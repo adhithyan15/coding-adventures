@@ -1,0 +1,11 @@
+{
+  "id": "PA-C251-tamba",
+  "pathSegment": "PA-PATH-251-GHR251",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-251-GHR251",
+      "order": 4
+    }
+  ]
+}

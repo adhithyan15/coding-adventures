@@ -1,0 +1,11 @@
+{
+  "id": "PA-C318-phuttna",
+  "pathSegment": "PA-PATH-318-MISHAP318",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-318-MISHAP318",
+      "order": 1
+    }
+  ]
+}

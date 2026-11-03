@@ -1,0 +1,20 @@
+{
+  "chapter": 217,
+  "title": "Who Came?",
+  "label": "ch:pa-a2-aaia",
+  "canDo": "I can say who came, a man, a woman or a group, and tell a man from a woman in the past.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C217-payoff",
+    "kind": "production",
+    "summary": "Say who came with aia, ai or ae, use aurat 'a woman', and recognise the letter au.",
+    "assesses": [
+      "PA-GRAMMAR-PAST-AAIA-217",
+      "PA-LEX-AURAT-217",
+      "PA-SCRIPT-RECOG-AU-217",
+      "PA-GRAMMAR-PAST-AGREE-PERSON-217"
+    ]
+  }
+}

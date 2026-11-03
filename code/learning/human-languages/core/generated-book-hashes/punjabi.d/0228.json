@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:789a523061f98394",
+  "lessonIds": [
+    "PA-C228-nichorna",
+    "PA-C228-sukauna",
+    "PA-C228-tangna",
+    "PA-C228-rassi",
+    "PA-C228-punjhna"
+  ],
+  "tex": "punjabi/book/chapters/ch228-drying-the-clothes.tex"
+}

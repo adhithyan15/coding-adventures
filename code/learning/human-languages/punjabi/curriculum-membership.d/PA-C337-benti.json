@@ -1,0 +1,11 @@
+{
+  "id": "PA-C337-benti",
+  "pathSegment": "PA-PATH-337-ASK337",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-337-ASK337",
+      "order": 1
+    }
+  ]
+}

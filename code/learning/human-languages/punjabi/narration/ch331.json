@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 331,
+  "title": "Uncles and Aunts",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c18cb37ee9a5d3ca",
+  "lessons": [
+    {
+      "id": "PA-C331-chacha",
+      "sequence": 20130,
+      "title": "ਚਾਚਾ (chāchā) — a father's younger brother",
+      "headword": "ਚਾਚਾ",
+      "romanization": "chāchā",
+      "gloss": "a father's younger brother",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d252b87a5a8e6afb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a husband's younger brother's wife, then the Punjabi for a husband's elder brother's wife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚਾਚਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਾਚਾ — chāchā — \"a father's younger brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਚਾਚਾ ਖੇਤ ਵਿੱਚ ਕੰਮ ਕਰਦਾ ਹੈ। merā chāchā khet vich kamm kardā hai. My father's younger brother works in the fields."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਾਚਾ (chāchā) is inherited from a reconstructed cācca, \"uncle\"; CDIAL lists Punjabi cācā, \"father's younger brother\", under it (CDIAL 4734)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāchā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāchā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāchā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāchā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā chāchā khet vich kamm kardā hai. — My father's younger brother works in the fields.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā chāchā khet vich kamm kardā hai.* — My father's younger brother works in the fields.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a husband's younger brother's wife, then the Punjabi for a husband's elder brother's wife, then say chāchā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a husband's younger brother's wife, then the Punjabi for a husband's elder brother's wife, then say *chāchā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚਾਚਾ (chāchā) mean? (\"A father's younger brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C331-taia",
+      "sequence": 20140,
+      "title": "ਤਾਇਆ (tāiā) — a father's elder brother",
+      "headword": "ਤਾਇਆ",
+      "romanization": "tāiā",
+      "gloss": "a father's elder brother",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b39c1a75d0fe22bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a husband's elder brother's wife, then the Punjabi for a father's younger brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਾਇਆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਾਇਆ — tāiā — \"a father's elder brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਤਾਇਆ ਸਾਡੇ ਨਾਲ ਰਹਿੰਦਾ ਹੈ। merā tāiā sāḍe nāl rahindā hai. My father's elder brother lives with us."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਾਇਆ (tāiā) is inherited from Sanskrit tātya, \"fatherly\"; CDIAL lists Punjabi tāiā, \"father's elder brother\", under it (CDIAL 5759)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāiā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāiā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāiā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāiā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā tāiā sāḍe nāl rahindā hai. — My father's elder brother lives with us.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā tāiā sāḍe nāl rahindā hai.* — My father's elder brother lives with us.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a husband's elder brother's wife, then the Punjabi for a father's younger brother, then say tāiā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a husband's elder brother's wife, then the Punjabi for a father's younger brother, then say *tāiā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤਾਇਆ (tāiā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤਾਇਆ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਾਇਆ (tāiā) mean? (\"A father's elder brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C331-mama",
+      "sequence": 20150,
+      "title": "ਮਾਮਾ (māmā) — a mother's brother",
+      "headword": "ਮਾਮਾ",
+      "romanization": "māmā",
+      "gloss": "a mother's brother",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:249b09c347f63a60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a father's younger brother, then the Punjabi for a father's elder brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਾਮਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਮਾ — māmā — \"a mother's brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਰਮੀ ਦੀ ਛੁੱਟੀ ਵਿੱਚ ਅਸੀਂ ਮਾਮੇ ਦੇ ਘਰ ਗਏ। garmī dī chhuṭṭī vich asīṁ māme de ghar gae. In the summer holidays we went to my mother's brother's house."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਮਾ (māmā) is inherited from Sanskrit māma, \"uncle\", a nursery word; CDIAL lists Punjabi māmmā under it (CDIAL 10055)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māmā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māmā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māmā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māmā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garmī dī chhuṭṭī vich asīṁ māme de ghar gae. — In the summer holidays we went to my mother's brother's house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garmī dī chhuṭṭī vich asīṁ māme de ghar gae.* — In the summer holidays we went to my mother's brother's house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a father's younger brother, then the Punjabi for a father's elder brother, then say māmā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a father's younger brother, then the Punjabi for a father's elder brother, then say *māmā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਾਮਾ (māmā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਾਮਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਾਮਾ (māmā) mean? (\"A mother's brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C331-masi",
+      "sequence": 20160,
+      "title": "ਮਾਸੀ (māsī) — a mother's sister",
+      "headword": "ਮਾਸੀ",
+      "romanization": "māsī",
+      "gloss": "a mother's sister",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb1e25b08bddf8d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a father's elder brother, then the Punjabi for a mother's brother."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਾਸੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਸੀ — māsī — \"a mother's sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੀ ਮਾਸੀ ਹਰ ਸਾਲ ਸਾਡੇ ਲਈ ਤੋਹਫ਼ੇ ਲਿਆਉਂਦੀ ਹੈ। merī māsī har sāl sāḍe laī tohfe liāundī hai. My mother's sister brings us gifts every year."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਸੀ (māsī) is inherited from Sanskrit mātuḥṣvasṛ, \"a mother's sister\"; CDIAL lists Punjabi māssī, \"mother's sister\", under it (CDIAL 10001)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī māsī har sāl sāḍe laī tohfe liāundī hai. — My mother's sister brings us gifts every year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī māsī har sāl sāḍe laī tohfe liāundī hai.* — My mother's sister brings us gifts every year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a father's elder brother, then the Punjabi for a mother's brother, then say māsī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a father's elder brother, then the Punjabi for a mother's brother, then say *māsī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਾਸੀ (māsī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਾਸੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਾਸੀ (māsī) mean? (\"A mother's sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C331-masar",
+      "sequence": 20170,
+      "title": "ਮਾਸੜ (māsaṛ) — a mother's sister's husband",
+      "headword": "ਮਾਸੜ",
+      "romanization": "māsaṛ",
+      "gloss": "a mother's sister's husband",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afead0ef496e04a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a mother's brother, then the Punjabi for a mother's sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਾਸੜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਸੜ — māsaṛ — \"a mother's sister's husband\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਮਾਸੜ ਇੱਕ ਦਰਜ਼ੀ ਹੈ। merā māsaṛ ikk darzī hai. My mother's sister's husband is a tailor."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਸੜ (māsaṛ) is inherited from Sanskrit mātuḥṣvasṛ, \"a mother's sister\"; CDIAL lists Punjabi māsaṛ, \"mother's sister's husband\", under it (CDIAL 10001)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsaṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsaṛ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māsaṛ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māsaṛ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā māsaṛ ikk darzī hai. — My mother's sister's husband is a tailor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā māsaṛ ikk darzī hai.* — My mother's sister's husband is a tailor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a mother's brother, then the Punjabi for a mother's sister, then say māsaṛ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a mother's brother, then the Punjabi for a mother's sister, then say *māsaṛ* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਾਸੜ (māsaṛ) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਾਸੜ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਾਸੜ (māsaṛ) mean? (\"A mother's sister's husband\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

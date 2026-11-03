@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 239,
+  "title": "Bread on the Griddle",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:115726ea98db8721",
+  "lessons": [
+    {
+      "id": "PA-C239-tava",
+      "sequence": 13720,
+      "title": "ਤਵਾ (tavā) — a griddle",
+      "headword": "ਤਵਾ",
+      "romanization": "tavā",
+      "gloss": "a griddle",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6655c10597da02f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a ball of dough, then the Punjabi for to roll out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਵਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਵਾ — tavā — \"a griddle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਤਵਾ ਚੁੱਲ੍ਹੇ ਉੱਤੇ ਹੈ। tavā chullhe utte hai. The griddle is on the stove."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਵਾ (tavā) is inherited from a reconstructed tapaka, \"frying pan\"; CDIAL lists Punjabi tavā, \"circular griddle\" (CDIAL 5670)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tavā chullhe utte hai. — The griddle is on the stove.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tavā chullhe utte hai.* — The griddle is on the stove.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a ball of dough, then the Punjabi for to roll out, then say tavā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a ball of dough, then the Punjabi for to roll out, then say *tavā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਵਾ (tavā) mean? (\"A griddle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C239-sekna",
+      "sequence": 13730,
+      "title": "ਸੇਕਣਾ (sekṇā) — to bake on a griddle; to warm",
+      "headword": "ਸੇਕਣਾ",
+      "romanization": "sekṇā",
+      "gloss": "to bake on a griddle; to warm",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01a0a9cd5c804f6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to roll out, then the Punjabi for a griddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸੇਕਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੇਕਣਾ — sekṇā — \"to bake on a griddle; to warm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਤਵੇ ਉੱਤੇ ਰੋਟੀ ਸੇਕਦੀ ਹਾਂ। maiṁ tave utte roṭī sekdī hāṁ. I bake the roti on the griddle."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਰੋਟੀ ਸੇਕੀ, maiṁ roṭī sekī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੇਕਣਾ (sekṇā) is inherited from a reconstructed sēkk, \"heat, foment, roast\"; CDIAL lists Punjabi sekṇā, \"to warm, toast, foment\" (CDIAL 13581)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sekṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sekṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sekṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sekṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ tave utte roṭī sekdī hāṁ. — I bake the roti on the griddle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ tave utte roṭī sekdī hāṁ.* — I bake the roti on the griddle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to roll out, then the Punjabi for a griddle, then say sekṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to roll out, then the Punjabi for a griddle, then say *sekṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸੇਕਣਾ (sekṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸੇਕਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸੇਕਣਾ (sekṇā) mean? (\"To bake on a griddle; to warm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C239-chimta",
+      "sequence": 13740,
+      "title": "ਚਿਮਟਾ (chimṭā) — tongs",
+      "headword": "ਚਿਮਟਾ",
+      "romanization": "chimṭā",
+      "gloss": "tongs",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0cd6f0cff2720cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a griddle, then the Punjabi for to bake on a griddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚਿਮਟਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਿਮਟਾ — chimṭā — \"tongs\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਚਿਮਟੇ ਨਾਲ ਰੋਟੀ ਚੁੱਕਦੀ ਹਾਂ। maiṁ chimṭe nāl roṭī chukkdī hāṁ. I lift the roti with tongs."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਿਮਟਾ (chimṭā) is inherited from a reconstructed cimb, \"pinch\"; CDIAL lists Punjabi cimṭā, \"tongs\" (CDIAL 4822)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chimṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chimṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chimṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chimṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ chimṭe nāl roṭī chukkdī hāṁ. — I lift the roti with tongs.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ chimṭe nāl roṭī chukkdī hāṁ.* — I lift the roti with tongs.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a griddle, then the Punjabi for to bake on a griddle, then say chimṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a griddle, then the Punjabi for to bake on a griddle, then say *chimṭā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚਿਮਟਾ (chimṭā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚਿਮਟਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚਿਮਟਾ (chimṭā) mean? (\"Tongs\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C239-dhakkna",
+      "sequence": 13750,
+      "title": "ਢੱਕਣਾ (ḍhakkṇā) — to cover",
+      "headword": "ਢੱਕਣਾ",
+      "romanization": "ḍhakkṇā",
+      "gloss": "to cover",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dcd695e9ecb204b4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to bake on a griddle, then the Punjabi for tongs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਢੱਕਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢੱਕਣਾ — ḍhakkṇā — \"to cover\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਰੋਟੀਆਂ ਕੱਪੜੇ ਨਾਲ ਢੱਕਦੀ ਹਾਂ। maiṁ roṭīāṁ kappṛe nāl ḍhakkdī hāṁ. I cover the rotis with a cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਪਤੀਲਾ ਢੱਕਿਆ, maiṁ patīlā ḍhakkiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢੱਕਣਾ (ḍhakkṇā) is inherited from a reconstructed ḍhakk, \"cover\"; CDIAL lists Punjabi ḍhakkṇā, \"to cover\" (CDIAL 5574)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhakkṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhakkṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhakkṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhakkṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ roṭīāṁ kappṛe nāl ḍhakkdī hāṁ. — I cover the rotis with a cloth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ roṭīāṁ kappṛe nāl ḍhakkdī hāṁ.* — I cover the rotis with a cloth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to bake on a griddle, then the Punjabi for tongs, then say ḍhakkṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to bake on a griddle, then the Punjabi for tongs, then say *ḍhakkṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਢੱਕਣਾ (ḍhakkṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਢੱਕਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਢੱਕਣਾ (ḍhakkṇā) mean? (\"To cover\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C239-ghiu",
+      "sequence": 13760,
+      "title": "ਘਿਉ (ghiu) — ghee; clarified butter",
+      "headword": "ਘਿਉ",
+      "romanization": "ghiu",
+      "gloss": "ghee; clarified butter",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d16de8e57f1295b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for tongs, then the Punjabi for to cover."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਘਿਉ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਘਿਉ — ghiu — \"ghee; clarified butter\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ ਰੋਟੀ ਉੱਤੇ ਘਿਉ ਮਲਦੀ ਹੈ। dādī roṭī utte ghiu maldī hai. Grandmother rubs ghee on the roti."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਘਿਉ (ghiu) is inherited from Sanskrit ghṛta, \"clarified butter, ghee\"; CDIAL lists Punjabi gheu, \"ghee\" (CDIAL 4501)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghiu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghiu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghiu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghiu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī roṭī utte ghiu maldī hai. — Grandmother rubs ghee on the roti.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī roṭī utte ghiu maldī hai.* — Grandmother rubs ghee on the roti.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for tongs, then the Punjabi for to cover, then say ghiu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for tongs, then the Punjabi for to cover, then say *ghiu* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਘਿਉ (ghiu) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਘਿਉ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਘਿਉ (ghiu) mean? (\"Ghee; clarified butter\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

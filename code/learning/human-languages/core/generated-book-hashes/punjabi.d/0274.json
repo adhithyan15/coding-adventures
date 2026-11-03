@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:c9488218df351546",
+  "lessonIds": [
+    "PA-C274-minna",
+    "PA-C274-gaz",
+    "PA-C274-mitar",
+    "PA-C274-nap",
+    "PA-C274-jora"
+  ],
+  "tex": "punjabi/book/chapters/ch274-yards-and-metres.tex"
+}

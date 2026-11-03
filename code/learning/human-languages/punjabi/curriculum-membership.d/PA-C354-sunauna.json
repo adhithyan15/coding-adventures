@@ -1,0 +1,11 @@
+{
+  "id": "PA-C354-sunauna",
+  "pathSegment": "PA-PATH-354-STORY354",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-354-STORY354",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-270-SEARCH270",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "PA-EXT-270-SEARCH270"
+  ],
+  "after": []
+}

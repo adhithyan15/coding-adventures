@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 223,
+  "sourceHash": "fnv1a64:06888ce80dd5ccfa",
+  "lessonIds": [
+    "PA-C223-time-return",
+    "PA-C223-next-week",
+    "PA-C223-shaid",
+    "PA-C223-spoken-plan",
+    "PA-C223-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch223-perhaps-next-week.tex"
+}

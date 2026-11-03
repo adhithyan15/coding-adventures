@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:d8347ec30577ad8f",
+  "lessonIds": [
+    "PA-C285-paratna",
+    "PA-C285-varna",
+    "PA-C285-mukkna",
+    "PA-C285-thakkna",
+    "PA-C285-pahu"
+  ],
+  "tex": "punjabi/book/chapters/ch285-back-home-again.tex"
+}

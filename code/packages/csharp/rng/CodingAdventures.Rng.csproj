@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.Rng.CSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>Pseudorandom number generator library implementing LCG, Xorshift64, and PCG32</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:35a4e62b40a466ef",
+  "lessonIds": [
+    "PA-C275-dhilla",
+    "PA-C275-tang",
+    "PA-C275-phabbna",
+    "PA-C275-darjan",
+    "PA-C275-thaila"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch275.txt",
+  "json": "punjabi/narration/ch275.json",
+  "textHash": "fnv1a64:d223a2e4a1dfbc8c",
+  "jsonHash": "fnv1a64:e89197784a0e2b3c",
+  "findings": []
+}

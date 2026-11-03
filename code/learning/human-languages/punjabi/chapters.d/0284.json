@@ -1,0 +1,19 @@
+{
+  "chapter": 284,
+  "title": "Getting Off",
+  "label": "ch:pa-a2-getting-off",
+  "canDo": "I can say where I will get off.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C284-apparna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 284: I can say where I will get off.",
+    "assesses": [
+      "PA-LEX-C284-OFF284-03",
+      "PA-LEX-C284-OFF284-04",
+      "PA-LEX-C284-OFF284-05"
+    ]
+  }
+}

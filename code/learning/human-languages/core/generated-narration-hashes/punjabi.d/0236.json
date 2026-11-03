@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:5d7f19623ca4da25",
+  "lessonIds": [
+    "PA-C236-manjna",
+    "PA-C236-hanghalna",
+    "PA-C236-uladdna",
+    "PA-C236-lota",
+    "PA-C236-katora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch236.txt",
+  "json": "punjabi/narration/ch236.json",
+  "textHash": "fnv1a64:f1c4432325020045",
+  "jsonHash": "fnv1a64:67c116ddb1508b24",
+  "findings": []
+}

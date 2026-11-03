@@ -1,0 +1,11 @@
+{
+  "id": "PA-C282-nikalna",
+  "pathSegment": "PA-PATH-282-BAGS282",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-282-BAGS282",
+      "order": 4
+    }
+  ]
+}

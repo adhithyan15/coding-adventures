@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C224-message",
+    "language": "punjabi",
+    "chapter": 224,
+    "sequence": 12290,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:cc0262ee0b242493"
+  },
+  "findings": []
+}

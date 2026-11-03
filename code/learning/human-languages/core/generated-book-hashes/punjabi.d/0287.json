@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:78d3ed9594c40a1f",
+  "lessonIds": [
+    "PA-C287-bund",
+    "PA-C287-bhijjna",
+    "PA-C287-harh",
+    "PA-C287-tapakna",
+    "PA-C287-chikkar",
+    "PA-R287-review-281-287"
+  ],
+  "tex": "punjabi/book/chapters/ch287-when-the-rain-comes.tex"
+}

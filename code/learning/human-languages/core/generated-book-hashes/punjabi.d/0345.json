@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:a690dcb8e0d59688",
+  "lessonIds": [
+    "PA-C345-sharat",
+    "PA-C345-faisla",
+    "PA-C345-rae",
+    "PA-C345-mukauna",
+    "PA-C345-tajviz"
+  ],
+  "tex": "punjabi/book/chapters/ch345-making-up-our-minds.tex"
+}

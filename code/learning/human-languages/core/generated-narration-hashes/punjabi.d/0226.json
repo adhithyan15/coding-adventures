@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:519f1e570ad6bc7e",
+  "lessonIds": [
+    "PA-C226-tiar",
+    "PA-C226-burash",
+    "PA-C226-kambna",
+    "PA-C226-bherna",
+    "PA-C226-sair"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch226.txt",
+  "json": "punjabi/narration/ch226.json",
+  "textHash": "fnv1a64:7e5e599de85e652a",
+  "jsonHash": "fnv1a64:a2aa2d6071500c13",
+  "findings": []
+}

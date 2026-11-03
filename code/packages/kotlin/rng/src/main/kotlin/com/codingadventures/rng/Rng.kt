@@ -107,31 +107,12 @@ class Lcg(seed: Long) {
     fun nextFloat(): Double = nextU32().toDouble() / FLOAT_DIV
 
     /**
-     * Return a uniform random [Long] in [[min], [max]] inclusive.
+     * Return a uniform random [Long] in [[min], [max]] inclusive, by the
+     * rejection sampling of [intInRange].
      *
-     * Uses rejection sampling to eliminate modulo bias.  Naïve
-     * `value % range` over-samples low values when 2^32 is not divisible
-     * by range.
-     *
-     * ```
-     *  threshold = (-range) mod range   (unsigned 32-bit arithmetic)
-     *  discard draws below threshold; expected extra draws < 2.
-     * ```
-     *
-     * @param min lower bound (inclusive)
-     * @param max upper bound (inclusive), must be ≥ min
+     * @throws IllegalArgumentException if `min > max`, before any draw
      */
-    fun nextIntInRange(min: Long, max: Long): Long {
-        require(min <= max) { "nextIntInRange requires min <= max, got $min > $max" }
-        val rangeSize = max - min + 1L
-        val threshold = java.lang.Long.remainderUnsigned(-rangeSize, rangeSize)
-        while (true) {
-            val r = nextU32()
-            if (java.lang.Long.compareUnsigned(r, threshold) >= 0) {
-                return min + java.lang.Long.remainderUnsigned(r, rangeSize)
-            }
-        }
-    }
+    fun nextIntInRange(min: Long, max: Long): Long = intInRange(::nextU32, min, max)
 }
 
 // =========================================================================
@@ -193,24 +174,12 @@ class Xorshift64(seed: Long) {
     fun nextFloat(): Double = nextU32().toDouble() / FLOAT_DIV
 
     /**
-     * Return a uniform random [Long] in [[min], [max]] inclusive.
+     * Return a uniform random [Long] in [[min], [max]] inclusive, by the
+     * rejection sampling of [intInRange].
      *
-     * Same rejection-sampling algorithm as [Lcg.nextIntInRange].
-     *
-     * @param min lower bound (inclusive)
-     * @param max upper bound (inclusive), must be ≥ min
+     * @throws IllegalArgumentException if `min > max`, before any draw
      */
-    fun nextIntInRange(min: Long, max: Long): Long {
-        require(min <= max) { "nextIntInRange requires min <= max, got $min > $max" }
-        val rangeSize = max - min + 1L
-        val threshold = java.lang.Long.remainderUnsigned(-rangeSize, rangeSize)
-        while (true) {
-            val r = nextU32()
-            if (java.lang.Long.compareUnsigned(r, threshold) >= 0) {
-                return min + java.lang.Long.remainderUnsigned(r, rangeSize)
-            }
-        }
-    }
+    fun nextIntInRange(min: Long, max: Long): Long = intInRange(::nextU32, min, max)
 }
 
 // =========================================================================
@@ -295,22 +264,66 @@ class Pcg32(seed: Long) {
     fun nextFloat(): Double = nextU32().toDouble() / FLOAT_DIV
 
     /**
-     * Return a uniform random [Long] in [[min], [max]] inclusive.
+     * Return a uniform random [Long] in [[min], [max]] inclusive, by the
+     * rejection sampling of [intInRange].
      *
-     * Same rejection-sampling algorithm as [Lcg.nextIntInRange].
-     *
-     * @param min lower bound (inclusive)
-     * @param max upper bound (inclusive), must be ≥ min
+     * @throws IllegalArgumentException if `min > max`, before any draw
      */
-    fun nextIntInRange(min: Long, max: Long): Long {
-        require(min <= max) { "nextIntInRange requires min <= max, got $min > $max" }
-        val rangeSize = max - min + 1L
-        val threshold = java.lang.Long.remainderUnsigned(-rangeSize, rangeSize)
-        while (true) {
-            val r = nextU32()
-            if (java.lang.Long.compareUnsigned(r, threshold) >= 0) {
-                return min + java.lang.Long.remainderUnsigned(r, rangeSize)
-            }
+    fun nextIntInRange(min: Long, max: Long): Long = intInRange(::nextU32, min, max)
+}
+
+// =========================================================================
+// Bounded draws (spec rng.md, "Rejection Sampling", v2)
+// =========================================================================
+
+/**
+ * A uniform [Long] in [[min], [max]], drawn from a stream of 32-bit outputs
+ * (held in the low half of a Long), identically in every language of the
+ * repository.
+ *
+ * `span = max - min + 1` lies between 1 and 2^64. Taking `r % span` of a raw
+ * draw over-samples small offsets whenever the number of possible draws is
+ * not a multiple of span; rejecting the `threshold` lowest draws removes
+ * exactly the excess. Three regimes, chosen by span alone:
+ *
+ * ```
+ *  span <= 2^32    draw 32 bits,  threshold = (2^32 - span) mod span
+ *  span <  2^64    draw 64 bits,  threshold = (2^64 - span) mod span
+ *  span == 2^64    the whole Long domain: every 64-bit value is valid
+ * ```
+ *
+ * The values are unsigned, held in [ULong] so comparison and division are
+ * unsigned; ULong arithmetic wraps, and the whole domain's span, 2^64, wraps
+ * to 0.
+ *
+ * v1 took the threshold modulo 2^64 while drawing 32 bits. That was biased,
+ * never reached more than 2^32 - 1 above min, divided by zero for the whole
+ * domain, and for spans such as 2^63 + 1 rejected every possible draw, so it
+ * never returned.
+ */
+internal fun intInRange(next32: () -> Long, min: Long, max: Long): Long {
+    require(min <= max) { "nextIntInRange requires min <= max, got $min > $max" }
+    val span = max.toULong() - min.toULong() + 1uL // 2^64 wraps to 0
+    val twoTo32 = 1uL shl 32
+    val next64 = { (next32().toULong() shl 32) or next32().toULong() }
+    val offset: ULong = when {
+        span == 0uL -> next64()
+        span <= twoTo32 -> {
+            val threshold = (twoTo32 - span) % span
+            var r: ULong
+            do {
+                r = next32().toULong()
+            } while (r < threshold)
+            r % span
+        }
+        else -> {
+            val threshold = (0uL - span) % span // (2^64 - span) mod span
+            var r: ULong
+            do {
+                r = next64()
+            } while (r < threshold)
+            r % span
         }
     }
+    return (min.toULong() + offset).toLong() // wraps back into [min, max]
 }

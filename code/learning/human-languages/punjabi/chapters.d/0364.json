@@ -1,0 +1,21 @@
+{
+  "chapter": 364,
+  "title": "Good at My Job",
+  "label": "ch:pa-a2-good-at-my-job",
+  "canDo": "I can say what my work is and what I have achieved.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-R364-review-final-364",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say what my work is and what I have achieved.",
+    "assesses": [
+      "PA-LEX-C364-JOB364-01",
+      "PA-LEX-C364-JOB364-02",
+      "PA-LEX-C364-JOB364-03",
+      "PA-LEX-C364-JOB364-04",
+      "PA-LEX-C364-JOB364-05"
+    ]
+  }
+}

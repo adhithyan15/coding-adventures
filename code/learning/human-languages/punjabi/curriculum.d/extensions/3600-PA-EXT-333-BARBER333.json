@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-333-BARBER333",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can name the people who cut hair and wash clothes.",
+  "prerequisites": []
+}

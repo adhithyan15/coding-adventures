@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "The Lie of the Land",
+  "label": "ch:pa-a2-the-lie-of-the-land",
+  "canDo": "I can describe the land around a village.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C293-tilla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can describe the land around a village.",
+    "assesses": [
+      "PA-LEX-C293-LAND293-03",
+      "PA-LEX-C293-LAND293-04",
+      "PA-LEX-C293-LAND293-05"
+    ]
+  }
+}

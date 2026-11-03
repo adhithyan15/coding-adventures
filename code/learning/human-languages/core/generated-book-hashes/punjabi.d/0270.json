@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:94edc4e7a8ee4100",
+  "lessonIds": [
+    "PA-C270-dhundhna",
+    "PA-C270-kharhna",
+    "PA-C270-langhauna",
+    "PA-C270-mil",
+    "PA-C270-maidan"
+  ],
+  "tex": "punjabi/book/chapters/ch270-searching-for-an-address.tex"
+}

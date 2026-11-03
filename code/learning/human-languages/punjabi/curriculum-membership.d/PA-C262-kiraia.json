@@ -1,0 +1,11 @@
+{
+  "id": "PA-C262-kiraia",
+  "pathSegment": "PA-PATH-262-FEE262",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-262-FEE262",
+      "order": 1
+    }
+  ]
+}

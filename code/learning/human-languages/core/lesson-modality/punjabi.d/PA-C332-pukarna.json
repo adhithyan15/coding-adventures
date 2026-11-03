@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C332-pukarna",
+    "language": "punjabi",
+    "chapter": 332,
+    "sequence": 20220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a870a00cd12479ca"
+  },
+  "findings": []
+}

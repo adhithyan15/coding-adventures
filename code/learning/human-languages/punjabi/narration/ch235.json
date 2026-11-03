@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 235,
+  "title": "Sweeping the Floor",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cb1d219e1777cd43",
+  "lessons": [
+    {
+      "id": "PA-C235-buharna",
+      "sequence": 13510,
+      "title": "ਬੁਹਾਰਨਾ (buhārnā) — to sweep",
+      "headword": "ਬੁਹਾਰਨਾ",
+      "romanization": "buhārnā",
+      "gloss": "to sweep",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:027342f7619e69da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to put out, then the Punjabi for a wooden bed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬੁਹਾਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੁਹਾਰਨਾ — buhārnā — \"to sweep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਝਾੜੂ ਨਾਲ ਕਮਰਾ ਬੁਹਾਰਦੀ ਹਾਂ। maiṁ jhāṛū nāl kamrā buhārdī hāṁ. I sweep the room with a broom."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਕਮਰਾ ਬੁਹਾਰਿਆ, maiṁ kamrā buhāriā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੁਹਾਰਨਾ (buhārnā) is inherited: CDIAL sets it under Sanskrit bahukāra, \"effecting much\" (also a late word for a sweeper), and lists Punjabi buhārnā, \"to sweep\" (CDIAL 9188)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buhārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buhārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "buhārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *buhārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ jhāṛū nāl kamrā buhārdī hāṁ. — I sweep the room with a broom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ jhāṛū nāl kamrā buhārdī hāṁ.* — I sweep the room with a broom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to put out, then the Punjabi for a wooden bed, then say buhārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to put out, then the Punjabi for a wooden bed, then say *buhārnā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬੁਹਾਰਨਾ (buhārnā) mean? (\"To sweep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C235-jharna",
+      "sequence": 13520,
+      "title": "ਝਾੜਨਾ (jhāṛnā) — to dust; to shake out",
+      "headword": "ਝਾੜਨਾ",
+      "romanization": "jhāṛnā",
+      "gloss": "to dust; to shake out",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:58a4cddcbe58455b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a wooden bed, then the Punjabi for to sweep."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਝਾੜਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਝਾੜਨਾ — jhāṛnā — \"to dust; to shake out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਕੱਪੜੇ ਨਾਲ ਅਲਮਾਰੀ ਝਾੜਦਾ ਹਾਂ। maiṁ kappṛe nāl almārī jhāṛdā hāṁ. I dust the cupboard with a cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਦਰੀ ਝਾੜੀ, maiṁ darī jhāṛī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਝਾੜਨਾ (jhāṛnā) is inherited from a reconstructed jhāṭayati, \"shakes down\"; CDIAL lists Punjabi jhāṛṇā, \"to shake off, thresh, sweep\" (CDIAL 5328)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhāṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhāṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ kappṛe nāl almārī jhāṛdā hāṁ. — I dust the cupboard with a cloth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ kappṛe nāl almārī jhāṛdā hāṁ.* — I dust the cupboard with a cloth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a wooden bed, then the Punjabi for to sweep, then say jhāṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a wooden bed, then the Punjabi for to sweep, then say *jhāṛnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਝਾੜਨਾ (jhāṛnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਝਾੜਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਝਾੜਨਾ (jhāṛnā) mean? (\"To dust; to shake out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C235-pocha",
+      "sequence": 13530,
+      "title": "ਪੋਚਾ (pochā) — a floor cloth (for mopping)",
+      "headword": "ਪੋਚਾ",
+      "romanization": "pochā",
+      "gloss": "a floor cloth (for mopping)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1bed4f2b71d83323",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to sweep, then the Punjabi for to dust."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੋਚਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੋਚਾ — pochā — \"a floor cloth (for mopping)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਗਿੱਲੇ ਪੋਚੇ ਨਾਲ ਫ਼ਰਸ਼ ਸਾਫ਼ ਕਰਦੀ ਹਾਂ। maiṁ gille poche nāl farsh sāf kardī hāṁ. I clean the floor with a wet floor cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੋਚਾ (pochā) is inherited from Sanskrit pōta, \"cloth\"; CDIAL lists Punjabi poccā, \"cloth or brush for smearing\" (CDIAL 8400)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pochā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pochā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pochā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pochā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ gille poche nāl farsh sāf kardī hāṁ. — I clean the floor with a wet floor cloth.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ gille poche nāl farsh sāf kardī hāṁ.* — I clean the floor with a wet floor cloth.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to sweep, then the Punjabi for to dust, then say pochā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to sweep, then the Punjabi for to dust, then say *pochā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪੋਚਾ (pochā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪੋਚਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੋਚਾ (pochā) mean? (\"A floor cloth (for mopping)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C235-gara",
+      "sequence": 13540,
+      "title": "ਗਾਰਾ (gārā) — mud plaster",
+      "headword": "ਗਾਰਾ",
+      "romanization": "gārā",
+      "gloss": "mud plaster",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24e16900d6d1165c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to dust, then the Punjabi for a floor cloth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗਾਰਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਾਰਾ — gārā — \"mud plaster\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਾਰਾ ਗਿੱਲਾ ਅਤੇ ਭਾਰੀ ਹੈ। gārā gillā ate bhārī hai. The mud plaster is wet and heavy."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਾਰਾ (gārā) is inherited from a reconstructed gāra, \"dripping, oozing\"; CDIAL lists Punjabi gārā, \"kneaded potter's clay, mud used for mortar\" (CDIAL 4137)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gārā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gārā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gārā gillā ate bhārī hai. — The mud plaster is wet and heavy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gārā gillā ate bhārī hai.* — The mud plaster is wet and heavy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to dust, then the Punjabi for a floor cloth, then say gārā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to dust, then the Punjabi for a floor cloth, then say *gārā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗਾਰਾ (gārā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗਾਰਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗਾਰਾ (gārā) mean? (\"Mud plaster\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C235-lippna",
+      "sequence": 13550,
+      "title": "ਲਿੱਪਣਾ (lippṇā) — to plaster (with mud)",
+      "headword": "ਲਿੱਪਣਾ",
+      "romanization": "lippṇā",
+      "gloss": "to plaster (with mud)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8d1a45a3327d9a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a floor cloth, then the Punjabi for mud plaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਲਿੱਪਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲਿੱਪਣਾ — lippṇā — \"to plaster (with mud)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ ਗਾਰੇ ਨਾਲ ਚੁੱਲ੍ਹਾ ਲਿੱਪਦੀ ਹੈ। dādī gāre nāl chullhā lippdī hai. Grandmother plasters the stove with mud."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਚੁੱਲ੍ਹਾ ਲਿੱਪਿਆ, maiṁ chullhā lippiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲਿੱਪਣਾ (lippṇā) is inherited from Sanskrit lipyatē, \"is smeared\"; CDIAL lists Punjabi lippṇā among the verbs for plastering a wall (CDIAL 11061)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lippṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lippṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lippṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lippṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī gāre nāl chullhā lippdī hai. — Grandmother plasters the stove with mud.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī gāre nāl chullhā lippdī hai.* — Grandmother plasters the stove with mud.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a floor cloth, then the Punjabi for mud plaster, then say lippṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a floor cloth, then the Punjabi for mud plaster, then say *lippṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਲਿੱਪਣਾ (lippṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਲਿੱਪਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਲਿੱਪਣਾ (lippṇā) mean? (\"To plaster (with mud)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

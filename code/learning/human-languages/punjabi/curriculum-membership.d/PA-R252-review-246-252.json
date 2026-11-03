@@ -1,0 +1,11 @@
+{
+  "id": "PA-R252-review-246-252",
+  "pathSegment": "PA-PATH-252-GHR252",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-252-GHR252",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C251-chhikka",
+  "pathSegment": "PA-PATH-251-GHR251",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-251-GHR251",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C235-lippna",
+    "language": "punjabi",
+    "chapter": 235,
+    "sequence": 13550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8d1a45a3327d9a9"
+  },
+  "findings": []
+}

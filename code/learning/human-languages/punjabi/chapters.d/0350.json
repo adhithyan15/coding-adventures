@@ -1,0 +1,21 @@
+{
+  "chapter": 350,
+  "title": "Plays, Films and Fun",
+  "label": "ch:pa-a2-plays-films-and-fun",
+  "canDo": "I can talk about my hobbies and the shows I enjoy.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-R350-review-344-350",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can talk about my hobbies and the shows I enjoy.",
+    "assesses": [
+      "PA-LEX-C350-SHOW350-01",
+      "PA-LEX-C350-SHOW350-02",
+      "PA-LEX-C350-SHOW350-03",
+      "PA-LEX-C350-SHOW350-04",
+      "PA-LEX-C350-SHOW350-05"
+    ]
+  }
+}

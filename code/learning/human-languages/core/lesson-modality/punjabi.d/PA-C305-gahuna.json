@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C305-gahuna",
+    "language": "punjabi",
+    "chapter": 305,
+    "sequence": 18260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36bab175d58bab14"
+  },
+  "findings": []
+}

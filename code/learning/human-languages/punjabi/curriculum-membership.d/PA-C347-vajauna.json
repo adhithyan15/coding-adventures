@@ -1,0 +1,11 @@
+{
+  "id": "PA-C347-vajauna",
+  "pathSegment": "PA-PATH-347-DRUM347",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-347-DRUM347",
+      "order": 1
+    }
+  ]
+}

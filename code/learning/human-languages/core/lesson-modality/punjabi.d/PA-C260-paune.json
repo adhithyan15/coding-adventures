@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C260-paune",
+    "language": "punjabi",
+    "chapter": 260,
+    "sequence": 15380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63bb34683040a1db"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C331-mama",
+    "language": "punjabi",
+    "chapter": 331,
+    "sequence": 20150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:249b09c347f63a60"
+  },
+  "findings": []
+}

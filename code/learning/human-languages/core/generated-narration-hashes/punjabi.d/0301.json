@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:058845a3a9212e3e",
+  "lessonIds": [
+    "PA-C301-hal",
+    "PA-C301-balad",
+    "PA-C301-jula",
+    "PA-C301-vahuna",
+    "PA-C301-jotna",
+    "PA-R301-review-295-301"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch301.txt",
+  "json": "punjabi/narration/ch301.json",
+  "textHash": "fnv1a64:e3afd94e06d394d4",
+  "jsonHash": "fnv1a64:66851a6f29a750b2",
+  "findings": []
+}

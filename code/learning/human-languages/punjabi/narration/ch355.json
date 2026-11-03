@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 355,
+  "title": "Riddles and Jokes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0c271252a286cddd",
+  "lessons": [
+    {
+      "id": "PA-C355-paheli",
+      "sequence": 21920,
+      "title": "ਪਹੇਲੀ (pahelī) — a riddle",
+      "headword": "ਪਹੇਲੀ",
+      "romanization": "pahelī",
+      "gloss": "a riddle",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3ebbc1c8dfd500a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a queen, then the Punjabi for magic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਹੇਲੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਹੇਲੀ — pahelī — \"a riddle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੇ ਦਾਦੇ ਕੋਲ ਬਹੁਤ ਪਹੇਲੀਆਂ ਹਨ। mere dāde kol bahut pahelīāṁ han. My grandfather knows lots of riddles."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਹੇਲੀ (pahelī) is inherited from Sanskrit prahelikā, \"riddle\"; CDIAL lists Punjabi parhelī, \"riddle\", and pahelī under it (CDIAL 8911)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahelī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahelī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahelī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahelī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere dāde kol bahut pahelīāṁ han. — My grandfather knows lots of riddles.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere dāde kol bahut pahelīāṁ han.* — My grandfather knows lots of riddles.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a queen, then the Punjabi for magic, then say pahelī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a queen, then the Punjabi for magic, then say *pahelī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਹੇਲੀ (pahelī) mean? (\"A riddle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C355-bujjhna",
+      "sequence": 21930,
+      "title": "ਬੁੱਝਣਾ (bujjhṇā) — to solve a riddle; to guess",
+      "headword": "ਬੁੱਝਣਾ",
+      "romanization": "bujjhṇā",
+      "gloss": "to solve a riddle; to guess",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc3a20a2ed3e9c85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for magic, then the Punjabi for a riddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬੁੱਝਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੁੱਝਣਾ — bujjhṇā — \"to solve a riddle; to guess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੀ ਭੈਣ ਹਰ ਪਹੇਲੀ ਬੁੱਝਦੀ ਹੈ। merī bhaiṇ har pahelī bujjhdī hai. My sister solves every riddle."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਪਹੇਲੀ ਬੁੱਝੀ, maiṁ pahelī bujjhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੁੱਝਣਾ (bujjhṇā) is inherited from Sanskrit budhyate, \"is awakened, understands\"; CDIAL lists Punjabi bujjhṇā, \"to guess, solve\", under it (CDIAL 9279)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujjhṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujjhṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bujjhṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bujjhṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī bhaiṇ har pahelī bujjhdī hai. — My sister solves every riddle.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī bhaiṇ har pahelī bujjhdī hai.* — My sister solves every riddle.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for magic, then the Punjabi for a riddle, then say bujjhṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for magic, then the Punjabi for a riddle, then say *bujjhṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬੁੱਝਣਾ (bujjhṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬੁੱਝਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬੁੱਝਣਾ (bujjhṇā) mean? (\"To solve a riddle; to guess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C355-mazak",
+      "sequence": 21940,
+      "title": "ਮਜ਼ਾਕ (mazāk) — a joke; joking",
+      "headword": "ਮਜ਼ਾਕ",
+      "romanization": "mazāk",
+      "gloss": "a joke; joking",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54011717a361b2cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a riddle, then the Punjabi for to solve a riddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਜ਼ਾਕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਜ਼ਾਕ — mazāk — \"a joke; joking\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਦੋਸਤ ਬਹੁਤ ਮਜ਼ਾਕ ਕਰਦਾ ਹੈ। merā dost bahut mazāk kardā hai. My friend jokes a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਜ਼ਾਕ (mazāk) is a loan, usually traced through Persian to Arabic madhāq, \"taste\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazāk",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazāk*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mazāk, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mazāk*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā dost bahut mazāk kardā hai. — My friend jokes a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā dost bahut mazāk kardā hai.* — My friend jokes a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a riddle, then the Punjabi for to solve a riddle, then say mazāk again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a riddle, then the Punjabi for to solve a riddle, then say *mazāk* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਜ਼ਾਕ (mazāk) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਜ਼ਾਕ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਜ਼ਾਕ (mazāk) mean? (\"A joke; joking\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C355-hasauna",
+      "sequence": 21950,
+      "title": "ਹਸਾਉਣਾ (hasāuṇā) — to make someone laugh",
+      "headword": "ਹਸਾਉਣਾ",
+      "romanization": "hasāuṇā",
+      "gloss": "to make someone laugh",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c1289821dfbb04c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to solve a riddle, then the Punjabi for a joke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹਸਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਸਾਉਣਾ — hasāuṇā — \"to make someone laugh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਸਭ ਨੂੰ ਹਸਾਉਂਦਾ ਹੈ। Aman sabh nū̃ hasāundā hai. Aman makes everyone laugh."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਬੱਚਿਆਂ ਨੂੰ ਹਸਾਇਆ, maiṁ bachchiāṁ nū̃ hasāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਸਾਉਣਾ (hasāuṇā) is the causative partner of hassṇā, \"to laugh\", which goes back to a reconstructed hasyate, \"one laughs\"; CDIAL lists Punjabi hassṇā under it (CDIAL 14048)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hasāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hasāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aman sabh nū̃ hasāundā hai. — Aman makes everyone laugh.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aman sabh nū̃ hasāundā hai.* — Aman makes everyone laugh.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to solve a riddle, then the Punjabi for a joke, then say hasāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to solve a riddle, then the Punjabi for a joke, then say *hasāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹਸਾਉਣਾ (hasāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹਸਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹਸਾਉਣਾ (hasāuṇā) mean? (\"To make someone laugh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C355-chherna",
+      "sequence": 21960,
+      "title": "ਛੇੜਨਾ (chheṛnā) — to tease",
+      "headword": "ਛੇੜਨਾ",
+      "romanization": "chheṛnā",
+      "gloss": "to tease",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce4eda652efc7a1a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a joke, then the Punjabi for to make someone laugh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਛੇੜਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛੇੜਨਾ — chheṛnā — \"to tease\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਭਰਾ ਮੈਨੂੰ ਹਰ ਰੋਜ਼ ਛੇੜਦਾ ਹੈ। merā bharā mainū̃ har roz chheṛdā hai. My brother teases me every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਭੈਣ ਨੂੰ ਛੇੜਿਆ, maiṁ bhaiṇ nū̃ chheṛiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛੇੜਨਾ (chheṛnā) is inherited from a reconstructed ciḍ, \"be angry\", with cheḍ, \"make angry\"; CDIAL lists Punjabi cheṛnā, \"to provoke\", under it (CDIAL 4794)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chheṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chheṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chheṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chheṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā bharā mainū̃ har roz chheṛdā hai. — My brother teases me every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā bharā mainū̃ har roz chheṛdā hai.* — My brother teases me every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a joke, then the Punjabi for to make someone laugh, then say chheṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a joke, then the Punjabi for to make someone laugh, then say *chheṛnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਛੇੜਨਾ (chheṛnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਛੇੜਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਛੇੜਨਾ (chheṛnā) mean? (\"To tease\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

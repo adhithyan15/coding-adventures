@@ -1,0 +1,11 @@
+{
+  "id": "PA-C229-kassna",
+  "pathSegment": "PA-PATH-229-DIN229",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-229-DIN229",
+      "order": 2
+    }
+  ]
+}

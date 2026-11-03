@@ -1,0 +1,11 @@
+{
+  "id": "PA-C226-burash",
+  "pathSegment": "PA-PATH-226-DIN226",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-226-DIN226",
+      "order": 1
+    }
+  ]
+}

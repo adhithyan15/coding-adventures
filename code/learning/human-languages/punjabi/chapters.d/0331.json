@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Uncles and Aunts",
+  "label": "ch:pa-a2-uncles-and-aunts",
+  "canDo": "I can name my uncles and aunts on both sides.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C331-masar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can name my uncles and aunts on both sides.",
+    "assesses": [
+      "PA-LEX-C331-UNCLE331-03",
+      "PA-LEX-C331-UNCLE331-04",
+      "PA-LEX-C331-UNCLE331-05"
+    ]
+  }
+}

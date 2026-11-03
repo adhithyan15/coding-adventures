@@ -1,0 +1,11 @@
+{
+  "id": "PA-C324-haphna",
+  "pathSegment": "PA-PATH-324-BREATH324",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-324-BREATH324",
+      "order": 2
+    }
+  ]
+}

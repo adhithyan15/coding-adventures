@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C254-sahi",
+    "language": "punjabi",
+    "chapter": 254,
+    "sequence": 15070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5441f5feb54cb1ad"
+  },
+  "findings": []
+}

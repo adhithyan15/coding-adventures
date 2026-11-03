@@ -1,0 +1,11 @@
+{
+  "id": "PA-C340-kabulna",
+  "pathSegment": "PA-PATH-340-AGREE340",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-340-AGREE340",
+      "order": 3
+    }
+  ]
+}

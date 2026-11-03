@@ -1,0 +1,11 @@
+{
+  "id": "PA-C223-next-week",
+  "pathSegment": "PA-PATH-223-A2-PLAN",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-223-A2-PLAN",
+      "order": 1
+    }
+  ]
+}

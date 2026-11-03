@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C249-balna-kindle",
+    "language": "punjabi",
+    "chapter": 249,
+    "sequence": 14230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e97e625182554457"
+  },
+  "findings": []
+}

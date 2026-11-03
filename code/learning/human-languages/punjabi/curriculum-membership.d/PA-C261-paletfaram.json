@@ -1,0 +1,11 @@
+{
+  "id": "PA-C261-paletfaram",
+  "pathSegment": "PA-PATH-261-TRAIN261",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-261-TRAIN261",
+      "order": 1
+    }
+  ]
+}

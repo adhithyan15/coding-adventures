@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C230-mokla",
+    "language": "punjabi",
+    "chapter": 230,
+    "sequence": 13250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de4b48a3863d5aa1"
+  },
+  "findings": []
+}

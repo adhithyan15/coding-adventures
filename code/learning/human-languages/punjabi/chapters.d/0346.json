@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Owning Up",
+  "label": "ch:pa-a2-owning-up",
+  "canDo": "I can admit a fault and say I am sorry.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C346-afsos",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can admit a fault and say I am sorry.",
+    "assesses": [
+      "PA-LEX-C346-SORRY346-03",
+      "PA-LEX-C346-SORRY346-04",
+      "PA-LEX-C346-SORRY346-05"
+    ]
+  }
+}

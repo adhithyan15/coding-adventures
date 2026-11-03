@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:fc1b9a2fe4de89d1",
+  "lessonIds": [
+    "PA-C347-dhol",
+    "PA-C347-vajauna",
+    "PA-C347-tal",
+    "PA-C347-thap",
+    "PA-C347-tari"
+  ],
+  "tex": "punjabi/book/chapters/ch347-the-big-drum.tex"
+}

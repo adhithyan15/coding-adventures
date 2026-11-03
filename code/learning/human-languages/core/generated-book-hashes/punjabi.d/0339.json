@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:1618b5566dcba212",
+  "lessonIds": [
+    "PA-C339-inkar",
+    "PA-C339-talna-back-out",
+    "PA-C339-bahana",
+    "PA-C339-hargiz",
+    "PA-C339-arna"
+  ],
+  "tex": "punjabi/book/chapters/ch339-no-thank-you.tex"
+}

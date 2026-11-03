@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:e6084aaeb04b457c",
+  "lessonIds": [
+    "PA-C304-khurpa",
+    "PA-C304-godna",
+    "PA-C304-pakkna",
+    "PA-C304-sitta",
+    "PA-C304-dana"
+  ],
+  "tex": "punjabi/book/chapters/ch304-weeding-and-ripening.tex"
+}

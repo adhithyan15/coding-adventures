@@ -1,0 +1,11 @@
+{
+  "id": "PA-C236-hanghalna",
+  "pathSegment": "PA-PATH-236-KAM236",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-236-KAM236",
+      "order": 1
+    }
+  ]
+}

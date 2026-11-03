@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C304-dana",
+    "language": "punjabi",
+    "chapter": 304,
+    "sequence": 18220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dcc49195d1709855"
+  },
+  "findings": []
+}

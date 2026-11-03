@@ -1,0 +1,11 @@
+{
+  "id": "PA-C271-dakkhan",
+  "pathSegment": "PA-PATH-271-COMPASS271",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-271-COMPASS271",
+      "order": 1
+    }
+  ]
+}

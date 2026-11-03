@@ -1,0 +1,11 @@
+{
+  "id": "PA-C337-zara",
+  "pathSegment": "PA-PATH-337-ASK337",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-337-ASK337",
+      "order": 3
+    }
+  ]
+}

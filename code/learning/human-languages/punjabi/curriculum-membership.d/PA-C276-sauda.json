@@ -1,0 +1,11 @@
+{
+  "id": "PA-C276-sauda",
+  "pathSegment": "PA-PATH-276-PRICE276",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-276-PRICE276",
+      "order": 3
+    }
+  ]
+}

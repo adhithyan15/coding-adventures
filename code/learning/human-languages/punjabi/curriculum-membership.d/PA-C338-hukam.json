@@ -1,0 +1,11 @@
+{
+  "id": "PA-C338-hukam",
+  "pathSegment": "PA-PATH-338-PERM338",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-338-PERM338",
+      "order": 3
+    }
+  ]
+}

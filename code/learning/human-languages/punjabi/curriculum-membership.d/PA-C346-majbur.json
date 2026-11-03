@@ -1,0 +1,11 @@
+{
+  "id": "PA-C346-majbur",
+  "pathSegment": "PA-PATH-346-SORRY346",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-346-SORRY346",
+      "order": 3
+    }
+  ]
+}

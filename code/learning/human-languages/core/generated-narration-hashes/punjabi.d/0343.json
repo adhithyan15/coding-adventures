@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:d81e49dbd8eeee4b",
+  "lessonIds": [
+    "PA-C343-ulajhna",
+    "PA-C343-ukkna",
+    "PA-C343-ishara",
+    "PA-C343-mamla",
+    "PA-C343-sabut",
+    "PA-R343-review-337-343"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch343.txt",
+  "json": "punjabi/narration/ch343.json",
+  "textHash": "fnv1a64:de9c152aa4afa4b8",
+  "jsonHash": "fnv1a64:59397dfc9781b37c",
+  "findings": []
+}

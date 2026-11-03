@@ -1,0 +1,11 @@
+{
+  "id": "PA-C336-murammat",
+  "pathSegment": "PA-PATH-336-TRADE336",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-336-TRADE336",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 279,
+  "title": "Taking Something Back",
+  "label": "ch:pa-a2-taking-something-back",
+  "canDo": "I can take back or exchange a faulty thing.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PA-C279-shikait",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 279: I can take back or exchange a faulty thing.",
+    "assesses": [
+      "PA-LEX-C279-SWAP279-03",
+      "PA-LEX-C279-SWAP279-04",
+      "PA-LEX-C279-SWAP279-05"
+    ]
+  }
+}

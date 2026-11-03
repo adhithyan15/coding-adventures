@@ -1,0 +1,11 @@
+{
+  "id": "PA-C301-vahuna",
+  "pathSegment": "PA-PATH-301-PLOUGH301",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-301-PLOUGH301",
+      "order": 3
+    }
+  ]
+}

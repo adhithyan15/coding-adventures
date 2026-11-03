@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:85c16394495bbf0e",
+  "lessonIds": [
+    "PA-C330-bharjai",
+    "PA-C330-jija",
+    "PA-C330-nanan",
+    "PA-C330-darani",
+    "PA-C330-jathani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch330.txt",
+  "json": "punjabi/narration/ch330.json",
+  "textHash": "fnv1a64:0ff24095192fdce6",
+  "jsonHash": "fnv1a64:0ec19b2cdfc83ba6",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:c40be778ec8453a7",
+  "lessonIds": [
+    "PA-C278-hisab",
+    "PA-C278-laddna",
+    "PA-C278-vikna",
+    "PA-C278-paikat",
+    "PA-C278-jorna"
+  ],
+  "tex": "punjabi/book/chapters/ch278-packets-and-accounts.tex"
+}

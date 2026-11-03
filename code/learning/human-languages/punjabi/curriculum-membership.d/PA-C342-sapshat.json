@@ -1,0 +1,11 @@
+{
+  "id": "PA-C342-sapshat",
+  "pathSegment": "PA-PATH-342-MEAN342",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-342-MEAN342",
+      "order": 3
+    }
+  ]
+}

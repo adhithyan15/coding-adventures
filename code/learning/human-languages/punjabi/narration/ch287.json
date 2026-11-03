@@ -1,0 +1,885 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 287,
+  "title": "When the Rain Comes",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6e531e6b4b68610d",
+  "lessons": [
+    {
+      "id": "PA-C287-bund",
+      "sequence": 17300,
+      "title": "ਬੂੰਦ (būnd) — a drop",
+      "headword": "ਬੂੰਦ",
+      "romanization": "būnd",
+      "gloss": "a drop",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08e4ccf130164c63",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a squall, then the Punjabi for to flash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬੂੰਦ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੂੰਦ — būnd — \"a drop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਛੱਤ ਤੋਂ ਪਾਣੀ ਦੀ ਇੱਕ ਬੂੰਦ ਡਿੱਗੀ। chhatt ton pāṇī dī ikk būnd ḍiggī. A drop of water fell from the roof."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੂੰਦ (būnd) is inherited from Sanskrit bindu, \"drop, spot\"; CDIAL lists Punjabi bund, \"drop\", under it (CDIAL 9240)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "būnd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *būnd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "būnd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *būnd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhatt ton pāṇī dī ikk būnd ḍiggī. — A drop of water fell from the roof.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhatt ton pāṇī dī ikk būnd ḍiggī.* — A drop of water fell from the roof.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a squall, then the Punjabi for to flash, then say būnd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a squall, then the Punjabi for to flash, then say *būnd* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬੂੰਦ (būnd) mean? (\"A drop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C287-bhijjna",
+      "sequence": 17310,
+      "title": "ਭਿੱਜਣਾ (bhijjṇā) — to get wet",
+      "headword": "ਭਿੱਜਣਾ",
+      "romanization": "bhijjṇā",
+      "gloss": "to get wet",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53b6aaef69d7247e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to flash, then the Punjabi for a drop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਭਿੱਜਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਿੱਜਣਾ — bhijjṇā — \"to get wet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੇ ਮੀਂਹ ਆਵੇਗਾ ਤਾਂ ਅਸੀਂ ਭਿੱਜਾਂਗੇ। je mīṁh āvegā tāṁ asīṁ bhijjāṅge. If the rain comes, we will get wet."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਮੀਂਹ ਵਿੱਚ ਭਿੱਜਿਆ, maiṁ mīṁh vich bhijjiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਿੱਜਣਾ (bhijjṇā) is inherited from a reconstructed bhiyajyatē, \"is smeared, gets wet\"; CDIAL lists Punjabi bhijjṇā, \"to get wet\", under it (CDIAL 9502)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhijjṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhijjṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhijjṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhijjṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je mīṁh āvegā tāṁ asīṁ bhijjāṅge. — If the rain comes, we will get wet.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je mīṁh āvegā tāṁ asīṁ bhijjāṅge.* — If the rain comes, we will get wet.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to flash, then the Punjabi for a drop, then say bhijjṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to flash, then the Punjabi for a drop, then say *bhijjṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਭਿੱਜਣਾ (bhijjṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਭਿੱਜਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਭਿੱਜਣਾ (bhijjṇā) mean? (\"To get wet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C287-harh",
+      "sequence": 17320,
+      "title": "ਹੜ੍ਹ (haṛh) — a flood",
+      "headword": "ਹੜ੍ਹ",
+      "romanization": "haṛh",
+      "gloss": "a flood",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10bdb42b8e9d87bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a drop, then the Punjabi for to get wet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹੜ੍ਹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੜ੍ਹ — haṛh — \"a flood\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੇ ਮੀਂਹ ਨਹੀਂ ਰੁਕੇਗਾ ਤਾਂ ਹੜ੍ਹ ਆਵੇਗਾ। je mīṁh nahīṁ rukegā tāṁ haṛh āvegā. If the rain does not stop, there will be a flood."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੜ੍ਹ (haṛh) has no settled source: CDIAL gives no Punjabi form, and the Punjabi origin remains unknown in the sources used here."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṛh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṛh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṛh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṛh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je mīṁh nahīṁ rukegā tāṁ haṛh āvegā. — If the rain does not stop, there will be a flood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je mīṁh nahīṁ rukegā tāṁ haṛh āvegā.* — If the rain does not stop, there will be a flood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a drop, then the Punjabi for to get wet, then say haṛh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a drop, then the Punjabi for to get wet, then say *haṛh* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹੜ੍ਹ (haṛh) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹੜ੍ਹ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹੜ੍ਹ (haṛh) mean? (\"A flood\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C287-tapakna",
+      "sequence": 17330,
+      "title": "ਟਪਕਣਾ (ṭapakṇā) — to drip; to leak",
+      "headword": "ਟਪਕਣਾ",
+      "romanization": "ṭapakṇā",
+      "gloss": "to drip; to leak",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d84ca751d60cd74b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to get wet, then the Punjabi for a flood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਟਪਕਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟਪਕਣਾ — ṭapakṇā — \"to drip; to leak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੀਂਹ ਵਿੱਚ ਪੁਰਾਣੀ ਛੱਤ ਟਪਕਦੀ ਹੈ। mīṁh vich purāṇī chhatt ṭapakdī hai. The old roof drips in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਛੱਤ ਟਪਕੀ, oh chhatt ṭapkī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟਪਕਣਾ (ṭapakṇā) goes back to a reconstructed ṭapp, \"drip, drop\", an imitative root; CDIAL gives no Punjabi form, but lists Hindi ṭapaknā, \"to drip\" (CDIAL 5444)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭapakṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭapakṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭapakṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭapakṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṁh vich purāṇī chhatt ṭapakdī hai. — The old roof drips in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṁh vich purāṇī chhatt ṭapakdī hai.* — The old roof drips in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to get wet, then the Punjabi for a flood, then say ṭapakṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to get wet, then the Punjabi for a flood, then say *ṭapakṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਟਪਕਣਾ (ṭapakṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਟਪਕਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਟਪਕਣਾ (ṭapakṇā) mean? (\"To drip; to leak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C287-chikkar",
+      "sequence": 17340,
+      "title": "ਚਿੱਕੜ (chikkaṛ) — mud",
+      "headword": "ਚਿੱਕੜ",
+      "romanization": "chikkaṛ",
+      "gloss": "mud",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf2b771908d9cb72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a flood, then the Punjabi for to drip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚਿੱਕੜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਿੱਕੜ — chikkaṛ — \"mud\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੀਂਹ ਤੋਂ ਬਾਅਦ ਸੜਕ ਉੱਤੇ ਚਿੱਕੜ ਹੋਵੇਗਾ। mīṁh ton bāad saṛak utte chikkaṛ hovegā. After the rain there will be mud on the road."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਿੱਕੜ (chikkaṛ) goes back to Sanskrit cikka, \"gummy matter\"; CDIAL lists Punjabi cikkaṛ, \"mud\", under it (CDIAL 4780)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what comes next."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chikkaṛ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chikkaṛ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chikkaṛ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chikkaṛ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mīṁh ton bāad saṛak utte chikkaṛ hovegā. — After the rain there will be mud on the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mīṁh ton bāad saṛak utte chikkaṛ hovegā.* — After the rain there will be mud on the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a flood, then the Punjabi for to drip, then say chikkaṛ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a flood, then the Punjabi for to drip, then say *chikkaṛ* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚਿੱਕੜ (chikkaṛ) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚਿੱਕੜ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚਿੱਕੜ (chikkaṛ) mean? (\"Mud\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R287-review-281-287",
+      "sequence": 17350,
+      "title": "Looking back: from Plans for the Holidays to When the Rain Comes",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Plans for the Holidays to When the Rain Comes",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30b3c09d8d81558d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for a plan and an intention."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a plan, an intention, advice, to put off, at once",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a plan, an intention, advice, to put off, at once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a suitcase, a bedding roll, a cloth shoulder bag, to keep safe, to come out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a suitcase, a bedding roll, a cloth shoulder bag, to keep safe, to come out]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a route, a companion, to arrive, to get stuck, to sway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a route, a companion, to arrive, to get stuck, to sway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get off, to take down, a push, last, to get to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get off, to take down, a push, last, to get to]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to return, to go in, to come to an end, to get tired, dawn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to return, to go in, to come to an end, to get tired, dawn]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a spell of steady rain, to thunder, to pour down, a squall, to flash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a spell of steady rain, to thunder, to pour down, a squall, to flash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a drop, to get wet, a flood, to drip, mud",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a drop, to get wet, a flood, to drip, mud]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A plan? (ਪ੍ਰੋਗਰਾਮ, progrām.) An intention? (ਇਰਾਦਾ, irādā.) Advice? (ਸਲਾਹ, salāh.) To put off? (ਟਾਲਣਾ, ṭālṇā.) At once? (ਤੁਰੰਤ, turant.) A suitcase? (ਅਟੈਚੀ, aṭaichī.) A bedding roll? (ਬਿਸਤਰਾ, bisatrā.) A cloth shoulder bag? (ਝੋਲਾ, jholā.) To keep safe? (ਸਾਂਭਣਾ, sāmbhṇā.) To come out? (ਨਿਕਲਣਾ, nikalṇā.) A route? (ਰਾਹ, rāh.) A companion? (ਸਾਥੀ, sāthī.) To arrive? (ਪਹੁੰਚਣਾ, pahunchṇā.) To get stuck? (ਫਸਣਾ, phasṇā.) To sway? (ਹਿੱਲਣਾ, hillṇā.) To get off? (ਉਤਰਨਾ, utarnā.) To take down? (ਉਤਾਰਨਾ, utārnā.) A push? (ਧੱਕਾ, dhakkā.) Last? (ਆਖ਼ਰੀ, ākhrī.) To get to? (ਅੱਪੜਨਾ, appaṛnā.) To return? (ਪਰਤਣਾ, paratṇā.) To go in? (ਵੜਨਾ, vaṛnā.) To come to an end? (ਮੁੱਕਣਾ, mukkṇā.) To get tired? (ਥੱਕਣਾ, thakkṇā.) Dawn? (ਪਹੁ, pahu.) A spell of steady rain? (ਝੜੀ, jhaṛī.) To thunder? (ਗੱਜਣਾ, gajjṇā.) To pour down? (ਵਰ੍ਹਨਾ, varhnā.) A squall? (ਝੱਖੜ, jhakkhaṛ.) To flash? (ਚਮਕਣਾ, chamakṇā.) A drop? (ਬੂੰਦ, būnd.) To get wet? (ਭਿੱਜਣਾ, bhijjṇā.) A flood? (ਹੜ੍ਹ, haṛh.) To drip? (ਟਪਕਣਾ, ṭapakṇā.) Mud? (ਚਿੱਕੜ, chikkaṛ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

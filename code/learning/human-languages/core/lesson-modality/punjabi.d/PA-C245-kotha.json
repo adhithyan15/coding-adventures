@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C245-kotha",
+    "language": "punjabi",
+    "chapter": 245,
+    "sequence": 14030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c31162c7177606d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 244,
+  "title": "From Pot to Plate",
+  "label": "ch:pa-a2-from-pot-to-plate",
+  "canDo": "I can talk about the last steps of making a meal.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C244-ghotna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 244: I can talk about the last steps of making a meal.",
+    "assesses": [
+      "PA-LEX-C244-KAM244-03",
+      "PA-LEX-C244-KAM244-04",
+      "PA-LEX-C244-KAM244-05"
+    ]
+  }
+}

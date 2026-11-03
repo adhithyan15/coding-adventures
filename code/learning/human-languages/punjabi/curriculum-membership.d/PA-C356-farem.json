@@ -1,0 +1,11 @@
+{
+  "id": "PA-C356-farem",
+  "pathSegment": "PA-PATH-356-PHOTO356",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-356-PHOTO356",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:363ccda845584819",
+  "lessonIds": [
+    "PA-C313-viah",
+    "PA-C313-barat",
+    "PA-C313-lara",
+    "PA-C313-vandna",
+    "PA-C313-vadhai"
+  ],
+  "tex": "punjabi/book/chapters/ch313-a-wedding-in-the-family.tex"
+}

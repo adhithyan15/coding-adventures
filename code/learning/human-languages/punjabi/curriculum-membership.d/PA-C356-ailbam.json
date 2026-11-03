@@ -1,0 +1,11 @@
+{
+  "id": "PA-C356-ailbam",
+  "pathSegment": "PA-PATH-356-PHOTO356",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-356-PHOTO356",
+      "order": 3
+    }
+  ]
+}

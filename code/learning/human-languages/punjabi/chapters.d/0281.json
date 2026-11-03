@@ -1,0 +1,19 @@
+{
+  "chapter": 281,
+  "title": "Plans for the Holidays",
+  "label": "ch:pa-a2-plans-for-the-holidays",
+  "canDo": "I can talk about a plan for the coming holidays.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C281-turant",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 281: I can talk about a plan for the coming holidays.",
+    "assesses": [
+      "PA-LEX-C281-PLAN281-03",
+      "PA-LEX-C281-PLAN281-04",
+      "PA-LEX-C281-PLAN281-05"
+    ]
+  }
+}

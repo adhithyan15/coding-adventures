@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "Slippery Paths",
+  "label": "ch:pa-a2-slippery-paths",
+  "canDo": "I can describe slippery and sticky things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C296-pighalna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can describe slippery and sticky things.",
+    "assesses": [
+      "PA-LEX-C296-SLIP296-03",
+      "PA-LEX-C296-SLIP296-04",
+      "PA-LEX-C296-SLIP296-05"
+    ]
+  }
+}

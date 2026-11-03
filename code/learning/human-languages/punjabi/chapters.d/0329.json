@@ -1,0 +1,21 @@
+{
+  "chapter": 329,
+  "title": "Parents-in-Law",
+  "label": "ch:pa-a2-parents-in-law",
+  "canDo": "I can name my in-laws and say who they are.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R329-review-323-329",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can name my in-laws and say who they are.",
+    "assesses": [
+      "PA-LEX-C329-INLAW329-01",
+      "PA-LEX-C329-INLAW329-02",
+      "PA-LEX-C329-INLAW329-03",
+      "PA-LEX-C329-INLAW329-04",
+      "PA-LEX-C329-INLAW329-05"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-223-A2-PLAN",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "PA-EXT-223-A2-PLAN"
+  ],
+  "after": []
+}

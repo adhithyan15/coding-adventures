@@ -1,0 +1,11 @@
+{
+  "id": "PA-C360-ank",
+  "pathSegment": "PA-PATH-360-EXAM360",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-360-EXAM360",
+      "order": 2
+    }
+  ]
+}

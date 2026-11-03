@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "At the Clinic",
+  "label": "ch:pa-a2-at-the-clinic",
+  "canDo": "I can tell a doctor what is wrong and follow what happens.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C320-tika",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can tell a doctor what is wrong and follow what happens.",
+    "assesses": [
+      "PA-LEX-C320-CLINIC320-03",
+      "PA-LEX-C320-CLINIC320-04",
+      "PA-LEX-C320-CLINIC320-05"
+    ]
+  }
+}

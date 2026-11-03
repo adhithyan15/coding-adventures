@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C229-gandh",
+    "language": "punjabi",
+    "chapter": 229,
+    "sequence": 13200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3032e9d42132dcf"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C277-parakhna",
+  "pathSegment": "PA-PATH-277-CHOOSE277",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-277-CHOOSE277",
+      "order": 2
+    }
+  ]
+}

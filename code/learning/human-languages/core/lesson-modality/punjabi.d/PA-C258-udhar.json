@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C258-udhar",
+    "language": "punjabi",
+    "chapter": 258,
+    "sequence": 15250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32be771a8e88b1f7"
+  },
+  "findings": []
+}

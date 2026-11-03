@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 238,
+  "sourceHash": "fnv1a64:c466a824c75435cd",
+  "lessonIds": [
+    "PA-C238-ata",
+    "PA-C238-parat",
+    "PA-C238-gunnhna",
+    "PA-C238-pera",
+    "PA-C238-velna",
+    "PA-R238-review-232-238"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch238.txt",
+  "json": "punjabi/narration/ch238.json",
+  "textHash": "fnv1a64:27a6e904892756b0",
+  "jsonHash": "fnv1a64:bdf38d5764715cff",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Aching and Out of Breath",
+  "label": "ch:pa-a2-aching-and-out-of-breath",
+  "canDo": "I can say that I am out of breath and where it hurts.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C324-chakkar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can say that I am out of breath and where it hurts.",
+    "assesses": [
+      "PA-LEX-C324-BREATH324-03",
+      "PA-LEX-C324-BREATH324-04",
+      "PA-LEX-C324-BREATH324-05"
+    ]
+  }
+}

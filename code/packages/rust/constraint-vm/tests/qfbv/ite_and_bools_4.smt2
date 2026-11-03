@@ -1,0 +1,13 @@
+; expect: sat unsat
+(set-logic QF_BV)
+(declare-const p Bool)
+(declare-const q Bool)
+(declare-const x (_ BitVec 4))
+(push 1)
+(assert (= (ite p x (bvnot x)) #b1010))
+(assert (not p))
+(assert (=> q p))
+(check-sat)
+(pop 1)
+(assert (and q (not q)))
+(check-sat)

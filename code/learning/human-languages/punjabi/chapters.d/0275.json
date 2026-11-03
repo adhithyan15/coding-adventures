@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Too Loose, Too Tight",
+  "label": "ch:pa-a2-too-loose-too-tight",
+  "canDo": "I can say whether clothes fit me.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PA-C275-thaila",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can say whether clothes fit me.",
+    "assesses": [
+      "PA-LEX-C275-FIT275-03",
+      "PA-LEX-C275-FIT275-04",
+      "PA-LEX-C275-FIT275-05"
+    ]
+  }
+}

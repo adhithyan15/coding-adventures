@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:d1ceb76147176d30",
+  "lessonIds": [
+    "PA-C312-mulakat",
+    "PA-C312-saddna",
+    "PA-C312-kharkauna",
+    "PA-C312-mezban",
+    "PA-C312-tohfa"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch312.txt",
+  "json": "punjabi/narration/ch312.json",
+  "textHash": "fnv1a64:de80914fc4173f78",
+  "jsonHash": "fnv1a64:b6b2641dfc081b94",
+  "findings": []
+}

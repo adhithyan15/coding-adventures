@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C360-pepar",
+    "language": "punjabi",
+    "chapter": 360,
+    "sequence": 22190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4560f158a3dc5f53"
+  },
+  "findings": []
+}

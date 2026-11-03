@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C356-kaimra",
+    "language": "punjabi",
+    "chapter": 356,
+    "sequence": 21970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9e36b3013fa58798"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C240-sil",
+    "language": "punjabi",
+    "chapter": 240,
+    "sequence": 13770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d2b13cf75a4e9fca"
+  },
+  "findings": []
+}

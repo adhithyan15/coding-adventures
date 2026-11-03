@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:3b9a1b74af5cc627",
+  "lessonIds": [
+    "PA-C224-message-return",
+    "PA-C224-message",
+    "PA-C224-message-questions",
+    "PA-R224-first-pass-saying-no-and-asking",
+    "PA-R224-second-pass-past-and-future"
+  ],
+  "tex": "punjabi/book/chapters/ch224-a-message-about-tomorrow.tex"
+}

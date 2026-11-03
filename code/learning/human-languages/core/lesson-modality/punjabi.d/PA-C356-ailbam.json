@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C356-ailbam",
+    "language": "punjabi",
+    "chapter": 356,
+    "sequence": 22000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:188d0b472927d5ee"
+  },
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 240,
+  "sourceHash": "fnv1a64:da7a66ddf86799ea",
+  "lessonIds": [
+    "PA-C240-sil",
+    "PA-C240-pihna",
+    "PA-C240-ukkhli",
+    "PA-C240-mohla",
+    "PA-C240-kuttna"
+  ],
+  "tex": "punjabi/book/chapters/ch240-grinding-and-pounding.tex"
+}

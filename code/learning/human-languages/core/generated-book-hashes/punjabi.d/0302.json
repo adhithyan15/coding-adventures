@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:165f26903ada2abc",
+  "lessonIds": [
+    "PA-C302-kiari",
+    "PA-C302-ruri",
+    "PA-C302-khilarna",
+    "PA-C302-uggna",
+    "PA-C302-sarhom"
+  ],
+  "tex": "punjabi/book/chapters/ch302-sowing-time.tex"
+}

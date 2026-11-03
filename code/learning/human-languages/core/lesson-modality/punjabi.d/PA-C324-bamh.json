@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C324-bamh",
+    "language": "punjabi",
+    "chapter": 324,
+    "sequence": 19770,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:85c30ad73b61ab1c"
+  },
+  "findings": []
+}

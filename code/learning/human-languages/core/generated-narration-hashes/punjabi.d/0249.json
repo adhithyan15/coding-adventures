@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:9888cc600040a0f1",
+  "lessonIds": [
+    "PA-C249-balna-kindle",
+    "PA-C249-phukna",
+    "PA-C249-dhumam",
+    "PA-C249-kola",
+    "PA-C249-angiar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch249.txt",
+  "json": "punjabi/narration/ch249.json",
+  "textHash": "fnv1a64:3eb2181f6ea8ff2f",
+  "jsonHash": "fnv1a64:e5d220c5b7dc0130",
+  "findings": []
+}

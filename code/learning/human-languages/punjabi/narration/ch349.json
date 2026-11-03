@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 349,
+  "title": "Singers and Songs",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1eeaae2ddd52a4c3",
+  "lessons": [
+    {
+      "id": "PA-C349-gaik",
+      "sequence": 21610,
+      "title": "ਗਾਇਕ (gāik) — a singer",
+      "headword": "ਗਾਇਕ",
+      "romanization": "gāik",
+      "gloss": "a singer",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60792c5aa9c93da6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for music practice, then the Punjabi for to echo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗਾਇਕ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਾਇਕ — gāik — \"a singer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਹ ਗਾਇਕ ਬਹੁਤ ਮਿੱਠਾ ਗਾਉਂਦਾ ਹੈ। oh gāik bahut miṭṭhā gāundā hai. That singer sings very sweetly."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਾਇਕ (gāik) is taken over from Sanskrit gāyaka, \"a singer\", a tatsama (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāik",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāik*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāik, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāik*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oh gāik bahut miṭṭhā gāundā hai. — That singer sings very sweetly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oh gāik bahut miṭṭhā gāundā hai.* — That singer sings very sweetly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for music practice, then the Punjabi for to echo, then say gāik again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for music practice, then the Punjabi for to echo, then say *gāik* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗਾਇਕ (gāik) mean? (\"A singer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C349-vanjhli",
+      "sequence": 21620,
+      "title": "ਵੰਝਲੀ (vanjhlī) — a flute; a simple pipe",
+      "headword": "ਵੰਝਲੀ",
+      "romanization": "vanjhlī",
+      "gloss": "a flute; a simple pipe",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82d11c1a44dd7cb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to echo, then the Punjabi for a singer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵੰਝਲੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੰਝਲੀ — vanjhlī — \"a flute; a simple pipe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਨੂੰ ਵੰਝਲੀ ਦੀ ਧੁਨ ਪਸੰਦ ਹੈ। mainū̃ vanjhlī dī dhun pasand hai. I like the tune of the flute."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੰਝਲੀ (vanjhlī) is inherited from Sanskrit vaṁśī, \"flute, pipe\"; CDIAL lists Punjabi vañjhlī, \"pipe, flute\", under it (CDIAL 11180)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vanjhlī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vanjhlī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vanjhlī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vanjhlī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mainū̃ vanjhlī dī dhun pasand hai. — I like the tune of the flute.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mainū̃ vanjhlī dī dhun pasand hai.* — I like the tune of the flute.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to echo, then the Punjabi for a singer, then say vanjhlī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to echo, then the Punjabi for a singer, then say *vanjhlī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵੰਝਲੀ (vanjhlī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵੰਝਲੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵੰਝਲੀ (vanjhlī) mean? (\"A flute; a simple pipe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C349-vaja",
+      "sequence": 21630,
+      "title": "ਵਾਜਾ (vājā) — a harmonium; a musical instrument",
+      "headword": "ਵਾਜਾ",
+      "romanization": "vājā",
+      "gloss": "a harmonium; a musical instrument",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8d86768642f2c39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a singer, then the Punjabi for a flute."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵਾਜਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਾਜਾ — vājā — \"a harmonium; a musical instrument\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਦਾਦਾ ਵਾਜਾ ਵਜਾਉਂਦਾ ਹੈ ਅਤੇ ਗਾਉਂਦਾ ਹੈ। merā dādā vājā vajāundā hai ate gāundā hai. My grandfather plays the harmonium and sings."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਾਜਾ (vājā) is inherited from Sanskrit vādya, \"musical instrument\"; CDIAL lists Punjabi vājjā, \"musical instrument\", under it (CDIAL 11511). CDIAL does not give the narrower sense \"harmonium\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vājā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vājā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vājā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vājā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā dādā vājā vajāundā hai ate gāundā hai. — My grandfather plays the harmonium and sings.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā dādā vājā vajāundā hai ate gāundā hai.* — My grandfather plays the harmonium and sings.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a singer, then the Punjabi for a flute, then say vājā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a singer, then the Punjabi for a flute, then say *vājā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵਾਜਾ (vājā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵਾਜਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵਾਜਾ (vājā) mean? (\"A harmonium; a musical instrument\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C349-kavita",
+      "sequence": 21640,
+      "title": "ਕਵਿਤਾ (kavitā) — a poem; poetry",
+      "headword": "ਕਵਿਤਾ",
+      "romanization": "kavitā",
+      "gloss": "a poem; poetry",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79690f3751bc5b72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a flute, then the Punjabi for a harmonium."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਵਿਤਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਵਿਤਾ — kavitā — \"a poem; poetry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੀ ਭੈਣ ਹਰ ਹਫ਼ਤੇ ਇੱਕ ਕਵਿਤਾ ਲਿਖਦੀ ਹੈ। merī bhaiṇ har hafte ikk kavitā likhdī hai. My sister writes a poem every week."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਵਿਤਾ (kavitā) is taken over from Sanskrit kavitā, \"a poem\", a tatsama (Monier-Williams)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavitā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavitā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kavitā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kavitā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī bhaiṇ har hafte ikk kavitā likhdī hai. — My sister writes a poem every week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī bhaiṇ har hafte ikk kavitā likhdī hai.* — My sister writes a poem every week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a flute, then the Punjabi for a harmonium, then say kavitā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a flute, then the Punjabi for a harmonium, then say *kavitā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਵਿਤਾ (kavitā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਵਿਤਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਵਿਤਾ (kavitā) mean? (\"A poem; poetry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C349-sarahuna",
+      "sequence": 21650,
+      "title": "ਸਰਾਹੁਣਾ (sarāhuṇā) — to praise",
+      "headword": "ਸਰਾਹੁਣਾ",
+      "romanization": "sarāhuṇā",
+      "gloss": "to praise",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf0ba95d0dda35a8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a harmonium, then the Punjabi for a poem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸਰਾਹੁਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਰਾਹੁਣਾ — sarāhuṇā — \"to praise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਲੋਕ ਉਸ ਗਾਇਕ ਨੂੰ ਬਹੁਤ ਸਰਾਹੁੰਦੇ ਹਨ। lok us gāik nū̃ bahut sarāhunde han. People praise that singer a great deal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਉਸ ਦੀ ਕਵਿਤਾ ਸਰਾਹੀ, maiṁ us dī kavitā sarāhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਰਾਹੁਣਾ (sarāhuṇā) is inherited from Sanskrit ślāghate, \"praises\"; CDIAL lists Punjabi sarāhuṇā, \"praises\", under it (CDIAL 12734)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarāhuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarāhuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarāhuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarāhuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lok us gāik nū̃ bahut sarāhunde han. — People praise that singer a great deal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lok us gāik nū̃ bahut sarāhunde han.* — People praise that singer a great deal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a harmonium, then the Punjabi for a poem, then say sarāhuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a harmonium, then the Punjabi for a poem, then say *sarāhuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸਰਾਹੁਣਾ (sarāhuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸਰਾਹੁਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸਰਾਹੁਣਾ (sarāhuṇā) mean? (\"To praise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

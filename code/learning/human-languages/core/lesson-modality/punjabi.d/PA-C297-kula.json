@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C297-kula",
+    "language": "punjabi",
+    "chapter": 297,
+    "sequence": 17840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f204a1531203797f"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C266-imarat",
+  "pathSegment": "PA-PATH-266-TOWN266",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-266-TOWN266",
+      "order": 4
+    }
+  ]
+}

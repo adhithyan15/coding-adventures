@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-310-SLIP310",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how someone slipped and what broke.",
+  "prerequisites": []
+}

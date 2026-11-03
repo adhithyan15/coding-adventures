@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "The Big Drum",
+  "label": "ch:pa-a2-the-big-drum",
+  "canDo": "I can say that I like the drum and its beat.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-C347-tari",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can say that I like the drum and its beat.",
+    "assesses": [
+      "PA-LEX-C347-DRUM347-03",
+      "PA-LEX-C347-DRUM347-04",
+      "PA-LEX-C347-DRUM347-05"
+    ]
+  }
+}

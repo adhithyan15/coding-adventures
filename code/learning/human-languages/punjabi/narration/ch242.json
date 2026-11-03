@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 242,
+  "title": "Frying and Roasting",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:896a8bf3947e14ec",
+  "lessons": [
+    {
+      "id": "PA-C242-talna",
+      "sequence": 13870,
+      "title": "ਤਲਣਾ (talṇā) — to fry",
+      "headword": "ਤਲਣਾ",
+      "romanization": "talṇā",
+      "gloss": "to fry",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a55f4e037756bb6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a chilli, then the Punjabi for gram flour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਲਣਾ — talṇā — \"to fry\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਪਕੌੜੇ ਤੇਲ ਵਿੱਚ ਤਲਦੀ ਹਾਂ। maiṁ pakauṛe tel vich taldī hāṁ. I fry the pakoras in oil."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਪਕੌੜੇ ਤਲੇ, maiṁ pakauṛe tale."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਲਣਾ (talṇā) is inherited from a reconstructed talati, \"fries\"; CDIAL lists Punjabi talṇā, \"to fry, cook in ghee\" (CDIAL 5736)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "talṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *talṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ pakauṛe tel vich taldī hāṁ. — I fry the pakoras in oil.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ pakauṛe tel vich taldī hāṁ.* — I fry the pakoras in oil.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a chilli, then the Punjabi for gram flour, then say talṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a chilli, then the Punjabi for gram flour, then say *talṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਲਣਾ (talṇā) mean? (\"To fry\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C242-bhunnna",
+      "sequence": 13880,
+      "title": "ਭੁੰਨਣਾ (bhunnṇā) — to roast; to parch",
+      "headword": "ਭੁੰਨਣਾ",
+      "romanization": "bhunnṇā",
+      "gloss": "to roast; to parch",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2e7ba28a8e62ac8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for gram flour, then the Punjabi for to fry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਭੁੰਨਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭੁੰਨਣਾ — bhunnṇā — \"to roast; to parch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਰਦੀ ਵਿੱਚ ਅਸੀਂ ਮੂੰਗਫਲੀ ਭੁੰਨਦੇ ਹਾਂ। sardī vich asīṁ mū̃gphalī bhunnde hāṁ. In winter we roast peanuts."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਮੱਕੀ ਭੁੰਨੀ, maiṁ makkī bhunnī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭੁੰਨਣਾ (bhunnṇā) is inherited from a reconstructed bhṛgṇa, \"fried, roasted\"; CDIAL lists Punjabi bhunnaṇā, \"to parch, fry\" (CDIAL 9577)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhunnṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhunnṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhunnṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhunnṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sardī vich asīṁ mū̃gphalī bhunnde hāṁ. — In winter we roast peanuts.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sardī vich asīṁ mū̃gphalī bhunnde hāṁ.* — In winter we roast peanuts.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for gram flour, then the Punjabi for to fry, then say bhunnṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for gram flour, then the Punjabi for to fry, then say *bhunnṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਭੁੰਨਣਾ (bhunnṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਭੁੰਨਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਭੁੰਨਣਾ (bhunnṇā) mean? (\"To roast; to parch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C242-karchhi",
+      "sequence": 13890,
+      "title": "ਕੜਛੀ (kaṛchhī) — a ladle",
+      "headword": "ਕੜਛੀ",
+      "romanization": "kaṛchhī",
+      "gloss": "a ladle",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c94d8f5577c2cb64",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to fry, then the Punjabi for to roast."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕੜਛੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੜਛੀ — kaṛchhī — \"a ladle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੜਛੀ ਪਤੀਲੇ ਵਿੱਚ ਹੈ। kaṛchhī patīle vich hai. The ladle is in the cooking pot."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੜਛੀ (kaṛchhī) is inherited from a reconstructed kaṭacchu, \"ladle\"; CDIAL lists Punjabi kaṛchī, \"iron ladle\" (CDIAL 2633)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṛchhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṛchhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṛchhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṛchhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṛchhī patīle vich hai. — The ladle is in the cooking pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṛchhī patīle vich hai.* — The ladle is in the cooking pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to fry, then the Punjabi for to roast, then say kaṛchhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to fry, then the Punjabi for to roast, then say *kaṛchhī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕੜਛੀ (kaṛchhī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕੜਛੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕੜਛੀ (kaṛchhī) mean? (\"A ladle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C242-chhirakna",
+      "sequence": 13900,
+      "title": "ਛਿੜਕਣਾ (chhiṛakṇā) — to sprinkle",
+      "headword": "ਛਿੜਕਣਾ",
+      "romanization": "chhiṛakṇā",
+      "gloss": "to sprinkle",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a91c19381a1254b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to roast, then the Punjabi for a ladle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਛਿੜਕਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛਿੜਕਣਾ — chhiṛakṇā — \"to sprinkle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਸਬਜ਼ੀ ਉੱਤੇ ਲੂਣ ਛਿੜਕਦੀ ਹਾਂ। maiṁ sabzī utte lūṇ chhiṛakdī hāṁ. I sprinkle salt on the vegetables."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਲੂਣ ਛਿੜਕਿਆ, maiṁ lūṇ chhiṛkiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛਿੜਕਣਾ (chhiṛakṇā) is inherited from a reconstructed chiṭ, \"sudden movement, splash, scatter\"; CDIAL lists Punjabi chiṛkaṇā, \"to sprinkle\" (CDIAL 5035)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhiṛakṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhiṛakṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhiṛakṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhiṛakṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ sabzī utte lūṇ chhiṛakdī hāṁ. — I sprinkle salt on the vegetables.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ sabzī utte lūṇ chhiṛakdī hāṁ.* — I sprinkle salt on the vegetables.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to roast, then the Punjabi for a ladle, then say chhiṛakṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to roast, then the Punjabi for a ladle, then say *chhiṛakṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਛਿੜਕਣਾ (chhiṛakṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਛਿੜਕਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਛਿੜਕਣਾ (chhiṛakṇā) mean? (\"To sprinkle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C242-sarna",
+      "sequence": 13910,
+      "title": "ਸੜਨਾ (saṛnā) — to get burnt",
+      "headword": "ਸੜਨਾ",
+      "romanization": "saṛnā",
+      "gloss": "to get burnt",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce061195185d8f01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a ladle, then the Punjabi for to sprinkle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸੜਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੜਨਾ — saṛnā — \"to get burnt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੇ ਤਵਾ ਬਹੁਤ ਗਰਮ ਹੈ ਤਾਂ ਰੋਟੀ ਸੜਦੀ ਹੈ। je tavā bahut garam hai tāṁ roṭī saṛdī hai. If the griddle is too hot, the roti burns."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਰੋਟੀ ਸੜੀ, oh roṭī saṛī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੜਨਾ (saṛnā) is inherited from Sanskrit śaṭati, \"disintegrates\"; CDIAL lists Punjabi saṛnā, \"to rot, be burnt\" (CDIAL 12268)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je tavā bahut garam hai tāṁ roṭī saṛdī hai. — If the griddle is too hot, the roti burns.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je tavā bahut garam hai tāṁ roṭī saṛdī hai.* — If the griddle is too hot, the roti burns.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a ladle, then the Punjabi for to sprinkle, then say saṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a ladle, then the Punjabi for to sprinkle, then say *saṛnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸੜਨਾ (saṛnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸੜਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸੜਨਾ (saṛnā) mean? (\"To get burnt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 312,
+  "title": "Visitors at the Door",
+  "label": "ch:pa-a2-visitors-at-the-door",
+  "canDo": "I can say who came to visit and when.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C312-tohfa",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can say who came to visit and when.",
+    "assesses": [
+      "PA-LEX-C312-VISIT312-03",
+      "PA-LEX-C312-VISIT312-04",
+      "PA-LEX-C312-VISIT312-05"
+    ]
+  }
+}

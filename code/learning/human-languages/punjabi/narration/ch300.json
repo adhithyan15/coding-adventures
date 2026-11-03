@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 300,
+  "title": "Crops of the Year",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:23a7dc3b485b7201",
+  "lessons": [
+    {
+      "id": "PA-C300-fasal",
+      "sequence": 17970,
+      "title": "ਫ਼ਸਲ (fasal) — a crop; a harvest",
+      "headword": "ਫ਼ਸਲ",
+      "romanization": "fasal",
+      "gloss": "a crop; a harvest",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c3a41121adea2f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for brackish, then the Punjabi for beautiful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਫ਼ਸਲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫ਼ਸਲ — fasal — \"a crop; a harvest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਗਲੇ ਸਾਲ ਫ਼ਸਲ ਚੰਗੀ ਹੋਵੇਗੀ। agle sāl fasal chaṅgī hovegī. Next year the crop will be good."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫ਼ਸਲ (fasal) is a loan, usually traced through Persian to Arabic fasl, \"season\"; its sense here, \"crop\", is a shift from that."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fasal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fasal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fasal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fasal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "agle sāl fasal chaṅgī hovegī. — Next year the crop will be good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *agle sāl fasal chaṅgī hovegī.* — Next year the crop will be good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for brackish, then the Punjabi for beautiful, then say fasal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for brackish, then the Punjabi for beautiful, then say *fasal* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਫ਼ਸਲ (fasal) mean? (\"A crop; a harvest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C300-harhi",
+      "sequence": 17980,
+      "title": "ਹਾੜ੍ਹੀ (hāṛhī) — the spring harvest; the winter-sown crop",
+      "headword": "ਹਾੜ੍ਹੀ",
+      "romanization": "hāṛhī",
+      "gloss": "the spring harvest; the winter-sown crop",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61fa82eccc531c83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for beautiful, then the Punjabi for a crop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹਾੜ੍ਹੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਾੜ੍ਹੀ — hāṛhī — \"the spring harvest; the winter-sown crop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਣਕ ਹਾੜ੍ਹੀ ਦੀ ਫ਼ਸਲ ਹੈ। kaṇak hāṛhī dī fasal hai. Wheat is a crop of the spring harvest."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਾੜ੍ਹੀ (hāṛhī) is inherited from Sanskrit āṣāḍhīya, \"pertaining to the month Āṣāḍha\", the month you know as ਹਾੜ; CDIAL lists Punjabi hāṛhī and hāṛī, \"crops sown in winter\", under it (CDIAL 1474)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāṛhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāṛhī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hāṛhī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hāṛhī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṇak hāṛhī dī fasal hai. — Wheat is a crop of the spring harvest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṇak hāṛhī dī fasal hai.* — Wheat is a crop of the spring harvest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for beautiful, then the Punjabi for a crop, then say hāṛhī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for beautiful, then the Punjabi for a crop, then say *hāṛhī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹਾੜ੍ਹੀ (hāṛhī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹਾੜ੍ਹੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹਾੜ੍ਹੀ (hāṛhī) mean? (\"The spring harvest; the winter-sown crop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C300-sauni",
+      "sequence": 17990,
+      "title": "ਸਾਉਣੀ (sāuṇī) — the autumn harvest; the monsoon-sown crop",
+      "headword": "ਸਾਉਣੀ",
+      "romanization": "sāuṇī",
+      "gloss": "the autumn harvest; the monsoon-sown crop",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e0e5e9a04786fd9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a crop, then the Punjabi for the spring harvest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸਾਉਣੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਾਉਣੀ — sāuṇī — \"the autumn harvest; the monsoon-sown crop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੱਕੀ ਸਾਉਣੀ ਦੀ ਫ਼ਸਲ ਹੈ। makkī sāuṇī dī fasal hai. Maize is a crop of the autumn harvest."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਾਉਣੀ (sāuṇī) is inherited from Sanskrit śrāvaṇika, \"relating to the month Śrāvaṇa\"; CDIAL lists Punjabi sāuṇī, \"the autumn crop\", under it (CDIAL 12700)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāuṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāuṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāuṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāuṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "makkī sāuṇī dī fasal hai. — Maize is a crop of the autumn harvest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *makkī sāuṇī dī fasal hai.* — Maize is a crop of the autumn harvest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a crop, then the Punjabi for the spring harvest, then say sāuṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a crop, then the Punjabi for the spring harvest, then say *sāuṇī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸਾਉਣੀ (sāuṇī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸਾਉਣੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸਾਉਣੀ (sāuṇī) mean? (\"The autumn harvest; the monsoon-sown crop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C300-kapah",
+      "sequence": 18000,
+      "title": "ਕਪਾਹ (kapāh) — raw cotton; the cotton plant",
+      "headword": "ਕਪਾਹ",
+      "romanization": "kapāh",
+      "gloss": "raw cotton; the cotton plant",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:420c60afb8c20729",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for the spring harvest, then the Punjabi for the autumn harvest."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਪਾਹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਪਾਹ — kapāh — \"raw cotton; the cotton plant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਾਡੇ ਖੇਤ ਵਿੱਚ ਕਪਾਹ ਹੈ। sāḍe khet vich kapāh hai. There is cotton in our field."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਪਾਹ (kapāh) is inherited from Sanskrit karpāsa, \"the cotton plant\"; CDIAL lists Punjabi kapāh, \"cotton plant, raw cotton\", under it (CDIAL 2877)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kapāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kapāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḍe khet vich kapāh hai. — There is cotton in our field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḍe khet vich kapāh hai.* — There is cotton in our field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for the spring harvest, then the Punjabi for the autumn harvest, then say kapāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for the spring harvest, then the Punjabi for the autumn harvest, then say *kapāh* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਪਾਹ (kapāh) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਪਾਹ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਪਾਹ (kapāh) mean? (\"Raw cotton; the cotton plant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C300-ganna",
+      "sequence": 18010,
+      "title": "ਗੰਨਾ (gannā) — sugar cane",
+      "headword": "ਗੰਨਾ",
+      "romanization": "gannā",
+      "gloss": "sugar cane",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:853e2468197a1484",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for the autumn harvest, then the Punjabi for raw cotton."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗੰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੰਨਾ — gannā — \"sugar cane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਸੀਂ ਗੰਨੇ ਤੋਂ ਗੁੜ ਬਣਾਉਂਦੇ ਹਾਂ। asīṁ ganne ton guṛ baṇāunde hāṁ. We make jaggery from sugar cane."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੰਨਾ (gannā) is inherited from Sanskrit gaṇḍa, \"joint of plant\"; CDIAL lists Punjabi gannā, \"sugarcane\", under it (CDIAL 3998)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gannā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gannā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gannā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gannā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asīṁ ganne ton guṛ baṇāunde hāṁ. — We make jaggery from sugar cane.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asīṁ ganne ton guṛ baṇāunde hāṁ.* — We make jaggery from sugar cane.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for the autumn harvest, then the Punjabi for raw cotton, then say gannā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for the autumn harvest, then the Punjabi for raw cotton, then say *gannā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗੰਨਾ (gannā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗੰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗੰਨਾ (gannā) mean? (\"Sugar cane\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

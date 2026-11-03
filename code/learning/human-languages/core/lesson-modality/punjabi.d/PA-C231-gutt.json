@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C231-gutt",
+    "language": "punjabi",
+    "chapter": 231,
+    "sequence": 13320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e82c5d285695ab58"
+  },
+  "findings": []
+}

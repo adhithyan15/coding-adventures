@@ -1,0 +1,18 @@
+{
+  "chapter": 216,
+  "title": "Where Did They Go?",
+  "label": "ch:pa-a2-gia",
+  "canDo": "I can say where someone went, yesterday or earlier, with gia, gai or gae agreeing with them.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C216-payoff",
+    "kind": "production",
+    "summary": "Say who went where, with gia for a man, gai for a woman and gae for a group, and use kall for yesterday.",
+    "assesses": [
+      "PA-GRAMMAR-PAST-GIA-216",
+      "PA-LEX-KALL-216"
+    ]
+  }
+}

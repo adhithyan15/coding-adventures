@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 250,
+  "sourceHash": "fnv1a64:9a07775f32a47f55",
+  "lessonIds": [
+    "PA-C250-handi",
+    "PA-C250-karaha",
+    "PA-C250-garva",
+    "PA-C250-gagar",
+    "PA-C250-pittal"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch250.txt",
+  "json": "punjabi/narration/ch250.json",
+  "textHash": "fnv1a64:a544c446602ac7d2",
+  "jsonHash": "fnv1a64:e0f56cb50d7f1228",
+  "findings": []
+}

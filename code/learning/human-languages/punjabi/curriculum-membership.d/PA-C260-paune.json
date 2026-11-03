@@ -1,0 +1,11 @@
+{
+  "id": "PA-C260-paune",
+  "pathSegment": "PA-PATH-260-TIME260",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-260-TIME260",
+      "order": 2
+    }
+  ]
+}

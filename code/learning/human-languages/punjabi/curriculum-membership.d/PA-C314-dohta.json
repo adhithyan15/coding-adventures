@@ -1,0 +1,11 @@
+{
+  "id": "PA-C314-dohta",
+  "pathSegment": "PA-PATH-314-BABY314",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-314-BABY314",
+      "order": 4
+    }
+  ]
+}

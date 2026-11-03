@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 213,
+  "sourceHash": "fnv1a64:cbcbaf30fe7d5ee5",
+  "lessonIds": [
+    "PA-C213-request-return",
+    "PA-C213-baitho",
+    "PA-C213-baitho-review",
+    "PA-C213-na-utthho",
+    "PA-C213-aje",
+    "PA-C213-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch213-please-don-t-get-up.tex"
+}

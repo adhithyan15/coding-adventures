@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 333,
+  "title": "The Barber and the Washerman",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0829aee05bdbaf80",
+  "lessons": [
+    {
+      "id": "PA-C333-nai",
+      "sequence": 20230,
+      "title": "ਨਾਈ (nāī) — a barber",
+      "headword": "ਨਾਈ",
+      "romanization": "nāī",
+      "gloss": "a barber",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c9a9888e02cb9aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a woman's female friend, then the Punjabi for to call out to someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਨਾਈ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਾਈ — nāī — \"a barber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਾਈ ਹਰ ਸਵੇਰ ਆਪਣੀ ਦੁਕਾਨ ਖੋਲ੍ਹਦਾ ਹੈ। nāī har saver āpṇī dukān kholhdā hai. The barber opens his shop every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਾਈ (nāī) is inherited from Sanskrit nāpita, \"a barber\"; CDIAL lists Punjabi nāī, \"barber\", under it (CDIAL 13792)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāī har saver āpṇī dukān kholhdā hai. — The barber opens his shop every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāī har saver āpṇī dukān kholhdā hai.* — The barber opens his shop every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a woman's female friend, then the Punjabi for to call out to someone, then say nāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a woman's female friend, then the Punjabi for to call out to someone, then say *nāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਨਾਈ (nāī) mean? (\"A barber\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C333-munnna",
+      "sequence": 20240,
+      "title": "ਮੁੰਨਣਾ (munnṇā) — to shave",
+      "headword": "ਮੁੰਨਣਾ",
+      "romanization": "munnṇā",
+      "gloss": "to shave",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:80a79248efacbdee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to call out to someone, then the Punjabi for a barber."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮੁੰਨਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੁੰਨਣਾ — munnṇā — \"to shave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਨਾਈ ਸਵੇਰੇ ਲੋਕਾਂ ਦੀ ਦਾੜ੍ਹੀ ਮੁੰਨਦਾ ਹੈ। nāī savere lokāṁ dī dāṛhī munndā hai. The barber shaves people's beards in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਆਪਣੀ ਦਾੜ੍ਹੀ ਮੁੰਨੀ, maiṁ āpṇī dāṛhī munnī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੁੰਨਣਾ (munnṇā) is inherited from Sanskrit muṇḍayati, \"shaves\"; CDIAL lists Punjabi munnanā, \"shaves\", under it (CDIAL 10194)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munnṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munnṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "munnṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *munnṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāī savere lokāṁ dī dāṛhī munndā hai. — The barber shaves people's beards in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāī savere lokāṁ dī dāṛhī munndā hai.* — The barber shaves people's beards in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to call out to someone, then the Punjabi for a barber, then say munnṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to call out to someone, then the Punjabi for a barber, then say *munnṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮੁੰਨਣਾ (munnṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮੁੰਨਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮੁੰਨਣਾ (munnṇā) mean? (\"To shave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C333-dhobi",
+      "sequence": 20250,
+      "title": "ਧੋਬੀ (dhobī) — a washerman",
+      "headword": "ਧੋਬੀ",
+      "romanization": "dhobī",
+      "gloss": "a washerman",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0129fa8ac2f5ccaf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a barber, then the Punjabi for to shave."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਧੋਬੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਧੋਬੀ — dhobī — \"a washerman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਧੋਬੀ ਹਰ ਹਫ਼ਤੇ ਸਾਡੇ ਕੱਪੜੇ ਧੋਂਦਾ ਹੈ। dhobī har hafte sāḍe kappṛe dhondā hai. The washerman washes our clothes every week."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਧੋਬੀ (dhobī) goes back to a reconstructed dhauvati, \"washes\", as a word taken from Hindi: CDIAL lists Punjabi dhobī under it among the forms that spread from Hindi dhobī, \"washerman\" (CDIAL 6886)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhobī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhobī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhobī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhobī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhobī har hafte sāḍe kappṛe dhondā hai. — The washerman washes our clothes every week.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhobī har hafte sāḍe kappṛe dhondā hai.* — The washerman washes our clothes every week.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a barber, then the Punjabi for to shave, then say dhobī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a barber, then the Punjabi for to shave, then say *dhobī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਧੋਬੀ (dhobī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਧੋਬੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਧੋਬੀ (dhobī) mean? (\"A washerman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C333-mochi",
+      "sequence": 20260,
+      "title": "ਮੋਚੀ (mochī) — a cobbler",
+      "headword": "ਮੋਚੀ",
+      "romanization": "mochī",
+      "gloss": "a cobbler",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:04cab2e7e3c1bf82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to shave, then the Punjabi for a washerman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮੋਚੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੋਚੀ — mochī — \"a cobbler\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੋਚੀ ਬਾਜ਼ਾਰ ਵਿੱਚ ਜੁੱਤੀਆਂ ਸਿਉਂਦਾ ਹੈ। mochī bāzār vich juttīāṁ siundā hai. The cobbler stitches shoes in the market."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੋਚੀ (mochī) is inherited from Sanskrit mocika, \"a tanner and cobbler\"; CDIAL lists Punjabi mocī, \"cobbler\", under it (CDIAL 10349). CDIAL traces the word for a shoe behind it to Iranian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mochī bāzār vich juttīāṁ siundā hai. — The cobbler stitches shoes in the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mochī bāzār vich juttīāṁ siundā hai.* — The cobbler stitches shoes in the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to shave, then the Punjabi for a washerman, then say mochī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to shave, then the Punjabi for a washerman, then say *mochī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮੋਚੀ (mochī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮੋਚੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮੋਚੀ (mochī) mean? (\"A cobbler\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C333-mali",
+      "sequence": 20270,
+      "title": "ਮਾਲੀ (mālī) — a gardener",
+      "headword": "ਮਾਲੀ",
+      "romanization": "mālī",
+      "gloss": "a gardener",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d06b334b25d43c2b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a washerman, then the Punjabi for a cobbler."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਾਲੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਲੀ — mālī — \"a gardener\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮਾਲੀ ਸਵੇਰੇ ਬਾਗ਼ ਵਿੱਚ ਪਾਣੀ ਪਾਉਂਦਾ ਹੈ। mālī savere bāgh vich pāṇī pāundā hai. The gardener waters the garden in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਲੀ (mālī) is inherited from Sanskrit mālin, \"garlanded; a gardener\"; CDIAL lists Punjabi mālī, \"garlanded; gardener\", under it (CDIAL 10094)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mālī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mālī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mālī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mālī savere bāgh vich pāṇī pāundā hai. — The gardener waters the garden in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mālī savere bāgh vich pāṇī pāundā hai.* — The gardener waters the garden in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a washerman, then the Punjabi for a cobbler, then say mālī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a washerman, then the Punjabi for a cobbler, then say *mālī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਾਲੀ (mālī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਾਲੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਾਲੀ (mālī) mean? (\"A gardener\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C350-natak",
+  "pathSegment": "PA-PATH-350-SHOW350",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-350-SHOW350",
+      "order": 1
+    }
+  ]
+}

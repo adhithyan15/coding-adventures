@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 345,
+  "title": "Making Up Our Minds",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:0810e9237ebd4fd8",
+  "lessons": [
+    {
+      "id": "PA-C345-sharat",
+      "sequence": 21410,
+      "title": "ਸ਼ਰਤ (sharat) — a condition",
+      "headword": "ਸ਼ਰਤ",
+      "romanization": "sharat",
+      "gloss": "a condition",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bcd712fa234f743f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for stubbornness, then the Punjabi for an objection."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸ਼ਰਤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸ਼ਰਤ — sharat — \"a condition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੀ ਇੱਕ ਸ਼ਰਤ ਹੈ ਅਤੇ ਉਹ ਔਖੀ ਨਹੀਂ ਹੈ। merī ikk sharat hai ate oh aukhī nahīṁ hai. I have one condition, and it is not hard."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸ਼ਰਤ (sharat) is a loan, usually traced through Persian to Arabic sharṭ, \"condition\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sharat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sharat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sharat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sharat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī ikk sharat hai ate oh aukhī nahīṁ hai. — I have one condition, and it is not hard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī ikk sharat hai ate oh aukhī nahīṁ hai.* — I have one condition, and it is not hard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for stubbornness, then the Punjabi for an objection, then say sharat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for stubbornness, then the Punjabi for an objection, then say *sharat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸ਼ਰਤ (sharat) mean? (\"A condition\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C345-faisla",
+      "sequence": 21420,
+      "title": "ਫ਼ੈਸਲਾ (faislā) — a decision",
+      "headword": "ਫ਼ੈਸਲਾ",
+      "romanization": "faislā",
+      "gloss": "a decision",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f4b864d005c106c4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an objection, then the Punjabi for a condition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਫ਼ੈਸਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫ਼ੈਸਲਾ — faislā — \"a decision\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਹਾਡਾ ਫ਼ੈਸਲਾ ਪੱਕਾ ਹੈ? kī tuhāḍā faislā pakkā hai? Is your decision final?"
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫ਼ੈਸਲਾ (faislā) is a loan, usually traced through Persian to Arabic faiṣala, \"decision\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "faislā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *faislā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "faislā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *faislā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kī tuhāḍā faislā pakkā hai? — Is your decision final?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kī tuhāḍā faislā pakkā hai?* — Is your decision final?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an objection, then the Punjabi for a condition, then say faislā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an objection, then the Punjabi for a condition, then say *faislā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਫ਼ੈਸਲਾ (faislā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਫ਼ੈਸਲਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਫ਼ੈਸਲਾ (faislā) mean? (\"A decision\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C345-rae",
+      "sequence": 21430,
+      "title": "ਰਾਏ (rāe) — an opinion; a view",
+      "headword": "ਰਾਏ",
+      "romanization": "rāe",
+      "gloss": "an opinion; a view",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a42602281fad721",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a condition, then the Punjabi for a decision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰਾਏ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਾਏ — rāe — \"an opinion; a view\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਸੀਂ ਮੇਰੀ ਰਾਏ ਮੰਨਦੇ ਹੋ? kī tusī̃ merī rāe mannde ho? Do you go along with my view?"
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਾਏ (rāe) is a loan, usually traced through Persian to Arabic raʾy, \"opinion\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāe, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāe*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kī tusī̃ merī rāe mannde ho? — Do you go along with my view?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kī tusī̃ merī rāe mannde ho?* — Do you go along with my view?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a condition, then the Punjabi for a decision, then say rāe again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a condition, then the Punjabi for a decision, then say *rāe* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਰਾਏ (rāe) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਰਾਏ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰਾਏ (rāe) mean? (\"An opinion; a view\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C345-mukauna",
+      "sequence": 21440,
+      "title": "ਮੁਕਾਉਣਾ (mukāuṇā) — to settle a matter; to bring to an end",
+      "headword": "ਮੁਕਾਉਣਾ",
+      "romanization": "mukāuṇā",
+      "gloss": "to settle a matter; to bring to an end",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:48c684c372f90410",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a decision, then the Punjabi for an opinion."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮੁਕਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੁਕਾਉਣਾ — mukāuṇā — \"to settle a matter; to bring to an end\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਅਸੀਂ ਅੱਜ ਗੱਲ ਮੁਕਾਵਾਂਗੇ? kī asīṁ ajj gall mukāvāṅge? Shall we settle the matter today?"
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਮਾਮਲਾ ਮੁਕਾਇਆ, maiṁ māmlā mukāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮੁਕਾਉਣਾ (mukāuṇā) is the causative partner of mukkṇā, \"to come to an end\", which goes back to a reconstructed mukna, \"loosed\"; CDIAL lists Punjabi mukkṇā, \"to come to an end, run short\", under it (CDIAL 10157)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mukāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mukāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kī asīṁ ajj gall mukāvāṅge? — Shall we settle the matter today?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kī asīṁ ajj gall mukāvāṅge?* — Shall we settle the matter today?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a decision, then the Punjabi for an opinion, then say mukāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a decision, then the Punjabi for an opinion, then say *mukāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮੁਕਾਉਣਾ (mukāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮੁਕਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮੁਕਾਉਣਾ (mukāuṇā) mean? (\"To settle a matter; to bring to an end\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C345-tajviz",
+      "sequence": 21450,
+      "title": "ਤਜਵੀਜ਼ (tajvīz) — a proposal; a plan put forward",
+      "headword": "ਤਜਵੀਜ਼",
+      "romanization": "tajvīz",
+      "gloss": "a proposal; a plan put forward",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:73bd005b0f595e98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an opinion, then the Punjabi for to settle a matter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਜਵੀਜ਼",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਜਵੀਜ਼ — tajvīz — \"a proposal; a plan put forward\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਸ ਦੀ ਤਜਵੀਜ਼ ਬੁਰੀ ਨਹੀਂ ਹੈ। us dī tajvīz burī nahīṁ hai. His proposal is not a bad one."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਜਵੀਜ਼ (tajvīz) is a loan, usually traced through Persian to Arabic tajwīz, \"allowing\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajvīz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajvīz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tajvīz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tajvīz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us dī tajvīz burī nahīṁ hai. — His proposal is not a bad one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us dī tajvīz burī nahīṁ hai.* — His proposal is not a bad one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an opinion, then the Punjabi for to settle a matter, then say tajvīz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an opinion, then the Punjabi for to settle a matter, then say *tajvīz* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤਜਵੀਜ਼ (tajvīz) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤਜਵੀਜ਼** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਜਵੀਜ਼ (tajvīz) mean? (\"A proposal; a plan put forward\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

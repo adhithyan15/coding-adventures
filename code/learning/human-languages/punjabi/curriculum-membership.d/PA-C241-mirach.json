@@ -1,0 +1,11 @@
+{
+  "id": "PA-C241-mirach",
+  "pathSegment": "PA-PATH-241-KAM241",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-241-KAM241",
+      "order": 3
+    }
+  ]
+}

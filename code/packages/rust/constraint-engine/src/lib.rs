@@ -56,8 +56,9 @@
 
 use std::collections::HashMap;
 
-use constraint_core::{Logic, Predicate, Sort};
+use constraint_core::{depth_of, infer_sort, Logic, Predicate, Sort, MAX_PREDICATE_DEPTH};
 
+pub mod bv;
 pub mod lia;
 pub mod sat;
 
@@ -119,9 +120,8 @@ impl Default for Model {
 
 /// A concrete value that can appear in a satisfying model.
 ///
-/// The set is intentionally small in v1 (Bool + Int + Real via rational).
-/// Richer sorts (BitVec, Array, Uninterpreted) produce `Unknown` when
-/// their tactics aren't yet wired up.
+/// Bool, Int, Real (as a rational) and, since VER10, bit-vectors. Array and
+/// uninterpreted sorts produce `Unknown` until their tactics exist.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
     /// Boolean assignment.
@@ -130,6 +130,9 @@ pub enum Value {
     Int(i128),
     /// Rational assignment (for Real-sorted variables).
     Real(i128, i128), // (num, den) — always reduced by gcd
+    /// Bit-vector assignment (for `BitVec(w)`-sorted variables): `w` bits,
+    /// least significant first.
+    BitVec(Vec<bool>),
 }
 
 impl Value {
@@ -139,6 +142,17 @@ impl Value {
             Some(*n)
         } else {
             None
+        }
+    }
+
+    /// A bit-vector's value as an unsigned integer, or `None` if this is not
+    /// a bit-vector or it is wider than 128 bits.
+    pub fn as_bv_u128(&self) -> Option<u128> {
+        match self {
+            Value::BitVec(bits) if bits.len() <= 128 => {
+                Some(bits.iter().enumerate().map(|(i, &b)| (b as u128) << i).sum())
+            }
+            _ => None,
         }
     }
 
@@ -163,6 +177,11 @@ impl std::fmt::Display for Value {
                 } else {
                     write!(f, "{n}/{d}")
                 }
+            }
+            // SMT-LIB binary literal, most significant bit first.
+            Value::BitVec(bits) => {
+                write!(f, "#b")?;
+                bits.iter().rev().try_for_each(|&b| write!(f, "{}", b as u8))
             }
         }
     }
@@ -312,7 +331,9 @@ impl Engine {
     /// |---|---|---|
     /// | Bool only | `QF_Bool` / not set | SAT (CDCL) |
     /// | Int only or mixed Bool+Int | `QF_LIA` / not set | LIA (Cooper) + SAT for Bool residual |
-    /// | Real, BitVec, Array, Uninterpreted | any | `Unknown` |
+    /// | BitVec (with or without Bool) | `QF_BV` / not set | BV (bit-blasting + CDCL), UNSAT certified by `drat-check` |
+    /// | BitVec mixed with Int | any | `Unknown` |
+    /// | Real, Array, Uninterpreted | any | `Unknown` |
     /// | Quantified predicates | any | `Unknown` |
     pub fn check_sat(&self) -> SolverResult {
         // Fast path: empty conjunction is trivially SAT.
@@ -325,7 +346,7 @@ impl Engine {
         if let Some(logic) = self.logic {
             if !is_supported_logic(logic) {
                 return SolverResult::Unknown(format!(
-                    "logic {logic} is not yet supported (v1 supports QF_Bool, QF_LIA)"
+                    "logic {logic} is not yet supported (supported: QF_Bool, QF_LIA, QF_BV)"
                 ));
             }
         }
@@ -333,7 +354,8 @@ impl Engine {
         // Reject unsupported sorts.
         if let Some(bad) = self.unsupported_sort_in_env() {
             return SolverResult::Unknown(format!(
-                "sort `{bad}` is not yet supported (v1 supports Bool, Int)"
+                "sort `{bad}` is not yet supported (supported: Bool, Int, BitVec up to {} bits)",
+                bv::MAX_BV_WIDTH
             ));
         }
 
@@ -347,8 +369,28 @@ impl Engine {
         // Classify the formula by sorts present.
         let has_int = self.sort_env.values().any(|s| matches!(s, Sort::Int));
         let has_bool = self.sort_env.values().any(|s| matches!(s, Sort::Bool));
+        // Bit-vector *syntax* counts too: `(= #b01 #b01)` mentions no
+        // BitVec variable but must never reach the LIA tactic.
+        let has_bv = self.sort_env.values().any(|s| matches!(s, Sort::BitVec(_)))
+            || self.assertions.iter().any(mentions_bv_syntax);
 
-        if has_int {
+        if has_bv && has_int {
+            return SolverResult::Unknown(
+                "BitVec mixed with Int is not supported (no combination of BV and LIA yet)".into(),
+            );
+        }
+        if has_bv || self.logic == Some(Logic::QF_BV) {
+            // Bit-vectors (and any Booleans alongside them) go to the BV
+            // tactic, which also handles pure-Bool QF_BV problems.
+            bv::BvTactic::solve(&self.assertions, &self.sort_env)
+        } else if has_int {
+            // LIA reads anything it cannot evaluate as `false`, so anything
+            // outside its fragment must be refused before it gets there.
+            for p in &self.assertions {
+                if let Some(why) = lia_fragment_violation(p, &self.sort_env) {
+                    return SolverResult::Unknown(format!("outside the LIA fragment: {why}"));
+                }
+            }
             // LIA path.  Booleans are handled via substitution in the LIA
             // tactic — we ground Bool variables to {0, 1} and let Cooper
             // reduce them.
@@ -373,11 +415,16 @@ impl Engine {
         m
     }
 
-    /// Return the name of the first variable whose sort isn't supported in
-    /// v1 (`Bool` and `Int` are supported; everything else is not).
+    /// Return the name of the first variable whose sort isn't supported
+    /// (`Bool`, `Int`, and `BitVec` of width 1..=`MAX_BV_WIDTH`).
     fn unsupported_sort_in_env(&self) -> Option<String> {
         for (name, sort) in &self.sort_env {
-            if !matches!(sort, Sort::Bool | Sort::Int) {
+            let ok = match sort {
+                Sort::Bool | Sort::Int => true,
+                Sort::BitVec(w) => (1..=bv::MAX_BV_WIDTH).contains(&(*w as usize)),
+                _ => false,
+            };
+            if !ok {
                 return Some(name.clone());
             }
         }
@@ -393,16 +440,20 @@ impl Engine {
     /// 3. If SAT and there are Bool-only predicates, verify them
     ///    consistently using the SAT tactic.
     fn solve_lia(&self, _has_bool: bool) -> SolverResult {
-        let int_vars: Vec<String> = self.sort_env
+        // Sorted, so the search order (and so any Unknown) is reproducible
+        // run to run rather than following HashMap iteration.
+        let mut int_vars: Vec<String> = self.sort_env
             .iter()
             .filter(|(_, s)| matches!(s, Sort::Int))
             .map(|(n, _)| n.clone())
             .collect();
-        let bool_vars: Vec<String> = self.sort_env
+        int_vars.sort();
+        let mut bool_vars: Vec<String> = self.sort_env
             .iter()
             .filter(|(_, s)| matches!(s, Sort::Bool))
             .map(|(n, _)| n.clone())
             .collect();
+        bool_vars.sort();
 
         let result = lia::LiaTactic::solve(&self.assertions, &int_vars, &bool_vars);
 
@@ -448,8 +499,125 @@ impl Default for Engine {
 // Helpers
 // ---------------------------------------------------------------------------
 
+/// The direct sub-predicates of `p`. A variant added to the
+/// non-exhaustive `Predicate` later reports none.
+fn children(p: &Predicate) -> Vec<&Predicate> {
+    match p {
+        Predicate::Bool(_) | Predicate::Var(_) | Predicate::Int(_) | Predicate::Real(_) => vec![],
+        Predicate::Apply { args, .. } => args.iter().collect(),
+        Predicate::And(ps) | Predicate::Or(ps) | Predicate::Add(ps) => ps.iter().collect(),
+        Predicate::Not(a) | Predicate::Mul { term: a, .. } => vec![a],
+        Predicate::Forall { body, .. } | Predicate::Exists { body, .. } => vec![body],
+        Predicate::Implies(a, b)
+        | Predicate::Iff(a, b)
+        | Predicate::Eq(a, b)
+        | Predicate::NEq(a, b)
+        | Predicate::Sub(a, b)
+        | Predicate::Le(a, b)
+        | Predicate::Lt(a, b)
+        | Predicate::Ge(a, b)
+        | Predicate::Gt(a, b)
+        | Predicate::Select { arr: a, idx: b } => vec![a, b],
+        Predicate::Ite(a, b, c) | Predicate::Store { arr: a, idx: b, val: c } => vec![a, b, c],
+        _ => vec![],
+    }
+}
+
+/// Does `p` contain bit-vector syntax: a `#b`/`#x` literal, an indexed
+/// `(_ …)` term, or a `bv…` operator? Walks with an explicit stack, so it is
+/// safe on predicates of any depth.
+fn mentions_bv_syntax(p: &Predicate) -> bool {
+    let mut stack = vec![p];
+    while let Some(q) = stack.pop() {
+        match q {
+            Predicate::Var(name) if name.starts_with('#') => return true,
+            Predicate::Apply { f, .. } if f == "_" || f.starts_with("bv") => return true,
+            _ => stack.extend(children(q)),
+        }
+    }
+    false
+}
+
+/// Why `p` is outside what the LIA tactic can evaluate, if it is.
+///
+/// The LIA tactic's evaluator turns anything it cannot evaluate into
+/// `false`, and `false` under a `not` into `true`. An unsupported construct
+/// therefore does not fail loudly; it gives a wrong `Unsat` or a wrong
+/// `Sat`. So, before LIA runs, every assertion must:
+///
+/// - sort-check as `Bool` under the declared sorts (no undeclared names, no
+///   `Int` compared with `Bool`);
+/// - use only the constructs the evaluator handles: Booleans, integers,
+///   declared variables, the connectives, `+ - *`, comparisons and `ite`.
+fn lia_fragment_violation(p: &Predicate, env: &SortEnv) -> Option<String> {
+    if depth_of(p) > MAX_PREDICATE_DEPTH {
+        return Some(format!("deeper than MAX_PREDICATE_DEPTH ({MAX_PREDICATE_DEPTH})"));
+    }
+    // Integer literals and coefficients stay far from the i128 edge, so the
+    // LIA search's bound arithmetic (`lo + width`, `hi − lo`, `k ± 1`) cannot
+    // overflow.
+    const MAX_LIA_LITERAL: i128 = 1 << 62;
+    let mut stack = vec![p];
+    while let Some(q) = stack.pop() {
+        match q {
+            Predicate::Int(n) | Predicate::Mul { coef: n, .. } if n.unsigned_abs() > MAX_LIA_LITERAL as u128 => {
+                return Some(format!("integer {n} beyond ±2^62"));
+            }
+            // Arithmetic and comparisons take integers: `infer_sort` lets
+            // `(+ p q)` over Booleans through, and the search would read it
+            // as 0/1 arithmetic.
+            Predicate::Add(_)
+            | Predicate::Sub(..)
+            | Predicate::Mul { .. }
+            | Predicate::Le(..)
+            | Predicate::Lt(..)
+            | Predicate::Ge(..)
+            | Predicate::Gt(..) => {
+                for c in children(q) {
+                    match infer_sort(c, env) {
+                        Ok(Sort::Int) => {}
+                        Ok(other) => return Some(format!("arithmetic on a {other} operand")),
+                        Err(e) => return Some(e.to_string()),
+                    }
+                }
+            }
+            _ => {}
+        }
+        let ok = matches!(
+            q,
+            Predicate::Bool(_)
+                | Predicate::Int(_)
+                | Predicate::Var(_)
+                | Predicate::And(_)
+                | Predicate::Or(_)
+                | Predicate::Not(_)
+                | Predicate::Implies(..)
+                | Predicate::Iff(..)
+                | Predicate::Eq(..)
+                | Predicate::NEq(..)
+                | Predicate::Add(_)
+                | Predicate::Sub(..)
+                | Predicate::Mul { .. }
+                | Predicate::Le(..)
+                | Predicate::Lt(..)
+                | Predicate::Ge(..)
+                | Predicate::Gt(..)
+                | Predicate::Ite(..)
+        );
+        if !ok {
+            return Some(format!("unsupported term {q:?}"));
+        }
+        stack.extend(children(q));
+    }
+    match infer_sort(p, env) {
+        Ok(Sort::Bool) => None,
+        Ok(other) => Some(format!("assertion has sort {other}, not Bool")),
+        Err(e) => Some(e.to_string()),
+    }
+}
+
 fn is_supported_logic(logic: Logic) -> bool {
-    matches!(logic, Logic::QF_Bool | Logic::QF_LIA)
+    matches!(logic, Logic::QF_Bool | Logic::QF_LIA | Logic::QF_BV)
 }
 
 fn default_value_for_sort(sort: &Sort) -> Option<Value> {
@@ -457,6 +625,11 @@ fn default_value_for_sort(sort: &Sort) -> Option<Value> {
         Sort::Bool => Some(Value::Bool(false)),
         Sort::Int => Some(Value::Int(0)),
         Sort::Real => Some(Value::Real(0, 1)),
+        // Capped: a declared-but-unused `(_ BitVec 4000000000)` must not
+        // allocate four billion bits for a trivial model.
+        Sort::BitVec(w) if (1..=bv::MAX_BV_WIDTH).contains(&(*w as usize)) => {
+            Some(Value::BitVec(vec![false; *w as usize]))
+        }
         _ => None,
     }
 }
@@ -520,50 +693,75 @@ pub(crate) fn eval_int_or_bool(p: &Predicate, model: &Model) -> EvalResult {
             Some(Value::Int(n)) => EvalResult::Int(*n),
             _ => EvalResult::Unknown,
         },
+        // The connectives are three-valued (Kleene logic): an operand that
+        // cannot be evaluated makes the result unknown unless another operand
+        // already decides it. Unknown must never quietly become `false`:
+        // under a `not` it would become `true`, and either way the LIA search
+        // could report a wrong UNSAT or SAT.
         Predicate::And(parts) => {
+            let mut unknown = false;
             for part in parts {
-                if !eval_bool(part, model) {
-                    return EvalResult::Bool(false);
+                match truth(part, model) {
+                    Some(false) => return EvalResult::Bool(false),
+                    Some(true) => {}
+                    None => unknown = true,
                 }
             }
-            EvalResult::Bool(true)
+            if unknown { EvalResult::Unknown } else { EvalResult::Bool(true) }
         }
         Predicate::Or(parts) => {
+            let mut unknown = false;
             for part in parts {
-                if eval_bool(part, model) {
-                    return EvalResult::Bool(true);
+                match truth(part, model) {
+                    Some(true) => return EvalResult::Bool(true),
+                    Some(false) => {}
+                    None => unknown = true,
                 }
             }
-            EvalResult::Bool(false)
+            if unknown { EvalResult::Unknown } else { EvalResult::Bool(false) }
         }
-        Predicate::Not(inner) => {
-            EvalResult::Bool(!eval_bool(inner, model))
-        }
-        Predicate::Implies(a, b) => {
-            EvalResult::Bool(!eval_bool(a, model) || eval_bool(b, model))
-        }
-        Predicate::Iff(a, b) => {
-            EvalResult::Bool(eval_bool(a, model) == eval_bool(b, model))
-        }
-        Predicate::Eq(a, b) => {
-            match (eval_int_or_bool(a, model), eval_int_or_bool(b, model)) {
-                (EvalResult::Int(x), EvalResult::Int(y)) => EvalResult::Bool(x == y),
-                (EvalResult::Bool(x), EvalResult::Bool(y)) => EvalResult::Bool(x == y),
-                _ => EvalResult::Unknown,
+        Predicate::Not(inner) => match truth(inner, model) {
+            Some(b) => EvalResult::Bool(!b),
+            None => EvalResult::Unknown,
+        },
+        Predicate::Implies(a, b) => match (truth(a, model), truth(b, model)) {
+            (Some(false), _) | (_, Some(true)) => EvalResult::Bool(true),
+            (Some(true), Some(false)) => EvalResult::Bool(false),
+            _ => EvalResult::Unknown,
+        },
+        Predicate::Iff(a, b) => match (truth(a, model), truth(b, model)) {
+            (Some(x), Some(y)) => EvalResult::Bool(x == y),
+            _ => EvalResult::Unknown,
+        },
+        Predicate::Eq(a, b) | Predicate::NEq(a, b) => {
+            let same = match (eval_int_or_bool(a, model), eval_int_or_bool(b, model)) {
+                (EvalResult::Int(x), EvalResult::Int(y)) => Some(x == y),
+                (EvalResult::Bool(x), EvalResult::Bool(y)) => Some(x == y),
+                // The LIA search grounds Bool variables as the integers 0
+                // and 1, so a Bool variable meets a Boolean as an integer.
+                // Callers only evaluate well-sorted predicates (the engine
+                // sort-checks before LIA), so this pairing always means a
+                // grounded Bool, compared by truth value.
+                (EvalResult::Int(x), EvalResult::Bool(y)) | (EvalResult::Bool(y), EvalResult::Int(x)) => {
+                    Some((x != 0) == y)
+                }
+                _ => None,
+            };
+            match same {
+                Some(s) => EvalResult::Bool(if matches!(p, Predicate::Eq(..)) { s } else { !s }),
+                None => EvalResult::Unknown,
             }
         }
-        Predicate::NEq(a, b) => {
-            match (eval_int_or_bool(a, model), eval_int_or_bool(b, model)) {
-                (EvalResult::Int(x), EvalResult::Int(y)) => EvalResult::Bool(x != y),
-                (EvalResult::Bool(x), EvalResult::Bool(y)) => EvalResult::Bool(x != y),
-                _ => EvalResult::Unknown,
-            }
-        }
+        // Arithmetic is exact: an overflow is unknown, never a clamped value
+        // (saturation once made `n + MAX > n + MAX − 1` false).
         Predicate::Add(parts) => {
             let mut sum = 0i128;
             for part in parts {
                 match eval_int_or_bool(part, model) {
-                    EvalResult::Int(n) => sum = sum.saturating_add(n),
+                    EvalResult::Int(n) => match sum.checked_add(n) {
+                        Some(s) => sum = s,
+                        None => return EvalResult::Unknown,
+                    },
                     _ => return EvalResult::Unknown,
                 }
             }
@@ -572,14 +770,14 @@ pub(crate) fn eval_int_or_bool(p: &Predicate, model: &Model) -> EvalResult {
         Predicate::Sub(a, b) => {
             match (eval_int_or_bool(a, model), eval_int_or_bool(b, model)) {
                 (EvalResult::Int(x), EvalResult::Int(y)) => {
-                    EvalResult::Int(x.saturating_sub(y))
+                    x.checked_sub(y).map_or(EvalResult::Unknown, EvalResult::Int)
                 }
                 _ => EvalResult::Unknown,
             }
         }
         Predicate::Mul { coef, term } => {
             match eval_int_or_bool(term, model) {
-                EvalResult::Int(n) => EvalResult::Int(coef.saturating_mul(n)),
+                EvalResult::Int(n) => coef.checked_mul(n).map_or(EvalResult::Unknown, EvalResult::Int),
                 _ => EvalResult::Unknown,
             }
         }
@@ -587,15 +785,23 @@ pub(crate) fn eval_int_or_bool(p: &Predicate, model: &Model) -> EvalResult {
         Predicate::Lt(a, b) => cmp_eval(a, b, model, |x, y| x < y),
         Predicate::Ge(a, b) => cmp_eval(a, b, model, |x, y| x >= y),
         Predicate::Gt(a, b) => cmp_eval(a, b, model, |x, y| x > y),
-        Predicate::Ite(c, t, e) => {
-            if eval_bool(c, model) {
-                eval_int_or_bool(t, model)
-            } else {
-                eval_int_or_bool(e, model)
-            }
-        }
+        Predicate::Ite(c, t, e) => match truth(c, model) {
+            Some(true) => eval_int_or_bool(t, model),
+            Some(false) => eval_int_or_bool(e, model),
+            None => EvalResult::Unknown,
+        },
         // Unsupported in evaluation: Apply, quantifiers, arrays.
         _ => EvalResult::Unknown,
+    }
+}
+
+/// The truth value of `p`, or `None` if it cannot be evaluated. An integer
+/// in Boolean position is a grounded Bool variable: true iff non-zero.
+pub(crate) fn truth(p: &Predicate, model: &Model) -> Option<bool> {
+    match eval_int_or_bool(p, model) {
+        EvalResult::Bool(b) => Some(b),
+        EvalResult::Int(n) => Some(n != 0),
+        EvalResult::Unknown => None,
     }
 }
 
@@ -862,6 +1068,44 @@ mod tests {
     fn eval_bool_literals() {
         let m = Model::new();
         assert!(eval_bool(&Predicate::Bool(true), &m));
+        // Three-valued connectives: unknown is never quietly false.
+        let unk = Predicate::Var("undeclared".into());
+        let not_unk = Predicate::Not(Box::new(unk.clone()));
+        assert_eq!(eval_int_or_bool(&not_unk, &m), EvalResult::Unknown);
+        let t = Predicate::Bool(true);
+        let f = Predicate::Bool(false);
+        assert_eq!(eval_int_or_bool(&Predicate::And(vec![unk.clone(), t.clone()]), &m), EvalResult::Unknown);
+        assert_eq!(eval_int_or_bool(&Predicate::And(vec![unk.clone(), f.clone()]), &m), EvalResult::Bool(false));
+        assert_eq!(eval_int_or_bool(&Predicate::Or(vec![unk.clone(), f.clone()]), &m), EvalResult::Unknown);
+        assert_eq!(eval_int_or_bool(&Predicate::Or(vec![unk.clone(), t.clone()]), &m), EvalResult::Bool(true));
+        let imp = |a: &Predicate, b: &Predicate| Predicate::Implies(Box::new(a.clone()), Box::new(b.clone()));
+        assert_eq!(eval_int_or_bool(&imp(&f, &unk), &m), EvalResult::Bool(true));
+        assert_eq!(eval_int_or_bool(&imp(&unk, &t), &m), EvalResult::Bool(true));
+        assert_eq!(eval_int_or_bool(&imp(&t, &f), &m), EvalResult::Bool(false));
+        assert_eq!(eval_int_or_bool(&imp(&t, &unk), &m), EvalResult::Unknown);
+        assert_eq!(
+            eval_int_or_bool(&Predicate::Iff(Box::new(unk.clone()), Box::new(t.clone())), &m),
+            EvalResult::Unknown
+        );
+        assert_eq!(
+            eval_int_or_bool(&Predicate::Ite(Box::new(unk.clone()), Box::new(t.clone()), Box::new(f.clone())), &m),
+            EvalResult::Unknown
+        );
+        // Exact arithmetic: overflow is unknown, not a clamped value.
+        let max = Predicate::Int(i128::MAX);
+        let one = Predicate::Int(1);
+        assert_eq!(eval_int_or_bool(&Predicate::Add(vec![max.clone(), one.clone()]), &m), EvalResult::Unknown);
+        assert_eq!(
+            eval_int_or_bool(&Predicate::Sub(Box::new(Predicate::Int(i128::MIN)), Box::new(one.clone())), &m),
+            EvalResult::Unknown
+        );
+        assert_eq!(eval_int_or_bool(&Predicate::Mul { coef: 2, term: Box::new(max) }, &m), EvalResult::Unknown);
+        // A grounded Bool (an integer) meets a Boolean by truth value.
+        let eq = Predicate::Eq(Box::new(Predicate::Int(1)), Box::new(t.clone()));
+        assert_eq!(eval_int_or_bool(&eq, &m), EvalResult::Bool(true));
+        let neq = Predicate::NEq(Box::new(f), Box::new(Predicate::Int(0)));
+        assert_eq!(eval_int_or_bool(&neq, &m), EvalResult::Bool(false));
+        assert_eq!(truth(&Predicate::Int(2), &m), Some(true));
         assert!(!eval_bool(&Predicate::Bool(false), &m));
     }
 

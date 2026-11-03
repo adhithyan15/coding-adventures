@@ -1,0 +1,11 @@
+{
+  "id": "PA-C345-rae",
+  "pathSegment": "PA-PATH-345-DECIDE345",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-345-DECIDE345",
+      "order": 2
+    }
+  ]
+}

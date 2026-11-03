@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:8a84bf2a7b352961",
+  "lessonIds": [
+    "PA-C211-verbs-return",
+    "PA-C211-janda",
+    "PA-C211-janda-review",
+    "PA-C211-khanda-pinda",
+    "PA-C211-khanda-review",
+    "PA-C211-tea-every-day",
+    "PA-C211-payoff"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch211.txt",
+  "json": "punjabi/narration/ch211.json",
+  "textHash": "fnv1a64:a9f57484e03dba7a",
+  "jsonHash": "fnv1a64:827f5511e294f52f",
+  "findings": []
+}

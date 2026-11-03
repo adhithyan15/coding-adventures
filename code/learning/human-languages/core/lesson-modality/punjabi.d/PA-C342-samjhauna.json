@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C342-samjhauna",
+    "language": "punjabi",
+    "chapter": 342,
+    "sequence": 21250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e9a9549555de2be9"
+  },
+  "findings": []
+}

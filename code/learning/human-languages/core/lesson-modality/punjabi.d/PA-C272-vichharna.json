@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C272-vichharna",
+    "language": "punjabi",
+    "chapter": 272,
+    "sequence": 15970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0c6e62f23292c11a"
+  },
+  "findings": []
+}

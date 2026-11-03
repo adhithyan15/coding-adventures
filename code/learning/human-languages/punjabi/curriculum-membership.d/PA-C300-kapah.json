@@ -1,0 +1,11 @@
+{
+  "id": "PA-C300-kapah",
+  "pathSegment": "PA-PATH-300-CROP300",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-300-CROP300",
+      "order": 3
+    }
+  ]
+}

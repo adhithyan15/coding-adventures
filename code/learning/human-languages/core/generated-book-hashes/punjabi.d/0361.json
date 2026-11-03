@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:f782deec72a6d935",
+  "lessonIds": [
+    "PA-C361-kalaj",
+    "PA-C361-dakhla",
+    "PA-C361-digri",
+    "PA-C361-vazifa",
+    "PA-C361-ustad"
+  ],
+  "tex": "punjabi/book/chapters/ch361-after-school.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C310-dullhna",
+    "language": "punjabi",
+    "chapter": 310,
+    "sequence": 19090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3b17d40dcde6a3f9"
+  },
+  "findings": []
+}

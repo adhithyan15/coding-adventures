@@ -1,0 +1,19 @@
+{
+  "chapter": 262,
+  "title": "Fees and Fines",
+  "label": "ch:pa-a2-fees-and-fines",
+  "canDo": "I can understand a fee, a fare and a fine.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C262-chukauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 262: I can understand a fee, a fare and a fine.",
+    "assesses": [
+      "PA-LEX-C262-FEE262-03",
+      "PA-LEX-C262-FEE262-04",
+      "PA-LEX-C262-FEE262-05"
+    ]
+  }
+}

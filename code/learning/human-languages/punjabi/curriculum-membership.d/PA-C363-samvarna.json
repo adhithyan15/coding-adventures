@@ -1,0 +1,11 @@
+{
+  "id": "PA-C363-samvarna",
+  "pathSegment": "PA-PATH-363-WORK363",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-363-WORK363",
+      "order": 3
+    }
+  ]
+}

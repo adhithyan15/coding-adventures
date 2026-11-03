@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 361,
+  "sourceHash": "fnv1a64:33ca2b2699f45909",
+  "lessonIds": [
+    "PA-C361-kalaj",
+    "PA-C361-dakhla",
+    "PA-C361-digri",
+    "PA-C361-vazifa",
+    "PA-C361-ustad"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch361.txt",
+  "json": "punjabi/narration/ch361.json",
+  "textHash": "fnv1a64:6e94f276e116fe6d",
+  "jsonHash": "fnv1a64:b7088d60f9631754",
+  "findings": []
+}

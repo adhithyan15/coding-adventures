@@ -14,6 +14,11 @@ on:
       # lane's real-bundle upgrade checks (mosaic-release-state-gate-v1.md).
       - code/scripts/mosaic_release_state_gate.py
       - code/scripts/tests/test_mosaic_release_state_gate.py
+      # The shared macOS and Windows launchers the SwiftUI and WinUI gates
+      # start Trestle through.
+      - code/scripts/mosaic-release-launch.sh
+      - code/scripts/mosaic-release-launch.ps1
+      - code/scripts/tests/test_mosaic_release_launch.py
       - code/scripts/taskapp-xaml-smoke.ps1
       - code/scripts/taskapp-xaml-startup-smoke.ps1
       - code/programs/mosaic/task-app/**
@@ -77,6 +82,8 @@ jobs:
           python -m pytest code/scripts/tests/test_taskapp_release.py
           python -m unittest discover -s code/scripts/tests \
             -p 'test_mosaic_release_state_gate.py'
+          python -m unittest discover -s code/scripts/tests \
+            -p 'test_mosaic_release_launch.py'
 
       - name: Validate version, tag, ref, and publication availability
         id: release
@@ -667,36 +674,46 @@ jobs:
             cat "$diagnostic_log"
           }
 
-          launch_app() {
+          # Every Trestle launch goes through the shared macOS launcher
+          # (mosaic-release-state-gate-v1.md, "Launching a payload"): from `/`,
+          # alive for 5 s, stopped, and failing on a runtime-unavailable log.
+          # Its exit 2 means the app QUIT early -- the one case worth a crash
+          # report and an lldb backtrace. The optional third argument is a
+          # MOSAIC_APP_STATE_PATH override; without it the variable is unset
+          # and the app uses the real per-user path.
+          launch_trestle() {
             local app="$1"
             local log="$2"
-            (
-              cd /
+            local state_path="${3:-}"
+            local status=0
+            if [[ -n "$state_path" ]]; then
               env -u MOSAIC_APP_LIBRARY \
                 SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
-                MOSAIC_APP_STATE_PATH="$state" \
-                "$app/Contents/MacOS/Trestle" >"$log" 2>&1 &
-              app_pid=$!
-              trap 'kill "$app_pid" 2>/dev/null || true' EXIT
-              sleep 5
-              if ! kill -0 "$app_pid" 2>/dev/null; then
-                cat "$log"
-                sleep 2
-                find "$HOME/Library/Logs/DiagnosticReports" -type f \
-                  -name 'Trestle*.ips' -mmin -2 -print -exec cat {} \; || true
-                diagnose_swift_crash \
-                  "$app/Contents/MacOS/Trestle" "${log%.log}-lldb.log" "$state"
-                exit 1
-              fi
-              kill "$app_pid"
-              wait "$app_pid" || true
-              trap - EXIT
-            )
-            ! grep -Fq "Mosaic Rust runtime unavailable" "$log"
-            ! grep -E "missing required MIL prop|Mosaic runtime failed|Fatal error|Precondition failed" "$log"
+                MOSAIC_APP_STATE_PATH="$state_path" \
+                bash code/scripts/mosaic-release-launch.sh 5 "$log" "$app" || status=$?
+            else
+              env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+                SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
+                bash code/scripts/mosaic-release-launch.sh 5 "$log" "$app" || status=$?
+            fi
+            if [[ "$status" -eq 2 ]]; then
+              sleep 2
+              find "$HOME/Library/Logs/DiagnosticReports" -type f \
+                -name 'Trestle*.ips' -mmin -2 -print -exec cat {} \; || true
+              diagnose_swift_crash \
+                "$app/Contents/MacOS/Trestle" "${log%.log}-lldb.log" "$state_path"
+              exit 1
+            fi
+            if [[ "$status" -ne 0 ]]; then
+              exit 1
+            fi
+            if grep -E "missing required MIL prop|Mosaic runtime failed|Fatal error|Precondition failed" "$log"; then
+              echo "::error::$log reports a Mosaic runtime failure"
+              exit 1
+            fi
           }
-          launch_app "$app_v1" "$PWD/release-work/macos-v1-launch.log"
-          launch_app "$app_replacement" "$PWD/release-work/macos-replacement-launch.log"
+          launch_trestle "$app_v1" "$PWD/release-work/macos-v1-launch.log" "$state"
+          launch_trestle "$app_replacement" "$PWD/release-work/macos-replacement-launch.log" "$state"
           env -u MOSAIC_APP_LIBRARY MOSAIC_APP_STATE_PATH="$state" \
             MOSAIC_EXPECT_RESTORED=1 \
             swift run --package-path "$harness" Conformance \
@@ -707,34 +724,7 @@ jobs:
           python code/scripts/taskapp_release.py materialize-upgrade-fixture \
             --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
             --output "$standard_state"
-          launch_standard_app() {
-            local app="$1"
-            local log="$2"
-            (
-              cd /
-              env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
-                SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr" \
-                "$app/Contents/MacOS/Trestle" >"$log" 2>&1 &
-              app_pid=$!
-              trap 'kill "$app_pid" 2>/dev/null || true' EXIT
-              sleep 5
-              if ! kill -0 "$app_pid" 2>/dev/null; then
-                cat "$log"
-                sleep 2
-                find "$HOME/Library/Logs/DiagnosticReports" -type f \
-                  -name 'Trestle*.ips' -mmin -2 -print -exec cat {} \; || true
-                diagnose_swift_crash \
-                  "$app/Contents/MacOS/Trestle" "${log%.log}-lldb.log"
-                exit 1
-              fi
-              kill "$app_pid"
-              wait "$app_pid" || true
-              trap - EXIT
-            )
-            ! grep -Fq "Mosaic Rust runtime unavailable" "$log"
-            ! grep -E "missing required MIL prop|Mosaic runtime failed|Fatal error|Precondition failed" "$log"
-          }
-          launch_standard_app "$app_v1" "$PWD/release-work/macos-upgrade-launch.log"
+          launch_trestle "$app_v1" "$PWD/release-work/macos-upgrade-launch.log"
           python code/scripts/taskapp_release.py verify-upgrade-state \
             --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
             --state "$standard_state"
@@ -745,7 +735,7 @@ jobs:
 
           printf 'invalid TaskApp state\n' > "$standard_state"
           cp "$standard_state" release-work/macos-corrupt-probe
-          launch_standard_app "$app_replacement" "$PWD/release-work/macos-recovery.log"
+          launch_trestle "$app_replacement" "$PWD/release-work/macos-recovery.log"
           python code/scripts/mosaic_release_state_gate.py verify-quarantine \
             --app task-app --state "$standard_state" \
             --probe release-work/macos-corrupt-probe
@@ -862,17 +852,11 @@ jobs:
             --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json `
             --output $state
           if ($LASTEXITCODE -ne 0) { throw 'Could not seed the Windows upgrade fixture' }
-          $upgradeProcess = Start-Process -FilePath $firstExecutable -WindowStyle Hidden -PassThru
-          try {
-            Start-Sleep -Seconds 5
-            $upgradeProcess.Refresh()
-            if ($upgradeProcess.HasExited) {
-              throw "Upgrade-fixture app exited with code $($upgradeProcess.ExitCode)"
-            }
-          }
-          finally {
-            if (!$upgradeProcess.HasExited) { Stop-Process -Id $upgradeProcess.Id -Force }
-          }
+          # The shared Windows launcher (mosaic-release-state-gate-v1.md,
+          # "Launching a payload"): hidden window, alive for 5 s, stopped.
+          pwsh -NoProfile -ExecutionPolicy Bypass -File code/scripts/mosaic-release-launch.ps1 `
+            -ExePath $firstExecutable -Seconds 5 -Label 'Upgrade-fixture'
+          if ($LASTEXITCODE -ne 0) { throw 'Upgrade-fixture app did not stay running' }
           python code/scripts/taskapp_release.py verify-upgrade-state `
             --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json `
             --state $state
@@ -889,17 +873,9 @@ jobs:
           Set-Content $state 'invalid TaskApp state' -Encoding utf8NoBOM
           $corruptProbe = Join-Path $PWD 'release-work/windows-corrupt-probe'
           Copy-Item $state $corruptProbe
-          $recoveryProcess = Start-Process -FilePath $replacementExecutable -WindowStyle Hidden -PassThru
-          try {
-            Start-Sleep -Seconds 5
-            $recoveryProcess.Refresh()
-            if ($recoveryProcess.HasExited) {
-              throw "Corrupt-state recovery app exited with code $($recoveryProcess.ExitCode)"
-            }
-          }
-          finally {
-            if (!$recoveryProcess.HasExited) { Stop-Process -Id $recoveryProcess.Id -Force }
-          }
+          pwsh -NoProfile -ExecutionPolicy Bypass -File code/scripts/mosaic-release-launch.ps1 `
+            -ExePath $replacementExecutable -Seconds 5 -Label 'Corrupt-state recovery'
+          if ($LASTEXITCODE -ne 0) { throw 'Corrupt-state recovery app did not stay running' }
           python code/scripts/mosaic_release_state_gate.py verify-quarantine `
             --app task-app --state $state --probe $corruptProbe
           if ($LASTEXITCODE -ne 0) { throw 'Windows app did not quarantine invalid state byte for byte' }

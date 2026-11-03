@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 237,
+  "title": "Milk on the Fire",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c5e0f45d25fb681e",
+  "lessons": [
+    {
+      "id": "PA-C237-ubalna",
+      "sequence": 13610,
+      "title": "ਉਬਾਲਣਾ (ubālṇā) — to boil",
+      "headword": "ਉਬਾਲਣਾ",
+      "romanization": "ubālṇā",
+      "gloss": "to boil",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bbb1f54ee93cf9d3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a small water pot, then the Punjabi for a deep bowl."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਉਬਾਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਬਾਲਣਾ — ubālṇā — \"to boil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਸਵੇਰੇ ਦੁੱਧ ਉਬਾਲਦੀ ਹਾਂ। maiṁ savere dudh ubāldī hāṁ. I boil the milk in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਦੁੱਧ ਉਬਾਲਿਆ, maiṁ dudh ubāliā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਬਾਲਣਾ (ubālṇā) is inherited from a reconstructed ubbāl, \"rise, swell, boil\"; CDIAL lists Punjabi ubālaṇā, \"to boil\" (CDIAL 2339)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubālṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubālṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ubālṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ubālṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ savere dudh ubāldī hāṁ. — I boil the milk in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ savere dudh ubāldī hāṁ.* — I boil the milk in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a small water pot, then the Punjabi for a deep bowl, then say ubālṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a small water pot, then the Punjabi for a deep bowl, then say *ubālṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਉਬਾਲਣਾ (ubālṇā) mean? (\"To boil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C237-autna",
+      "sequence": 13620,
+      "title": "ਔਟਣਾ (auṭṇā) — to boil down (milk)",
+      "headword": "ਔਟਣਾ",
+      "romanization": "auṭṇā",
+      "gloss": "to boil down (milk)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba46b38d82f7c9d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a deep bowl, then the Punjabi for to boil."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਔਟਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਔਟਣਾ — auṭṇā — \"to boil down (milk)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ ਦੁੱਧ ਬਹੁਤ ਦੇਰ ਔਟਦੀ ਹੈ। dādī dudh bahut der auṭdī hai. Grandmother boils the milk down for a long time."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਦੁੱਧ ਔਟਿਆ, maiṁ dudh auṭiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਔਟਣਾ (auṭṇā) is inherited from Sanskrit āvartayati, \"causes to turn round\" (the entry also gives āvartana, \"stirring\"); CDIAL lists Punjabi auṭṇā, \"to boil\", and Hindi auṭnā, \"to boil, to evaporate over a fire\" (CDIAL 1420)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auṭṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auṭṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "auṭṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *auṭṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī dudh bahut der auṭdī hai. — Grandmother boils the milk down for a long time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī dudh bahut der auṭdī hai.* — Grandmother boils the milk down for a long time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a deep bowl, then the Punjabi for to boil, then say auṭṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a deep bowl, then the Punjabi for to boil, then say *auṭṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਔਟਣਾ (auṭṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਔਟਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਔਟਣਾ (auṭṇā) mean? (\"To boil down (milk)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C237-dahim",
+      "sequence": 13630,
+      "title": "ਦਹੀਂ (dahīṁ) — yoghurt; curd",
+      "headword": "ਦਹੀਂ",
+      "romanization": "dahīṁ",
+      "gloss": "yoghurt; curd",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fac987069f4ee5b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to boil, then the Punjabi for to boil down."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਦਹੀਂ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਹੀਂ — dahīṁ — \"yoghurt; curd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਰੋਟੀ ਨਾਲ ਦਹੀਂ ਖਾਂਦਾ ਹਾਂ। maiṁ roṭī nāl dahīṁ khāndā hāṁ. I eat yoghurt with my roti."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਹੀਂ (dahīṁ) is inherited from Sanskrit dadhi, \"thick sour milk\"; CDIAL lists Punjabi dahī̃, \"thick sour milk\" (CDIAL 6146)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dahīṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dahīṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dahīṁ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dahīṁ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ roṭī nāl dahīṁ khāndā hāṁ. — I eat yoghurt with my roti.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ roṭī nāl dahīṁ khāndā hāṁ.* — I eat yoghurt with my roti.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to boil, then the Punjabi for to boil down, then say dahīṁ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to boil, then the Punjabi for to boil down, then say *dahīṁ* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਦਹੀਂ (dahīṁ) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਦਹੀਂ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਦਹੀਂ (dahīṁ) mean? (\"Yoghurt; curd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C237-chati",
+      "sequence": 13640,
+      "title": "ਚਾਟੀ (chāṭī) — a churning pot",
+      "headword": "ਚਾਟੀ",
+      "romanization": "chāṭī",
+      "gloss": "a churning pot",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9963d1fed1ffd0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to boil down, then the Punjabi for yoghurt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚਾਟੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਾਟੀ — chāṭī — \"a churning pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਚਾਟੀ ਵਿੱਚ ਦਹੀਂ ਹੈ। chāṭī vich dahīṁ hai. There is curd in the churning pot."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚਾਟੀ (chāṭī) is inherited from a reconstructed cāṭṭa, \"pot\"; CDIAL lists Punjabi cāṭṭī, \"large earthen vessel\" (CDIAL 4738). CDIAL takes cāṭṭa itself from Dravidian (Tamil caṭṭi)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāṭī vich dahīṁ hai. — There is curd in the churning pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāṭī vich dahīṁ hai.* — There is curd in the churning pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to boil down, then the Punjabi for yoghurt, then say chāṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to boil down, then the Punjabi for yoghurt, then say *chāṭī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚਾਟੀ (chāṭī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚਾਟੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚਾਟੀ (chāṭī) mean? (\"A churning pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C237-madhani",
+      "sequence": 13650,
+      "title": "ਮਧਾਣੀ (madhāṇī) — a churning stick",
+      "headword": "ਮਧਾਣੀ",
+      "romanization": "madhāṇī",
+      "gloss": "a churning stick",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d9f7998e7b8b6cd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for yoghurt, then the Punjabi for a churning pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਧਾਣੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਧਾਣੀ — madhāṇī — \"a churning stick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ ਮਧਾਣੀ ਨਾਲ ਲੱਸੀ ਬਣਾਉਂਦੀ ਹੈ। dādī madhāṇī nāl lassī baṇāundī hai. Grandmother makes lassi with a churning stick."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਧਾਣੀ (madhāṇī) is inherited from Sanskrit manthāna, \"churning-stick\"; CDIAL lists Punjabi madhāṇī, \"churning-stick\" (CDIAL 9842)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhāṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhāṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madhāṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madhāṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī madhāṇī nāl lassī baṇāundī hai. — Grandmother makes lassi with a churning stick.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī madhāṇī nāl lassī baṇāundī hai.* — Grandmother makes lassi with a churning stick.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for yoghurt, then the Punjabi for a churning pot, then say madhāṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for yoghurt, then the Punjabi for a churning pot, then say *madhāṇī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਧਾਣੀ (madhāṇī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਧਾਣੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਧਾਣੀ (madhāṇī) mean? (\"A churning stick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

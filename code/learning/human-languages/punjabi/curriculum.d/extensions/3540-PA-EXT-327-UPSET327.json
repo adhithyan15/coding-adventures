@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-327-UPSET327",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when someone is upset or lonely.",
+  "prerequisites": []
+}

@@ -1,0 +1,30 @@
+{
+  "lesson": {
+    "id": "PA-C217-au",
+    "language": "punjabi",
+    "chapter": 217,
+    "sequence": 11880,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "script-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:563c9dfc39ab4a53",
+    "detachableSegments": [
+      "Script you'll notice: ਔ",
+      "Writing: copy what you can see"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

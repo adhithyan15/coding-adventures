@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:ef8aef8aaaf1b030",
+  "lessonIds": [
+    "PA-C276-mull",
+    "PA-C276-bhaa",
+    "PA-C276-ghatauna",
+    "PA-C276-sauda",
+    "PA-C276-mufat"
+  ],
+  "tex": "punjabi/book/chapters/ch276-what-is-the-price.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 225,
+  "title": "Waking Up Early",
+  "label": "ch:pa-a2-waking-up-early",
+  "canDo": "I can say when I wake and when I am free.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C225-kahla",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 225: I can say when I wake and when I am free.",
+    "assesses": [
+      "PA-LEX-C225-DIN225-03",
+      "PA-LEX-C225-DIN225-04",
+      "PA-LEX-C225-DIN225-05"
+    ]
+  }
+}

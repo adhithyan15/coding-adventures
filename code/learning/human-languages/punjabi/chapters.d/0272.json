@@ -1,0 +1,19 @@
+{
+  "chapter": 272,
+  "title": "Lost in the Crowd",
+  "label": "ch:pa-a2-lost-in-the-crowd",
+  "canDo": "I can ask for help when I lose my group in town.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C272-parak",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 272: I can ask for help when I lose my group in town.",
+    "assesses": [
+      "PA-LEX-C272-CROWD272-03",
+      "PA-LEX-C272-CROWD272-04",
+      "PA-LEX-C272-CROWD272-05"
+    ]
+  }
+}

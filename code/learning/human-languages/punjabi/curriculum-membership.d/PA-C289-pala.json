@@ -1,0 +1,11 @@
+{
+  "id": "PA-C289-pala",
+  "pathSegment": "PA-PATH-289-COLD289",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-289-COLD289",
+      "order": 2
+    }
+  ]
+}

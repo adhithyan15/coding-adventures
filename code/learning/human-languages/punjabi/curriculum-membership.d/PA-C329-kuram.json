@@ -1,0 +1,11 @@
+{
+  "id": "PA-C329-kuram",
+  "pathSegment": "PA-PATH-329-INLAW329",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-329-INLAW329",
+      "order": 4
+    }
+  ]
+}

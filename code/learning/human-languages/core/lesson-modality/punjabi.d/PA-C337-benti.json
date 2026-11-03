@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C337-benti",
+    "language": "punjabi",
+    "chapter": 337,
+    "sequence": 21010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cc595919e484a54d"
+  },
+  "findings": []
+}

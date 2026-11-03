@@ -1,0 +1,21 @@
+{
+  "chapter": 245,
+  "title": "Our Courtyard House",
+  "label": "ch:pa-a2-our-courtyard-house",
+  "canDo": "I can name the parts of a courtyard house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-R245-review-239-245",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 245: I can name the parts of a courtyard house.",
+    "assesses": [
+      "PA-LEX-C245-GHR245-01",
+      "PA-LEX-C245-GHR245-02",
+      "PA-LEX-C245-GHR245-03",
+      "PA-LEX-C245-GHR245-04",
+      "PA-LEX-C245-GHR245-05"
+    ]
+  }
+}

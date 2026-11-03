@@ -1,0 +1,11 @@
+{
+  "id": "PA-C321-nigalna",
+  "pathSegment": "PA-PATH-321-COLD321",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-321-COLD321",
+      "order": 4
+    }
+  ]
+}

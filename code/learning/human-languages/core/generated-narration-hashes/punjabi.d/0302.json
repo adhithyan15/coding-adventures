@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:3fdcad68425dd171",
+  "lessonIds": [
+    "PA-C302-kiari",
+    "PA-C302-ruri",
+    "PA-C302-khilarna",
+    "PA-C302-uggna",
+    "PA-C302-sarhom"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch302.txt",
+  "json": "punjabi/narration/ch302.json",
+  "textHash": "fnv1a64:a8bc6e425acf0760",
+  "jsonHash": "fnv1a64:d69100902067ffb3",
+  "findings": []
+}

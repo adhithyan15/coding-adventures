@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Rough and Smooth",
+  "label": "ch:pa-a2-rough-and-smooth",
+  "canDo": "I can say how something feels in the hand.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C297-chubhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say how something feels in the hand.",
+    "assesses": [
+      "PA-LEX-C297-TOUCH297-03",
+      "PA-LEX-C297-TOUCH297-04",
+      "PA-LEX-C297-TOUCH297-05"
+    ]
+  }
+}

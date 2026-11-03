@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C322-sujjna",
+    "language": "punjabi",
+    "chapter": 322,
+    "sequence": 19680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f10a2d7cefe00e03"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C362-azmauna",
+    "language": "punjabi",
+    "chapter": 362,
+    "sequence": 22320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c80d69d9f900ed8f"
+  },
+  "findings": []
+}

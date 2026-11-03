@@ -1,0 +1,11 @@
+{
+  "id": "PA-C338-tokna",
+  "pathSegment": "PA-PATH-338-PERM338",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-338-PERM338",
+      "order": 4
+    }
+  ]
+}

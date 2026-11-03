@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 252,
+  "sourceHash": "fnv1a64:0b96a145ad4d3743",
+  "lessonIds": [
+    "PA-C252-potli",
+    "PA-C252-pand",
+    "PA-C252-van",
+    "PA-C252-takhta",
+    "PA-C252-parda",
+    "PA-R252-review-246-252",
+    "PA-R252-review-final-252"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch252.txt",
+  "json": "punjabi/narration/ch252.json",
+  "textHash": "fnv1a64:65473be42a80f173",
+  "jsonHash": "fnv1a64:f04594530e4ff1c7",
+  "findings": []
+}

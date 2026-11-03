@@ -1,0 +1,19 @@
+{
+  "chapter": 260,
+  "title": "Quarter Past and Half Past",
+  "label": "ch:pa-a2-quarter-past-and-half-past",
+  "canDo": "I can say a time with a quarter or a half.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C260-dhai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 260: I can say a time with a quarter or a half.",
+    "assesses": [
+      "PA-LEX-C260-TIME260-03",
+      "PA-LEX-C260-TIME260-04",
+      "PA-LEX-C260-TIME260-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C309-hadsa",
+    "language": "punjabi",
+    "chapter": 309,
+    "sequence": 19010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c9617ed9ce512020"
+  },
+  "findings": []
+}

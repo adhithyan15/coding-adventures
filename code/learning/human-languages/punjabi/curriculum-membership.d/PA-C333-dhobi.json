@@ -1,0 +1,11 @@
+{
+  "id": "PA-C333-dhobi",
+  "pathSegment": "PA-PATH-333-BARBER333",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-333-BARBER333",
+      "order": 2
+    }
+  ]
+}

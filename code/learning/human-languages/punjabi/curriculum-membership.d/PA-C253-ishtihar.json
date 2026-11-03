@@ -1,0 +1,11 @@
+{
+  "id": "PA-C253-ishtihar",
+  "pathSegment": "PA-PATH-253-RULE253",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-253-RULE253",
+      "order": 4
+    }
+  ]
+}

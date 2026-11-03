@@ -1,0 +1,19 @@
+{
+  "chapter": 211,
+  "title": "Going and Drinking Every Day",
+  "label": "ch:pa-a2-vowel-stem",
+  "canDo": "I can say what I go to, eat and drink every day, with the present forms of jana, khana and pina.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C211-payoff",
+    "kind": "production",
+    "summary": "Say where you go and what you eat and drink every day, as a man, a woman and a group.",
+    "assesses": [
+      "PA-GRAMMAR-VOWEL-STEM-211",
+      "PA-GRAMMAR-KHANDA-PINDA-211",
+      "PA-GRAMMAR-VOWEL-STEM-PLURAL-211"
+    ]
+  }
+}

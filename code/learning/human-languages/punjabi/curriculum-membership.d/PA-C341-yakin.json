@@ -1,0 +1,11 @@
+{
+  "id": "PA-C341-yakin",
+  "pathSegment": "PA-PATH-341-DOUBT341",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-341-DOUBT341",
+      "order": 1
+    }
+  ]
+}

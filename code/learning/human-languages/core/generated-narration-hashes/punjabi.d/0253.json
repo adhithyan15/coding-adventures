@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 253,
+  "sourceHash": "fnv1a64:1c37b2d00483dbd2",
+  "lessonIds": [
+    "PA-C253-niyam",
+    "PA-C253-notis",
+    "PA-C253-katar",
+    "PA-C253-hatna",
+    "PA-C253-ishtihar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch253.txt",
+  "json": "punjabi/narration/ch253.json",
+  "textHash": "fnv1a64:bb2dd1988b3868b2",
+  "jsonHash": "fnv1a64:b9efdfbe3c03f2a1",
+  "findings": []
+}

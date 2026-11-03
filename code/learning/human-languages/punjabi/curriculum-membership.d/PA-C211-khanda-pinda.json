@@ -1,0 +1,11 @@
+{
+  "id": "PA-C211-khanda-pinda",
+  "pathSegment": "PA-PATH-211-A2-VOWEL-STEM",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-211-A2-VOWEL-STEM",
+      "order": 3
+    }
+  ]
+}

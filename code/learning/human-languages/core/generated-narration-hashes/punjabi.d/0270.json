@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 270,
+  "sourceHash": "fnv1a64:f30c077870ea1bfa",
+  "lessonIds": [
+    "PA-C270-dhundhna",
+    "PA-C270-kharhna",
+    "PA-C270-langhauna",
+    "PA-C270-mil",
+    "PA-C270-maidan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch270.txt",
+  "json": "punjabi/narration/ch270.json",
+  "textHash": "fnv1a64:e416f85ca436ec9d",
+  "jsonHash": "fnv1a64:ddf7db46055d9919",
+  "findings": []
+}

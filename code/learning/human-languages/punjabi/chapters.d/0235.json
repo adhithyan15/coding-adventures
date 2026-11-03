@@ -1,0 +1,19 @@
+{
+  "chapter": 235,
+  "title": "Sweeping the Floor",
+  "label": "ch:pa-a2-sweeping-the-floor",
+  "canDo": "I can name the jobs of cleaning a house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C235-lippna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 235: I can name the jobs of cleaning a house.",
+    "assesses": [
+      "PA-LEX-C235-KAM235-03",
+      "PA-LEX-C235-KAM235-04",
+      "PA-LEX-C235-KAM235-05"
+    ]
+  }
+}

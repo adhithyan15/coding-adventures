@@ -72,7 +72,7 @@ use warnings;
 use Carp;
 use Math::BigInt;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 # ============================================================================
 # CONSTANTS
@@ -143,32 +143,78 @@ sub _rotr32 {
     return (($v >> $rot) | (($v << (32 - $rot)) & U32_MASK)) & U32_MASK;
 }
 
-# _rejection_sample(next_u32_fn, min, max): uniform integer in [min, max].
+# _rejection_sample(next_u32_fn, min, max): a uniform integer in [min, max]
+# (spec rng.md, "Rejection Sampling", v2), identical in every language.
 #
-# ## Why Rejection Sampling?
+# span = max - min + 1 lies between 1 and 2^64. Naïve r % span over-samples
+# low values whenever the number of possible draws is not a multiple of span.
+# Example: span = 3, 2^32 = 4294967296 = 3 * 1431655765 + 1, so offset 0
+# would be drawn once more than 1 and 2. Rejecting the `threshold` lowest
+# draws removes exactly the excess. Three regimes, chosen by span alone:
 #
-# Naïve value % range over-samples low values when 2^32 is not evenly
-# divisible by range. Example: range = 3, 2^32 = 4294967296.
-# 4294967296 mod 3 = 1, so value 0 appears 1431655766 times vs 1431655765
-# for values 1 and 2.
+#   span <= 2^32    draw 32 bits,  threshold = (2^32 - span) % span
+#   span <  2^64    draw 64 bits,  threshold = (2^64 - span) % span
+#   span == 2^64    the whole signed 64-bit domain: every u64 is valid
 #
-# Rejection sampling: compute threshold = (2^32 mod range). Discard draws
-# below threshold. All remaining values map uniformly onto [0, range).
-# Expected extra draws per call: < 2 for all range sizes.
+# The 32-bit regime fits native integers exactly. Wider spans use
+# Math::BigInt: Perl's native arithmetic silently turns into floating point
+# when a 64-bit integer operation overflows, which would change the answer.
 #
+# Bounds must be integers (native, decimal strings or Math::BigInt) inside the
+# signed 64-bit domain, with min <= max; anything else croaks before any draw.
+# v1 masked the span to 32 bits and drew 32 bits for every span, so a range
+# wider than 2^32 could never return more than 2^32 - 1 above min.
+my $_I64_MIN = Math::BigInt->new('-9223372036854775808');
+my $_I64_MAX = Math::BigInt->new('9223372036854775807');
+my $_TWO_32  = Math::BigInt->new('4294967296');
+my $_TWO_64  = Math::BigInt->new('18446744073709551616');
+
 sub _rejection_sample {
     my ($next_u32_fn, $min, $max) = @_;
-    my $range = $max - $min + 1;
-    # threshold = (2^32 - range) % range = (0x100000000 - range) % range
-    # Since range fits in 32 bits, we compute: ((-range) & 0xFFFFFFFF) % range
-    my $neg_range = ((-$range) & U32_MASK);
-    my $threshold = $neg_range % $range;
-    while (1) {
-        my $r = $next_u32_fn->();
-        if ($r >= $threshold) {
-            return $min + ($r % $range);
+    # Each bound is stringified exactly once, and that one string is both
+    # checked and parsed: an object with "" overloading could otherwise pass
+    # the check with one string and be parsed from another.
+    my @text;
+    for my $bound ($min, $max) {
+        my $string = defined $bound ? "$bound" : '';
+        # Two checks, because a float's string form is rounded to 15
+        # significant digits: 0.9999999999999999 prints as "1" and would pass
+        # the pattern alone. The second compares the number with its own
+        # integer part, which differs for any non-integer float. (Comparing
+        # with Math::BigInt does not work: its constructor stringifies too.)
+        Carp::croak('next_int_in_range bounds must be integers')
+            unless $string =~ /\A-?[0-9]+\z/
+            && (ref($bound) || $bound == int($bound));
+        push @text, $string;
+    }
+    my ($lo, $hi) = map { Math::BigInt->new($_) } @text;
+    Carp::croak("next_int_in_range needs signed 64-bit bounds with min <= max, got [$lo, $hi]")
+        if $lo->is_nan || $hi->is_nan
+        || $lo < $_I64_MIN || $hi > $_I64_MAX || $lo > $hi;
+
+    my $span = $hi - $lo + 1;
+    my $next_u64 = sub {
+        my $h = Math::BigInt->new($next_u32_fn->());
+        return $h->blsft(32)->bior($next_u32_fn->());
+    };
+    if ($span <= $_TWO_32) {
+        my $s = $span->numify;
+        my $threshold = (4294967296 - $s) % $s;
+        while (1) {
+            my $r = $next_u32_fn->();
+            return ($lo + ($r % $s))->numify if $r >= $threshold;
         }
     }
+    if ($span < $_TWO_64) {
+        my $threshold = ($_TWO_64 - $span) % $span;
+        while (1) {
+            my $r = $next_u64->();
+            return ($lo + ($r % $span))->numify if $r >= $threshold;
+        }
+    }
+    # Only the whole domain is left; anything else is a bug, not a draw.
+    Carp::croak("next_int_in_range: unexpected span $span") unless $span == $_TWO_64;
+    return ($lo + $next_u64->())->numify;
 }
 
 # ============================================================================
@@ -224,7 +270,6 @@ sub next_float {
 # next_int_in_range(min, max): uniform integer in [min, max] inclusive.
 sub next_int_in_range {
     my ($self, $min, $max) = @_;
-    Carp::croak("next_int_in_range requires min <= max, got $min > $max") if $min > $max;
     return CodingAdventures::Rng::_rejection_sample(
         sub { $self->next_u32() },
         $min, $max
@@ -310,7 +355,6 @@ sub next_float {
 # next_int_in_range(min, max): uniform integer in [min, max] inclusive.
 sub next_int_in_range {
     my ($self, $min, $max) = @_;
-    Carp::croak("next_int_in_range requires min <= max, got $min > $max") if $min > $max;
     return CodingAdventures::Rng::_rejection_sample(
         sub { $self->next_u32() },
         $min, $max
@@ -400,7 +444,6 @@ sub next_float {
 # next_int_in_range(min, max): uniform integer in [min, max] inclusive.
 sub next_int_in_range {
     my ($self, $min, $max) = @_;
-    Carp::croak("next_int_in_range requires min <= max, got $min > $max") if $min > $max;
     return CodingAdventures::Rng::_rejection_sample(
         sub { $self->next_u32() },
         $min, $max

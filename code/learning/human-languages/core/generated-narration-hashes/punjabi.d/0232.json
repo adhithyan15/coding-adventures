@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 232,
+  "sourceHash": "fnv1a64:a95fb5641bba3a8b",
+  "lessonIds": [
+    "PA-C232-sajauna",
+    "PA-C232-sametna",
+    "PA-C232-yad",
+    "PA-C232-uddharna",
+    "PA-C232-tunnna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch232.txt",
+  "json": "punjabi/narration/ch232.json",
+  "textHash": "fnv1a64:655732c315e9a784",
+  "jsonHash": "fnv1a64:a05eadb305b44315",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:41269a21cbade9a5",
+  "lessonIds": [
+    "PA-C336-karigar",
+    "PA-C336-mazdur",
+    "PA-C336-kasai",
+    "PA-C336-daraivar",
+    "PA-C336-murammat",
+    "PA-R336-review-330-336",
+    "PA-R336-review-final-336"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch336.txt",
+  "json": "punjabi/narration/ch336.json",
+  "textHash": "fnv1a64:848e88aec6164497",
+  "jsonHash": "fnv1a64:44cfd653b1a4509e",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C217-aaia",
+    "language": "punjabi",
+    "chapter": 217,
+    "sequence": 11850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c731a7749df481c1"
+  },
+  "findings": []
+}

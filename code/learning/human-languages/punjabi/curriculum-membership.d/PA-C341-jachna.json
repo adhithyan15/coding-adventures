@@ -1,0 +1,11 @@
+{
+  "id": "PA-C341-jachna",
+  "pathSegment": "PA-PATH-341-DOUBT341",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-341-DOUBT341",
+      "order": 4
+    }
+  ]
+}

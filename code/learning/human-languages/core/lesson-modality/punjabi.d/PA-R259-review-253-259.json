@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R259-review-253-259",
+    "language": "punjabi",
+    "chapter": 259,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:aee4103bf1bb6e61"
+  },
+  "findings": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-357-SCHOOL357",
+  "spine_node": "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO",
+  "before": [],
+  "inline": [
+    "PA-EXT-357-SCHOOL357"
+  ],
+  "after": []
+}

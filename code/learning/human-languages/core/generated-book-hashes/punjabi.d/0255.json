@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 255,
+  "sourceHash": "fnv1a64:706318faafb98328",
+  "lessonIds": [
+    "PA-C255-dak",
+    "PA-C255-lifafa",
+    "PA-C255-mohar",
+    "PA-C255-kaghaz",
+    "PA-C255-chhapna"
+  ],
+  "tex": "punjabi/book/chapters/ch255-letters-and-stamps.tex"
+}

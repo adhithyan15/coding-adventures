@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-224-A2-MESSAGE",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can follow a short message that says what happened, what did not, and what will happen at what time.",
+  "prerequisites": [
+    "PA-EXT-223-A2-PLAN"
+  ]
+}

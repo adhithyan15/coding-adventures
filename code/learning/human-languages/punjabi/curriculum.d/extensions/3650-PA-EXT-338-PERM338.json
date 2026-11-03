@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-338-PERM338",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for permission and say what is not allowed.",
+  "prerequisites": []
+}

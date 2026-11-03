@@ -1,0 +1,11 @@
+{
+  "id": "PA-C259-ghanti",
+  "pathSegment": "PA-PATH-259-PHONE259",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-259-PHONE259",
+      "order": 1
+    }
+  ]
+}

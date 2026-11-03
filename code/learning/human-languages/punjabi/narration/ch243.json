@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 243,
+  "title": "Mixing and Tasting",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:af0e80e3b3a00c72",
+  "lessons": [
+    {
+      "id": "PA-C243-pauna",
+      "sequence": 13920,
+      "title": "ਪਾਉਣਾ (pāuṇā) — to pour in; to put in",
+      "headword": "ਪਾਉਣਾ",
+      "romanization": "pāuṇā",
+      "gloss": "to pour in; to put in",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7dfef4c7f5495035",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to sprinkle, then the Punjabi for to get burnt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਾਉਣਾ — pāuṇā — \"to pour in; to put in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਚਾਹ ਵਿੱਚ ਦੁੱਧ ਪਾਉਂਦੀ ਹਾਂ। maiṁ chāh vich dudh pāundī hāṁ. I pour milk into the tea."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਦੁੱਧ ਪਾਇਆ, maiṁ dudh pāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਾਉਣਾ (pāuṇā) is inherited from Sanskrit pātayati, \"throws, pours out\"; CDIAL lists Punjabi pāuṇā, \"to pour\" (CDIAL 8053)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ chāh vich dudh pāundī hāṁ. — I pour milk into the tea.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ chāh vich dudh pāundī hāṁ.* — I pour milk into the tea.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to sprinkle, then the Punjabi for to get burnt, then say pāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to sprinkle, then the Punjabi for to get burnt, then say *pāuṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਾਉਣਾ (pāuṇā) mean? (\"To pour in; to put in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C243-gholna",
+      "sequence": 13930,
+      "title": "ਘੋਲਣਾ (gholṇā) — to dissolve; to stir in",
+      "headword": "ਘੋਲਣਾ",
+      "romanization": "gholṇā",
+      "gloss": "to dissolve; to stir in",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8979f1f96bdb7e3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to get burnt, then the Punjabi for to pour in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਘੋਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਘੋਲਣਾ — gholṇā — \"to dissolve; to stir in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਪਾਣੀ ਵਿੱਚ ਖੰਡ ਘੋਲਦਾ ਹਾਂ। maiṁ pāṇī vich khaṇḍ gholdā hāṁ. I dissolve sugar in water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਖੰਡ ਘੋਲੀ, maiṁ khaṇḍ gholī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਘੋਲਣਾ (gholṇā) is inherited from Sanskrit ghōlayati, \"mixes, stirs together\"; CDIAL lists Punjabi gholaṇā, \"to stir, mix, dissolve\" (CDIAL 4526)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gholṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gholṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gholṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gholṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ pāṇī vich khaṇḍ gholdā hāṁ. — I dissolve sugar in water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ pāṇī vich khaṇḍ gholdā hāṁ.* — I dissolve sugar in water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to get burnt, then the Punjabi for to pour in, then say gholṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to get burnt, then the Punjabi for to pour in, then say *gholṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਘੋਲਣਾ (gholṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਘੋਲਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਘੋਲਣਾ (gholṇā) mean? (\"To dissolve; to stir in\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C243-ralauna",
+      "sequence": 13940,
+      "title": "ਰਲਾਉਣਾ (ralāuṇā) — to mix",
+      "headword": "ਰਲਾਉਣਾ",
+      "romanization": "ralāuṇā",
+      "gloss": "to mix",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea1f0e175c1ae5ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to pour in, then the Punjabi for to dissolve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰਲਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਲਾਉਣਾ — ralāuṇā — \"to mix\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਦਾਲ ਵਿੱਚ ਮਸਾਲਾ ਰਲਾਉਂਦੀ ਹਾਂ। maiṁ dāl vich masālā ralāundī hāṁ. I mix spices into the dal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਮਸਾਲਾ ਰਲਾਇਆ, maiṁ masālā ralāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਲਾਉਣਾ (ralāuṇā) is inherited from a reconstructed ral, \"meet with, join\"; CDIAL lists Punjabi ralāuṇā, \"to mix, join\" (CDIAL 10640)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ralāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ralāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ralāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ralāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ dāl vich masālā ralāundī hāṁ. — I mix spices into the dal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ dāl vich masālā ralāundī hāṁ.* — I mix spices into the dal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to pour in, then the Punjabi for to dissolve, then say ralāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to pour in, then the Punjabi for to dissolve, then say *ralāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਰਲਾਉਣਾ (ralāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਰਲਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰਲਾਉਣਾ (ralāuṇā) mean? (\"To mix\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C243-chhanna",
+      "sequence": 13950,
+      "title": "ਛਾਣਨਾ (chhāṇnā) — to sift",
+      "headword": "ਛਾਣਨਾ",
+      "romanization": "chhāṇnā",
+      "gloss": "to sift",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:934be15ccfb3fa9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to dissolve, then the Punjabi for to mix."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਛਾਣਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛਾਣਨਾ — chhāṇnā — \"to sift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਆਟਾ ਛਾਣਦੀ ਹਾਂ। maiṁ āṭā chhāṇdī hāṁ. I sift the flour."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਆਟਾ ਛਾਣਿਆ, maiṁ āṭā chhāṇiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛਾਣਨਾ (chhāṇnā) is inherited from a reconstructed kṣaṇati, \"is sifted, is strained\"; CDIAL lists Punjabi chāṇnā, \"to sift, strain, choose\" (CDIAL 3643)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāṇnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāṇnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhāṇnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhāṇnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ āṭā chhāṇdī hāṁ. — I sift the flour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ āṭā chhāṇdī hāṁ.* — I sift the flour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to dissolve, then the Punjabi for to mix, then say chhāṇnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to dissolve, then the Punjabi for to mix, then say *chhāṇnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਛਾਣਨਾ (chhāṇnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਛਾਣਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਛਾਣਨਾ (chhāṇnā) mean? (\"To sift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C243-chakkhna",
+      "sequence": 13960,
+      "title": "ਚੱਖਣਾ (chakkhṇā) — to taste",
+      "headword": "ਚੱਖਣਾ",
+      "romanization": "chakkhṇā",
+      "gloss": "to taste",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e57cd7c474abe95f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to mix, then the Punjabi for to sift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚੱਖਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੱਖਣਾ — chakkhṇā — \"to taste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਸੀਂ ਖੀਰ ਚੱਖੋਗੇ? kī tusī̃ khīr chakkhoge? Will you taste the rice pudding?"
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਖੀਰ ਚੱਖੀ, maiṁ khīr chakkhī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੱਖਣਾ (chakkhṇā) is inherited from a reconstructed cakṣati, \"tastes\"; CDIAL lists Punjabi cakkhṇā, \"to taste\" (CDIAL 4557)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chakkhṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chakkhṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chakkhṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chakkhṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kī tusī̃ khīr chakkhoge? — Will you taste the rice pudding?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kī tusī̃ khīr chakkhoge?* — Will you taste the rice pudding?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to mix, then the Punjabi for to sift, then say chakkhṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to mix, then the Punjabi for to sift, then say *chakkhṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚੱਖਣਾ (chakkhṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚੱਖਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚੱਖਣਾ (chakkhṇā) mean? (\"To taste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

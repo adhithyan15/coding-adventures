@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C234-diva",
+    "language": "punjabi",
+    "chapter": 234,
+    "sequence": 13470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8d101fc36ddacb0a"
+  },
+  "findings": []
+}

@@ -1,0 +1,16 @@
+; expect: sat unsat
+(set-logic QF_BV)
+(declare-const a (_ BitVec 4))
+(declare-const b (_ BitVec 4))
+(declare-const c (_ BitVec 4))
+(push 1)
+(assert (bvslt a b))
+(assert (bvslt b c))
+(assert (bvsge c #x7))
+(check-sat)
+(pop 1)
+; Strict order is transitive: a < b < c and c <= a is impossible.
+(assert (bvult a b))
+(assert (bvult b c))
+(assert (bvule c a))
+(check-sat)

@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Bread on the Griddle",
+  "label": "ch:pa-a2-bread-on-the-griddle",
+  "canDo": "I can talk about cooking flatbread.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C239-ghiu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can talk about cooking flatbread.",
+    "assesses": [
+      "PA-LEX-C239-KAM239-03",
+      "PA-LEX-C239-KAM239-04",
+      "PA-LEX-C239-KAM239-05"
+    ]
+  }
+}

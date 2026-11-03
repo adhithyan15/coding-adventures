@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 262,
+  "title": "Fees and Fines",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:23e5dd1a4e9a81e1",
+  "lessons": [
+    {
+      "id": "PA-C262-fis",
+      "sequence": 15460,
+      "title": "ਫ਼ੀਸ (fīs) — a fee",
+      "headword": "ਫ਼ੀਸ",
+      "romanization": "fīs",
+      "gloss": "a fee",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:610200d73efe858a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to set off, then the Punjabi for departing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਫ਼ੀਸ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫ਼ੀਸ — fīs — \"a fee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਲਾਇਬ੍ਰੇਰੀ ਦੀ ਫ਼ੀਸ ਬਹੁਤ ਘੱਟ ਹੈ। lāibrerī dī fīs bahut ghaṭṭ hai. The library fee is very low."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫ਼ੀਸ (fīs) is borrowed from English fees, the plural of fee."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fīs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fīs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fīs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fīs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāibrerī dī fīs bahut ghaṭṭ hai. — The library fee is very low.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāibrerī dī fīs bahut ghaṭṭ hai.* — The library fee is very low.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to set off, then the Punjabi for departing, then say fīs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to set off, then the Punjabi for departing, then say *fīs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਫ਼ੀਸ (fīs) mean? (\"A fee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C262-kiraia",
+      "sequence": 15470,
+      "title": "ਕਿਰਾਇਆ (kirāiā) — a fare; rent",
+      "headword": "ਕਿਰਾਇਆ",
+      "romanization": "kirāiā",
+      "gloss": "a fare; rent",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4a3e42e412cfc113",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for departing, then the Punjabi for a fee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਿਰਾਇਆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿਰਾਇਆ — kirāiā — \"a fare; rent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸ਼ਹਿਰ ਤੱਕ ਬੱਸ ਦਾ ਕਿਰਾਇਆ ਸਸਤਾ ਹੈ। shahir tak bass dā kirāiā sastā hai. The bus fare to town is cheap."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿਰਾਇਆ (kirāiā) is a loan, usually traced through Persian to Arabic kirā, \"hire\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirāiā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirāiā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kirāiā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kirāiā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shahir tak bass dā kirāiā sastā hai. — The bus fare to town is cheap.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shahir tak bass dā kirāiā sastā hai.* — The bus fare to town is cheap.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for departing, then the Punjabi for a fee, then say kirāiā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for departing, then the Punjabi for a fee, then say *kirāiā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਿਰਾਇਆ (kirāiā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਿਰਾਇਆ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਿਰਾਇਆ (kirāiā) mean? (\"A fare; rent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C262-jurmana",
+      "sequence": 15480,
+      "title": "ਜੁਰਮਾਨਾ (jurmānā) — a fine; a penalty",
+      "headword": "ਜੁਰਮਾਨਾ",
+      "romanization": "jurmānā",
+      "gloss": "a fine; a penalty",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d13cfbf67241949",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a fee, then the Punjabi for a fare."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਜੁਰਮਾਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੁਰਮਾਨਾ — jurmānā — \"a fine; a penalty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਜੇ ਤੁਹਾਡੇ ਕੋਲ ਟਿਕਟ ਨਹੀਂ ਹੈ ਤਾਂ ਤੁਸੀਂ ਜੁਰਮਾਨਾ ਭਰੋਗੇ। je tuhāḍe kol ṭikaṭ nahīṁ hai tāṁ tusī̃ jurmānā bharoge. If you have no ticket, you will pay a fine."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੁਰਮਾਨਾ (jurmānā) is a loan, usually traced to Persian jurmāna, \"a fine\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jurmānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jurmānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jurmānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jurmānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je tuhāḍe kol ṭikaṭ nahīṁ hai tāṁ tusī̃ jurmānā bharoge. — If you have no ticket, you will pay a fine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je tuhāḍe kol ṭikaṭ nahīṁ hai tāṁ tusī̃ jurmānā bharoge.* — If you have no ticket, you will pay a fine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a fee, then the Punjabi for a fare, then say jurmānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a fee, then the Punjabi for a fare, then say *jurmānā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਜੁਰਮਾਨਾ (jurmānā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਜੁਰਮਾਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਜੁਰਮਾਨਾ (jurmānā) mean? (\"A fine; a penalty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C262-rasid",
+      "sequence": 15490,
+      "title": "ਰਸੀਦ (rasīd) — a receipt",
+      "headword": "ਰਸੀਦ",
+      "romanization": "rasīd",
+      "gloss": "a receipt",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:552d41f84c8cd9b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a fare, then the Punjabi for a fine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰਸੀਦ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਸੀਦ — rasīd — \"a receipt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਫ਼ੀਸ ਦੀ ਰਸੀਦ ਮੇਰੀ ਜੇਬ ਵਿੱਚ ਹੈ। fīs dī rasīd merī jeb vich hai. The receipt for the fee is in my pocket."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਸੀਦ (rasīd) is a loan, usually traced to Persian rasīd, \"arrived; a receipt\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasīd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasīd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rasīd, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rasīd*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fīs dī rasīd merī jeb vich hai. — The receipt for the fee is in my pocket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fīs dī rasīd merī jeb vich hai.* — The receipt for the fee is in my pocket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a fare, then the Punjabi for a fine, then say rasīd again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a fare, then the Punjabi for a fine, then say *rasīd* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਰਸੀਦ (rasīd) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਰਸੀਦ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰਸੀਦ (rasīd) mean? (\"A receipt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C262-chukauna",
+      "sequence": 15500,
+      "title": "ਚੁਕਾਉਣਾ (chukāuṇā) — to pay off; to settle a bill",
+      "headword": "ਚੁਕਾਉਣਾ",
+      "romanization": "chukāuṇā",
+      "gloss": "to pay off; to settle a bill",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01f8e917787720d2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a fine, then the Punjabi for a receipt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚੁਕਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੁਕਾਉਣਾ — chukāuṇā — \"to pay off; to settle a bill\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਹਰ ਮਹੀਨੇ ਬੈਂਕ ਦਾ ਕਰਜ਼ਾ ਚੁਕਾਉਂਦਾ ਹਾਂ। maiṁ har mahīne baiṅk dā karzā chukāundā hāṁ. I pay off the bank debt every month."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਜੁਰਮਾਨਾ ਚੁਕਾਇਆ, maiṁ jurmānā chukāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੁਕਾਉਣਾ (chukāuṇā) is inherited from a reconstructed cukk, \"fall short of, stop\"; CDIAL lists Punjabi cukāuṇā, \"to finish with, settle\", under it (CDIAL 4848)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chukāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chukāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chukāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chukāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ har mahīne baiṅk dā karzā chukāundā hāṁ. — I pay off the bank debt every month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ har mahīne baiṅk dā karzā chukāundā hāṁ.* — I pay off the bank debt every month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a fine, then the Punjabi for a receipt, then say chukāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a fine, then the Punjabi for a receipt, then say *chukāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚੁਕਾਉਣਾ (chukāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚੁਕਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚੁਕਾਉਣਾ (chukāuṇā) mean? (\"To pay off; to settle a bill\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C230-lahuna",
+    "language": "punjabi",
+    "chapter": 230,
+    "sequence": 13260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1c0dcc71dd05fea2"
+  },
+  "findings": []
+}

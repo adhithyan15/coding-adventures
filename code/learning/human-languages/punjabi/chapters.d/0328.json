@@ -1,0 +1,19 @@
+{
+  "chapter": 328,
+  "title": "Caring for the Sick",
+  "label": "ch:pa-a2-caring-for-the-sick",
+  "canDo": "I can say who cared for a sick person and how.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C328-sahina",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can say who cared for a sick person and how.",
+    "assesses": [
+      "PA-LEX-C328-CARE328-03",
+      "PA-LEX-C328-CARE328-04",
+      "PA-LEX-C328-CARE328-05"
+    ]
+  }
+}

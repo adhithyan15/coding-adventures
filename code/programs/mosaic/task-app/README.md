@@ -50,6 +50,12 @@ host-only exclusions (theme storage and locale-formatted calendar copy).
 note's typed *Attach to task* name resolves to (accented Latin, Greek final sigma,
 German ß, Turkish dotted I, trimming and ties). Both hosts run every case; the rule
 is `code/specs/task-app-notes-ui-v1.md`'s addendum v1.4.
+`fixtures/task-name-limit-v1.json` pins the task-name limit the same way: 512
+Unicode scalar values (code points on the web, `str::chars` natively), with cases
+exactly at it, one past it, and in two-byte, three-byte, astral and combining
+characters. A name typed past it is refused as typed; a name stored before it loads
+whole and can only shrink (`code/specs/task-app-data-model.md`, "Task names are
+bounded").
 The first-run product acceptance and its focused follow-up queue are recorded in
 `code/specs/task-app-first-run-usability-audit-v1.md`. Which of Mosaic's nine
 backends TaskApp is actually finished on is measured in

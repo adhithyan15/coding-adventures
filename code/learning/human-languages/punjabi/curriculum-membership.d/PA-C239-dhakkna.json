@@ -1,0 +1,11 @@
+{
+  "id": "PA-C239-dhakkna",
+  "pathSegment": "PA-PATH-239-KAM239",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-239-KAM239",
+      "order": 3
+    }
+  ]
+}

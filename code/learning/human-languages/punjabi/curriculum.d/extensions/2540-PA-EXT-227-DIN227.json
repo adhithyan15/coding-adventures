@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-227-DIN227",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about washing my hands and face.",
+  "prerequisites": []
+}

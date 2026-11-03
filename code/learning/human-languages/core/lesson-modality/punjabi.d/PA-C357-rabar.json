@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C357-rabar",
+    "language": "punjabi",
+    "chapter": 357,
+    "sequence": 22020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4f03310e62b588f1"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C277-chiz",
+    "language": "punjabi",
+    "chapter": 277,
+    "sequence": 16260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3c1005a02986ac43"
+  },
+  "findings": []
+}

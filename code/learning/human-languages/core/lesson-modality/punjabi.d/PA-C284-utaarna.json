@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C284-utaarna",
+    "language": "punjabi",
+    "chapter": 284,
+    "sequence": 17160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7b2184dd54a3cb90"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C240-ukkhli",
+  "pathSegment": "PA-PATH-240-KAM240",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-240-KAM240",
+      "order": 2
+    }
+  ]
+}

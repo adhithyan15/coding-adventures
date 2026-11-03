@@ -1,0 +1,11 @@
+{
+  "id": "PA-R224-first-pass-saying-no-and-asking",
+  "pathSegment": "PA-PATH-224-A2-MESSAGE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-224-A2-MESSAGE",
+      "order": 3
+    }
+  ]
+}

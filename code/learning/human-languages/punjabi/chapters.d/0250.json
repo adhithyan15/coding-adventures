@@ -1,0 +1,19 @@
+{
+  "chapter": 250,
+  "title": "Pots and Pans",
+  "label": "ch:pa-a2-pots-and-pans",
+  "canDo": "I can name cooking pots and what they are made of.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C250-pittal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 250: I can name cooking pots and what they are made of.",
+    "assesses": [
+      "PA-LEX-C250-GHR250-03",
+      "PA-LEX-C250-GHR250-04",
+      "PA-LEX-C250-GHR250-05"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:c5a25383aeb4778a",
+  "lessonIds": [
+    "PA-C329-sahura",
+    "PA-C329-sass",
+    "PA-C329-numh",
+    "PA-C329-javai",
+    "PA-C329-kuram",
+    "PA-R329-review-323-329"
+  ],
+  "tex": "punjabi/book/chapters/ch329-parents-in-law.tex"
+}

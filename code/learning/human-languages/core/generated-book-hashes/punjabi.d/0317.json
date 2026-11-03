@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:de6c51228be74610",
+  "lessonIds": [
+    "PA-C317-vela",
+    "PA-C317-bitna",
+    "PA-C317-zamana",
+    "PA-C317-pachhtauna",
+    "PA-C317-guzarna"
+  ],
+  "tex": "punjabi/book/chapters/ch317-days-gone-by.tex"
+}
