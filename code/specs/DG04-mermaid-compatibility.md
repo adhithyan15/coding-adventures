@@ -221,7 +221,8 @@ colors plus keyed or positional label offsets likewise survive semantic IR,
 layout, and backend-neutral PaintInstructions. C4 defaults to Mermaid's pinned four
 shapes and two boundaries per row. `UpdateLayoutConfig` shape and boundary row
 limits override those defaults in semantic IR; shape row limits control structural
-layout while both values lower to backend-neutral PaintScene metadata. C4 directional relationship macros,
+layout, boundary row limits arrange top-level C4 groups, and both values lower to
+backend-neutral PaintScene metadata. C4 directional relationship macros,
 including their short and long spellings, preserve typed direction hints through
 semantic and layout IR into PaintScene metadata while retaining the pinned
 renderer's ordinary portable relationship geometry. Keyed and positional custom

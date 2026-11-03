@@ -14,6 +14,10 @@
     {
       "name": "default-layout-config",
       "source": "C4Context\nPerson(a, \"A\")\nPerson(b, \"B\")\nPerson(c, \"C\")\nPerson(d, \"D\")\nPerson(e, \"E\")"
+    },
+    {
+      "name": "boundary-row-layout",
+      "source": "C4Context\nSystem_Boundary(one, \"One\") {\nSystem(a, \"A\")\n}\nSystem_Boundary(two, \"Two\") {\nSystem(b, \"B\")\n}\nSystem_Boundary(three, \"Three\") {\nSystem(c, \"C\")\n}"
     }
   ]
 }
