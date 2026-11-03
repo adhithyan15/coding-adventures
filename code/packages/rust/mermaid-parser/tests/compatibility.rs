@@ -133,6 +133,14 @@ const C4_LAYOUT_CONFIG_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-layout-config-11.16.1-visual-corpus.json"
 ));
+const C4_DIRECTIONS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-directions-11.16.1-corpus.json"
+));
+const C4_DIRECTIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-directions-11.16.1-visual-corpus.json"
+));
 const C4_ELEMENT_TECHNOLOGY_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-element-technology-11.16.1-corpus.json"
@@ -2918,6 +2926,27 @@ fn pinned_c4_layout_config_reaches_semantic_ir() {
     let positional = parse_c4_diagram(fixtures[1]["source"].as_str().unwrap()).unwrap();
     assert_eq!(positional.render_config.c4_shape_in_row, Some(1));
     assert_eq!(positional.render_config.c4_boundary_in_row, Some(2));
+}
+
+#[test]
+fn pinned_c4_directions_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_DIRECTIONS_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_DIRECTIONS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = [
+        DiagramDirection::Tb,
+        DiagramDirection::Bt,
+        DiagramDirection::Lr,
+        DiagramDirection::Rl,
+    ];
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), expected.len());
+    for (fixture, direction) in fixtures.iter().zip(expected) {
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        assert_eq!(diagram.direction, Some(direction));
+        assert_eq!(diagram.nodes.len(), 2);
+        assert_eq!(diagram.relationships.len(), 1);
+    }
 }
 
 #[test]

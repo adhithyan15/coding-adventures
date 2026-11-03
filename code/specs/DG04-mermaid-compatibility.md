@@ -174,7 +174,8 @@ diagram titles may come from YAML front matter or an inline `title` statement,
 with inline titles taking precedence. Standard Mermaid init directives and comments
 are removed before C4 grammar parsing while preserving source line positions; the
 resolved title then survives semantic IR, structural layout, and backend-neutral
-text paint. C4
+text paint. C4 `direction` statements preserve all four Mermaid axes in semantic
+IR and drive structural node placement plus backend-neutral relationship paint. C4
 bidirectional and backward relationships also preserve their authored endpoint
 arrows through structural layout and backend-neutral PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same

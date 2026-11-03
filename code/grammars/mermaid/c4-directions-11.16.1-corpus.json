@@ -1,0 +1,23 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 diagram direction vertical slice",
+  "fixtures": [
+    {
+      "name": "top-to-bottom",
+      "source": "C4Context\ndirection TB\nPerson(customer, \"Customer\")\nSystem(bank, \"Bank\")\nRel(customer, bank, \"Uses\")"
+    },
+    {
+      "name": "bottom-to-top",
+      "source": "C4Context\ndirection BT\nPerson(customer, \"Customer\")\nSystem(bank, \"Bank\")\nRel(customer, bank, \"Uses\")"
+    },
+    {
+      "name": "left-to-right",
+      "source": "C4Context\ndirection LR\nPerson(customer, \"Customer\")\nSystem(bank, \"Bank\")\nRel(customer, bank, \"Uses\")"
+    },
+    {
+      "name": "right-to-left",
+      "source": "C4Context\ndirection RL\nPerson(customer, \"Customer\")\nSystem(bank, \"Bank\")\nRel(customer, bank, \"Uses\")"
+    }
+  ]
+}

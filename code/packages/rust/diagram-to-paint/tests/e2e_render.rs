@@ -169,6 +169,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-layout-config-11.16.1-visual-corpus.json"
     ));
+    const C4_DIRECTIONS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-directions-11.16.1-corpus.json"
+    ));
+    const C4_DIRECTIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-directions-11.16.1-visual-corpus.json"
+    ));
     const C4_ELEMENT_TECHNOLOGY_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-element-technology-11.16.1-corpus.json"
@@ -5367,6 +5375,54 @@ line "Target" [35, 50, 68, 82]"##,
             );
             let pixels = render(&scene);
             write_png(&pixels, &format!("/tmp/mermaid_c4_layout_config_{index}_e2e.png")).unwrap();
+        }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_directions_to_png() {
+        let syntax: Value = serde_json::from_str(C4_DIRECTIONS_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_DIRECTIONS_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let expected = [
+            DiagramDirection::Tb,
+            DiagramDirection::Bt,
+            DiagramDirection::Lr,
+            DiagramDirection::Rl,
+        ];
+        let fixtures = syntax["fixtures"].as_array().unwrap();
+        for (index, (fixture, direction)) in fixtures.iter().zip(expected).enumerate() {
+            assert_eq!(visual["fixtures"][index], fixture["name"]);
+            let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+            assert_eq!(diagram.direction, Some(direction.clone()));
+            let layout = layout_structural_diagram(&diagram);
+            let customer = layout.nodes.iter().find(|node| node.id == "customer").unwrap();
+            let bank = layout.nodes.iter().find(|node| node.id == "bank").unwrap();
+            match direction {
+                DiagramDirection::Tb => assert!(bank.y > customer.y),
+                DiagramDirection::Bt => assert!(customer.y > bank.y),
+                DiagramDirection::Lr => assert!(bank.x > customer.x),
+                DiagramDirection::Rl => assert!(customer.x > bank.x),
+            }
+            let shaper = CoreTextShaper;
+            let metrics = CoreTextMetrics;
+            let resolver = CoreTextResolver::new();
+            let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#6b7280")
+            )));
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_direction_{index}_e2e.png");
+            write_png(&pixels, &path).unwrap();
+            assert!(pixels.width > 0 && pixels.height > 0);
         }
     }
 

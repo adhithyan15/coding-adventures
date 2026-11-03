@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.167.0";
+pub const VERSION: &str = "0.168.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14076,6 +14076,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let mut groups = Vec::new();
     let mut group_stack: Vec<String> = Vec::new();
     let mut relationships = Vec::new();
+    let mut direction = None;
 
     while !cursor.at_eof() {
         match token_name(cursor.current()) {
@@ -14121,10 +14122,14 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 );
             }
             "DIRECTION" => {
-                cursor.advance();
-                if token_name(cursor.current()) == "LPAREN" {
-                    parse_c4_arguments(&mut cursor)?;
-                }
+                let token = cursor.advance();
+                direction = match token.value.split_whitespace().last() {
+                    Some("TB") => Some(DiagramDirection::Tb),
+                    Some("BT") => Some(DiagramDirection::Bt),
+                    Some("LR") => Some(DiagramDirection::Lr),
+                    Some("RL") => Some(DiagramDirection::Rl),
+                    _ => return Err(token_error(token, "unsupported C4 direction")),
+                };
             }
             "CONFIG_MACRO" => {
                 let macro_token = cursor.advance().clone();
@@ -14251,7 +14256,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         title,
         accessibility_title,
         accessibility_description,
-        direction: None,
+        direction,
         alignments: Vec::new(),
         nodes,
         groups,
@@ -20182,7 +20187,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.167.0");
+        assert_eq!(crate::VERSION, "0.168.0");
     }
 
     #[test]
