@@ -20274,3 +20274,32 @@ Lua build-tool tests, every Lua syntax check, and 1,740 lesson shards with zero
 problems. Commit this durable PR receipt, push normally, and obtain exact-head
 publication review before allowing guarded squash auto-merge; results attached
 to any earlier head cannot authorize the merge.
+
+#### Lua fallback PR #18756 merge and CLI validation reprioritization
+
+All 37 checks on exact independently reviewed fallback head
+`1daa366ad4f3f4c100086b7ca32aee353778a2da` completed terminal acceptable:
+13 succeeded and 24 were expected skips. PR #18756 was externally
+squash-merged at `2026-10-31T00:10:47Z` as
+`d2c289290d885da155befaeb6f394d81fa738d41`. The receipt is an ancestor of
+current `origin/main`; the completed worktree is archived. No auto-merge
+claim is made.
+
+A fresh priority pass selects the already implemented Lua CLI argument
+validation owner. The old parser ignored unknown options, let a missing
+`--root` fall through to auto-detection, and could accept a missing
+`--language` before succeeding with zero packages. Implementation
+`de3e5370036ad39c4f506868e22d27ed20cd3d28` introduces a process-free
+all-or-error parser with stable path-redacted diagnostics, rejects empty or
+value-less options and unexpected arguments before discovery, preserves help
+and supported flags, and adds direct boundary regressions.
+
+Normal current-main merge
+`b10e0853d6c7175258bfa2c1502ae9df2dfc2979` incorporates main
+`4cedfcff47130c26823f2f54c1f1b333b0e98481`. README.md and build.lua
+auto-merged disjoint hunks; its sole textual merge conflict was the Lua
+build-tool changelog, whose resolution preserves both complete entry sets. The
+exact merged tree passes 11 focused CLI cases, 242 complete Lua
+build-tool cases, every Lua syntax check, 1,789 lesson shards, and 11 quirk
+shards with zero problems. Independent security and publication review remain
+required before publication.
