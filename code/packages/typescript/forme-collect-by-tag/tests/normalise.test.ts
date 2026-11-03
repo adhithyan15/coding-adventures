@@ -2,117 +2,118 @@
  * normalise.test.ts — tag-string normalisation rules.
  */
 
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, test as it } from "node:test";
 import { normaliseTag } from "../src/index.js";
 
 describe("normaliseTag — basic", () => {
   it("lowercases", () => {
-    expect(normaliseTag("TypeScript")).toBe("typescript");
+    assert.equal(normaliseTag("TypeScript"), "typescript");
   });
 
   it("replaces spaces with hyphens", () => {
-    expect(normaliseTag("type script")).toBe("type-script");
+    assert.equal(normaliseTag("type script"), "type-script");
   });
 
   it("collapses multi-space", () => {
-    expect(normaliseTag("type   script")).toBe("type-script");
+    assert.equal(normaliseTag("type   script"), "type-script");
   });
 
   it("keeps digits", () => {
-    expect(normaliseTag("Node 22")).toBe("node-22");
+    assert.equal(normaliseTag("Node 22"), "node-22");
   });
 
   it("trims leading/trailing hyphens", () => {
-    expect(normaliseTag("-foo-")).toBe("foo");
+    assert.equal(normaliseTag("-foo-"), "foo");
   });
 
   it("trims leading/trailing whitespace", () => {
-    expect(normaliseTag("  foo  ")).toBe("foo");
+    assert.equal(normaliseTag("  foo  "), "foo");
   });
 
   it("collapses adjacent hyphens", () => {
-    expect(normaliseTag("foo---bar")).toBe("foo-bar");
+    assert.equal(normaliseTag("foo---bar"), "foo-bar");
   });
 
   it("idempotent: normaliseTag(normaliseTag(x)) === normaliseTag(x)", () => {
     for (const input of ["TypeScript", "Type Script", "Foo!!Bar", "   x   "]) {
       const once = normaliseTag(input);
-      expect(normaliseTag(once)).toBe(once);
+      assert.equal(normaliseTag(once), once);
     }
   });
 });
 
 describe("normaliseTag — security hardening", () => {
   it("strips angle brackets", () => {
-    expect(normaliseTag("<script>")).toBe("script");
+    assert.equal(normaliseTag("<script>"), "script");
   });
 
   it("strips quotes", () => {
-    expect(normaliseTag(`"x"`)).toBe("x");
-    expect(normaliseTag(`'x'`)).toBe("x");
+    assert.equal(normaliseTag(`"x"`), "x");
+    assert.equal(normaliseTag(`'x'`), "x");
   });
 
   it("strips ampersand", () => {
-    expect(normaliseTag("foo&bar")).toBe("foobar");
+    assert.equal(normaliseTag("foo&bar"), "foobar");
   });
 
   it("strips control bytes", () => {
-    expect(normaliseTag("foo\x00bar\x1bbaz\x7f")).toBe("foobarbaz");
+    assert.equal(normaliseTag("foo\x00bar\x1bbaz\x7f"), "foobarbaz");
   });
 
   it("strips underscores (so `__proto__` becomes `proto`)", () => {
-    expect(normaliseTag("__proto__")).toBe("proto");
+    assert.equal(normaliseTag("__proto__"), "proto");
   });
 
   it("strips non-ASCII (CJK / emoji)", () => {
-    expect(normaliseTag("日本語")).toBe("");
-    expect(normaliseTag("🎉")).toBe("");
+    assert.equal(normaliseTag("日本語"), "");
+    assert.equal(normaliseTag("🎉"), "");
   });
 
   it("strips path-traversal sequences", () => {
-    expect(normaliseTag("../../etc/passwd")).toBe("etcpasswd");
+    assert.equal(normaliseTag("../../etc/passwd"), "etcpasswd");
   });
 
   it("output always matches /^[a-z0-9-]*$/", () => {
     const cases = ["<x>", "a&b", `"q"`, "../x", "\x00\x01", "日本語"];
     for (const c of cases) {
-      expect(normaliseTag(c)).toMatch(/^[a-z0-9-]*$/);
+      assert.match(normaliseTag(c), /^[a-z0-9-]*$/);
     }
   });
 });
 
 describe("normaliseTag — empty / collapsed input", () => {
   it("empty string → empty", () => {
-    expect(normaliseTag("")).toBe("");
+    assert.equal(normaliseTag(""), "");
   });
 
   it("whitespace-only → empty", () => {
-    expect(normaliseTag("   ")).toBe("");
+    assert.equal(normaliseTag("   "), "");
   });
 
   it("punctuation-only → empty", () => {
-    expect(normaliseTag("!!!")).toBe("");
+    assert.equal(normaliseTag("!!!"), "");
   });
 
   it("non-ASCII-only → empty", () => {
-    expect(normaliseTag("日本語")).toBe("");
+    assert.equal(normaliseTag("日本語"), "");
   });
 });
 
 describe("normaliseTag — defensive coercion", () => {
   it("non-string coerces via String(...)", () => {
     // @ts-expect-error — runtime coercion
-    expect(normaliseTag(42)).toBe("42");
+    assert.equal(normaliseTag(42), "42");
   });
 
   it("null → 'null'", () => {
     // @ts-expect-error — runtime coercion
-    expect(normaliseTag(null)).toBe("null");
+    assert.equal(normaliseTag(null), "null");
   });
 });
 
 describe("normaliseTag — deterministic", () => {
   it("same input → same output", () => {
-    expect(normaliseTag("Foo Bar")).toBe(normaliseTag("Foo Bar"));
+    assert.equal(normaliseTag("Foo Bar"), normaliseTag("Foo Bar"));
   });
 });
