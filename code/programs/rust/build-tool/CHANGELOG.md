@@ -14,6 +14,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   prerequisite closures, exact repository-boundary digest and reverse-index
   selection (including shared multi-consumers), Unicode-scalar strict-glob
   matching, and the operation-wide 50,000,000 work ceiling.
+- Add a bounded, process-free Cargo test-trigger selection operation over
+  caller-supplied inert values. It closes ordinary dependents, applies
+  dev-dependency triggers exactly one hop outside the build graph, then closes
+  prerequisites, with deterministic sorted output, stable fail-closed
+  diagnostics, exact cardinality ceilings, six shared fixtures, and matching
+  coverage through the established Go selection helpers.
 
 ### Changed
 

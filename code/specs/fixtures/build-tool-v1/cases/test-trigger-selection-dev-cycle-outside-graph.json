@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/test-trigger-dev-cycle-outside-graph",
+  "domain": "diff_selection",
+  "summary": "A cycle among test-trigger relations is valid because trigger relations are not dependency-graph edges.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["diff_selection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": ["rust/cyc-a", "rust/cyc-b", "rust/consumer"],
+      "edges": [["rust/cyc-a", "rust/consumer"]],
+      "trigger_relations": [
+        ["rust/cyc-a", "rust/cyc-b"],
+        ["rust/cyc-b", "rust/cyc-a"]
+      ],
+      "changed_packages": ["rust/cyc-a"]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/test-trigger-dev-cycle-outside-graph",
+    "domain": "diff_selection",
+    "outcome": "ok",
+    "result": {
+      "changed_packages": ["rust/cyc-a"],
+      "affected_packages": ["rust/consumer", "rust/cyc-a", "rust/cyc-b"],
+      "prerequisite_packages": []
+    },
+    "diagnostics": []
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

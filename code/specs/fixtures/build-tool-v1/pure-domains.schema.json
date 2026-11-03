@@ -566,7 +566,7 @@
         }
       ]
     },
-    "diff_selection_input": {
+    "diff_path_selection_input": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -626,6 +626,63 @@
           }
         }
       }
+    },
+    "test_trigger_selection_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "diff_selection"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packages",
+            "edges",
+            "trigger_relations",
+            "changed_packages"
+          ],
+          "properties": {
+            "packages": {
+              "$ref": "#/$defs/package_names"
+            },
+            "edges": {
+              "type": "array",
+              "maxItems": 16384,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/edge"
+              }
+            },
+            "trigger_relations": {
+              "type": "array",
+              "maxItems": 16384,
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/$defs/edge"
+              }
+            },
+            "changed_packages": {
+              "$ref": "#/$defs/package_names"
+            }
+          }
+        }
+      }
+    },
+    "diff_selection_input": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/diff_path_selection_input"
+        },
+        {
+          "$ref": "#/$defs/test_trigger_selection_input"
+        }
+      ]
     },
     "diff_selection_result": {
       "type": "object",
