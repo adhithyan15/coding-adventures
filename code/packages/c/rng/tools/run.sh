@@ -29,3 +29,5 @@ fi
 
 . "$HARNESS/lib/iso-lib.sh"
 iso_build_and_run c rng-tests tests/rng_test.c src/rng.c
+# The shared rng-v1 corpus, read from its flat form (spec rng.md).
+iso_build_and_run c rng-conformance tests/conformance_test.c src/rng.c

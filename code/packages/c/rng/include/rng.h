@@ -34,9 +34,14 @@ void rng_lcg_init(rng_lcg *g, uint64_t seed);
 uint32_t rng_lcg_next_u32(rng_lcg *g);
 uint64_t rng_lcg_next_u64(rng_lcg *g);
 double rng_lcg_next_float(rng_lcg *g); /* [0.0, 1.0) */
-/* Uniform integer in [min, max] (rejection sampling). If min > max, returns
- * min (the Rust crate panics). */
+/* Uniform integer in [min, max] (spec rng.md v2 rejection sampling; every
+ * span up to the whole int64 domain). If min > max it returns min and draws
+ * nothing: C has no exception to raise. Prefer the _try_ form, which reports
+ * that case: it returns 0 and stores the value in *out, or returns -1 without
+ * drawing anything. */
 int64_t rng_lcg_next_int_in_range(rng_lcg *g, int64_t min, int64_t max);
+int rng_lcg_try_int_in_range(rng_lcg *g, int64_t min, int64_t max,
+                             int64_t *out);
 
 /* ── Xorshift64 — Marsaglia (2003) ────────────────────────────────────────── */
 typedef struct {
@@ -50,6 +55,8 @@ uint64_t rng_xorshift64_next_u64(rng_xorshift64 *g);
 double rng_xorshift64_next_float(rng_xorshift64 *g);
 int64_t rng_xorshift64_next_int_in_range(rng_xorshift64 *g, int64_t min,
                                          int64_t max);
+int rng_xorshift64_try_int_in_range(rng_xorshift64 *g, int64_t min,
+                                    int64_t max, int64_t *out);
 
 /* ── Pcg32 — O'Neill (2014), XSH-RR ───────────────────────────────────────── */
 typedef struct {
@@ -62,5 +69,7 @@ uint32_t rng_pcg32_next_u32(rng_pcg32 *g);
 uint64_t rng_pcg32_next_u64(rng_pcg32 *g);
 double rng_pcg32_next_float(rng_pcg32 *g);
 int64_t rng_pcg32_next_int_in_range(rng_pcg32 *g, int64_t min, int64_t max);
+int rng_pcg32_try_int_in_range(rng_pcg32 *g, int64_t min, int64_t max,
+                               int64_t *out);
 
 #endif /* RNG_H */
