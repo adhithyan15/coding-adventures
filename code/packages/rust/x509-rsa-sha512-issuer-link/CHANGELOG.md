@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-03
+
+### Added
+
+- Added a construction-bound SHA-512 issuer-link entry point that derives both
+  endpoints from one exact adjacent-link projection and retains that
+  projection beside the validated issuer key.
+- Added exact projected-target success, corrupted-child rejection, redacted
+  error, and retained-construction coverage.
+
+### Security
+
+- Construction order can no longer be detached from this authenticated link.
+  The result still grants no complete issuer policy, path validation, trust,
+  hostname, revocation, TLS, HTTP, OAuth, audit, trace, or network authority.
+
 ## [0.3.0] - 2026-10-30
 
 ### Added
