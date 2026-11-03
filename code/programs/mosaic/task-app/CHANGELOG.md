@@ -23,6 +23,16 @@ cut.
 
 ### Fixed
 
+- Typed names are stored the same on every host (backlog 6e2b). The web host
+  trimmed task, label, project and checklist names with JavaScript's
+  `.trim()`, which keeps U+0085 (NEXT LINE) and strips U+FEFF (the byte order
+  mark), while the native hosts trim Unicode `White_Space`; so "Task\u0085"
+  was stored with its NEXT LINE on the web, and a name of only U+0085 made a
+  task there that native hosts refuse. Every name composer on the web, and
+  each part of the Sheet's Labels cell, now trims Unicode `White_Space` as the
+  native hosts do (`code/specs/task-app-data-model.md`, "Typed names are
+  trimmed of Unicode White_Space"). New `fixtures/task-name-trimming-v1.json`
+  holds the cases, run by both `task-mosaic-app` and the web host.
 - A note's *Attach to task* name now finds the same task on every host
   (backlog 6e2). The native adapter compared names ASCII-only, so "écrire"
   attached to "Écrire" on the web and was refused natively; both hosts now
@@ -30,6 +40,15 @@ cut.
   give a tie to the first task by id (`code/specs/task-app-notes-ui-v1.md`,
   addendum v1.4). New `fixtures/task-name-matching-v1.json` holds the cases,
   run by both `task-mosaic-app` and the web host.
+- The Qt, Flutter and Compose Linux release lanes now fail when a launch log
+  says `Mosaic Rust runtime unavailable` (backlog 2q). Each lane checked this
+  with `! grep -Fq ...` in the middle of a `set -e` step, and `set -e` ignores
+  a command inverted with `!`, so a payload whose runtime did not load still
+  passed. They also `cat`-ed the app's raw output, where GitHub reads
+  `::command::` lines. All six upgrade and recovery logs now go through
+  `code/scripts/mosaic-release-check-log.sh`. It shows the log between
+  `::stop-commands::` markers and fails on the runtime-unavailable report.
+  The macOS launcher shares the same script.
 
 ## [0.5.16] - 2026-10-30
 

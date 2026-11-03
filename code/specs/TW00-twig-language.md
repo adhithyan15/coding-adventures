@@ -349,6 +349,40 @@ a user local (a user local spelled `__r1_x` just pushes the generated
 name to the next free one), and a compiler temporary never collides with a
 user local spelled like one (`_n1`).
 
+### Compile-time budgets (#18474)
+
+Twig source is untrusted wherever a user hands a VM a file, so the Rust
+compiler (`twig-ir-compiler`, `src/budgets.rs`) refuses, before anything
+reaches a backend, a program that would make it do unbounded work or that
+its VMs cannot run. Each budget is a public constant; a breach is a
+`TwigCompileError` whose message starts with the budget's name and, for the
+per-function budgets, names the function and points at the source of the
+instruction that went over.
+
+| Budget | Limit | Checked | Reason |
+|--------|-------|---------|--------|
+| source bytes | 1 MiB | `compile_source`, `compile_typed_source` before lexing; files (the `twig-vm` CLI, each file of a `twig-module-driver` graph, `twig-aot`) through `bounded-source-file`: regular files only, never blocking, size before reading, then a reader that stops at 1 MiB + 1 bytes | LANG84 C5's trusted ceiling ("file runners bound while reading"); the repo's largest Twig file is 29 KB |
+| CST items (nodes + tokens) | 2²⁰ | every `compile_ast*` entry and `Compiler::compile`, iteratively, before any other walk | ordinary Twig is ~0.6 items per byte, so 1 MiB of it fits |
+| tree depth | 256 | `check_cst`, `MAX_COMPILE_DEPTH` (unchanged) | stack safety |
+| registers per function | 2¹⁶ | each finished function: `params.len()` + distinct non-param `dest`s | the frame limit of both twig-vm (`MAX_REGISTERS_PER_FRAME`) and vm-core (`VMFrame::MAX_FRAME_REGISTERS`), pinned by tests on both sides |
+| IIR instructions per function | 2¹⁸ | each finished function | four per register at the register limit |
+| IIR instructions per module | 2²⁰ | running total as each function is added | twig-vm's profile-slot cap; bounds `(record …)`, whose n accessors are ≈ n²/2 instructions |
+| IIR instructions per linked program | 2²⁰ (the same) | `twig-module-driver`: running total as each module is compiled, and the linked result | the linker merges up to 1,000 modules into the one module the VM runs |
+| functions per module, and per linked program | 2¹⁶ | each function admitted; the driver's running total | twig-vm profiles and caches at most 2¹⁶ distinct functions per run |
+| name bytes | 256 | every `NAME` token: `twig-parser`'s `parse_to_ast` (before the grammar parser), and the compiler's tree walk for a hand-built tree | the repo's longest name is 33 bytes |
+| tokens | 2²⁰ | `twig-parser`'s `parse_to_ast`, before the grammar parser | bounds the parser's peak memory for source that skipped the source budget |
+| generated name bytes | 1 MiB | record/union predicate and accessor names, `(|name| + 1) + Σ (|name| + 1 + |field|)`, by arithmetic before any is formatted: `extract_program`, the type checker, the compiler's pre-pass | a long name × many fields was ≈ 30 GB of names before any other budget counted |
+| source bytes per import graph | 4 MiB | `twig-module-driver`, as each file is read | four maximum-size files; past ~2 MiB of the densest code a graph could not link anyway |
+| imported names per import graph | 2²⁰ | `twig-module-driver`: export-clause lengths summed over import edges, before any copying | bounds the edges × exports merge |
+| imported name bytes per import graph | 16 MiB | the same edges, charged each export clause's bytes | every name is cloned into the importer's type-checker globals |
+| type-checker diagnostics | 256, 4 KiB each, 1 MiB in all; lists name 8 items | `type_checker_protocol::bounded`, in both Twig type checkers | a non-exhaustive match listed every missing variant: ~60,000 variants × ~50,000 matches was ~33 GB of messages |
+
+A function is checked once it is finished: lowering one function is linear
+in the (already bounded) tree, so this wastes at most one function's work.
+The number of functions is what can grow faster than the source, which is
+why the module total is checked as each one is added. Every program under
+the budgets compiles to exactly the IIR it compiled to before #18474.
+
 ## The `Heap` class (the GC playground)
 
 Twig's heap is a host-side Python object exposed to `vm-core` via

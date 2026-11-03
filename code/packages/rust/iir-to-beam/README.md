@@ -204,7 +204,8 @@ guards: `is_integer`, `idx >= 0`, `idx < length(source)`, failing to
 `erlang:error('Trap.Bounds')`. (`lists:nth` would fail on its own, but with
 `function_clause`, which names no kind.) `str_concat` checks
 `length(A) + length(B)` against the module's string ceiling before `++` and
-raises `'Trap.Overflow'` past it.
+raises `'Trap.Overflow'` past it. `validate_for_beam` refuses a `str_const`
+longer than the ceiling, and a ceiling above `STR_MAX_BYTES` (#18800).
 
 A float `const` is now accepted **only** with `type_hint == "f64"` (BEAM03 —
 see the opcode table above and `code/specs/BEAM03-float-lowering.md`); any

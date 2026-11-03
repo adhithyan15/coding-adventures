@@ -119,7 +119,8 @@ sub run {
     if (!$resolved) {
         my $error = $@;
         if (blessed($error)
-            && $error->isa('CodingAdventures::BuildTool::MetadataEncodingError')) {
+            && ($error->isa('CodingAdventures::BuildTool::MetadataEncodingError')
+                || $error->isa('CodingAdventures::BuildTool::DependencySelfEdgeError'))) {
             warn "$error\n";
             return 2;
         }

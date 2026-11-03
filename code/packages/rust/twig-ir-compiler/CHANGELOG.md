@@ -1,5 +1,113 @@
 # Changelog — twig-ir-compiler
 
+## Unreleased — #18474 re-review: imported name bytes; pre-pass test
+
+- `MAX_IMPORTED_NAME_BYTES` (16 MiB) and `check_imported_name_bytes`, for
+  `twig-module-driver`'s per-edge byte charge.
+- Test `the_compiler_pre_pass_charges_generated_names_itself`: a
+  `parse_to_ast` tree (never extracted) given to `Compiler::compile` is
+  refused by the pre-pass's own charge, at the union *variant* that went
+  over (line 125). One variant fewer compiles.
+
+## Unreleased — #18474 security review: names, functions, driver budgets
+
+### Added
+
+- **Name and generated-name budgets** (from `twig-parser`, re-exported:
+  `MAX_NAME_BYTES` 256, `MAX_GENERATED_NAME_BYTES` 1 MiB). `check_cst_items`
+  is now public and also refuses a `NAME` token over 256 bytes, so a
+  hand-built tree gets the lexer's rule. The pre-pass charges each record's
+  and union variant's invented names (`twig_parser::generated_name_bytes`)
+  before formatting one.
+- **`MAX_FUNCTIONS_PER_MODULE` (2¹⁶)**, twig-vm's `MAX_PROFILED_FUNCTIONS` /
+  `MAX_IC_FUNCTIONS`: the 65,537th function is a compile error, not a
+  run-time refusal. `check_linked_functions` holds a linked program to it.
+- **Driver budgets**, with the driver: `MAX_PROGRAM_SOURCE_BYTES` (4 MiB,
+  `check_graph_source_bytes`) and `MAX_IMPORTED_NAMES` (2²⁰,
+  `check_imported_names`).
+
+### Fixed
+
+- **Names of any length reached the pre-pass**, which formatted
+  `{record}-{field}` per field: a 512 KB record name × 58,000 fields was
+  about 30 GB, and `emit_record_def` built about 750 MB of 512 KB accessor
+  names before the module budget tripped. Both are refused now.
+
+### Tests
+
+- `tests/budgets.rs`: the review's record through `compile_source` and
+  `compile_typed_source`; a 256-byte name compiles and 257 is refused; a
+  hand-built tree with a long name is refused by `compile_ast` and
+  `Compiler::compile`; generated names at exactly 1 MiB compile and one
+  byte more is refused through both source entry points; 65,536 functions
+  compile and 65,537 are refused.
+- `tests/cst_walk.rs`: the CST-only import contract allows the parser's
+  CST-level budget items (never the `Program`-level
+  `check_generated_names`), and now scans `src/budgets.rs` too.
+
+## Unreleased — #18474: compile-time resource budgets
+
+### Added
+
+- **`src/budgets.rs`: five compile-time budgets**, each a public constant,
+  each refusing with an ordinary `TwigCompileError` whose message starts
+  with the budget's name (``registers per function exceeds the limit of
+  65536 in function `main` ``) before anything reaches a backend:
+
+  | Budget | Limit | Checked |
+  |--------|-------|---------|
+  | `MAX_SOURCE_BYTES` | 1 MiB | `compile_source`, `compile_typed_source`, before lexing |
+  | `MAX_CST_ITEMS` | 2²⁰ | every `compile_ast*` entry point and `Compiler::compile`, iteratively, before `check_cst` |
+  | `MAX_REGISTERS_PER_FUNCTION` | 2¹⁶ = 65,536 | each finished function: params + distinct non-param dests (vm-core's count) |
+  | `MAX_IIR_INSTRUCTIONS_PER_FUNCTION` | 2¹⁸ = 262,144 | each finished function |
+  | `MAX_IIR_INSTRUCTIONS_PER_MODULE` | 2²⁰ = 1,048,576 | running total as each function is admitted |
+
+  Tree depth was already bounded (256, `check_cst` and
+  `MAX_COMPILE_DEPTH`). The register budget is the frame limit of both
+  VMs Twig runs on, twig-vm's `MAX_REGISTERS_PER_FRAME` and vm-core's
+  `VMFrame::MAX_FRAME_REGISTERS`; twig-vm's and this crate's tests pin
+  both. A breach names the function and points at the source of the
+  instruction that went over, walking back past compiler-written
+  (`SYNTHETIC`) instructions, else at the declaration.
+- **`Compiler::admit_function`** is now the only way a function enters
+  the module, so no function skips the checks.
+- **`budgets::check_source`, `check_source_len` and
+  `check_linked_instructions`** are public. `check_source_len` measures a
+  file's size before it is read; `check_linked_instructions` holds a
+  program linked from several modules (`twig-module-driver`) to the same
+  2²⁰-instruction budget as one module, because the linker merges them
+  into the one module the VM runs.
+- `RecordView::pos` and `VariantView::pos` (crate-internal), so a record's
+  or union's helper functions can be blamed on their declaration.
+- `tests/budgets.rs`: every budget at its limit and one past it, plus the
+  at-limit module through vm-core's `VMFrame::check_register_limit`
+  (vm-core is a new dev-dependency, not a dependency).
+
+### Fixed
+
+- **A function too big for a VM frame compiled and failed at run time.**
+  65,537 top-level `1`s compiled to a `main` of 65,537 registers, which
+  twig-vm refused mid-run (`frame register count exceeds
+  MAX_REGISTERS_PER_FRAME`). It is now refused at 65537:1.
+- **A record of n fields lowered to ≈ n²/2 instructions with no limit.**
+  Field *i*'s accessor walks *i* `cdr`s, so a 25 KB `(record P (f0 : int)
+  … (f1999 : int))` compiled to 2,009,006 instructions in 7 s, and a
+  250 KB one would have asked for 200 million. The module budget stops it
+  after at most 2²⁰ instructions of work. Unions have the same shape.
+- **Twig source had no size limit** on `compile_source` /
+  `compile_typed_source`.
+
+### Changed
+
+- `tests/cst_walk.rs`'s `wide_and_or_compile_in_constant_stack` compiled
+  `(and 1 … 1)` with 50,000 arguments: 150,000 registers, a program no VM
+  could run. It now compiles 21,000 arguments (63,000 registers) on a
+  256 KiB stack, a quarter of the old 1 MiB, and asserts that 50,000 are
+  refused by the register budget, not by a stack overflow.
+
+The IIR of every program under the budgets is unchanged: the checks only
+read finished functions, and functions enter the module in the same order.
+
 ## Unreleased — #18453: `and` / `or` inside a lambda; `string<?` is a `bool`
 
 ### Fixed

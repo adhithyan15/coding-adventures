@@ -25,3 +25,7 @@ iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
 iir-to-beam           = { path = "../iir-to-beam" }
 # tests/backend_encode.rs serialises WasmModule -> bytes.
 wasm-module-encoder   = { path = "../wasm-module-encoder" }
+# tests/budgets.rs (#18474): the register budget is vm-core's frame limit,
+# and every function of the at-limit module passes vm-core's load-time
+# check.  A dev-dependency only: vm-core stays out of twig-vm's graph.
+vm-core               = { path = "../vm-core" }

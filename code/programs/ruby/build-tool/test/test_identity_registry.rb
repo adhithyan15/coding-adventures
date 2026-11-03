@@ -76,6 +76,20 @@ class TestIdentityRegistry < Minitest::Test
     FileUtils.rm_rf(workspace)
   end
 
+  # Cargo link tables: inline and sub-table entries in [dependencies],
+  # [build-dependencies] and their target forms are edges; dev-dependencies,
+  # [patch], registry entries, features and comments are not.
+  def test_shared_rust_link_table_fixture
+    workspace, fixture = materialize_case("resolution-rust-field-aware.json")
+    packages = BuildTool::Discovery.discover_packages(workspace / "code")
+
+    graph = BuildTool::Resolver.resolve_dependencies(packages)
+
+    assert_equal fixture.dig("expected", "result", "edges").sort, graph_edges(graph)
+  ensure
+    FileUtils.rm_rf(workspace)
+  end
+
   def test_real_cli_returns_exit_two_for_duplicate_identity
     workspace, fixture = materialize_case("discovery-duplicate-identity.json")
     diagnostic = fixture.dig("expected", "diagnostics", 0)

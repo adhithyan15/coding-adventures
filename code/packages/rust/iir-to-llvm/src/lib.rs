@@ -459,11 +459,25 @@ fn dyn_builtin(name: &str) -> Option<&'static (&'static str, &'static str, usize
 /// 2. Every instruction's `type_hint` maps to an LLVM type (see
 ///    [`llvm_type_for`]).
 /// 3. Every function's return type maps to an LLVM type.
+/// 4. The module's string ceiling (LANG83 PR5a, #18800):
+///    [`IIRModule::str_ceiling_errors`] — no `str_const` longer than
+///    `str_ceiling()`, and no `str_max_bytes` above `STR_MAX_BYTES`.
 ///
 /// These mirror the post-hoc checks the lowerer would do anyway, but
 /// surfaced up-front so callers can fail-fast and aggregate all errors.
 pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
     let mut errors = Vec::new();
+
+    // ── LANG83 PR5a: the module's string ceiling (#18800) ───────────────────
+    //
+    // A `str_const` longer than the module's ceiling (`StrTooLong`), or a
+    // ceiling above the registry's (`StrMaxBytes`), is malformed IR: no
+    // column could hold the literal, and `str_concat` is the only op allowed
+    // to find an over-long string at run time.  `IIRModule::validate` knew
+    // this, but nothing on the way to a backend called it, so every column
+    // compiled such a module.  The shared check lives in `interpreter-ir`, so
+    // every column refuses exactly the same modules.
+    errors.extend(module.str_ceiling_errors());
 
     for func in &module.functions {
         // Return type check.
@@ -1202,9 +1216,11 @@ pub fn lower_iir_to_llvm(
             out.push_str("declare i64 @__twig_str_slice(i64, i64, i64)\n");
         }
         if used_str_concat {
-            // `@__twig_str_concat` (E4-dyn) is provided by `twig_runtime.c`: reads both
-            // operands' `[i64 len][bytes]` headers and returns an i64 handle to a fresh
-            // joined block. Used when `str_concat` has a non-literal (runtime) operand.
+            // `@__twig_str_concat(a, b, max)` (E4-dyn) is provided by `twig_runtime.c`:
+            // reads both operands' `[i64 len][bytes]` headers and returns an i64 handle to
+            // a fresh joined block, or raises `Trap.Overflow` when the join would exceed
+            // `max`, the module's string ceiling (LANG83 PR5a). Used when `str_concat`
+            // has a non-literal (runtime) operand, or its literal join is past the ceiling.
             out.push_str("declare i64 @__twig_str_concat(i64, i64, i64)\n");
         }
         if used_str_eq {
@@ -1322,6 +1338,8 @@ pub fn lower_iir_to_llvm(
 fn collect_string_literals(
     module: &IIRModule,
 ) -> (Vec<LlvmStringLiteralDef>, HashMap<String, LlvmStringLiteralRef>) {
+    // LANG83 PR5a: the most bytes a folded `str_concat` may produce (#18800).
+    let str_ceiling = module.str_ceiling();
     let mut defs = Vec::new();
     let mut map = HashMap::new();
     fn intern_string_literal(
@@ -1411,6 +1429,19 @@ fn collect_string_literals(
                     else {
                         continue;
                     };
+                    // LANG83 PR5a (#18800): the same ceiling `lower_str_concat`
+                    // folds under. A longer join is a run-time
+                    // `@__twig_str_concat` call that traps `Trap.Overflow`, so
+                    // there is nothing to intern — and interning it anyway (as
+                    // this pre-pass did) emitted the over-long bytes as a module
+                    // constant and let a chain of `d = d ++ d` double in the
+                    // compiler without bound (40 doublings of 8 bytes: 8 TiB).
+                    // `dest` then holds a run-time string, so its value is
+                    // forgotten too: a later join that reads it cannot fold.
+                    if left.len().saturating_add(right.len()) > str_ceiling as usize {
+                        fn_values.remove(dest);
+                        continue;
+                    }
                     let value = format!("{left}{right}");
                     intern_string_literal(&value, &mut defs, &mut map);
                     fn_values.insert(dest.clone(), value);

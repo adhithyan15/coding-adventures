@@ -995,15 +995,36 @@ func _sir_write(stream string, terminator string, unpackArrays bool, args []Valu
 	case "once":
 		parts := make([]string, len(args))
 		for i, a := range args {
-			parts[i] = _sir_format(a)
+			parts[i] = _sir_to_s(a)
 		}
 		fmt.Fprint(out, strings.Join(parts, " ")+"\n")
 	default:
 		for _, a := range args {
-			fmt.Fprint(out, _sir_format(a))
+			fmt.Fprint(out, _sir_to_s(a))
 		}
 	}
 	return nil
+}
+
+// A value as `puts`, `print` and `"#{…}"` show it: Ruby's `to_s`.  The one
+// difference from `_sir_format` is `nil`, whose `to_s` is the empty string,
+// so `puts nil` prints an empty line (#18798, item 11).  `_sir_format` keeps
+// `nil` for an array element, as Ruby's `inspect` of an array does.
+func _sir_to_s(v Value) string {
+	if v == nil && _sir_display_ruby {
+		return ""
+	}
+	return _sir_format(v)
+}
+
+// `"a#{x}b"` — SIR's `StrConcat`: every part shown with `_sir_to_s`, joined.
+// The emitter evaluates the parts left to right into the argument list.
+func _sir_str_concat(parts ...Value) Value {
+	var b strings.Builder
+	for _, p := range parts {
+		b.WriteString(_sir_to_s(p))
+	}
+	return b.String()
 }
 
 // Emit a single `_sir_write` argument under the `per_value` terminator:
@@ -1028,7 +1049,7 @@ func _sir_write_one(out *os.File, v Value, unpackArrays bool, visited map[Value]
 			return
 		}
 	}
-	fmt.Fprint(out, _sir_format(v)+"\n")
+	fmt.Fprint(out, _sir_to_s(v)+"\n")
 }
 
 // ── format (cycle-safe) ────────────────────────────────────────
@@ -2070,7 +2091,7 @@ func _sir_numeric_responds(name string) bool {
 func _sir_array_responds(name string) bool {
 	switch name {
 	// Non-block Array methods.
-	case "length", "size", "count", "first", "last", "empty?", "include?",
+	case "[]", "[]=", "length", "size", "count", "first", "last", "empty?", "include?",
 		"index", "push", "append", "<<", "pop", "shift", "reverse", "sort",
 		"min", "max", "minmax", "sum", "uniq", "flatten", "compact", "zip", "rotate",
 		"to_h", "tally", "take", "drop", "values_at",
@@ -2091,7 +2112,7 @@ func _sir_hash_responds(name string) bool {
 	switch name {
 	// Non-block Hash methods.
 	case "keys", "values", "has_key?", "key?", "include?", "member?",
-		"has_value?", "value?", "size", "length", "empty?", "fetch", "to_h":
+		"has_value?", "value?", "size", "length", "empty?", "fetch", "to_h", "[]":
 		return true
 	// Block-taking Hash methods.
 	case "each", "each_pair", "each_key", "each_value", "map",
@@ -2107,6 +2128,31 @@ func _sir_hash_responds(name string) bool {
 }
 
 // ── Array (*Seq) catalog ───────────────────────────────────────
+
+// The largest index `a[i] = v` grows an array to (shared by every backend's
+// runtime): past it Ruby's own `IndexError: index N too big`.  It bounds one
+// write's padding loop and keeps its size within an int; it is not a memory
+// budget — 2^28 slots is still gigabytes.
+const _sir_array_max_index = int64(1) << 28
+
+// The position a Ruby integer index names in `recv`: a negative index counts
+// back from the end.  The result may lie outside the array; the caller
+// decides what that means.  A non-integer index is Ruby's catchable
+// `TypeError`, not a raw Go panic.
+func _sir_array_index(recv *Seq, raw Value) int64 {
+	switch raw.(type) {
+	case int64, int:
+	default:
+		panic(_sir_new_error("TypeError",
+			Value("no implicit conversion of "+_sir_ruby_class_name(raw)+" into Integer")))
+	}
+	i := _sir_as_int(raw)
+	if i < 0 {
+		i += int64(len(recv.Items))
+	}
+	return i
+}
+
 func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 	// Block-taking methods are dispatched only when a trailing *Closure
 	// is present; peel it off the positional args first.
@@ -2117,6 +2163,45 @@ func _sir_array_method(recv *Seq, name string, args []Value) (Value, bool) {
 		}
 	}
 	switch name {
+	// #18798 (item 13) — `a[i]` and `a[i] = v`.  The Ruby frontend lowers
+	// indexing to the method calls `[]` / `[]=` (it cannot tell an Array
+	// from a Hash), and neither was here: `z[1]` panicked with
+	// `undefined method '[]' for Array`.
+	//
+	// | call          | Ruby                                         |
+	// |---------------|----------------------------------------------|
+	// | `[3, 4][1]`   | `4`                                          |
+	// | `[3, 4][-1]`  | `4` (counts from the end)                    |
+	// | `[3, 4][5]`   | `nil` (out of range is nil, not an error)    |
+	// | `a[3] = 7`    | pads with `nil` up to index 3, then stores   |
+	// | `a[-9] = 7`   | `IndexError` (before the start)              |
+	// | `a[2**40] = 7`| `IndexError` (past `_sir_array_max_index`)   |
+	case "[]":
+		if len(args) != 1 {
+			return nil, false
+		}
+		i := _sir_array_index(recv, args[0])
+		if i < 0 || i >= int64(len(recv.Items)) {
+			return nil, true
+		}
+		return recv.Items[i], true
+	case "[]=":
+		if len(args) != 2 {
+			return nil, false
+		}
+		i := _sir_array_index(recv, args[0])
+		if i < 0 {
+			panic(_sir_new_error("IndexError", Value("index "+_sir_format(args[0])+
+				" too small for array; minimum: -"+strconv.Itoa(len(recv.Items)))))
+		}
+		if i >= _sir_array_max_index {
+			panic(_sir_new_error("IndexError", Value("index "+_sir_format(args[0])+" too big")))
+		}
+		for int64(len(recv.Items)) <= i {
+			recv.Items = append(recv.Items, nil)
+		}
+		recv.Items[i] = args[1]
+		return args[1], true
 	case "length", "size", "count":
 		if name == "count" && len(args) > 0 {
 			n := int64(0)
@@ -2855,6 +2940,13 @@ func _sir_hash_method(recv *Map, name string, args []Value) (Value, bool) {
 		return int64(len(recv.Entries)), true
 	case "empty?":
 		return len(recv.Entries) == 0, true
+	case "[]":
+		// #18798 — `h[k]`: the value, or nil for a missing key (unlike
+		// `fetch`, which raises).  It was missing, so `h[:a]` panicked.
+		if len(args) != 1 {
+			return nil, false
+		}
+		return _sir_map_get(recv, args[0]), true
 	case "fetch":
 		// Ruby `Hash#fetch(key)` is the RAISING lookup: a missing key raises
 		// `KeyError` (unlike `hash[key]`, which returns nil).  A supplied

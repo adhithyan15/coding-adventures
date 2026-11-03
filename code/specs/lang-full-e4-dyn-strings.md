@@ -101,7 +101,7 @@ freshly allocated block (via `__twig_alloc_bytes`), preserving immutability:
 
 | helper | signature | semantics |
 |--------|-----------|-----------|
-| `__twig_str_concat` | `(int64_t a, int64_t b) -> int64_t` | allocate `8 + len(a)+len(b)`; write length; `memcpy` a then b; return handle |
+| `__twig_str_concat` | `(int64_t a, int64_t b, int64_t max) -> int64_t` | `Trap.Overflow` if `len(a) > max − len(b)` (LANG83 PR5a: `max` is the module's string ceiling, `IIRModule::str_ceiling()`, which the compiler passes); else allocate `8 + len(a)+len(b)`; write length; `memcpy` a then b; return handle |
 | `__twig_str_slice` | `(int64_t s, int64_t start, int64_t end) -> int64_t` | **bounds-check** `0 ≤ start ≤ end ≤ len` (else trap, per §2.2 of E4); allocate + copy `[start,end)` |
 | `__twig_str_len` | `(int64_t s) -> int64_t` | load length at offset 0 (may be inlined as a raw load instead) |
 | `__twig_str_index` | `(int64_t s, int64_t i) -> int64_t` | **bounds-check** `0 ≤ i < len` (else trap); return the `i8` byte zero-extended |

@@ -70,7 +70,7 @@
 //!
 //! ## Deferred nodes (still rejected at the capability check)
 //!
-//! String interpolation (`StrConcat`), the remaining SIR17 OOP scopes
+//! The remaining SIR17 OOP scopes
 //! (`ModuleDef`, `SingletonClassDef` dispatch, the `Instance`/`ClassVar`
 //! scopes), the SIR22 array/matrix domain, and `Intrinsic` are **not
 //! emitted**.  Their `Feature`s are absent from the backend's
@@ -1194,12 +1194,19 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_expr(out, lhs, indent);
             out.push(')');
         }
-        // ── Deferred expression kinds (rejected at capability check) ──
-        // `StrConcat` (SIR18 string interpolation) is not accepted yet.
-        Expr::StrConcat { span, .. } => {
-            panic!(
-                "javascript backend reached a deferred `StrConcat` at {span} — not accepted yet"
-            );
+        // SIR18 string interpolation (`"a#{x}b"`, #18798): each part shown
+        // with the runtime's `toS` (Ruby's `to_s`: `true` is `true`, `nil` is
+        // empty), joined.  The parts are evaluated left to right, as Ruby
+        // evaluates the `#{}`s, because JavaScript evaluates arguments so.
+        Expr::StrConcat { parts, .. } => {
+            out.push_str("__Sir.strConcat(");
+            for (i, part) in parts.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_expr(out, part, indent);
+            }
+            out.push(')');
         }
         Expr::Intrinsic { name, span, .. } => {
             // The v0 backend accepts no intrinsics; `check_module`

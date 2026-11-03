@@ -27,6 +27,7 @@
 use std::collections::HashSet;
 
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
+use type_checker_protocol::bounded::{diagnostics_closed, name_list_with, push_bounded, MAX_LISTED_NAMES};
 use type_checker_protocol::TypeErrorDiagnostic;
 use type_declarations::{AnnotatedChild, AnnotatedNode, KindDecl, TypeDeclarations, TypedModeDecl};
 
@@ -103,7 +104,7 @@ pub fn infer<P: LanguageProfile>(
             if *arity != actual && *mode != TypedModeDecl::Off {
                 let (line, col) = profile.position(node);
                 let fn_name = profile.as_var_ref(app.callee).unwrap_or("<expr>");
-                errors.push(TypeErrorDiagnostic {
+                push_bounded(errors, TypeErrorDiagnostic {
                     message: format!(
                         "arity error: '{}' expects {} argument{}, got {}",
                         fn_name,
@@ -224,7 +225,7 @@ fn infer_var_ref<P: LanguageProfile>(
     // 3. Not found — emit error in Lenient/Strict mode
     if *mode != TypedModeDecl::Off {
         let (line, col) = profile.position(node);
-        errors.push(TypeErrorDiagnostic {
+        push_bounded(errors, TypeErrorDiagnostic {
             message: format!("unresolved variable '{}'", name),
             line,
             column: col,
@@ -333,6 +334,11 @@ fn check_exhaustiveness<P: LanguageProfile>(
     node: &GrammarASTNode,
     errors: &mut Vec<TypeErrorDiagnostic>,
 ) {
+    // Diagnostics are capped (`type_checker_protocol::bounded`, #18474
+    // review); once full, building another is wasted work.
+    if diagnostics_closed(errors) {
+        return;
+    }
     // A Wildcard or Binding arm makes the match trivially exhaustive.
     for arm in arms {
         match &arm.pattern {
@@ -353,19 +359,20 @@ fn check_exhaustiveness<P: LanguageProfile>(
         })
         .collect();
 
-    let missing: Vec<&str> = variants
-        .iter()
-        .filter(|v| !covered.contains(v.as_str()))
-        .map(|v| v.as_str())
-        .collect();
+    // Count the missing variants and keep only the few the message names
+    // (#18474 review): listing all of them made each match on a huge union
+    // cost the union's size in message bytes.  One pass, O(1) memory.
+    let mut missing = variants.iter().filter(|v| !covered.contains(v.as_str()));
+    let listed: Vec<&str> = missing.by_ref().take(MAX_LISTED_NAMES).map(|v| v.as_str()).collect();
 
-    if !missing.is_empty() {
+    if !listed.is_empty() {
+        let total = listed.len() + missing.count();
         let (line, col) = profile.position(node);
-        errors.push(TypeErrorDiagnostic {
+        push_bounded(errors, TypeErrorDiagnostic {
             message: format!(
-                "non-exhaustive match on union '{}': unmatched variants: '{}'",
+                "non-exhaustive match on union '{}': unmatched variants: {}",
                 union_name,
-                missing.join("', '")
+                name_list_with(&listed, total, "'", "'")
             ),
             line,
             column: col,

@@ -19,7 +19,9 @@
 #      `env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH` in front of us.
 #   2. Once a second for SECONDS seconds, check the process is alive.
 #   3. Stop it -- TERM, then KILL if it is still there 10 seconds later.
-#   4. Print the log, and fail if it says the runtime did not load.
+#   4. Print the log, and fail if it says the runtime did not load. Both are
+#      mosaic-release-check-log.sh, the one copy of that rule, which every
+#      Linux release lane also calls on the log it captures itself.
 #
 # TARGET may be an executable or a macOS `.app` bundle. A bundle is resolved
 # through `Contents/Info.plist`'s CFBundleExecutable, which must be a bare file
@@ -37,7 +39,8 @@
 
 set -uo pipefail
 
-RUNTIME_UNAVAILABLE="Mosaic Rust runtime unavailable"
+# The log check lives beside this script.
+check_log="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/mosaic-release-check-log.sh"
 
 usage() {
   echo "usage: mosaic-release-launch.sh SECONDS LOG TARGET [ARG...]" >&2
@@ -107,21 +110,6 @@ pid=$!
 # runner to hold files open for the next step.
 trap 'kill -KILL "$pid" 2>/dev/null || true' EXIT
 
-# The log is the app's own output. GitHub reads any line of the form
-# `::command::` on stdout as a workflow command, so a stray `::endgroup::`
-# or `::add-mask::` printed by the app would be obeyed. `::stop-commands::`
-# with a one-off token turns command parsing off until the same token is
-# echoed back, so the log is shown as plain text.
-show_log() {
-  local token
-  token="mosaic-log-$$-$RANDOM$RANDOM"
-  echo "::group::$label"
-  echo "::stop-commands::$token"
-  cat "$log"
-  echo "::$token::"
-  echo "::endgroup::"
-}
-
 elapsed=0
 while [[ "$elapsed" -lt "$seconds" ]]; do
   sleep 1
@@ -130,7 +118,8 @@ while [[ "$elapsed" -lt "$seconds" ]]; do
     wait "$pid"
     status=$?
     trap - EXIT
-    show_log
+    # Shown either way; a runtime-unavailable report here explains the exit.
+    bash "$check_log" "$label" "$log" || true
     echo "::error::$label: the app exited with status $status after ${elapsed}s, before its ${seconds}s were up" >&2
     exit 2
   fi
@@ -146,10 +135,7 @@ kill -KILL "$pid" 2>/dev/null || true
 wait "$pid" 2>/dev/null || true
 trap - EXIT
 
-show_log
-if grep -Fq "$RUNTIME_UNAVAILABLE" "$log"; then
-  echo "::error::$label: the app ran, but could not load its bundled runtime" >&2
-  exit 1
-fi
+# Show the log as plain text, and fail if it says the runtime did not load.
+bash "$check_log" "$label" "$log" || exit 1
 echo "$label: still running after ${seconds}s; stopped"
 exit 0

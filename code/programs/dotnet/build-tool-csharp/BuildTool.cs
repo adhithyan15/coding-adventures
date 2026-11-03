@@ -1410,6 +1410,35 @@ public static class Discovery
     }
 }
 
+/// <summary>
+/// A package whose own manifest resolves the package itself as a dependency.
+/// The conformance contract rejects this as <c>DEPENDENCY_SELF_EDGE</c>: a
+/// self-edge is neither dropped nor drawn (a drawn self-loop would surface
+/// later as a cycle, far from its cause). A Cargo manifest can do it with
+/// nothing more than a path entry named after its own directory or its
+/// <c>[package]</c> name. <see cref="Manifest"/> is repository-relative, so
+/// the message never discloses the checkout root; the CLI reports it with
+/// exit status 2.
+/// </summary>
+public sealed class DependencySelfEdgeException : Exception
+{
+    public DependencySelfEdgeException(string package, string manifest, string dependency)
+        : base($"DEPENDENCY_SELF_EDGE: package={package} manifest={manifest} dependency={dependency}")
+    {
+        Package = package;
+        Manifest = manifest;
+        Dependency = dependency;
+    }
+
+    public string Code => "DEPENDENCY_SELF_EDGE";
+
+    public string Package { get; }
+
+    public string Manifest { get; }
+
+    public string Dependency { get; }
+}
+
 public static class Resolver
 {
     public static DirectedGraph ResolveDependencies(IReadOnlyList<PackageSpec> packages)
@@ -1450,6 +1479,17 @@ public static class Resolver
                 _ => [],
             };
 
+            // Step 5 of the Rust contract: a Cargo candidate resolving to the
+            // crate itself (by directory alias or [package] name) is
+            // rejected, neither dropped nor drawn.
+            if (package.Language is "rust" or "wasm" && dependencies.Contains(package.Name, StringComparer.Ordinal))
+            {
+                throw new DependencySelfEdgeException(
+                    package.Name,
+                    RepositoryManifestPath(Path.Combine(package.Path, "Cargo.toml")),
+                    package.Name);
+            }
+
             foreach (var dependency in dependencies.Distinct(StringComparer.Ordinal))
             {
                 graph.AddEdge(dependency, package.Name);
@@ -1457,6 +1497,23 @@ public static class Resolver
         }
 
         return graph;
+    }
+
+    // Everything from the last `code/packages` or `code/programs` pair of
+    // components on, or just the file name when there is none — the Go
+    // reference's rule, so a diagnostic never discloses the checkout root.
+    private static string RepositoryManifestPath(string path)
+    {
+        var parts = path.Replace('\\', '/').Split('/');
+        for (var index = parts.Length - 2; index >= 0; index--)
+        {
+            if (parts[index] == "code" && parts[index + 1] is "packages" or "programs")
+            {
+                return string.Join('/', parts[index..]);
+            }
+        }
+
+        return Path.GetFileName(path);
     }
 
     public static Dictionary<string, string> BuildKnownNames(IReadOnlyList<PackageSpec> packages) =>
@@ -1690,7 +1747,11 @@ public static class Resolver
             return null;
         }
 
-        var match = Regex.Match(File.ReadAllText(cargoToml), @"(?m)^\s*name\s*=\s*""([^""]+)""");
+        // `[ \t]*`, not `\s*`: with (?m) a `\s*` after `^` runs across every
+        // following blank line from each line start and backtracks when the
+        // match then fails, which is quadratic in a run of blank lines. Names
+        // never span lines either.
+        var match = Regex.Match(File.ReadAllText(cargoToml), @"(?m)^[ \t]*name[ \t]*=[ \t]*""([^""\n]+)""");
         return match.Success ? match.Groups[1].Value.Trim().ToLowerInvariant() : null;
     }
 
@@ -1906,6 +1967,52 @@ public static class Resolver
         return dependencies;
     }
 
+    // ------------------------------------------------------------------
+    // Rust: Cargo.toml
+    // ------------------------------------------------------------------
+    //
+    // Which tables are build-graph edges
+    // ----------------------------------
+    // A graph edge means "rebuild and re-test the dependent when this
+    // changes", so it must cover everything Cargo compiles INTO the crate:
+    //
+    //   table                                  edge?  why
+    //   -------------------------------------  -----  ---------------------------
+    //   [dependencies]                         yes    linked into the library
+    //   [build-dependencies]                   yes    compiled into build.rs,
+    //                                                 which generates or
+    //                                                 configures it
+    //   [target.<cfg>.dependencies]            yes    linked on that target; CI
+    //   [target.<cfg>.build-dependencies]      yes    builds on several hosts,
+    //                                                 so the union over every cfg
+    //   [dev-dependencies] (every form)        no     tests only; Cargo allows
+    //                                                 dev cycles, a graph must not
+    //   [patch], [replace], [workspace], ...   no     not a dependency at all
+    //
+    // `build_dependencies` is Cargo's legacy spelling of `build-dependencies`.
+    //
+    // Which entry shapes
+    // ------------------
+    // Both TOML spellings of a path dependency are read:
+    //
+    //   [dependencies]
+    //   logic-gates = { path = "../logic-gates" }          <- inline table
+    //   gates = { package = "logic-gates", path = "..." }  <- renamed: "logic-gates"
+    //
+    //   [dependencies.logic-gates]                         <- sub-table
+    //   path = "../logic-gates"
+    //
+    // The crate name (the `package` rename if present, else the key) is then
+    // looked up in the known names; ResolveDependencies collapses duplicates.
+    // The line procedure is the cross-implementation contract in the Rust
+    // paragraph of code/specs/build-tool-conformance.md; every build-tool
+    // front implements the same one (ported here from the Go reference,
+    // cargoLinkDependencyNames), and the shared fixture
+    // resolution-rust-field-aware pins it.
+    //
+    // Every character compared below is ASCII. A UTF-16 surrogate is never
+    // ASCII, so char-by-char scanning is exact and never splits a character.
+
     private static IReadOnlyList<string> ParseRustDeps(PackageSpec package, Dictionary<string, string> knownNames)
     {
         var cargoToml = Path.Combine(package.Path, "Cargo.toml");
@@ -1915,23 +2022,8 @@ public static class Resolver
         }
 
         var dependencies = new List<string>();
-        var inDeps = false;
-        foreach (var line in File.ReadLines(cargoToml))
+        foreach (var crateName in CargoLinkDependencyNames(File.ReadAllText(cargoToml)))
         {
-            var trimmed = line.Trim();
-            if (trimmed.StartsWith("[", StringComparison.Ordinal))
-            {
-                inDeps = trimmed == "[dependencies]";
-                continue;
-            }
-
-            if (!inDeps || !trimmed.Contains("path", StringComparison.Ordinal) || !trimmed.Contains('=', StringComparison.Ordinal))
-            {
-                continue;
-            }
-
-            var parts = trimmed.Split('=', 2);
-            var crateName = parts[0].Trim().ToLowerInvariant();
             if (knownNames.TryGetValue(crateName, out var packageName))
             {
                 dependencies.Add(packageName);
@@ -1939,6 +2031,504 @@ public static class Resolver
         }
 
         return dependencies;
+    }
+
+    // The table names whose path entries link into, or build, the crate.
+    // They are compared exactly: TOML keys are case-sensitive, so
+    // `[Dependencies]` is some other table.
+    private static readonly HashSet<string> CargoLinkTableNames = new(StringComparer.Ordinal)
+    {
+        "dependencies",
+        "build-dependencies",
+        "build_dependencies",
+    };
+
+    // How the lines under the current header are read.
+    private enum CargoLinkTableKind
+    {
+        Ignored, // not a link table: its lines are skipped
+        Inline, // [D] or [target.C.D]: one `name = { ... }` entry per line
+        Sub, // [D.N] or [target.C.D.N]: the keys of the one entry N
+    }
+
+    // Returns the ASCII-lowercased crate names of every path dependency in a
+    // manifest's link tables, in manifest order, duplicates included (the
+    // caller collapses them).
+    //
+    // It is one pass over the lines with a three-state machine. Every header
+    // line — even a malformed one, or an array of tables — ends the current
+    // table, and so does the end of the file; a sub-table's entry is complete
+    // only then, because its `path` and `package` keys may come in any order.
+    //
+    // One inline entry may cover several lines. TOML 1.0 lets an ARRAY
+    // inside an inline table span lines, and the repository writes exactly
+    // that:
+    //
+    //   coding_adventures_vault_pm_cli = { path = "../vault-pm-cli", features = [
+    //       "crash-injection",
+    //   ] }
+    //
+    // So while the entry's value still has an unclosed `{` or `[`, the next
+    // lines are joined onto it with one space (and are not looked at as
+    // headers or entries). If the file ends first, the entry contributes
+    // nothing. The brackets are counted over the joined value as one text —
+    // a string left open at the end of one line continues after the joining
+    // space — but the joined value is never rescanned: a TomlBracketScanner
+    // carries its state from line to line and the pieces are joined once, so
+    // the join is linear in the entry's length.
+    internal static List<string> CargoLinkDependencyNames(string text)
+    {
+        if (text.StartsWith('﻿'))
+        {
+            text = text[1..]; // a leading byte-order mark
+        }
+
+        // Step 1 of the contract: split at LF, drop ONE trailing CR, strip
+        // the comment outside strings, trim spaces and tabs.
+        var lines = text.Split('\n');
+        static string CleanLine(string raw) =>
+            TrimTomlBlank(StripTomlLineComment(raw.EndsWith('\r') ? raw[..^1] : raw));
+
+        var names = new List<string>();
+        var kind = CargoLinkTableKind.Ignored;
+        string subKey = string.Empty;
+        string? subPath = null;
+        string? subPackage = null;
+
+        // A sub-table is a candidate only once it ends, when `path` was set;
+        // it is named by its `package` rename, else by its key N.
+        void FinishTable()
+        {
+            if (kind == CargoLinkTableKind.Sub && subPath is not null)
+            {
+                names.Add(AsciiLower(subPackage ?? subKey));
+            }
+        }
+
+        for (var index = 0; index < lines.Length; index++)
+        {
+            var line = CleanLine(lines[index]);
+            if (line.StartsWith('[') && line.EndsWith(']'))
+            {
+                FinishTable();
+                (kind, subKey) = ClassifyCargoLinkHeader(line);
+                subPath = null;
+                subPackage = null;
+                continue;
+            }
+
+            var equals = IndexTomlOutsideStrings(line, '=');
+            if (equals < 0)
+            {
+                continue;
+            }
+
+            switch (kind)
+            {
+                case CargoLinkTableKind.Inline:
+                    {
+                        // The pieces are collected and joined once, and the
+                        // scanner carries its state from piece to piece, so
+                        // the join is linear.
+                        var value = TrimTomlBlank(line[(equals + 1)..]);
+                        var complete = true;
+                        if (value.StartsWith('{'))
+                        {
+                            var scanner = new TomlBracketScanner();
+                            scanner.Feed(value);
+                            if (scanner.Depth > 0)
+                            {
+                                var pieces = new List<string> { value };
+                                complete = false;
+                                while (!complete && index + 1 < lines.Length)
+                                {
+                                    index++;
+                                    var piece = CleanLine(lines[index]);
+                                    scanner.Feed(" ");
+                                    scanner.Feed(piece);
+                                    pieces.Add(piece);
+                                    complete = scanner.Depth <= 0;
+                                }
+
+                                // If the file ended inside the value, there is no entry.
+                                value = string.Join(' ', pieces);
+                            }
+                        }
+
+                        if (complete && CargoPathDependencyName(line[..equals], value) is { } crateName)
+                        {
+                            names.Add(crateName);
+                        }
+
+                        break;
+                    }
+
+                case CargoLinkTableKind.Sub:
+                    {
+                        // Only the keys `path` and `package` matter, bare or
+                        // quoted (`"path" = ...` is the same key); the first
+                        // occurrence of each wins. `version`, `features`,
+                        // `optional` ... are ignored, and so is `Path`: TOML
+                        // keys are case-sensitive.
+                        if (TomlSingleString(line[(equals + 1)..]) is not { } value)
+                        {
+                            break;
+                        }
+
+                        switch (TomlKeySegment(line[..equals]))
+                        {
+                            case "path":
+                                subPath ??= value;
+                                break;
+                            case "package":
+                                subPackage ??= value;
+                                break;
+                        }
+
+                        break;
+                    }
+            }
+        }
+
+        FinishTable();
+        return names;
+    }
+
+    // Decides how to read the lines under a header line (already cleaned,
+    // starting with `[` and ending with `]`). For a sub-table it also returns
+    // the dependency key N.
+    //
+    // The header is split into dotted-key segments at every `.` OUTSIDE a
+    // string, and each segment is decoded to its value. That is what makes a
+    // cfg header one segment however much punctuation it quotes:
+    //
+    //   [target.'cfg(any(target_os = "linux", windows))'.dependencies]
+    //    target  C (one quoted segment)                    D
+    //
+    //   [target."thumbv8m.main-none-eabihf".dependencies.pi]  -> sub-table "pi"
+    //   [target.x86_64-unknown-linux-gnu.build-dependencies]  -> bare triple
+    //   ["dependencies"]                                      -> same as [dependencies]
+    //
+    // Segment lists that are not exactly one of [D], [D.N], [target.C.D] or
+    // [target.C.D.N] — and malformed headers — are ignored tables.
+    private static (CargoLinkTableKind Kind, string SubKey) ClassifyCargoLinkHeader(string line)
+    {
+        if (line.StartsWith("[[", StringComparison.Ordinal))
+        {
+            return (CargoLinkTableKind.Ignored, string.Empty); // array of tables, e.g. [[bin]]
+        }
+
+        var segments = new List<string>();
+        foreach (var raw in SplitTomlOutsideStrings(line[1..^1], '.', nested: false))
+        {
+            if (TomlKeySegment(raw) is not { } segment)
+            {
+                return (CargoLinkTableKind.Ignored, string.Empty);
+            }
+
+            segments.Add(segment);
+        }
+
+        if (segments.Count >= 3 && segments[0] == "target")
+        {
+            segments.RemoveRange(0, 2); // drop `target` and the cfg, whatever it is
+        }
+
+        return segments switch
+        {
+            [var table] when CargoLinkTableNames.Contains(table) => (CargoLinkTableKind.Inline, string.Empty),
+            [var table, var key] when CargoLinkTableNames.Contains(table) => (CargoLinkTableKind.Sub, key),
+            _ => (CargoLinkTableKind.Ignored, string.Empty),
+        };
+    }
+
+    // Returns the crate a completed inline-table entry `key = value` names
+    // when it is a path dependency — the only kind that can point at a
+    // repository package — or null. The key is the crate name unless the
+    // inline table renames it with `package = "..."`:
+    //
+    //   logic-gates = { path = "../logic-gates" }                    -> logic-gates
+    //   gates = { package = "logic-gates", path = "../logic-gates" } -> logic-gates
+    //   serde = "1"                                                  -> not a path dep
+    //   x = { version = "1", features = ["path"] }                   -> not a path dep
+    //   foo.path = "../foo"                                          -> dotted key: no
+    //
+    // Fields are split at commas outside strings AND outside nested `[...]`
+    // or `{...}`, so a `features` array cannot leak a fake field and a nested
+    // table's `path` is not the entry's. A field key is decoded like an
+    // entry key, so `"path"` and `'path'` are the key `path` (TOML, and so
+    // Cargo, read them that way); the decoded key must then be exactly
+    // `path` or `package` (Cargo ignores `Package`, so it must not count as a
+    // rename; escapes are not decoded):
+    //
+    //   a = { "path" = "../a" }                 -> a
+    //   x = { 'package' = "a", path = "../a" }  -> a
+    //   a = { "Path" = "../a" }                 -> not a path dep (case-sensitive)
+    //   a = { path.x = "../a" }                 -> not a path dep (dotted field key)
+    private static string? CargoPathDependencyName(string key, string value)
+    {
+        if (TomlKeySegment(key) is not { } crateName)
+        {
+            return null;
+        }
+
+        value = TrimTomlBlank(value);
+        if (value.Length < 2 || value[0] != '{' || value[^1] != '}')
+        {
+            return null;
+        }
+
+        string? path = null;
+        string? packageName = null;
+        foreach (var field in SplitTomlOutsideStrings(value[1..^1], ',', nested: true))
+        {
+            var equals = IndexTomlOutsideStrings(field, '=');
+            if (equals < 0 || TomlSingleString(field[(equals + 1)..]) is not { } fieldValue)
+            {
+                continue;
+            }
+
+            // A dotted or malformed field key is no key at all (null).
+            switch (TomlKeySegment(field[..equals]))
+            {
+                case "path":
+                    path ??= fieldValue;
+                    break;
+                case "package":
+                    packageName ??= fieldValue;
+                    break;
+            }
+        }
+
+        return path is null ? null : AsciiLower(packageName ?? crateName);
+    }
+
+    // Lowercases A-Z only, as the contract says (ToLowerInvariant would also
+    // fold non-ASCII letters).
+    private static string AsciiLower(string value) =>
+        string.Create(value.Length, value, static (span, source) =>
+        {
+            for (var index = 0; index < source.Length; index++)
+            {
+                span[index] = char.IsAsciiLetterUpper(source[index]) ? (char)(source[index] + 32) : source[index];
+            }
+        });
+
+    // Trims spaces and tabs only — the contract's notion of blank.
+    private static string TrimTomlBlank(string value) => value.Trim(' ', '\t');
+
+    // Returns the index just past the string that opens at value[start] (a
+    // `"` or `'`), or -1 if it is not closed on this line. In a basic "..."
+    // string a backslash makes the next character part of the string, so
+    // `\"` does not end it; a literal '...' string has no escapes.
+    private static int TomlStringEnd(string value, int start)
+    {
+        var quote = value[start];
+        for (var index = start + 1; index < value.Length; index++)
+        {
+            if (quote == '"' && value[index] == '\\')
+            {
+                index++;
+            }
+            else if (value[index] == quote)
+            {
+                return index + 1;
+            }
+        }
+
+        return -1;
+    }
+
+    // Removes a TOML comment: everything from the first `#` outside a
+    // string. An unclosed string runs to the end of the line.
+    private static string StripTomlLineComment(string line)
+    {
+        for (var index = 0; index < line.Length; index++)
+        {
+            switch (line[index])
+            {
+                case '"' or '\'':
+                    var end = TomlStringEnd(line, index);
+                    if (end < 0)
+                    {
+                        return line;
+                    }
+
+                    index = end - 1;
+                    break;
+                case '#':
+                    return line[..index];
+            }
+        }
+
+        return line;
+    }
+
+    // Returns the index of the first target character outside every string,
+    // or -1 (also when a string is left unclosed before it).
+    private static int IndexTomlOutsideStrings(string value, char target)
+    {
+        for (var index = 0; index < value.Length; index++)
+        {
+            var character = value[index];
+            if (character is '"' or '\'')
+            {
+                var end = TomlStringEnd(value, index);
+                if (end < 0)
+                {
+                    return -1;
+                }
+
+                index = end - 1;
+            }
+            else if (character == target)
+            {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
+    // Counts the `{` and `[` outside strings that are not closed again, over
+    // text fed in pieces. Feeding "ab" and then "cd" leaves exactly the
+    // state feeding "abcd" would, because the scanner keeps what a rescan of
+    // the joined text would have to rediscover: whether it is inside a
+    // string (and which delimiter closes it), and whether the previous
+    // character was a backslash escaping the next one in a basic string. So
+    // a string still open at the end of one line continues after the
+    // joining space, as it does in the joined value:
+    //
+    //   Feed("{ x = \"q\\")   depth 1, inside "...", escape pending
+    //   Feed(" ")              the space is escaped: still inside the string
+    //   Feed("\", p = 1 }")    the string closes, `}` closes the table: 0
+    //
+    // Depth zero (or less) means the value is complete. Carrying this state
+    // is what keeps the continuation join linear: the reader used to rescan
+    // the whole growing value for every appended line, which is quadratic.
+    private sealed class TomlBracketScanner
+    {
+        private char _quote; // the delimiter of the string being scanned, or '\0'
+        private bool _escape; // the previous character was a backslash in "..."
+
+        public int Depth { get; private set; }
+
+        public void Feed(string text)
+        {
+            foreach (var character in text)
+            {
+                if (_escape)
+                {
+                    _escape = false;
+                }
+                else if (_quote != '\0')
+                {
+                    if (_quote == '"' && character == '\\')
+                    {
+                        _escape = true;
+                    }
+                    else if (character == _quote)
+                    {
+                        _quote = '\0';
+                    }
+                }
+                else if (character is '"' or '\'')
+                {
+                    _quote = character;
+                }
+                else if (character is '{' or '[')
+                {
+                    Depth++;
+                }
+                else if (character is '}' or ']')
+                {
+                    Depth--;
+                }
+            }
+        }
+    }
+
+    // Splits value at every separator outside strings. With nested set, a
+    // separator inside `[...]` or `{...}` does not split either. An unclosed
+    // string makes the rest of value the last part.
+    private static List<string> SplitTomlOutsideStrings(string value, char separator, bool nested)
+    {
+        var parts = new List<string>();
+        int start = 0, depth = 0;
+        for (var index = 0; index < value.Length; index++)
+        {
+            var character = value[index];
+            if (character is '"' or '\'')
+            {
+                var end = TomlStringEnd(value, index);
+                if (end < 0)
+                {
+                    parts.Add(value[start..]);
+                    return parts;
+                }
+
+                index = end - 1;
+            }
+            else if (nested && character is '[' or '{')
+            {
+                depth++;
+            }
+            else if (nested && character is ']' or '}')
+            {
+                depth--;
+            }
+            else if (character == separator && depth == 0)
+            {
+                parts.Add(value[start..index]);
+                start = index + 1;
+            }
+        }
+
+        parts.Add(value[start..]);
+        return parts;
+    }
+
+    // Decodes one key or header segment: a bare key (ASCII letters, digits,
+    // `_`, `-`), or exactly one complete string, whose value is the text
+    // between its quotes taken verbatim (escapes are not decoded). Anything
+    // else — empty, dotted, or text around a string — is null.
+    private static string? TomlKeySegment(string raw)
+    {
+        var segment = TrimTomlBlank(raw);
+        if (segment.Length == 0)
+        {
+            return null;
+        }
+
+        if (segment[0] is '"' or '\'')
+        {
+            return TomlStringEnd(segment, 0) == segment.Length ? segment[1..^1] : null;
+        }
+
+        foreach (var character in segment)
+        {
+            if (!char.IsAsciiLetterOrDigit(character) && character is not ('_' or '-'))
+            {
+                return null;
+            }
+        }
+
+        return segment;
+    }
+
+    // Returns the content of a value that is exactly one complete, non-empty
+    // string (after trimming), as `path` and `package` require, or null.
+    // `"1"` is one; `"a" "b"`, `1`, `""` and `["x"]` are not.
+    private static string? TomlSingleString(string raw)
+    {
+        var value = TrimTomlBlank(raw);
+        if (value.Length == 0 || value[0] is not ('"' or '\'') || TomlStringEnd(value, 0) != value.Length)
+        {
+            return null;
+        }
+
+        var content = value[1..^1];
+        return content.Length == 0 ? null : content;
     }
 
     private static IReadOnlyList<string> ParseElixirDeps(PackageSpec package, Dictionary<string, string> knownNames)
@@ -3491,7 +4081,18 @@ public static class BuildToolApp
 
         Console.WriteLine($"Discovered {packages.Count} packages");
 
-        var graph = Resolver.ResolveDependencies(packages);
+        DirectedGraph graph;
+        try
+        {
+            graph = Resolver.ResolveDependencies(packages);
+        }
+        catch (DependencySelfEdgeException error)
+        {
+            // Malformed input: the stable, root-free diagnostic and exit 2.
+            Console.Error.WriteLine(error.Message);
+            return 2;
+        }
+
         HashSet<string>? affectedSet = null;
         var ciToolchains = new HashSet<string>(StringComparer.Ordinal);
         var force = options.Force;

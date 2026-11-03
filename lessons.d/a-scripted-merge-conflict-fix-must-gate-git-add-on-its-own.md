@@ -27,6 +27,12 @@ What to do differently:
 - Match conflict markers by shape, not by label: `>>>>>>> .*`. The label is a
   commit hash, a branch name or `origin/main` depending on how the merge was
   started.
+- Check marker lines, not marker substrings. During VER26's bootstrap-squash
+  reconciliation, a guard searching for `=======` anywhere rejected the CI
+  file's decorative comment banner even after its real conflict was removed.
+  That check correctly stopped staging. Match a whole `=======` line or a
+  line beginning with a real opening/closing marker, then stage only after
+  the check succeeds.
 - Before committing a merge, run `git diff --cached | grep -c '^+\(<<<<<<<\|>>>>>>>\)'`.
   After committing, run `git diff <previous-head> HEAD | grep -c …` the same
   way. Both must print 0.

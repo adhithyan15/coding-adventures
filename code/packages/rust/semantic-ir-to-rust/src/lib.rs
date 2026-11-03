@@ -59,6 +59,9 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::Pairs,
     Feature::Symbols,
     Feature::Strings,
+    // SIR18 string interpolation (#18798): `StrConcat` joins its parts'
+    // Ruby `to_s` through the runtime's `str_concat`.
+    Feature::StringInterpolation,
     Feature::DynamicTyping,
     Feature::OptionalTypeAnnotations,
     Feature::MutualRecursion,

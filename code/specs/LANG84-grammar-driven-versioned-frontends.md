@@ -233,7 +233,8 @@ validated at generation time. Every frontend MUST enforce a
 | Compiler traversal depth | ≤ parser depth cap; iterative where unbounded by the grammar | IIR compiler |
 | Flat operator spine | 512 | before any allocation that folds a repetition (lesson: *check flat operator spines…*) |
 | IIR instructions | 1,000,000 | IIR compiler |
-| Registers per lowered function | the target VM's frame limit: vm-core's `VMFrame::MAX_FRAME_REGISTERS` (65,536), referenced, not restated; counted as the VM counts them (parameters + distinct non-parameter `dest`s) | IIR compiler, as it emits (Python and Ruby release paths since #18419) |
+| Registers per lowered function | the target VM's frame limit: vm-core's `VMFrame::MAX_FRAME_REGISTERS` (65,536), referenced, not restated; counted as the VM counts them (parameters + distinct non-parameter `dest`s) | IIR compiler, as it emits (Python and Ruby release paths since #18419; Python's LANG79 float pilot runs the vm-core backstop since #18475; Twig per finished function since #18474) |
+| VM steps for a runner's module | derived from the module (Python: `len(main) + 1` + 1,024 per float print; Ruby: `len(main) + 1`), never a flat ceiling | the language's `run_module` (Ruby since #18475) |
 | Lexer group/pair stack (E2) | 256 frames | lexer |
 | Captured slot length (E4) | 256 bytes | lexer |
 | Pending deferred bodies (E5) | 64 per line, 4,096 total | lexer |
@@ -253,7 +254,20 @@ budget keeps it at about 36,900 registers, measured with
 `console.log(x,x,x);` repeated, and Perl's 16,384-item budget at most one
 register per item), and its
 `Budget` names the function and the 1-based start of the statement
-that went over. Registers the compiler emits after the last statement (the
+that went over. Twig, which is not a LANG84 release-path frontend and has no
+`FrontendBudgets` value, carries the same budgets as fixed constants since
+#18474: 1 MiB of source, 2²⁰ CST items, 65,536 registers and 2¹⁸
+instructions per function, 2²⁰ instructions per module and per linked
+multi-module program, 2¹⁶ functions per module, 256-byte names and 1 MiB of
+generated record/union names, and bounded type-checker diagnostics
+(`type_checker_protocol::bounded`: 256 kept, lists of at most 8 names)
+(TW00 "Compile-time budgets"); its file
+runners, and `lang-aot`'s, read through `bounded-source-file`: regular files
+only, never blocking, size checked before reading, at most the budget plus
+one byte read. Its register budget is the stricter of twig-vm's and vm-core's
+frame limits (both 2¹⁶); twig-ir-compiler depends on neither, so tests in
+twig-vm and in twig-ir-compiler (vm-core as a dev-dependency) pin the
+number to both. Registers the compiler emits after the last statement (the
 `ret 0` epilogue) are reserved while statements are lowered, so the refusal
 always points at source, and the check is exact: a function of exactly the
 limit compiles and runs. The finished module is then put through the VM's own

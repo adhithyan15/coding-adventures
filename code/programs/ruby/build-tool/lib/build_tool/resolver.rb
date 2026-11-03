@@ -28,8 +28,10 @@
 # - **TypeScript**: package.json uses `@coding-adventures/` scoped npm names.
 #   `@coding-adventures/logic-gates` maps to `typescript/logic-gates`.
 #
-# - **Rust**: Cargo.toml uses path-based local dependencies.
-#   The crate name (key before `=`) maps to `rust/crate-name`.
+# - **Rust**: Cargo.toml uses path-based local dependencies in the tables
+#   that link into or build the crate (`[dependencies]`,
+#   `[build-dependencies]` and their `[target.<cfg>.…]` forms). The crate name
+#   (the entry key, or its `package` rename) maps to `rust/crate-name`.
 #
 # - **Swift**: Package.swift uses `.package(path: "../dep-name")` relative
 #   path references. The directory name maps to `swift/dep-name`.
@@ -52,6 +54,26 @@ module BuildTool
       @manifest = manifest
       @encoding = "UTF-8"
       super("#{code}: package=#{package} manifest=#{manifest} encoding=#{encoding}")
+    end
+  end
+
+  # DependencySelfEdgeError -- A package whose manifest resolves itself.
+  #
+  # The conformance contract rejects this as DEPENDENCY_SELF_EDGE: a self-edge
+  # is neither dropped nor drawn (a drawn self-loop would surface later as a
+  # cycle, far from its cause). A Cargo manifest can do it with nothing more
+  # than a path entry named after its own directory or [package] name. The
+  # manifest is repository-relative, so the message never discloses the
+  # checkout root.
+  class DependencySelfEdgeError < StandardError
+    attr_reader :code, :package, :manifest, :dependency
+
+    def initialize(package:, manifest:, dependency:)
+      @code = "DEPENDENCY_SELF_EDGE"
+      @package = package
+      @manifest = manifest
+      @dependency = dependency
+      super("#{code}: package=#{package} manifest=#{manifest} dependency=#{dependency}")
     end
   end
 
@@ -456,7 +478,9 @@ module BuildTool
 
     def repository_relative_manifest(path)
       normalized = Pathname(path).cleanpath.to_s.tr("\\", "/")
-      match = normalized.match(%r{(?:\A|/)(code/(?:packages|programs)/.+)\z})
+      # The greedy prefix makes this the LAST code/packages|programs pair, so a
+      # checkout under a directory that itself holds one is never printed.
+      match = normalized.match(%r{\A(?:.*/)?(code/(?:packages|programs)/.+)\z})
       return match[1] if match
 
       Pathname(normalized).basename.to_s
@@ -526,13 +550,37 @@ module BuildTool
 
     # parse_rust_deps -- Extract internal deps from Cargo.toml.
     #
-    # Rust Cargo.toml declares workspace-local dependencies with path references:
+    # Which Cargo tables are build-graph edges
+    # ----------------------------------------
+    #
+    # A graph edge means "rebuild and re-test the dependent when this
+    # changes", so it must cover everything Cargo compiles INTO the crate:
+    #
+    #   table                                 edge?  why
+    #   ------------------------------------  -----  ---------------------------
+    #   [dependencies]                        yes    linked into the library
+    #   [build-dependencies]                  yes    compiled into build.rs
+    #   [build_dependencies]                  yes    legacy spelling of the above
+    #   [target.<cfg>.<one of the above>]     yes    union over every cfg: CI
+    #                                                builds on several hosts
+    #   [dev-dependencies] (every form)       no     tests only; Cargo allows a
+    #                                                dev-dependency cycle
+    #   [patch], [replace], [workspace], ...  no     not a dependency of the crate
+    #
+    # Both TOML spellings of a path dependency are read:
     #
     #   [dependencies]
-    #   logic-gates = { path = "../logic-gates" }
+    #   logic-gates = { path = "../logic-gates" }          <- inline table
+    #   gates = { package = "logic-gates", path = "..." }  <- renamed
     #
-    # We look for lines in the [dependencies] section that contain `path =`
-    # and extract the crate name (the key before `=`).
+    #   [dependencies.logic-gates]                         <- sub-table
+    #   path = "../logic-gates"
+    #
+    # The line procedure is the Rust paragraph of
+    # code/specs/build-tool-conformance.md; every build-tool front implements
+    # it and the shared fixture resolution-rust-field-aware pins it. Each
+    # candidate name is looked up among the known Cargo names (directory name
+    # and declared [package] name); duplicates collapse to one dependency.
     #
     # @param package [Package] The Rust package.
     # @param known_names [Hash<String, String>] Mapping from crate name to package name.
@@ -541,31 +589,417 @@ module BuildTool
       cargo_toml = package.path / "Cargo.toml"
       return [] unless cargo_toml.exist?
 
-      text = cargo_toml.read
-      internal_deps = []
-      in_deps = false
+      cargo_link_dependency_names(File.binread(cargo_toml)).filter_map do |crate_name|
+        known_names[crate_name]
+      end.uniq
+    end
 
-      text.lines.each do |line|
-        stripped = line.strip
+    # The table names whose path entries link into, or build, the crate.
+    # Compared exactly: TOML keys are case-sensitive, so `[Dependencies]` is
+    # some other table.
+    CARGO_LINK_TABLE_NAMES = %w[dependencies build-dependencies build_dependencies].freeze
 
-        if stripped.start_with?("[")
-          in_deps = stripped == "[dependencies]"
-          next
-        end
+    # TOML's bare-key alphabet: ASCII letters, digits, `_` and `-`.
+    TOML_BARE_KEY = /\A[A-Za-z0-9_-]+\z/
 
-        next unless in_deps
+    # The UTF-8 byte-order mark, as raw bytes (the manifest is read binary).
+    UTF8_BOM = "\xEF\xBB\xBF".b.freeze
 
-        # Look for lines like: logic-gates = { path = "../logic-gates" }
-        if stripped.include?("path") && stripped.include?("=")
-          parts = stripped.split("=", 2)
-          if parts.size >= 2
-            crate_name = parts.first.strip.downcase
-            internal_deps << known_names[crate_name] if known_names.key?(crate_name)
-          end
+    # cargo_link_dependency_names -- Every path dependency's crate name.
+    #
+    # Returns lower-case names in manifest order, duplicates kept (the
+    # caller collapses them). The text is scanned as raw bytes: every
+    # character the procedure compares is ASCII, so a byte scan is exact and
+    # does not depend on Ruby's default external encoding.
+    #
+    # It is one pass over the lines with a three-state machine:
+    #
+    #   :ignored  not a link table; its lines are skipped
+    #   :inline   [D] or [target.C.D]: one entry per line
+    #   :sub      [D.N] or [target.C.D.N]: the `path`/`package` keys of entry N
+    #
+    # Every header line -- even a malformed one, or an array of tables --
+    # ends the current table, and so does the end of the file; a sub-table's
+    # entry is complete only then, since its keys may come in either order.
+    #
+    # One inline entry may cover several lines. TOML 1.0 lets an ARRAY inside
+    # an inline table span lines, and the repository writes exactly that:
+    #
+    #   coding_adventures_vault_pm_cli = { path = "../vault-pm-cli", features = [
+    #       "crash-injection",
+    #   ] }
+    #
+    # So while the value still has an unclosed `{` or `[`, the next lines
+    # are joined onto it with one space (and are not looked at as headers or
+    # entries). If the file ends first, the entry contributes nothing. The
+    # brackets are counted over the joined value as one text -- a string left
+    # open at the end of one line continues after the joining space -- but
+    # the joined value is never rescanned: a TomlBracketScanner carries its
+    # state from line to line and the pieces are joined once, so the join is
+    # linear in the entry's length.
+    def cargo_link_dependency_names(text)
+      text = text.b
+      text = text.byteslice(UTF8_BOM.bytesize..) if text.start_with?(UTF8_BOM)
+      # Split at LF only, keeping trailing empty fields (-1).
+      lines = text.split("\n", -1)
+      clean = lambda do |raw|
+        raw = raw.delete_suffix("\r")
+        trim_spaces_and_tabs(strip_toml_line_comment(raw))
+      end
+
+      names = []
+      kind = :ignored
+      sub_key = nil
+      sub_path = nil
+      sub_package = nil
+      finish_table = lambda do
+        if kind == :sub && sub_path
+          names << ascii_downcase(sub_package || sub_key)
         end
       end
 
-      internal_deps
+      index = 0
+      while index < lines.length
+        line = clean.call(lines[index])
+        index += 1
+
+        # Step 2: headers. Every header ends the current table.
+        if line.start_with?("[") && line.end_with?("]")
+          finish_table.call
+          kind, sub_key = classify_cargo_link_header(line)
+          sub_path = sub_package = nil
+          next
+        end
+
+        equals = index_toml_outside_strings(line, "=")
+        next unless equals
+
+        case kind
+        when :inline
+          # Step 3: inline entries, continued while a bracket is open.
+          # The pieces are collected and joined once, and the scanner carries
+          # its state from piece to piece, so the join is linear.
+          value = trim_spaces_and_tabs(line.byteslice((equals + 1)..))
+          if value.start_with?("{")
+            scanner = TomlBracketScanner.new
+            scanner.feed(value)
+            if scanner.depth > 0
+              pieces = [value]
+              closed = false
+              while !closed && index < lines.length
+                piece = clean.call(lines[index])
+                index += 1
+                scanner.feed(" ")
+                scanner.feed(piece)
+                pieces << piece
+                closed = scanner.depth <= 0
+              end
+              # If the file ended inside the value, there is no entry.
+              value = closed ? pieces.join(" ") : nil
+            end
+          end
+          crate_name = value && cargo_path_dependency_name(line.byteslice(0, equals), value)
+          names << crate_name if crate_name
+        when :sub
+          # Step 4: only the keys `path` and `package` matter, bare or quoted
+          # (`"path" = ...` is the same key); first wins. `version`,
+          # `features`, `optional` ... are ignored, and so is `Path`: TOML
+          # keys are case-sensitive.
+          field_value = toml_single_string(line.byteslice((equals + 1)..))
+          next unless field_value
+
+          case toml_key_segment(line.byteslice(0, equals))
+          when "path" then sub_path ||= field_value
+          when "package" then sub_package ||= field_value
+          end
+        end
+      end
+      finish_table.call
+      names
+    end
+
+    # classify_cargo_link_header -- How to read the lines under a header.
+    #
+    # The line is already comment-stripped and trimmed, and starts with `[`
+    # and ends with `]`. Returns [kind, sub_key]. The header is split into
+    # dotted-key segments at every `.` OUTSIDE a string and each segment is
+    # decoded, so a cfg header is one segment however much punctuation it
+    # quotes:
+    #
+    #   [target.'cfg(any(target_os = "linux", windows))'.dependencies]
+    #    target  C (one quoted segment)                   D
+    #
+    #   [target."thumbv8m.main-none-eabihf".dependencies.pi]  -> sub-table pi
+    #   [target.x86_64-unknown-linux-gnu.build-dependencies]  -> bare triple
+    #   ["dependencies"]                                      -> [dependencies]
+    #
+    # Exactly [D], [D.N], [target.C.D] and [target.C.D.N] are read; arrays of
+    # tables, malformed headers and every other segment list are ignored.
+    def classify_cargo_link_header(line)
+      return [:ignored, nil] if line.start_with?("[[") # e.g. [[bin]]
+
+      segments = []
+      split_toml_outside_strings(line.byteslice(1, line.bytesize - 2), ".", false).each do |raw|
+        segment = toml_key_segment(raw)
+        return [:ignored, nil] unless segment
+
+        segments << segment
+      end
+      # Drop `target` and the cfg, whatever it is.
+      segments = segments.drop(2) if segments.length >= 3 && segments.first == "target"
+      return [:ignored, nil] unless CARGO_LINK_TABLE_NAMES.include?(segments.first)
+
+      case segments.length
+      when 1 then [:inline, nil]
+      when 2 then [:sub, segments[1]]
+      else [:ignored, nil]
+      end
+    end
+
+    # cargo_path_dependency_name -- The crate a complete inline entry names.
+    #
+    # Only path dependencies can point at a repository package. The name is
+    # the `package` rename if there is one, and the entry key otherwise:
+    #
+    #   logic-gates = { path = "../logic-gates" }                    -> logic-gates
+    #   gates = { package = "logic-gates", path = "../logic-gates" } -> logic-gates
+    #   serde = "1"                                -> nil (not a table)
+    #   x = { version = "1", features = ["path"] } -> nil (no path field)
+    #   foo.path = "../foo"                        -> nil (dotted key)
+    #
+    # Fields are split at commas outside strings AND outside nested `[...]`
+    # or `{...}`, so a `features` array cannot leak a fake field and a nested
+    # table's `path` is not the entry's. A field key is decoded like an entry
+    # key, so `"path"` and `'path'` are the key `path` (TOML, and so Cargo,
+    # read them that way); the decoded key must then be exactly `path` or
+    # `package` (Cargo ignores `Package`; escapes are not decoded). The first
+    # usable field wins:
+    #
+    #   a = { "path" = "../a" }                 -> a
+    #   x = { 'package' = "a", path = "../a" }  -> a
+    #   a = { "Path" = "../a" }                 -> nil (keys are case-sensitive)
+    #   a = { path.x = "../a" }                 -> nil (dotted field key)
+    def cargo_path_dependency_name(key, value)
+      crate_name = toml_key_segment(key)
+      return nil unless crate_name
+
+      value = trim_spaces_and_tabs(value)
+      return nil unless value.bytesize >= 2 && value.start_with?("{") && value.end_with?("}")
+
+      path = nil
+      package_name = nil
+      split_toml_outside_strings(value.byteslice(1, value.bytesize - 2), ",", true).each do |field|
+        equals = index_toml_outside_strings(field, "=")
+        next unless equals
+
+        field_value = toml_single_string(field.byteslice((equals + 1)..))
+        next unless field_value
+
+        # A dotted or malformed field key is no key at all (nil).
+        case toml_key_segment(field.byteslice(0, equals))
+        when "path" then path ||= field_value
+        when "package" then package_name ||= field_value
+        end
+      end
+      return nil unless path
+
+      ascii_downcase(package_name || crate_name)
+    end
+
+    # toml_string_end -- Index just past the string opening at text[start].
+    #
+    # text[start] is `"` or `'`. Returns nil when the string is not closed on
+    # this line (strings never span lines here). In a basic "..." string a
+    # backslash makes the next byte part of the string, so `\"` does not end
+    # it; a literal '...' string has no escapes.
+    def toml_string_end(text, start)
+      quote = text.getbyte(start)
+      index = start + 1
+      while index < text.bytesize
+        byte = text.getbyte(index)
+        if quote == 0x22 && byte == 0x5C # a backslash inside "..."
+          index += 2
+          next
+        end
+        return index + 1 if byte == quote
+
+        index += 1
+      end
+      nil
+    end
+
+    # Is the byte at text[index] a string opener (`"` or `'`)?
+    def toml_quote_at?(text, index)
+      byte = text.getbyte(index)
+      [0x22, 0x27].include?(byte)
+    end
+
+    # strip_toml_line_comment -- Drop everything from the first `#` outside
+    # a string. An unclosed string runs to the end of the line.
+    def strip_toml_line_comment(line)
+      index = 0
+      while index < line.bytesize
+        if toml_quote_at?(line, index)
+          index = toml_string_end(line, index)
+          return line unless index
+
+          next
+        end
+        return line.byteslice(0, index) if line.getbyte(index) == 0x23 # "#"
+
+        index += 1
+      end
+      line
+    end
+
+    # index_toml_outside_strings -- Index of the first `target` byte outside
+    # every string, or nil.
+    def index_toml_outside_strings(text, target)
+      target_byte = target.ord
+      index = 0
+      while index < text.bytesize
+        if toml_quote_at?(text, index)
+          index = toml_string_end(text, index)
+          return nil unless index
+
+          next
+        end
+        return index if text.getbyte(index) == target_byte
+
+        index += 1
+      end
+      nil
+    end
+
+    # TomlBracketScanner -- Count the `{`/`[` outside strings left unclosed,
+    # over text fed in pieces.
+    #
+    # Feeding "ab" and then "cd" leaves exactly the state feeding "abcd"
+    # would, because the scanner keeps what a rescan of the joined text would
+    # have to rediscover: whether it is inside a string (and which delimiter
+    # closes it), and whether the previous byte was a backslash escaping the
+    # next one in a basic string. So a string still open at the end of one
+    # line continues after the joining space, as it does in the joined value:
+    #
+    #   feed('{ x = "q\\')   depth 1, inside "...", escape pending
+    #   feed(" ")             the space is escaped: still inside the string
+    #   feed('", p = 1 }')    the string closes, `}` closes the table: 0
+    #
+    # Zero (or less) means the inline value is complete:
+    #
+    #   { path = "../a", features = [   -> 2
+    #   { path = "../a" }               -> 0 (complete)
+    #
+    # Carrying this state is what keeps the continuation join linear: the
+    # reader used to rescan the whole growing value for every appended line,
+    # which is quadratic in a long entry.
+    class TomlBracketScanner
+      attr_reader :depth
+
+      def initialize
+        @depth = 0
+        @quote = nil # the delimiter byte of the string being scanned, or nil
+        @escape = false # the previous byte was a backslash inside "..."
+      end
+
+      def feed(text)
+        text.each_byte do |byte|
+          if @escape
+            @escape = false
+          elsif @quote
+            if @quote == 0x22 && byte == 0x5C # a backslash inside "..."
+              @escape = true
+            elsif byte == @quote
+              @quote = nil
+            end
+          elsif byte == 0x22 || byte == 0x27 # " '
+            @quote = byte
+          elsif byte == 0x7B || byte == 0x5B # { [
+            @depth += 1
+          elsif byte == 0x7D || byte == 0x5D # } ]
+            @depth -= 1
+          end
+        end
+        self
+      end
+    end
+
+    # split_toml_outside_strings -- Split at every separator outside strings.
+    #
+    # With `nested`, a separator inside `[...]` or `{...}` does not split
+    # either. An unclosed string runs to the end of the last part.
+    def split_toml_outside_strings(text, separator, nested)
+      separator_byte = separator.ord
+      parts = []
+      start = 0
+      depth = 0
+      index = 0
+      while index < text.bytesize
+        if toml_quote_at?(text, index)
+          index = toml_string_end(text, index)
+          break unless index
+
+          next
+        end
+        byte = text.getbyte(index)
+        if nested && [0x5B, 0x7B].include?(byte)
+          depth += 1
+        elsif nested && [0x5D, 0x7D].include?(byte)
+          depth -= 1
+        elsif byte == separator_byte && depth.zero?
+          parts << text.byteslice(start, index - start)
+          start = index + 1
+        end
+        index += 1
+      end
+      parts << text.byteslice(start..)
+    end
+
+    # toml_key_segment -- Decode one key or header segment, or nil.
+    #
+    # A bare key (ASCII letters, digits, `_`, `-`) or exactly one complete
+    # string, whose value is the text between its quotes, verbatim (escapes
+    # are not decoded): `dependencies`, `'cfg(unix)'` -> `cfg(unix)`.
+    def toml_key_segment(raw)
+      segment = trim_spaces_and_tabs(raw)
+      return nil if segment.empty?
+
+      if toml_quote_at?(segment, 0)
+        return nil unless toml_string_end(segment, 0) == segment.bytesize
+
+        return segment.byteslice(1, segment.bytesize - 2)
+      end
+      TOML_BARE_KEY.match?(segment) ? segment : nil
+    end
+
+    # toml_single_string -- The content of a value that is exactly one
+    # non-empty string: `"1"` is one; `"a" "b"`, `1`, `""`, `["x"]` are not.
+    def toml_single_string(raw)
+      value = trim_spaces_and_tabs(raw)
+      return nil if value.empty? || !toml_quote_at?(value, 0)
+      return nil unless toml_string_end(value, 0) == value.bytesize
+
+      content = value.byteslice(1, value.bytesize - 2)
+      content.empty? ? nil : content
+    end
+
+    # Trim only spaces and tabs (String#strip also eats NUL, \v, \f ...).
+    #
+    # An index scan from each end, not `sub(/[ \t]+\z/, "")`: that regex
+    # retries from every byte of an interior run of spaces and fails at
+    # each, which is quadratic in a long run between two other characters.
+    def trim_spaces_and_tabs(text)
+      start = 0
+      finish = text.bytesize
+      start += 1 while start < finish && [0x20, 0x09].include?(text.getbyte(start))
+      finish -= 1 while finish > start && [0x20, 0x09].include?(text.getbyte(finish - 1))
+      text.byteslice(start, finish - start)
+    end
+
+    # Lower-case only A-Z, then present the name as UTF-8 so it can be
+    # compared with the (UTF-8) known-name keys.
+    def ascii_downcase(text)
+      text.tr("A-Z", "a-z").force_encoding(Encoding::UTF_8)
     end
 
     # parse_dotnet_deps -- Extract internal deps from .csproj/.fsproj.
@@ -767,11 +1201,16 @@ module BuildTool
       end
     end
 
+    CARGO_PACKAGE_NAME = /^[ \t]*name[ \t]*=[ \t]*"([^"\n]+)"/
+
     def read_cargo_package_name(pkg)
       cargo_toml = pkg.path / "Cargo.toml"
       return nil unless cargo_toml.exist?
 
-      match = cargo_toml.read.match(/^\s*name\s*=\s*"([^"]+)"/)
+      # `[ \t]*`, not `\s*`: Ruby's `^` matches at every line start, and a
+      # `\s*` there runs across all following blank lines and backtracks,
+      # which is quadratic in a run of blank lines. Names never span lines.
+      match = cargo_toml.read.match(CARGO_PACKAGE_NAME)
       match && match[1].strip.downcase
     end
 
@@ -899,6 +1338,8 @@ module BuildTool
     #
     # @param packages [Array<Package>]
     # @return [DirectedGraph]
+    # @raise [MetadataEncodingError] a rockspec is not valid UTF-8.
+    # @raise [DependencySelfEdgeError] a Cargo manifest resolves its own crate.
     def resolve_dependencies(packages)
       graph = DirectedGraph.new
 
@@ -930,6 +1371,16 @@ module BuildTool
                when "csharp", "fsharp", "dotnet" then parse_dotnet_deps(pkg, known_names)
                else []
                end
+        # Step 5 of the Rust contract: a Cargo candidate resolving to the
+        # crate itself (by directory alias or [package] name) is rejected,
+        # neither dropped nor drawn.
+        if %w[rust wasm].include?(pkg.language) && deps.include?(pkg.name)
+          raise DependencySelfEdgeError.new(
+            package: pkg.name,
+            manifest: repository_relative_manifest(pkg.path / "Cargo.toml"),
+            dependency: pkg.name
+          )
+        end
         deps = (deps + parse_build_tool_deps(pkg, known_package_names)).uniq.sort
 
         deps.each do |dep_name|

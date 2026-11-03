@@ -26,6 +26,13 @@ authenticated links, and reviewed-root selection together. It does not advance
 path-length state, apply anchor or intermediate constraints, construct or
 search paths, or generalize certificate-path validation.
 
+`bind_x509_rsa_sha512_reviewed_intermediate_server_path_length` is the stronger
+join for a two-link proof whose path-length state was already advanced. It
+applies the same exact decoded-target identity gate and retains target policy,
+complete intermediate policy, both authenticated links, the caller-seeded and
+already-advanced path-length state, and exact reviewed-root selection. It does
+not derive the initial state or perform another path-length transition.
+
 `validate_x509_rsa_sha512_reviewed_server_anchor_policy` then consumes that
 complete proof and derives both inputs to its DNS-policy decision from it:
 
@@ -44,10 +51,10 @@ proof beside optional constrained-name evidence.
 This composition performs no new signature work or root lookup. Its bounded
 parsing is limited to the direct-link policy's exact reviewed-anchor constraint
 bytes and exact target SAN retained by the consumed proof. The two-link binding
-performs no parsing. Neither API constructs or validates a path, applies
-intermediate or IP constraints, checks revocation or hostnames, performs TLS or
-HTTP, authorizes OAuth transport, or opens a network connection. It does not
-make concrete HTTPS or live-provider use ready.
+and path-length binding perform no parsing. None of these APIs constructs or
+validates a path, applies intermediate or IP constraints, checks revocation or
+hostnames, performs TLS or HTTP, authorizes OAuth transport, or opens a network
+connection. It does not make concrete HTTPS or live-provider use ready.
 
 ## Validation
 

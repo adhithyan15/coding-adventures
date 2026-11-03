@@ -102,8 +102,8 @@ LispyValue results
 ## Resource limits
 
 - `MAX_DISPATCH_DEPTH = 256` — caps recursion depth so adversarial input can't blow the host Rust stack.  Closures count toward this limit (`apply_closure` recurses through the same `dispatch` path as direct `call`).
-- `MAX_INSTRUCTIONS_PER_RUN = 2²⁰` — caps total instructions per top-level run as a backstop against infinite loops in hand-built malformed IIR.
-- `MAX_REGISTERS_PER_FRAME = 2¹⁶` — caps per-frame `HashMap` allocation so a hand-built module with `register_count = usize::MAX` can't abort the process at allocation time.
+- `MAX_INSTRUCTIONS_PER_RUN = 2²⁵` — caps total instructions per top-level run as a backstop against infinite loops in hand-built malformed IIR. (2²⁰ in LANG62, raised to 2²⁵ in LANG66 for the 7-file self-compile; see its doc comment.)
+- `MAX_REGISTERS_PER_FRAME = 2¹⁶` — caps per-frame `HashMap` allocation so a hand-built module with `register_count = usize::MAX` can't abort the process at allocation time. Since #18474 `twig-ir-compiler` refuses a function over this many registers at compile time (`MAX_REGISTERS_PER_FUNCTION`, pinned equal by a test here), so compiled Twig never reaches the run-time check; it still guards hand-built IIR.
 - `MAX_IC_SLOTS_PER_FUNCTION = 2¹⁶` — caps the per-function IC vector growth so `IIRInstr::ic_slot = Some(u32::MAX - 1)` can't OOM the process.
 - `MAX_IC_FUNCTIONS = 2¹⁶` — caps `ICTable`'s distinct-function-name key set so a module with millions of unique function names can't unboundedly grow IC storage.
 - `MAX_PROFILED_FUNCTIONS = 2¹⁶` — caps `ProfileTable`'s distinct-function-name key set (call_counts + per-instruction slots) for the same reason.
@@ -160,4 +160,20 @@ module's string ceiling (`IIRModule::str_ceiling`) raises `Trap.Overflow`:
 
 ```text
 (string-ref "ABC" 3)   =>  Err(RunError::Trap { kind: "Trap.Bounds" })   // "trap: Trap.Bounds"
+```
+
+The `dynval-runtime` string builtins follow the same contract (#18800):
+`call_builtin "string-ref"` / `"substring"` out of range raise `Trap.Bounds`,
+and `"string-append"` past the module's ceiling raises `Trap.Overflow`, on
+every path that calls a builtin (`call_builtin`, and a builtin closure through
+`apply_closure`, `call_closure` or `map` / `filter` / `fold-left` /
+`fold-right`); `"make-string"` gets the module's ceiling too. A module
+whose `str_const` is longer than its ceiling is refused before it runs
+(`RunError::InvalidModule`), as on vm-core and every compiled column. So a
+Twig expression fails the same way whether the compiler emitted the op or
+the builtin call:
+
+```text
+(fold-left string-append "" (list "abc" "de"))   ; str_max_bytes = Some(4)
+  =>  Err(RunError::Trap { kind: "Trap.Overflow" })
 ```

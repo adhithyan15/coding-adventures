@@ -1,5 +1,71 @@
 # Changelog — twig-vm
 
+## Unreleased — #18474 re-review: capability manifest
+
+- `required_capabilities.json` was in the legacy string-list shape, which
+  fails the v1 schema, and it declared no file access. It now declares,
+  in schema-valid form:
+  - `stdout` write (the `print` builtin);
+  - `fs` read (the CLI and `run_file` read the source and its imports,
+    through `bounded-source-file`);
+  - `net` listen on `127.0.0.1:*` (`--debug-port`).
+
+  It is removed from the shrink-only invalid-manifest ledger.
+
+## Unreleased — #18474 security review: the CLI never blocks on a file
+
+### Fixed
+
+- `twig-vm <FILE>` refuses anything but a regular file without blocking
+  (via `twig_module_driver::read_source`, now on `bounded-source-file`): a
+  FIFO with no writer used to block it forever, and `/dev/zero` is refused
+  as `not a regular file`.
+
+### Tests
+
+- `tests/cli_source_budget.rs` gains `a_fifo_is_refused_without_blocking`
+  (the child is killed after 10 s if it blocks), `/dev/zero` now expects
+  `not a regular file`, and `a_long_record_name_is_refused_before_any_
+  accessor_name_is_made` runs the review's 512 KB record name through the
+  binary (a 256-byte name runs).
+
+## Unreleased — #18474: the compiler's register budget is the frame limit
+
+### Fixed
+
+- **The CLI read a source file of any size.** `twig-vm <FILE>` called
+  `read_to_string`, so a huge file was read whole before the compiler's
+  1 MiB source budget refused it, and `/dev/zero` was read until memory ran
+  out. It now reads with `twig_module_driver::read_source`, which checks
+  the file's size first and reads at most 1 MiB + 1 bytes. A breach exits 1
+  with ``compile error in "<file>": … source bytes exceeds the limit of
+  1048576``. `tests/cli_source_budget.rs` runs the binary on a file of
+  exactly 1 MiB (runs), one byte more (refused) and `/dev/zero` (refused);
+  it is not built under Miri, which cannot spawn processes.
+
+### Tests
+
+- `compiler_register_budget_is_the_frame_limit` pins
+  `twig_ir_compiler::MAX_REGISTERS_PER_FUNCTION` to
+  `MAX_REGISTERS_PER_FRAME` (twig-ir-compiler cannot depend on this crate,
+  so it writes the number down; this test keeps the two equal), and the
+  compiler's module instruction budget to at most
+  `MAX_PROFILED_INSTRUCTION_SLOTS`.
+- `a_main_of_exactly_the_frame_limit_runs`: 65,536 top-level `1`s compile
+  and run on the dispatcher.
+- `a_main_one_register_over_the_frame_is_a_compile_error`: 65,537 are
+  `TwigRunError::Compile` at 65537:1. Before #18474 they compiled and then
+  failed in the dispatcher. Both large tests are skipped under Miri (safe
+  Rust only, 2¹⁶ parse and dispatch steps).
+
+## Unreleased — LANG83 PR5a follow-up (#18800): the string builtins trap like the ops
+
+### Fixed
+
+- Every path that runs a `dynval-runtime` builtin (`call_builtin`, and a builtin closure through `apply_closure`, `call_closure` or a higher-order list operation's `invoke_closure_value`) now goes through one helper, `call_lispy_builtin`. It turns the builtins' new `RuntimeError::Trap { kind }` into `RunError::Trap { kind }`, so `call_builtin "string-ref"` / `"substring"` out of range are `trap: Trap.Bounds` like the `str_index` / `str_slice` ops (they were `Runtime(TypeError(..))`), and it runs `"string-append"` under the module's `str_ceiling()` (`string_append_within`), so past it the builtin raises `Trap.Overflow` like `str_concat` (it had no ceiling).
+- Tests `builtin_string_ref_and_substring_out_of_range_are_trap_bounds`, `builtin_string_append_past_the_module_ceiling_is_trap_overflow` (also pins `dynval_runtime::builtins::STR_MAX_BYTES == interpreter_ir::STR_MAX_BYTES`) and `a_builtin_closure_gets_the_module_ceiling_and_the_trap_too` (`fold-left string-append`). All three fail without the change.
+- **Security review follow-ups.** `make-string` goes through `call_lispy_builtin` with the module's ceiling, like `string-append` (`make_string_within`). And twig-vm now refuses an over-long `str_const` (or a ceiling above `STR_MAX_BYTES`) when a run starts, as vm-core and every compiled column do: new `RunError::InvalidModule { errors }`, checked by `run_with_profile` (which `run`, `run_with_globals` and `run_with_state` call) and by `run_with_debug`, before any instruction. Tests `builtin_make_string_past_the_module_ceiling_is_trap_overflow` and `a_literal_past_the_module_ceiling_is_refused_at_load` (a debug hook checks that no instruction ran) fail without the change.
+
 ## Unreleased — LANG83 PR5a: string failures are registered traps
 
 ### Added

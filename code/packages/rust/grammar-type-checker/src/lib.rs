@@ -555,6 +555,32 @@ mod tests {
         assert!(result.errors[0].message.contains("Blue"));
     }
 
+    /// #18474 review: the unmatched-variant list names at most
+    /// `MAX_LISTED_NAMES` variants, then counts the rest, so a match on a
+    /// huge union costs a bounded message.
+    #[test]
+    fn generic_match_lists_at_most_max_listed_names() {
+        use type_checker_protocol::bounded::MAX_LISTED_NAMES;
+        let message_for = |missing: usize| {
+            let mut d = TypeDeclarations::new("test");
+            d.typed_mode = Some(TypedModeDecl::Strict);
+            d.globals.insert("v".to_owned(), KindDecl::Named("Big".to_owned()));
+            let variants = (0..=missing)
+                .map(|i| VariantDecl { name: format!("V{i}"), fields: vec![] })
+                .collect();
+            d.named_types.insert("Big".to_owned(), NamedTypeDecl::Union { variants });
+            let arm = parent("V0", vec![leaf("int_lit")]);
+            let root = program_of(parent("match_expr", vec![token_node("var_ref", "v"), arm]));
+            check(&root, &d, &TestProfile).errors[0].message.clone()
+        };
+        let at = message_for(MAX_LISTED_NAMES);
+        assert!(at.ends_with("'V8'") && !at.contains("more"), "{at}");
+        let over = message_for(MAX_LISTED_NAMES + 1);
+        assert!(over.ends_with("'V8', … and 1 more"), "{over}");
+        let huge = message_for(50_000);
+        assert!(huge.ends_with("… and 49992 more") && huge.len() < 200, "{huge}");
+    }
+
     #[test]
     fn generic_match_exhaustive_all_variants() {
         let mut d = TypeDeclarations::new("test");

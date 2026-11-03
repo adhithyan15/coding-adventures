@@ -99,13 +99,19 @@ cargo run -p ruby-iir-compiler --bin rubyvm -- [--release 3.3.6] prog.rb
 ```
 
 A trap prints the output so far, then `trap: Trap.DivZero` on stderr, and
-exits 1. `lang-aot` compiles the same modules for every other backend
+exits 1.
+
+`run_module` gives a module `len(main) + 1` VM steps (#18475). The compiler
+writes one straight-line `main`, so that is exactly enough for its output,
+while a hand-built module that loops (`label L; jmp L`) stops after 3 steps
+instead of the flat 1,000,000 it used to get. `lang-aot` compiles the same modules for every other backend
 (`--lang ruby`, `.rb` files).
 
 ## Tests
 
-- `src/tests.rs` — outputs, emitted ops, refusals, budgets, and forged
-  caller-supplied trees (token types, spellings, shapes).
+- `src/tests.rs` — outputs, emitted ops, refusals, budgets, forged
+  caller-supplied trees (token types, spellings, shapes), and
+  `run_module`'s per-module step budget (#18475).
 - `tests/register_limit.rs` — `main` at exactly 65,536 registers compiles and
   runs on vm-core; one more is a positioned `Budget` error (#18419).
 - `tests/release_subsets.rs` — LANG84 stage I: the

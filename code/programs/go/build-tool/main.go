@@ -99,6 +99,13 @@ func formatResolverError(err error) (string, int) {
 	if errors.As(err, &encodingError) {
 		return encodingError.Error(), 2
 	}
+	// A manifest that names its own package is malformed input too (the
+	// contract's DEPENDENCY_SELF_EDGE), so it gets the same stable,
+	// root-free diagnostic and exit status.
+	var selfEdgeError *resolver.DependencySelfEdgeError
+	if errors.As(err, &selfEdgeError) {
+		return selfEdgeError.Error(), 2
+	}
 	return fmt.Sprintf("Error: %v", err), 1
 }
 
@@ -315,10 +322,10 @@ var resolutionNativeFixtureCases = map[string]string{
 	"gradle-java-field-aware": "GHY", "gradle-kotlin-field-aware": "GHY",
 	"ecosystem-scoped-aliases": "GY",
 	"elixir-field-aware":       "GH", "go-field-aware": "GH", "perl-field-aware": "GH",
-	"ruby-field-aware": "GH", "swift-field-aware": "GH", "typescript-field-aware": "GH",
+	"ruby-field-aware": "GH", "rust-field-aware": "GHLPYBRST", "swift-field-aware": "GH", "typescript-field-aware": "GH",
 	"elixir-program-package": "BR", "elixir-self-edge": "R",
 	"lua-cycle": "H", "lua-field-aware": "H", "lua-program-package": "H",
-	"python-diamond": "H", "python-field-aware": "H", "rust-field-aware": "H",
+	"python-diamond": "H", "python-field-aware": "H",
 	"lua-utf8": "GHLPBRST", "lua-invalid-utf8": "GHLPBRST",
 	"ocaml-field-aware": "G",
 }

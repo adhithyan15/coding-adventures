@@ -1,5 +1,41 @@
 # Changelog
 
+## Unreleased — `nil` inside an array; Ruby's `[]=` (#18798)
+
+- **Two Integers compare exactly.** `_sir_lt`/`_sir_gt`/`_sir_le`/`_sir_ge`
+  compared every number as a `double`, which holds integers exactly only up
+  to 2^53: `9007199254740993 > 9007199254740992` was false.  It showed up
+  when the Ruby frontend began lowering a `for` over a range that can
+  `break` or `return` to a `while` on such a comparison (a `ForRange` had
+  counted in `int64_t`): `9007199254740993...9007199254740996` ran 2 trips
+  instead of 3, `9223372036854775805..9223372036854775806` none instead of
+  2.  Two Integers now compare as `int64_t`, as `_sir_value_eq` already
+  did; a Float on either side still compares as a `double`.  Tests
+  `compile_and_run_int_compare.rs` (outputs are ruby 3.3.6's; both failed
+  before the fix).
+
+- Security review: the comment on `_sir_array_bracket_set` now says why the
+  old buffer is not freed when the array grows (a block helper may be
+  iterating a snapshot of it; the arena never frees, which is what makes that
+  safe), what that costs (as `push`: O(n^2) bytes to append one slot at a
+  time), and that the 2^28 limit keeps the byte size from overflowing rather
+  than bounding memory (2^28 slots is 4 GiB).
+
+- 28 execution tests that lower real Ruby expected the Lisp display (`#t`,
+  `#f`, `nil` for `puts nil`), because the Ruby frontend never said its
+  module was Ruby; they now expect what ruby 3.3.6 prints.
+
+- **`print [nil, false]` printed `[, false]`.**  Ruby shows a collection's
+  elements with `inspect`, where `nil` is `nil`; only a value printed on its
+  own is empty.  `_sir_fmt_elem` / `_sir_display_elem` render an Array or
+  Hash element.
+- **`a[i] = v` follows Ruby**: `_sir_array_bracket_set` counts a negative
+  index from the end and pads with `nil` past the end (in a fresh buffer,
+  as `push` does); before the start, or past index 2^28, it raises
+  `IndexError`, and a non-integer index raises `TypeError`.  It shared
+  the strict `_sir_seq_set`, which exited on both.  End-to-end check:
+  `sir-conformance`'s `rb_array_index_size_and_index_assignment`.
+
 ## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
 
 ### Test temp files live in a private scratch directory

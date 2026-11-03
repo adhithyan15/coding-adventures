@@ -7,6 +7,9 @@ description = "v0.228.0 (macsyma-iir-vm.md Wave 4 -- Macsyma runs on NativeAOT/L
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
 twig-ir-compiler      = { path = "../twig-ir-compiler" }
+# #18474 review: read source files within a byte budget, regular files only,
+# without blocking on a FIFO or tty.
+bounded-source-file   = { path = "../bounded-source-file" }
 nib-iir-compiler      = { path = "../nib-iir-compiler" }
 brainfuck-iir-compiler = { path = "../brainfuck-iir-compiler" }
 dartmouth-basic-iir-compiler = { path = "../dartmouth-basic-iir-compiler" }

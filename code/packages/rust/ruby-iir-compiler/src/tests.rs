@@ -460,3 +460,88 @@ fn a_hostile_number_token_is_refused_without_echoing_it_whole() {
     let message = compile_ast(&forged, "t").unwrap_err().to_string();
     assert!(message.len() < 300 && !message.contains('\n'), "{message}");
 }
+
+// ---------------------------------------------------------------------------
+// run_module's step budget comes from the module (#18475)
+// ---------------------------------------------------------------------------
+
+/// A `main` of `body`, in a module `run_module` will accept.
+fn hand_built(body: Vec<interpreter_ir::IIRInstr>) -> IIRModule {
+    let mut module = compile_source("puts(1)", "t").unwrap();
+    module.add_or_replace(IIRFunction::new("main", vec![], "i64", body));
+    module
+}
+
+/// The compiler's own output is straight-line, so its budget is its
+/// length plus one, and that is enough for it to run to the end: the
+/// program sits exactly on its budget.
+#[test]
+fn compiled_output_runs_on_a_budget_of_its_own_length() {
+    let module = compile_source("puts(1)\nputs(2 * 3, 7 / -2)", "t").unwrap();
+    let main_len = module.get_function("main").unwrap().instructions.len() as u64;
+    assert_eq!(step_budget(&module), main_len + 1);
+    assert_eq!(run_module(module).unwrap().stdout, "1\n6\n-4\n");
+}
+
+/// A hand-built module that executes even two instructions more than it
+/// holds is stopped, at its own budget rather than a flat million.
+///
+/// ```text
+///   0  const f ← 0
+///   1  label L
+///   2  jmp_if_false f, S     taken the first time, not the second
+///   3  const r ← 0
+///   4  ret r
+///   5  label S
+///   6  const f ← 1
+///   7  jmp L
+/// ```
+///
+/// It executes 0 1 2 5 6 7 1 2 3 4 — ten steps from eight instructions,
+/// more than a straight-line program could. Before #18475 it ran to the
+/// end under the flat 1,000,000-step budget; now its budget is 9.
+#[test]
+fn a_module_that_revisits_an_instruction_passes_its_budget() {
+    use interpreter_ir::IIRInstr;
+    let var = |name: &str| Operand::Var(name.to_string());
+    let module = hand_built(vec![
+        IIRInstr::new("const", Some("f".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("label", None, vec![var("L")], "void"),
+        IIRInstr::new("jmp_if_false", None, vec![var("f"), var("S")], "void"),
+        IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("ret", None, vec![var("r")], "i64"),
+        IIRInstr::new("label", None, vec![var("S")], "void"),
+        IIRInstr::new("const", Some("f".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("jmp", None, vec![var("L")], "void"),
+    ]);
+    assert_eq!(step_budget(&module), 9);
+    match run_module(module) {
+        Err(RunError::Vm(message)) => assert!(message.contains("step limit 9 exceeded"), "{message}"),
+        other => panic!("a module that loops back ran to {other:?}"),
+    }
+}
+
+/// The issue's repro: `label L; jmp L` stops after three steps, not a
+/// million.
+#[test]
+fn a_spinning_module_stops_after_its_own_length_plus_one() {
+    use interpreter_ir::IIRInstr;
+    let var = |name: &str| Operand::Var(name.to_string());
+    let spin = hand_built(vec![
+        IIRInstr::new("label", None, vec![var("again")], "void"),
+        IIRInstr::new("jmp", None, vec![var("again")], "void"),
+    ]);
+    assert_eq!(step_budget(&spin), 3);
+    match run_module(spin) {
+        Err(RunError::Vm(message)) => assert!(message.contains("step limit 3 exceeded"), "{message}"),
+        other => panic!("a spinning module ran to {other:?}"),
+    }
+    // A module with no `main` is refused by `execute` before any step.
+    let mut empty = compile_source("puts(1)", "t").unwrap();
+    empty.functions.clear();
+    assert_eq!(step_budget(&empty), 1);
+    assert!(run_module(empty).is_err());
+    // A hand-built `main` longer than the instruction budget is capped.
+    let long = hand_built(vec![IIRInstr::new("label", None, vec![var("x")], "void"); MAX_IIR_INSTRUCTIONS + 5]);
+    assert_eq!(step_budget(&long), MAX_IIR_INSTRUCTIONS as u64 + 1);
+}

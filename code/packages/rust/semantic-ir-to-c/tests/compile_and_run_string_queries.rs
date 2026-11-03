@@ -94,7 +94,7 @@ fn start_with_and_end_with() {
 fn index_returns_position_or_nil() {
     // `index` returns the 0-based position of the substring, or nil when absent.
     match run_ruby("puts \"hello\".index(\"l\")\nputs \"hello\".index(\"z\")\n") {
-        Some(out) => assert_eq!(out, "2\nnil\n"),
+        Some(out) => assert_eq!(out, "2\n\n"),
         None => eprintln!("skip: no cc"),
     }
 }

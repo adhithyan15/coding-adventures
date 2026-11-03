@@ -18,10 +18,13 @@ import * as os from "node:os";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
+  DependencySelfEdgeError,
   DirectedGraph,
   MetadataEncodingError,
   resolveDependencies,
   buildKnownNames,
+  cargoLinkDependencyNames,
+  trimSpacesAndTabs,
 } from "../src/resolver.js";
 import { discoverPackages, type Package } from "../src/discovery.js";
 
@@ -699,5 +702,568 @@ describe("resolveDependencies", () => {
     fs.mkdirSync(pkgDir, { recursive: true });
     const pkg = makePkg("go/no-mod", pkgDir, "go");
     expect(() => resolveDependencies([pkg])).not.toThrow();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Tests: Cargo link-table reader
+// ---------------------------------------------------------------------------
+
+// One manifest shape per case, pinning each line rule of the Cargo contract
+// in code/specs/build-tool-conformance.md. The table is the Go reference
+// tool's TestCargoLinkDependencyNames, case for case, so a divergence between
+// fronts shows up as the same named case failing.
+describe("cargoLinkDependencyNames", () => {
+  const cases: Array<[string, string, string[]]> = [
+    [
+      "top-level inline",
+      "[dependencies]\n" +
+      "a = { path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "build-dependencies",
+      "[build-dependencies]\n" +
+      "a = { path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "legacy build_dependencies",
+      "[build_dependencies]\n" +
+      "a = { path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "quoted cfg target",
+      "[target.'cfg(any(target_os = \"linux\", windows))'.dependencies]\n" +
+      "a = { path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "bare triple target build",
+      "[target.x86_64-pc-windows-msvc.build-dependencies]\n" +
+      "a = { path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "legacy target build",
+      "[target.'cfg(unix)'.build_dependencies]\n" +
+      "a = { path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "spaced header segments",
+      "[ target . 'cfg(unix)' . dependencies ]\n" +
+      "a = { path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "quoted table segment",
+      "[\"dependencies\"]\n" +
+      "a = { path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "sub-table",
+      "[dependencies.a]\n" +
+      "version = \"1\"\n" +
+      "path = \"../a\"\n",
+      ["a"],
+    ],
+    [
+      "sub-table rename before path",
+      "[build-dependencies.x]\n" +
+      "package = \"A\"\n" +
+      "path = '../a'\n",
+      ["a"],
+    ],
+    [
+      "target sub-table, dotted quoted triple",
+      "[target.\"thumbv8m.main-none-eabihf\".dependencies.a]\n" +
+      "path = \"../a\"\n",
+      ["a"],
+    ],
+    [
+      "quoted sub-table key",
+      "[dependencies.\"a\"]\n" +
+      "path = \"../a\"\n",
+      ["a"],
+    ],
+    [
+      "sub-table without path",
+      "[dependencies.a]\n" +
+      "version = \"1\"\n",
+      [],
+    ],
+    [
+      "sub-table first path wins, ended by header",
+      "[dependencies.a]\n" +
+      "path = \"../a\"\n" +
+      "path = \"../b\"\n" +
+      "[package]\n" +
+      "name = \"z\"\n",
+      ["a"],
+    ],
+    [
+      "sub-table non-string path",
+      "[dependencies.a]\n" +
+      "path = 1\n",
+      [],
+    ],
+    [
+      "sub-table empty path",
+      "[dependencies.a]\n" +
+      "path = \"\"\n",
+      [],
+    ],
+    [
+      "sub-table capitalised Path key",
+      "[dependencies.a]\n" +
+      "Path = \"../a\"\n",
+      [],
+    ],
+    [
+      "rename",
+      "[dependencies]\n" +
+      "x = { package = \"Logic-Gates\", path = \"../g\" }\n",
+      ["logic-gates"],
+    ],
+    [
+      "capitalised Package is not a rename",
+      "[dependencies]\n" +
+      "x = { Package = \"y\", path = \"../g\" }\n",
+      ["x"],
+    ],
+    [
+      "capitalised Path is not a path",
+      "[dependencies]\n" +
+      "x = { Path = \"../g\" }\n",
+      [],
+    ],
+    [
+      "version plus path with trailing comment",
+      "[dependencies]\n" +
+      "a = { version = \"1\", path = \"../a\" } # b = { path = \"../b\" }\n",
+      ["a"],
+    ],
+    [
+      "hash inside a string is not a comment",
+      "[dependencies]\n" +
+      "a = { path = \"../a#1\" }\n",
+      ["a"],
+    ],
+    [
+      "quoted entry key",
+      "[dependencies]\n" +
+      "\"a\" = { path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "registry entry with path feature",
+      "[dependencies]\n" +
+      "a = { version = \"1\", features = [\"path\", \"x\"] }\n" +
+      "b = \"1\"\n",
+      [],
+    ],
+    [
+      "nested table path is not the entry's",
+      "[dependencies]\n" +
+      "a = { x = { path = \"../a\" } }\n",
+      [],
+    ],
+    [
+      "features array commas do not split fields",
+      "[dependencies]\n" +
+      "a = { features = [\"p\", \"q\"], path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "empty path",
+      "[dependencies]\n" +
+      "a = { path = \"\" }\n",
+      [],
+    ],
+    [
+      "array continued onto later lines",
+      "[dependencies]\n" +
+      "a = { path = \"../a\", features = [\n" +
+      "    \"x\", # [not-a-header]\n" +
+      "] }\n" +
+      "b = { path = \"../b\" }\n",
+      ["a", "b"],
+    ],
+    [
+      "continuation lines are not headers",
+      "[dependencies]\n" +
+      "a = { path = \"../a\", features = [\n" +
+      "[\"x\"]\n" +
+      "] }\n" +
+      "b = { path = \"../b\" }\n",
+      ["a", "b"],
+    ],
+    [
+      "braces continued onto later lines",
+      "[dependencies]\n" +
+      "a = { version = \"1\",\n" +
+      "  path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "file ends inside the value",
+      "[dependencies]\n" +
+      "a = { path = \"../a\", features = [\n" +
+      "  \"x\",\n",
+      [],
+    ],
+    [
+      "continued value must end with a brace",
+      "[dependencies]\n" +
+      "a = { path = \"../a\", features = [\n" +
+      "] } x\n",
+      [],
+    ],
+    [
+      "dotted key is out of scope",
+      "[dependencies]\n" +
+      "a.path = \"../a\"\n",
+      [],
+    ],
+    [
+      "commented-out entry",
+      "[dependencies]\n" +
+      "# a = { path = \"../a\" }\n",
+      [],
+    ],
+    [
+      "dev-dependencies",
+      "[dev-dependencies]\n" +
+      "a = { path = \"../a\" }\n" +
+      "[dev_dependencies]\n" +
+      "b = { path = \"../b\" }\n",
+      [],
+    ],
+    [
+      "target dev-dependencies",
+      "[target.'cfg(unix)'.dev-dependencies]\n" +
+      "a = { path = \"../a\" }\n",
+      [],
+    ],
+    [
+      "dev-dependencies sub-table",
+      "[dev-dependencies.a]\n" +
+      "path = \"../a\"\n",
+      [],
+    ],
+    [
+      "patch, replace, workspace",
+      "[patch.crates-io]\n" +
+      "a = { path = \"../a\" }\n" +
+      "[workspace.dependencies]\n" +
+      "b = { path = \"../b\" }\n" +
+      "[replace]\n" +
+      "\"c:1.0.0\" = { path = \"../c\" }\n",
+      [],
+    ],
+    [
+      "capitalised table name",
+      "[Dependencies]\n" +
+      "a = { path = \"../a\" }\n",
+      [],
+    ],
+    [
+      "features sub-table of a dependency",
+      "[dependencies.a.features]\n" +
+      "path = \"../a\"\n",
+      [],
+    ],
+    [
+      "target table itself",
+      "[target.'cfg(unix)']\n" +
+      "a = { path = \"../a\" }\n",
+      [],
+    ],
+    [
+      "array of tables ends the table",
+      "[dependencies]\n" +
+      "[[bin]]\n" +
+      "a = { path = \"../a\" }\n",
+      [],
+    ],
+    [
+      "malformed header ends the table",
+      "[dependencies]\n" +
+      "[a b]\n" +
+      "c = { path = \"../c\" }\n",
+      [],
+    ],
+    [
+      "unterminated quoted header ends the table",
+      "[dependencies]\n" +
+      "[target.'cfg(unix).dependencies]\n" +
+      "c = { path = \"../c\" }\n",
+      [],
+    ],
+    [
+      "CRLF and BOM",
+      "\ufeff[dependencies]\r\n" +
+      "a = { path = \"../a\" }\r\n",
+      ["a"],
+    ],
+    [
+      "union across tables keeps duplicates for the caller",
+      "[dependencies]\n" +
+      "a = { path = \"../a\" }\n" +
+      "[build-dependencies]\n" +
+      "a = { path = \"../a\" }\n",
+      ["a", "a"],
+    ],
+    [
+      "quoted inline path key",
+      "[dependencies]\n" +
+      "a = { \"path\" = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "literal-quoted inline path key",
+      "[dependencies]\n" +
+      "a = { 'path' = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "quoted inline package key renames",
+      "[dependencies]\n" +
+      "x = { \"package\" = \"a\", path = \"../a\" }\n",
+      ["a"],
+    ],
+    [
+      "quoted capitalised inline Path key",
+      "[dependencies]\n" +
+      "a = { \"Path\" = \"../a\" }\n",
+      [],
+    ],
+    [
+      "escaped inline path key is compared verbatim",
+      "[dependencies]\n" +
+      "a = { \"pa\\u0074h\" = \"../a\" }\n",
+      [],
+    ],
+    [
+      "dotted inline field key",
+      "[dependencies]\n" +
+      "a = { path.x = \"../a\" }\n",
+      [],
+    ],
+    [
+      "quoted sub-table path key",
+      "[dependencies.a]\n" +
+      "\"path\" = \"../a\"\n",
+      ["a"],
+    ],
+    [
+      "quoted sub-table package key",
+      "[dependencies.x]\n" +
+      "'package' = \"a\"\n" +
+      "path = \"../a\"\n",
+      ["a"],
+    ],
+    [
+      "quoted capitalised sub-table Path key",
+      "[dependencies.a]\n" +
+      "\"Path\" = \"../a\"\n",
+      [],
+    ],
+    [
+      "open string continues across the join",
+      "[dependencies]\n" +
+      "a = { path = \"../a\", x = \"q [\n" +
+      "\" }\n",
+      ["a"],
+    ],
+    [
+      "line-final backslash escapes the joining space",
+      "[dependencies]\n" +
+      "a = { x = \"q\\\n" +
+      "\", path = \"../a\" }\n",
+      ["a"],
+    ],
+  ];
+
+  it.each(cases)("%s", (_name, manifest, expected) => {
+    expect(cargoLinkDependencyNames(manifest)).toEqual(expected);
+  });
+
+  // The table is the Go reference's, row for row: a row added there and not
+  // here (or the reverse) must fail loudly.
+  it("has the Go reference's 57 rows", () => {
+    expect(cases).toHaveLength(57);
+  });
+
+  // Rescanning the whole joined value for every appended line is quadratic:
+  // a 20,000-line continuation (about 500 KB) took tens of seconds. Carrying
+  // the scanner state makes it one pass; the bound is generous so a loaded
+  // CI machine cannot flake it.
+  it("joins a 20,000-line continuation in linear time", () => {
+    const manifest = "[dependencies]\na = { path = \"../a\", features = [\n" +
+      "  \"feature-name-padding\",\n".repeat(20_000) + "] }\n";
+    const started = performance.now();
+    expect(cargoLinkDependencyNames(manifest)).toEqual(["a"]);
+    expect(performance.now() - started).toBeLessThan(10_000);
+  });
+
+  // `replace(/[ \t]+$/, "")` retries from every character of an interior run
+  // of spaces: quadratic in a long run between two other characters.
+  it("trims a line with a 100 KB interior run of spaces in linear time", () => {
+    const line = "a" + " ".repeat(100_000) + "b";
+    const started = performance.now();
+    expect(trimSpacesAndTabs(" \t" + line + "\t ")).toBe(line);
+    expect(cargoLinkDependencyNames("[dependencies]\n" + line + "\n")).toEqual([]);
+    expect(performance.now() - started).toBeLessThan(5_000);
+  });
+});
+
+describe("Rust link-table resolution", () => {
+  let tmpDir: string;
+
+  beforeEach(() => {
+    tmpDir = makeTempDir();
+  });
+
+  afterEach(() => {
+    rmDir(tmpDir);
+  });
+
+  it("collapses a crate named by several link tables and drops unknown names", () => {
+    const appDir = path.join(tmpDir, "app");
+    const libDir = path.join(tmpDir, "lib");
+    writeFile(
+      path.join(appDir, "Cargo.toml"),
+      "[package]\nname = \"app\"\n\n[dependencies]\nlib = { path = \"../lib\" }\n" +
+        "serde = { path = \"../vendored-serde\" }\n\n[build-dependencies]\nlib = { path = \"../lib\" }\n\n" +
+        "[target.'cfg(windows)'.dependencies.lib]\npath = \"../lib\"\n",
+    );
+    writeFile(path.join(libDir, "Cargo.toml"), "[package]\nname = \"lib\"\n");
+
+    const graph = resolveDependencies([
+      makePkg("rust/app", appDir, "rust"),
+      makePkg("rust/lib", libDir, "rust"),
+    ]);
+    expect(graphEdges(graph)).toEqual([["rust/lib", "rust/app"]]);
+  });
+
+  // `^\s*name` with the `m` flag runs `\s*` across every following blank
+  // line from each line start and backtracks when the match then fails,
+  // which is quadratic in a run of them (32 s at 100,000 blank lines).
+  it("reads the [package] name after 100,000 blank lines in linear time", () => {
+    const appDir = path.join(tmpDir, "app");
+    const lateDir = path.join(tmpDir, "late-dir");
+    const otherDir = path.join(tmpDir, "other-dir");
+    writeFile(
+      path.join(appDir, "Cargo.toml"),
+      "[dependencies]\nx = { package = \"late-crate\", path = \"../late-dir\" }\n" +
+        "other-dir = { path = \"../other-dir\" }\n",
+    );
+    writeFile(
+      path.join(lateDir, "Cargo.toml"),
+      "\n".repeat(100_000) + "[package]\nname = \"Late-Crate\"\n",
+    );
+    writeFile(path.join(otherDir, "Cargo.toml"), "\n".repeat(100_000) + "name =\n");
+    const started = performance.now();
+    const graph = resolveDependencies([
+      makePkg("rust/app", appDir, "rust"),
+      makePkg("rust/late-dir", lateDir, "rust"),
+      makePkg("rust/other-dir", otherDir, "rust"),
+    ]);
+    expect(performance.now() - started).toBeLessThan(5_000);
+    expect(graphEdges(graph)).toEqual([
+      ["rust/late-dir", "rust/app"],
+      ["rust/other-dir", "rust/app"],
+    ]);
+  });
+
+  it("does not read a [package] name that spans lines", () => {
+    const appDir = path.join(tmpDir, "app");
+    const libDir = path.join(tmpDir, "lib-dir");
+    writeFile(
+      path.join(appDir, "Cargo.toml"),
+      "[dependencies]\nx = { package = \"split\", path = \"../lib-dir\" }\n",
+    );
+    writeFile(path.join(libDir, "Cargo.toml"), "[package]\nname =\n\"split\"\n");
+    const graph = resolveDependencies([
+      makePkg("rust/app", appDir, "rust"),
+      makePkg("rust/lib-dir", libDir, "rust"),
+    ]);
+    expect(graphEdges(graph)).toEqual([]);
+  });
+
+  // Step 5: a candidate resolving to the crate itself -- by its directory
+  // alias, by its [package] name through a renamed sub-table, or from a
+  // target table -- is DEPENDENCY_SELF_EDGE, neither dropped nor drawn.
+  it.each([
+    ["directory alias", "[dependencies]\napp-dir = { path = \".\" }\n"],
+    [
+      "cargo name via a renamed sub-table",
+      "[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n",
+    ],
+    ["target table", "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n"],
+  ])("rejects a self-edge by %s", (_label, entry) => {
+    const appDir = path.join(tmpDir, "code", "packages", "rust", "app-dir");
+    writeFile(path.join(appDir, "Cargo.toml"), "[package]\nname = \"app-crate\"\n\n" + entry);
+    let caught: unknown;
+    try {
+      resolveDependencies([makePkg("rust/app-dir", appDir, "rust")]);
+    } catch (error) {
+      caught = error;
+    }
+    expect(caught).toBeInstanceOf(DependencySelfEdgeError);
+    const selfEdge = caught as DependencySelfEdgeError;
+    expect(selfEdge.code).toBe("DEPENDENCY_SELF_EDGE");
+    expect(selfEdge.package).toBe("rust/app-dir");
+    expect(selfEdge.manifest).toBe("code/packages/rust/app-dir/Cargo.toml");
+    expect(selfEdge.dependency).toBe("rust/app-dir");
+    expect(selfEdge.message).toBe(
+      "DEPENDENCY_SELF_EDGE: package=rust/app-dir " +
+        "manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir",
+    );
+    expect(selfEdge.message).not.toContain(tmpDir);
+  });
+
+  it("real CLI returns exit 2 for a Cargo self-edge", () => {
+    const appDir = path.join(tmpDir, "code", "packages", "rust", "app");
+    writeFile(path.join(appDir, "BUILD"), "echo build app\n");
+    writeFile(
+      path.join(appDir, "Cargo.toml"),
+      "[package]\nname = \"app\"\n\n[dependencies]\napp = { path = \".\" }\n",
+    );
+    const tsxCli = path.join(packageRoot, "node_modules", "tsx", "dist", "cli.mjs");
+    const entrypoint = path.join(packageRoot, "src", "index.ts");
+    const result = spawnSync(
+      process.execPath,
+      [tsxCli, entrypoint, "--root", tmpDir, "--force", "--dry-run"],
+      { encoding: "utf-8", timeout: 30_000 },
+    );
+    expect(result.error).toBeUndefined();
+    expect(result.status).toBe(2);
+    expect(result.stderr).toBe(
+      "DEPENDENCY_SELF_EDGE: package=rust/app " +
+        "manifest=code/packages/rust/app/Cargo.toml dependency=rust/app\n",
+    );
+    expect(result.stderr).not.toContain(tmpDir);
+  });
+
+  // Inline and sub-table entries in [dependencies], [build-dependencies] and
+  // their target forms are edges; dev-dependencies, [patch], registry
+  // entries, features and comments are not.
+  it("consumes the shared resolution-rust-field-aware.json fixture", () => {
+    const fixture = loadSharedResolutionFixture("resolution-rust-field-aware.json");
+    const materialized = materializeSharedResolutionFixture(fixture);
+    try {
+      expect(graphEdges(resolveDependencies(materialized.packages))).toEqual(
+        (fixture.expected.result.edges ?? []).sort((left, right) =>
+          left.join("\0").localeCompare(right.join("\0"))
+        ),
+      );
+    } finally {
+      rmDir(materialized.root);
+    }
   });
 });

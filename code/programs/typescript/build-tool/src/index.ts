@@ -43,7 +43,11 @@ import {
   analyzeCIWorkflowChanges,
   sortedToolchains,
 } from "./ci-workflow.js";
-import { MetadataEncodingError, resolveDependencies } from "./resolver.js";
+import {
+  DependencySelfEdgeError,
+  MetadataEncodingError,
+  resolveDependencies,
+} from "./resolver.js";
 import { getChangedFiles, mapFilesToPackages } from "./gitdiff.js";
 import { hashPackage, hashDeps } from "./hasher.js";
 import { BuildCache } from "./cache.js";
@@ -410,6 +414,7 @@ main().then((code) => {
 }).catch((error: unknown) => {
   if (
     error instanceof MetadataEncodingError ||
+    error instanceof DependencySelfEdgeError ||
     error instanceof DuplicatePackageIdentityError
   ) {
     console.error(error.message);

@@ -60,6 +60,11 @@ live bounded traversal, native no-follow reads, full Git-index stability, and
 reverse boundary-diff selection to the same reviewed C# engine. Portable
 dependency and combined-digest framing remain a separate follow-up contract.
 
+Dependency resolution is the shared C# engine's too, including its Cargo
+reader: build and target link tables, sub-tables, and `package` renames per the
+Rust paragraph of `code/specs/build-tool-conformance.md` (see the C# build
+tool's README). F# has no Cargo reader of its own.
+
 The tracked-artifact facade deliberately reuses the reviewed C# data and result
 types. Its F# test surface independently consumes all five language-neutral
 conformance fixtures, including hostile-path redaction, Unicode-scalar length

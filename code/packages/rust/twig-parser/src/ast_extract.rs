@@ -223,7 +223,14 @@ pub fn extract_program(root: &GrammarASTNode) -> Result<Program, TwigParseError>
             }
         }
     }
-    Ok(Program { forms, module_info })
+    let program = Program { forms, module_info };
+    // The generated-name budget (`crate::budgets`): every consumer of a
+    // `Program` — the type checker above all — registers each record's and
+    // union's accessor names, and those grow as name length × field count.
+    // Refuse an oversized program here, by arithmetic, before any consumer
+    // formats one of them.
+    crate::budgets::check_generated_names(&program)?;
+    Ok(program)
 }
 
 // ---------------------------------------------------------------------------

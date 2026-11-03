@@ -37,8 +37,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 
 | Priority / ID | Work | State / prerequisite and acceptance |
 |---|---|---|
-| P0 / VER-P003 | TF01 Rust L0 bootstrap | #18807 open; current-head CI, security review and actual merge |
-| P1 / VER-P004 | Rust CT01 corpus through L0 | draft #18849, waiting P003; local checks pass; every case, fixed-array API, fresh output, error mapping, logical work fields, regeneration/build selection |
+| done / VER-P003 | TF01 Rust L0 bootstrap | #18807 merged as 6a09869c279; expected head 4e608afe3bc9 verified on fetched main; all checks acceptable |
+| P1 / VER-P004 | Rust CT01 corpus through L0 | #18849 retargeted to main after P003 merge; local checks pass; awaiting final-head hosted CI; every case, fixed-array API, fresh output, error mapping, logical work fields, regeneration/build selection |
 | P1 / VER-P005 | Warrant v0 specification | waiting P004; VER04 syntax/types/bindings and negative examples |
 | P1 / VER-P006 | Warrant grammar/generated lexer/parser | waiting P005; positive/negative corpus and drift gate |
 | P1 / VER-P007 | Warrant type checker/Rust bindings | waiting P006; missing exports, wrong types and vacuous bindings reject |
@@ -86,7 +86,11 @@ can progress independently once their prerequisites are available.
 - CT01 expected_work is logical public input shape, not measured instructions
   or a constant-time proof. Preserve the separate optimized equality CFG gate;
   full trace proofs, selection and addresses remain VER20 work.
-- #18807 has repeated main merges; always refresh its exact head before acting.
+- #18807 merged at its expected head. Reprioritization keeps P004 first: no new
+  safety blocker was found, and its completed local evidence unlocks Warrant.
+  Merging fetched main into P004 required retaining three reviewed additive
+  hunks (CT01 CI commands, Go input predicate and its tests) against empty sides
+  from the bootstrap squash; unrelated main changes were retained.
 - #18808 records a pre-existing LOW: LIA search budget is not scaled by constraint
   size. Reproduce before choosing a repair; do not weaken soundness or bundle
   speculative performance work into corpus adoption.
@@ -98,10 +102,10 @@ can progress independently once their prerequisites are available.
 - A dependent-branch replay printed partial-clone fetch errors but completed;
   the requested blob's local bytes hashed to the expected SHA. Diagnose repeat
   occurrences separately; preserve committed work and validate the replay.
-- CI filters PRs to main. Draft #18849 targets #18807's branch to keep its diff
-  focused and uses no hosted CI yet. After P003 merges, retarget to main, check
-  the exact diff/head, mark ready and require hosted CI before auto-merge. Never
-  merge the dependent PR into the bootstrap feature branch.
+- CI filters PRs to main. #18849 initially targeted #18807's branch as a draft
+  without hosted CI; GitHub retargeted it to main when P003 merged. Reconcile
+  main, check the exact diff/head, mark ready and require hosted CI before
+  auto-merge. No dependent change was merged into the bootstrap feature branch.
 - Low-priority tooling follow-up: investigate a Go cached test invocation that
   remained active after package PASS output. A fresh `go test -count=1
   -timeout=2m ./...` on the final branch terminated successfully in about 31 s
@@ -123,4 +127,5 @@ L0; observe length-error panics and mutate fresh selection output; check logical
 work fields; register corpus/reference build inputs and regeneration on both
 platforms; update package/pilot/quirk docs; run Rust/Python/Go checks and security
 review; publish a dependent draft, then retarget/mark ready after P003's merge is
-verified. Reprioritize again after P004's actual merge before selecting P005.
+verified (now done). Reprioritize again after P004's actual merge before selecting
+P005. The local Warrant notes are preparation, not an accepted spec or code.

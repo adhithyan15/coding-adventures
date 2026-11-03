@@ -332,6 +332,11 @@ impl<'a> RecordView<'a> {
         text(first_token_named(self.0, "NAME"))
     }
 
+    /// The `(record …)` form's start position.
+    pub fn pos(self) -> (usize, usize) {
+        pos(self.0)
+    }
+
     /// The field names in declaration order.
     pub fn fields(self) -> impl Iterator<Item = &'a str> + Clone + 'a {
         field_names(self.0)
@@ -357,6 +362,11 @@ impl<'a> VariantView<'a> {
     /// The variant (constructor) name.
     pub fn name(self) -> &'a str {
         text(first_token_named(self.0, "NAME"))
+    }
+
+    /// The `(Variant …)` clause's start position.
+    pub fn pos(self) -> (usize, usize) {
+        pos(self.0)
     }
 
     /// The field names in declaration order.

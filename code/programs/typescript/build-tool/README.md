@@ -84,6 +84,25 @@ including:
 - **Haskell**: Cabal package dependencies
 - **.NET**: C# and F# project references
 
+Rust resolution reads path entries from every Cargo table that is compiled
+into the crate: `[dependencies]`, `[build-dependencies]` (and the legacy
+`build_dependencies`), and the same tables under `[target.<cfg>.…]` for any
+cfg, quoted or a bare triple, as a union over all targets. Entries count both
+as inline tables (`name = { path = "..." }`, whose arrays may continue onto
+later lines) and as `[dependencies.name]` sub-tables with a `path = "..."`
+key. A `package = "..."` rename is authoritative. Crate names are
+ASCII-lowercased and matched against each Rust package's directory name and
+declared `[package]` `name`. Dev-dependencies in every form, `[patch]`,
+`[replace]`, `[workspace]`, package metadata, features, comments, and
+registry-only dependencies never create edges. Field and sub-table keys may
+be bare or quoted (`"path" = "..."`), continuation lines are joined in linear
+time, and a crate that resolves itself is a `DEPENDENCY_SELF_EDGE` error (exit
+status 2). The line procedure is the Rust
+paragraph of `code/specs/build-tool-conformance.md`; the shared
+`resolution/rust-field-aware` fixture pins it, and the reader returns the same
+dependency names as the Go reference reader for all 1,650 tracked
+`Cargo.toml` files (checked 2026-11-02).
+
 Lua rockspecs are decoded as strict UTF-8. Malformed metadata fails closed with
 the stable `METADATA_INVALID_UTF8` diagnostic and CLI exit code 2; a valid
 literal U+FFFD replacement character remains valid UTF-8.
