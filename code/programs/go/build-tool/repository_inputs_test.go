@@ -116,6 +116,41 @@ func TestTestBootstrapCorpusSelectsTheHarness(t *testing.T) {
 	}
 }
 
+func TestIsCtCompareCorpus(t *testing.T) {
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/ct-compare-v1/cases.tfv":     true,
+		"code/specs/fixtures/ct-compare-v1/cases.json":    true,
+		"code/specs/fixtures/ct-compare-v1/schema.json":   true,
+		"code/specs/fixtures/ct-compare-v10/cases.json":   false,
+		"code/specs/fixtures/ct-compare-v1":               false,
+		"code/specs/CT01-constant-time-compare.md":        false,
+		"code/specs/fixtures/test-bootstrap-v1/cases.tfv": false,
+		`code\specs\fixtures\ct-compare-v1\cases.tfv`:     false,
+	} {
+		if got := isCtCompareCorpus(path); got != want {
+			t.Errorf("isCtCompareCorpus(%q) = %v, want %v", path, got, want)
+		}
+	}
+}
+
+func TestCtCompareCorpusSelectsTheRustLane(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "rust/test-bootstrap", Language: "rust"},
+		{Name: "rust/ct-compare", Language: "rust"},
+	}
+	corpus := []string{"code/specs/fixtures/ct-compare-v1/cases.tfv"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := map[string]bool{"rust/ct-compare": true}; !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if _, err := repositoryInputConsumersForChange(corpus, packages[:1], "all"); err == nil {
+		t.Fatal("a corpus change with the Rust lane missing must fail closed")
+	}
+}
+
 func TestRepositoryInputConsumersForChange(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/mosaic-package-resolver", Language: "rust"},

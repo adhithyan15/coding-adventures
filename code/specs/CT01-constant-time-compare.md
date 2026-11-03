@@ -111,6 +111,10 @@ transport is rejected by the validator and never passed to a language adapter.
 An adapter may map a native exception to that ID but must not invent a
 successful output for an error case.
 
+`cases.tfv`, beside it, is the same corpus in TF01's line format for adapters
+without a JSON parser. It is generated from `cases.json` and checked for
+staleness by the validator, so the two can never disagree.
+
 The corpus covers empty, first/middle/last/all-byte mismatch, public length
 mismatch, high-bit bytes, a 256-byte input, both choices, a fresh-output
 ownership case, fixed widths, zero/maximum/sign-bit unsigned integers, and

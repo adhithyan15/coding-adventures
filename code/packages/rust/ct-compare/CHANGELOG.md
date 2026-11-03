@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **Breaking:** `ct_select_bytes` returns
+  `Result<Vec<u8>, SelectLengthMismatch>` instead of panicking when the slices
+  differ in length. CT01 names this error `CT_SELECT_LENGTH_MISMATCH`
+  (`SelectLengthMismatch::ID`); a value lets callers recover and lets the
+  conformance adapter read the id without catching an unwind. The check still
+  happens before either input is read. No crate in the repository called it.
+- Run the shared CT01 corpus (`code/specs/fixtures/ct-compare-v1/cases.tfv`,
+  21 cases) as the `ct01_corpus` test on the L0 bootstrap harness (TF01):
+  results, the semantic error, fresh selection output and logical work counts.
+  Four hand-made mutants (inverted `eq`, `select` ignoring `choice`, a 32-bit
+  `eq_u64`, a truncating length mismatch) each fail it.
+
 - Harden equal-length slice and fixed-array comparison so every loop iteration
   retains volatile reads of both inputs and the accumulator plus a volatile
   accumulator write, preventing the optimizer from eliding later work after an

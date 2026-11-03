@@ -105,6 +105,24 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the TF01 self-corpus and its Python reference",
 		matches:  isTestBootstrapInput,
 	},
+	{
+		name:     "rust/ct-compare",
+		language: "rust",
+		inputs:   "the shared CT01 conformance corpus",
+		matches:  isCtCompareCorpus,
+	},
+}
+
+// isCtCompareCorpus reports whether a changed path is in the shared CT01
+// corpus. The Rust lane's ct01_corpus test embeds cases.tfv with
+// include_str!, so a corpus edit changes what the test checks.
+//
+//	code/specs/fixtures/ct-compare-v1/cases.tfv     → true
+//	code/specs/fixtures/ct-compare-v1/cases.json    → true
+//	code/specs/fixtures/ct-compare-v10/cases.json   → false
+//	code/specs/CT01-constant-time-compare.md        → false (prose; the corpus pins behaviour)
+func isCtCompareCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/ct-compare-v1/")
 }
 
 // isTestBootstrapInput reports whether a changed path is one the bootstrap

@@ -3,6 +3,13 @@
 The fixture is a published contract, not a snapshot of any package's output.
 This validator recomputes its functional answers and its *logical* public-work
 counts directly from canonical input text. It makes no timing assertion.
+
+It also compiles `cases.json` into `cases.tfv`, the TF01 line format that
+harnesses read (a test harness may not depend on a JSON parser), and fails if
+the committed `cases.tfv` is not exactly what `cases.json` generates:
+
+    python3 code/scripts/ct_compare_conformance.py           # check (CI)
+    python3 code/scripts/ct_compare_conformance.py --write   # regenerate cases.tfv
 """
 
 from __future__ import annotations
@@ -11,7 +18,11 @@ import argparse
 import json
 import pathlib
 import re
+import sys
 from typing import Any
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import tfv  # a sibling script, found through the path set above
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DEFAULT_CORPUS = ROOT / "code" / "specs" / "fixtures" / "ct-compare-v1" / "cases.json"
@@ -171,13 +182,91 @@ def validate_document(document: Any) -> int:
     return len(cases)
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
+# ---------------------------------------------------------------------------
+# cases.json -> cases.tfv
+# ---------------------------------------------------------------------------
+# One TFV record per case, keyed by the case id. The JSON transport's hex
+# strings become TFV bytes (or, for eq_u64, integers), and the nested
+# `expected` and `expected_work` objects are flattened so an adapter reads
+# every field by name without a map lookup:
+#
+#   field            kind    present for
+#   ---------------  ------  -------------------------------------------
+#   op               text    every case: eq, eq_fixed, select_bytes, eq_u64
+#   left, right      bytes   byte operations
+#   left, right      int     eq_u64 (0 .. 2^64-1)
+#   width            int     eq_fixed
+#   choice           bool    select_bytes
+#   equal            bool    eq, eq_fixed, eq_u64
+#   output           bytes   select_bytes that succeeds
+#   fresh_output     bool    select_bytes that succeeds (always true)
+#   error_id         text    select_bytes that must fail
+#   work_positions, work_reads, work_writes, work_u64_bits
+#                    int     every case: CT01's logical public-work counts
+def to_records(document: Any) -> list[tfv.Record]:
+    records: list[tfv.Record] = []
+    for case in document["cases"]:
+        operation = case["operation"]
+        fields: list[tuple[str, tfv.Value]] = [("op", ("text", operation))]
+        if operation == "eq_u64":
+            fields += [
+                ("left", ("int", int(case["left_u64"], 16))),
+                ("right", ("int", int(case["right_u64"], 16))),
+            ]
+        else:
+            fields += [
+                ("left", ("bytes", bytes.fromhex(case["left_hex"]))),
+                ("right", ("bytes", bytes.fromhex(case["right_hex"]))),
+            ]
+        if operation == "eq_fixed":
+            fields.append(("width", ("int", case["fixed_size_bytes"])))
+        if operation == "select_bytes":
+            fields.append(("choice", ("bool", case["choice"])))
+        expected = case["expected"]
+        if "equal" in expected:
+            fields.append(("equal", ("bool", expected["equal"])))
+        elif "error_id" in expected:
+            fields.append(("error_id", ("text", expected["error_id"])))
+        else:
+            fields += [
+                ("output", ("bytes", bytes.fromhex(expected["output_hex"]))),
+                ("fresh_output", ("bool", expected["fresh_output"])),
+            ]
+        work = case["expected_work"]
+        fields += [
+            ("work_positions", ("int", work["byte_positions"])),
+            ("work_reads", ("int", work["byte_reads"])),
+            ("work_writes", ("int", work["byte_writes"])),
+            ("work_u64_bits", ("int", work["u64_bits"])),
+        ]
+        records.append((case["id"], fields))
+    return records
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--corpus", type=pathlib.Path, default=DEFAULT_CORPUS)
-    args = parser.parse_args()
-    count = validate_document(parse_json(args.corpus.read_text(encoding="utf-8")))
+    parser.add_argument(
+        "--write", action="store_true", help="regenerate cases.tfv beside the corpus"
+    )
+    args = parser.parse_args(argv)
+    document = parse_json(args.corpus.read_text(encoding="utf-8"))
+    count = validate_document(document)
+    # Validation first: only a corpus the oracle accepts may be compiled.
+    records = to_records(document)
+    generated = tfv.encode_file(records)
+    target = args.corpus.with_name("cases.tfv")
+    if args.write:
+        target.write_text(generated, encoding="utf-8")
+    elif not target.exists() or target.read_text(encoding="utf-8") != generated:
+        print("ct-compare-v1: cases.tfv is stale: run with --write", file=sys.stderr)
+        return 1
+    elif tfv.parse_file(generated) != records:
+        print("ct-compare-v1: cases.tfv does not round-trip", file=sys.stderr)
+        return 1
     print(f"ct-compare-v1: {count} cases valid")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

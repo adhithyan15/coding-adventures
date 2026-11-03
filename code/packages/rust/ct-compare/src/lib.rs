@@ -162,22 +162,61 @@ pub fn ct_eq_fixed<const N: usize>(a: &[u8; N], b: &[u8; N]) -> bool {
     ct_eq_equal_length(a, b)
 }
 
+/// CT01's one runtime error: `ct_select_bytes` was given slices of different
+/// lengths.
+///
+/// CT01 names the error, not the language mechanism, so every lane can be
+/// checked against one corpus case (`select-public-length-mismatch`). Rust
+/// reports it as a value rather than a panic: a caller handling untrusted
+/// lengths can then recover, and a test harness can read the error's [`ID`]
+/// without catching an unwind.
+///
+/// Lengths are public (see the crate docs), so returning early on a mismatch
+/// leaks nothing: neither input's contents are read first.
+///
+/// [`ID`]: SelectLengthMismatch::ID
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct SelectLengthMismatch;
+
+impl SelectLengthMismatch {
+    /// CT01's semantic error id, the same in every language lane.
+    pub const ID: &'static str = "CT_SELECT_LENGTH_MISMATCH";
+}
+
+impl core::fmt::Display for SelectLengthMismatch {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "{}: ct_select_bytes requires equal-length slices",
+            Self::ID
+        )
+    }
+}
+
+impl std::error::Error for SelectLengthMismatch {}
+
 /// Select between two same-length byte slices without a source-level branch.
 ///
 /// If `choice` is `true`, returns a copy of `a`; if `false`, returns a
 /// copy of `b`. The selection is branchless — no instruction in the
 /// function body depends on `choice` via a conditional jump, only on a
-/// masked arithmetic combination.
+/// masked arithmetic combination. The result is always a fresh `Vec`, never
+/// a view of either input.
 ///
-/// # Panics
-/// Panics if `a.len() != b.len()`. Length is treated as public.
+/// | `a.len() == b.len()` | `choice` | result                         |
+/// |----------------------|----------|--------------------------------|
+/// | yes                  | `true`   | `Ok(copy of a)`                |
+/// | yes                  | `false`  | `Ok(copy of b)`                |
+/// | no                   | either   | `Err(SelectLengthMismatch)`    |
+///
+/// # Errors
+/// [`SelectLengthMismatch`] if the lengths differ, decided before either
+/// input's contents are read. Length is treated as public.
 #[inline(never)]
-pub fn ct_select_bytes(a: &[u8], b: &[u8], choice: bool) -> Vec<u8> {
-    assert_eq!(
-        a.len(),
-        b.len(),
-        "ct_select_bytes requires equal-length slices"
-    );
+pub fn ct_select_bytes(a: &[u8], b: &[u8], choice: bool) -> Result<Vec<u8>, SelectLengthMismatch> {
+    if a.len() != b.len() {
+        return Err(SelectLengthMismatch);
+    }
     // Expand `choice` to an all-ones or all-zeros mask. `bool as u8` is
     // guaranteed to be exactly 0 or 1, so `0u8.wrapping_sub(choice as u8)`
     // gives 0x00 or 0xFF — no branch.
@@ -189,7 +228,7 @@ pub fn ct_select_bytes(a: &[u8], b: &[u8], choice: bool) -> Vec<u8> {
         // The XOR-and-mask trick: b ^ ((a ^ b) & mask).
         out[i] = b[i] ^ ((a[i] ^ b[i]) & mask);
     }
-    out
+    Ok(out)
 }
 
 /// Source-level branchless equality on two `u64` values.
@@ -307,22 +346,22 @@ mod tests {
     fn ct_select_true_picks_a() {
         let a = [0xAAu8; 8];
         let b = [0xBBu8; 8];
-        assert_eq!(ct_select_bytes(&a, &b, true), vec![0xAAu8; 8]);
+        assert_eq!(ct_select_bytes(&a, &b, true), Ok(vec![0xAAu8; 8]));
     }
 
     #[test]
     fn ct_select_false_picks_b() {
         let a = [0xAAu8; 8];
         let b = [0xBBu8; 8];
-        assert_eq!(ct_select_bytes(&a, &b, false), vec![0xBBu8; 8]);
+        assert_eq!(ct_select_bytes(&a, &b, false), Ok(vec![0xBBu8; 8]));
     }
 
     #[test]
     fn ct_select_empty() {
         let a: [u8; 0] = [];
         let b: [u8; 0] = [];
-        assert_eq!(ct_select_bytes(&a, &b, true), Vec::<u8>::new());
-        assert_eq!(ct_select_bytes(&a, &b, false), Vec::<u8>::new());
+        assert_eq!(ct_select_bytes(&a, &b, true), Ok(Vec::<u8>::new()));
+        assert_eq!(ct_select_bytes(&a, &b, false), Ok(Vec::<u8>::new()));
     }
 
     #[test]
@@ -331,16 +370,24 @@ mod tests {
         // doesn't clobber any bit position.
         let a: Vec<u8> = (0..=255).collect();
         let b: Vec<u8> = (0..=255).rev().collect();
-        assert_eq!(ct_select_bytes(&a, &b, true), a);
-        assert_eq!(ct_select_bytes(&a, &b, false), b);
+        assert_eq!(ct_select_bytes(&a, &b, true), Ok(a.clone()));
+        assert_eq!(ct_select_bytes(&a, &b, false), Ok(b.clone()));
     }
 
     #[test]
-    #[should_panic(expected = "equal-length slices")]
-    fn ct_select_length_mismatch_panics() {
+    fn ct_select_length_mismatch_is_ct01_error() {
         let a = [0u8; 4];
         let b = [0u8; 5];
-        let _ = ct_select_bytes(&a, &b, true);
+        for choice in [true, false] {
+            assert_eq!(ct_select_bytes(&a, &b, choice), Err(SelectLengthMismatch));
+            assert_eq!(ct_select_bytes(&b, &a, choice), Err(SelectLengthMismatch));
+        }
+        assert_eq!(SelectLengthMismatch::ID, "CT_SELECT_LENGTH_MISMATCH");
+        let message = SelectLengthMismatch.to_string();
+        assert!(
+            message.starts_with("CT_SELECT_LENGTH_MISMATCH: "),
+            "{message}"
+        );
     }
 
     // === ct_eq_u64 ========================================================

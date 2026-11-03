@@ -14,8 +14,10 @@ timing-side-channel resistance:
    equality on byte slices.
 2. `ct_eq_fixed::<N>(a: &[u8; N], b: &[u8; N]) -> bool` — type-safe
    fixed-length variant.
-3. `ct_select_bytes(a, b, choice) -> Vec<u8>` — source-level branchless
-   select between two same-length slices.
+3. `ct_select_bytes(a, b, choice) -> Result<Vec<u8>, SelectLengthMismatch>`
+   — source-level branchless select between two same-length slices, into
+   fresh storage. Different lengths give CT01's semantic error
+   `CT_SELECT_LENGTH_MISMATCH` (`SelectLengthMismatch::ID`).
 4. `ct_eq_u64(a: u64, b: u64) -> bool` — source-level branchless 64-bit
    equality for counters and lease IDs.
 
@@ -75,8 +77,8 @@ let ok: bool = ct_eq_fixed(&tag_a, &tag_b);
 // Lease-ID comparison
 if ct_eq_u64(lease.id, requested.id) { /* ... */ }
 
-// Branchless conditional select
-let picked = ct_select_bytes(&option_a, &option_b, predicate);
+// Branchless conditional select (lengths must match; they are public)
+let picked = ct_select_bytes(&option_a, &option_b, predicate)?;
 ```
 
 ## How It Fits
@@ -88,6 +90,25 @@ unlock-key comparison.
 Self-contained: no runtime dependencies. Two private safe wrappers contain the
 audited volatile-pointer operations; public callers never handle pointers or
 invoke `unsafe`.
+
+## Conformance
+
+The crate runs CT01's shared, language-neutral corpus
+(`code/specs/fixtures/ct-compare-v1/`, 21 cases) on the L0 bootstrap harness
+(`coding_adventures_test_bootstrap`, TF01) rather than on libtest:
+
+```sh
+cargo test -p coding_adventures_ct_compare --test ct01_corpus            # seed 0
+cargo test -p coding_adventures_ct_compare --test ct01_corpus -- --seed 7
+```
+
+The harness reads `cases.tfv` (generated from `cases.json` by
+`code/scripts/ct_compare_conformance.py`), runs every case in a seeded shuffled
+order and prints TAP v14. Each case checks the operation's result, CT01's
+semantic error where one is expected, that a selection's output is fresh
+storage, and the case's logical work counts against this crate's loop shape.
+Those counts are a statement about the source; `tests/optimized_ir.rs` is what
+checks the compiled code keeps that shape.
 
 ## Implementation Notes
 

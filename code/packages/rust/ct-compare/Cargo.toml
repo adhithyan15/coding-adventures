@@ -5,3 +5,14 @@ edition = "2021"
 description = "Constant-time byte-slice equality — no early exit on first differing byte, no data-dependent branches"
 
 [dependencies]
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+# The CT01 corpus runs on the L0 bootstrap harness (TF01), not libtest, so it
+# is a plain `fn main()` test binary. Arguments after `--` reach it unchanged:
+#   cargo test -p coding_adventures_ct_compare --test ct01_corpus -- --seed 7
+[[test]]
+name = "ct01_corpus"
+path = "tests/ct01_corpus.rs"
+harness = false

@@ -220,13 +220,15 @@ whoever owns those lanes (§8.3). The pilot touches only the Rust lane, so it
 does not fix them.
 
 - **No lane runs the CT01 corpus.** `code/specs/fixtures/ct-compare-v1/` is
-  referenced by no package.
+  referenced by no package. (Rust now does, since step 4; every other lane
+  still does not.)
 - **`eq_fixed` is not one operation across lanes.** Some lanes enforce the
   width in the type system, one takes an explicit length with a caller
   precondition, and the rest delegate to `eq`. CT01 needs to say which of
   these are acceptable.
 - **Errors on a select length mismatch differ in every lane**, and none maps to
-  CT01's semantic error `CT_SELECT_LENGTH_MISMATCH`.
+  CT01's semantic error `CT_SELECT_LENGTH_MISMATCH`. (Rust's panic became a
+  `SelectLengthMismatch` error value carrying that id in step 4.)
 - **The `eq_u64` reduction technique differs between lanes.** Each lane's form
   must be reviewed against CT01's "fixed operation sequence" rule.
 - **Only Rust checks its generated code for an optimiser-introduced early

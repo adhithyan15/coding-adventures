@@ -9,6 +9,7 @@ import io
 import json
 import pathlib
 import sys
+import tempfile
 import unittest
 from unittest import mock
 
@@ -152,6 +153,71 @@ class CtCompareConformanceTests(unittest.TestCase):
         ):
             MODULE.main()
         self.assertEqual(output.getvalue(), "ct-compare-v1: 21 cases valid\n")
+
+    # --- cases.json -> cases.tfv ------------------------------------------
+    def test_records_flatten_every_operation(self) -> None:
+        records = dict(MODULE.to_records(self.document))
+        self.assertEqual(len(records), 21)
+        names = lambda case_id: [name for name, _ in records[case_id]]
+        work = ["work_positions", "work_reads", "work_writes", "work_u64_bits"]
+        self.assertEqual(
+            names("eq-first-different"), ["op", "left", "right", "equal"] + work
+        )
+        self.assertEqual(
+            names("fixed-16-equal"), ["op", "left", "right", "width", "equal"] + work
+        )
+        self.assertEqual(
+            names("select-left-fresh"),
+            ["op", "left", "right", "choice", "output", "fresh_output"] + work,
+        )
+        self.assertEqual(
+            names("select-public-length-mismatch"),
+            ["op", "left", "right", "choice", "error_id"] + work,
+        )
+        u64 = dict(records["u64-sign-bit-different"])
+        self.assertEqual(u64["right"], ("int", 1 << 63))
+        select = dict(records["select-left-fresh"])
+        self.assertEqual(select["output"], ("bytes", bytes.fromhex("00ff80")))
+        self.assertEqual(
+            dict(records["eq-256-byte-last-different"])["work_reads"], ("int", 512)
+        )
+
+    def test_committed_tfv_is_exactly_what_the_corpus_generates(self) -> None:
+        generated = MODULE.tfv.encode_file(MODULE.to_records(self.document))
+        committed = CORPUS.with_name("cases.tfv").read_text(encoding="utf-8")
+        self.assertEqual(committed, generated)
+        self.assertEqual(
+            MODULE.tfv.parse_file(committed), MODULE.to_records(self.document)
+        )
+
+    def test_stale_or_missing_tfv_fails_and_write_repairs_it(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            corpus = pathlib.Path(directory) / "cases.json"
+            corpus.write_text(CORPUS.read_text(encoding="utf-8"), encoding="utf-8")
+            argv = ["--corpus", str(corpus)]
+            for content in (None, "tfv 1\n"):
+                if content is not None:
+                    corpus.with_name("cases.tfv").write_text(content, encoding="utf-8")
+                errors = io.StringIO()
+                with (
+                    contextlib.redirect_stderr(errors),
+                    contextlib.redirect_stdout(io.StringIO()),
+                ):
+                    self.assertEqual(MODULE.main(argv), 1)
+                self.assertIn("cases.tfv is stale", errors.getvalue())
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(MODULE.main(argv + ["--write"]), 0)
+                self.assertEqual(MODULE.main(argv), 0)
+
+    def test_invalid_corpus_is_never_compiled(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            corpus = pathlib.Path(directory) / "cases.json"
+            changed = copy.deepcopy(self.document)
+            changed["cases"][0]["expected"]["equal"] = False
+            corpus.write_text(json.dumps(changed), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "independent oracle"):
+                MODULE.main(["--corpus", str(corpus), "--write"])
+            self.assertFalse(corpus.with_name("cases.tfv").exists())
 
 
 if __name__ == "__main__":

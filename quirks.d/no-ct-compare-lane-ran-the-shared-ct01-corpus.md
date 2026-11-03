@@ -13,5 +13,11 @@ but no lane's tests reference it. Each lane tests itself with its own
 hand-written cases, so the lanes drifted apart (error types, `eq_fixed`
 meaning) without any test noticing.
 
-**Open:** the Rust lane adopts the corpus in VER26 step 4; the other lanes are
-the package-parity loop's `ct-compare-existing-lane-conformance-adoption` item.
+**Rust: done** (VER26 step 4). `rust/ct-compare` runs all 21 cases on the L0
+harness from the generated `cases.tfv`, and corpus edits select it through the
+build tool's repository inputs. Adopting the corpus also forced CT01's
+`CT_SELECT_LENGTH_MISMATCH` into the Rust API, which used to panic.
+
+**Open for every other lane:** the package-parity loop's
+`ct-compare-existing-lane-conformance-adoption` item. Lanes with a JSON reader
+may read `cases.json`; the rest can read `cases.tfv`.

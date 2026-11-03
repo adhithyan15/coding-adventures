@@ -10,10 +10,20 @@ All bytes and unsigned integers are canonical lowercase hexadecimal; the
 expected result and logical public-work counts are checked by an independent
 validator rather than captured from an existing package.
 
+`cases.tfv` is the same corpus in TF01's line format, for harnesses that may
+not depend on a JSON parser. It is generated, never edited: the validator fails
+if it is not exactly what `cases.json` produces. Each case is one record whose
+fields are flattened from the JSON (`op`, `left`, `right`, then `width`,
+`choice`, `equal`, `output`, `fresh_output` or `error_id` as the operation
+needs, then `work_positions`, `work_reads`, `work_writes`, `work_u64_bits`);
+`eq_u64` operands are integers rather than hex text. The Rust lane reads it
+(`code/packages/rust/ct-compare/tests/ct01_corpus.rs`).
+
 Run from the repository root:
 
 ```sh
-python code/scripts/ct_compare_conformance.py
+python code/scripts/ct_compare_conformance.py           # validate, check cases.tfv
+python code/scripts/ct_compare_conformance.py --write   # regenerate cases.tfv
 python -m unittest discover -s code/scripts/tests -p test_ct_compare_conformance.py -v
 ```
 
