@@ -53,7 +53,7 @@ class ValidatorTests(unittest.TestCase):
 
     def test_canonical_corpus_is_clean(self) -> None:
         self.assertEqual(MODULE.check(self.cases), [])
-        self.assertEqual(len(self.cases), 72)
+        self.assertEqual(len(self.cases), 85)
 
     def test_flipped_verdict_is_caught(self) -> None:
         def flip(cases: list[dict]) -> None:
@@ -120,32 +120,49 @@ class ValidatorTests(unittest.TestCase):
         self.assert_problem(unknown, "unknown op 'teleport'")
         self.assert_problem(duplicate, "duplicate case id")
 
-
     def test_failure_id_membership_covers_valid_and_invalid_baselines(self) -> None:
         rows = [c for c in self.cases if c["op"] == "failure_id_valid"]
         self.assertEqual(
             {c["input"] for c in rows if c["valid"]},
-            {"not-deep-equal", "no-error", "wrong-error", "panic", "corpus-mismatch", "corpus-malformed"},
+            {
+                "not-deep-equal",
+                "no-error",
+                "wrong-error",
+                "panic",
+                "corpus-mismatch",
+                "corpus-malformed",
+            },
         )
         self.assertTrue(any(not c["valid"] for c in rows))
 
     def test_wrong_failure_id_membership_is_caught(self) -> None:
         def corrupt(cases: list[dict]) -> None:
-            next(c for c in cases if c["op"] == "failure_id_valid")["valid"] = False
+            next(c for c in cases if c["op"] == "failure_id_valid" and c["valid"])[
+                "valid"
+            ] = False
+
         self.assert_problem(corrupt, "failure-ID membership disagrees")
 
     def test_missing_failure_id_baselines_are_caught(self) -> None:
         def drop_registered(cases: list[dict]) -> None:
-            cases[:] = [c for c in cases if not (c["op"] == "failure_id_valid" and c["input"] == "panic")]
+            cases[:] = [
+                c
+                for c in cases
+                if not (c["op"] == "failure_id_valid" and c["input"] == "panic")
+            ]
+
         def drop_rejections(cases: list[dict]) -> None:
             cases[:] = [c for c in cases if c["op"] != "failure_id_valid" or c["valid"]]
+
         self.assert_problem(drop_registered, "registered failure IDs missing")
         self.assert_problem(drop_rejections, "needs an unregistered-ID rejection")
 
     def test_failure_id_transport_kinds_are_strict(self) -> None:
         for field, value in [("input", True), ("valid", "true")]:
-            def corrupt(cases: list[dict]) -> None:
+
+            def corrupt(cases: list[dict], field=field, value=value) -> None:
                 next(c for c in cases if c["op"] == "failure_id_valid")[field] = value
+
             self.assert_problem(corrupt, "needs text input and bool valid")
 
 
@@ -174,7 +191,9 @@ class CommandLineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             fixture = self.copy_fixture(pathlib.Path(tmp))
             self.assertEqual(self.run_main(fixture, "--write")[0], 0)
-            expected = tfv.encode_file(MODULE.to_records(MODULE.load_cases())).encode("utf-8")
+            expected = tfv.encode_file(MODULE.to_records(MODULE.load_cases())).encode(
+                "utf-8"
+            )
             self.assertEqual((fixture / "cases.tfv").read_bytes(), expected)
 
     def test_stale_tfv_fails_and_write_repairs_it(self) -> None:

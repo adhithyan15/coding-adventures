@@ -62,6 +62,17 @@ fn check(ctx: &Ctx, record: &Record) -> Result<Verdict, String> {
             let got = ctx.error_is(raised, text(record, "expected")?);
             expect_verdict(record, got)?
         }
+        "failure_id_valid" => {
+            let got = coding_adventures_test_bootstrap::verdict::is_registered_failure_id(text(
+                record, "input",
+            )?);
+            match field(record, "valid")? {
+                Value::Bool(want) => {
+                    agree(got == *want, || "failure-ID membership disagrees".into())
+                }
+                _ => return Err("valid must be bool".into()),
+            }
+        }
         "splitmix64" => {
             let mut rng = SplitMix64::new(int(record, "seed")?);
             let want = ints(list(record, "outputs")?)?;
