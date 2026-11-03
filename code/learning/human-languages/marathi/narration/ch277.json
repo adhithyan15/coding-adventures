@@ -4,7 +4,7 @@
   "chapter": 277,
   "title": "Will, Going To, Will Not",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:96e528732a03f295",
+  "sourceHash": "fnv1a64:1ba2d728931ab071",
   "lessons": [
     {
       "id": "MR-C277-jain",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da542372c14c1473",
+      "sourceHash": "fnv1a64:ed119042ee050a2e",
       "notice": null,
       "blocks": [
         {
@@ -228,7 +228,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a6db101916bffe8",
+      "sourceHash": "fnv1a64:7cda76c9963951f1",
       "notice": null,
       "blocks": [
         {
@@ -370,7 +370,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf8a8d717a6c00c8",
+      "sourceHash": "fnv1a64:1de2d959271d050b",
       "notice": null,
       "blocks": [
         {

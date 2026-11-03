@@ -1438,20 +1438,22 @@ or non-DNS anchor constraints, derive the initial path-length cap, check
 revocation, generalize path validation, perform TLS or HTTP, authorize OAuth
 transport, or grant network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
-An additive bounded intermediate DNS-policy follow-up now consumes that exact
-anchor-policy proof. It derives the intermediate certificate, target
+An additive bounded intermediate name-constraints follow-up now consumes that
+exact anchor-policy proof. It derives the intermediate certificate, target
 certificate, and already-validated target SAN extension index only through the
 retained routed construction. An absent NameConstraints extension succeeds
 without manufacturing evidence; a present extension must be critical and must
-decode under a separate caller-owned limit before every target dNSName is
-checked against the supported permitted-and-excluded-DNS subset. Success keeps
-the complete target policy, both routed signatures, complete intermediate
-policy, advanced caller-owned path-length state, reviewed root selection,
-anchor-policy evidence, and optional payload-free intermediate constrained-
-name evidence together. This pure public-certificate composition performs no
+decode under a separate caller-owned limit before every retained target
+dNSName and IPv4 or IPv6 iPAddress is evaluated together against the supported
+permitted-and-excluded DNS and IP subsets. Success keeps the complete target
+policy, both routed signatures, complete intermediate policy, advanced
+construction-derived path-length state, reviewed root selection, anchor-policy
+evidence, and optional payload-free DNS/IP counts together. The earlier DNS
+count remains available as compatibility evidence only after the combined
+evaluation succeeds. This pure public-certificate composition performs no
 credential access, signing, storage, clock acquisition, audit event, trace
 emission, I/O, or external effect. It does not support additional
-intermediates, derive the initial path-length cap, apply IP or other name-form
+intermediates, apply other GeneralName forms or excluded or non-DNS anchor
 constraints, verify a hostname, check revocation, generalize path validation,
 perform TLS or HTTP, authorize OAuth transport, or grant network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
@@ -1676,10 +1678,15 @@ terminal issuer must be the exact decoded certificate retained by the reviewed
 root evidence. Distinct non-copyable success evidence keeps all three inputs,
 including complete intermediate policy and the advanced path-length state, so
 callers cannot splice authenticated links from separately constructed paths or
-discard the reviewed terminal. The caller-supplied initial path-length state
-still is not derived from anchor policy, and this fixed-shape composition does
-not apply anchor constraints, target policy, revocation, generalized path
-validation, TLS, HTTP, OAuth transport, or network authority.
+discard the reviewed terminal. The fixed-shape binder no longer accepts caller-
+supplied initial path-length state: after the exact two-link shape and retained
+endpoint identities are checked, it derives the RFC 5280 initial capacity of
+one intermediate from that construction and advances it using only the
+complete retained intermediate policy. The lower-level caller-owned transition
+remains available for future generalized traversal, but it cannot directly
+create this fixed reviewed-path proof. This composition does not apply anchor
+constraints, target policy, revocation, generalized path validation, TLS,
+HTTP, OAuth transport, or network authority.
 A bounded construction-bound target-policy follow-up now consumes that complete
 authenticated reviewed path together with complete validated server-certificate
 policy. It fails closed unless the server-policy certificate is the same exact
@@ -1687,11 +1694,10 @@ decoded target object retained by the constructed path, then returns distinct
 non-copyable evidence retaining both complete inputs. This prevents callers
 from attaching hostname, validity, purpose, end-entity role, critical-extension,
 and algorithm policy for one certificate to a separately constructed and
-authenticated target, including a byte-equal re-decode. The result still uses
-the caller-supplied initial path-length state retained by the prior proof and
-does not apply anchor or intermediate name constraints, other anchor policy,
-revocation, generalized path validation, TLS, HTTP, OAuth transport, or network
-authority.
+authenticated target, including a byte-equal re-decode. The result retains the
+construction-derived fixed-shape path-length state and does not apply anchor or
+intermediate name constraints, other anchor policy, revocation, generalized
+path validation, TLS, HTTP, OAuth transport, or network authority.
 A bounded construction-bound anchor-policy follow-up now consumes that exact
 target-policy result and applies the selected reviewed terminal's exact
 supported DNS constraints to the exact target certificate retained by the
@@ -1701,10 +1707,10 @@ repository-owned bounded NameConstraints and Subject Alternative Name decoders,
 require every target dNSName to satisfy at least one permitted DNS subtree, and
 retain optional payload-free count evidence. Callers cannot substitute another
 constructed path, reviewed terminal, target certificate, or SAN collection.
-The result still retains caller-supplied initial path-length state and does not
-apply intermediate name constraints, excluded or non-DNS anchor constraints,
-other anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
-transport, or network authority.
+The result retains the construction-derived fixed-shape path-length state and
+does not apply intermediate name constraints, excluded or non-DNS anchor
+constraints, other anchor policy, revocation, generalized path validation,
+TLS, HTTP, OAuth transport, or network authority.
 A bounded construction-bound intermediate-policy follow-up now consumes that
 complete anchor-policy result and applies the exact retained intermediate's
 NameConstraints extension to the exact retained target. An absent extension
@@ -1715,9 +1721,9 @@ permitted policy, excluded names take precedence, and wildcard targets that
 overlap an excluded subtree fail closed. The target, intermediate, constructed
 path, reviewed terminal, and SAN collection are all derived through the one
 retained proof, so callers cannot splice policy evidence from another path or
-certificate. This fixed two-link boundary still retains caller-supplied initial
-path-length state and does not apply excluded or non-DNS anchor constraints,
-other anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
+certificate. This fixed two-link boundary retains construction-derived path-
+length state and does not apply excluded or non-DNS anchor constraints, other
+anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
 transport, or network authority.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded

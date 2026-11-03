@@ -230,20 +230,9 @@ fn reviewed_path<'path, 'target, 'target_encoded, 'candidates, 'candidate_encode
         intermediate_policy(intermediate, &profiles, false),
     )
     .unwrap();
-    let intermediate = advance_x509_rsa_constructed_path_intermediate_path_length(
-        X509CertificatePathLengthState::new(1),
-        intermediate,
-    )
-    .unwrap();
     let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
         path.adjacent_link(1).unwrap(),
-        algorithm_policy(
-            intermediate
-                .authenticated_intermediate()
-                .intermediate_policy()
-                .certificate(),
-            &profiles,
-        ),
+        algorithm_policy(intermediate.intermediate_policy().certificate(), &profiles),
         role_policy(root, X509CertificateRole::IssuingCertificateAuthority),
         rsa_policy(root, &profiles),
         &[route()],
@@ -805,7 +794,7 @@ fn rejects_byte_equal_detached_reviewed_anchor() {
 }
 
 #[test]
-fn binds_complete_routed_two_link_path_to_reviewed_anchor() {
+fn binds_complete_routed_two_link_path_and_derives_initial_path_length() {
     let target_encoded = fixture(TARGET_HEX);
     let intermediate_encoded = fixture(INTERMEDIATE_HEX);
     let root_encoded = fixture(ROOT_HEX);
@@ -829,11 +818,6 @@ fn binds_complete_routed_two_link_path_to_reviewed_anchor() {
     let intermediate = bind_x509_rsa_constructed_path_intermediate_policy(
         intermediate_signature,
         intermediate_policy(&candidates[0], &profiles, false),
-    )
-    .unwrap();
-    let intermediate = advance_x509_rsa_constructed_path_intermediate_path_length(
-        X509CertificatePathLengthState::new(1),
-        intermediate,
     )
     .unwrap();
 
@@ -961,6 +945,7 @@ fn retains_exact_routed_server_path_through_unconstrained_anchor_and_intermediat
         .unwrap();
 
     assert_eq!(validated.constrained_dns_names(), None);
+    assert_eq!(validated.constrained_names(), None);
     assert!(std::ptr::eq(
         validated
             .anchor_policy()
@@ -1039,11 +1024,6 @@ fn rejects_two_link_proofs_from_distinct_construction_objects() {
     let intermediate = bind_x509_rsa_constructed_path_intermediate_policy(
         intermediate_signature,
         intermediate_policy(&candidates[0], &profiles, false),
-    )
-    .unwrap();
-    let intermediate = advance_x509_rsa_constructed_path_intermediate_path_length(
-        X509CertificatePathLengthState::new(1),
-        intermediate,
     )
     .unwrap();
 

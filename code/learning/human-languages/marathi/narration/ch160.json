@@ -3,8 +3,8 @@
   "language": "marathi",
   "chapter": 160,
   "title": "The Future, Soon, Next, From Now On, To Plan",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4563190aace2a2e2",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:166f53d074cf1ee4",
   "lessons": [
     {
       "id": "MR-C160-bhavishya",
@@ -671,6 +671,282 @@
             {
               "kind": "speech",
               "text": "What does आखणे (ākhṇe) mean? (\"To plan, to draw up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C160-jain",
+      "sequence": 7661,
+      "title": "मी जाईन (mī jāīn) — the future, person by person",
+      "headword": "मी जाईन",
+      "romanization": "mī jāīn",
+      "gloss": "I will go — the future changes with person, not gender",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:420c5e79f959c765",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"to plan\", then \"tomorrow\", then उद्या भेटू."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: who will do it?",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उद्या मी पुण्याला जाईन. udyā mī puṇyālā jāīn. — \"Tomorrow I will go to Pune.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Use मी जाईन (mī jāīn), तू जाशील, तो / ती जाईल, आम्ही जाऊ, तुम्ही जाल, ते जातील. The future changes with the person, but not gender: a man and a woman both say मी जाईन (mī jāīn)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: a few future stems",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The endings stay while the stem changes: येणे becomes येईन / येईल, करणे becomes करीन / करेल, वाचणे becomes वाचीन / वाचेल, पडणे becomes पडेल. Ask काय होईल?, \"What will happen?\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Tomorrow I will go to Pune\" — udyā mī puṇyālā jāīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Tomorrow I will go to Pune\" — *udyā mī puṇyālā jāīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"It will rain in the evening\" — sandhyākāḷī pāūs paḍel",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"It will rain in the evening\" — *sandhyākāḷī pāūs paḍel*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"We will meet tomorrow\" — āmhī udyā bheṭū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"We will meet tomorrow\" — *āmhī udyā bheṭū*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C160-jain-r1",
+              "prompt": "Say that you will go to Pune tomorrow, then that it will rain in the evening.",
+              "assesses": [
+                "MR-GRAMMAR-C160-FUTURE-PERSON-01",
+                "MR-GRAMMAR-C160-FUTURE-STEMS-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "udyā mī puṇyālā jāīn; sandhyākāḷī pāūs paḍel",
+                "उद्या मी पुण्याला जाईन. संध्याकाळी पाऊस पडेल."
+              ],
+              "feedback": {
+                "correct": "जाईन is I; पडेल is it.",
+                "incorrect": "Use -ईन for I and -ईल or -ेल for he, she or it."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I will go\"? (जाईन.) \"We will go\"? (जाऊ.) \"You will go\" with respect? (जाल.) \"They will go\"? (जातील.) \"It will rain\"? (पडेल.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-C160-janar-ahe",
+      "sequence": 7662,
+      "title": "मी जाणार आहे (mī jāṇār āhe) — a plan, and what will not happen",
+      "headword": "मी जाणार आहे",
+      "romanization": "mī jāṇār āhe",
+      "gloss": "I am going to go — a plan with -णार आहे, and won't with -णार नाही",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:748cbb23dca4e063",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I will go\", then जाणे, then आहे."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: -णार आहे for a plan",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुढच्या आठवड्यात मी गावाला जाणार आहे. puḍhcyā āṭhavḍyāt mī gāvālā jāṇār āhe. — \"Next week I am going to go to the village.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Take -णे off the verb and add -णार: जाणे becomes जाणार, करणे becomes करणार, येणे becomes येणार. Add आहे for a present plan. -णार stays the same with every person in this bounded A2 pattern."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: -णार नाही for won't",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Replace आहे with नाही for a future refusal or firm negative: मी उद्या येणार नाही, \"I won't come tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am going to go to the village\" — mī gāvālā jāṇār āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am going to go to the village\" — *mī gāvālā jāṇār āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am going to work tomorrow\" — mī udyā kām karṇār āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am going to work tomorrow\" — *mī udyā kām karṇār āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I won't come tomorrow\" — mī udyā yeṇār nāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I won't come tomorrow\" — *mī udyā yeṇār nāhī*]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MR-C160-janar-ahe-r1",
+              "prompt": "Say that you are going to go to the village next week, then that you will not come tomorrow.",
+              "assesses": [
+                "MR-GRAMMAR-C160-NAR-PLAN-01",
+                "MR-GRAMMAR-C160-NAR-NAHI-01"
+              ],
+              "responseSeconds": 24,
+              "acceptedResponses": [
+                "puḍhcyā āṭhavḍyāt mī gāvālā jāṇār āhe; mī udyā yeṇār nāhī",
+                "पुढच्या आठवड्यात मी गावाला जाणार आहे. मी उद्या येणार नाही."
+              ],
+              "feedback": {
+                "correct": "Use -णार आहे for the plan and -णार नाही for won't.",
+                "incorrect": "Remove -णे, add -णार, then choose आहे or नाही."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I will go\"? (मी जाईन (mī jāīn).) \"I am going to go\"? (मी जाणार आहे (mī jāṇār āhe).) \"I won't come\"? (मी येणार नाही.) \"Next week\"? (पुढच्या आठवड्यात.) \"From now on\"? (यानंतर (yānantar).) \"To plan\"? (आखणे (ākhṇe).)"
             }
           ]
         }

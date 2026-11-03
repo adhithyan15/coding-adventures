@@ -4,7 +4,7 @@
   "label": "ch:mr-what-happened-who-did-it-what-there-was",
   "canDo": "I can say what happened (gelo, ālī), who did something with -ne (tyāne kām kelaṁ), and what there was (hotā).",
   "spineNodes": [
-    "SPINE-TALK-ABOUT-PAST"
+    "SPINE-NARRATE-EVENTS"
   ],
   "payoff": {
     "lesson": "MR-R276-what-happened",

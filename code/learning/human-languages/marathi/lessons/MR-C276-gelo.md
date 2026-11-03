@@ -4,7 +4,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 id: MR-C276-gelo
-spine_node: SPINE-TALK-ABOUT-PAST
+spine_node: SPINE-NARRATE-EVENTS
 sequence: 16000
 chapter: 276
 type: grammar

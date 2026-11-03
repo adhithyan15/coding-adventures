@@ -4,7 +4,7 @@
   "label": "ch:mr-will-going-to-will-not",
   "canDo": "I can say what will happen (jāīn, paḍel), what I am going to do (jāṇār āhe) and what I won't do (jāṇār nāhī).",
   "spineNodes": [
-    "SPINE-TALK-ABOUT-FUTURE"
+    "SPINE-NARRATE-EVENTS"
   ],
   "payoff": {
     "lesson": "MR-R277-what-will-happen",

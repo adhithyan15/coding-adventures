@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 277,
-  "sourceHash": "fnv1a64:96e528732a03f295",
+  "sourceHash": "fnv1a64:1ba2d728931ab071",
   "lessonIds": [
     "MR-C277-jain",
     "MR-C277-janar-ahe",
@@ -12,6 +12,6 @@
   "text": "marathi/narration/ch277.txt",
   "json": "marathi/narration/ch277.json",
   "textHash": "fnv1a64:9cee02df1a0f2d7e",
-  "jsonHash": "fnv1a64:45b0b6910ae5d3fb",
+  "jsonHash": "fnv1a64:78f027d7174ae5c5",
   "findings": []
 }

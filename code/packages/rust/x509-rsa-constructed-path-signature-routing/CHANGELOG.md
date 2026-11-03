@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.9.0 - 2026-11-03
+
+### Added
+
+- The exact intermediate NameConstraints follow-up now evaluates every retained
+  target DNS-ID and IP-ID together against supported critical permitted and
+  excluded DNS and IP subtrees.
+- Success retains payload-free combined DNS/IP counts while preserving the
+  existing DNS-only compatibility evidence after the combined check passes.
+
+### Security
+
+- Mixed constraints can no longer silently drop the IP form after the exact
+  intermediate, target, and target SAN index have been derived from the routed
+  construction.
+- This remains fixed-shape public certificate policy; it does not apply other
+  GeneralName forms or non-DNS anchor constraints, verify a hostname, check
+  revocation, perform TLS or HTTP, authorize OAuth, or grant network authority.
+
+## 0.8.0 - 2026-11-03
+
+### Changed
+
+- The exact target -> intermediate -> reviewed-root binder now accepts the
+  complete construction-bound intermediate policy directly and derives the
+  RFC 5280 initial capacity of one intermediate from the retained two-link
+  shape.
+- The lower-level caller-owned path-length transition remains available for
+  future generalized traversal, but detached state can no longer create the
+  fixed reviewed two-link proof.
+
+### Security
+
+- Callers cannot weaken or spuriously exhaust the fixed route by supplying an
+  unrelated initial path-length state.
+- This is fixed-shape public certificate policy only; it does not generalize
+  path validation, check revocation, perform TLS or HTTP, authorize OAuth, or
+  grant network authority.
+
 ## 0.7.0 - 2026-11-03
 
 ### Added
