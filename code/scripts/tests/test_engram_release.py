@@ -130,7 +130,10 @@ class ComposeLinuxStateGateTests(unittest.TestCase):
     def test_a_launch_must_still_be_running_when_the_timeout_fires(self) -> None:
         self.assertIn('run-under-xvfb.sh" timeout 15s "$launcher"', self.step)
         self.assertIn('if [[ "$status" -ne 124 ]]; then', self.step)
-        self.assertIn('if grep -F "Mosaic Rust runtime unavailable" "$log"; then', self.step)
+        # The log is shown as plain text and the runtime-unavailable report
+        # fails the step, both in the shared script rather than inline.
+        self.assertIn('code/scripts/mosaic-release-check-log.sh" \\\n', self.step)
+        self.assertNotIn("Mosaic Rust runtime unavailable", self.step)
         self.assertIn("set -euo pipefail", self.step)
 
     def test_no_expression_is_interpolated_into_the_shell(self) -> None:
