@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.0 - 2026-11-03
+
+### Added
+
+- Added an exact-object terminal handoff from one data-driven routed
+  constructed-path signature proof to reviewed Mozilla root selection.
+- Added coverage for successful evidence retention, non-terminal adjacency
+  rejection, and byte-equal detached reviewed-root evidence.
+
+### Security
+
+- The handoff requires the authenticated adjacency to end at the construction's
+  final selected issuer and retains its certificate-wide issuing-CA policy.
+- Reviewed snapshot membership does not grant complete path validity, apply
+  trust-anchor constraints, or authorize TLS, HTTP, OAuth, or network use.
+
 ## 0.2.0 - 2026-11-03
 
 ### Added

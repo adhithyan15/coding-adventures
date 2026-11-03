@@ -1374,6 +1374,23 @@ traversal, construct or validate a complete path, apply name constraints,
 establish reviewed trust, verify a hostname, check revocation, perform TLS or
 HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
 and live-provider readiness remain unavailable.
+A separate bounded terminal follow-up now consumes one data-driven routed
+constructed-path signature proof together with reviewed Mozilla root-selection
+evidence. It succeeds only when the authenticated adjacency ends at the
+construction's final selected issuer and both proofs retain the same exact
+decoded terminal certificate object; a byte-equal independent decode fails
+closed. The non-copyable result retains construction order, certificate-wide
+critical-extension and issuing-CA role policy, certificate-bound RSA
+algorithm/key policy, the selected repository-owned SHA-256, SHA-384, or
+SHA-512 verifier result, and reviewed-root selection together. This is an
+authenticated trust-root handoff, not complete path validity: reviewed
+snapshot membership does not apply anchor or intermediate name constraints,
+prove prior traversal or path-length state, validate target policy, identity,
+or time, check revocation, perform TLS or HTTP, authorize OAuth transport, or
+grant network authority. The pure public-certificate composition performs no
+credential access, signing, storage, clock acquisition, audit event, trace
+emission, I/O, or external effect. Concrete HTTPS and live-provider readiness
+remain unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each

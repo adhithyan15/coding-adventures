@@ -26,12 +26,22 @@ independent decode. A second follow-up advances caller-owned path-length state
 using only the retained complete policy and keeps the authenticated adjacency,
 policy, and advanced state together.
 
+An independent terminal follow-up consumes one routed proof only when its
+adjacency ends at the construction's final selected issuer and reviewed-root
+selection retains that same exact decoded certificate. It keeps the
+construction order, certificate-wide issuing-CA policy, data-driven RSA
+algorithm/key policy, fixed-verifier result, and reviewed Mozilla root
+selection together. A byte-equal certificate from another decode does not
+match.
+
 This package authenticates one projected link and can retain one intermediate
-path-length transition. It does not define full Name comparison, authenticate
-another link, prove prior traversal, apply name constraints, establish a trust
-anchor, validate target identity or time, check revocation, perform TLS or
-HTTP, authorize OAuth transport, or open a network connection. It does not
-make concrete HTTPS or live-provider use ready.
+path-length transition or one reviewed terminal handoff. Reviewed-root
+selection is snapshot membership, not complete trust. The package does not
+define full Name comparison, authenticate another link, prove prior traversal,
+apply trust-anchor or name constraints, validate target identity or time,
+check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
+network connection. It does not make concrete HTTPS or live-provider use
+ready.
 
 ## Validation
 
