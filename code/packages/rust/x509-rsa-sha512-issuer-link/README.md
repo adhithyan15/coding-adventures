@@ -20,6 +20,15 @@ name constraints, construct or validate a complete path, select a reviewed
 trust anchor, check revocation, perform TLS or HTTP, emit audit or trace
 events, or make OAuth HTTPS/live-provider use ready.
 
+A construction-bound entry point consumes one
+`ConstructedX509CertificatePathAdjacentLink`. It derives the target child at
+depth zero or the preceding selected candidate at later depths, authenticates
+that exact child against the exact projected issuer without rerunning Name
+policy, and returns non-copyable evidence retaining the projection and
+validated issuer key. This preserves one construction step's order without
+authenticating another link, applying complete issuer policy, validating a
+path, or establishing trust.
+
 The stronger policy-link entry point consumes certificate-wide critical-
 extension and issuing-CA role evidence plus certificate-bound, data-driven RSA
 algorithm/key evidence. It rejects evidence retained from any other decoded

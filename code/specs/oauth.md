@@ -1114,6 +1114,19 @@ does not route algorithms, recognize every critical extension, check validity,
 path length or name constraints, construct or validate a complete path, select
 trust, check revocation, perform TLS or HTTP, or authorize OAuth transport;
 concrete HTTPS remains unavailable.
+A construction-bound sibling entry point now consumes one exact adjacent-link
+projection from an existing bounded certificate-path construction. It derives
+both endpoints only from that projection's retained depth and construction,
+does not rerun caller Name policy, and applies the same fixed repository-owned
+RSA PKCS #1 v1.5 SHA-512 role, key, and signature checks to that exact pair.
+The non-copyable result retains the complete projection beside the validated
+issuer key, preventing this authenticated link from being detached from its
+selected construction order. This remains one public-data adjacency only: it
+does not retain complete issuer policy, authenticate another depth, validate a
+path, select trust, check constraints, hostname or revocation, perform TLS or
+HTTP, authorize OAuth transport, emit audit or trace events, or cause an
+external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A stronger bounded entry point now requires the exact candidate issuer to be
 retained by both certificate-wide critical-extension/issuing-CA role evidence
 and certificate-bound, data-driven RSA algorithm/key-policy evidence before
