@@ -17,3 +17,9 @@ and repair the selected root itself. On Darwin, scope
 `DEVELOPER_DIR=/Library/Developer/CommandLineTools` to that root's Cabal process;
 on other hosts preserve the ordinary command. Validate every independently
 selectable root, not only the leaf where the first linker failure appeared.
+
+`code/scripts/tests/test_haskell_darwin_cabal_linker.py` now executes every
+Darwin-reachable Haskell `BUILD` front with stubbed `uname` and `cabal` and
+fails if any Cabal call misses the CLT `DEVELOPER_DIR` on Darwin, leaks it to
+other platforms, or changes the command, failure status or skip behaviour.
+Copy the guard from `code/packages/haskell/trig/BUILD` when adding a package.
