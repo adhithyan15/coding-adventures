@@ -201,7 +201,7 @@ func TestTestTriggerFixtureConsumerMapTracksNativeReferences(t *testing.T) {
 			return nil
 		}
 		switch filepath.Ext(entry.Name()) {
-		case ".go", ".rs":
+		case ".cs", ".dart", ".ex", ".exs", ".fs", ".fsx", ".go", ".hs", ".java", ".kt", ".lua", ".ml", ".mli", ".pl", ".pm", ".py", ".rb", ".rs", ".swift", ".ts":
 		default:
 			return nil
 		}
@@ -225,9 +225,13 @@ func TestTestTriggerFixtureConsumerMapTracksNativeReferences(t *testing.T) {
 		if err != nil {
 			return err
 		}
-		isTest := strings.Contains("/"+portable+"/", "/tests/") ||
-			strings.Contains("/"+portable+"/", "/test/") ||
-			strings.Contains(entry.Name(), "Test") || strings.Contains(entry.Name(), "test")
+		lowerPath := strings.ToLower("/" + portable + "/")
+		lowerName := strings.ToLower(entry.Name())
+		isTest := strings.Contains(lowerPath, "/tests/") ||
+			strings.Contains(lowerPath, "/test/") || strings.Contains(lowerPath, "/spec/") ||
+			strings.Contains(lowerPath, "/t/") || strings.Contains(lowerName, "test") ||
+			strings.Contains(lowerName, "spec") ||
+			(filepath.Ext(entry.Name()) == ".rs" && bytes.Contains(data, []byte("#[cfg(test)]")))
 		if entry.Name() == "test_trigger_fixture_ci_selection_test.go" || !isTest {
 			return nil
 		}
