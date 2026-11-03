@@ -30,6 +30,22 @@
 //! history: startup rejects it, and then a reload after an import rejects the
 //! merged result too.
 //!
+//! Two failure shapes are pinned for Electron on Unix, because they decide
+//! whether a name is used up by nothing:
+//!
+//! ```text
+//!   at the name / during the copy     must happen
+//!   --------------------------------  ---------------------------------------
+//!   a link whose target is gone       skipped as taken; nothing is written
+//!                                     through it, so its target stays absent
+//!   the copy fails partway (EFBIG)    no file left at any name; saving off,
+//!                                     and the error reported, not "holds 10"
+//! ```
+//!
+//! Electron gets both from Node's `copyFileSync(…, COPYFILE_EXCL)`: libuv
+//! creates the copy with `O_CREAT | O_EXCL`, which never follows a link, and
+//! removes the destination when the copy fails. These tests hold it to that.
+//!
 //! The tests run the real host files under Node with stand-ins only at the
 //! edges: a fake wasm engine whose `loadSnapshot` accepts exactly the text
 //! `GOOD` and whose `snapshot` returns a fixed demo state, plus (for
@@ -78,7 +94,17 @@ fn stage_engine(root: &Path) {
 /// Run an ES-module `script` with Node from `root`. Returns `None` when Node
 /// is absent, and fails the test when the script itself fails.
 fn run_node(root: &Path, envs: &[(&str, &Path)], script: &str) -> Option<Output> {
-    let mut command = Command::new("node");
+    run_node_with(Command::new("node"), root, envs, script)
+}
+
+/// [`run_node`] with the command to start Node supplied by the caller, so a
+/// test can launch it under a shell that limits it first.
+fn run_node_with(
+    mut command: Command,
+    root: &Path,
+    envs: &[(&str, &Path)],
+    script: &str,
+) -> Option<Output> {
     command
         .current_dir(root)
         .args(["--input-type=module", "-e", script]);
@@ -218,6 +244,70 @@ fn electron_saves_nothing_over_the_snapshot_when_every_quarantine_name_is_taken(
     assert_eq!(fs::read_to_string(&case.snapshot).unwrap(), STUDY_HISTORY);
     assert!(!electron_quarantine(&case, 10).exists());
     assert_eq!(fs::read_to_string(&case.corrupt).unwrap(), "quarantine 0");
+}
+
+/// A link at a quarantine name is taken, even when its target is gone. The
+/// host looks at the name itself (`lstat`), never through it, and claims a
+/// name with an exclusive create that refuses to follow a link: writing
+/// through a dangling link would create its target, wherever it points.
+#[cfg(unix)]
+#[test]
+fn electron_skips_a_dangling_link_at_a_quarantine_name() {
+    let case = electron_case(STUDY_HISTORY);
+    let target = case.root.join("elsewhere/never-created");
+    std::os::unix::fs::symlink(&target, &case.corrupt).unwrap();
+    if start_electron(&case.root, &case.snapshot).is_none() {
+        return;
+    }
+    assert!(!target.exists(), "the copy was written through the link");
+    assert!(fs::symlink_metadata(&case.corrupt)
+        .unwrap()
+        .file_type()
+        .is_symlink());
+    assert_eq!(
+        fs::read_to_string(electron_quarantine(&case, 1)).unwrap(),
+        STUDY_HISTORY
+    );
+    assert_eq!(fs::read_to_string(&case.snapshot).unwrap(), DEMO_STATE);
+}
+
+/// A copy that fails partway leaves nothing behind and uses no name up.
+///
+/// `ulimit -f 0` makes every write to a file fail (EFBIG once SIGXFSZ, which
+/// would otherwise kill Node, is ignored; an ignored signal stays ignored
+/// across `exec`). Pipes are not files, so Node can still report. Left
+/// behind, a partial copy reads as "taken" on the next launch, and repeated
+/// failures walk all ten names until saving is switched off for good with
+/// "already holds 10 unreadable snapshots" and none to show for it.
+#[cfg(unix)]
+#[test]
+fn electron_leaves_no_partial_copy_when_the_copy_fails() {
+    let case = electron_case(STUDY_HISTORY);
+    let mut shell = Command::new("sh");
+    shell.args(["-c", "ulimit -f 0; trap '' XFSZ; exec node \"$@\"", "sh"]);
+    let Some(output) = run_node_with(
+        shell,
+        &case.root,
+        &[("ENGRAM_SNAPSHOT_PATH", &case.snapshot)],
+        "const m = await import('./host.js'); await m.createMosaicHost();",
+    ) else {
+        return;
+    };
+    for index in 0..10 {
+        let name = electron_quarantine(&case, index);
+        assert!(
+            fs::symlink_metadata(&name).is_err(),
+            "a failed copy left {} behind",
+            name.display()
+        );
+    }
+    assert_eq!(fs::read_to_string(&case.snapshot).unwrap(), STUDY_HISTORY);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+    assert!(
+        stderr.contains("could not copy the unreadable snapshot aside"),
+        "the failure was not reported: {stderr}"
+    );
+    assert!(!stderr.contains("already holds"), "{stderr}");
 }
 
 // --------------------------------------------------------------------------
