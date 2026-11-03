@@ -126,9 +126,15 @@ pub const RAW_BYTES_LITERAL_NAME: &str = "\0<raw-byte literal>";
 /// `Var("record")`, and `call_builtin [Bytes(b"record"), …]` then called the
 /// builtin `record` on the JIT, where vm-core refuses the module (PR5b
 /// security review, L2). Every raw-byte literal therefore lifts to
-/// [`RAW_BYTES_LITERAL_NAME`]. `JITCore` also refuses to compile a function
-/// that carries one, and no CIR backend lowers `str_const` itself: the native
-/// columns expand it to byte stores first, and the JIT refuses string ops.
+/// [`RAW_BYTES_LITERAL_NAME`]. That name is not the literal's bytes, so no
+/// CIR consumer may use it as a literal: `JITCore` refuses to compile a
+/// function that carries a `Bytes` operand; `riscv-backend`, the one CIR
+/// backend that lowers `str_const` itself (it takes the `Var` text as the
+/// literal), refuses this name; and `aot-core` / `lang-aot` run
+/// `IIRModule::str_literal_errors` before `aot_specialise`. The x86-64 and
+/// AArch64 columns never see a `str_const` in CIR: `twig-aot` expands it to
+/// byte stores first. (PR5b security re-review, L2-a: the first version of
+/// this comment claimed no CIR backend lowered `str_const`.)
 fn raw_bytes_to_cir(_bytes: &[u8]) -> CIROperand {
     CIROperand::Var(RAW_BYTES_LITERAL_NAME.to_string())
 }

@@ -9,7 +9,7 @@ use std::collections::{HashMap, HashSet};
 use std::fmt;
 
 use jit_core::backend::{Backend, FunctionContext};
-use jit_core::cir::{CIRInstr, CIROperand};
+use jit_core::cir::{CIRInstr, CIROperand, RAW_BYTES_LITERAL_NAME};
 use riscv_encoder::{
     assemble, encode_add, encode_addi, encode_and, encode_andi, encode_beq, encode_bne,
     encode_div, encode_divu, encode_ecall, encode_jal, encode_lui, encode_mul, encode_mulhu,
@@ -581,6 +581,21 @@ impl ByteAllocationLayout {
                             function: function.context.name.to_owned(),
                             error: Box::new(BackendError::InvalidOperand(
                                 "str_const requires a str destination".to_owned(),
+                            )),
+                        });
+                    }
+                    // LANG83 PR5b: CIR has no byte-string operand, so every raw-byte
+                    // `Operand::Bytes` literal lifts to the one reserved name
+                    // `RAW_BYTES_LITERAL_NAME`. Taking that name's text as the
+                    // literal would emit "\0<raw-byte literal>" for every such
+                    // literal (PR5b security re-review, L2-a), so it is refused.
+                    if literal == RAW_BYTES_LITERAL_NAME {
+                        return Err(BackendError::InFunction {
+                            function: function.context.name.to_owned(),
+                            error: Box::new(BackendError::InvalidOperand(
+                                "str_const of a raw-byte (Operand::Bytes) literal is not supported \
+                                 on this backend"
+                                    .to_owned(),
                             )),
                         });
                     }

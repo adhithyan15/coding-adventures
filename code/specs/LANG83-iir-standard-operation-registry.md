@@ -1321,12 +1321,30 @@ a Rust `String`:
   `IIRModule::bytes_operand_errors()`. Every column runs it before it
   compiles or runs a module, through `IIRModule::str_literal_errors()` (the
   ceiling checks plus this one), in each place that called
-  `str_ceiling_errors()`; `validate()` includes it too. The JIT refuses to
-  compile a function that carries a `Bytes` operand, and CIR never spells
-  one as a name: it lifts to a reserved register name holding a NUL. (A first
-  draft lifted a UTF-8 `Bytes(b"record")` to `Var("record")`, so on the JIT
+  `str_ceiling_errors()`; `validate()` includes it too. So do `aot-core`'s
+  `AOTCore::compile` and `lang-aot`'s source pipelines, before
+  `aot_specialise`.
+- **In CIR.** CIR has no byte-string operand, and a `Str` literal travels as
+  a `Var` naming its text, which is also how a name travels. A `Bytes`
+  literal therefore lifts to one reserved name, `RAW_BYTES_LITERAL_NAME`
+  (it holds a NUL). That name is **not** the literal's bytes, so no CIR
+  consumer may use it as a literal or a name:
+  - the JIT refuses to compile a function that carries a `Bytes` operand;
+  - `riscv-backend`, the one CIR backend that lowers `str_const` itself
+    (taking the `Var` text as the literal), refuses the reserved name;
+  - the x86-64 and AArch64 columns never see a `str_const` in CIR, because
+    `twig-aot` expands it to byte stores first.
+
+  Raw-byte literals are therefore not supported on the RISC-V column. A
+  `Str` literal whose text is exactly the reserved name is refused there
+  too: a false refusal, never a miscompile.
+
+  How this was found, in two security reviews: a first draft lifted a UTF-8
+  `Bytes(b"record")` to `Var("record")`, so on the JIT
   `call_builtin [Bytes(b"record")]` called the builtin `record` while vm-core
-  refused the module. PR5b security review, L2.)
+  refused the module (L2). The fix lifted every `Bytes` to the reserved name.
+  A re-review found that `riscv-backend` then emitted the name's text as the
+  literal, the same text for every raw-byte literal (L2-a).
 - **One accessor.** `Operand::as_lit_bytes()` returns the bytes of a `Str` or
   a `Bytes` literal. `as_str_lit()` keeps answering `Str` only, so a name can
   never be a byte literal. Every fold table keys on bytes, so `Str("é")` and

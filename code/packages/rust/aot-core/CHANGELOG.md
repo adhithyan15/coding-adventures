@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — strings are bytes
 
+- `AOTCore::compile` runs `IIRModule::str_literal_errors()` before `aot_specialise` and returns the new `AOTError::InvalidModule` for a literal over the ceiling or a misplaced raw-byte literal (security re-review L2-a). Test `compile_refuses_a_module_that_breaks_the_string_literal_rules`, which fails on the previous `compile`.
 - `Operand::Bytes` (LANG83 PR5b): inferred as `"str"`, no concrete numeric type in the specialiser, and written to the runtime JSON as `{"bytes": [...]}` (it need not be UTF-8, so it cannot be a JSON string).
 
 ## 0.3.0 - 2026-07-18 (`mov` keeps its `any` type — GC-root correctness)

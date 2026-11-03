@@ -44,6 +44,14 @@ pub enum AOTError {
     ///
     /// `message` contains the specific read failure reason.
     Snapshot { message: String },
+
+    /// The module breaks a rule every column checks before compiling it
+    /// (`IIRModule::str_literal_errors`: a literal over the string ceiling, or
+    /// a raw-byte `Operand::Bytes` outside `str_const`'s literal). Checked
+    /// before `aot_specialise`, which lifts every raw-byte literal to a
+    /// reserved name that is not its bytes (LANG83 PR5b security re-review,
+    /// L2-a).
+    InvalidModule { message: String },
 }
 
 impl AOTError {
@@ -62,6 +70,7 @@ impl AOTError {
         match self {
             AOTError::Backend { message } => message,
             AOTError::Snapshot { message } => message,
+            AOTError::InvalidModule { message } => message,
         }
     }
 }
@@ -71,6 +80,7 @@ impl fmt::Display for AOTError {
         match self {
             AOTError::Backend { message } => write!(f, "AOT backend error: {}", message),
             AOTError::Snapshot { message } => write!(f, "AOT snapshot error: {}", message),
+            AOTError::InvalidModule { message } => write!(f, "AOT invalid module: {}", message),
         }
     }
 }

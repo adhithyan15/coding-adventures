@@ -907,7 +907,28 @@ fn compile_request_to_iir(
     module_name: &str,
 ) -> Result<IIRModule, LangAotError> {
     let request = request.into();
-    compile_source_to_iir_at(request.language, request.release(), source, module_name)
+    let module = compile_source_to_iir_at(request.language, request.release(), source, module_name)?;
+    check_string_literals(&module)?;
+    Ok(module)
+}
+
+/// The string-literal checks every column runs (`IIRModule::str_literal_errors`:
+/// a literal over the string ceiling, a raw-byte `Operand::Bytes` outside
+/// `str_const`'s literal), run on every module a source pipeline builds.
+///
+/// The native pipelines below hand each function straight to
+/// `aot_core::specialise::aot_specialise`, which lifts a raw-byte literal to a
+/// reserved CIR name that is not its bytes, and no other check stands in
+/// front of those backends (LANG83 PR5b security re-review, L2-a). The
+/// pipelines with their own validator (WASM, JVM, CLR, BEAM, LLVM, twig-aot)
+/// run the same check again, which costs one pass.
+fn check_string_literals(module: &IIRModule) -> Result<(), LangAotError> {
+    let errors = module.str_literal_errors();
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(LangAotError::AotError(twig_aot::AotError::Compile(errors.join("; "))))
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -3373,6 +3394,23 @@ mod tests {
     /// This is what makes COBOL's inherent scale-12 intermediate (`10^12`)
     /// expressible on the real-CoreCLR column: narrowed to `i32` the backend
     /// could only — correctly — refuse the literal.
+    /// LANG83 PR5b (security re-review, L2-a): the source pipelines refuse a
+    /// module that breaks the string-literal rules before any function reaches
+    /// `aot_specialise`.
+    #[test]
+    fn source_pipelines_check_the_string_literal_rules() {
+        use interpreter_ir::{IIRFunction, IIRInstr, Operand};
+        let mut module = IIRModule::new("m", "test");
+        module.add_or_replace(IIRFunction::new("main", vec![], "void", vec![
+            IIRInstr::new("call_builtin", None, vec![Operand::Bytes(b"record".to_vec())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        let err = check_string_literals(&module).unwrap_err();
+        assert!(format!("{err}").contains("BytesOperand"), "{err}");
+        let ok = compile_request_to_iir(Language::Twig, "(define (main) 0)", "m").expect("a Twig module");
+        assert!(check_string_literals(&ok).is_ok());
+    }
+
     #[test]
     fn cil_concretization_narrows_i64_only_for_the_simulator_path() {
         let scalar = || {
