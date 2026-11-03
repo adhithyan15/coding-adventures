@@ -2919,13 +2919,72 @@
     },
     {
       "id": "build-tool-rust-cargo-test-trigger-selection-parity",
-      "title": "Adopt bounded Cargo test-trigger selection in the Rust build tool",
+      "title": "Adopt the bounded Cargo test-trigger selection core in the Rust build tool",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
       "registered_at": "2026-10-30T12:39:41Z",
-      "notes": "Discovered during exact-head review of the prepared Rust graph/diff adoption. Audit the established Go build-tool test-trigger resolver contract, define the smallest authority-free Cargo selection boundary, and port its repository-input, dev-dependency, orphan, exclusion, stable-diagnostic, and resource-ceiling behavior into the Rust build tool with neutral fixtures. Keep command execution, package graph/diff implementation, platform process authority, and unrelated Cargo BUILD validation outside this owner; prioritize it only after the independently prepared Lua and Rust graph/diff owners are published or reprioritized."
+      "notes": "Discovered during exact-head review of the prepared Rust graph/diff adoption and narrowed by the 2026-11-02 Rust/Go contract audit. Implement only the authority-free selection evaluator over already validated package names, graph edges, resolved trigger pairs, and changed packages: dependent closure, exactly one trigger hop, then prerequisite closure. Return deterministic sorted results; reuse the Rust graph/diff ceilings of 4096 packages and 16384 graph edges, add a 16384 trigger-pair ceiling, and consume a small neutral fixture family shared with Go. Keep Cargo parsing, filesystem identity, orphan/config policy, discovery, command execution, and CLI integration in the separately recorded follow-up owners."
+    },
+    {
+      "id": "build-tool-neutral-cargo-manifest-trigger-snapshot-contract",
+      "title": "Define the neutral strict Cargo manifest trigger snapshot contract",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-rust-cargo-test-trigger-selection-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit after the original test-trigger owner proved too broad for one independently reviewable slice. Define a shared authority-free strict TOML subset and snapshot fixtures for trigger tables, link-table screening, BOM and malformed-shape diagnostics, and the established 1 MiB manifest, 64 KiB continued-entry, and 256-line continuation ceilings. Do not open files, resolve paths or symlinks, consult environment state, or integrate a language-specific CLI in this owner."
+    },
+    {
+      "id": "build-tool-rust-cargo-trigger-crate-closure-snapshot-parity",
+      "title": "Adopt pure Cargo trigger crate-closure snapshots in the Rust build tool",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-neutral-cargo-manifest-trigger-snapshot-contract"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Implement the authority-free lexical package, nested-crate, orphan, patch, Cargo-config, and exemption-ledger snapshot resolver over already captured inputs, with a 16-level depth ceiling plus memoized cycle and diamond handling. Keep native reads, filesystem identity, symlink handling, process authority, package execution, and CLI integration outside this owner."
+    },
+    {
+      "id": "build-tool-rust-cargo-trigger-native-input-adapter",
+      "title": "Adopt the exact-identity native Cargo trigger input adapter in the Rust build tool",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-rust-cargo-trigger-crate-closure-snapshot-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Add regular no-follow stable reads, exact case and Unicode spelling, symlink/junction/reparse identity, Cargo ancestor config inspection, and the orphan exemption ledger before feeding immutable snapshots into the pure resolver. Refuse source redirection, local git URLs, replace, unsupported patch and workspace inheritance fail-closed with stable diagnostics; keep process execution and final CLI selection integration outside this owner."
+    },
+    {
+      "id": "build-tool-rust-cargo-trigger-cli-integration",
+      "title": "Integrate Cargo test triggers into Rust build-tool change selection",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-rust-cargo-test-trigger-selection-parity",
+        "build-tool-rust-cargo-trigger-native-input-adapter"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Discover and snapshot the full package universe before language filtering, integrate the reviewed trigger relation with stable exit 2, apply exactly one trigger hop after dependent closure and before prerequisite scheduling, and add end-to-end neutral fixtures. Do not expand command execution authority or unrelated Cargo BUILD validation."
+    },
+    {
+      "id": "build-tool-rust-repository-input-consumer-selection-parity",
+      "title": "Adopt repository-input consumer selection in the Rust build tool",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded separately by the 2026-11-03 Rust/Go contract audit because Go repository-input consumers are not Cargo test triggers and Rust currently has no counterpart. Define and adopt a bounded authority-free consumer-selection relation for repository-wide inputs without conflating it with build-graph edges or Cargo dev-dependencies; preserve one-hop consumer semantics and keep unrelated command authority outside this owner."
     },
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",
