@@ -20303,12 +20303,3 @@ all-target tests, Clippy with warnings denied, the focused Go witness, format
 and diff checks, state-graph integrity, authority boundary, and ignored-file
 hygiene. Keep it unpublished while Lua CLI validation PR #18842 occupies the
 publication slot.
-
-That exact clean-checkout review also found a distinct Go baseline: full
-Go build-tool tests expect `code/packages/rust/engram-core-wasm`, but that path
-is absent while tracked `code/programs/mosaic/engram-app/Cargo.toml` references
-it. Pending owner `build-tool-go-test-trigger-clean-checkout-hermeticity` must
-make the two real-repository witnesses hermetic with neutral captured inputs,
-or register and validate the generated dependency through the existing orphan
-exemption contract. It must not weaken the strict Cargo resolver's orphan,
-identity, symlink, config, source, patch, workspace, or ceiling checks.
