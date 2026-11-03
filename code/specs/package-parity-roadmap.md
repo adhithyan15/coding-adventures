@@ -20303,3 +20303,14 @@ exact merged tree passes 11 focused CLI cases, 242 complete Lua
 build-tool cases, every Lua syntax check, 1,789 lesson shards, and 11 quirk
 shards with zero problems. Independent security and publication review remain
 required before publication.
+
+#### Lua CLI argument validation PR #18842 publication receipt
+
+Publish independently reviewed current-main head
+`a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a` as ready PR #18842 over exact
+base `4cedfcff47130c26823f2f54c1f1b333b0e98481` at
+`2026-11-03T06:03:19Z`. GitHub reports the PR mergeable; fresh CI, CodeQL, and
+human-language detection checks are queued. Keep guarded squash auto-merge
+disabled until this durable receipt is committed, pushed normally, and
+independently reviewed, then require every exact-head check to complete
+terminal acceptable while GitHub still reports the PR mergeable.

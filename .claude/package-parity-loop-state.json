@@ -16,14 +16,16 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18842,
+  "active_prs": [
+    18842
+  ],
   "last_ci_action": {
-    "observed_at": "2026-10-31T00:10:47Z",
-    "pr_number": 18756,
-    "head_revision": "1daa366ad4f3f4c100086b7ca32aee353778a2da",
-    "action": "All 37 checks on exact independently reviewed Lua Windows discovery fallback head 1daa366ad4f3f4c100086b7ca32aee353778a2da completed terminal acceptable: 13 succeeded and 24 were expected skips. PR #18756 was squash-merged externally at 2026-10-31T00:10:47Z as d2c289290d885da155befaeb6f394d81fa738d41. The receipt is an ancestor of current origin/main, the completed worktree is archived, and a fresh priority pass selects the already implemented Lua CLI argument-validation repair next.",
-    "manual_merge": true
+    "observed_at": "2026-11-03T06:03:19Z",
+    "pr_number": 18842,
+    "head_revision": "a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a",
+    "action": "Independently reviewed current-main Lua CLI argument-validation head a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a opened as ready PR #18842 over exact base 4cedfcff47130c26823f2f54c1f1b333b0e98481 at 2026-11-03T06:03:19Z. GitHub reports it mergeable and fresh exact-head CI, CodeQL, and human-language detection are queued. Auto-merge remains disabled until every check on the final lifecycle head is terminal acceptable and GitHub still reports the PR mergeable.",
+    "manual_merge": false
   },
   "last_inventory": {
     "revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
@@ -2789,10 +2791,15 @@
     {
       "id": "build-tool-lua-cli-argument-validation-hardening",
       "title": "Reject unknown and value-less Lua build-tool CLI options",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/build-tool-lua-cli-args-hardening",
-      "pr_number": null,
+      "pr_number": 18842,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18842",
+      "pr_opened_at": "2026-11-03T06:03:19Z",
+      "publication_head": "a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a",
+      "publication_base": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
+      "publication_notes": "The independently reviewed current-main head opened as ready PR #18842. GitHub reports it mergeable; fresh CI, CodeQL, and human-language detection checks are queued. Guarded squash auto-merge remains disabled until the durable PR receipt is pushed and reviewed and every check on that resulting exact head is terminal acceptable while GitHub still reports it mergeable.",
       "registered_at": "2026-10-30T20:40:43Z",
       "selection_revision": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
       "selection_notes": "Selected after Lua fallback PR #18756 completed 37 exact-head checks acceptably and was externally squash-merged. This concrete fail-open CLI defect was already under local implementation, has no dependency on the completed fallback internals, and ranks ahead of the broader Rust Cargo test-trigger follow-up because malformed invocations can silently target the wrong root or succeed after selecting no packages.",
