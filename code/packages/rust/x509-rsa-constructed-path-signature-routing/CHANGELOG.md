@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.0 - 2026-11-03
+
+### Added
+
+- Added exact-object binding between complete target-server certificate policy
+  and one routed target -> intermediate -> reviewed-root construction.
+- Added coverage for retained policy/path evidence and rejection of policy for
+  a byte-equal independently decoded target.
+
+### Security
+
+- The binding prevents complete identity, validity, purpose, end-entity role,
+  critical-extension, or algorithm policy from being attached to another
+  construction's target.
+- The result does not apply anchor or intermediate constraints, check
+  revocation, or authorize TLS, HTTP, OAuth, or network use.
+
 ## 0.4.0 - 2026-11-03
 
 ### Added

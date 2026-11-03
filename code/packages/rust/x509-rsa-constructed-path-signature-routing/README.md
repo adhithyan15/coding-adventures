@@ -41,12 +41,21 @@ signature proofs, and keeps the intermediate's complete policy and advanced
 path-length state with the reviewed-root handoff. Proofs from a separately
 constructed path fail even when they select the same decoded certificates.
 
+A target-policy follow-up consumes that routed reviewed construction together
+with complete server-certificate policy. It requires the policy to retain the
+construction's exact decoded target object and keeps both non-copyable inputs
+together. A byte-equal independent decode does not match, so identity,
+validity, purpose, end-entity role, critical-extension, and algorithm policy
+cannot be spliced onto another construction.
+
 Reviewed-root selection is snapshot membership, not complete trust. The
 fixed-shape result does not generalize to additional intermediates, derive the
 initial path-length cap from anchor policy, define full Name comparison, apply
-trust-anchor or name constraints, validate target identity or time, check
-revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
-connection. It does not make concrete HTTPS or live-provider use ready.
+trust-anchor or name constraints, check revocation, perform TLS or HTTP,
+authorize OAuth transport, or open a network connection. Target identity,
+time, and purpose are retained only inside the complete server policy and do
+not make the whole path valid. This does not make concrete HTTPS or live-
+provider use ready.
 
 ## Validation
 

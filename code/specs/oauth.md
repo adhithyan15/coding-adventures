@@ -1408,6 +1408,21 @@ or HTTP, authorize OAuth transport, or grant network authority. The pure
 public-certificate composition performs no credential access, signing,
 storage, clock acquisition, audit event, trace emission, I/O, or external
 effect. Concrete HTTPS and live-provider readiness remain unavailable.
+A bounded target-policy follow-up now consumes that data-driven routed
+two-link result together with complete server-certificate policy. It succeeds
+only when the policy retains the exact decoded target object in the retained
+construction; policy for a byte-equal independent decode fails closed. The
+non-copyable result keeps complete target critical-extension, algorithm,
+end-entity role, SAN-only identity, explicit-time validity, and purpose policy
+together with both routed signature results, complete intermediate policy,
+advanced caller-owned path-length state, and reviewed Mozilla root selection.
+This pure public-certificate composition performs no credential access,
+signing, storage, clock acquisition, audit event, trace emission, I/O, or
+external effect. It does not derive the initial path-length cap from anchor
+policy, apply anchor or intermediate constraints, check revocation, generalize
+path validation, perform TLS or HTTP, authorize OAuth transport, or grant
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each

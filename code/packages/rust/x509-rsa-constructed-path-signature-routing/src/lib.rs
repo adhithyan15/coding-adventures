@@ -27,6 +27,7 @@ use x509_rsa_signature_routing::{
     verify_x509_rsa_policy_signature, VerifiedX509RsaPolicySignature, X509RsaSignatureRoute,
     X509RsaSignatureRoutingErrorKind,
 };
+use x509_server_certificate_policy::ValidatedX509ServerCertificatePolicy;
 use x509_webpki_root_anchor_selection::SelectedReviewedWebPkiRootAnchor;
 
 /// Stable, payload-free constructed-path RSA routing failures.
@@ -190,6 +191,43 @@ impl fmt::Display for X509RsaConstructedPathReviewedIntermediatePathError {
 }
 
 impl std::error::Error for X509RsaConstructedPathReviewedIntermediatePathError {}
+
+/// Stable, payload-free reviewed server-path binding failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaConstructedPathReviewedServerPolicyErrorKind {
+    /// The server policy and constructed path retain different target objects.
+    EvidenceMismatch,
+}
+
+/// A redacted reviewed server-path binding failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaConstructedPathReviewedServerPolicyError {
+    kind: X509RsaConstructedPathReviewedServerPolicyErrorKind,
+}
+
+impl X509RsaConstructedPathReviewedServerPolicyError {
+    const fn new(kind: X509RsaConstructedPathReviewedServerPolicyErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaConstructedPathReviewedServerPolicyErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaConstructedPathReviewedServerPolicyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA constructed-path reviewed server policy error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaConstructedPathReviewedServerPolicyError {}
 
 /// Non-copyable evidence authenticating one exact constructed-path adjacency.
 ///
@@ -384,6 +422,72 @@ impl<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
 impl fmt::Debug for BoundX509RsaConstructedReviewedIntermediatePath<'_, '_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("BoundX509RsaConstructedReviewedIntermediatePath")
+    }
+}
+
+/// Non-copyable server policy bound to one routed reviewed two-link path.
+///
+/// The reviewed path retains both authenticated adjacencies, complete
+/// intermediate policy, advanced path-length state, and reviewed-root
+/// selection. The server policy retains complete target critical-extension,
+/// algorithm, end-entity role, SAN-only identity, explicit-time validity, and
+/// purpose policy for the construction's exact decoded target. This does not
+/// apply anchor or intermediate constraints, check revocation, or authorize
+/// TLS, HTTP, OAuth, or network use.
+pub struct BoundX509RsaConstructedReviewedIntermediateServerPath<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    server_policy: ValidatedX509ServerCertificatePolicy<'server_certificate, 'target_encoded>,
+    reviewed_path: BoundX509RsaConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+}
+
+impl<'path, 'server_certificate, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    BoundX509RsaConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return complete server policy for the construction's exact target.
+    #[must_use]
+    pub const fn server_policy(
+        &self,
+    ) -> &ValidatedX509ServerCertificatePolicy<'server_certificate, 'target_encoded> {
+        &self.server_policy
+    }
+
+    /// Return the authenticated reviewed two-link construction.
+    #[must_use]
+    pub const fn reviewed_path(
+        &self,
+    ) -> &BoundX509RsaConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.reviewed_path
+    }
+}
+
+impl fmt::Debug for BoundX509RsaConstructedReviewedIntermediateServerPath<'_, '_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509RsaConstructedReviewedIntermediateServerPath")
     }
 }
 
@@ -1067,6 +1171,59 @@ pub fn bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor<
     Ok(BoundX509RsaConstructedReviewedIntermediatePath {
         authenticated_intermediate,
         reviewed_terminal,
+    })
+}
+
+/// Bind complete target-server policy to one routed reviewed construction.
+///
+/// The policy certificate must be the exact decoded target object retained by
+/// the constructed path. Matching encoded bytes from an independent decode are
+/// insufficient. Success consumes and retains both complete inputs. This is
+/// pure evidence composition and adds no constraints, revocation, transport,
+/// OAuth, or network authority.
+pub fn bind_x509_rsa_constructed_reviewed_intermediate_server_path<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    server_policy: ValidatedX509ServerCertificatePolicy<'server_certificate, 'target_encoded>,
+    reviewed_path: BoundX509RsaConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> Result<
+    BoundX509RsaConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaConstructedPathReviewedServerPolicyError,
+> {
+    let constructed_target = reviewed_path
+        .authenticated_intermediate()
+        .authenticated_intermediate()
+        .verified_signature()
+        .adjacent_link()
+        .constructed_path()
+        .target_certificate();
+    if !same_exact_object(server_policy.certificate(), constructed_target) {
+        return Err(X509RsaConstructedPathReviewedServerPolicyError::new(
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    Ok(BoundX509RsaConstructedReviewedIntermediateServerPath {
+        server_policy,
+        reviewed_path,
     })
 }
 
