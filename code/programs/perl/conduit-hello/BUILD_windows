@@ -1,5 +1,2 @@
 # build-tool: deps=perl/conduit
-# Each line runs as its own `cmd /C`, so no sh syntax. The perl on PATH is the
-# one that loads the extension, so it is the one asked for $Config{dlext}.
-cd ..\..\..\packages\perl\conduit && cargo build --release && perl -MConfig -MFile::Path=make_path -MFile::Copy=copy -e "make_path('lib/auto/CodingAdventures/Conduit'); copy('target/release/Conduit.dll', 'lib/auto/CodingAdventures/Conduit/Conduit.' . $Config{dlext}) or die qq{cannot stage Conduit.dll: $!\n}"
-perl -c hello.pl && prove -v t/
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\check-perl-extension-windows.ps1 -ExtensionName Conduit -ExtensionDir ..\..\..\packages\perl\conduit -Program hello.pl

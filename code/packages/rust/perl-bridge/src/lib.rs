@@ -246,6 +246,8 @@ extern "C" {
         argc: c_int,
         err_out: *mut *mut c_char,
     ) -> *mut SV;
+    #[link_name = "perl_bridge_free_error"]
+    fn raw_free_error(message: *mut c_char);
     #[link_name = "perl_bridge_newHV"]
     fn raw_newHV() -> *mut HV;
     #[link_name = "perl_bridge_hv_store"]
@@ -526,11 +528,9 @@ pub unsafe fn call_coderef(coderef: *mut SV, args: &[*mut SV]) -> CallResult {
     );
     if !err.is_null() {
         let msg = std::ffi::CStr::from_ptr(err).to_string_lossy().into_owned();
-        // The shim allocated this with malloc; free it with the matching free.
-        extern "C" {
-            fn free(ptr: *mut c_void);
-        }
-        free(err as *mut c_void);
+        // Perl's headers may remap malloc/free to the interpreter's allocator.
+        // Release through the shim, rather than a different Windows CRT heap.
+        raw_free_error(err);
         return CallResult::Died(msg);
     }
     if result.is_null() {

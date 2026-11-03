@@ -1,5 +1,2 @@
-# Each line runs as its own `cmd /C`, so no sh syntax. The perl on PATH is the
-# one prove loads the extension into, so it is the one asked for $Config{dlext}.
-cargo build --release
-perl -MConfig -MFile::Path=make_path -MFile::Copy=copy -e "make_path('lib/auto/CodingAdventures/Conduit'); copy('target/release/Conduit.dll', 'lib/auto/CodingAdventures/Conduit/Conduit.' . $Config{dlext}) or die qq{cannot stage Conduit.dll: $!\n}"
-prove -I"%CD%\lib" -v t/
+# Keep Cargo, staging and prove on the same native Windows Perl under Git Bash.
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\check-perl-extension-windows.ps1 -ExtensionName Conduit
