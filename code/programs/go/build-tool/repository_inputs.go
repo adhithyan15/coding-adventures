@@ -82,6 +82,21 @@ type repositoryInputConsumer struct {
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name: "perl/conduit", language: "perl",
+		inputs:  "the native Perl build helper and shared Rust XS bridge",
+		matches: isNativePerlBuildInput,
+	},
+	{
+		name: "perl/irc-server-native", language: "perl",
+		inputs:  "the native Perl build helper and shared Rust XS bridge",
+		matches: isNativePerlBuildInput,
+	},
+	{
+		name: "perl/programs/conduit-hello", language: "perl",
+		inputs:  "the native Perl build helper and shared Rust XS bridge",
+		matches: isNativePerlBuildInput,
+	},
+	{
 		name:     "rust/ct-compare",
 		language: "rust",
 		inputs:   "the CT01 corpus, L0 transport and independent projection",
@@ -201,6 +216,19 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the TF01 self-corpus and its Python reference",
 		matches:  isTestBootstrapInput,
 	},
+}
+
+// These Perl packages load Rust cdylibs and share a helper outside their own
+// roots. Editing only the helper or bridge must still exercise the real XS
+// consumers, rather than produce an empty incremental build plan.
+func isNativePerlBuildInput(changed string) bool {
+	switch changed {
+	case "code/scripts/check-perl-extension-windows.ps1",
+		"code/packages/rust/perl-bridge/Cargo.toml",
+		"code/packages/rust/perl-bridge/build.rs":
+		return true
+	}
+	return strings.HasPrefix(changed, "code/packages/rust/perl-bridge/src/")
 }
 
 // CT01 is embedded in an L0 test, so edits outside the crate must still run it.

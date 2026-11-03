@@ -27,3 +27,6 @@ sequentially: copying a staged DLL while another suite has loaded it fails.
 Git Bash also puts its MSYS Perl ahead of native Strawberry in inherited PATH.
 Select native Perl once for Cargo, staging and prove; choosing it only in the
 Rust build script leaves the test loader on the wrong interpreter.
+Register shared helpers and cross-language bridge sources as external inputs
+of their runtime consumers. A helper outside package roots otherwise selects
+no packages when it is the only changed file, silently skipping native tests.

@@ -61,7 +61,7 @@ build script and source directory as external inputs of all three Perl
 consumers: Conduit, IRC Server Native and Conduit Hello. Editing one of those
 inputs must select the consumers even when no Perl package file changed.
 Missing consumers fail closed, and single-language runs retain their language
-filter. Documentation and lookalike helper filenames are not build inputs.
+filter. Crate-root documentation and lookalike helper filenames are not build inputs.
 
 ## Architecture
 

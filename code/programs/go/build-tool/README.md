@@ -2,6 +2,12 @@
 
 The **primary build tool** for the coding-adventures monorepo. Compiled to a native binary for fast, dependency-free CI execution.
 
+Changes to the shared native Perl Windows helper or the Rust `perl-bridge`
+manifest, build script and source directory also select Conduit, IRC Server
+Native and Conduit Hello for all/Perl builds. These external inputs must still
+run the real XS consumers when no Perl package file changed. Missing consumers
+fail closed; other language filters and lookalike helper paths stay separate.
+
 Changes to the exact `code/specs/fixtures/starlark-opcode-provider-v1/cases.json`
 path also schedule the committed `go/starlark-compiler` native conformance reader
 on every platform for all/Go invocations. Nearby schema/docs paths and other

@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — Native Perl external build inputs (#18844)
+
+- Helper-only and shared `perl-bridge` manifest/build/source edits select
+  Conduit, IRC Server Native and Conduit Hello as runtime test consumers.
+  Missing consumers fail closed, language filters are retained, and docs or
+  lookalike paths do not trigger the mapping. The regression test fails without
+  registration because a helper-only edit previously selected no packages.
+
 ## 2026-11-02 — `windows-posix-syntax`: BUILD_windows lines must be cmd syntax
 
 - **New `-validate-build-files` rule, `windows-posix-syntax`**

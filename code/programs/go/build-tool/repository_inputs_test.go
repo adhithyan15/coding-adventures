@@ -178,6 +178,49 @@ func TestTestBootstrapCorpusSelectsTheHarness(t *testing.T) {
 	}
 }
 
+func TestNativePerlBuildInputsSelectTheirRuntimeConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "perl/conduit", Language: "perl"},
+		{Name: "perl/irc-server-native", Language: "perl"},
+		{Name: "perl/programs/conduit-hello", Language: "perl"},
+	}
+	want := map[string]bool{
+		"perl/conduit":                true,
+		"perl/irc-server-native":      true,
+		"perl/programs/conduit-hello": true,
+	}
+	for _, input := range []string{
+		"code/scripts/check-perl-extension-windows.ps1",
+		"code/packages/rust/perl-bridge/Cargo.toml",
+		"code/packages/rust/perl-bridge/build.rs",
+		"code/packages/rust/perl-bridge/src/perl_bridge_shim.c",
+		"code/packages/rust/perl-bridge/src/lib.rs",
+	} {
+		for _, language := range []string{"all", "perl"} {
+			got, err := repositoryInputConsumersForChange([]string{input}, packages, language)
+			if err != nil || !reflect.DeepEqual(got, want) {
+				t.Fatalf("%s (%s): got %v, err %v; want all native Perl consumers", input, language, got, err)
+			}
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:2], "all"); err == nil {
+			t.Fatalf("%s: a missing runtime consumer must fail closed", input)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{input}, nil, "go"); err != nil || len(got) != 0 {
+			t.Fatalf("%s: another language should not select Perl: %v, %v", input, got, err)
+		}
+	}
+	for _, other := range []string{
+		"code/scripts/check-perl-extension-windows.ps1.bak",
+		"code/packages/rust/perl-bridge/README.md",
+		"code/packages/rust/perl-bridge-other/src/lib.rs",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{other}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Fatalf("unrelated input %s selected %v: %v", other, got, err)
+		}
+	}
+}
+
 func TestRepositoryInputConsumersForChange(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/mosaic-package-resolver", Language: "rust"},
