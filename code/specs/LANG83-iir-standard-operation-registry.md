@@ -1218,6 +1218,8 @@ section takes precedence.
    | native x86-64 / AArch64 | `twig-aot`'s `prepare_module_for_aot` (every module compile), and `compile_typed_module_to_arm64_bytes`, which skips that step | `AotError::Compile` |
    | VM | `vm-core`'s load-time check, beside the frame-register check, before any instruction runs | `VMError::InvalidModule { errors }` (new) |
 
+   `twig-vm` (not a column, but it runs the same E4 ops) refuses the same
+   modules when a run starts, with `RunError::InvalidModule { errors }`.
    The columns call only the ceiling checks, not the whole of `validate()`:
    its other checks (duplicate names, the entry point) are not every column's
    contract today, and widening them is a separate change. The JIT still
@@ -1245,8 +1247,13 @@ section takes precedence.
      builtin uses the registry ceiling (`dynval_runtime::builtins::STR_MAX_BYTES`,
      equal to `interpreter_ir::STR_MAX_BYTES`), and `string_append_within`
      takes an explicit one.
+   - `make-string n ch`, the other builtin that grows a string, returns
+     `Trap.Overflow` when `n × len_utf8(ch)` exceeds the ceiling or overflows,
+     checked before it allocates. A code point that is not a Unicode scalar
+     value is a `TypeError`; it used to be truncated to 32 bits.
+     `make_string_within` takes an explicit ceiling.
    - twig-vm, the VM that runs these builtins on IIR, passes the module's
-     `str_ceiling()` to `string-append` on every path that calls a builtin:
+     `str_ceiling()` to `string-append` and `make-string` on every path that calls a builtin:
      `call_builtin`, and a builtin closure called through `apply_closure`,
      `call_closure` or a higher-order list operation. It turns
      `RuntimeError::Trap { kind }` into `RunError::Trap { kind }`. So Twig's
@@ -1266,6 +1273,24 @@ section takes precedence.
    now reads "a literal join past the ceiling is not folded; the run-time check
    raises it". The behaviour does not change: the same bytes are written before
    the same `Trap.Overflow`.
+
+   The security review of this change found that the WASM fold table is keyed
+   by variable name, and that a concat or slice that was *not* folded left
+   any literal an earlier write had given its destination in the table. With
+   `d = str_const "x"` hinted `"bool"` (which validation accepts), then
+   `d = a ++ a` past the ceiling, `str_len d` folded to 1 and the trap never
+   ran. Three changes close it. A variable written more than once is a
+   run-time string whatever the write's type hint (the analysis used to count
+   only `"str"`-hinted writes). A concat or slice that is not folded removes
+   its destination from the table. And the lowering checks, in release builds
+   too, that a folded concat's literal is exactly its operands' literals
+   joined and within the ceiling; if not, it refuses to compile. The
+   out-of-range literal `str_slice` of such a rewritten variable read the
+   stale literal before PR5a's follow-ups too; it now raises `Trap.Bounds`.
+   LLVM's validator refuses a `str_const` that is not hinted `"str"`, and its
+   lowering tracks literals in program order. twig-aot registers no literal
+   for a destination written twice. So the reproducer folds on neither, and
+   tests pin both.
 5. Comments that still described `__twig_str_concat` with two arguments now
    name the third, `max`.
 
