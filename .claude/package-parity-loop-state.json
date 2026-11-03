@@ -16,13 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18853,
+  "active_prs": [
+    18853
+  ],
   "last_ci_action": {
-    "observed_at": "2026-11-03T08:09:56Z",
-    "pr_number": 18842,
-    "head_revision": "360b9fffb2a220e29b8209f6311d04e0e91c6288",
-    "action": "All 37 checks on exact independently reviewed Lua CLI argument-validation head 360b9fffb2a220e29b8209f6311d04e0e91c6288 completed terminal acceptable: 13 succeeded and 24 were expected skips. GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled, and PR #18842 merged at 2026-11-03T08:09:56Z as e76c294a30577a58e5bd22610b83ffb2abd8a776. The receipt is an ancestor of origin/main; the clean completed worktree is archived.",
+    "observed_at": "2026-11-03T08:13:51Z",
+    "pr_number": 18853,
+    "head_revision": "c60e057844416505c56b8d5b0989edc0ab43e156",
+    "action": "Opened draft PR #18853 for the selected Rust Cargo test-trigger core from exact reviewed selection head c60e057844416505c56b8d5b0989edc0ab43e156 over exact base e76c294a30577a58e5bd22610b83ffb2abd8a776. GitHub reports the draft mergeable. Keep it draft while this PR-number lifecycle receipt is committed, pushed normally, and independently reviewed; hosted results must be re-evaluated on the final exact ready head before guarded squash auto-merge.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2938,10 +2940,16 @@
     {
       "id": "build-tool-rust-cargo-test-trigger-selection-parity",
       "title": "Adopt the bounded Cargo test-trigger selection core in the Rust build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-rust-cargo-test-trigger",
+      "pr_number": 18853,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18853",
+      "pr_opened_at": "2026-11-03T08:13:51Z",
+      "draft_creation_head": "c60e057844416505c56b8d5b0989edc0ab43e156",
+      "publication_head": "c60e057844416505c56b8d5b0989edc0ab43e156",
+      "publication_base": "e76c294a30577a58e5bd22610b83ffb2abd8a776",
+      "publication_notes": "Draft PR #18853 records the independently reviewed selected current-main head. GitHub reports it mergeable over exact base e76c294a30577a58e5bd22610b83ffb2abd8a776. Keep it draft until this PR-number receipt is committed, pushed normally, and independently reviewed; then mark ready and require fresh hosted qualification on the resulting exact head.",
       "registered_at": "2026-10-30T12:39:41Z",
       "preparation_branch": "codex/build-tool-rust-cargo-test-trigger",
       "prepared_at": "2026-11-03T07:36:31Z",

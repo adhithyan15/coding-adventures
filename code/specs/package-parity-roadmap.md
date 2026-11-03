@@ -20360,3 +20360,14 @@ dependency-free, gains no host authority, and directly unlocks the strict
 snapshot, native adapter, CLI integration, and fixture-routing follow-ups.
 Publish only after the durable selection receipt is committed and pushed
 normally, then require a fresh exact-head publication review.
+
+#### Rust Cargo test-trigger core PR #18853 draft receipt
+
+Open independently reviewed selection head
+`c60e057844416505c56b8d5b0989edc0ab43e156` as draft PR #18853 over exact
+base `e76c294a30577a58e5bd22610b83ffb2abd8a776` at
+`2026-11-03T08:13:51Z`. GitHub reports the draft mergeable. Keep it draft while
+this PR-number lifecycle receipt is committed and pushed normally. Independent
+exact-head publication review must pass before marking it ready; every hosted
+check on the final reviewed head must then complete terminal acceptable while
+GitHub still reports the PR mergeable before guarded squash auto-merge.
