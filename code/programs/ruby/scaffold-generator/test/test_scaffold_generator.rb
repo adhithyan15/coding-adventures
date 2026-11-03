@@ -985,3 +985,145 @@ class TestRustWorkspaceUpdate < Minitest::Test
     refute result
   end
 end
+
+# ===========================================================================
+# Test: Command-line entry point
+# ===========================================================================
+#
+# Nothing above calls `main`, so for a long time nobody noticed it could not
+# even find its own spec: it looked three directories up (inside this
+# package) instead of five (code/programs/, where every language's
+# scaffold-generator shares one scaffold-generator.json). These tests drive
+# `main` end to end. It reports its outcome through `exit`, which raises
+# SystemExit, so each test asserts the exit status as well as the output.
+
+class TestCli < Minitest::Test
+  # Run main with `argv` and return [status, stdout, stderr]. A run that
+  # finishes without calling exit (a successful scaffold) reports status 0.
+  def run_main(argv)
+    status = 0
+    out, err = capture_io do
+      SG.main(argv)
+    rescue SystemExit => e
+      status = e.status
+    end
+    [status, out, err]
+  end
+
+  def test_spec_file_is_the_shared_code_programs_spec
+    assert File.file?(SG::SPEC_FILE), "missing CLI spec at #{SG::SPEC_FILE}"
+    assert_equal "programs", File.basename(File.dirname(SG::SPEC_FILE))
+    assert_equal "scaffold-generator", JSON.parse(File.read(SG::SPEC_FILE))["name"]
+  end
+
+  def test_help_exits_zero_and_describes_the_cli
+    status, out, _err = run_main(["--help"])
+    assert_equal 0, status
+    assert_includes out, "scaffold-generator"
+    assert_includes out, "--language"
+  end
+
+  def test_version_prints_the_spec_version
+    status, out, _err = run_main(["--version"])
+    assert_equal 0, status
+    assert_equal JSON.parse(File.read(SG::SPEC_FILE))["version"], out.strip
+  end
+
+  def test_unknown_flag_exits_one
+    status, _out, err = run_main(["--no-such-flag", "pkg"])
+    assert_equal 1, status
+    assert_includes err, "scaffold-generator:"
+  end
+
+  def test_non_kebab_package_name_exits_one
+    status, _out, err = run_main(["Bad_Name"])
+    assert_equal 1, status
+    assert_includes err, "invalid package name"
+  end
+
+  def test_unknown_language_exits_one
+    status, _out, err = run_main(["--language", "cobol", "pkg"])
+    assert_equal 1, status
+    assert_includes err, "unknown language"
+  end
+
+  # A dry run walks the whole pipeline (parse, validate, find the repo root,
+  # resolve dependencies) and prints the plan without writing anything.
+  def test_dry_run_reports_the_plan_and_writes_nothing
+    Dir.mktmpdir do |repo|
+      Dir.mkdir(File.join(repo, ".git"))
+      FileUtils.mkdir_p(File.join(repo, "code", "packages", "ruby"))
+      before = Dir.glob("**/*", base: repo).sort
+
+      status, out, err = Dir.chdir(repo) do
+        run_main(["--language", "ruby", "--dry-run", "brand-new-pkg"])
+      end
+
+      assert_equal 0, status, err
+      assert_includes out, "[dry-run] Would create ruby package at:"
+      assert_includes out, File.join("code", "packages", "ruby", "brand_new_pkg")
+      assert_equal before, Dir.glob("**/*", base: repo).sort
+    end
+  end
+end
+
+# ===========================================================================
+# Test: Repository root detection
+# ===========================================================================
+#
+# `.git` is a directory in an ordinary clone but a plain file (holding
+# `gitdir: <path>`) in a linked worktree or a submodule. Both mark a root.
+
+class TestFindRepoRoot < Minitest::Test
+  def test_finds_a_git_directory_above_the_start
+    Dir.mktmpdir do |repo|
+      Dir.mkdir(File.join(repo, ".git"))
+      nested = File.join(repo, "code", "programs")
+      FileUtils.mkdir_p(nested)
+      assert_equal repo, SG.find_repo_root(nested)
+    end
+  end
+
+  # A worktree nested inside another checkout must resolve to the worktree,
+  # not walk past its `.git` file to the outer checkout's `.git` directory
+  # (which would scaffold into the wrong tree).
+  def test_a_worktree_git_file_wins_over_an_outer_git_directory
+    Dir.mktmpdir do |outer|
+      Dir.mkdir(File.join(outer, ".git"))
+      worktree = File.join(outer, ".claude", "worktrees", "wt")
+      FileUtils.mkdir_p(File.join(worktree, "code"))
+      File.write(File.join(worktree, ".git"), "gitdir: #{outer}/.git/worktrees/wt\n")
+      assert_equal worktree, SG.find_repo_root(File.join(worktree, "code"))
+    end
+  end
+
+  def test_raises_outside_any_repository
+    Dir.mktmpdir do |dir|
+      error = assert_raises(RuntimeError) { SG.find_repo_root(dir) }
+      assert_includes error.message, "not inside a git repository"
+    end
+  end
+end
+
+# ===========================================================================
+# Test: the runnable script
+# ===========================================================================
+#
+# scaffold_generator_tool.rb is what the README tells people to run. Launch
+# it as a separate process from an unrelated directory, the way a person
+# would, to prove it finds its own gems and spec regardless of the cwd.
+
+class TestToolScript < Minitest::Test
+  SCRIPT = File.expand_path("../scaffold_generator_tool.rb", __dir__)
+
+  def test_script_runs_from_an_unrelated_directory
+    require "open3"
+    require "rbconfig"
+
+    Dir.mktmpdir do |elsewhere|
+      out, err, status = Open3.capture3(RbConfig.ruby, SCRIPT, "--version", chdir: elsewhere)
+      assert status.success?, err
+      assert_equal SG::VERSION, out.strip
+    end
+  end
+end

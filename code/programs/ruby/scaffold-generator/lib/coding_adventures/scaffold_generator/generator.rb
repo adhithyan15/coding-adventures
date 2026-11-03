@@ -1382,14 +1382,18 @@ module CodingAdventures
     # Repository Root Detection
     # =====================================================================
 
-    # Walk up from cwd to find the git root directory.
+    # Walk up from `start` (the cwd by default) to find the git root directory.
     #
     # @return [String] path to the repository root
     # @raise [RuntimeError] if not inside a git repository
-    def self.find_repo_root
-      d = Dir.pwd
+    #
+    # The marker is `.git` of either kind: a directory in an ordinary clone,
+    # but a *file* (holding `gitdir: ...`) in a linked worktree or submodule.
+    # Checking only for a directory walked straight past a worktree's root.
+    def self.find_repo_root(start = Dir.pwd)
+      d = start
       loop do
-        return d if Dir.exist?(File.join(d, ".git"))
+        return d if File.exist?(File.join(d, ".git"))
 
         parent = File.dirname(d)
         raise "not inside a git repository" if parent == d
@@ -1496,16 +1500,30 @@ module CodingAdventures
     # Main Entry Point
     # =====================================================================
 
+    # Where the CLI spec lives. The JSON is shared by every language's
+    # scaffold-generator, so it sits beside them in code/programs/ rather
+    # than inside this package. Each ".." climbs one directory from this
+    # file's own directory (__dir__ = lib/coding_adventures/scaffold_generator):
+    #
+    #   ".." x1  lib/coding_adventures/
+    #   ".." x2  lib/
+    #   ".." x3  ruby/scaffold-generator/   (this package: no spec here)
+    #   ".." x4  ruby/
+    #   ".." x5  code/programs/             <- scaffold-generator.json
+    #
+    # The old three-level path stopped inside this package, so main raised
+    # ENOENT before parsing a single flag.
+    SPEC_FILE = File.expand_path("../../../../../scaffold-generator.json", __dir__)
+
     # Parse CLI arguments via CLI Builder and scaffold packages.
     #
     # This is the main entry point for the scaffold-generator program.
     # The entire CLI interface is defined in scaffold-generator.json;
-    # this method just orchestrates the business logic.
-    def self.main
-      spec_file = File.join(File.dirname(__FILE__), "..", "..", "..", "scaffold-generator.json")
-
+    # this method just orchestrates the business logic. `argv` defaults to
+    # the process arguments; tests pass their own.
+    def self.main(argv = ARGV)
       begin
-        result = CodingAdventures::CliBuilder::Parser.new(spec_file, ["scaffold-generator"] + ARGV).parse
+        result = CodingAdventures::CliBuilder::Parser.new(SPEC_FILE, ["scaffold-generator"] + argv).parse
       rescue CodingAdventures::CliBuilder::ParseErrors => e
         e.errors.each { |err| warn "scaffold-generator: #{err.message}" }
         exit 1
