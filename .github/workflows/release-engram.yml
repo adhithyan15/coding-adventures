@@ -39,6 +39,8 @@ on:
       # engram-app/** below.
       - code/scripts/run-under-xvfb.sh
       - code/scripts/mosaic-release-launch.sh
+      - code/scripts/mosaic-release-check-log.sh
+      - code/scripts/tests/test_mosaic_release_check_log.py
       - code/scripts/mosaic-release-launch.ps1
       - code/scripts/tests/test_mosaic_release_launch.py
       - code/packages/rust/mosaic-app-bindings/templates/compose/**
@@ -508,20 +510,12 @@ jobs:
               >"$log" 2>&1
             status=$?
             set -e
-            echo "::group::$name launch log (exit $status)"
-            # The app's output must not be read as workflow commands; see
-            # code/scripts/mosaic-release-launch.sh show_log.
-            local token="mosaic-log-$$-$RANDOM$RANDOM"
-            echo "::stop-commands::$token"
-            cat "$log"
-            echo "::$token::"
-            echo "::endgroup::"
+            # Shows the log as plain text (never as workflow commands) and
+            # fails if it reports the runtime did not load.
+            bash "$GITHUB_WORKSPACE/code/scripts/mosaic-release-check-log.sh" \
+              "$name launch log (exit $status)" "$log"
             if [[ "$status" -ne 124 ]]; then
               echo "::error::the $name launch exited with $status before the timeout"
-              exit 1
-            fi
-            if grep -F "Mosaic Rust runtime unavailable" "$log"; then
-              echo "::error::the $name launch could not load the bundled runtime"
               exit 1
             fi
             echo "after the $name launch:"
@@ -948,20 +942,12 @@ jobs:
               >"$log" 2>&1
             status=$?
             set -e
-            echo "::group::$name launch log (exit $status)"
-            # The app's output must not be read as workflow commands; see
-            # code/scripts/mosaic-release-launch.sh show_log.
-            local token="mosaic-log-$$-$RANDOM$RANDOM"
-            echo "::stop-commands::$token"
-            cat "$log"
-            echo "::$token::"
-            echo "::endgroup::"
+            # Shows the log as plain text (never as workflow commands) and
+            # fails if it reports the runtime did not load.
+            bash "$GITHUB_WORKSPACE/code/scripts/mosaic-release-check-log.sh" \
+              "$name launch log (exit $status)" "$log"
             if [[ "$status" -ne 124 ]]; then
               echo "::error::the $name launch exited with $status before the timeout"
-              exit 1
-            fi
-            if grep -F "Mosaic Rust runtime unavailable" "$log"; then
-              echo "::error::the $name launch could not load the bundled runtime"
               exit 1
             fi
             echo "after the $name launch:"
