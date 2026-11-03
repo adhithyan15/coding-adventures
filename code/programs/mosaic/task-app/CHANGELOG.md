@@ -27,6 +27,9 @@ cut.
 
 ### Fixed
 
+- Scale native smoke-test window geometry by the target DPI so wide/narrow
+  navigation assertions exercise the same logical widths on scaled desktops (#18865).
+
 - Typed names are stored the same on every host (backlog 6e2b). The web host
   trimmed task, label, project and checklist names with JavaScript's
   `.trim()`, which keeps U+0085 (NEXT LINE) and strips U+FEFF (the byte order
