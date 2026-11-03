@@ -2239,6 +2239,24 @@ def _cmd_compose_name(args: argparse.Namespace) -> int:
     return 0
 
 
+# The native payloads by backend, for `payload-name`. The release-state gate
+# steps name the archive they extract through this rather than spelling
+# `engram-<backend>-<platform>-v<version>.zip` in shell, so the published name
+# keeps exactly one source of truth -- the same reason `compose-name` exists.
+PAYLOAD_NAMERS = {
+    "compose": compose_artifact_name,
+    "flutter": flutter_artifact_name,
+    "qt": qt_artifact_name,
+    "swiftui": swiftui_artifact_name,
+    "xaml": xaml_artifact_name,
+}
+
+
+def _cmd_payload_name(args: argparse.Namespace) -> int:
+    print(PAYLOAD_NAMERS[args.backend](args.version, args.platform))
+    return 0
+
+
 def _cmd_desktop_name(args: argparse.Namespace) -> int:
     print(desktop_artifact_name(args.version, args.platform))
     return 0
@@ -2326,6 +2344,15 @@ def main(argv: list[str] | None = None) -> int:
     compose.add_argument("--version", required=True)
     compose.add_argument("--platform", required=True)
     compose.set_defaults(handler=_cmd_compose_name)
+
+    payload = subcommands.add_parser(
+        "payload-name",
+        help="The published name for one native backend's payload on one platform",
+    )
+    payload.add_argument("--backend", required=True, choices=sorted(PAYLOAD_NAMERS))
+    payload.add_argument("--version", required=True)
+    payload.add_argument("--platform", required=True)
+    payload.set_defaults(handler=_cmd_payload_name)
 
     desktop = subcommands.add_parser(
         "desktop-name", help="The published name for one platform's desktop build"

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "spec": "code/specs/task-app-data-model.md, \"Task names are bounded\"",
+  "about": "The task-name limit and its boundary. Each case types `prefix` (absent means empty), then `repeat` written `count` times, then `suffix`, into a fresh app's Add Task composer and presses Add. `accepted: true` means the edit lands and Add creates one task whose name is the typed text trimmed; false means the edit is refused as typed, so the draft stays empty and Add creates nothing. The unit is the Unicode scalar value: Rust counts str::chars, the web host counts code points, never String.length. task-mosaic-app's native test and the web host's test both run every case and both check their limit equals `maxChars`, so the hosts cannot drift apart. Astral and combining characters are written as \\u escapes.",
+  "maxChars": 512,
+  "unit": "Unicode scalar values",
+  "cases": [
+    { "name": "ASCII, exactly at the cap", "repeat": "x", "count": 512, "suffix": "", "accepted": true },
+    { "name": "ASCII, one past the cap", "repeat": "x", "count": 513, "suffix": "", "accepted": false },
+    { "name": "two-byte, at the cap (1,024 UTF-8 bytes: not a byte cap)", "repeat": "é", "count": 512, "suffix": "", "accepted": true },
+    { "name": "two-byte, one past the cap", "repeat": "é", "count": 513, "suffix": "", "accepted": false },
+    { "name": "three-byte CJK, at the cap", "repeat": "字", "count": 512, "suffix": "", "accepted": true },
+    { "name": "astral, at the cap (1,024 UTF-16 units: String.length would refuse it)", "repeat": "😀", "count": 512, "suffix": "", "accepted": true },
+    { "name": "astral, one past the cap", "repeat": "😀", "count": 513, "suffix": "", "accepted": false },
+    { "name": "an astral last character reaches the cap", "repeat": "x", "count": 511, "suffix": "😀", "accepted": true },
+    { "name": "an astral character one past the cap", "repeat": "x", "count": 512, "suffix": "😀", "accepted": false },
+    { "name": "scalars, not graphemes: e + combining acute is two", "repeat": "é", "count": 256, "suffix": "", "accepted": true },
+    { "name": "scalars, not graphemes: one more scalar is past the cap", "repeat": "é", "count": 256, "suffix": "x", "accepted": false },
+    { "name": "the draft is measured as typed: a leading space counts", "prefix": " ", "repeat": "x", "count": 512, "suffix": "", "accepted": false },
+    { "name": "the draft is measured untrimmed, the name stored trimmed", "prefix": " ", "repeat": "x", "count": 510, "suffix": " ", "accepted": true }
+  ]
+}

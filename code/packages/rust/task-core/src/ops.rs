@@ -19,6 +19,45 @@ use std::collections::BTreeMap;
 /// a handful; capping defends the working-time walk against a crafted calendar.
 const MAX_INTERVALS_PER_DAY: usize = 48;
 
+// ── Task-name limit (6e4) ───────────────────────────────────────────────────────
+//
+// A task's name is a line of text: a list row, a board card, a Sheet cell. It
+// was unbounded, so a pasted or restored multi-megabyte name was stored,
+// re-rendered on every event, and lowercased again on every note Save that
+// looks a task up by name. The limit lives HERE, in the trust boundary, so every
+// host gets it by calling the engine (task-app-data-model.md, "Task names are
+// bounded").
+//
+//   unit       Unicode scalar values (`str::chars`), not bytes and not UTF-16
+//              units: the web host counts code points, so 512 emoji are 512 on
+//              both hosts.
+//   why 512    the note title's and Journal title's cap, and each Checklists
+//              composer's: a checklist item IS a task.
+//
+// The rule, with `new` the proposed name and `old` the stored one:
+//
+//   operation                 chars(new) <= 512   chars(new) > 512
+//   create a task             written             refused
+//   rename, new <= old        written             written: a name stored before
+//                                                 the cap may shrink towards it
+//   rename, new >  old        written             refused: nothing grows past it
+//
+// Stored names are never cut: deserializing a snapshot measures nothing, and a
+// checklist run copies its template's names verbatim.
+
+/// The longest a task's name may be created or grown to, in Unicode scalar
+/// values (`str::chars`).
+pub const MAX_TASK_NAME_CHARS: usize = 512;
+
+/// The refusal for a name past [`MAX_TASK_NAME_CHARS`].
+const NAME_TOO_LONG: OpError = OpError::Invalid("task name too long");
+
+/// True when `name` is within [`MAX_TASK_NAME_CHARS`]. Counting stops one past
+/// the cap, so measuring a multi-megabyte paste costs 513 steps, not millions.
+pub fn task_name_fits(name: &str) -> bool {
+    name.chars().nth(MAX_TASK_NAME_CHARS).is_none()
+}
+
 /// Why an operation was rejected. Operations never panic and never do I/O; an invalid
 /// request is a typed error, not a crash.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -57,13 +96,18 @@ impl ProjectState {
 
     // ── tasks ────────────────────────────────────────────────────────────────────
 
-    /// Create a leaf task. Rejects a duplicate id or a non-existent parent.
+    /// Create a leaf task. Rejects a name past [`MAX_TASK_NAME_CHARS`], a
+    /// duplicate id, or a non-existent parent.
     pub fn create_task(
         &mut self,
         id: TaskId,
         name: impl Into<String>,
         parent: Option<TaskId>,
     ) -> Result<(), OpError> {
+        let name = name.into();
+        if !task_name_fits(&name) {
+            return Err(NAME_TOO_LONG);
+        }
         if self.tasks.contains_key(&id) {
             return Err(OpError::Duplicate);
         }
@@ -80,9 +124,18 @@ impl ProjectState {
         Ok(())
     }
 
-    /// Rename a task.
+    /// Rename a task. A name past [`MAX_TASK_NAME_CHARS`] is refused unless it
+    /// is no longer than the current one, so a name stored before the cap can be
+    /// shortened towards it but nothing ever grows past it.
     pub fn rename_task(&mut self, id: &TaskId, name: impl Into<String>) -> Result<(), OpError> {
-        self.task_mut(id)?.name = name.into();
+        let name = name.into();
+        let task = self.task_mut(id)?;
+        // `nth(old)` is Some exactly when the new name has more scalars than
+        // the old one, and stops counting there.
+        if !task_name_fits(&name) && name.chars().nth(task.name.chars().count()).is_some() {
+            return Err(NAME_TOO_LONG);
+        }
+        task.name = name;
         Ok(())
     }
 
@@ -1109,6 +1162,106 @@ mod tests {
             Err(OpError::NotFound)
         );
         assert!(s.create_task(tid("b"), "B", Some(tid("a"))).is_ok());
+    }
+
+    // ── the task-name limit (6e4) ──────────────────────────────────────────────
+    //
+    // The unit is the Unicode scalar value, so each boundary is checked in a
+    // one-byte, a two-byte and a four-byte (astral) character: 512 emoji are
+    // 2,048 bytes and 1,024 UTF-16 units, and still exactly at the cap.
+
+    #[test]
+    fn a_task_name_is_capped_in_scalars_at_creation() {
+        for unit in ["x", "é", "😀"] {
+            let mut s = base();
+            let at_cap = unit.repeat(MAX_TASK_NAME_CHARS);
+            assert!(task_name_fits(&at_cap), "{unit}");
+            assert!(s.create_task(tid("a"), at_cap.clone(), None).is_ok());
+            assert_eq!(s.tasks[&tid("a")].name, at_cap);
+
+            let over = unit.repeat(MAX_TASK_NAME_CHARS + 1);
+            assert!(!task_name_fits(&over), "{unit}");
+            assert_eq!(
+                s.create_task(tid("b"), over, None),
+                Err(OpError::Invalid("task name too long"))
+            );
+            assert!(!s.tasks.contains_key(&tid("b")), "nothing written");
+        }
+        // Scalars, not grapheme clusters: `e` + U+0301 is two.
+        assert!(task_name_fits(&"e\u{301}".repeat(MAX_TASK_NAME_CHARS / 2)));
+        assert!(!task_name_fits(&format!(
+            "{}x",
+            "e\u{301}".repeat(MAX_TASK_NAME_CHARS / 2)
+        )));
+    }
+
+    #[test]
+    fn the_workspace_create_takes_the_same_cap() {
+        let mut w = Workspace::empty(WorkspaceId::from_raw("w"), ProjectId::from_raw("p"));
+        let p = ProjectId::from_raw("p");
+        let over = "x".repeat(MAX_TASK_NAME_CHARS + 1);
+        assert_eq!(
+            w.create_task(&p, tid("a"), over, None),
+            Err(OpError::Invalid("task name too long"))
+        );
+        assert!(w.project_of_task(&tid("a")).is_none());
+    }
+
+    #[test]
+    fn a_rename_may_reach_the_cap_but_not_pass_it() {
+        let mut s = base();
+        s.create_task(tid("a"), "A", None).unwrap();
+        let at_cap = "😀".repeat(MAX_TASK_NAME_CHARS);
+        assert!(s.rename_task(&tid("a"), at_cap.clone()).is_ok());
+        assert_eq!(
+            s.rename_task(&tid("a"), format!("{at_cap}x")),
+            Err(OpError::Invalid("task name too long"))
+        );
+        assert_eq!(
+            s.tasks[&tid("a")].name,
+            at_cap,
+            "refused leaves it as it was"
+        );
+    }
+
+    #[test]
+    fn a_name_stored_over_the_cap_loads_whole_and_can_only_shrink() {
+        // A task named before the cap existed: written straight into the map,
+        // as a deserialized snapshot would.
+        let mut s = base();
+        let legacy = "x".repeat(MAX_TASK_NAME_CHARS + 10);
+        s.tasks
+            .insert(tid("old"), Task::new(tid("old"), legacy.clone()));
+
+        // Shorter but still over the cap: kept, so it can be edited down.
+        let shorter = "x".repeat(MAX_TASK_NAME_CHARS + 5);
+        assert!(s.rename_task(&tid("old"), shorter.clone()).is_ok());
+        assert_eq!(s.tasks[&tid("old")].name, shorter);
+        // The same length again is not growth either.
+        assert!(s
+            .rename_task(&tid("old"), "y".repeat(MAX_TASK_NAME_CHARS + 5))
+            .is_ok());
+        // Longer than it is now: refused, even though it is shorter than the
+        // legacy name it started as.
+        assert_eq!(
+            s.rename_task(&tid("old"), "x".repeat(MAX_TASK_NAME_CHARS + 6)),
+            Err(OpError::Invalid("task name too long"))
+        );
+        // And back within the cap, as any rename may.
+        assert!(s.rename_task(&tid("old"), "Short").is_ok());
+        assert_eq!(s.tasks[&tid("old")].name, "Short");
+    }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn a_snapshot_with_an_over_cap_name_deserializes_whole() {
+        let mut s = base();
+        s.create_task(tid("a"), "A", None).unwrap();
+        let legacy = "😀".repeat(MAX_TASK_NAME_CHARS * 2);
+        s.tasks.get_mut(&tid("a")).unwrap().name = legacy.clone();
+        let json = serde_json::to_string(&s).unwrap();
+        let back: ProjectState = serde_json::from_str(&json).unwrap();
+        assert_eq!(back.tasks[&tid("a")].name, legacy);
     }
 
     #[test]

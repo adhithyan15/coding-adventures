@@ -160,7 +160,9 @@ The wire names are the raw emit names. Every error leaves the app unchanged:
 **Bounds.**
 
 - Both composers refuse input past 512 characters as it is typed, so no draft
-  can grow the state file without bound.
+  can grow the state file without bound. 512 is task-core's
+  `MAX_TASK_NAME_CHARS` (`task-app-data-model.md`, *Task names are
+  bounded*): each composer names a task, a checklist's root or an item.
 - An added item takes the next `order` under the root. The engine sorts
   siblings by `(order, id)`, and minted ids do not sort numerically
   (`task-10` sorts before `task-9`).
