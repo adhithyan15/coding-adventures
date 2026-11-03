@@ -374,3 +374,22 @@ the field takes that cap, with v1.2's semantics for the title:
 A name past the cap can no longer be typed, and no task created since the
 cap has one, so the field loses nothing it could ever have matched. The
 matching rule (v1.4) is unchanged.
+
+## Addendum (v1.6): one trim for every typed name
+
+Mosaic backlog item 6e2b. v1.4's step 1 trimmed only this field's text of
+Unicode `White_Space`, and its *Scope* paragraph left the Sheet's Labels
+column on JavaScript's `.trim()`. Every other composer on the web host —
+Add Task, the edit-task field, the Sheet Name cell, labels, projects,
+checklists and their items — also trimmed with `.trim()`, so the same typed
+name could be stored differently on the web than natively. The rule is now
+stated once, for every typed name and label, in `task-app-data-model.md`,
+*Typed names are trimmed of Unicode `White_Space`*: U+0085 is trimmed,
+U+FEFF is kept, on every host. Step 1 here is that rule, unchanged; v1.4's
+*Scope* exception for the Labels column no longer holds.
+
+v1.4 also described the web trim as the regex
+`/^\p{White_Space}+|\p{White_Space}+$/gu`. The host has used
+`trimWhiteSpace`, a linear walk over the same set, since that regex was
+found to backtrack quadratically on a long inner run of spaces; the set of
+characters trimmed is the same.

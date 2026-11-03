@@ -1,5 +1,19 @@
 # Changelog — task-mosaic-app
 
+## [Unreleased] — the shared White_Space trim is pinned (6e2b)
+
+- Tests only; no behaviour changes. This adapter already trims every typed
+  name with `str::trim`, which is Unicode `White_Space`, and the web host now
+  trims the same way (`task-app-data-model.md`, "Typed names are trimmed of
+  Unicode White_Space"). Two tests read TaskApp's new
+  `fixtures/task-name-trimming-v1.json`, which the web host runs too:
+  `str_trim_removes_exactly_the_shared_white_space` checks over every scalar
+  value that `str::trim` removes exactly the fixture's 25 code points (U+0085
+  in, U+FEFF out), and `typed_names_are_trimmed_by_the_shared_vectors` types
+  every case into Add Task, the edit-task Save, the Sheet Name and Labels
+  cells, the label, project, checklist and checklist-item composers and checks
+  the stored name, or that an all-`White_Space` name was refused.
+
 ## [Unreleased] — task names are capped at 512 characters (6e4)
 
 - **Added: a task-name limit wherever a task name is typed.** Nothing limited
