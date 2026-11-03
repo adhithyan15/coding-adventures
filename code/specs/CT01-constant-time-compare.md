@@ -148,3 +148,28 @@ derived from the inputs; the expected fields are not generated from any
 existing language package. Existing-lane adoption and missing Dart, Haskell,
 Lua, Perl, and Swift ports are separate CT01 owners, not silently marked done
 by this corpus.
+
+## Rust L0 adoption (VER26 step 4)
+
+The Rust lane runs every corpus record through TF01's L0 harness in a
+`harness = false` integration target. A standard-library Python projection
+first validates cases.json with the independent CT01 oracle, then generates
+cases.tfv with TF01's transport. It also generates a Rust match arm for every
+fixed width in the corpus: each arm calls the real ct_eq_fixed::<N> API.
+An unhandled width fails rather than falling back to slice equality. Checks
+reject stale generated files, and corpus/reference edits select rust/ct-compare.
+
+The adapter calls the real public operations. For select length errors it
+observes the existing native panic and maps it to CT_SELECT_LENGTH_MISMATCH;
+panic wording is not standardized and the public API is unchanged. It checks
+fresh output by mutating the returned vector and verifying both inputs remain
+unchanged. Empty vectors have no mutable contents, so no distinct-allocation
+requirement is invented for them.
+
+The adapter independently derives expected_work from public input shape and
+checks all four fields. These are logical contract fields, not measured runtime
+events, instructions or proof of constant time. The existing optimized equality
+CFG gate remains separate compiler evidence; VER20 will prove full traces.
+Negative adapter cases must detect wrong equality/selection, successful output
+in place of a required error, and malformed work metadata. TF01's independent
+self-corpus and sabotage BUILD remain the checks of the underlying harness.

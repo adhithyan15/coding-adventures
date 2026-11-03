@@ -1,7 +1,10 @@
 # VER00 — The Verified Shipping Program
 
-**Status:** Draft umbrella spec. Nothing here is implemented. Child specs
-(VER01–VER26, listed in §11) are written one at a time before their code.
+**Status:** Draft umbrella spec; the full program is not implemented. VER09's
+CDCL solver, VER11's DRAT kernel and VER10's first bit-vector slice are on main;
+the D21 taxonomy extension and pilot quirks log have also landed. Child specs
+(VER01–VER26, listed in §11) are written one at a time before their code. See
+[the delivery backlog](VER-BACKLOG.md) for merged evidence and remaining work.
 
 **Layer:** Repository-wide policy and tooling.
 
