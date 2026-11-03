@@ -2653,21 +2653,44 @@ mod tests {
         // all at the method's top level.
         assert_eq!(func(&m, "f").body.stmts.len(), 4 + 4999 + 1);
 
-        // 20 000 guard clauses, and a local bound after the first one,
-        // which is hoisted out of its guard so the next guard can read it.
-        // Only the lowering is timed; parsing that much source is slow on
-        // its own in a debug build.
-        let src = format!(
-            "def f(x)\n  return 0 if x == 0\n  y = x * 2\n{}  y\nend\nputs f(3)\n",
-            "  return 1 if x == 1\n".repeat(20_000)
-        );
-        let ast = coding_adventures_ruby_parser::try_create_ruby_parser(&src)
-            .expect("lexes")
-            .parse()
-            .expect("parses");
-        let start = std::time::Instant::now();
-        let m = compile(&ast, "test").expect("lowers");
-        assert!(start.elapsed() < std::time::Duration::from_secs(2), "{:?}", start.elapsed());
+        // Guard clauses, and a local bound after the first one, which is
+        // hoisted out of its guard so the next guard can read it.  Only the
+        // lowering is timed; parsing that much source is slow on its own in
+        // a debug build.
+        //
+        // "Linear" is checked as a growth rate, not against a wall-clock
+        // limit: a fixed 2 s budget failed at 2.3 s on a busy Windows CI
+        // runner in a debug build, though the lowering was linear.  Four
+        // times the guards should cost about four times the time.  A
+        // quadratic lowering costs sixteen times, so the bound of ten
+        // separates the two, whatever the machine's speed.  Each size takes
+        // the fastest of three runs, which drops one-off scheduler stalls.
+        let program = |guards: usize| {
+            let src = format!(
+                "def f(x)\n  return 0 if x == 0\n  y = x * 2\n{}  y\nend\nputs f(3)\n",
+                "  return 1 if x == 1\n".repeat(guards)
+            );
+            coding_adventures_ruby_parser::try_create_ruby_parser(&src)
+                .expect("lexes")
+                .parse()
+                .expect("parses")
+        };
+        let fastest_lowering = |ast: &_| {
+            (0..3)
+                .map(|_| {
+                    let start = std::time::Instant::now();
+                    compile(ast, "test").expect("lowers");
+                    start.elapsed()
+                })
+                .min()
+                .unwrap()
+        };
+        let (small, large) = (program(5_000), program(20_000));
+        let (t_small, t_large) = (fastest_lowering(&small), fastest_lowering(&large));
+        // The floor keeps a near-zero small time from making the ratio noise.
+        let budget = t_small.max(std::time::Duration::from_millis(20)) * 10;
+        assert!(t_large < budget, "5 000 guards: {t_small:?}; 20 000 guards: {t_large:?} (limit {budget:?})");
+        let m = compile(&large, "test").expect("lowers");
         assert_valid(&m);
         let f = func(&m, "f");
         assert!(

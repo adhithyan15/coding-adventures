@@ -17,7 +17,10 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
   becomes a store) so the next stretch can read it.  `lower_list` and
   `value_into` check `MAX_IR_DEPTH` and refuse, with a message, past it.
   Test `thousands_of_jumps_lower_flat_and_in_linear_time` (5000 bare
-  returns lower; 20 000 guard clauses lower in under 2 s).
+  returns lower; lowering 20 000 guard clauses costs under ten times what
+  5 000 cost — linear is about four times, quadratic sixteen.  The test first
+  used a fixed 2 s limit, which a busy Windows CI runner missed at 2.3 s in
+  a debug build, so it now checks the growth rate, not the clock).
 - **Security review: `for i in 0...2**62 do break end` never finished.** A
   `for` over a range that can `break` or `return` ran out its remaining trips
   with the body disabled.  It is now a `while` counting in a local of its
