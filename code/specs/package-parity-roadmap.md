@@ -20493,9 +20493,11 @@ All 37 checks on exact independently reviewed head
 seven succeeded and 30 were expected skips. GitHub reported the PR clean and
 mergeable. The loop invoked guarded squash auto-merge with exact-head matching,
 and GitHub merged PR #18879 immediately at `2026-11-03T14:02:33Z` as
-`38dba577c2f234d1b0bd8f1f150517e773b7e746`. The receipt was current
-`origin/main` when observed and remains an ancestor of exact current main
-`978d4de8690dc86415b2d0502a39b7ac6bd095df`; the clean completed worktree was
+`38dba577c2f234d1b0bd8f1f150517e773b7e746`. The receipt was
+`origin/main` when observed, was verified as an ancestor of the first successor
+reconciliation snapshot `978d4de8690dc86415b2d0502a39b7ac6bd095df`, and
+remains an ancestor of the final rebase snapshot
+`14fb4342823b6ea37768f1ad7becb01fdc29d1dd`; the clean completed worktree was
 queued for archival.
 
 Reprioritization selects the already implemented duplicate-discovery fixture
