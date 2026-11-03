@@ -164,6 +164,7 @@ fn forbidden_source_has_closed_kinds_and_exact_raw_intervals() {
         let err = SourceDocument::admit(bytes, SourceLimits::default()).unwrap_err();
         assert_eq!(err.kind(), kind);
         assert_eq!(err.code(), "W0001");
+        assert!(err.to_string().starts_with("W0001:"));
         assert_eq!(err.byte_range(), Some(start..end));
     }
 }
@@ -191,6 +192,7 @@ fn each_configuration_ceiling_is_enforced_before_empty_input() {
     ] {
         let err = SourceDocument::admit(b"", limits).unwrap_err();
         assert_eq!(err.kind(), SourceErrorKind::InvalidLimits);
+        assert!(err.to_string().starts_with("W0001:"));
         assert_eq!(err.byte_range(), None);
     }
 }
@@ -233,6 +235,7 @@ fn byte_and_work_limits_have_exact_lowered_boundaries() {
         let err = SourceDocument::admit(b"abc", limits).unwrap_err();
         assert_eq!(err.kind(), kind);
         assert!(err.byte_range().is_none());
+        assert!(err.to_string().starts_with("W0001:"));
     }
     assert!(SourceDocument::admit(
         b"",
@@ -268,6 +271,7 @@ fn capacity_limits_include_the_line_index_and_normalized_buffer() {
         )
         .unwrap_err();
         assert_eq!(err.kind(), SourceErrorKind::OwnedBytes);
+        assert!(err.to_string().starts_with("W0001:"));
         assert_eq!(err.byte_range(), None);
     }
     let err = SourceDocument::admit(

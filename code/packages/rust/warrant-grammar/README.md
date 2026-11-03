@@ -12,11 +12,26 @@ assert!(!tokens.definitions.is_empty());
 assert!(!rules.rules.is_empty());
 ```
 
-The public API only constructs grammar data. A guarded untrusted-source
-lexer/parser, original UTF-8 byte spans and input/work/native-stack quotas are
-P006b. Name/type checking, hostile-input/label/binding validation, solvers and
-Rust generation are later layers. Grammar data and syntax acceptance provide
-none of those results or release authorization.
+The additive [VER04a source stage](../../../specs/VER04a-warrant-source-admission.md)
+also admits bytes, normalizes CRLF and maps normalized ranges to original UTF-8
+bytes. LF input borrows its original buffer. Other input must fit the 1-MiB
+source, 64-MiB owned-buffer and 3-MiB scan-work ceilings; callers may lower caps.
+Malformed UTF-8, leading BOM, NUL and bare CR reject with fixed `W0001` errors.
+Document Debug omits source. Range coordinates are one-based line/byte-column,
+with zero-based raw byte offsets. Paths/revision binding remain a later layer.
+
+```rust
+use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
+let source = SourceDocument::admit(b"warrant x\r\n", SourceLimits::default()).unwrap();
+assert_eq!(source.normalized(), "warrant x\n");
+let newline = source.original_span(9, 10).unwrap();
+assert_eq!(&source.original()[newline.start.byte_offset..newline.end.byte_offset], "\r\n");
+```
+
+Significant-layout token origins and the guarded lexer/parser with its
+token/literal/AST/native-stack quotas remain P006b2/b3. Source admission,
+grammar data and syntax acceptance do not establish type/binding validation,
+solvers, Rust generation, proof or release authorization.
 
 ## Tests and regeneration
 
@@ -50,6 +65,12 @@ from outside the harness. Ordinary runs pass 60 L0 checks plus regeneration and
 adapter unit tests. Test adapters suppress raw source/parser exception text;
 they use a shared-parser rule cap on bounded embedded fixtures, which is not a
 multi-shape stack-safety proof or an implementation of VER04's full budgets.
+
+Eleven source-stage tests separately check authored raw byte/line coordinates,
+all scalar-boundary ranges of small mixed sources, invalid UTF-8 and forbidden
+bytes, UTF-8 query boundaries, exact lowered limits and a dense 1-MiB newline
+input. None exposes an untrusted-source lexer/parser. The shared CV04a range
+API still deliberately refuses indentation/layout synthesis.
 
 Some parser positives deliberately have duplicate names, a Bool/Int mismatch
 or an unreachable refinement. Those belong to later checkers; their presence

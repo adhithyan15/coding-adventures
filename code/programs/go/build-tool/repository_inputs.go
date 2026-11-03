@@ -218,7 +218,8 @@ func isWarrantGrammarInput(changed string) bool {
 		changed == "code/scripts/warrant_syntax_corpus.py" ||
 		changed == "code/scripts/tests/test_warrant_syntax_corpus.py" ||
 		changed == "code/scripts/tfv.py" ||
-		changed == "code/specs/VER04-warrant-language.md"
+		changed == "code/specs/VER04-warrant-language.md" ||
+		changed == "code/specs/VER04a-warrant-source-admission.md"
 }
 
 // CT01 is embedded in an L0 test, so edits outside the crate must still run it.

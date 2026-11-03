@@ -43,7 +43,7 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-I004 | Enforce TF01's closed failure vocabulary at the Rust harness boundary | #18875 merged as 089fb8e7bf7 at expected d2b5ae4db2c; verified on fetched main; all 39 checks acceptable |
 | done / VER-P005 | Warrant v0 specification | #18890 merged as 655b99e5e27 at expected 5a60550f9d1; verified on fetched main; all 37 checks acceptable; no implemented compiler claimed |
 | done / VER-P006a | Canonical Warrant grammars, compiled Rust grammar data and syntax corpus | #18898 merged as ce9ab9e57d48 at expected 4271246dbe7; verified on fetched main; all 40 checks acceptable; protected frontend remains P006b |
-| P1 / VER-P006b1 | Bounded source admission and CRLF/original-byte mapping | selected; [VER04a](VER04a-warrant-source-admission.md) committed before tests/code; pure UTF-8 admission, bounded normalization/index, exact original spans and opaque W0001 errors; no public parser |
+| P1 / VER-P006b1 | Bounded source admission and CRLF/original-byte mapping | local implementation; [VER04a](VER04a-warrant-source-admission.md) before tests/code;11 source tests, two real mutants rejected,177/183 source lines covered; final review/publication/hosted CI pending; no public parser |
 | P1 / VER-P006b2 | Exact bounded significant-layout capture | after b1; additive matcher/synthetic-token origin contract, pre-allocation budgets and consumer audit; existing CV04a capture deliberately refuses indentation |
 | P1 / VER-P006b3 | Guarded Warrant source lexer/parser | after b2; source/token/literal/declaration/AST limits, original-byte spans and measured multi-shape native-stack guard; no unguarded public parser in earlier slices |
 | P1 / VER-P007 | Warrant type checker/Rust bindings | waiting P006; missing exports, wrong types and vacuous bindings reject |
@@ -85,6 +85,18 @@ can progress independently once their prerequisites are available.
 | VER26 follow-on | Busicom-to-gates, a capability-bearing pilot, then other languages |
 
 ## Discoveries and current plan
+
+P006b1 local proof: eleven source tests pass, including authored CRLF/Unicode
+coordinates, exhaustive small scalar ranges, invalid encoding/forbidden-byte
+rejection and exact source/work/capacity limits. Replacing raw offsets with
+normalized offsets makes two tests fail; bypassing NUL admission makes two
+tests fail. Actual recompilation was used for both mutants and the restored
+source. LLVM measures 177/183 executable source-module lines (96.72%); overflow
+and allocation-failure closures remain unexecuted, not declared tested. Package
+tests (60 L0 plus16 native units), strict Clippy/fmt and exact grammar generation
+pass. Full Go tests/vet pass with source-contract routing. These are local
+source-stage results; public layout capture, parser quotas and semantic checks
+remain separate pending work, as does hosted acceptance of the final head.
 
 Post-P006a prioritization: #18898's expected head 4271246dbe7 merged as
 ce9ab9e57d48 and is reachable on fetched main. Eight live open PRs had no
