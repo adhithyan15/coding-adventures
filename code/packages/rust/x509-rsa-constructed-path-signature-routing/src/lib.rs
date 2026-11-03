@@ -152,6 +152,45 @@ impl fmt::Display for X509RsaConstructedPathReviewedAnchorError {
 
 impl std::error::Error for X509RsaConstructedPathReviewedAnchorError {}
 
+/// Stable, payload-free reviewed two-link path binding failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaConstructedPathReviewedIntermediatePathErrorKind {
+    /// The two proofs retain different constructed-path objects or certificates.
+    EvidenceMismatch,
+    /// The retained construction is not exactly target -> intermediate -> root.
+    InvalidPathShape,
+}
+
+/// A redacted reviewed two-link path binding failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaConstructedPathReviewedIntermediatePathError {
+    kind: X509RsaConstructedPathReviewedIntermediatePathErrorKind,
+}
+
+impl X509RsaConstructedPathReviewedIntermediatePathError {
+    const fn new(kind: X509RsaConstructedPathReviewedIntermediatePathErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaConstructedPathReviewedIntermediatePathErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaConstructedPathReviewedIntermediatePathError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA constructed-path reviewed intermediate path error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaConstructedPathReviewedIntermediatePathError {}
+
 /// Non-copyable evidence authenticating one exact constructed-path adjacency.
 ///
 /// The retained projection preserves path order. The retained issuer role
@@ -250,6 +289,101 @@ impl fmt::Debug
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("VerifiedX509RsaConstructedPathPolicySignature")
+    }
+}
+
+/// Non-copyable evidence for one complete routed two-link reviewed path.
+///
+/// The intermediate input authenticates the target-to-intermediate adjacency,
+/// retains complete intermediate policy, and advances path length. The terminal
+/// input authenticates the immediately following intermediate-to-root adjacency
+/// and binds that exact root to reviewed Mozilla snapshot membership. Both must
+/// retain the same exact two-issuer construction. This is not complete Web PKI
+/// path validation and does not apply name constraints or target identity.
+pub struct BoundX509RsaConstructedReviewedIntermediatePath<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    authenticated_intermediate: ValidatedX509RsaConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    reviewed_terminal: BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+}
+
+impl<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    BoundX509RsaConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the depth-zero authenticated intermediate path-length transition.
+    #[must_use]
+    pub const fn authenticated_intermediate(
+        &self,
+    ) -> &ValidatedX509RsaConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.authenticated_intermediate
+    }
+
+    /// Return the depth-one terminal authentication and reviewed-root handoff.
+    #[must_use]
+    pub const fn reviewed_terminal(
+        &self,
+    ) -> &BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.reviewed_terminal
+    }
+}
+
+impl fmt::Debug for BoundX509RsaConstructedReviewedIntermediatePath<'_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509RsaConstructedReviewedIntermediatePath")
     }
 }
 
@@ -837,6 +971,102 @@ pub fn advance_x509_rsa_constructed_path_intermediate_path_length<
     Ok(ValidatedX509RsaConstructedPathIntermediatePathLength {
         authenticated_intermediate,
         path_length_state,
+    })
+}
+
+/// Bind one exact routed target -> intermediate -> reviewed-root construction.
+///
+/// The authenticated intermediate must be the depth-zero projection and the
+/// reviewed terminal must be the depth-one projection from the identical
+/// constructed-path object. The construction must contain exactly those two
+/// issuers, and the terminal child must be the exact intermediate retained by
+/// complete policy and the path-length transition. Success therefore retains
+/// both authenticated links, their data-driven algorithm/key policy, complete
+/// intermediate policy, advanced path-length state, and reviewed-root handoff.
+pub fn bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    authenticated_intermediate: ValidatedX509RsaConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    reviewed_terminal: BoundX509RsaConstructedPathTerminalToReviewedAnchor<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> Result<
+    BoundX509RsaConstructedReviewedIntermediatePath<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaConstructedPathReviewedIntermediatePathError,
+> {
+    let intermediate_link = authenticated_intermediate
+        .authenticated_intermediate()
+        .verified_signature()
+        .adjacent_link();
+    let terminal_link = reviewed_terminal
+        .verified_terminal_signature()
+        .adjacent_link();
+    let constructed_path = intermediate_link.constructed_path();
+
+    if !same_exact_object(constructed_path, terminal_link.constructed_path()) {
+        return Err(X509RsaConstructedPathReviewedIntermediatePathError::new(
+            X509RsaConstructedPathReviewedIntermediatePathErrorKind::EvidenceMismatch,
+        ));
+    }
+    if constructed_path.issuer_count() != 2
+        || intermediate_link.issuer_depth() != 0
+        || terminal_link.issuer_depth() != 1
+    {
+        return Err(X509RsaConstructedPathReviewedIntermediatePathError::new(
+            X509RsaConstructedPathReviewedIntermediatePathErrorKind::InvalidPathShape,
+        ));
+    }
+
+    let Some(terminal_child) = terminal_link.child_candidate_certificate() else {
+        return Err(X509RsaConstructedPathReviewedIntermediatePathError::new(
+            X509RsaConstructedPathReviewedIntermediatePathErrorKind::InvalidPathShape,
+        ));
+    };
+    let policy_intermediate = authenticated_intermediate
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    if !same_exact_object(terminal_child, intermediate_link.issuer_certificate())
+        || !same_exact_object(terminal_child, policy_intermediate)
+    {
+        return Err(X509RsaConstructedPathReviewedIntermediatePathError::new(
+            X509RsaConstructedPathReviewedIntermediatePathErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    Ok(BoundX509RsaConstructedReviewedIntermediatePath {
+        authenticated_intermediate,
+        reviewed_terminal,
     })
 }
 

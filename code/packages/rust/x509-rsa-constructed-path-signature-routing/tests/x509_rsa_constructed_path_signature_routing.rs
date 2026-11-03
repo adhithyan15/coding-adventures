@@ -21,11 +21,14 @@ use x509_rsa_algorithm_policy::{
 };
 use x509_rsa_constructed_path_signature_routing::{
     advance_x509_rsa_constructed_path_intermediate_path_length,
+    bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor,
     bind_x509_rsa_constructed_path_intermediate_policy,
     bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
     verify_x509_rsa_constructed_path_policy_signature,
     X509RsaConstructedPathIntermediatePolicyErrorKind,
-    X509RsaConstructedPathReviewedAnchorErrorKind, X509RsaConstructedPathSignatureRoutingErrorKind,
+    X509RsaConstructedPathReviewedAnchorErrorKind,
+    X509RsaConstructedPathReviewedIntermediatePathErrorKind,
+    X509RsaConstructedPathSignatureRoutingErrorKind,
 };
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_signature_routing::{
@@ -695,5 +698,165 @@ fn rejects_byte_equal_detached_reviewed_anchor() {
     assert_eq!(
         error.kind(),
         X509RsaConstructedPathReviewedAnchorErrorKind::EvidenceMismatch
+    );
+}
+
+#[test]
+fn binds_complete_routed_two_link_path_to_reviewed_anchor() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+
+    let intermediate_signature = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let intermediate = bind_x509_rsa_constructed_path_intermediate_policy(
+        intermediate_signature,
+        intermediate_policy(&candidates[0], &profiles, false),
+    )
+    .unwrap();
+    let intermediate = advance_x509_rsa_constructed_path_intermediate_path_length(
+        X509CertificatePathLengthState::new(1),
+        intermediate,
+    )
+    .unwrap();
+
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+
+    let bound =
+        bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor(intermediate, terminal)
+            .unwrap();
+
+    assert_eq!(
+        bound
+            .authenticated_intermediate()
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    let intermediate_link = bound
+        .authenticated_intermediate()
+        .authenticated_intermediate()
+        .verified_signature()
+        .adjacent_link();
+    let terminal_link = bound
+        .reviewed_terminal()
+        .verified_terminal_signature()
+        .adjacent_link();
+    assert_eq!(intermediate_link.issuer_depth(), 0);
+    assert_eq!(terminal_link.issuer_depth(), 1);
+    assert!(std::ptr::eq(
+        intermediate_link.constructed_path(),
+        terminal_link.constructed_path()
+    ));
+    assert!(std::ptr::eq(
+        intermediate_link.issuer_certificate(),
+        terminal_link.child_candidate_certificate().unwrap()
+    ));
+    assert!(std::ptr::eq(
+        terminal_link.issuer_certificate(),
+        bound
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .candidate_certificate()
+    ));
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundX509RsaConstructedReviewedIntermediatePath"
+    );
+}
+
+#[test]
+fn rejects_two_link_proofs_from_distinct_construction_objects() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let intermediate_path = constructed_chain(&target, &candidates);
+    let terminal_path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+
+    let intermediate_signature = verify_x509_rsa_constructed_path_policy_signature(
+        intermediate_path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let intermediate = bind_x509_rsa_constructed_path_intermediate_policy(
+        intermediate_signature,
+        intermediate_policy(&candidates[0], &profiles, false),
+    )
+    .unwrap();
+    let intermediate = advance_x509_rsa_constructed_path_intermediate_path_length(
+        X509CertificatePathLengthState::new(1),
+        intermediate,
+    )
+    .unwrap();
+
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        terminal_path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+
+    let error =
+        bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor(intermediate, terminal)
+            .expect_err("byte-identical selection from another path object is detached traversal");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathReviewedIntermediatePathErrorKind::EvidenceMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 RSA constructed-path reviewed intermediate path error EvidenceMismatch"
     );
 }

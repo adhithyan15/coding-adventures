@@ -1391,6 +1391,23 @@ grant network authority. The pure public-certificate composition performs no
 credential access, signing, storage, clock acquisition, audit event, trace
 emission, I/O, or external effect. Concrete HTTPS and live-provider readiness
 remain unavailable.
+A bounded two-link follow-up now consumes the routed intermediate path-length
+transition and routed reviewed-terminal handoff for one exact
+target -> intermediate -> root construction. It fails closed unless both
+inputs retain the same constructed-path object at depths zero and one, the
+construction has exactly two issuers, and the terminal child is the exact
+intermediate retained by complete policy. Success retains both data-driven RSA
+signature results, complete intermediate critical-extension, role, algorithm,
+self-issued, and explicit-time policy, advanced caller-owned path-length state,
+and reviewed Mozilla root selection together. Proofs projected from a distinct
+construction fail even when they select the same decoded certificates. This
+fixed shape does not support additional intermediates, derive the initial
+path-length cap from anchor policy, apply anchor or intermediate name
+constraints, validate target identity or purpose, check revocation, perform TLS
+or HTTP, authorize OAuth transport, or grant network authority. The pure
+public-certificate composition performs no credential access, signing,
+storage, clock acquisition, audit event, trace emission, I/O, or external
+effect. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each
