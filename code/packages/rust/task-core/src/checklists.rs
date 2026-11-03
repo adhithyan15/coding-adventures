@@ -60,10 +60,15 @@ impl ProjectState {
         description: impl Into<String>,
         now: u64,
     ) -> Result<(), OpError> {
+        // The root is a task named after the checklist, so the checklist's
+        // name is a task name and takes the task-name limit.
+        let name = name.into();
+        if !crate::ops::task_name_fits(&name) {
+            return Err(OpError::Invalid("task name too long"));
+        }
         if self.checklists.contains_key(&id) || self.tasks.contains_key(&root) {
             return Err(OpError::Duplicate);
         }
-        let name = name.into();
         let mut task = Task::new(root.clone(), name.clone());
         task.kind = TaskKind::Summary;
         self.tasks.insert(root.clone(), task);
@@ -680,6 +685,32 @@ mod tests {
     }
     fn c(s: &str) -> ChecklistId {
         ChecklistId::from_raw(s)
+    }
+
+    #[test]
+    fn a_checklist_name_takes_the_task_name_cap() {
+        // The root is a task named after the checklist.
+        let mut p = ProjectState::empty(ProjectId::from_raw("p"));
+        let at_cap = "😀".repeat(crate::MAX_TASK_NAME_CHARS);
+        p.create_checklist_template(c("a"), t("ra"), at_cap.clone(), "", 1)
+            .unwrap();
+        assert_eq!(p.tasks[&t("ra")].name, at_cap);
+        assert_eq!(
+            p.create_checklist_template(c("b"), t("rb"), format!("{at_cap}x"), "", 1),
+            Err(OpError::Invalid("task name too long"))
+        );
+        assert!(!p.checklists.contains_key(&c("b")) && !p.tasks.contains_key(&t("rb")));
+    }
+
+    #[test]
+    fn a_run_copies_an_over_cap_name_whole() {
+        // A template item named before the cap: a run is a copy of stored
+        // data, so it neither fails nor cuts the name.
+        let mut p = preflight();
+        let legacy = "x".repeat(crate::MAX_TASK_NAME_CHARS + 1);
+        p.tasks.get_mut(&t("fuel")).unwrap().name = legacy.clone();
+        p.instantiate_checklist(&c("tpl"), c("r1"), 2).unwrap();
+        assert_eq!(p.tasks[&t("r1/fuel")].name, legacy);
     }
 
     /// "Pre-flight": Fuel · Passengers? (yes: Brief · Seatbelts / no: Stow seats) · Doors
