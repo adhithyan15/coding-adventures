@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 
 import {
   DuplicateEdgeIdError,
@@ -15,8 +16,8 @@ describe("MultiDirectedGraph", () => {
     graph.addNode("input", { "nn.op": "input" });
     graph.addNode("input", { "nn.shape": "[1]" });
 
-    expect(graph.nodes()).toEqual(["input"]);
-    expect(graph.nodeProperties("input")).toEqual({
+    assert.deepEqual(graph.nodes(), ["input"]);
+    assert.deepEqual(graph.nodeProperties("input"), {
       "nn.op": "input",
       "nn.shape": "[1]",
     });
@@ -28,14 +29,14 @@ describe("MultiDirectedGraph", () => {
     const e0 = graph.addEdge("A", "B", 0.25, { channel: "left" }, "edge-a");
     const e1 = graph.addEdge("A", "B", 0.75, { channel: "right" }, "edge-b");
 
-    expect(e0).toBe("edge-a");
-    expect(e1).toBe("edge-b");
-    expect(graph.edgesBetween("A", "B").map((edge) => edge.id)).toEqual([
+    assert.equal(e0, "edge-a");
+    assert.equal(e1, "edge-b");
+    assert.deepEqual(graph.edgesBetween("A", "B").map((edge) => edge.id), [
       "edge-a",
       "edge-b",
     ]);
-    expect(graph.successors("A")).toEqual(["B"]);
-    expect(graph.predecessors("B")).toEqual(["A"]);
+    assert.deepEqual(graph.successors("A"), ["B"]);
+    assert.deepEqual(graph.predecessors("B"), ["A"]);
   });
 
   it("supports generic node values", () => {
@@ -43,15 +44,15 @@ describe("MultiDirectedGraph", () => {
 
     const edgeId = graph.addEdge(1, 2, 3.5);
 
-    expect(graph.nodes()).toEqual([1, 2]);
-    expect(graph.edge(edgeId)).toEqual({
+    assert.deepEqual(graph.nodes(), [1, 2]);
+    assert.deepEqual(graph.edge(edgeId), {
       id: edgeId,
       from: 1,
       to: 2,
       weight: 3.5,
     });
-    expect(graph.successors(1)).toEqual([2]);
-    expect(graph.predecessors(2)).toEqual([1]);
+    assert.deepEqual(graph.successors(1), [2]);
+    assert.deepEqual(graph.predecessors(2), [1]);
   });
 
   it("keeps edge properties and weights synchronized", () => {
@@ -61,18 +62,18 @@ describe("MultiDirectedGraph", () => {
       "nn.trainable": true,
     });
 
-    expect(graph.edgeProperties(edgeId)).toEqual({
+    assert.deepEqual(graph.edgeProperties(edgeId), {
       "nn.trainable": true,
       weight: 0.5,
     });
 
     graph.setEdgeProperty(edgeId, "weight", 0.75);
-    expect(graph.edgeWeight(edgeId)).toBe(0.75);
-    expect(graph.edgeProperties(edgeId).weight).toBe(0.75);
+    assert.equal(graph.edgeWeight(edgeId), 0.75);
+    assert.equal(graph.edgeProperties(edgeId).weight, 0.75);
 
     graph.removeEdgeProperty(edgeId, "weight");
-    expect(graph.edgeWeight(edgeId)).toBe(1.0);
-    expect(graph.edgeProperties(edgeId).weight).toBe(1.0);
+    assert.equal(graph.edgeWeight(edgeId), 1.0);
+    assert.equal(graph.edgeProperties(edgeId).weight, 1.0);
   });
 
   it("stores graph properties", () => {
@@ -80,13 +81,13 @@ describe("MultiDirectedGraph", () => {
 
     graph.setGraphProperty("nn.name", "tiny-model");
     graph.setGraphProperty("nn.version", "0");
-    expect(graph.graphProperties()).toEqual({
+    assert.deepEqual(graph.graphProperties(), {
       "nn.name": "tiny-model",
       "nn.version": "0",
     });
 
     graph.removeGraphProperty("nn.version");
-    expect(graph.graphProperties()).toEqual({ "nn.name": "tiny-model" });
+    assert.deepEqual(graph.graphProperties(), { "nn.name": "tiny-model" });
   });
 
   it("removes incident edges and metadata when removing a node", () => {
@@ -97,11 +98,11 @@ describe("MultiDirectedGraph", () => {
 
     graph.removeNode("A");
 
-    expect(graph.hasNode("A")).toBe(false);
-    expect(graph.hasEdge(e0)).toBe(false);
-    expect(graph.hasEdge(e1)).toBe(false);
-    expect(() => graph.edgeProperties(e0)).toThrow(EdgeNotFoundError);
-    expect(() => graph.nodeProperties("A")).toThrow(NodeNotFoundError);
+    assert.equal(graph.hasNode("A"), false);
+    assert.equal(graph.hasEdge(e0), false);
+    assert.equal(graph.hasEdge(e1), false);
+    assert.throws(() => graph.edgeProperties(e0), EdgeNotFoundError);
+    assert.throws(() => graph.nodeProperties("A"), NodeNotFoundError);
   });
 
   it("topologically sorts with parallel edge counts", () => {
@@ -111,9 +112,9 @@ describe("MultiDirectedGraph", () => {
     graph.addEdge("A", "B");
     graph.addEdge("B", "C");
 
-    expect(graph.topologicalSort()).toEqual(["A", "B", "C"]);
-    expect(graph.independentGroups()).toEqual([["A"], ["B"], ["C"]]);
-    expect(graph.hasCycle()).toBe(false);
+    assert.deepEqual(graph.topologicalSort(), ["A", "B", "C"]);
+    assert.deepEqual(graph.independentGroups(), [["A"], ["B"], ["C"]]);
+    assert.equal(graph.hasCycle(), false);
   });
 
   it("detects cycles", () => {
@@ -122,18 +123,19 @@ describe("MultiDirectedGraph", () => {
     graph.addEdge("A", "B");
     graph.addEdge("B", "A");
 
-    expect(graph.hasCycle()).toBe(true);
-    expect(() => graph.topologicalSort()).toThrow(MultiDirectedGraphCycleError);
+    assert.equal(graph.hasCycle(), true);
+    assert.throws(() => graph.topologicalSort(), MultiDirectedGraphCycleError);
   });
 
   it("controls self-loops", () => {
-    expect(() => new MultiDirectedGraph().addEdge("A", "A")).toThrow(
-      "Self-loops are not allowed"
+    assert.throws(
+      () => new MultiDirectedGraph().addEdge("A", "A"),
+      /Self-loops are not allowed/,
     );
 
     const graph = new MultiDirectedGraph({ allowSelfLoops: true });
     const edgeId = graph.addEdge("A", "A");
-    expect(graph.edge(edgeId)).toEqual({
+    assert.deepEqual(graph.edge(edgeId), {
       id: edgeId,
       from: "A",
       to: "A",
@@ -146,8 +148,9 @@ describe("MultiDirectedGraph", () => {
 
     graph.addEdge("A", "B", 1.0, {}, "edge");
 
-    expect(() => graph.addEdge("A", "B", 1.0, {}, "edge")).toThrow(
-      DuplicateEdgeIdError
+    assert.throws(
+      () => graph.addEdge("A", "B", 1.0, {}, "edge"),
+      DuplicateEdgeIdError,
     );
   });
 
@@ -155,6 +158,6 @@ describe("MultiDirectedGraph", () => {
     const graph = new MultiDirectedGraph();
     graph.addEdge("A", "B");
 
-    expect(graph.toString()).toBe("MultiDirectedGraph(nodes=2, edges=1)");
+    assert.equal(graph.toString(), "MultiDirectedGraph(nodes=2, edges=1)");
   });
 });
