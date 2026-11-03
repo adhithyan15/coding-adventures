@@ -1,5 +1,13 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — LANG83 PR5b — a CLR string holds one char per byte
+
+- **Any literal** (`Str` or raw-byte `Operand::Bytes`) emits: printable ASCII keeps the quoted `ldstr "…"`, anything else is `ldstr bytearray (b0 00 b1 00 …)`, the UTF-16LE of one char per byte, so NUL and 0x80–0xFF need no escape. (The IL text path accepted printable ASCII only.)
+- **`print_str` and `putchar` write bytes** through a synthetic `__iir_write_bytes(string)`: flush `Console.Out`, copy each char into a `uint8[]`, write it to a cached `Console.OpenStandardOutput()` stream (static field `__iir_stdout`) and flush it. `Console.Write(string)` / `Write(char)` encoded with the console's encoding, so `putchar 0xFF` wrote `C3 BF`. The writer is emitted only when used; a module function may not take its name. Its stack is empty at every label and branch.
+- **`input_str` reads Latin-1**: a module that uses it sets `Console.InputEncoding = Encoding.Latin1` in the launcher, before the entry runs, so each input byte is one char.
+- The binary `lower.rs` path (clr-simulator) refuses a `Bytes` operand in `const` and as a call argument; its literal support is unchanged.
+- `string_literal_print_emits_ldstr_console_write_and_discards_result` and `brainfuck_byte_tape_and_putchar_lower_to_cil` now pin the byte writer instead of `Console.Write`. New `tests/lang83_pr5b.rs` (four tests, each failing on the previous IL emitter), including a stack-depth model of the writer. CoreCLR is not on the dev host; CI executes the IL.
+
 ## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused on every CLR path
 
 - A `str_const` longer than the module's string ceiling (`StrTooLong`), or a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), is refused as `IIRClrError::ValidationFailed` before anything is emitted, on all three entry points: `lower_iir_to_cil` (through `validate_iir_for_clr`), and `emit_il` (the real-CoreCLR `.il` path the CoreCLR column runs) and `lower_typed_scalars_to_cil`, which skip that validator and call the new crate-private `validate::check_str_ceiling`. The check is `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, `emit_il` compiled the 17-byte literal of a ceiling-16 module.
