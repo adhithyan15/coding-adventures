@@ -51,10 +51,10 @@ defmodule CodingAdventures.Rng do
       import Bitwise
 
       @multiplier 6_364_136_223_846_793_005
-      @increment  1_442_695_040_888_963_407
-      @mask64     0xFFFF_FFFF_FFFF_FFFF
-      @mask32     0xFFFF_FFFF
-      @float_div  4_294_967_296.0
+      @increment 1_442_695_040_888_963_407
+      @mask64 0xFFFF_FFFF_FFFF_FFFF
+      @mask32 0xFFFF_FFFF
+      @float_div 4_294_967_296.0
     end
   end
 end
@@ -114,7 +114,7 @@ defmodule CodingAdventures.Rng.LCG do
   @spec next_u32(t()) :: {non_neg_integer(), t()}
   def next_u32(%__MODULE__{state: s} = g) do
     new_state = band(s * @multiplier + @increment, @mask64)
-    value     = bsr(new_state, 32)
+    value = bsr(new_state, 32)
     {value, %__MODULE__{g | state: new_state}}
   end
 
@@ -146,34 +146,15 @@ defmodule CodingAdventures.Rng.LCG do
   # next_int_in_range ───────────────────────────────────────────────────────────
 
   @doc """
-  Return a uniform random integer in `[min, max]` inclusive.
+  Return a uniform random integer in `[min, max]` inclusive, by the
+  rejection sampling of `CodingAdventures.Rng.Range.int_in_range/5`.
 
-  Uses rejection sampling to eliminate modulo bias.  The threshold is:
-
-      threshold = rem(rem(-range_size, 2^32) + 2^32, 2^32)
-
-  Any draw below `threshold` is discarded.  Expected extra draws per call
-  is less than 2 for all range sizes.
+  Raises `ArgumentError` for bounds that are not signed 64-bit integers or
+  for `min > max`, before any draw.
   """
   @spec next_int_in_range(t(), integer(), integer()) :: {integer(), t()}
-  def next_int_in_range(g, min_val, max_val) when min_val <= max_val do
-    range_size = max_val - min_val + 1
-    threshold  = rem(rem(-range_size, 1 <<< 32) + (1 <<< 32), 1 <<< 32)
-    threshold  = rem(threshold, range_size)
-    do_sample(g, min_val, range_size, threshold)
-  end
-
-  def next_int_in_range(_gen, min_val, max_val) do
-    raise ArgumentError, "next_int_in_range requires min_val <= max_val, got #{min_val} > #{max_val}"
-  end
-
-  defp do_sample(g, min, range_size, threshold) do
-    {r, g1} = next_u32(g)
-    if r >= threshold do
-      {min + rem(r, range_size), g1}
-    else
-      do_sample(g1, min, range_size, threshold)
-    end
+  def next_int_in_range(g, min_val, max_val) do
+    CodingAdventures.Rng.Range.int_in_range(g, &next_u32/1, &next_u64/1, min_val, max_val)
   end
 end
 
@@ -212,7 +193,7 @@ defmodule CodingAdventures.Rng.Xorshift64 do
       {:ok, g} = CodingAdventures.Rng.Xorshift64.new(1)
   """
   @spec new(non_neg_integer()) :: {:ok, t()}
-  def new(0),    do: {:ok, %__MODULE__{state: 1}}
+  def new(0), do: {:ok, %__MODULE__{state: 1}}
   def new(seed), do: {:ok, %__MODULE__{state: band(seed, @mask64)}}
 
   @doc """
@@ -241,26 +222,10 @@ defmodule CodingAdventures.Rng.Xorshift64 do
     {u / @float_div, g1}
   end
 
-  @doc "Return a uniform integer in `[min, max]` using rejection sampling."
+  @doc "Return a uniform integer in `[min, max]`; see `CodingAdventures.Rng.LCG.next_int_in_range/3`."
   @spec next_int_in_range(t(), integer(), integer()) :: {integer(), t()}
-  def next_int_in_range(g, min_val, max_val) when min_val <= max_val do
-    range_size = max_val - min_val + 1
-    threshold  = rem(rem(-range_size, 1 <<< 32) + (1 <<< 32), 1 <<< 32)
-    threshold  = rem(threshold, range_size)
-    do_sample(g, min_val, range_size, threshold)
-  end
-
-  def next_int_in_range(_gen, min_val, max_val) do
-    raise ArgumentError, "next_int_in_range requires min_val <= max_val, got #{min_val} > #{max_val}"
-  end
-
-  defp do_sample(g, min, range_size, threshold) do
-    {r, g1} = next_u32(g)
-    if r >= threshold do
-      {min + rem(r, range_size), g1}
-    else
-      do_sample(g1, min, range_size, threshold)
-    end
+  def next_int_in_range(g, min_val, max_val) do
+    CodingAdventures.Rng.Range.int_in_range(g, &next_u32/1, &next_u64/1, min_val, max_val)
   end
 end
 
@@ -337,11 +302,13 @@ defmodule CodingAdventures.Rng.PCG32 do
 
     # XSH RR: mix high bits down, then rotate right by the top-5 rotation.
     xorshifted = band(bsr(bxor(bsr(old_state, 18), old_state), 27), @mask32)
-    rot        = bsr(old_state, 59)
-    output     = band(
-      bor(bsr(xorshifted, rot), band(bsl(xorshifted, band(32 - rot, 31)), @mask32)),
-      @mask32
-    )
+    rot = bsr(old_state, 59)
+
+    output =
+      band(
+        bor(bsr(xorshifted, rot), band(bsl(xorshifted, band(32 - rot, 31)), @mask32)),
+        @mask32
+      )
 
     {output, g1}
   end
@@ -361,30 +328,83 @@ defmodule CodingAdventures.Rng.PCG32 do
     {u / @float_div, g1}
   end
 
-  @doc "Return a uniform integer in `[min, max]` using rejection sampling."
+  @doc "Return a uniform integer in `[min, max]`; see `CodingAdventures.Rng.LCG.next_int_in_range/3`."
   @spec next_int_in_range(t(), integer(), integer()) :: {integer(), t()}
-  def next_int_in_range(g, min_val, max_val) when min_val <= max_val do
-    range_size = max_val - min_val + 1
-    threshold  = rem(rem(-range_size, 1 <<< 32) + (1 <<< 32), 1 <<< 32)
-    threshold  = rem(threshold, range_size)
-    do_sample(g, min_val, range_size, threshold)
-  end
-
-  def next_int_in_range(_gen, min_val, max_val) do
-    raise ArgumentError, "next_int_in_range requires min_val <= max_val, got #{min_val} > #{max_val}"
-  end
-
-  defp do_sample(g, min, range_size, threshold) do
-    {r, g1} = next_u32(g)
-    if r >= threshold do
-      {min + rem(r, range_size), g1}
-    else
-      do_sample(g1, min, range_size, threshold)
-    end
+  def next_int_in_range(g, min_val, max_val) do
+    CodingAdventures.Rng.Range.int_in_range(g, &next_u32/1, &next_u64/1, min_val, max_val)
   end
 
   # One step of the internal LCG recurrence that drives PCG32's state.
   defp lcg_advance(%__MODULE__{state: s, increment: inc} = g) do
     %__MODULE__{g | state: band(s * @multiplier + inc, @mask64)}
+  end
+end
+
+# ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ────────────────────
+
+defmodule CodingAdventures.Rng.Range do
+  @moduledoc """
+  The rejection sampling every generator's `next_int_in_range/3` shares,
+  identical in every language of the repository.
+
+  `span = max - min + 1` lies between 1 and 2^64. Taking `rem(r, span)` of a
+  raw draw over-samples small offsets whenever the number of possible draws is
+  not a multiple of span; rejecting the `threshold` lowest draws removes
+  exactly the excess. Three regimes, chosen by span alone:
+
+      span <= 2^32    draw 32 bits,  threshold = rem(2^32 - span, span)
+      span <  2^64    draw 64 bits,  threshold = rem(2^64 - span, span)
+      span == 2^64    the whole signed 64-bit domain: no rejection
+
+  Example, span = 3: 2^32 = 3 * 1431655765 + 1, so threshold = 1. Rejecting
+  r = 0 leaves 2^32 - 1 draws, an exact multiple of 3.
+
+  Elixir integers are unbounded, but the spec's bounds are signed 64-bit and
+  every language must agree, so wider bounds raise like `min > max` does. The
+  `is_integer` guards matter too: without them `min <= max` would compare any
+  two terms (Elixir orders floats, strings and atoms as well). v1 drew 32 bits
+  for every span, so a range wider than 2^32 could never return more than
+  2^32 - 1 above min.
+
+  Errors are raised before any draw, and the message names only the bounds.
+  """
+
+  import Bitwise
+
+  @i64_min -(1 <<< 63)
+  @i64_max (1 <<< 63) - 1
+  @two_32 1 <<< 32
+  @two_64 1 <<< 64
+
+  @doc "A uniform integer in `[min, max]` and the advanced generator."
+  @spec int_in_range(g, (g -> {integer(), g}), (g -> {integer(), g}), integer(), integer()) ::
+          {integer(), g}
+        when g: var
+  def int_in_range(g, next_u32, next_u64, min, max)
+      when is_integer(min) and is_integer(max) and min >= @i64_min and max <= @i64_max and
+             min <= max do
+    span = max - min + 1
+
+    cond do
+      span <= @two_32 -> sample(g, next_u32, min, span, rem(@two_32 - span, span))
+      span < @two_64 -> sample(g, next_u64, min, span, rem(@two_64 - span, span))
+      true -> next_u64.(g) |> then(fn {r, g1} -> {min + r, g1} end)
+    end
+  end
+
+  def int_in_range(_g, _next_u32, _next_u64, min, max) do
+    raise ArgumentError,
+          "next_int_in_range needs signed 64-bit integer bounds with min <= max, " <>
+            "got [#{inspect(min)}, #{inspect(max)}]"
+  end
+
+  defp sample(g, draw, min, span, threshold) do
+    {r, g1} = draw.(g)
+
+    if r >= threshold do
+      {min + rem(r, span), g1}
+    else
+      sample(g1, draw, min, span, threshold)
+    end
   end
 end
