@@ -20385,3 +20385,16 @@ auto-merge remains disabled. Commit and push this receipt normally, require a
 fresh independent review of the resulting exact head, and enable guarded
 squash auto-merge only after every exact-head check is terminal acceptable and
 GitHub still reports the PR mergeable.
+
+#### Rust Cargo test-trigger core PR #18853 CI repair
+
+Exact ready head `024d688e6f995085881aae3abaf2c5c757130e3b` failed the
+repo-wide metadata-contract job in the Java build-tool fixture roster. The new
+closed `diff_selection` trigger variant carries package-name strings, while the
+non-adopting Java legacy test attempted to decode every `diff_selection`
+fixture as structured path-selection package records and rejected the absent
+`source_mode`. Keep auto-merge disabled. The bounded repair leaves only
+`trigger_relations` fixtures to adopting consumers while preserving the
+complete Java graph and legacy path-selection roster. Validate, commit, and
+push the repair normally, then require independent exact-head review and fresh
+terminal acceptable hosted qualification before guarded squash auto-merge.

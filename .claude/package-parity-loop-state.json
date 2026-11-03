@@ -21,10 +21,10 @@
     18853
   ],
   "last_ci_action": {
-    "observed_at": "2026-11-03T08:27:59Z",
+    "observed_at": "2026-11-03T09:09:44Z",
     "pr_number": 18853,
-    "head_revision": "f185778a48faaea5b1800d09f3228b62aa82e95e",
-    "action": "Marked PR #18853 ready only after independent exact-head publication review issued SHIP for f185778a48faaea5b1800d09f3228b62aa82e95e. Hosted checks are queued or in progress and auto-merge remains disabled. Commit and push this ready receipt normally, obtain independent review of the resulting exact head, and enable guarded squash auto-merge only after every check on that final reviewed head is terminal acceptable while GitHub reports the PR mergeable.",
+    "head_revision": "024d688e6f995085881aae3abaf2c5c757130e3b",
+    "action": "Exact-head CI failed the repo-wide metadata contract because the Java legacy graph/diff fixture roster attempted to decode the new closed Cargo trigger variant's package-name strings as legacy structured path-selection records. Keep auto-merge disabled. The bounded repair explicitly leaves trigger_relations fixtures to adopting consumers while preserving the Java legacy roster, and must be validated, committed, pushed normally, independently reviewed, and requalified on the resulting exact head.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2953,6 +2953,8 @@
       "lifecycle_review_revision": "f185778a48faaea5b1800d09f3228b62aa82e95e",
       "lifecycle_review_notes": "Independent publication review verified the PR identity, exact head and base, mergeability, 19-file GitHub/local parity, current-main and Lua merge receipts, active-PR ceiling, non-overlap, byte-identical implementation, 185-case/328-file corpus, focused Go witness, and ignored-inclusive clean worktree. It reported no findings and authorized marking the draft ready.",
       "ready_at": "2026-11-03T08:27:37Z",
+      "ci_failure_revision": "024d688e6f995085881aae3abaf2c5c757130e3b",
+      "ci_failure_notes": "Repo-wide metadata contracts failed only the Java BuildToolCoreTest legacy fixture-roster test. The new closed diff_selection trigger variant carries package-name strings, while that non-adopting Java test assumes every diff_selection fixture carries legacy package records with source_mode. The repair makes the Java legacy roster ignore only options containing trigger_relations, matching the documented distinct variant while leaving all existing graph and path-selection fixtures mandatory.",
       "registered_at": "2026-10-30T12:39:41Z",
       "preparation_branch": "codex/build-tool-rust-cargo-test-trigger",
       "prepared_at": "2026-11-03T07:36:31Z",
