@@ -1417,8 +1417,23 @@ export function summarizeModality(
   lessons: readonly ParsedLesson[],
   options: ModalityOptions = {},
 ): ModalitySummary {
-  const entries = lessonModalities(lessons, options);
+  return summarizeLessonModalities(lessonModalities(lessons, options), options);
+}
 
+/**
+ * {@link summarizeModality} for lessons whose modality is already derived.
+ *
+ * Every number in the summary is a count over the per-lesson entries; nothing
+ * here reads a lesson again. So a caller that derives the entries one track at a
+ * time, and lets each track's parsed lessons go before reading the next, gets
+ * the same summary without ever holding the whole corpus. `options` must be the
+ * options the entries were derived with: only the table width is read here, and
+ * only to report it.
+ */
+export function summarizeLessonModalities(
+  entries: readonly LessonModality[],
+  options: ModalityOptions = {},
+): ModalitySummary {
   const findings: ModalityFinding[] = [];
   for (const entry of entries) findings.push(...modalityFindings(entry));
   findings.sort(
