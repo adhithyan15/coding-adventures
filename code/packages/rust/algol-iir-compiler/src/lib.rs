@@ -3727,6 +3727,34 @@ impl Compiler {
         }
         if node.rule_name != "proc_call" {
             let sequence = pieces(node);
+            if sequence.len() >= 3 && !sequence.len().is_multiple_of(2) {
+                let mut coefficient = if negative { -1_i64 } else { 1_i64 };
+                let mut radicand = None;
+                let mut is_product = true;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index.is_multiple_of(2) {
+                        let Piece::Node(operand) = piece else {
+                            is_product = false;
+                            break;
+                        };
+                        if let Some(value) = self.exact_static_sqrt_radicand(operand) {
+                            if radicand.replace(value).is_some() {
+                                return None;
+                            }
+                        } else {
+                            let value = self
+                                .exact_static_integer_normalizer_operand_value(operand)?;
+                            coefficient = coefficient.checked_mul(value)?;
+                        }
+                    } else if !matches!(piece, Piece::Op(operator) if operator == "*") {
+                        is_product = false;
+                        break;
+                    }
+                }
+                if is_product {
+                    return self.exact_scaled_floor_root_value(coefficient, radicand?);
+                }
+            }
             let has_leading_sign = matches!(
                 sequence.first(),
                 Some(Piece::Op(operator)) if matches!(operator.as_str(), "+" | "-")
@@ -3815,6 +3843,48 @@ impl Compiler {
         }
         let magnitude = root + u64::from(root * root != value);
         i64::try_from(magnitude).ok()?.checked_neg()
+    }
+
+    fn exact_static_sqrt_radicand(&self, node: &GrammarASTNode) -> Option<u64> {
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.exact_static_sqrt_radicand(child);
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return (sign == "+")
+                .then(|| self.exact_static_sqrt_radicand(child))?;
+        }
+        if node.rule_name != "proc_call" {
+            let children = direct_nodes(node);
+            return (direct_tokens(node).is_empty() && children.len() == 1)
+                .then(|| self.exact_static_sqrt_radicand(children[0]))?;
+        }
+        let name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&name);
+        if target_name != "sqrt" || self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() != 1 {
+            return None;
+        }
+        let value = self.exact_static_integer_normalizer_operand_value(actuals[0])?;
+        u64::try_from(value).ok()
+    }
+
+    fn exact_scaled_floor_root_value(&self, coefficient: i64, radicand: u64) -> Option<i64> {
+        let magnitude = coefficient.unsigned_abs() as u128;
+        let squared = magnitude.checked_mul(magnitude)?;
+        let value = squared.checked_mul(radicand as u128)?;
+        let root = value.isqrt();
+        if coefficient >= 0 {
+            return i64::try_from(root).ok();
+        }
+        let ceiling = root.checked_add(u128::from(root * root != value))?;
+        i64::try_from(ceiling).ok()?.checked_neg()
     }
 
     /// Evaluate checked integer arithmetic around nested static normalizers.
@@ -17355,6 +17425,35 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "negative radicands, overridden or dynamic roots, and multiple roots must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_scaled_floor_root_nested_wide_static_integer_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(entier(9223372030926249000)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) * 5 * 2)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier((-2) * sqrt(entier(15)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "integer-scaled exact floor roots may compose between wide static integer normalizers for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(entier(-1)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure sqrt(x); value x; real x; sqrt := 8; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 80; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) * sqrt(entier(3)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / 2)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(9223372036854775807 * 2 * sqrt(entier(2)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(9223372036854775807 * sqrt(entier(9223372036854775807)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "negative radicands, overridden or dynamic roots, multiple roots, division, and overflow must fail closed",
             );
         }
     }
