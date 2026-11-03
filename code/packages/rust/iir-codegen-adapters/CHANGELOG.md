@@ -4,6 +4,10 @@ All notable changes to this crate will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased — LANG83 PR5b
+
+- `compile_iir(m, "iir-jvm")` calls the JVM generator's `try_generate` and turns a class-file limit into `IIRAdapterError::LoweringFailed`. Before, `generate` `.expect`ed the lowering, so a module that validated but overflowed the constant pool panicked (security re-review I2). Test `compile_iir_reports_a_jvm_class_file_limit_instead_of_panicking`.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)

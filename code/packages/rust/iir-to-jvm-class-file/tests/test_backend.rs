@@ -2588,6 +2588,51 @@ fn a_method_past_the_code_limit_is_an_error() {
     assert!(format!("{err}").contains("bytes of code"), "{err}");
 }
 
+/// PR5b security re-review (I2.1): more than 65 535 local slots is an `Err`.
+/// `allocate_slots` asserted (and `max_locals` panicked behind it).
+#[test]
+fn too_many_locals_is_an_error_not_a_panic() {
+    let body: Vec<IIRInstr> = (0..70_000)
+        .map(|i| IIRInstr::new("const", Some(format!("v{i}")), vec![Operand::Int(1)], "i64"))
+        .chain([IIRInstr::new("ret_void", None, vec![], "void")])
+        .collect();
+    let module = module_with(IIRFunction::new("many", vec![], "void", body));
+    let err = std::panic::catch_unwind(|| lower_iir_to_jvm(&module, &IIRJvmConfig::new("TestClass")))
+        .expect("no panic")
+        .unwrap_err();
+    assert!(format!("{err}").contains("local variable slots"), "{err}");
+}
+
+/// PR5b security re-review (I2.2): a `__callClosure` arm past a JVM branch's
+/// reach (a target with 7 000 `i64` parameters) is an `Err`. It panicked.
+#[test]
+fn a_closure_dispatch_arm_past_a_branch_is_an_error_not_a_panic() {
+    let params: Vec<(String, String)> = (0..7_000).map(|i| (format!("p{i}"), "i64".to_string())).collect();
+    let target = IIRFunction::new("__big", params, "i64", vec![IIRInstr::new("ret", None, vec![Operand::Var("p0".into())], "i64")]);
+    let caller = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("alloc_closure", Some("cl".into()), vec![Operand::Str("__big".into())], "closure"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let mut module = module_with(caller);
+    module.functions.push(target);
+    let err = std::panic::catch_unwind(|| lower_iir_to_jvm(&module, &IIRJvmConfig::new("TestClass")))
+        .expect("no panic")
+        .unwrap_err();
+    assert!(matches!(&err, IIRJvmError::ClassFileLimit { function, .. } if function == "__callClosure"), "{err}");
+}
+
+/// PR5b security re-review (I2.3): a name longer than one `CONSTANT_Utf8`
+/// entry (65 535 bytes) is an `Err` from lowering. It lowered `Ok`, and
+/// `serialize_jvm_class_file` then panicked.
+#[test]
+fn a_name_past_the_utf8_constant_limit_is_an_error() {
+    let long_fn = module_with(void_fn(&"a".repeat(70_000)));
+    let err = lower_iir_to_jvm(&long_fn, &IIRJvmConfig::new("TestClass")).unwrap_err();
+    assert!(format!("{err}").contains("bytes of modified UTF-8"), "{err}");
+    let err = lower_iir_to_jvm(&module_with(void_fn("main")), &IIRJvmConfig::new("C".repeat(70_000))).unwrap_err();
+    assert!(matches!(err, IIRJvmError::ClassFileLimit { .. }), "{err}");
+}
+
 /// A module function may not take the synthetic writer's name.
 #[test]
 fn e4_a_function_may_not_be_named_iir_print_str() {

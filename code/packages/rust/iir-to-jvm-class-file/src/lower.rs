@@ -745,6 +745,19 @@ fn modified_utf8(s: &str) -> Vec<u8> {
     out
 }
 
+/// The length of [`modified_utf8`]`(s)`, without building it.
+fn modified_utf8_str_len(s: &str) -> usize {
+    s.chars()
+        .map(|c| match c as u32 {
+            0 => 2,
+            0x01..=0x7F => 1,
+            0x80..=0x7FF => 2,
+            0x800..=0xFFFF => 3,
+            _ => 6, // two surrogates, three bytes each
+        })
+        .sum()
+}
+
 /// The synthetic `print_str` method (LANG83 PR5b), and its descriptor.
 const PRINT_STR_METHOD: &str = "__iir_print_str";
 const PRINT_STR_DESCRIPTOR: &str = "(Ljava/lang/String;)V";
@@ -1922,12 +1935,21 @@ fn emit_long_compare(code: &mut Vec<u8>, cmp_opcode: u8) {
 fn allocate_slots(
     func: &IIRFunction,
     type_map: &HashMap<String, JvmType>,
-) -> HashMap<String, (u16, JvmType)> {
+) -> Result<HashMap<String, (u16, JvmType)>, IIRJvmError> {
     let mut slots: HashMap<String, (u16, JvmType)> = HashMap::new();
     // Use u32 internally to detect overflow before narrowing to u16.
-    // JVM local slots are 16-bit; exceeding 65,535 slots would produce
-    // silently aliased locals, so we assert-guard the cast.
+    // JVM local slots are 16-bit (`max_locals` is a `u2`); exceeding them
+    // would alias locals. A function past the limit is
+    // `IIRJvmError::ClassFileLimit`, never a panic: it was an `assert!`, which
+    // 70 000 `const v{i}` instructions reached (LANG83 PR5b security
+    // re-review, I2).
     let mut next_slot: u32 = 0;
+    let too_many = || IIRJvmError::ClassFileLimit {
+        function: func.name.clone(),
+        detail: format!("the method needs more than {} local variable slots", u16::MAX),
+    };
+    // Every slot ends below 65 536, so `max_locals` (index + width) fits a u16.
+    let fits = |next: u32, t: JvmType| next + t.slot_width() as u32 <= u16::MAX as u32;
 
     // ── Step 1: allocate params ──────────────────────────────────────────────
     //
@@ -1937,10 +1959,9 @@ fn allocate_slots(
     for (param_name, param_type_str) in &func.params {
         let jvm_type = iir_type_to_jvm(param_type_str.as_str())
             .unwrap_or(JvmType::Int); // fallback; validator should catch bad types
-        assert!(
-            next_slot <= u16::MAX as u32,
-            "JVM local slot overflow: too many variables in function {:?}", func.name
-        );
+        if !fits(next_slot, jvm_type) {
+            return Err(too_many());
+        }
         slots.insert(param_name.clone(), (next_slot as u16, jvm_type));
         next_slot += jvm_type.slot_width() as u32;
     }
@@ -1962,10 +1983,9 @@ fn allocate_slots(
                     .get(dest.as_str())
                     .copied()
                     .unwrap_or(instr_type);
-                assert!(
-                    next_slot <= u16::MAX as u32,
-                    "JVM local slot overflow: too many variables in function {:?}", func.name
-                );
+                if !fits(next_slot, var_type) {
+                    return Err(too_many());
+                }
                 slots.insert(dest.clone(), (next_slot as u16, var_type));
                 next_slot += var_type.slot_width() as u32;
             }
@@ -1975,10 +1995,9 @@ fn allocate_slots(
             if let Operand::Var(name) = src {
                 if !slots.contains_key(name.as_str()) {
                     let var_type = type_map.get(name.as_str()).copied().unwrap_or(instr_type);
-                    assert!(
-                        next_slot <= u16::MAX as u32,
-                        "JVM local slot overflow: too many variables in function {:?}", func.name
-                    );
+                    if !fits(next_slot, var_type) {
+                        return Err(too_many());
+                    }
                     slots.insert(name.clone(), (next_slot as u16, var_type));
                     next_slot += var_type.slot_width() as u32;
                 }
@@ -1986,7 +2005,7 @@ fn allocate_slots(
         }
     }
 
-    slots
+    Ok(slots)
 }
 
 /// Build a variable-to-type map for a function.
@@ -2178,6 +2197,12 @@ struct ConstantPoolBuilder {
     /// [`IIRJvmError::ClassFileLimit`] before any method is finished, so no
     /// class with a 0 index is ever emitted (LANG83 PR5b security review, I2).
     overflowed: bool,
+    /// The longest `CONSTANT_Utf8` entry added, in modified-UTF-8 bytes. An
+    /// entry is at most 65 535 bytes (a `u2` length); a longer name (a
+    /// 70 000-character function or class name) is refused by
+    /// [`check_class_file_limits`] instead of panicking in
+    /// [`serialize_jvm_class_file`] (LANG83 PR5b security re-review, I2).
+    longest_utf8: usize,
 }
 
 /// The most entries a constant pool may hold: `constant_pool_count` is a `u2`
@@ -2198,6 +2223,15 @@ fn check_class_file_limits(cp: &ConstantPoolBuilder, code: &[u8], function: &str
             detail: format!("the constant pool needs more than {} entries", JVM_CP_MAX_ENTRIES - 1),
         });
     }
+    if cp.longest_utf8 > JVM_UTF8_MAX {
+        return Err(IIRJvmError::ClassFileLimit {
+            function: function.to_string(),
+            detail: format!(
+                "a name or constant is {} bytes of modified UTF-8 (limit {JVM_UTF8_MAX})",
+                cp.longest_utf8
+            ),
+        });
+    }
     if code.len() > JVM_CODE_MAX {
         return Err(IIRJvmError::ClassFileLimit {
             function: function.to_string(),
@@ -2213,6 +2247,7 @@ impl ConstantPoolBuilder {
             entries: vec![None], // index 0 is always unused in JVM
             index_map: HashMap::new(),
             overflowed: false,
+            longest_utf8: 0,
         }
     }
 
@@ -2239,6 +2274,7 @@ impl ConstantPoolBuilder {
 
     /// Add a UTF8 string entry.
     fn add_utf8(&mut self, s: &str) -> u16 {
+        self.longest_utf8 = self.longest_utf8.max(modified_utf8_str_len(s));
         let key = format!("Utf8:{}", s);
         self.add_entry(key, JvmConstantPoolEntry::Utf8(s.to_string()))
     }
@@ -2485,7 +2521,7 @@ fn lower_function(
 
     // ── Pass 1: build type map and allocate slots ────────────────────────────
     let type_map = build_type_map(func);
-    let slots = allocate_slots(func, &type_map);
+    let slots = allocate_slots(func, &type_map)?;
 
     // Compute max_locals: the maximum slot index + width across all variables.
     // Use u32 arithmetic to avoid u16 overflow before the final bounds check.
@@ -2499,14 +2535,12 @@ fn lower_function(
             .unwrap_or(0);
         let from_params = func.params.len() as u32;
         let raw = from_slots.max(from_params);
-        u16::try_from(raw).unwrap_or_else(|_| {
-            // allocate_slots should have already asserted; this is belt-and-braces.
-            panic!(
-                "max_locals {} overflows u16 for function {:?}; \
-                 this should have been caught in allocate_slots",
-                raw, func.name
-            )
-        })
+        // `allocate_slots` keeps every slot below 65 536; a parameter count
+        // past it is refused here too, as an error rather than a panic.
+        u16::try_from(raw).map_err(|_| IIRJvmError::ClassFileLimit {
+            function: func.name.clone(),
+            detail: format!("the method needs {raw} local variable slots (limit {})", u16::MAX),
+        })?
     };
 
     // ── Pass 2: emit bytecode ────────────────────────────────────────────────
@@ -5826,7 +5860,7 @@ fn generate_call_closure_dispatch(
 
             code.push(ALOAD);
             code.push(0u8); // closure array
-            emit_iconst(&mut code, (cap_i + 1) as i32); // closure[cap_i + 1]
+            emit_iconst_cp(&mut code, cp, (cap_i + 1) as i32); // closure[cap_i + 1] (any index, via the pool past ±32 767)
             code.push(LALOAD); // push as long
 
             if cap_jtype == JvmType::Int {
@@ -5847,7 +5881,7 @@ fn generate_call_closure_dispatch(
 
             code.push(ALOAD);
             code.push(1u8); // args array
-            emit_iconst(&mut code, arg_i as i32); // args[arg_i]
+            emit_iconst_cp(&mut code, cp, arg_i as i32); // args[arg_i] (any index, via the pool past ±32 767)
             code.push(LALOAD); // push as long
 
             if arg_jtype == JvmType::Int {
@@ -5882,15 +5916,16 @@ fn generate_call_closure_dispatch(
         let body_end = code.len();
         let raw_offset = (body_end as i64) - (ifne_pos as i64);
         if raw_offset < i16::MIN as i64 || raw_offset > i16::MAX as i64 {
-            // This is an internal limit of the JVM's 16-bit branch offsets.
-            // In practice it would require tens of thousands of closure entries
-            // to trigger, but we guard it explicitly for correctness.
-            panic!(
-                "__callClosure dispatch body too large for JVM i16 branch offset \
-                 ({} bytes, max {}); split the closure dispatch table or reduce \
-                 the number of closure-eligible functions",
-                raw_offset, i16::MAX
-            );
+            // An internal limit of the JVM's 16-bit branch offsets: one
+            // closure target with ~7 000 parameters reaches it. An error, not
+            // a panic (LANG83 PR5b security re-review, I2).
+            return Err(IIRJvmError::ClassFileLimit {
+                function: "__callClosure".to_string(),
+                detail: format!(
+                    "a closure dispatch arm is {raw_offset} bytes, past the {} a JVM branch can skip",
+                    i16::MAX
+                ),
+            });
         }
         let offset = raw_offset as i16;
         let ob = offset.to_be_bytes();
@@ -6258,6 +6293,13 @@ fn module_uses_op(module: &IIRModule, op: &str) -> bool {
 ///
 /// Used by the real-JVM integration test (see `test_backend.rs`).  The
 /// output should be accepted by any Java 8+ JVM.
+///
+/// # Panics
+///
+/// Only for a class this crate did not lower: a `CONSTANT_Utf8` entry longer
+/// than 65 535 bytes cannot be written. [`lower_iir_to_jvm`] refuses such a
+/// class with [`IIRJvmError::ClassFileLimit`] (LANG83 PR5b security
+/// re-review, I2), so its output always serialises.
 pub fn serialize_jvm_class_file(class: &JvmClassFile) -> Vec<u8> {
     let mut out = Vec::new();
 

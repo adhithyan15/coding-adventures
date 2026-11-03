@@ -2,6 +2,12 @@
 
 ## Unreleased — LANG83 PR5b — strings are bytes
 
+- **More class-file limits are errors** (security re-review I2), each now `IIRJvmError::ClassFileLimit`:
+  - more than 65 535 local slots (`allocate_slots` asserted, and `max_locals` panicked behind it);
+  - a `__callClosure` arm past a 16-bit branch (it panicked). Argument and capture indices above 32 767 now load through the constant pool (`emit_iconst_cp`) instead of reaching `emit_iconst`'s `debug_assert!`;
+  - a name or constant longer than one `CONSTANT_Utf8` entry, such as a 70 000-character function or class name. It lowered `Ok`, and `serialize_jvm_class_file` then panicked; that function now panics only on a class this crate did not lower.
+
+  New `IIRJvmCodeGenerator::try_generate` returns the lowering error; `generate` still panics. Tests `too_many_locals_is_an_error_not_a_panic`, `a_closure_dispatch_arm_past_a_branch_is_an_error_not_a_panic` and `a_name_past_the_utf8_constant_limit_is_an_error` all fail on the previous lowering.
 - **Class-file limits are errors, not panics** (security review I2). A literal near the string ceiling made of bytes ≥ 0x80 is ~32 768 chunks of two pool entries each, which overflowed the constant pool's `assert!`. The pool now records the overflow and every method build, and the class assembly, return the new `IIRJvmError::ClassFileLimit`; a method with more than 65 535 bytes of code (which the JVM rejects at load) is refused the same way. Tests `a_constant_pool_past_the_class_file_limit_is_an_error_not_a_panic` and `a_method_past_the_code_limit_is_an_error` (the first panicked, the second returned `Ok`, on the previous lowering).
 - The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.
 - **A JVM string holds one char per byte (U+0000–U+00FF).** `str_const` accepts any `Str` or raw-byte `Operand::Bytes` literal (the printable-ASCII `checked_jvm_string_literal` is gone) and widens each byte to one char. `length`, `charAt`, `substring`, `concat` and `compareTo` then compute the byte semantics unchanged.

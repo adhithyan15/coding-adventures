@@ -1453,7 +1453,7 @@ CI executes them.
 | native (`twig-aot`) | every literal byte through `store_byte`; the fold table holds bytes |
 | LLVM | any literal; literal table and fold facts keyed on bytes |
 | WASM | any literal into the data segment; runtime blocks keyed on bytes |
-| JVM | one char per byte; chunked constants; modified UTF-8 in the pool; `__iir_print_str`; a class past the class-file limits (65 535 pool entries, 65 535 bytes of method code) is `IIRJvmError::ClassFileLimit`, never a panic (security review I2: a ceiling-sized literal of bytes ≥ 0x80 overflowed the pool) |
+| JVM | one char per byte; chunked constants; modified UTF-8 in the pool; `__iir_print_str`; a class past a class-file limit is `IIRJvmError::ClassFileLimit`. The limits are 65 535 pool entries, 65 535 bytes of method code, 65 535 local slots, a `__callClosure` arm within a 16-bit branch, and a 65 535-byte `CONSTANT_Utf8`. Two security reviews (I2) found panics on those paths: a ceiling-sized literal of bytes ≥ 0x80 overflowed the pool, and very many locals, a 7 000-parameter closure target or a 70 000-character name each panicked. `lower_iir_to_jvm` and `IIRJvmCodeGenerator::try_generate` return the error. `generate` still panics on a lowering error, as it documents, and `iir-codegen-adapters` uses `try_generate`. `serialize_jvm_class_file` panics only on a class this crate did not lower. |
 | CLR | `ldstr bytearray` for a literal that is not printable ASCII; `__iir_write_bytes` behind `print_str` and `putchar`; Latin-1 `input_str` |
 | BEAM | any literal byte as a list element |
 | `lang-aot` | 14 `(PR5b)` cases and the gate `pr5b_strings_are_bytes_on_every_column`; byte-exact VM/JIT sinks and `input_str` line drain |

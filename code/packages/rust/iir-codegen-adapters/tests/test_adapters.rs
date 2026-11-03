@@ -481,3 +481,28 @@ fn adapter_error_validation_failed_display() {
     assert!(s.contains("iir-jvm"));
     assert!(s.contains("EmptyModule"));
 }
+
+/// LANG83 PR5b security re-review (I2.4): a module that validates for the JVM
+/// but exceeds the class-file format (here a constant pool past 65 535
+/// entries: 34 000 distinct literals over 40 functions) is a `LoweringFailed`
+/// error from `compile_iir`. The JVM generator's `generate` `.expect`ed the
+/// lowering, so this panicked.
+#[test]
+fn compile_iir_reports_a_jvm_class_file_limit_instead_of_panicking() {
+    let mut module = void_module();
+    for f in 0..40 {
+        let mut body: Vec<IIRInstr> = (0..850)
+            .map(|i| IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str(format!("{f}:{i}"))], "str"))
+            .collect();
+        body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+        module.functions.push(IIRFunction::new(format!("f{f}"), vec![], "void", body));
+    }
+    let result = std::panic::catch_unwind(|| compile_iir(&module, "iir-jvm")).expect("no panic");
+    match result {
+        Err(IIRAdapterError::LoweringFailed { backend, detail }) => {
+            assert_eq!(backend, "iir-jvm");
+            assert!(detail.contains("constant pool"), "{detail}");
+        }
+        other => panic!("expected LoweringFailed, got {other:?}"),
+    }
+}

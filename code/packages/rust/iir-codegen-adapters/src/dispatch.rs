@@ -151,7 +151,13 @@ pub fn compile_iir(
                     errors,
                 });
             }
-            let artifact = gen.generate(module);
+            // `try_generate`: a module can validate and still exceed the
+            // class-file format (LANG83 PR5b security re-review, I2), which
+            // `generate` would turn into a panic.
+            let artifact = gen.try_generate(module).map_err(|e| IIRAdapterError::LoweringFailed {
+                backend: backend.to_string(),
+                detail: e.to_string(),
+            })?;
             Ok(IIRBackendArtifact::Jvm(artifact))
         }
 
