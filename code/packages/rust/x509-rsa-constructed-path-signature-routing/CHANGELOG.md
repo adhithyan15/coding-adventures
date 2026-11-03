@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.8.0 - 2026-11-03
+
+### Changed
+
+- The exact target -> intermediate -> reviewed-root binder now accepts the
+  complete construction-bound intermediate policy directly and derives the
+  RFC 5280 initial capacity of one intermediate from the retained two-link
+  shape.
+- The lower-level caller-owned path-length transition remains available for
+  future generalized traversal, but detached state can no longer create the
+  fixed reviewed two-link proof.
+
+### Security
+
+- Callers cannot weaken or spuriously exhaust the fixed route by supplying an
+  unrelated initial path-length state.
+- This is fixed-shape public certificate policy only; it does not generalize
+  path validation, check revocation, perform TLS or HTTP, authorize OAuth, or
+  grant network authority.
+
 ## 0.7.0 - 2026-11-03
 
 ### Added

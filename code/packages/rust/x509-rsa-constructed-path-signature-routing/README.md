@@ -24,7 +24,9 @@ non-terminal intermediate issuer. It rejects the construction's terminal root
 and policy from any other decoded certificate object, including a byte-equal
 independent decode. A second follow-up advances caller-owned path-length state
 using only the retained complete policy and keeps the authenticated adjacency,
-policy, and advanced state together.
+policy, and advanced state together. That lower-level transition remains
+available for generalized traversal code, but it cannot directly create the
+fixed reviewed two-link result.
 
 An independent terminal follow-up consumes one routed proof only when its
 adjacency ends at the construction's final selected issuer and reviewed-root
@@ -36,10 +38,13 @@ match.
 
 A fixed-shape traversal follow-up consumes both results for an exact
 target -> intermediate -> reviewed-root construction. It requires depth zero
-and depth one from the same constructed-path object, retains both routed
-signature proofs, and keeps the intermediate's complete policy and advanced
-path-length state with the reviewed-root handoff. Proofs from a separately
-constructed path fail even when they select the same decoded certificates.
+and depth one from the same constructed-path object, derives the RFC 5280
+initial capacity of one intermediate from that exact shape, and advances it
+using only the retained complete intermediate policy. It retains both routed
+signature proofs and keeps the construction-derived path-length state with the
+reviewed-root handoff. Callers cannot inject detached initial state. Proofs
+from a separately constructed path fail even when they select the same decoded
+certificates.
 
 A target-policy follow-up consumes that routed reviewed construction together
 with complete server-certificate policy. It requires the policy to retain the
@@ -66,12 +71,13 @@ proof plus only a payload-free constrained-name count.
 
 Reviewed-root selection is snapshot membership, not complete trust. The
 fixed-shape result does not generalize to additional intermediates, derive the
-initial path-length cap from anchor policy, define full Name comparison, apply
+initial state for a generalized traversal, define full Name comparison, apply
 IP or other name-form constraints, excluded or non-DNS anchor constraints,
 check revocation, perform hostname verification, TLS, or HTTP, authorize OAuth
-transport, or open a network connection. Target identity, time, purpose, and
-the supported reviewed-anchor and intermediate DNS subsets do not make the
-whole path valid. This does not make concrete HTTPS or live-provider use ready.
+transport, or open a network connection. Target identity, time, purpose, the
+construction-derived fixed-shape state, and the supported reviewed-anchor and
+intermediate DNS subsets do not make the whole path valid. This does not make
+concrete HTTPS or live-provider use ready.
 
 ## Validation
 

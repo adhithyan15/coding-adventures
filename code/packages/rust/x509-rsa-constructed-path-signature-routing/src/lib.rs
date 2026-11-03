@@ -17,7 +17,8 @@ use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate_path_construction::ConstructedX509CertificatePathAdjacentLink;
 use x509_certificate_path_length_policy::{
-    X509CertificatePathLengthError, X509CertificatePathLengthState,
+    X509CertificatePathLengthError, X509CertificatePathLengthErrorKind,
+    X509CertificatePathLengthState,
 };
 use x509_certificate_policy::{
     ValidatedCertificateAlgorithmPolicy, ValidatedCertificateRolePolicy, X509CertificateRole,
@@ -166,6 +167,8 @@ pub enum X509RsaConstructedPathReviewedIntermediatePathErrorKind {
     EvidenceMismatch,
     /// The retained construction is not exactly target -> intermediate -> root.
     InvalidPathShape,
+    /// The construction-derived path-length transition failed.
+    PathLength(X509CertificatePathLengthErrorKind),
 }
 
 /// A redacted reviewed two-link path binding failure.
@@ -352,12 +355,15 @@ impl fmt::Debug
 
 /// Non-copyable evidence for one complete routed two-link reviewed path.
 ///
-/// The intermediate input authenticates the target-to-intermediate adjacency,
-/// retains complete intermediate policy, and advances path length. The terminal
-/// input authenticates the immediately following intermediate-to-root adjacency
-/// and binds that exact root to reviewed Mozilla snapshot membership. Both must
-/// retain the same exact two-issuer construction. This is not complete Web PKI
-/// path validation and does not apply name constraints or target identity.
+/// The intermediate input authenticates the target-to-intermediate adjacency
+/// and retains complete intermediate policy. The fixed-shape binder derives
+/// the RFC 5280 initial path-length capacity from the exact two-issuer
+/// construction, advances it across that intermediate, and retains the result.
+/// The terminal input authenticates the immediately following intermediate-to-
+/// root adjacency and binds that exact root to reviewed Mozilla snapshot
+/// membership. Both must retain the same exact construction. This is not
+/// complete Web PKI path validation and does not apply name constraints or
+/// target identity.
 pub struct BoundX509RsaConstructedReviewedIntermediatePath<
     'path,
     'target,
@@ -1247,9 +1253,11 @@ pub fn advance_x509_rsa_constructed_path_intermediate_path_length<
 /// reviewed terminal must be the depth-one projection from the identical
 /// constructed-path object. The construction must contain exactly those two
 /// issuers, and the terminal child must be the exact intermediate retained by
-/// complete policy and the path-length transition. Success therefore retains
-/// both authenticated links, their data-driven algorithm/key policy, complete
-/// intermediate policy, advanced path-length state, and reviewed-root handoff.
+/// complete policy. Success derives the initial path-length capacity from that
+/// exact shape, advances it across the retained intermediate, and keeps the
+/// resulting state with both authenticated links, their data-driven
+/// algorithm/key policy, complete intermediate policy, and reviewed-root
+/// handoff. No caller-supplied path-length state enters this fixed-shape proof.
 pub fn bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor<
     'path,
     'target,
@@ -1257,7 +1265,7 @@ pub fn bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor<
     'candidates,
     'candidate_encoded,
 >(
-    authenticated_intermediate: ValidatedX509RsaConstructedPathIntermediatePathLength<
+    authenticated_intermediate: VerifiedX509RsaConstructedPathIntermediatePolicySignature<
         'path,
         'target,
         'target_encoded,
@@ -1292,7 +1300,6 @@ pub fn bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor<
     X509RsaConstructedPathReviewedIntermediatePathError,
 > {
     let intermediate_link = authenticated_intermediate
-        .authenticated_intermediate()
         .verified_signature()
         .adjacent_link();
     let terminal_link = reviewed_terminal
@@ -1320,7 +1327,6 @@ pub fn bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor<
         ));
     };
     let policy_intermediate = authenticated_intermediate
-        .authenticated_intermediate()
         .intermediate_policy()
         .certificate();
     if !same_exact_object(terminal_child, intermediate_link.issuer_certificate())
@@ -1330,6 +1336,31 @@ pub fn bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor<
             X509RsaConstructedPathReviewedIntermediatePathErrorKind::EvidenceMismatch,
         ));
     }
+
+    // RFC 5280 initializes the path-length state to the number of
+    // intermediate certificates in the prospective path. The exact fixed
+    // shape above proves two selected issuers: one intermediate and one trust
+    // anchor. Deriving this value here prevents callers from weakening or
+    // spuriously exhausting the retained construction with detached state.
+    let Some(intermediate_count) = constructed_path.issuer_count().checked_sub(1) else {
+        return Err(X509RsaConstructedPathReviewedIntermediatePathError::new(
+            X509RsaConstructedPathReviewedIntermediatePathErrorKind::InvalidPathShape,
+        ));
+    };
+    let intermediate_count = u64::try_from(intermediate_count).map_err(|_| {
+        X509RsaConstructedPathReviewedIntermediatePathError::new(
+            X509RsaConstructedPathReviewedIntermediatePathErrorKind::InvalidPathShape,
+        )
+    })?;
+    let authenticated_intermediate = advance_x509_rsa_constructed_path_intermediate_path_length(
+        X509CertificatePathLengthState::new(intermediate_count),
+        authenticated_intermediate,
+    )
+    .map_err(|error| {
+        X509RsaConstructedPathReviewedIntermediatePathError::new(
+            X509RsaConstructedPathReviewedIntermediatePathErrorKind::PathLength(error.kind()),
+        )
+    })?;
 
     Ok(BoundX509RsaConstructedReviewedIntermediatePath {
         authenticated_intermediate,
@@ -1821,6 +1852,26 @@ mod tests {
         assert_eq!(
             error.to_string(),
             "X.509 RSA constructed-path signature routing error ChildEvidenceMismatch"
+        );
+    }
+
+    #[test]
+    fn construction_derived_path_length_error_is_stable_and_payload_free() {
+        let error = X509RsaConstructedPathReviewedIntermediatePathError::new(
+            X509RsaConstructedPathReviewedIntermediatePathErrorKind::PathLength(
+                X509CertificatePathLengthErrorKind::MaximumExceeded,
+            ),
+        );
+
+        assert_eq!(
+            error.kind(),
+            X509RsaConstructedPathReviewedIntermediatePathErrorKind::PathLength(
+                X509CertificatePathLengthErrorKind::MaximumExceeded,
+            )
+        );
+        assert_eq!(
+            error.to_string(),
+            "X.509 RSA constructed-path reviewed intermediate path error PathLength(MaximumExceeded)"
         );
     }
 
