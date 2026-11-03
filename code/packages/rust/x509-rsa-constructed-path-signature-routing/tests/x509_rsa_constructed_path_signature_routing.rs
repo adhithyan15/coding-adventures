@@ -26,6 +26,7 @@ use x509_rsa_constructed_path_signature_routing::{
     bind_x509_rsa_constructed_path_intermediate_policy,
     bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
     bind_x509_rsa_constructed_reviewed_intermediate_server_path,
+    validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy,
     verify_x509_rsa_constructed_path_policy_signature,
     BoundX509RsaConstructedReviewedIntermediatePath,
     X509RsaConstructedPathIntermediatePolicyErrorKind,
@@ -927,6 +928,50 @@ fn binds_complete_server_policy_to_exact_routed_reviewed_target() {
     assert_eq!(
         format!("{bound:?}"),
         "BoundX509RsaConstructedReviewedIntermediateServerPath"
+    );
+}
+
+#[test]
+fn retains_exact_routed_server_path_when_reviewed_anchor_is_unconstrained() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let bound = bind_x509_rsa_constructed_reviewed_intermediate_server_path(
+        server_policy(&target),
+        reviewed_path(&path),
+    )
+    .unwrap();
+
+    let validated = validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy(
+        bound,
+        Asn1Limits::default(),
+        Asn1Limits::default(),
+    )
+    .unwrap();
+
+    assert_eq!(validated.constrained_dns_names(), None);
+    assert!(std::ptr::eq(
+        validated
+            .reviewed_server_path()
+            .server_policy()
+            .certificate(),
+        &target
+    ));
+    assert!(std::ptr::eq(
+        validated
+            .reviewed_server_path()
+            .reviewed_path()
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(
+        format!("{validated:?}"),
+        "ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy"
     );
 }
 

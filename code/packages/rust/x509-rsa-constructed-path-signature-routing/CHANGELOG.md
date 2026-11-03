@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.6.0 - 2026-11-03
+
+### Added
+
+- Added bounded selected-anchor DNS policy for the exact target and reviewed
+  terminal retained by a routed two-link server path.
+- Added coverage for unconstrained reviewed roots, permitted DNS subtrees,
+  target violations, and missing Subject Alternative Name.
+
+### Security
+
+- The composition derives both target and reviewed constraint bytes through
+  one retained proof and keeps diagnostics free of certificate names.
+- Only the reviewed snapshot's supported permitted DNS subset is applied; this
+  does not cover intermediate, excluded, or non-DNS constraints, revocation,
+  TLS, HTTP, OAuth, or network use.
+
 ## 0.5.0 - 2026-11-03
 
 ### Added
