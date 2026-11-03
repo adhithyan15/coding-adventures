@@ -42,6 +42,10 @@
 
 ### Fixed
 
+- CLI parsing now rejects unknown options, unexpected positional arguments,
+  and missing `--root` or `--language` values with status 2 before discovery.
+  Stable argument diagnostics do not repeat raw, potentially path-bearing
+  input.
 - `DEPENDENCY_SELF_EDGE` diagnostics cut the manifest path at the **last**
   `code/packages/` or `code/programs/` pair (security review, round 2).
   Cutting at the first `/code/` printed the checkout's own directory for the
