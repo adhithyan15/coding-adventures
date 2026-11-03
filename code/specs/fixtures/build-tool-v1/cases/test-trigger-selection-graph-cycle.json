@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "diff-selection/test-trigger-graph-cycle",
+  "domain": "diff_selection",
+  "summary": "An ordinary dependency-graph cycle fails before test-trigger relations are considered.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["diff_selection"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "diff_selection",
+    "options": {
+      "packages": ["rust/a", "rust/b", "rust/tests"],
+      "edges": [
+        ["rust/a", "rust/b"],
+        ["rust/b", "rust/a"]
+      ],
+      "trigger_relations": [["rust/a", "rust/tests"]],
+      "changed_packages": ["rust/a"]
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "diff-selection/test-trigger-graph-cycle",
+    "domain": "diff_selection",
+    "outcome": "error",
+    "result": {},
+    "diagnostics": [
+      {"code": "TEST_TRIGGER_GRAPH_CYCLE", "severity": "error"}
+    ]
+  },
+  "limits": {
+    "wall_time_ms": 1000,
+    "output_bytes": 1048576,
+    "workspace_bytes": 1048576,
+    "process_count": 1,
+    "memory_mib": 128,
+    "cpu_time_ms": 1000
+  }
+}

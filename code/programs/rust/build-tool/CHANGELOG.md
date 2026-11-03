@@ -14,6 +14,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   prerequisite closures, exact repository-boundary digest and reverse-index
   selection (including shared multi-consumers), Unicode-scalar strict-glob
   matching, and the operation-wide 50,000,000 work ceiling.
+- Add a bounded, process-free Cargo test-trigger selection operation over
+  caller-supplied inert values. It closes ordinary dependents, applies
+  dev-dependency triggers exactly one hop outside the build graph, then closes
+  prerequisites, with deterministic sorted output, stable fail-closed
+  diagnostics, exact cardinality ceilings, six shared fixtures, and matching
+  coverage through the established Go selection helpers.
 
 ### Changed
 
@@ -22,6 +28,48 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `blib-example` in both extension and declared-source modes.
 
 ### Fixed
+
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: a `TomlBracketScanner` carries the bracket
+  depth, open-string delimiter and pending escape from line to line instead
+  of rescanning the growing value, which was quadratic. Quoted field and
+  sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`) are read as
+  the bare key, per the amended contract. Tests: 11 new one-shape cases (57),
+  a 20 000-line continuation, and Cargo self-edges (already rejected as
+  `DEPENDENCY_SELF_EDGE`) by alias, by name and from a target table.
+
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form. A change to a crate used only by a
+  build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md` in place
+  of the `toml` crate walk: headers are split into dotted-key segments outside
+  strings (quoted cfgs stay one segment, table names compare case-sensitively,
+  `[[...]]` and malformed headers end the table); comments are stripped
+  outside strings; inline values whose arrays continue onto later lines are
+  joined; `path` and `package` field keys must be exact and hold one
+  non-empty string; names are ASCII-lowercased and deduplicated.
+  Dev-dependencies (every form), `[patch]`, `[replace]`, `[workspace]` and
+  registry entries add no edge.
+- The old reader looked up every `[dependencies]` key, path or not, and
+  ignored a `package` rename, so `os-kernel = { package =
+  "os-kernel-simulator", ... }` drew an edge to `os-kernel`. Only path entries
+  count now, named by their rename.
+- A Rust crate is now also known by its directory name next to its declared
+  `[package]` `name`, as the contract and the Go reference require (WASM
+  wrappers stay known only by their declared name), and the duplicated
+  `[package]` read is gone.
+- Tests: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames`, duplicate collapse, the directory and
+  declared-name aliases, and the shared `resolution-rust-field-aware.json`
+  fixture. The reader returns the same dependency names as the Go reader for
+  all 1,650 tracked `Cargo.toml` files, and on the real repository the forced
+  graph gains 140 Rust/WASM edges and loses that one, after which its edges
+  into Rust and WASM packages equal the Go tool's (bar one TypeScript edge Go
+  draws from its cross-language resolution, which this tool does not have).
+- `resolution-rust-field-aware` now also seeds this front (reader R) in
+  `code/specs/ci-gate-registry.md` and the Go build tool's routing map.
 
 - Accept portable strict-glob `?` as exactly one Unicode scalar and preserve
   DIFF-specific invalid and duplicate package diagnostics.

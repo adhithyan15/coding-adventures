@@ -42,6 +42,56 @@
 
 ### Fixed
 
+- CLI parsing now rejects unknown options, unexpected positional arguments,
+  and missing `--root` or `--language` values with status 2 before discovery.
+  Stable argument diagnostics do not repeat raw, potentially path-bearing
+  input.
+- `DEPENDENCY_SELF_EDGE` diagnostics cut the manifest path at the **last**
+  `code/packages/` or `code/programs/` pair (security review, round 2).
+  Cutting at the first `/code/` printed the checkout's own directory for the
+  common `~/code/<repo>` layout; the self-edge tests now place the checkout
+  under `code/packages/checkout/` to pin it.
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: `toml_bracket_scan` carries the bracket depth,
+  the open string's delimiter and a pending escape from line to line (so a
+  string left open at a line end still continues after the joining space),
+  and the pieces are joined once with `table.concat`, instead of rescanning
+  the growing value for every appended line, which was quadratic. Quoted
+  field and sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`)
+  are read as the bare key, compared verbatim and case-sensitively, per the
+  amended contract. A Cargo path entry that resolves to the crate itself is
+  now a `DependencySelfEdgeError` (`DEPENDENCY_SELF_EDGE`, repository-relative
+  manifest, `Resolver.is_dependency_self_edge_error`; `build.lua` exits 2)
+  instead of a silently drawn self-loop. `trim_spaces_and_tabs` is an index
+  scan: its `gsub("[ \t]+$", "")` took 12.6 s on a 40 KB interior run of
+  spaces. Tests: the 11 new one-shape cases (57, now with a row-count
+  assert), a 20,000-line continuation, a 100 KB run of spaces, 100,000 blank
+  lines before the `[package]` name, self-edges by alias, by name and from a
+  target table, and a real CLI exit-2 test.
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form, so a change to a crate used only by
+  a build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md`, ported
+  from the Go reference: headers are split into dotted-key segments outside
+  strings (quoted cfgs stay one segment, table names compare case-sensitively,
+  `[[...]]` and malformed headers end the table); comments are stripped
+  outside strings; inline values whose arrays continue onto later lines are
+  joined; `path` and `package` field keys must be exact and hold one non-empty
+  string; names are ASCII-lowercased and deduplicated. Dev-dependencies (every
+  form), `[patch]`, `[replace]`, `[workspace]` and registry entries add no
+  edge.
+- The old reader counted any `[dependencies]` line mentioning `path`, so a
+  registry entry with `features = ["path"]` drew an edge, and it looked up
+  the entry key instead of a `package` rename. Both are fixed.
+  `Resolver.cargo_link_dependency_names` is exported for the tests.
+- Tests: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames`, raw-byte BOM/CRLF, duplicate collapse, and
+  the shared `resolution-rust-field-aware.json` fixture. The reader returns
+  the same dependency names as the Go reader for all 1,650 tracked
+  `Cargo.toml` files.
+
 - Graph and diff selection runs about 7x faster on large path sets, with the
   same answers. `test_graph_diff.lua`'s full-scale case (4,096 roots × 500-byte
   paths) took 5.5 s CPU locally and 15.6–18.5 s on `windows-2025`, failing

@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## Unreleased — a modifier after a bare jump keyword (#18798)
+
+- `tag_modifier_keywords` retags `if`/`unless`/`while`/`until` that follow a
+  bare `return`, `break` or `next` on the same line, as Ruby reads them.
+  `next if c` ⏎ `puts i` ⏎ `end` used to read the `if` as an `if` statement
+  that was `next`'s argument.  Test
+  `modifier_after_a_bare_jump_keyword_is_retagged`.
+
 ## Unreleased — linear lexing and a source budget (#18814); whitespace after a heredoc (#18820)
 
 - The heredoc body loop borrows the tag instead of cloning it once per body line, which cost tag-length × lines (a 250 KB tag over 548k empty lines took about 3.7 s). Timing regression `long_heredoc_tag_over_many_lines_lexes_in_linear_time` (#18814 re-review).

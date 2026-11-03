@@ -1,5 +1,63 @@
 # Changelog
 
+## 2026-11-02 — Cargo link-table edges: security-review fixes
+
+- **Workspace inheritance is refused in link tables (review round 2).**
+  `a = { workspace = true }` in `[dependencies]`, `[build-dependencies]` or a
+  target form, or a `workspace` key in a `[D.a]` sub-table (quoted or not),
+  passed the link-table screen yet drew no edge: Cargo takes the path from the
+  workspace root's `[workspace.dependencies]`, which the edge reader never
+  opens. A later change to that dependency would then re-run none of this
+  crate's tests. The strict reader now refuses it, as it already did in
+  dev-dependency tables. No repository manifest uses it.
+- **Manifest-derived keys are quoted** (`%q`) in the new link-screen
+  messages, so a quoted key cannot carry control bytes into a CI log.
+- **`readCargoManifestBytes` checks the open handle.** It `Stat`s the opened
+  file and requires `os.SameFile` with the `Lstat` it size-checked, so a
+  symlink swapped in between is refused instead of followed (portable, unlike
+  `O_NOFOLLOW`, which Go does not spell for Windows).
+- **Linear continuation join.** An inline Cargo entry continuing onto later
+  lines was joined by appending each line to the whole value and rescanning
+  the value's brackets per line — quadratic; a crafted 400 KB manifest took
+  64 s. `cargoLinkDependencyNames` now carries a `tomlBracketScanner`
+  (bracket depth, open-string delimiter, pending escape) from line to line,
+  collects the pieces and joins them once. The result is identical to the
+  rescan, including a string left open at the end of a line, which continues
+  across the joining space.
+- **Size guards on the edge reader.** `parseRustDeps` runs before the strict
+  test-trigger reader, so it now carries its own limits: it reads the
+  manifest through `readCargoManifestBytes` (a regular file of at most
+  1 MiB) and refuses one entry continuing past 256 non-blank lines or 64 KiB.
+  Both refusals are `*CargoManifestError` and fail the whole resolution;
+  `parseRustDeps` and `cargoLinkDependencyNames` now return an error.
+- **Quoted field keys.** `a = { "path" = "../a" }`, `'package' = "..."` and
+  `"path" = "../a"` in a `[dependencies.<name>]` sub-table are the keys TOML
+  and Cargo read, and are now edges (they were silently dropped). Keys stay
+  case-sensitive (`"Path"` is not `path`) and escapes are not decoded, per the
+  amended conformance contract.
+- **Fail closed on unmodelled link-table shapes.** For every Rust and WASM
+  package, the strict reader (`readCargoTriggerEntries`, `screenLinks`) now
+  also screens `[dependencies]`, `[build-dependencies]`,
+  `[build_dependencies]` and their `[target.<cfg>.…]` forms, refusing any
+  write the lenient edge reader would drop or misread: dotted keys inside
+  them (`a.path = ...`), at the root (`build-dependencies.a.path = ...`) or
+  under `[target]`/`[target.<cfg>]`; inline tables spelling one
+  (`build-dependencies = { ... }` under `[target.<cfg>]`); deeper headers and
+  arrays of tables (`[dependencies.a.features]`, `[[dependencies]]`); entry
+  values that are neither a string nor an inline table; a multi-line value in
+  a sub-table; dotted or non-`key = value` inline fields; and any backslash.
+  Every shape the contract models is still accepted. The forced plan of the
+  real repository is unchanged (exit 0, identical edge list).
+- **`DEPENDENCY_SELF_EDGE` instead of a panic.** A dependency that resolves
+  to the package itself (a Cargo path entry naming its own directory alias or
+  `[package]` name, for example) made `directed-graph.AddEdge` panic. It is
+  now a `*resolver.DependencySelfEdgeError` with a repository-relative
+  manifest, reported by the CLI as a stable diagnostic with exit status 2.
+- Tests: 11 new rows in the one-shape Cargo table (57 in all), linear-time
+  and entry-cap tests, manifest-guard tests, self-edge tests, and
+  `test_triggers_link_screen_test.go` (24 refused shapes, the multi-line
+  string backstop, 5 accepted groups, and the Rust/WASM-only scope).
+
 ## 2026-11-02 — Haskell Darwin BUILDs must select the CLT linker
 
 - New `validateHaskellDarwinLinker` (`internal/validator/haskell_darwin_linker.go`),
@@ -18,6 +76,51 @@
   record and bare `echo` lines are exempt; comments never satisfy the rule.
   The error names the file and
   `lessons.d/ghc-must-select-the-linker-matching-its-hardcoded-macos-sdk.md`.
+
+## 2026-11-01 — Cargo build and target-specific dependencies are graph edges
+
+- `parseRustDeps` (`internal/resolver/resolver.go`) now reads path
+  dependencies from `[dependencies]`, `[build-dependencies]`,
+  `[build_dependencies]`, and the same three tables under
+  `[target.<cfg>.…]` for any cfg (quoted or a bare triple), as a union
+  over all targets. Before, only the top-level `[dependencies]` table was
+  read, so a change to a build or target-specific dependency rebuilt and
+  re-tested none of its dependents. On the real repository the forced plan
+  gains 22 Rust edges and loses none, and the graph stays acyclic: among
+  them paint-metal and paint-vm-direct2d into barcode-1d/-2d, the sandbox
+  crates into the chief-of-staff launcher, host and e2e crates, sha256 into
+  chief-of-staff-spawn-isolation, the board-vm UART/serial crates into
+  board-vm-uno-r4-firmware, paint-vm-direct2d and paint-vm-gdi into
+  paint-vm-direct2d-c, and objc-bridge into markdown-reader and
+  venture-browser-macos.
+- The `[dependencies.<name>]` / `[target.<cfg>.dependencies.<name>]`
+  sub-table form with `path = "..."` (and optional `package = "..."`) is
+  read; it was silently dropped before.
+- Headers are split into dotted-key segments outside strings and each
+  segment is compared by value, so `[target.'cfg(any(target_os = "linux",
+  windows))'.dependencies]` and `["dependencies"]` are read. Every header,
+  including malformed ones and `[[bin]]`, ends the current table.
+- Inline entries: comments are stripped outside strings first (a trailing
+  comment no longer hides the `path` field), fields are split at commas
+  outside strings and outside nested `[...]`/`{...}`, the `path` and
+  `package` keys must be exact and lowercase, and a value whose `features`
+  array continues onto later lines is joined until its brackets close
+  (TOML 1.0; `vault-pm-cli-drill` uses it).
+- `[dev-dependencies]` in every form, `[patch]`, `[replace]`, `[workspace]`,
+  registry-only entries, features, and comments still contribute no edge.
+  Dev-dependencies stay in the separate test-trigger relation; the
+  `test_triggers.go` comments now say the graph records build and target
+  edges and explain why the trigger walk still follows package roots
+  (nested and orphan crates, native-extension manifests, path vs. name).
+- The Go tool now reads the shared `resolution/rust-field-aware` case
+  (`TestRustResolutionConformanceFixture`), and the resolution-fixture CI
+  routing in `main.go` and its selection test sends that case to Go as well
+  as Haskell. New table-driven `TestCargoLinkDependencyNames` pins each line
+  rule of the contract.
+- The Lua, Perl, Python, Ruby, Rust, Swift and TypeScript fronts now implement
+  the same contract and read the same case, so the routing (and
+  `ci-gate-registry.md`) sends `rust-field-aware` to G, H, L, P, Y, B, R, S
+  and T.
 
 ## 2026-10-26 — Mosaic manifest dependencies and repository-wide Mosaic guards
 

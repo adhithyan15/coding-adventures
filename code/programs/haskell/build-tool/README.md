@@ -174,13 +174,23 @@ PEP 503 naming. Shared fixtures cover the canonical diamond, field boundaries,
 version and environment markers, and mixed-separator aliases. The complete
 488-package Python lane matches the Go oracle at 1,118 edges.
 
-Rust dependency resolution reads only inline, path-based entries in the
-top-level Cargo `[dependencies]` table. Package metadata, features, workspace
-fields, dev/build/target dependency tables, comments, and registry-only
-dependencies cannot invent graph edges. Renamed dependencies use the inline
-`package = "..."` value rather than the local source alias. The shared
-field-boundary fixture and complete 948-package lane match the canonical Go
-resolver exactly at 2,373 edges.
+Rust dependency resolution reads path entries from every Cargo table that is
+compiled into the crate: `[dependencies]`, `[build-dependencies]` (and the
+legacy `build_dependencies`), and the same tables under `[target.<cfg>.…]` for
+any cfg, quoted or a bare triple, as a union over all targets. Entries count
+both as inline tables (`name = { path = "..." }`, whose arrays may continue
+onto later lines) and as `[dependencies.name]` sub-tables with a
+`path = "..."` key. Renamed dependencies use the `package = "..."` value
+rather than the local source alias. Dev-dependencies in every form,
+`[patch]`, `[replace]`, `[workspace]`, package metadata, features, comments,
+and registry-only dependencies cannot invent graph edges. Field and sub-table
+keys may be bare or quoted (`"path" = "..."`), continuation lines are joined
+in linear time, and a crate that resolves itself is a `DEPENDENCY_SELF_EDGE`
+error (exit status 2). The line procedure
+is the Rust paragraph of `code/specs/build-tool-conformance.md`; the shared
+`resolution/rust-field-aware` fixture pins it, and `rustDependencyTokens`
+returns the same dependency names as the Go reference reader for all 1,650
+tracked `Cargo.toml` files in the repository (checked 2026-11-01).
 
 Ruby dependency resolution reads only `add_dependency` and
 `add_runtime_dependency` calls on the `Gem::Specification.new` block receiver.

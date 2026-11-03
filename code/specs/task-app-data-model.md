@@ -475,6 +475,59 @@ and the web host's test both type every case into the Add Task composer and chec
 accepted and added, or refused with nothing written; both also assert their constant equals the
 fixture's `maxChars`, so a change to the number on one host alone fails CI.
 
+## Typed names are trimmed of Unicode `White_Space`
+
+Backlog item 6e2b. **The rule: every name or label a person types is trimmed of Unicode
+`White_Space` at both ends, on every host, before it is checked, stored or sent to the engine.
+U+0085 (NEXT LINE) is `White_Space` and is trimmed; U+FEFF (ZERO WIDTH NO-BREAK SPACE, the byte
+order mark) is not `White_Space` and is kept.** Nothing inside a name is touched.
+
+The engine stores names verbatim: task-core's `create_task`, `rename_task`, `upsert_label`,
+`create_project` and `create_checklist_template` do not trim. The trim is the host's, at the point
+where a typed draft becomes a name, so it has to be the same set on every host. Before 6e2b it was
+not. `task-mosaic-app` trims with Rust's `str::trim`, which is exactly Unicode `White_Space`; the web
+host trimmed with JavaScript's `String.prototype.trim`, which is ECMAScript's *WhiteSpace* and
+*LineTerminator* — a different set of 25:
+
+| Character | Unicode `White_Space` (`str::trim`, `trimWhiteSpace`) | JavaScript `.trim()` |
+| --- | --- | --- |
+| U+0085 NEXT LINE | trimmed | **kept** |
+| U+FEFF ZERO WIDTH NO-BREAK SPACE | kept | **trimmed** |
+| the other 24 (tab–CR, space, U+00A0, U+1680, U+2000–U+200A, U+2028, U+2029, U+202F, U+205F, U+3000) | trimmed | trimmed |
+
+So "\u{FEFF}Task" was stored as "Task" on the web and as "\u{FEFF}Task" natively, "Task\u{0085}"
+the other way round, and a name typed as a lone U+0085 was refused natively but created a task on
+the web. The web host now trims every name with `trimWhiteSpace` (`host/web/src/controller.ts`), a
+linear walk over `\p{White_Space}` that is exactly `str::trim`; `.trim()` is never used on a name.
+Two consequences follow from taking the Unicode set as the authority: a name that is only U+FEFF is
+not empty, so it is a name on every host, and a name made only of `White_Space` (U+0085 included)
+is empty on every host.
+
+**Where it applies**, and what an empty result does there — the same as before on both hosts:
+
+| Typed into | Trimmed name used for | Empty after trimming |
+| --- | --- | --- |
+| Add Task composer | `create_task` | refused: `Enter a task name.` |
+| edit-task field, *Save* | `rename_task` | refused: `Enter a task name.` |
+| Sheet Name cell | `rename_task` | the edit is dropped; the name is unchanged |
+| Sheet Labels cell | each comma-separated part, matched to a label by lowercased name | that part is dropped |
+| new label composer | `upsert_label` | no-op |
+| new project / subproject composer | `create_project` | no-op |
+| new checklist composer | `create_checklist_template` | no-op |
+| new checklist item composer | `create_task` under the template | no-op |
+| note *Attach to task* field | the name lookup (`task-app-notes-ui-v1.md`, v1.4) | no attachment |
+
+Typing into the Add Task or edit-task field clears the field's `Enter a task name.` error with the
+same test, so the error clears exactly when *Add task* or *Save* would accept the draft. The rule
+covers names only: dates, the Done, Priority and Status cells and the Sheet's filter keep their own
+parsing, and none of them is a name.
+
+**Shared vectors.** The cases live once, in
+`code/programs/mosaic/task-app/fixtures/task-name-trimming-v1.json`, with the 25 `White_Space` code
+points themselves. `task-mosaic-app`'s test and the web host's test both check that their trim
+removes exactly those code points, then type every case into each composer above and check the name
+stored, or that an all-`White_Space` name was refused. A trim that differs on one host fails CI.
+
 ## Snapshot & persistence
 
 `ProjectState` serializes to JSON via `serde_json` (feature-gated), matching the engram-core /

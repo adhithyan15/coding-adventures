@@ -656,6 +656,28 @@ impl From<std::io::Error> for LangAotError {
     fn from(e: std::io::Error) -> Self { LangAotError::Io(e) }
 }
 
+/// The most bytes any `compile_file_*` entry point reads from a source
+/// file: 16 MiB, LANG84 C5's ceiling for a trusted caller.  No frontend
+/// `lang-aot` drives accepts more (Twig refuses past 1 MiB, the LANG84
+/// release paths past their `FrontendBudgets`), so reading more could only
+/// be wasted memory; each frontend still applies its own, smaller budget
+/// to what is read.
+pub const MAX_SOURCE_FILE_BYTES: u64 = 16 << 20;
+
+/// Read a source file within [`MAX_SOURCE_FILE_BYTES`] (#18474 security
+/// review).
+///
+/// Every `compile_file_*` entry point used `std::fs::read_to_string`, which
+/// reads a whole file before anything can measure it: a 10 GB file cost
+/// 10 GB, `/dev/zero` never returned and a FIFO blocked forever.
+/// `bounded_source_file` refuses anything but a regular file (without
+/// blocking), checks the size first, and reads at most the limit plus one
+/// byte.  Failures stay `LangAotError::Io`: `InvalidInput` for not a
+/// regular file, `FileTooLarge` for over the limit.
+fn read_source_file(src: &Path) -> std::io::Result<String> {
+    bounded_source_file::read_to_string(src, MAX_SOURCE_FILE_BYTES)
+}
+
 impl From<UnsupportedOps> for LangAotError {
     fn from(e: UnsupportedOps) -> Self { LangAotError::UnsupportedOps(e) }
 }
@@ -961,7 +983,7 @@ pub fn compile_file_to_llvm_ir(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
     // LANG83: this textual-IR path lowers directly rather than through
@@ -1918,7 +1940,7 @@ pub fn compile_file_to_jvm(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("Main");
     let class = compile_iir_to_jvm_class(compile_request_to_iir(language, &source, stem)?, stem)?;
     let bytes = iir_to_jvm_class_file::serialize_jvm_class_file(&class);
@@ -1935,7 +1957,7 @@ pub fn compile_file_to_wasm(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let bytes = compile_iir_to_wasm(compile_request_to_iir(language, &source, stem)?)?;
     std::fs::write(out, bytes)?;
@@ -1973,7 +1995,7 @@ pub fn compile_file_to_riscv32_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2060,7 +2082,7 @@ pub fn compile_file_to_intel8008_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2144,7 +2166,7 @@ pub fn compile_file_to_armv7_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2221,7 +2243,7 @@ pub fn compile_file_to_arm1_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2292,7 +2314,7 @@ pub fn compile_file_to_mos6502_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2361,7 +2383,7 @@ pub fn compile_file_to_m68k_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2441,7 +2463,7 @@ pub fn compile_file_to_mips_r2000_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2518,7 +2540,7 @@ pub fn compile_file_to_z80_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2594,7 +2616,7 @@ pub fn compile_file_to_intel8051_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2668,7 +2690,7 @@ pub fn compile_file_to_intel8086_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2749,7 +2771,7 @@ pub fn compile_file_to_sparc_v8_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2829,7 +2851,7 @@ pub fn compile_file_to_intel4004_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -2950,7 +2972,7 @@ pub fn compile_file_to_ge225_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -3054,7 +3076,7 @@ pub fn compile_file_to_ibm704_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -3142,7 +3164,7 @@ pub fn compile_file_to_intel8080_bin(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
 
@@ -3178,7 +3200,7 @@ pub fn compile_file_to_linux_executable(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
     compile_iir_to_host_executable(&module, out)
@@ -3207,7 +3229,7 @@ pub fn compile_file_to_windows_executable(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
     compile_iir_to_host_executable(&module, out)
@@ -3220,7 +3242,7 @@ pub fn compile_file_to_macos_executable(
     out: &Path,
     language: impl Into<LanguageRequest>,
 ) -> Result<(), LangAotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_source_file(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
     let module = compile_request_to_iir(language, &source, stem)?;
     // Always the ARM64 Mach-O path (on any Unix host), so check the AArch64
@@ -3384,6 +3406,31 @@ fn is_narrow_int_hint(hint: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// #18474 review: source files are read within `MAX_SOURCE_FILE_BYTES`,
+    /// regular files only. A sparse file one byte over and a directory are
+    /// refused as `LangAotError::Io` before they are read; a small Twig file
+    /// still compiles.
+    #[test]
+    fn source_files_are_read_within_the_budget() {
+        use std::io::ErrorKind;
+        let dir = std::env::temp_dir().join(format!("lang_aot_read_budget_{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let out = dir.join("out.ll");
+        let kind = |src: &Path| match compile_file_to_llvm_ir(src, &out, Language::Twig) {
+            Err(LangAotError::Io(e)) => Some(e.kind()),
+            Err(other) => panic!("expected an I/O refusal, got {other}"),
+            Ok(()) => None,
+        };
+        let over = dir.join("over.tw");
+        std::fs::File::create(&over).unwrap().set_len(MAX_SOURCE_FILE_BYTES + 1).unwrap();
+        assert_eq!(kind(&over), Some(ErrorKind::FileTooLarge));
+        assert_eq!(kind(&dir), Some(ErrorKind::InvalidInput));
+        let ok = dir.join("ok.tw");
+        std::fs::write(&ok, "42").unwrap();
+        assert_eq!(kind(&ok), None);
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
 
     /// CLR-int64: the two CLR back ends concretize differently, and the
     /// difference is a property of the machine, not the program. The binary

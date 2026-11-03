@@ -56,6 +56,12 @@ exactly at it, one past it, and in two-byte, three-byte, astral and combining
 characters. A name typed past it is refused as typed; a name stored before it loads
 whole and can only shrink (`code/specs/task-app-data-model.md`, "Task names are
 bounded").
+`fixtures/task-name-trimming-v1.json` pins how every typed task, label, project and
+checklist name is trimmed: Unicode `White_Space` on both hosts (Rust's `str::trim`,
+the web's `trimWhiteSpace`, never JavaScript's `.trim()`), so U+0085 is trimmed and
+U+FEFF is kept, and an all-`White_Space` name is refused as empty
+(`code/specs/task-app-data-model.md`, "Typed names are trimmed of Unicode
+White_Space").
 The first-run product acceptance and its focused follow-up queue are recorded in
 `code/specs/task-app-first-run-usability-audit-v1.md`. Which of Mosaic's nine
 backends TaskApp is actually finished on is measured in
@@ -429,3 +435,5 @@ The compatible v0.5.16 checkpoint (#18746) is prepared for release validation
 and publication after its preparation PR merges; it is not yet published. v0.5.15 is published and audited
 under #18581: source `8819839dc63d78c4c5eeda21f833f51364746420`, 13 assets,
 12 checksums, and 11 manifest payloads. Artifact and signing limits are unchanged.
+
+Failed XAML validation retains a separate seven-day diagnostic artifact with known build ZIPs, source/hash receipts and a bounded smoke-log tail. Diagnostic artifacts are excluded from release publication (#18845).

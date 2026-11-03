@@ -573,11 +573,17 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         // KW2–KW6; modules using `Feature::KeywordParams` are rejected by the
         // validator until then, so this arm is effectively unreachable today.
         Expr::KeywordArg { value, .. } => collect_expr_assigned(value, out),
-        // Leaves, and the SIR18 `StrConcat` node (rejected before emit) —
-        // nothing nested that could hold a reachable `Assign`.  The SIR29
-        // `VirtualCall` joins this group for the same reason: `Feature::
-        // VirtualDispatch` is not in `ACCEPTED_FEATURES`, so a module
-        // using it is rejected before this traversal ever runs.
+        // SIR18 string interpolation (accepted since #18798): its parts are
+        // ordinary operands.
+        Expr::StrConcat { parts, .. } => {
+            for part in parts {
+                collect_expr_assigned(part, out);
+            }
+        }
+        // Leaves — nothing nested that could hold a reachable `Assign`.  The
+        // SIR29 `VirtualCall` joins this group: `Feature::VirtualDispatch`
+        // is not in `ACCEPTED_FEATURES`, so a module using it is rejected
+        // before this traversal ever runs.
         Expr::IntLit { .. }
         | Expr::FloatLit { .. }
         | Expr::BoolLit { .. }
@@ -586,7 +592,6 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         | Expr::StrLit { .. }
         | Expr::VarRef { .. }
         | Expr::Intrinsic { .. }
-        | Expr::StrConcat { .. }
         | Expr::VirtualCall { .. } => {}
         // SIR22 array/matrix nodes (base cut) — real recursion, since this
         // backend now accepts them: each sub-expression can nest an
@@ -1273,12 +1278,19 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_expr(out, key, indent);
             out.push_str("))");
         }
-        // The only remaining unsupported expression is `StrConcat`
-        // (SIR18 string interpolation).  Its feature is undeclared, so
-        // the capability check rejects such modules before emit; reaching
-        // this arm is an internal bug.
-        Expr::StrConcat { span, .. } => {
-            panic!("rust backend reached SIR18 str-concat expression at {} — capability check should have rejected it", span);
+        // SIR18 string interpolation (`"a#{x}b"`, #18798): each part shown
+        // with the runtime's `to_s` (Ruby's `to_s`), joined.  The parts go
+        // into an array literal, which Rust evaluates left to right, as
+        // Ruby evaluates the `#{}`s.
+        Expr::StrConcat { parts, .. } => {
+            out.push_str("__sir::str_concat(&[");
+            for (i, part) in parts.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_expr(out, part, indent);
+            }
+            out.push_str("])");
         }
         // SIR29 `VirtualCall` — `Feature::VirtualDispatch` is not in
         // `ACCEPTED_FEATURES`, so a validated module never reaches here.
@@ -1298,7 +1310,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         // spec-documented out-of-scope case (`sir-keyword-params.md`
         // §"Out of scope"), which the frontends do not emit.  A positioned
         // panic documents that narrow, internal-bug-only reachability
-        // (matching `StrConcat`/`Intrinsic` above).
+        // (matching the `Intrinsic` arm above).
         Expr::KeywordArg { span, .. } => {
             panic!("rust backend reached a stand-alone keyword-arg expression at {} — indirect/closure keyword calls are out of scope for v0 (see sir-keyword-params.md)", span);
         }
@@ -1468,7 +1480,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         }
         // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
         // validated module. Defensive panic covers internal bugs only
-        // (matches the `StrConcat`/`Intrinsic` arms above).
+        // (matches the `Intrinsic` arm above).
         Expr::Convert { span, .. } => {
             panic!(
                 "rust backend reached a deferred SIR26 expression ({}) at {} — not accepted yet",

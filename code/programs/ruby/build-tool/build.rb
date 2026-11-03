@@ -330,7 +330,7 @@ module BuildTool
       # -- Step 4: Resolve dependencies -----------------------------------------
       graph = begin
         Resolver.resolve_dependencies(packages)
-      rescue MetadataEncodingError => e
+      rescue MetadataEncodingError, DependencySelfEdgeError => e
         $stderr.puts e.message
         return 2
       end

@@ -39,14 +39,19 @@ preflight above so invalid input remains distinguishable from a non-match.
 The reusable `graph_diff` core accepts only caller-supplied values. It
 canonicalizes graph edges and prerequisite-first levels, performs exact
 package and shared-repository-input selection, and returns either one complete
-result or one stable error code. Strict-glob work is preflighted across the
-whole operation with the neutral 50,000,000 Unicode-scalar ceiling before the
-first match, while first-seen glob declarations are charged by exact UTF-8
-bytes against a separate 4 MiB ceiling before normalization. Repository-boundary
-inputs are depth, node, container, and string bounded; their versioned canonical
-SHA-256 and schema are verified before request-dependent path-classification
-preflights. The core never reads a checkout or acquires process, environment,
-clock, randomness, or network authority.
+result or one stable error code. Its Cargo test-trigger operation starts from
+inert package, graph, relation, and changed-package lists: it closes ordinary
+dependents, follows trigger relations exactly one hop, and only then closes
+ordinary prerequisites. Trigger relations never become graph edges, so valid
+dev-dependency cycles cannot poison build ordering. Strict-glob work is
+preflighted across the whole operation with the neutral 50,000,000
+Unicode-scalar ceiling before the first match, while first-seen glob
+declarations are charged by exact UTF-8 bytes against a separate 4 MiB ceiling
+before normalization. Repository-boundary inputs are depth, node, container,
+and string bounded; their versioned canonical SHA-256 and schema are verified
+before request-dependent path-classification preflights. The core never reads a
+checkout or acquires process, environment, clock, randomness, or network
+authority.
 
 Diff validation retains only compact per-package glob work factors. After the
 whole-operation preflight succeeds, one validated pattern is compiled at a
@@ -114,7 +119,7 @@ The tool is organized into focused modules, each responsible for one aspect of t
 
 1. **graph** — Directed graph data structure with topological sort and affected-node queries
 2. **discovery** — Recursively walks for `BUILD` files to find packages
-3. **resolver** — Parses supported package metadata, including strict UTF-8 Lua rockspecs, into dependency edges
+3. **resolver** — Parses supported package metadata, including strict UTF-8 Lua rockspecs and Cargo link tables, into dependency edges
 4. **hasher** — SHA256 hashing for change detection
 5. **cache** — JSON-based build cache (read/write with atomic saves)
 6. **executor** — Parallel execution with Rayon thread pool
@@ -177,6 +182,10 @@ Graph/diff conformance tests dynamically enumerate and pin the exact eight
 shared-input multi-consumer reverse index, deterministic transitive closures,
 strict character classes, unknown-path policies, repository-boundary digest,
 and the exact-at/over 50,000,000 match-work boundary.
+The Cargo test-trigger suite separately pins all six
+`test-trigger-selection-*.json` cases. The same successful cases are evaluated
+through Go's established one-hop selection helpers, while Rust additionally
+pins fail-closed graph/relation diagnostics and exact cardinality ceilings.
 
 ## Discovery and metadata diagnostics
 
@@ -202,6 +211,25 @@ METADATA_INVALID_UTF8: package=lua/pkg manifest=code/packages/lua/pkg/coding-adv
 
 The resolver and real CLI tests materialize the language-neutral
 `resolution/lua-utf8` and `resolution/lua-invalid-utf8` fixtures.
+
+Rust resolution reads path entries from every Cargo table that is compiled
+into the crate: `[dependencies]`, `[build-dependencies]` (and the legacy
+`build_dependencies`), and the same tables under `[target.<cfg>.…]` for any
+cfg, quoted or a bare triple, as a union over all targets. Entries count both
+as inline tables (`name = { path = "..." }`, whose arrays may continue onto
+later lines) and as `[dependencies.name]` sub-tables with a `path = "..."`
+key. A `package = "..."` rename is authoritative, field and sub-table keys
+may be bare or quoted (`"path" = "..."`), and continuation lines are joined
+in linear time. The crate name is matched,
+ASCII-lowercased, against each Rust package's directory name and declared
+`[package]` `name` (a WASM wrapper only by its declared name). Dev-dependencies
+in every form, `[patch]`, `[replace]`, `[workspace]`, package metadata,
+features, comments, and registry-only dependencies never create edges. The
+reader is the line procedure of the Rust paragraph of
+`code/specs/build-tool-conformance.md`, not the `toml` crate, so it draws the
+same edges as every other front; the shared `resolution/rust-field-aware`
+fixture pins it, and it returns the same dependency names as the Go reference
+reader for all 1,650 tracked `Cargo.toml` files (checked 2026-11-01).
 
 Orphan-crate validation also consumes only caller-supplied inert records. It
 models source directories, Cargo manifests, recognized BUILD files, and the

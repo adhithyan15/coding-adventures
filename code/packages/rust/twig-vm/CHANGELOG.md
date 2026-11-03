@@ -6,6 +6,63 @@
 - `str_const` (and an inline string operand of an E4 op) accepts a raw-byte `Operand::Bytes` literal: a heap string of exactly its bytes. As a general operand it is a `TypeError`; in `field_store` it is refused like a `Str`.
 - **`str_slice` no longer refuses a range that splits a UTF-8 character**, matching vm-core and the LANG83 byte contract: `str_slice "é", 1, 2` is the byte `A9`. The test that pinned the old refusal now pins the byte.
 - Test `a_raw_byte_str_const_holds_exactly_its_bytes`.
+## Unreleased — #18474 re-review: capability manifest
+
+- `required_capabilities.json` was in the legacy string-list shape, which
+  fails the v1 schema, and it declared no file access. It now declares,
+  in schema-valid form:
+  - `stdout` write (the `print` builtin);
+  - `fs` read (the CLI and `run_file` read the source and its imports,
+    through `bounded-source-file`);
+  - `net` listen on `127.0.0.1:*` (`--debug-port`).
+
+  It is removed from the shrink-only invalid-manifest ledger.
+
+## Unreleased — #18474 security review: the CLI never blocks on a file
+
+### Fixed
+
+- `twig-vm <FILE>` refuses anything but a regular file without blocking
+  (via `twig_module_driver::read_source`, now on `bounded-source-file`): a
+  FIFO with no writer used to block it forever, and `/dev/zero` is refused
+  as `not a regular file`.
+
+### Tests
+
+- `tests/cli_source_budget.rs` gains `a_fifo_is_refused_without_blocking`
+  (the child is killed after 10 s if it blocks), `/dev/zero` now expects
+  `not a regular file`, and `a_long_record_name_is_refused_before_any_
+  accessor_name_is_made` runs the review's 512 KB record name through the
+  binary (a 256-byte name runs).
+
+## Unreleased — #18474: the compiler's register budget is the frame limit
+
+### Fixed
+
+- **The CLI read a source file of any size.** `twig-vm <FILE>` called
+  `read_to_string`, so a huge file was read whole before the compiler's
+  1 MiB source budget refused it, and `/dev/zero` was read until memory ran
+  out. It now reads with `twig_module_driver::read_source`, which checks
+  the file's size first and reads at most 1 MiB + 1 bytes. A breach exits 1
+  with ``compile error in "<file>": … source bytes exceeds the limit of
+  1048576``. `tests/cli_source_budget.rs` runs the binary on a file of
+  exactly 1 MiB (runs), one byte more (refused) and `/dev/zero` (refused);
+  it is not built under Miri, which cannot spawn processes.
+
+### Tests
+
+- `compiler_register_budget_is_the_frame_limit` pins
+  `twig_ir_compiler::MAX_REGISTERS_PER_FUNCTION` to
+  `MAX_REGISTERS_PER_FRAME` (twig-ir-compiler cannot depend on this crate,
+  so it writes the number down; this test keeps the two equal), and the
+  compiler's module instruction budget to at most
+  `MAX_PROFILED_INSTRUCTION_SLOTS`.
+- `a_main_of_exactly_the_frame_limit_runs`: 65,536 top-level `1`s compile
+  and run on the dispatcher.
+- `a_main_one_register_over_the_frame_is_a_compile_error`: 65,537 are
+  `TwigRunError::Compile` at 65537:1. Before #18474 they compiled and then
+  failed in the dispatcher. Both large tests are skipped under Miri (safe
+  Rust only, 2¹⁶ parse and dispatch steps).
 
 ## Unreleased — LANG83 PR5a follow-up (#18800): the string builtins trap like the ops
 

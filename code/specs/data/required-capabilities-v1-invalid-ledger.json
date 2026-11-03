@@ -455,7 +455,6 @@
     "code/packages/rust/text-native-coretext/required_capabilities.json": "61eb106a0345616d30a238cd750bb1b663d956267f292d0f01aec5aaa18cf627",
     "code/packages/rust/text-native/required_capabilities.json": "731d848d942f3bac4a5778b89c508dc84f74b41ad3eb9730b36059c9ad38f299",
     "code/packages/rust/tree-set/required_capabilities.json": "ae29585c6ab891cbd9e2e0b21cb828a450d47fd8392a67ab1b6dbc2d8bfe9c2a",
-    "code/packages/rust/twig-vm/required_capabilities.json": "2a957be1f6a3516a2215c508bc912495d3723996eb5020e5034367d58c5f44af",
     "code/packages/rust/vault-attachments/required_capabilities.json": "ac65b440328ceca045039c8acaa7804ce793d193e2689964b052d11e6a045213",
     "code/packages/rust/vault-auth/required_capabilities.json": "ec47dfbed20c23c1f275bb67e5a20e420fc3ef4c8c5e5ef14e80d66ad06d535c",
     "code/packages/rust/vault-key-custody/required_capabilities.json": "1301a1c715a8e67716c0561497a71a01353983aabd213bfe05bb9033d11d551a",

@@ -1114,6 +1114,19 @@ does not route algorithms, recognize every critical extension, check validity,
 path length or name constraints, construct or validate a complete path, select
 trust, check revocation, perform TLS or HTTP, or authorize OAuth transport;
 concrete HTTPS remains unavailable.
+A construction-bound sibling entry point now consumes one exact adjacent-link
+projection from an existing bounded certificate-path construction. It derives
+both endpoints only from that projection's retained depth and construction,
+does not rerun caller Name policy, and applies the same fixed repository-owned
+RSA PKCS #1 v1.5 SHA-512 role, key, and signature checks to that exact pair.
+The non-copyable result retains the complete projection beside the validated
+issuer key, preventing this authenticated link from being detached from its
+selected construction order. This remains one public-data adjacency only: it
+does not retain complete issuer policy, authenticate another depth, validate a
+path, select trust, check constraints, hostname or revocation, perform TLS or
+HTTP, authorize OAuth transport, emit audit or trace events, or cause an
+external effect. Concrete HTTPS and live-provider readiness remain
+unavailable.
 A stronger bounded entry point now requires the exact candidate issuer to be
 retained by both certificate-wide critical-extension/issuing-CA role evidence
 and certificate-bound, data-driven RSA algorithm/key-policy evidence before
@@ -1238,6 +1251,57 @@ state, construct or search a path, apply anchor or intermediate constraints,
 check hostnames or revocation, perform TLS or HTTP, authorize OAuth transport,
 or cause an external effect. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A stronger bounded follow-up now consumes the exact target-server policy
+together with the reviewed SHA-512 two-link proof that already retains its
+advanced path-length state. It fails closed unless the server-policy
+certificate and the first link's authenticated target are the same exact
+decoded object; byte-equal independently decoded targets are insufficient.
+Success retains complete target policy, complete intermediate policy, both
+authenticated links, advanced path-length state, and exact reviewed-root
+selection in one distinct non-copyable result. The initial path-length state
+remains caller-owned and no additional transition is performed. This pure
+public-data binding performs no credential access, signing, storage, clock
+acquisition, audit event, trace emission, or external effect. It does not
+construct or search a path, apply anchor or intermediate constraints, verify a
+hostname, check revocation, perform TLS or HTTP, authorize OAuth transport, or
+grant network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+A bounded selected-anchor policy follow-up now consumes that complete
+path-length-preserving SHA-512 server proof. It derives both the selected
+reviewed snapshot entry's optional out-of-band NameConstraints bytes and the
+exact target certificate's Subject Alternative Name only through the consumed
+proof. Separate caller-owned ASN.1 budgets bound both decoders. An
+unconstrained selected anchor succeeds without manufacturing DNS evidence;
+supported permitted DNS subtrees must admit every retained target dNSName, and
+malformed constraints, a missing or malformed target SAN, unsupported forms,
+or names outside the permitted set fail closed with payload-free categories.
+The non-copyable result retains complete target policy, intermediate policy,
+both authenticated links, advanced path-length state, exact reviewed-root
+selection, and optional constrained-name evidence together. This pure
+public-data policy performs no credential access, signing, storage, clock
+acquisition, audit event, trace emission, or external effect. It does not
+apply intermediate or non-DNS constraints, construct or search a path, verify
+a hostname, check revocation, perform TLS or HTTP, authorize OAuth transport,
+or grant network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+A bounded intermediate-policy follow-up now consumes that complete SHA-512
+selected-anchor proof and applies the exact retained intermediate's
+NameConstraints extension to the exact retained target Subject Alternative
+Name. An absent extension preserves the complete prior proof without new DNS
+evidence. A present extension must be critical and must decode under a separate
+caller-owned ASN.1 budget as the supported permitted-and-excluded-dNSName
+subset; every target dNSName must satisfy the permitted policy, exclusions take
+precedence, and malformed or unsupported forms fail closed with payload-free
+categories. Both certificates and the SAN are derived only through the
+consumed proof, preventing detached certificate or policy substitution. The
+non-copyable result retains target and intermediate policy, both authenticated
+links, advanced path-length state, exact reviewed-root selection, anchor DNS
+policy, and optional intermediate constrained-name evidence together. This pure
+public-data policy performs no credential access, signing, storage, clock
+acquisition, audit event, trace emission, or external effect. It does not apply
+non-DNS constraints, construct or search a path, verify a hostname, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded `x509-rsa-signature-routing` prerequisite now separates
 caller-owned certificate algorithm selection from fixed repository-owned RSA
 verification. It consumes exact child-certificate algorithm-profile evidence

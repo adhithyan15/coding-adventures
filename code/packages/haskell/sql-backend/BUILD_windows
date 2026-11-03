@@ -1,1 +1,1 @@
-where cabal >/dev/null 2>/dev/null && cabal test all || echo cabal not available on this runner -- skipping
+if exist "%ProgramFiles%\\cabal\\bin\\cabal.exe" (cabal test all) else (echo cabal not found -- skipping)

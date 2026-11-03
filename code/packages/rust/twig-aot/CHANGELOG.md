@@ -6,6 +6,17 @@
 - **`lower_string_literals_for_aot` stores every literal byte exactly.** The printable-ASCII filter is gone: a `str_const` of any `Str` (its UTF-8) or raw-byte `Operand::Bytes` literal becomes `alloc_bytes` plus one `store_byte` per byte, NUL and 0x80–0xFF included. Before, any other literal was left for the backend, which refused it. The fold table holds bytes, so a literal `str_slice` that splits a UTF-8 character (`"é"[1..2]` is `A9`) and a literal `str_concat` of non-ASCII literals fold instead of falling back to the runtime helpers.
 - The constant-compare helper treats an `Operand::Bytes` as not a signed word, like `Str`.
 - Tests `non_ascii_and_raw_byte_literals_lower_to_exact_byte_stores` and `literal_folds_keep_bytes_that_are_not_utf8` (both fail on the previous lowering).
+## Unreleased — #18474 security review: bounded source reads
+
+- **Every `compile_file_*` entry point and `emit_object_to_disk` read the
+  source with `std::fs::read_to_string`**, so a huge file was read whole,
+  `/dev/zero` never returned and a FIFO blocked forever. They now read
+  through `read_twig_source` (`bounded-source-file`, limit
+  `twig_ir_compiler::MAX_SOURCE_BYTES`): only a regular file, size checked
+  first, at most 1 MiB + 1 bytes read. Errors stay `AotError::Io`
+  (`InvalidInput` / `FileTooLarge`).
+- Test `source_files_are_read_within_the_budget`: a sparse file one byte
+  over and a directory are refused; a file of exactly 1 MiB compiles.
 
 ## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused before lowering
 

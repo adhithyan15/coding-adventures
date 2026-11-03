@@ -16,15 +16,15 @@
       "external-approval"
     ]
   },
-  "active_pr": 18756,
+  "active_pr": 18853,
   "active_prs": [
-    18756
+    18853
   ],
   "last_ci_action": {
-    "observed_at": "2026-10-30T20:46:24Z",
-    "pr_number": 18756,
-    "head_revision": "01d2f14a6a621b7ccdd38361d8024fefce583cc6",
-    "action": "Independently reviewed Lua Windows discovery fallback head 01d2f14a6a621b7ccdd38361d8024fefce583cc6 opened as ready PR #18756 over exact base 5b57bc21b6190c2216e38c847f4943fb1a766a59. GitHub reports the PR mergeable and fresh exact-head CI is queued. Main advanced through path-disjoint Rust TLS record-protection state work at publication, so normal merge 02aa0b7a9dcd1d8403caede08a22082e5d979ee2 incorporates it; the exact lifecycle head requires fresh review and CI, and auto-merge remains disabled.",
+    "observed_at": "2026-11-03T10:09:45Z",
+    "pr_number": 18853,
+    "head_revision": "6f334e07991729ed5b22779d502e4add1ea4c577",
+    "action": "Exact-head CI confirmed the Java repair and then failed at the analogous Kotlin legacy fixture roster; the aggregate CI gate failed only because that required contract job failed. Audit found Dart uses the same non-adopting roster shape and would run next. Keep auto-merge disabled. Apply the same closed trigger_relations discriminator to Kotlin and Dart, preserve all legacy mandatory case sets, validate all three consumers plus the canonical corpus, push normally, independently review the resulting exact head, and require fresh hosted qualification.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2764,7 +2764,7 @@
     {
       "id": "build-tool-lua-windows-discovery-fallback-null-device-hardening",
       "title": "Correct the Lua build tool Windows discovery fallback null device",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/build-tool-lua-windows-fallback-hardening",
       "pr_number": 18756,
@@ -2782,17 +2782,37 @@
       "validation_notes": "The fallback now uses cmd.exe-compatible `cd /d` and `2>nul` on Windows while retaining POSIX `/dev/null`, quotes POSIX paths safely, rejects Windows expansion, quote, NUL, and record-framing inputs before execution, preserves legitimate POSIX leading and trailing whitespace, and strips only terminal carriage returns from Windows dir.exe records. Focused discovery tests pass 29/29, the canonical Lua build-tool suite passes 158/158, every Lua source parses, all 1,740 lesson shards validate, and diff plus ignored-inclusive hygiene checks are clean.",
       "security_review_revision": "ce030817f27ff6447ff95806a5637445fb87149e",
       "security_review_notes": "Independent review initially rejected trimming legitimate leading and trailing whitespace from fallback directory records. The final implementation preserves POSIX names exactly, removes only Windows record framing, fails closed on dangerous cmd.exe input, and keeps the injected fallback seams test-only and authority-neutral. Exact implementation-head re-review issued SHIP with no remaining findings.",
+      "final_head": "1daa366ad4f3f4c100086b7ca32aee353778a2da",
+      "merged_at": "2026-10-31T00:10:47Z",
+      "merge_commit": "d2c289290d885da155befaeb6f394d81fa738d41",
+      "merge_notes": "All 37 exact-head checks completed terminal acceptable: 13 succeeded and 24 were expected skips. The PR was externally squash-merged after exact-head review; the merge receipt is an ancestor of current origin/main. The completed worktree is archived, and no auto-merge claim is made.",
       "notes": "Discovered while diagnosing PR #18725 Windows job 124133234570. When lfs is unavailable, Discovery.dir_exists used POSIX 2>/dev/null even on Windows, so valid child probes failed and discovery could silently return zero packages. Repair the bounded fallback with platform-correct null devices, safe shell construction, deterministic forced-fallback regressions, and exact filename preservation. Keep strict CLI argument validation in its separately registered owner."
     },
     {
       "id": "build-tool-lua-cli-argument-validation-hardening",
       "title": "Reject unknown and value-less Lua build-tool CLI options",
-      "status": "pending",
+      "status": "merged",
       "depends_on": [],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/build-tool-lua-cli-args-hardening",
+      "pr_number": 18842,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18842",
+      "pr_opened_at": "2026-11-03T06:03:19Z",
+      "publication_head": "360b9fffb2a220e29b8209f6311d04e0e91c6288",
+      "publication_base": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
+      "publication_notes": "The independently reviewed current-main head opened as ready PR #18842. GitHub reports it mergeable; fresh CI, CodeQL, and human-language detection checks are queued. Guarded squash auto-merge remains disabled until the durable PR receipt is pushed and reviewed and every check on that resulting exact head is terminal acceptable while GitHub still reports it mergeable.",
       "registered_at": "2026-10-30T20:40:43Z",
-      "notes": "Discovered during independent review of the Lua Windows discovery fallback repair. The CLI currently ignores unknown options, treats a missing --root value as permission to auto-detect a root, and can accept a missing --language value before succeeding with zero packages. Define strict, path-redacted stable diagnostics for unknown options and every value-less option without widening filesystem or process authority. Keep this parser hardening separate from the Windows discovery fallback repair and reprioritize it before selection."
+      "selection_revision": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
+      "selection_notes": "Selected after Lua fallback PR #18756 completed 37 exact-head checks acceptably and was externally squash-merged. This concrete fail-open CLI defect was already under local implementation, has no dependency on the completed fallback internals, and ranks ahead of the broader Rust Cargo test-trigger follow-up because malformed invocations can silently target the wrong root or succeed after selecting no packages.",
+      "implementation_revision": "de3e5370036ad39c4f506868e22d27ed20cd3d28",
+      "main_refresh_revision": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
+      "main_merge_revision": "b10e0853d6c7175258bfa2c1502ae9df2dfc2979",
+      "main_merge_notes": "A normal current-main merge incorporated the completed discovery fallback, Lua graph/diff performance work, Cargo link-table resolution hardening, and all intervening repository changes. README.md and build.lua auto-merged disjoint hunks; the only textual merge conflict was the Lua build-tool changelog, whose resolution preserves both complete entry sets. Exact merged-head validation passes 11 focused CLI cases, 242 complete Lua build-tool cases, every Lua syntax check, 1,789 lesson shards, and 11 quirk shards with zero problems.",
+      "merged_head_revision": "360b9fffb2a220e29b8209f6311d04e0e91c6288",
+      "merged_at": "2026-11-03T08:09:56Z",
+      "merge_revision": "e76c294a30577a58e5bd22610b83ffb2abd8a776",
+      "merge_notes": "Every one of 37 exact-head checks reached a terminal acceptable conclusion: 13 succeeded and 24 were expected skips. GitHub reported CLEAN and MERGEABLE before guarded squash auto-merge. The merge commit is an ancestor of current origin/main; the completed worktree is archived and its recoverable snapshot retains the PR attachment.",
+      "validation_notes": "The parser is now a process-free all-or-error module. It rejects unknown options, unexpected positional arguments, empty or value-less --root and --language options, and option tokens in value position before discovery; diagnostics name only fixed option labels and never echo untrusted path-bearing input. Supported flags, help, Windows paths with spaces, and single-hyphen values remain accepted. The exact current-main tree passes 11 focused cases, 242 complete Lua build-tool tests, all Lua syntax checks, 1,789 lesson shards, and 11 quirk shards with zero problems.",
+      "notes": "Discovered during independent review of the Lua Windows discovery fallback repair. Unknown options were ignored, a missing --root value fell through to auto-detection, and a missing --language value could succeed after selecting zero packages. Implement strict, path-redacted stable diagnostics without widening filesystem or process authority; keep this parser hardening separate from discovery fallback behavior."
     },
     {
       "id": "build-tool-perl-diff-selection-match-work-ceiling-adoption",
@@ -2919,13 +2939,111 @@
     },
     {
       "id": "build-tool-rust-cargo-test-trigger-selection-parity",
-      "title": "Adopt bounded Cargo test-trigger selection in the Rust build tool",
+      "title": "Adopt the bounded Cargo test-trigger selection core in the Rust build tool",
+      "status": "pr-open",
+      "depends_on": [],
+      "branch": "codex/build-tool-rust-cargo-test-trigger",
+      "pr_number": 18853,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18853",
+      "pr_opened_at": "2026-11-03T08:13:51Z",
+      "draft_creation_head": "c60e057844416505c56b8d5b0989edc0ab43e156",
+      "publication_head": "c60e057844416505c56b8d5b0989edc0ab43e156",
+      "publication_base": "e76c294a30577a58e5bd22610b83ffb2abd8a776",
+      "publication_notes": "Draft PR #18853 recorded the independently reviewed selected current-main head over exact base e76c294a30577a58e5bd22610b83ffb2abd8a776. After the PR-number receipt was committed and pushed normally, independent exact-head publication review issued SHIP for f185778a48faaea5b1800d09f3228b62aa82e95e and the PR was marked ready. Auto-merge remains disabled pending this ready receipt, final exact-head review, and terminal acceptable hosted qualification.",
+      "lifecycle_review_revision": "f185778a48faaea5b1800d09f3228b62aa82e95e",
+      "lifecycle_review_notes": "Independent publication review verified the PR identity, exact head and base, mergeability, 19-file GitHub/local parity, current-main and Lua merge receipts, active-PR ceiling, non-overlap, byte-identical implementation, 185-case/328-file corpus, focused Go witness, and ignored-inclusive clean worktree. It reported no findings and authorized marking the draft ready.",
+      "ready_at": "2026-11-03T08:27:37Z",
+      "ci_failure_revision": "024d688e6f995085881aae3abaf2c5c757130e3b",
+      "ci_failure_notes": "Repo-wide metadata contracts failed only the Java BuildToolCoreTest legacy fixture-roster test. The new closed diff_selection trigger variant carries package-name strings, while that non-adopting Java test assumes every diff_selection fixture carries legacy package records with source_mode. The repair makes the Java legacy roster ignore only options containing trigger_relations, matching the documented distinct variant while leaving all existing graph and path-selection fixtures mandatory.",
+      "ci_second_failure_revision": "6f334e07991729ed5b22779d502e4add1ea4c577",
+      "ci_second_failure_notes": "Fresh hosted qualification passed the repaired Java roster and then exposed the same closed-variant decoding assumption in the Kotlin roster; the CI gate failed only as the required-job aggregate. A complete audit found Dart has the same sequential legacy consumer. The bounded repair applies the exact trigger_relations discriminator to Kotlin and Dart while retaining each unchanged mandatory graph and path-selection case set; canonical schema and semantic validation continue to validate every trigger fixture independently.",
+      "registered_at": "2026-10-30T12:39:41Z",
+      "preparation_branch": "codex/build-tool-rust-cargo-test-trigger",
+      "prepared_at": "2026-11-03T07:36:31Z",
+      "preparation_base_revision": "462710b53fc4340de8360b286c407b7dcec4e54b",
+      "implementation_revision": "8bf87dfe00153dc5d952bff5c242837fd9ae04cd",
+      "corpus_repair_revision": "e471100cc9256c7f59596ac4cc8dc47ad516bd98",
+      "preparation_head_revision": "9cded3754af849517f9b1f0e889bcb488b015498",
+      "reconciled_main_revision": "462710b53fc4340de8360b286c407b7dcec4e54b",
+      "selected_at": "2026-11-03T08:12:29Z",
+      "selection_revision": "e76c294a30577a58e5bd22610b83ffb2abd8a776",
+      "current_main_merge_revision": "73f109f73bacd9546a989c81d94e055f86efb5e7",
+      "selection_notes": "Selected immediately after PR #18842 completed all 37 exact-head checks acceptably and merged through guarded squash auto-merge, opening the publication slot. This dependency-free, authority-free Rust core is already fully implemented, current-main reconciled, independently reviewed, and clean; it directly unlocks the strict Cargo snapshot contract, native adapter, CLI integration, and native fixture-routing owners. It ranks ahead of beginning a new unprepared owner because it is the highest-leverage reviewed local preparation and has no open-PR path overlap.",
+      "preparation_notes": "Complete local-only preparation at exact clean head 9cded3754af849517f9b1f0e889bcb488b015498 after a normal path-disjoint merge of current origin/main. Keep this owner pending and unpublished while Lua CLI validation PR #18842 occupies the publication slot. The pure evaluator, six neutral fixtures, Go witness, closed schema variant, canonical semantic validator, documentation, five strict-reader/integration follow-ups, and separate native fixture-routing owner are recorded without claiming Cargo parsing or native authority.",
+      "preparation_validation_notes": "Independent exact-head review issued SHIP. Pinned canonical corpus validation reports 185 cases and 328 files; Python schema 27/27 and runner 93/93 pass; Rust test-trigger 4/4 plus all-targets 259/259 and Clippy with warnings denied pass; focused and forced uncached full Go build-tool tests pass; rustfmt, gofmt, diff hygiene, the 1,572-owner dependency-complete acyclic state graph, current-main ancestry, path-disjoint merge receipt, and ignored-inclusive cleanliness pass.",
+      "notes": "Discovered during exact-head review of the prepared Rust graph/diff adoption and narrowed by the 2026-11-02 Rust/Go contract audit. Implement only the authority-free selection evaluator over already validated package names, graph edges, resolved trigger pairs, and changed packages: dependent closure, exactly one trigger hop, then prerequisite closure. Return deterministic sorted results; reuse the Rust graph/diff ceilings of 4096 packages and 16384 graph edges, add a 16384 trigger-pair ceiling, and consume a small neutral fixture family shared with Go. Keep Cargo parsing, filesystem identity, orphan/config policy, discovery, command execution, and CLI integration in the separately recorded follow-up owners."
+    },
+    {
+      "id": "build-tool-test-trigger-fixture-native-ci-selection-routing",
+      "title": "Route test-trigger fixtures to native Go and Rust CI readers",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-ci-gate-fixture-native-ci-selection",
+        "build-tool-rust-cargo-test-trigger-selection-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T07:15:26Z",
+      "notes": "Recorded after the Rust Cargo test-trigger core introduced six shared test-trigger-selection-*.json cases. Extend the native fixture-change selection map so exact flat changes in that family seed only go/programs/build-tool and rust/programs/build-tool. Reject empty stems, nested paths, backslash spellings, case variants, and backups; cover added, modified, deleted, and renamed paths; preserve ordinary package-root union and prerequisite closure; and prove Linux, macOS, Windows, and explicit language-plan behavior. This operational routing is separate from the authority-free selection core and grants no native or merge credit."
+    },
+    {
+      "id": "build-tool-neutral-cargo-manifest-trigger-snapshot-contract",
+      "title": "Define the neutral strict Cargo manifest trigger snapshot contract",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-rust-cargo-test-trigger-selection-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit after the original test-trigger owner proved too broad for one independently reviewable slice. Define a shared authority-free strict TOML subset and snapshot fixtures for trigger tables, link-table screening, BOM and malformed-shape diagnostics, and the established 1 MiB manifest, 64 KiB continued-entry, and 256-line continuation ceilings. Do not open files, resolve paths or symlinks, consult environment state, or integrate a language-specific CLI in this owner."
+    },
+    {
+      "id": "build-tool-rust-cargo-trigger-crate-closure-snapshot-parity",
+      "title": "Adopt pure Cargo trigger crate-closure snapshots in the Rust build tool",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-neutral-cargo-manifest-trigger-snapshot-contract"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Implement the authority-free lexical package, nested-crate, orphan, patch, Cargo-config, and exemption-ledger snapshot resolver over already captured inputs, with a 16-level depth ceiling plus memoized cycle and diamond handling. Keep native reads, filesystem identity, symlink handling, process authority, package execution, and CLI integration outside this owner."
+    },
+    {
+      "id": "build-tool-rust-cargo-trigger-native-input-adapter",
+      "title": "Adopt the exact-identity native Cargo trigger input adapter in the Rust build tool",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-rust-cargo-trigger-crate-closure-snapshot-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Add regular no-follow stable reads, exact case and Unicode spelling, symlink/junction/reparse identity, Cargo ancestor config inspection, and the orphan exemption ledger before feeding immutable snapshots into the pure resolver. Refuse source redirection, local git URLs, replace, unsupported patch and workspace inheritance fail-closed with stable diagnostics; keep process execution and final CLI selection integration outside this owner."
+    },
+    {
+      "id": "build-tool-rust-cargo-trigger-cli-integration",
+      "title": "Integrate Cargo test triggers into Rust build-tool change selection",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-rust-cargo-test-trigger-selection-parity",
+        "build-tool-rust-cargo-trigger-native-input-adapter"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded by the 2026-11-03 Rust/Go contract audit. Discover and snapshot the full package universe before language filtering, integrate the reviewed trigger relation with stable exit 2, apply exactly one trigger hop after dependent closure and before prerequisite scheduling, and add end-to-end neutral fixtures. Do not expand command execution authority or unrelated Cargo BUILD validation."
+    },
+    {
+      "id": "build-tool-rust-repository-input-consumer-selection-parity",
+      "title": "Adopt repository-input consumer selection in the Rust build tool",
       "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "registered_at": "2026-10-30T12:39:41Z",
-      "notes": "Discovered during exact-head review of the prepared Rust graph/diff adoption. Audit the established Go build-tool test-trigger resolver contract, define the smallest authority-free Cargo selection boundary, and port its repository-input, dev-dependency, orphan, exclusion, stable-diagnostic, and resource-ceiling behavior into the Rust build tool with neutral fixtures. Keep command execution, package graph/diff implementation, platform process authority, and unrelated Cargo BUILD validation outside this owner; prioritize it only after the independently prepared Lua and Rust graph/diff owners are published or reprioritized."
+      "registered_at": "2026-11-03T06:22:44Z",
+      "notes": "Recorded separately by the 2026-11-03 Rust/Go contract audit because Go repository-input consumers are not Cargo test triggers and Rust currently has no counterpart. Define and adopt a bounded authority-free consumer-selection relation for repository-wide inputs without conflating it with build-graph edges or Cargo dev-dependencies; preserve one-hop consumer semantics and keep unrelated command authority outside this owner."
     },
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",

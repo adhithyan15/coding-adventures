@@ -428,11 +428,32 @@ an absent `BUILD_windows` is an empty Windows closure rather than a reason to
 skip comparison. The validator reports every missing canonical sibling in
 stable sorted order; an explicit Windows recipe may add transitive local rocks.
 
-Cargo dependency resolution reads inline path dependencies from the top-level
-`[dependencies]` table. When a dependency uses a local source alias together
-with `package = "published-name"`, the published package name drives internal
-lookup. Package metadata, features, dev/build/target tables, and registry-only
-dependencies remain outside this graph contract.
+Cargo dependency resolution reads path dependencies from every table Cargo
+compiles into the crate: `[dependencies]`, `[build-dependencies]` (and the
+legacy `build_dependencies`), and the same tables under `[target.<cfg>.…]` for
+any cfg, quoted (`[target.'cfg(any(unix, windows))'.dependencies]`) or a bare
+triple — the union over all targets, because CI builds on several hosts. Both
+entry forms count: an inline table (`name = { path = "..." }`, whose
+`features` array may continue onto later lines) and a `[dependencies.name]`
+sub-table with a `path = "..."` key. When a dependency uses a local source
+alias together with `package = "published-name"`, the published package name
+drives internal lookup. `[dev-dependencies]` in every form (they are test
+triggers instead; see `internal/resolver/test_triggers.go` and "Cargo
+dev-dependency test triggers" in `code/specs/12-build-system.md`), `[patch]`,
+`[replace]`, `[workspace]`, package metadata, features, and registry-only
+dependencies remain outside this graph contract. The exact line procedure is
+the Rust paragraph of `code/specs/build-tool-conformance.md`, pinned by the
+shared `resolution/rust-field-aware` case that this tool and the Haskell
+front both read. Field and sub-table keys may be bare or quoted
+(`"path" = "..."`). That procedure is lenient, so for every Rust and WASM
+package the strict test-trigger reader also screens these tables and stops the
+plan on any shape the procedure does not model (a dotted key such as
+`a.path = "..."` or `build-dependencies.a.path = "..."`, an inline table
+spelling a link table, `[dependencies.a.features]`, a multi-line string, a
+backslash, ...). The edge reader carries its own limits (a regular file of at
+most 1 MiB, one entry of at most 256 lines or 64 KiB) and joins continuation
+lines in linear time. A dependency that resolves to the package itself is a
+`DEPENDENCY_SELF_EDGE` diagnostic with exit status 2.
 
 Ruby dependency resolution reads only `add_dependency` and
 `add_runtime_dependency` calls on the gem specification receiver. Development

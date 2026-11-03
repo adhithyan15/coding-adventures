@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Rust dependency names are deduplicated with a set rather than a list scan,
+  so a manifest naming many crates costs time linear in its size (security
+  review, round 2).
 - Source hashing now consumes an installed, byte-identical projection of the
   checked 23-language source-input registry. All seven selector roles apply
   with exact package/site scoping and declared-source precedence; unknown
@@ -29,6 +32,47 @@ All notable changes to this project will be documented in this file.
 - Source hashing now follows the 27-component neutral generated-directory
   registry, pruning exact lowercase `blib` while retaining `Blib` and
   `blib-example` in both extension and declared-source modes.
+
+### Fixed
+
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: a `_TomlBracketScanner` carries the bracket
+  depth, the open string's delimiter and a pending escape from line to line
+  (so a string left open at a line end still continues after the joining
+  space), and the pieces are joined once, instead of rescanning the growing
+  value for every appended line, which was quadratic. Quoted field and
+  sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`) are read as
+  the bare key, compared verbatim and case-sensitively, per the amended
+  contract. A Cargo path entry that resolves to the crate itself is now
+  `DependencySelfEdgeError` (`DEPENDENCY_SELF_EDGE`, repository-relative
+  manifest; the CLI exits 2) instead of a silently drawn self-loop. The
+  `[package]` `name` reader uses `[ \t]*` instead of a multi-line `\s*`,
+  which was quadratic in a run of blank lines. Tests: the 11 new one-shape
+  cases (57), a 20,000-line continuation, 100,000 blank lines before the
+  name, and self-edges by alias, by name and from a target table.
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form. A change to a crate used only by a
+  build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md`: headers
+  are split into dotted-key segments outside strings (quoted cfgs stay one
+  segment, table names compare case-sensitively, `[[...]]` and malformed
+  headers end the table); comments are stripped outside strings; inline
+  values whose arrays continue onto later lines are joined; `path` and
+  `package` field keys must be exact and hold one non-empty string; names are
+  ASCII-lowercased and deduplicated. Dev-dependencies (every form),
+  `[patch]`, `[replace]`, `[workspace]` and registry entries add no edge.
+- The old reader counted any `[dependencies]` line mentioning `path`, so
+  `gamma = { version = "1", features = ["path"] }` drew an edge, and it looked
+  up the entry key instead of a `package` rename. Both are fixed.
+- The declared Cargo `[package]` `name` is now a known Rust name alongside the
+  directory name, as the contract and the other fronts require.
+- Tests: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames`, duplicate collapse, the declared-name alias,
+  and the shared `resolution-rust-field-aware.json` fixture (edges and
+  affected closure). The reader returns the same dependency names as the Go
+  reader for all 1,650 tracked `Cargo.toml` files.
 
 ## [0.3.18] - 2026-09-27
 

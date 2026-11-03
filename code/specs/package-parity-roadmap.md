@@ -20274,3 +20274,141 @@ Lua build-tool tests, every Lua syntax check, and 1,740 lesson shards with zero
 problems. Commit this durable PR receipt, push normally, and obtain exact-head
 publication review before allowing guarded squash auto-merge; results attached
 to any earlier head cannot authorize the merge.
+
+### Rust Cargo test-trigger core and native fixture-routing follow-up
+
+The bounded Rust Cargo test-trigger selection owner is implemented as a pure
+inert-value operation with six shared `test-trigger-selection-*.json` cases.
+Its corpus-validator repair routes that closed `diff_selection` variant before
+the legacy object-package path-selection oracle and independently checks its
+one-hop trigger and prerequisite semantics, including the intentional graph
+cycle and unknown-relation failures.
+
+New pending owner
+`build-tool-test-trigger-fixture-native-ci-selection-routing` must extend the
+native fixture-change selection map so an exact flat
+`test-trigger-selection-*.json` change seeds only
+`go/programs/build-tool` and `rust/programs/build-tool`. It must reject empty
+stems, nested paths, backslash spellings, case variants, and backups; cover
+added, modified, deleted, and renamed paths; preserve ordinary package-root
+union and prerequisite closure; and prove Linux, macOS, Windows, and explicit
+language-plan behavior. This operational routing remains separate from the
+authority-free selection core and receives no merge credit here.
+
+The completed local preparation is recorded at clean exact head
+`9cded3754af849517f9b1f0e889bcb488b015498`, normally reconciled with current
+main `462710b53fc4340de8360b286c407b7dcec4e54b`. Independent review passed the
+185-case canonical corpus, 27 schema tests, 93 runner tests, all 259 Rust
+all-target tests, Clippy with warnings denied, the focused Go witness, format
+and diff checks, state-graph integrity, authority boundary, and ignored-file
+hygiene. It remained unpublished while Lua CLI validation PR #18842 occupied
+the publication slot.
+
+#### Lua fallback PR #18756 merge and CLI validation reprioritization
+
+All 37 checks on exact independently reviewed fallback head
+`1daa366ad4f3f4c100086b7ca32aee353778a2da` completed terminal acceptable:
+13 succeeded and 24 were expected skips. PR #18756 was externally
+squash-merged at `2026-10-31T00:10:47Z` as
+`d2c289290d885da155befaeb6f394d81fa738d41`. The receipt is an ancestor of
+current `origin/main`; the completed worktree is archived. No auto-merge
+claim is made.
+
+A fresh priority pass selects the already implemented Lua CLI argument
+validation owner. The old parser ignored unknown options, let a missing
+`--root` fall through to auto-detection, and could accept a missing
+`--language` before succeeding with zero packages. Implementation
+`de3e5370036ad39c4f506868e22d27ed20cd3d28` introduces a process-free
+all-or-error parser with stable path-redacted diagnostics, rejects empty or
+value-less options and unexpected arguments before discovery, preserves help
+and supported flags, and adds direct boundary regressions.
+
+Normal current-main merge
+`b10e0853d6c7175258bfa2c1502ae9df2dfc2979` incorporates main
+`4cedfcff47130c26823f2f54c1f1b333b0e98481`. README.md and build.lua
+auto-merged disjoint hunks; its sole textual merge conflict was the Lua
+build-tool changelog, whose resolution preserves both complete entry sets. The
+exact merged tree passes 11 focused CLI cases, 242 complete Lua
+build-tool cases, every Lua syntax check, 1,789 lesson shards, and 11 quirk
+shards with zero problems. Independent security and publication review remain
+required before publication.
+
+#### Lua CLI argument validation PR #18842 publication receipt
+
+Publish independently reviewed current-main head
+`a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a` as ready PR #18842 over exact
+base `4cedfcff47130c26823f2f54c1f1b333b0e98481` at
+`2026-11-03T06:03:19Z`. GitHub reports the PR mergeable; fresh CI, CodeQL, and
+human-language detection checks are queued. Keep guarded squash auto-merge
+disabled until this durable receipt is committed, pushed normally, and
+independently reviewed, then require every exact-head check to complete
+terminal acceptable while GitHub still reports the PR mergeable.
+
+#### Lua CLI PR #18842 merge and Rust trigger-core selection
+
+All 37 checks on exact reviewed Lua CLI head
+`360b9fffb2a220e29b8209f6311d04e0e91c6288` completed terminal acceptable:
+13 succeeded and 24 were expected skips. GitHub reported CLEAN and MERGEABLE;
+guarded squash auto-merge completed at `2026-11-03T08:09:56Z` as
+`e76c294a30577a58e5bd22610b83ffb2abd8a776`. The receipt is an ancestor of
+current main, and the clean completed worktree is archived.
+
+The opened slot selects the already reviewed Rust Cargo test-trigger core.
+Normal merge `73f109f73bacd9546a989c81d94e055f86efb5e7` reconciles current main while
+preserving both histories and the complete Lua receipt. The pure core is
+dependency-free, gains no host authority, and directly unlocks the strict
+snapshot, native adapter, CLI integration, and fixture-routing follow-ups.
+Publish only after the durable selection receipt is committed and pushed
+normally, then require a fresh exact-head publication review.
+
+#### Rust Cargo test-trigger core PR #18853 draft receipt
+
+Open independently reviewed selection head
+`c60e057844416505c56b8d5b0989edc0ab43e156` as draft PR #18853 over exact
+base `e76c294a30577a58e5bd22610b83ffb2abd8a776` at
+`2026-11-03T08:13:51Z`. GitHub reports the draft mergeable. Keep it draft while
+this PR-number lifecycle receipt is committed and pushed normally. Independent
+exact-head publication review must pass before marking it ready; every hosted
+check on the final reviewed head must then complete terminal acceptable while
+GitHub still reports the PR mergeable before guarded squash auto-merge.
+
+#### Rust Cargo test-trigger core PR #18853 ready receipt
+
+Independent publication review issued SHIP for exact lifecycle head
+`f185778a48faaea5b1800d09f3228b62aa82e95e`. It verified the PR identity and
+base, 19-file GitHub/local parity, current-main and Lua merge ancestry, active
+publication ceiling, zero live overlap, byte-identical reviewed implementation,
+the valid 185-case/328-file corpus, focused Go witness, and ignored-inclusive
+worktree cleanliness with no findings. Mark PR #18853 ready at
+`2026-11-03T08:27:37Z`; hosted checks remain queued or in progress and
+auto-merge remains disabled. Commit and push this receipt normally, require a
+fresh independent review of the resulting exact head, and enable guarded
+squash auto-merge only after every exact-head check is terminal acceptable and
+GitHub still reports the PR mergeable.
+
+#### Rust Cargo test-trigger core PR #18853 CI repair
+
+Exact ready head `024d688e6f995085881aae3abaf2c5c757130e3b` failed the
+repo-wide metadata-contract job in the Java build-tool fixture roster. The new
+closed `diff_selection` trigger variant carries package-name strings, while the
+non-adopting Java legacy test attempted to decode every `diff_selection`
+fixture as structured path-selection package records and rejected the absent
+`source_mode`. Keep auto-merge disabled. The bounded repair leaves only
+`trigger_relations` fixtures to adopting consumers while preserving the
+complete Java graph and legacy path-selection roster. Validate, commit, and
+push the repair normally, then require independent exact-head review and fresh
+terminal acceptable hosted qualification before guarded squash auto-merge.
+
+#### Rust Cargo test-trigger core PR #18853 sequential consumer repair
+
+Fresh qualification on Java-repaired head
+`6f334e07991729ed5b22779d502e4add1ea4c577` passed Java and then failed the
+analogous Kotlin legacy fixture roster; the CI-gate failure only aggregates
+that required contract-job failure. A complete sequential-consumer audit found
+Dart uses the same non-adopting graph/diff roster and would run after Kotlin.
+Apply the same closed `trigger_relations` discriminator to Kotlin and Dart now,
+while leaving every existing mandatory graph and legacy path-selection case in
+their unchanged exact rosters. The canonical schema and semantic oracle still
+validate every trigger fixture independently. Keep auto-merge disabled; require
+all three consumer suites, the canonical corpus, independent exact-head review,
+and fresh terminal acceptable hosted qualification after a normal push.

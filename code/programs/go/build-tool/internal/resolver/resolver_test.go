@@ -6,9 +6,11 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"reflect"
 	"runtime"
 	"strings"
 	"testing"
+	"time"
 
 	directedgraph "github.com/adhithyan15/coding-adventures/code/packages/go/directed-graph"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
@@ -1266,7 +1268,10 @@ edition = "2021"
 	}
 
 	known := BuildKnownNames(packages)
-	deps := parseRustDeps(packages[0], known)
+	deps, err := parseRustDeps(packages[0], known)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	if len(deps) != 1 {
 		t.Fatalf("expected 1 dep, got %d: %v", len(deps), deps)
@@ -1279,9 +1284,262 @@ edition = "2021"
 func TestParseRustDepsNoCargoToml(t *testing.T) {
 	root := t.TempDir()
 	pkg := discovery.Package{Name: "rust/pkg-x", Path: root, Language: "rust"}
-	deps := parseRustDeps(pkg, map[string]string{})
-	if len(deps) != 0 {
-		t.Fatalf("expected 0 deps, got %d", len(deps))
+	deps, err := parseRustDeps(pkg, map[string]string{})
+	if err != nil || len(deps) != 0 {
+		t.Fatalf("expected 0 deps and no error, got %d, %v", len(deps), err)
+	}
+}
+
+// TestRustResolutionConformanceFixture runs the Go reference reader against
+// the shared case every build-tool front implements: inline and sub-table
+// entries in [dependencies], [build-dependencies] and their target forms are
+// edges; dev-dependencies (every form), [patch], registry entries, features
+// and comments are not.
+func TestRustResolutionConformanceFixture(t *testing.T) {
+	fixture := loadResolutionFixture(t, "resolution-rust-field-aware.json")
+	_, packages := materializeResolutionFixture(t, fixture)
+	graph := mustResolveDependencies(t, packages)
+
+	edges := graph.Edges()
+	if len(edges) != len(fixture.Expected.Result.Edges) {
+		t.Fatalf("dependency edge count = %d, want %d: %v", len(edges), len(fixture.Expected.Result.Edges), edges)
+	}
+	for _, edge := range fixture.Expected.Result.Edges {
+		if len(edge) != 2 || !graph.HasEdge(edge[0], edge[1]) {
+			t.Fatalf("missing expected dependency edge %v in %v", edge, edges)
+		}
+	}
+}
+
+// TestCargoLinkDependencyNames pins each line rule of the Cargo contract in
+// code/specs/build-tool-conformance.md, one manifest shape per case.
+func TestCargoLinkDependencyNames(t *testing.T) {
+	cases := []struct {
+		name     string
+		manifest string
+		want     []string
+	}{
+		{"top-level inline", "[dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"build-dependencies", "[build-dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"legacy build_dependencies", "[build_dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"quoted cfg target", "[target.'cfg(any(target_os = \"linux\", windows))'.dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"bare triple target build", "[target.x86_64-pc-windows-msvc.build-dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"legacy target build", "[target.'cfg(unix)'.build_dependencies]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"spaced header segments", "[ target . 'cfg(unix)' . dependencies ]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"quoted table segment", "[\"dependencies\"]\na = { path = \"../a\" }\n", []string{"a"}},
+		{"sub-table", "[dependencies.a]\nversion = \"1\"\npath = \"../a\"\n", []string{"a"}},
+		{"sub-table rename before path", "[build-dependencies.x]\npackage = \"A\"\npath = '../a'\n", []string{"a"}},
+		{"target sub-table, dotted quoted triple", "[target.\"thumbv8m.main-none-eabihf\".dependencies.a]\npath = \"../a\"\n", []string{"a"}},
+		{"quoted sub-table key", "[dependencies.\"a\"]\npath = \"../a\"\n", []string{"a"}},
+		{"sub-table without path", "[dependencies.a]\nversion = \"1\"\n", nil},
+		{"sub-table first path wins, ended by header", "[dependencies.a]\npath = \"../a\"\npath = \"../b\"\n[package]\nname = \"z\"\n", []string{"a"}},
+		{"sub-table non-string path", "[dependencies.a]\npath = 1\n", nil},
+		{"sub-table empty path", "[dependencies.a]\npath = \"\"\n", nil},
+		{"sub-table capitalised Path key", "[dependencies.a]\nPath = \"../a\"\n", nil},
+		{"rename", "[dependencies]\nx = { package = \"Logic-Gates\", path = \"../g\" }\n", []string{"logic-gates"}},
+		{"capitalised Package is not a rename", "[dependencies]\nx = { Package = \"y\", path = \"../g\" }\n", []string{"x"}},
+		{"capitalised Path is not a path", "[dependencies]\nx = { Path = \"../g\" }\n", nil},
+		{"version plus path with trailing comment", "[dependencies]\na = { version = \"1\", path = \"../a\" } # b = { path = \"../b\" }\n", []string{"a"}},
+		{"hash inside a string is not a comment", "[dependencies]\na = { path = \"../a#1\" }\n", []string{"a"}},
+		{"quoted entry key", "[dependencies]\n\"a\" = { path = \"../a\" }\n", []string{"a"}},
+		{"registry entry with path feature", "[dependencies]\na = { version = \"1\", features = [\"path\", \"x\"] }\nb = \"1\"\n", nil},
+		{"nested table path is not the entry's", "[dependencies]\na = { x = { path = \"../a\" } }\n", nil},
+		{"features array commas do not split fields", "[dependencies]\na = { features = [\"p\", \"q\"], path = \"../a\" }\n", []string{"a"}},
+		{"empty path", "[dependencies]\na = { path = \"\" }\n", nil},
+		{"array continued onto later lines", "[dependencies]\na = { path = \"../a\", features = [\n    \"x\", # [not-a-header]\n] }\nb = { path = \"../b\" }\n", []string{"a", "b"}},
+		{"continuation lines are not headers", "[dependencies]\na = { path = \"../a\", features = [\n[\"x\"]\n] }\nb = { path = \"../b\" }\n", []string{"a", "b"}},
+		{"braces continued onto later lines", "[dependencies]\na = { version = \"1\",\n  path = \"../a\" }\n", []string{"a"}},
+		{"file ends inside the value", "[dependencies]\na = { path = \"../a\", features = [\n  \"x\",\n", nil},
+		{"continued value must end with a brace", "[dependencies]\na = { path = \"../a\", features = [\n] } x\n", nil},
+		{"dotted key is out of scope", "[dependencies]\na.path = \"../a\"\n", nil},
+		{"commented-out entry", "[dependencies]\n# a = { path = \"../a\" }\n", nil},
+		{"dev-dependencies", "[dev-dependencies]\na = { path = \"../a\" }\n[dev_dependencies]\nb = { path = \"../b\" }\n", nil},
+		{"target dev-dependencies", "[target.'cfg(unix)'.dev-dependencies]\na = { path = \"../a\" }\n", nil},
+		{"dev-dependencies sub-table", "[dev-dependencies.a]\npath = \"../a\"\n", nil},
+		{"patch, replace, workspace", "[patch.crates-io]\na = { path = \"../a\" }\n[workspace.dependencies]\nb = { path = \"../b\" }\n[replace]\n\"c:1.0.0\" = { path = \"../c\" }\n", nil},
+		{"capitalised table name", "[Dependencies]\na = { path = \"../a\" }\n", nil},
+		{"features sub-table of a dependency", "[dependencies.a.features]\npath = \"../a\"\n", nil},
+		{"target table itself", "[target.'cfg(unix)']\na = { path = \"../a\" }\n", nil},
+		{"array of tables ends the table", "[dependencies]\n[[bin]]\na = { path = \"../a\" }\n", nil},
+		{"malformed header ends the table", "[dependencies]\n[a b]\nc = { path = \"../c\" }\n", nil},
+		{"unterminated quoted header ends the table", "[dependencies]\n[target.'cfg(unix).dependencies]\nc = { path = \"../c\" }\n", nil},
+		{"CRLF and BOM", "\ufeff[dependencies]\r\na = { path = \"../a\" }\r\n", []string{"a"}},
+		{"union across tables keeps duplicates for the caller", "[dependencies]\na = { path = \"../a\" }\n[build-dependencies]\na = { path = \"../a\" }\n", []string{"a", "a"}},
+		{"quoted inline path key", "[dependencies]\na = { \"path\" = \"../a\" }\n", []string{"a"}},
+		{"literal-quoted inline path key", "[dependencies]\na = { 'path' = \"../a\" }\n", []string{"a"}},
+		{"quoted inline package key renames", "[dependencies]\nx = { \"package\" = \"a\", path = \"../a\" }\n", []string{"a"}},
+		{"quoted capitalised inline Path key", "[dependencies]\na = { \"Path\" = \"../a\" }\n", nil},
+		{"escaped inline path key is compared verbatim", "[dependencies]\na = { \"pa\\u0074h\" = \"../a\" }\n", nil},
+		{"dotted inline field key", "[dependencies]\na = { path.x = \"../a\" }\n", nil},
+		{"quoted sub-table path key", "[dependencies.a]\n\"path\" = \"../a\"\n", []string{"a"}},
+		{"quoted sub-table package key", "[dependencies.x]\n'package' = \"a\"\npath = \"../a\"\n", []string{"a"}},
+		{"quoted capitalised sub-table Path key", "[dependencies.a]\n\"Path\" = \"../a\"\n", nil},
+		{"open string continues across the join", "[dependencies]\na = { path = \"../a\", x = \"q [\n\" }\n", []string{"a"}},
+		{"line-final backslash escapes the joining space", "[dependencies]\na = { x = \"q\\\n\", path = \"../a\" }\n", []string{"a"}},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := cargoLinkDependencyNames(tc.manifest)
+			if err != nil || !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("cargoLinkDependencyNames(%q) = %#v, %v, want %#v", tc.manifest, got, err, tc.want)
+			}
+		})
+	}
+}
+
+// TestCargoLinkDependencyNamesIsLinear proves the continuation join is
+// linear in the entry's length. Rescanning the whole joined value for every
+// appended line is quadratic: before the fix a 20 000-line continuation
+// (about 400 KB) took tens of seconds; linear work takes milliseconds. The
+// entry is far past the size caps, so the reader must ALSO refuse it — but
+// only after reading at most maxCargoEntryLines lines, so the uncapped
+// scanner is exercised directly too.
+func TestCargoLinkDependencyNamesIsLinear(t *testing.T) {
+	const continuationLines = 20000
+	var manifest strings.Builder
+	manifest.WriteString("[dependencies]\na = { path = \"../a\", features = [\n")
+	for line := 0; line < continuationLines; line++ {
+		manifest.WriteString("  \"feature-name-padding\",\n")
+	}
+	manifest.WriteString("] }\n")
+
+	// The scanner itself: feed every piece of the joined value once.
+	start := time.Now()
+	var scanner tomlBracketScanner
+	for _, line := range strings.Split(manifest.String(), "\n") {
+		scanner.feed(" ")
+		scanner.feed(line)
+	}
+	if scanner.depth != 0 {
+		t.Fatalf("depth after the whole entry = %d, want 0", scanner.depth)
+	}
+	// The reader: refused at the line cap, quickly.
+	names, err := cargoLinkDependencyNames(manifest.String())
+	if elapsed := time.Since(start); elapsed > 2*time.Second {
+		t.Fatalf("a %d-line continuation took %v; the join must be linear", continuationLines, elapsed)
+	}
+	if err == nil || !strings.Contains(err.Error(), "line 2: one dependency entry spans more than 256 lines") {
+		t.Fatalf("cargoLinkDependencyNames = %v, %v; want the entry-size refusal", names, err)
+	}
+}
+
+// TestCargoLinkDependencyNamesEntryCaps pins the two refusals at their
+// edges: a continuation of exactly maxCargoEntryLines non-blank lines is
+// read (blank lines do not count), one more is refused, and so is an entry
+// past maxCargoEntryBytes on few lines.
+func TestCargoLinkDependencyNamesEntryCaps(t *testing.T) {
+	entry := func(featureLines int, feature string) string {
+		var text strings.Builder
+		text.WriteString("[dependencies]\na = { path = \"../a\", features = [\n")
+		for line := 0; line < featureLines; line++ {
+			text.WriteString("\"" + feature + "\",\n\n")
+		}
+		text.WriteString("] }\n")
+		return text.String()
+	}
+	// first line + features + the closing line = maxCargoEntryLines.
+	if names, err := cargoLinkDependencyNames(entry(maxCargoEntryLines-2, "x")); err != nil || !reflect.DeepEqual(names, []string{"a"}) {
+		t.Fatalf("an entry of exactly %d lines = %v, %v; want [a]", maxCargoEntryLines, names, err)
+	}
+	if _, err := cargoLinkDependencyNames(entry(maxCargoEntryLines-1, "x")); err == nil {
+		t.Fatalf("an entry of %d lines was read; want a refusal", maxCargoEntryLines+1)
+	}
+	if _, err := cargoLinkDependencyNames(entry(4, strings.Repeat("x", maxCargoEntryBytes/4))); err == nil {
+		t.Fatalf("an entry past %d bytes was read; want a refusal", maxCargoEntryBytes)
+	}
+}
+
+// TestParseRustDepsRefusesOversizedManifests checks that the edge reader
+// carries the strict reader's own guards, since it runs first: a manifest
+// that is not a regular file, one past maxCargoManifestBytes, and one entry
+// past the entry caps are *CargoManifestError, and resolution fails with it.
+func TestParseRustDepsRefusesOversizedManifests(t *testing.T) {
+	longEntry := "[dependencies]\na = { path = \"../a\", features = [\n" +
+		strings.Repeat("\"x\",\n", maxCargoEntryLines+1) + "] }\n"
+	for name, manifest := range map[string]string{
+		"too large":  "[package]\nname = \"app\"\n" + strings.Repeat("# padding\n", maxCargoManifestBytes/10+1),
+		"long entry": "[package]\nname = \"app\"\n" + longEntry,
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := makeFixture(t, map[string]string{"app/Cargo.toml": manifest, "a/Cargo.toml": "[package]\nname = \"a\"\n"})
+			packages := []discovery.Package{
+				{Name: "rust/app", Path: filepath.Join(root, "app"), Language: "rust"},
+				{Name: "rust/a", Path: filepath.Join(root, "a"), Language: "rust"},
+			}
+			var manifestError *CargoManifestError
+			if _, err := parseRustDeps(packages[0], BuildKnownNames(packages)); !errors.As(err, &manifestError) {
+				t.Fatalf("parseRustDeps error = %v, want a *CargoManifestError", err)
+			}
+			if _, err := ResolveDependencies(packages); !errors.As(err, &manifestError) {
+				t.Fatalf("ResolveDependencies error = %v, want a *CargoManifestError", err)
+			}
+		})
+	}
+	t.Run("not a regular file", func(t *testing.T) {
+		root := makeFixture(t, map[string]string{"real/Cargo.toml": "[package]\nname = \"app\"\n", "app/BUILD": "x\n"})
+		if err := os.Symlink(filepath.Join(root, "real", "Cargo.toml"), filepath.Join(root, "app", "Cargo.toml")); err != nil {
+			t.Skipf("symlinks unavailable: %v", err)
+		}
+		pkg := discovery.Package{Name: "rust/app", Path: filepath.Join(root, "app"), Language: "rust"}
+		var manifestError *CargoManifestError
+		if _, err := parseRustDeps(pkg, map[string]string{}); !errors.As(err, &manifestError) ||
+			!strings.Contains(err.Error(), "is not a regular file") {
+			t.Fatalf("parseRustDeps error = %v, want the regular-file refusal", err)
+		}
+	})
+}
+
+// TestRustSelfEdgeIsADiagnostic checks that a Cargo path entry resolving to
+// the package itself — by its directory alias or by its [package] name — is
+// the contract's DEPENDENCY_SELF_EDGE with a repository-relative manifest,
+// not a directed-graph panic.
+func TestRustSelfEdgeIsADiagnostic(t *testing.T) {
+	for name, entry := range map[string]string{
+		"directory alias": "[dependencies]\napp-dir = { path = \".\" }\n",
+		"cargo name":      "[build-dependencies.self]\npackage = \"app-crate\"\npath = \".\"\n",
+		"target table":    "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n",
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := makeFixture(t, map[string]string{
+				"code/packages/rust/app-dir/Cargo.toml": "[package]\nname = \"app-crate\"\n\n" + entry,
+			})
+			packages := []discovery.Package{{
+				Name: "rust/app-dir", Path: filepath.Join(root, "code", "packages", "rust", "app-dir"), Language: "rust",
+			}}
+			var selfEdge *DependencySelfEdgeError
+			_, err := ResolveDependencies(packages)
+			if !errors.As(err, &selfEdge) {
+				t.Fatalf("ResolveDependencies error = %v, want a *DependencySelfEdgeError", err)
+			}
+			want := DependencySelfEdgeError{
+				Code: "DEPENDENCY_SELF_EDGE", Package: "rust/app-dir",
+				Manifest: "code/packages/rust/app-dir/Cargo.toml", Dependency: "rust/app-dir",
+			}
+			if *selfEdge != want {
+				t.Fatalf("self-edge diagnostic = %+v, want %+v", *selfEdge, want)
+			}
+			if got := err.Error(); got != "DEPENDENCY_SELF_EDGE: package=rust/app-dir manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir" {
+				t.Fatalf("self-edge message = %q", got)
+			}
+		})
+	}
+}
+
+// TestParseRustDepsCollapsesDuplicateLinks checks that a crate named by two
+// link tables yields one dependency, and that unknown names are dropped.
+func TestParseRustDepsCollapsesDuplicateLinks(t *testing.T) {
+	root := makeFixture(t, map[string]string{
+		"app/Cargo.toml": "[package]\nname = \"app\"\n\n[dependencies]\nlib = { path = \"../lib\" }\n" +
+			"serde = { path = \"../vendored-serde\" }\n\n[build-dependencies]\nlib = { path = \"../lib\" }\n\n" +
+			"[target.'cfg(windows)'.dependencies.lib]\npath = \"../lib\"\n",
+		"lib/Cargo.toml": "[package]\nname = \"lib\"\n",
+	})
+	packages := []discovery.Package{
+		{Name: "rust/app", Path: filepath.Join(root, "app"), Language: "rust"},
+		{Name: "rust/lib", Path: filepath.Join(root, "lib"), Language: "rust"},
+	}
+	if got, err := parseRustDeps(packages[0], BuildKnownNames(packages)); err != nil || !reflect.DeepEqual(got, []string{"rust/lib"}) {
+		t.Fatalf("parseRustDeps = %v, %v, want [rust/lib]", got, err)
 	}
 }
 

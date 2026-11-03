@@ -3,16 +3,19 @@
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 import pytest
 
 from build_tool.discovery import Package, discover_packages
 from build_tool.resolver import (
+    DependencySelfEdgeError,
     DirectedGraph,
     MetadataEncodingError,
     _build_known_names,
     _build_known_names_for_language,
+    _cargo_link_dependency_names,
     _dependency_scope,
     _in_dependency_scope,
     _parse_build_tool_deps,
@@ -24,6 +27,7 @@ from build_tool.resolver import (
     _parse_rust_deps,
     _parse_swift_deps,
     _parse_typescript_deps,
+    _read_cargo_package_name,
     resolve_dependencies,
 )
 
@@ -469,6 +473,643 @@ class TestParseGoDeps:
         assert deps == []
 
 
+class TestParseRustDeps:
+    """Pin each line rule of the Cargo contract in build-tool-conformance.md.
+
+    One manifest shape per case, the same table as the Go reference tool's
+    TestCargoLinkDependencyNames, so a divergence between fronts shows up as
+    the same named case failing.
+    """
+
+    @pytest.mark.parametrize(
+        ("manifest", "expected"),
+        [
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="top-level inline",
+        ),
+        pytest.param(
+            (
+                "[build-dependencies]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="build-dependencies",
+        ),
+        pytest.param(
+            (
+                "[build_dependencies]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="legacy build_dependencies",
+        ),
+        pytest.param(
+            (
+                "[target.'cfg(any(target_os = \"linux\", windows))'.dependencies]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="quoted cfg target",
+        ),
+        pytest.param(
+            (
+                "[target.x86_64-pc-windows-msvc.build-dependencies]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="bare triple target build",
+        ),
+        pytest.param(
+            (
+                "[target.'cfg(unix)'.build_dependencies]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="legacy target build",
+        ),
+        pytest.param(
+            (
+                "[ target . 'cfg(unix)' . dependencies ]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="spaced header segments",
+        ),
+        pytest.param(
+            (
+                "[\"dependencies\"]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="quoted table segment",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "version = \"1\"\n"
+                "path = \"../a\"\n"
+            ),
+            ["a"],
+            id="sub-table",
+        ),
+        pytest.param(
+            (
+                "[build-dependencies.x]\n"
+                "package = \"A\"\n"
+                "path = '../a'\n"
+            ),
+            ["a"],
+            id="sub-table rename before path",
+        ),
+        pytest.param(
+            (
+                "[target.\"thumbv8m.main-none-eabihf\".dependencies.a]\n"
+                "path = \"../a\"\n"
+            ),
+            ["a"],
+            id="target sub-table, dotted quoted triple",
+        ),
+        pytest.param(
+            (
+                "[dependencies.\"a\"]\n"
+                "path = \"../a\"\n"
+            ),
+            ["a"],
+            id="quoted sub-table key",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "version = \"1\"\n"
+            ),
+            [],
+            id="sub-table without path",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "path = \"../a\"\n"
+                "path = \"../b\"\n"
+                "[package]\n"
+                "name = \"z\"\n"
+            ),
+            ["a"],
+            id="sub-table first path wins, ended by header",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "path = 1\n"
+            ),
+            [],
+            id="sub-table non-string path",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "path = \"\"\n"
+            ),
+            [],
+            id="sub-table empty path",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "Path = \"../a\"\n"
+            ),
+            [],
+            id="sub-table capitalised Path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "x = { package = \"Logic-Gates\", path = \"../g\" }\n"
+            ),
+            ["logic-gates"],
+            id="rename",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "x = { Package = \"y\", path = \"../g\" }\n"
+            ),
+            ["x"],
+            id="capitalised Package is not a rename",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "x = { Path = \"../g\" }\n"
+            ),
+            [],
+            id="capitalised Path is not a path",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { version = \"1\", path = \"../a\" } # b = { path = \"../b\" }\n"
+            ),
+            ["a"],
+            id="version plus path with trailing comment",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"../a#1\" }\n"
+            ),
+            ["a"],
+            id="hash inside a string is not a comment",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "\"a\" = { path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="quoted entry key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { version = \"1\", features = [\"path\", \"x\"] }\n"
+                "b = \"1\"\n"
+            ),
+            [],
+            id="registry entry with path feature",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { x = { path = \"../a\" } }\n"
+            ),
+            [],
+            id="nested table path is not the entry's",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { features = [\"p\", \"q\"], path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="features array commas do not split fields",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"\" }\n"
+            ),
+            [],
+            id="empty path",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"../a\", features = [\n"
+                "    \"x\", # [not-a-header]\n"
+                "] }\n"
+                "b = { path = \"../b\" }\n"
+            ),
+            ["a", "b"],
+            id="array continued onto later lines",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"../a\", features = [\n"
+                "[\"x\"]\n"
+                "] }\n"
+                "b = { path = \"../b\" }\n"
+            ),
+            ["a", "b"],
+            id="continuation lines are not headers",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { version = \"1\",\n"
+                "  path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="braces continued onto later lines",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"../a\", features = [\n"
+                "  \"x\",\n"
+            ),
+            [],
+            id="file ends inside the value",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"../a\", features = [\n"
+                "] } x\n"
+            ),
+            [],
+            id="continued value must end with a brace",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a.path = \"../a\"\n"
+            ),
+            [],
+            id="dotted key is out of scope",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "# a = { path = \"../a\" }\n"
+            ),
+            [],
+            id="commented-out entry",
+        ),
+        pytest.param(
+            (
+                "[dev-dependencies]\n"
+                "a = { path = \"../a\" }\n"
+                "[dev_dependencies]\n"
+                "b = { path = \"../b\" }\n"
+            ),
+            [],
+            id="dev-dependencies",
+        ),
+        pytest.param(
+            (
+                "[target.'cfg(unix)'.dev-dependencies]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            [],
+            id="target dev-dependencies",
+        ),
+        pytest.param(
+            (
+                "[dev-dependencies.a]\n"
+                "path = \"../a\"\n"
+            ),
+            [],
+            id="dev-dependencies sub-table",
+        ),
+        pytest.param(
+            (
+                "[patch.crates-io]\n"
+                "a = { path = \"../a\" }\n"
+                "[workspace.dependencies]\n"
+                "b = { path = \"../b\" }\n"
+                "[replace]\n"
+                "\"c:1.0.0\" = { path = \"../c\" }\n"
+            ),
+            [],
+            id="patch, replace, workspace",
+        ),
+        pytest.param(
+            (
+                "[Dependencies]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            [],
+            id="capitalised table name",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a.features]\n"
+                "path = \"../a\"\n"
+            ),
+            [],
+            id="features sub-table of a dependency",
+        ),
+        pytest.param(
+            (
+                "[target.'cfg(unix)']\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            [],
+            id="target table itself",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "[[bin]]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            [],
+            id="array of tables ends the table",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "[a b]\n"
+                "c = { path = \"../c\" }\n"
+            ),
+            [],
+            id="malformed header ends the table",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "[target.'cfg(unix).dependencies]\n"
+                "c = { path = \"../c\" }\n"
+            ),
+            [],
+            id="unterminated quoted header ends the table",
+        ),
+        pytest.param(
+            (
+                "\ufeff[dependencies]\r\n"
+                "a = { path = \"../a\" }\r\n"
+            ),
+            ["a"],
+            id="CRLF and BOM",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"../a\" }\n"
+                "[build-dependencies]\n"
+                "a = { path = \"../a\" }\n"
+            ),
+            ["a", "a"],
+            id="union across tables keeps duplicates for the caller",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { \"path\" = \"../a\" }\n"
+            ),
+            ["a"],
+            id="quoted inline path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { 'path' = \"../a\" }\n"
+            ),
+            ["a"],
+            id="literal-quoted inline path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "x = { \"package\" = \"a\", path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="quoted inline package key renames",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { \"Path\" = \"../a\" }\n"
+            ),
+            [],
+            id="quoted capitalised inline Path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { \"pa\\u0074h\" = \"../a\" }\n"
+            ),
+            [],
+            id="escaped inline path key is compared verbatim",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path.x = \"../a\" }\n"
+            ),
+            [],
+            id="dotted inline field key",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "\"path\" = \"../a\"\n"
+            ),
+            ["a"],
+            id="quoted sub-table path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies.x]\n"
+                "'package' = \"a\"\n"
+                "path = \"../a\"\n"
+            ),
+            ["a"],
+            id="quoted sub-table package key",
+        ),
+        pytest.param(
+            (
+                "[dependencies.a]\n"
+                "\"Path\" = \"../a\"\n"
+            ),
+            [],
+            id="quoted capitalised sub-table Path key",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { path = \"../a\", x = \"q [\n"
+                "\" }\n"
+            ),
+            ["a"],
+            id="open string continues across the join",
+        ),
+        pytest.param(
+            (
+                "[dependencies]\n"
+                "a = { x = \"q\\\n"
+                "\", path = \"../a\" }\n"
+            ),
+            ["a"],
+            id="line-final backslash escapes the joining space",
+        ),
+        ],
+    )
+    def test_cargo_link_dependency_names(self, manifest, expected):
+        assert _cargo_link_dependency_names(manifest) == expected
+
+    def test_duplicate_links_collapse_and_unknown_names_drop(self, tmp_path):
+        app = tmp_path / "app"
+        lib = tmp_path / "lib"
+        app.mkdir()
+        lib.mkdir()
+        (app / "Cargo.toml").write_text(
+            '[package]\nname = "app"\n\n[dependencies]\n'
+            'lib = { path = "../lib" }\n'
+            'serde = { path = "../vendored-serde" }\n\n'
+            '[build-dependencies]\nlib = { path = "../lib" }\n\n'
+            "[target.'cfg(windows)'.dependencies.lib]\npath = \"../lib\"\n",
+            encoding="utf-8",
+        )
+        (lib / "Cargo.toml").write_text('[package]\nname = "lib"\n', encoding="utf-8")
+        packages = [
+            Package(name="rust/app", path=app, language="rust"),
+            Package(name="rust/lib", path=lib, language="rust"),
+        ]
+
+        deps = _parse_rust_deps(packages[0], _build_known_names(packages))
+
+        assert deps == ["rust/lib"]
+
+    def test_declared_package_name_is_a_known_cargo_name(self, tmp_path):
+        app = tmp_path / "app"
+        lib = tmp_path / "lib-dir"
+        app.mkdir()
+        lib.mkdir()
+        (app / "Cargo.toml").write_text(
+            '[dependencies]\nx = { package = "Lib-Crate", path = "../lib-dir" }\n',
+            encoding="utf-8",
+        )
+        (lib / "Cargo.toml").write_text(
+            '[package]\nname = "lib-crate"\n', encoding="utf-8"
+        )
+        packages = [
+            Package(name="rust/app", path=app, language="rust"),
+            Package(name="rust/lib-dir", path=lib, language="rust"),
+        ]
+
+        graph = resolve_dependencies(packages)
+
+        assert graph.edges() == [("rust/lib-dir", "rust/app")]
+
+    def test_missing_cargo_toml_has_no_dependencies(self, tmp_path):
+        package = Package(name="rust/empty", path=tmp_path, language="rust")
+
+        assert _parse_rust_deps(package, {}) == []
+
+    def test_continuation_join_is_linear(self):
+        # Rescanning the whole joined value for every appended line is
+        # quadratic: a 20,000-line continuation (about 500 KB) took tens of
+        # seconds. Carrying the scanner state makes it a single pass; the
+        # bound is generous so a loaded CI machine cannot flake it.
+        manifest = (
+            "[dependencies]\n"
+            'a = { path = "../a", features = [\n'
+            + '  "feature-name-padding",\n' * 20_000
+            + "] }\n"
+        )
+
+        start = time.monotonic()
+        names = _cargo_link_dependency_names(manifest)
+        elapsed = time.monotonic() - start
+
+        assert names == ["a"]
+        assert elapsed < 10, f"a 20,000-line continuation took {elapsed:.1f}s"
+
+    def test_package_name_reader_is_linear_in_blank_lines(self, tmp_path):
+        # `^\s*name` with re.MULTILINE runs `\s*` across every following
+        # blank line from each line start and backtracks when the match then
+        # fails (here: an unterminated name), which is quadratic in a run of
+        # blank lines -- 1.2 s at 20,000 of them, minutes at 100,000.
+        (tmp_path / "Cargo.toml").write_text(
+            "\n" * 100_000 + 'name = "unterminated\n', encoding="utf-8"
+        )
+
+        start = time.monotonic()
+        name = _read_cargo_package_name(tmp_path)
+        elapsed = time.monotonic() - start
+
+        assert name is None
+        assert elapsed < 5, f"100,000 blank lines took {elapsed:.1f}s"
+
+        (tmp_path / "Cargo.toml").write_text(
+            "\n" * 100_000 + '[package]\nname = "Late-Crate"\n', encoding="utf-8"
+        )
+        assert _read_cargo_package_name(tmp_path) == "late-crate"
+
+    def test_package_name_does_not_span_lines(self, tmp_path):
+        (tmp_path / "Cargo.toml").write_text(
+            '[package]\nname =\n"split"\nname = "app"\n', encoding="utf-8"
+        )
+
+        assert _read_cargo_package_name(tmp_path) == "app"
+
+    @pytest.mark.parametrize(
+        "entry",
+        [
+            pytest.param(
+                '[dependencies]\napp-dir = { path = "." }\n', id="directory alias"
+            ),
+            pytest.param(
+                '[build-dependencies.self]\npackage = "app-crate"\npath = "."\n',
+                id="cargo name via a renamed sub-table",
+            ),
+            pytest.param(
+                "[target.'cfg(unix)'.dependencies]\napp-crate = { path = \".\" }\n",
+                id="target table",
+            ),
+        ],
+    )
+    def test_self_edge_is_a_diagnostic(self, tmp_path, entry):
+        # Step 5: a candidate resolving to the crate itself is rejected as
+        # DEPENDENCY_SELF_EDGE -- neither dropped nor drawn as a self-loop.
+        app = tmp_path / "code" / "packages" / "rust" / "app-dir"
+        app.mkdir(parents=True)
+        (app / "Cargo.toml").write_text(
+            '[package]\nname = "app-crate"\n\n' + entry, encoding="utf-8"
+        )
+        packages = [Package(name="rust/app-dir", path=app, language="rust")]
+
+        with pytest.raises(DependencySelfEdgeError) as error:
+            resolve_dependencies(packages)
+
+        assert error.value.code == "DEPENDENCY_SELF_EDGE"
+        assert error.value.package == "rust/app-dir"
+        assert error.value.path == "code/packages/rust/app-dir/Cargo.toml"
+        assert error.value.dependency == "rust/app-dir"
+        assert str(error.value) == (
+            "DEPENDENCY_SELF_EDGE: package=rust/app-dir "
+            "manifest=code/packages/rust/app-dir/Cargo.toml dependency=rust/app-dir"
+        )
+        assert str(tmp_path) not in str(error.value)
+
+
 class TestResolveDependencies:
     """Integration tests for resolve_dependencies."""
 
@@ -514,7 +1155,7 @@ class TestResolveDependencies:
 
 
 class TestFieldAwareManifestResolution:
-    """Consume the shared Cabal, Gradle, and .NET resolution contracts."""
+    """Consume the shared Cabal, Gradle, .NET, Dart, and Cargo resolution contracts."""
 
     @staticmethod
     def _materialize_case(
@@ -557,6 +1198,7 @@ class TestFieldAwareManifestResolution:
             "resolution-dotnet-fsharp-field-aware.json",
             "resolution-dotnet-cross-language-field-aware.json",
             "resolution-dart-field-aware.json",
+            "resolution-rust-field-aware.json",
         ],
     )
     def test_shared_resolution_fixture(self, tmp_path, fixture_name):
@@ -605,6 +1247,11 @@ class TestFieldAwareManifestResolution:
                 "resolution-dart-field-aware.json",
                 "dart/gamma",
                 "dart/alpha",
+            ),
+            (
+                "resolution-rust-field-aware.json",
+                "rust/gamma",
+                "rust/alpha",
             ),
         ],
     )

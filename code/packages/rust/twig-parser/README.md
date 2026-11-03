@@ -104,6 +104,23 @@ The `GrammarParser` is recursive (one stack frame per matched rule).  Pathologic
 
 `parse()` pre-scans the token stream for LPAREN depth and rejects sources whose nesting exceeds [`MAX_PAREN_DEPTH`](src/lib.rs) (64) before invoking the parser.  The AST extractor adds its own depth bound via [`MAX_AST_DEPTH`](src/ast_extract.rs) for callers that bypass `parse()` and feed in a hand-built `GrammarASTNode`.
 
+## Input budgets
+
+`src/budgets.rs` (#18474 security review) holds the budgets every Twig
+consumer inherits by going through this crate:
+
+| Budget | Limit | Checked |
+|--------|-------|---------|
+| `MAX_NAME_BYTES` | 256 | every `NAME` token, before the grammar parser runs |
+| `MAX_TOKENS` | 2²⁰ | the lexer's output, before the grammar parser builds a tree (what bounds parse memory) |
+| `MAX_GENERATED_NAME_BYTES` | 1 MiB | record/union predicate and accessor names, `(|name| + 1) + Σ (|name| + 1 + |field|)`, in `extract_program`, before any consumer formats one |
+
+A record's accessor names repeat its name once per field, so without these a
+512 KB record name and tens of thousands of fields made the type checker and
+the IR compiler each allocate about 30 GB of names. `check_name_token`,
+`generated_name_bytes` and `GeneratedNameBudget` are public so consumers of
+hand-built trees apply the same rules.
+
 ## Tests
 
 ```bash

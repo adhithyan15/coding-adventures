@@ -50,6 +50,12 @@ final class BuildToolCoreTest {
                 if (!domain.equals("graph") && !domain.equals("diff_selection")) {
                     continue;
                 }
+                if (domain.equals("diff_selection")
+                        && fixture.path("input").path("options").has("trigger_relations")) {
+                    // This closed variant uses package-name strings rather than
+                    // the legacy path-selection package records consumed here.
+                    continue;
+                }
                 seen.add(fixture.path("id").asText());
                 if (domain.equals("graph")) {
                     assertGraphFixture(fixture);

@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased — interpolation, `nil`'s display, `[]`/`[]=`/`size` (#18798)
+
+- **`StrConcat` (string interpolation) is accepted**, as
+  `__Sir.strConcat(parts…)`, which joins each part's Ruby `to_s`.
+- **`puts nil` prints an empty line** under the Ruby display convention
+  (the new `toS`: `format`, except that `nil` is `""`).  An array element
+  keeps `nil`.
+- **`a[i]`, `a[i] = v`, `a.size` and `h[k]`.**  None was in the Array or
+  Hash catalog, so `z[1]` raised `undefined method []` and `[1, 2].size`
+  (a JS array has `length`) did too.  Same rules as the other backends:
+  negative indices count from the end, reads out of range are `nil`,
+  writes pad with `nil`, `IndexError` before the start or past index 2^28,
+  `TypeError` for a non-integer index (never used to index the array).
+- End-to-end checks: `sir-conformance`'s new `ruby_sir_gaps` programs.
+
 ## Unreleased — a `rescue` binding the clause reassigns (#18798)
 
 `rescue => e` ⏎ `e = 5` failed: the binding was always `const`

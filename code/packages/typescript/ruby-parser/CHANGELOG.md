@@ -6,6 +6,10 @@ All notable changes to the Ruby Parser (TypeScript) package will be documented i
 
 ### Changed
 
+- Updated by hand (the same shape the generator emits) for #18798's next batch: `return`, `break` and `next` take a
+  trailing modifier (`return x if c`, `next unless c`) as a
+  `modifier_statement`, and a jump followed by a modifier is no longer a
+  `statement` of its own.
 - Regenerated again for the #18798 re-review: `if`, `elsif`, `unless`,
   `when` and `in` take an optional `then` after the condition.
 - Regenerated again for the #18798 security review: `super`, `yield`,

@@ -189,6 +189,32 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 	},
+	{
+		name:     "rust/test-bootstrap",
+		language: "rust",
+		inputs:   "the TF01 self-corpus and its Python reference",
+		matches:  isTestBootstrapInput,
+	},
+}
+
+// isTestBootstrapInput reports whether a changed path is one the bootstrap
+// harness's BUILD reads: its self-corpus (embedded with include_str!, so a
+// corpus edit changes the test binary) or the stdlib reference that
+// re-derives the corpus and generates cases.tfv.
+//
+//	code/specs/fixtures/test-bootstrap-v1/cases.json     → true
+//	code/specs/fixtures/test-bootstrap-v1/cases.tfv      → true
+//	code/scripts/tfv.py                                  → true
+//	code/scripts/bootstrap_harness_conformance.py        → true
+//	code/specs/fixtures/test-bootstrap-v10/cases.json    → false
+//	code/specs/fixtures/ct-compare-v1/cases.json         → false
+//	code/scripts/tests/test_bootstrap_harness_conformance.py → false
+func isTestBootstrapInput(changed string) bool {
+	switch changed {
+	case "code/scripts/tfv.py", "code/scripts/bootstrap_harness_conformance.py":
+		return true
+	}
+	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
 }
 
 // isRngCorpus reports whether a changed path is in the shared rng corpus,

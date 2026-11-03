@@ -869,15 +869,34 @@ pub const RUNTIME: &str = r##"mod __sir {
                 }
             }
             "once" => {
-                let parts: Vec<String> = values.iter().map(format).collect();
+                let parts: Vec<String> = values.iter().map(to_s).collect();
                 let _ = writeln!(out, "{}", parts.join(" "));
             }
             _ => {
                 for v in values {
-                    let _ = write!(out, "{}", format(v));
+                    let _ = write!(out, "{}", to_s(v));
                 }
             }
         }
+    }
+
+    // A value as `puts`, `print` and `"#{…}"` show it: Ruby's `to_s`.  The
+    // one difference from `format` is `nil`, whose `to_s` is the empty
+    // string, so `puts nil` prints an empty line (#18798, item 11).
+    // `format` keeps `nil` for an array element, as Ruby's `inspect` of an
+    // array does.
+    pub fn to_s(v: &Value) -> String {
+        if SIR_DISPLAY_RUBY && matches!(v, Value::Nil) {
+            return String::new();
+        }
+        format(v)
+    }
+
+    // `"a#{x}b"` — SIR's `StrConcat`: every part shown with `to_s`, joined.
+    // The emitter evaluates the parts left to right into the slice.
+    pub fn str_concat(parts: &[Value]) -> Value {
+        let joined: String = parts.iter().map(to_s).collect();
+        Value::Str(Rc::from(joined.as_str()))
     }
 
     // Emit a single `write` argument under the `per_value` terminator:
@@ -908,7 +927,7 @@ pub const RUNTIME: &str = r##"mod __sir {
                 return;
             }
         }
-        let _ = writeln!(out, "{}", format(v));
+        let _ = writeln!(out, "{}", to_s(v));
     }
 
     // ── format ────────────────────────────────────────────────────
@@ -3095,6 +3114,39 @@ pub const RUNTIME: &str = r##"mod __sir {
     // methods read/compute; the mutators (`push`/`pop`) mutate the backing
     // vector in place through the `Rc<RefCell<…>>`, so the caller's handle
     // observes the change — exactly like the Python list reference.
+    // The largest index `a[i] = v` grows an array to (shared by every
+    // backend's runtime): past it Ruby's own `IndexError: index N too big`.
+    // It bounds one write's padding and keeps `idx as usize + 1` and the
+    // allocation's byte size from overflowing; it is not a memory budget —
+    // 2^28 slots is still gigabytes.
+    const ARRAY_MAX_INDEX: i64 = 1 << 28;
+
+    // The position a Ruby integer index names in `items`: a negative index
+    // counts back from the end.  The result may lie outside the array; the
+    // caller decides what that means.  A non-integer index is Ruby's
+    // catchable `TypeError`, raised before any borrow is taken (the same
+    // rule as `fetch` below).
+    fn array_index(items: &Rc<RefCell<Vec<Value>>>, raw: Option<&Value>) -> i64 {
+        let Some(Value::Int(i)) = raw else {
+            let cls = ruby_class_name(raw.unwrap_or(&Value::Nil));
+            raise(
+                "TypeError",
+                Value::Str(Rc::from(
+                    format!("no implicit conversion of {} into Integer", cls).as_str(),
+                )),
+            );
+        };
+        if *i < 0 {
+            i + items.borrow().len() as i64
+        } else {
+            *i
+        }
+    }
+
+    fn format_value_for_index(raw: Option<&Value>) -> String {
+        format(raw.unwrap_or(&Value::Nil))
+    }
+
     fn array_method(recv: Value, name: &str, args: Vec<Value>) -> Value {
         let items_rc = match &recv {
             Value::Seq(items) => items.clone(),
@@ -3112,11 +3164,9 @@ pub const RUNTIME: &str = r##"mod __sir {
             // This arm keeps `arr[oob] ⇒ nil` from falling through to the
             // `no_method_error` floor.
             "[]" => {
+                let idx = array_index(&items_rc, pos.first());
                 let items = items_rc.borrow();
-                let len = items.len() as i64;
-                let raw = as_i64(pos.first().unwrap_or(&Value::Nil));
-                let idx = if raw < 0 { raw + len } else { raw };
-                if idx >= 0 && idx < len {
+                if idx >= 0 && idx < items.len() as i64 {
                     items[idx as usize].clone()
                 } else {
                     Value::Nil
@@ -3162,17 +3212,49 @@ pub const RUNTIME: &str = r##"mod __sir {
             }
             "pop" => items_rc.borrow_mut().pop().unwrap_or(Value::Nil),
             // `Array#[]=` — the OO-surface indexed write (`arr[i] = v`, as
-            // opposed to the SIR-native `SeqSet` statement). Delegates to the
-            // SAME `seq_set` primitive `SeqSet` lowers to, so the two paths
-            // share one strictness rule (`0 <= i < len`, panics outside —
-            // matching the Go/C/Rust `SeqSet` reference, no auto-grow).
-            // Bracket-index write lowers through `__method__` (this dispatch),
-            // matching how `[]`'s lenient read above is the OO-surface
-            // counterpart to `SeqIndex`.
+            // opposed to the SIR-native `SeqSet` statement, which stays
+            // strict).  #18798 (item 13): it follows Ruby now.  It used to
+            // share `seq_set`'s `0 <= i < len` rule and panicked on both of
+            // these:
+            //
+            // | call         | Ruby                                        |
+            // |--------------|---------------------------------------------|
+            // | `a[-1] = 8`  | stores into the last element                |
+            // | `a[3] = 7`   | pads with `nil` up to index 3, then stores  |
+            // | `a[-9] = 7`  | `IndexError` (before the start)             |
             "[]=" => {
-                let idx = pos.first().cloned().unwrap_or(Value::Nil);
+                let idx = array_index(&items_rc, pos.first());
                 let val = pos.get(1).cloned().unwrap_or(Value::Nil);
-                seq_set(&recv, &idx, val)
+                if idx < 0 {
+                    let len = items_rc.borrow().len();
+                    raise(
+                        "IndexError",
+                        Value::Str(Rc::from(
+                            format!(
+                                "index {} too small for array; minimum: -{}",
+                                format_value_for_index(pos.first()),
+                                len
+                            )
+                            .as_str(),
+                        )),
+                    );
+                }
+                if idx >= ARRAY_MAX_INDEX {
+                    raise(
+                        "IndexError",
+                        Value::Str(Rc::from(
+                            format!("index {} too big", format_value_for_index(pos.first()))
+                                .as_str(),
+                        )),
+                    );
+                }
+                let mut items = items_rc.borrow_mut();
+                let at = idx as usize;
+                if at >= items.len() {
+                    items.resize(at + 1, Value::Nil);
+                }
+                items[at] = val.clone();
+                val
             }
             // `Array#fetch(i)` is the STRICT indexed read: unlike `arr[i]`
             // (which returns `nil` out of bounds), a `fetch` past the end

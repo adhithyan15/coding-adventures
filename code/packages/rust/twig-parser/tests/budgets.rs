@@ -1,0 +1,137 @@
+//! The parser's input budgets (`src/budgets.rs`, #18474 security review),
+//! each at its limit and one past it.
+//!
+//! Before the review none of these existed: a `NAME` of any length, any
+//! number of tokens, and any number of generated accessor-name bytes were
+//! accepted, and the type checker and IR compiler then formatted a record's
+//! name once per field.
+
+use twig_parser::{
+    check_tokens, extract_program, generated_name_bytes, parse, parse_to_ast, MAX_GENERATED_NAME_BYTES,
+    MAX_NAME_BYTES, MAX_TOKENS,
+};
+
+fn refused(source: &str) -> twig_parser::TwigParseError {
+    match parse(source) {
+        Ok(_) => panic!("must be refused"),
+        Err(e) => e,
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Name bytes
+// ---------------------------------------------------------------------------
+
+#[test]
+fn a_name_of_exactly_the_limit_parses_and_one_byte_more_is_refused() {
+    let name = "n".repeat(MAX_NAME_BYTES);
+    parse(&format!("(define {name} 1) {name}")).expect("a 256-byte name");
+
+    let long = "n".repeat(MAX_NAME_BYTES + 1);
+    let e = refused(&format!("\n  (define {long} 1)"));
+    assert_eq!(e.message, format!("name bytes exceeds the limit of {MAX_NAME_BYTES}"));
+    assert_eq!((e.line, e.column), (2, 11), "the name's own position");
+}
+
+/// The security review's repro: a 512 KB record name and thousands of
+/// fields. It used to parse, then cost the type checker and the compiler
+/// about name length × field count bytes of accessor names.
+#[test]
+fn the_review_s_long_record_name_is_refused_by_the_lexer_s_check() {
+    let fields: String = (0..5_000).map(|i| format!(" (f{i} : int)")).collect();
+    let src = format!("(record {}{fields})", "A".repeat(1 << 19));
+    let e = parse_to_ast(&src).expect_err("a 512 KB name");
+    assert!(e.message.starts_with("name bytes exceeds"), "{e}");
+}
+
+/// Quoted symbols, field names and keywords' neighbours are `NAME`s too;
+/// strings are not names and stay unlimited here (the compiler's source
+/// budget bounds them).
+#[test]
+fn the_name_limit_covers_every_name_position_and_no_string() {
+    let long = "s".repeat(MAX_NAME_BYTES + 1);
+    for src in [
+        format!("'{long}"),
+        format!("(record R ({long} : int))"),
+        format!("(let (({long} 1)) 2)"),
+    ] {
+        assert!(refused(&src).message.starts_with("name bytes exceeds"), "{src:.40}");
+    }
+    parse(&format!("\"{}\"", "s".repeat(10 * MAX_NAME_BYTES))).expect("a long string is not a name");
+}
+
+// ---------------------------------------------------------------------------
+// Tokens
+// ---------------------------------------------------------------------------
+
+/// The token budget is checked on the lexer's output, before the grammar
+/// parser builds a tree from it. At the limit the check passes (checked
+/// directly: parsing a million-token tree is the budget's whole point);
+/// one token more is refused by `parse_to_ast` without parsing.
+#[test]
+fn tokens_at_the_limit_pass_the_check_and_one_more_is_refused_before_parsing() {
+    let at = twig_lexer::tokenize_twig(&"1 ".repeat(MAX_TOKENS)).unwrap();
+    // The lexer appends an end-of-file token.
+    let eof = at.len() - MAX_TOKENS;
+    check_tokens(&at[..MAX_TOKENS]).expect("exactly MAX_TOKENS");
+
+    let e = parse_to_ast(&"1 ".repeat(MAX_TOKENS + 1 - eof)).expect_err("one token over");
+    assert_eq!(e.message, format!("tokens exceeds the limit of {MAX_TOKENS}"));
+}
+
+// ---------------------------------------------------------------------------
+// Generated name bytes
+// ---------------------------------------------------------------------------
+
+/// A program whose records generate exactly `target` bytes of names: one
+/// record named with 255 bytes and 5-letter fields (256 + 261 per field),
+/// and a field-less record whose name absorbs the remainder.
+fn records_generating(target: usize) -> String {
+    let fields = (target - 256 - 2) / 261;
+    let field = |i: usize| {
+        let mut name = String::new();
+        let mut n = i;
+        for _ in 0..5 {
+            name.push((b'a' + (n % 26) as u8) as char);
+            n /= 26;
+        }
+        name
+    };
+    let field_list: String = (0..fields).map(|i| format!(" ({} : int)", field(i))).collect();
+    let first = generated_name_bytes(255, (0..fields).map(|_| 5));
+    let rest = target - first; // the second record's `name?` is name + 1 bytes
+    assert!((2..=MAX_NAME_BYTES + 1).contains(&rest), "{rest}");
+    format!("(record {}{field_list})\n(record {})", "R".repeat(255), "Q".repeat(rest - 1))
+}
+
+#[test]
+fn generated_names_at_the_limit_extract_and_one_byte_more_is_refused() {
+    let at = records_generating(MAX_GENERATED_NAME_BYTES);
+    parse(&at).expect("exactly MAX_GENERATED_NAME_BYTES");
+
+    let over = records_generating(MAX_GENERATED_NAME_BYTES + 1);
+    let tree = parse_to_ast(&over).expect("the tree itself is fine");
+    let e = extract_program(&tree).expect_err("one generated byte over");
+    assert_eq!(e.message, format!("generated name bytes exceeds the limit of {MAX_GENERATED_NAME_BYTES}"));
+    assert_eq!(e.line, 2, "the record that went over");
+}
+
+/// Union variants are charged the same way: `Variant?` and one
+/// `variant-field` per field.
+#[test]
+fn union_variants_are_charged_like_records() {
+    let name = "V".repeat(MAX_NAME_BYTES);
+    let fields: String = (0..5_000).map(|i| format!(" (f{i} : int)")).collect();
+    let src = format!("(union U ({name}{fields}))");
+    assert!(generated_name_bytes(MAX_NAME_BYTES, (0..5_000).map(|i| format!("f{i}").len()))
+        > MAX_GENERATED_NAME_BYTES);
+    assert!(refused(&src).message.starts_with("generated name bytes exceeds"));
+}
+
+#[test]
+fn the_generated_name_formula_matches_the_names_the_toolchain_makes() {
+    // (record Span (start : int) (end : int)) → span? span-start span-end
+    assert_eq!(generated_name_bytes(4, [5, 3]), "span?".len() + "span-start".len() + "span-end".len());
+    assert_eq!(generated_name_bytes(3, []), "abc?".len());
+    assert_eq!(generated_name_bytes(usize::MAX, [usize::MAX]), usize::MAX, "saturates");
+}

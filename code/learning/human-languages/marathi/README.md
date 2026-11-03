@@ -34,7 +34,8 @@ examiner scripts, shared rung-owned rubrics, and fail-closed manifests covering
 all twelve published pre-A1 parts and all eleven published A1 parts. They are
 structural project evidence only: recording provenance, qualified review,
 standard setting, calibration, and book-only human validation remain explicit
-backlog, as do the later-rung mock bundles.
+backlog. The project-defined A2 four-skill task shape is also published, but its
+two timed mock bundles and every later-rung mock bundle remain backlog.
 
 ## Progress
 

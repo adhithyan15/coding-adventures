@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.164.0";
+pub const VERSION: &str = "0.168.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14076,6 +14076,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let mut groups = Vec::new();
     let mut group_stack: Vec<String> = Vec::new();
     let mut relationships = Vec::new();
+    let mut direction = None;
 
     while !cursor.at_eof() {
         match token_name(cursor.current()) {
@@ -14121,10 +14122,14 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 );
             }
             "DIRECTION" => {
-                cursor.advance();
-                if token_name(cursor.current()) == "LPAREN" {
-                    parse_c4_arguments(&mut cursor)?;
-                }
+                let token = cursor.advance();
+                direction = match token.value.split_whitespace().last() {
+                    Some("TB") => Some(DiagramDirection::Tb),
+                    Some("BT") => Some(DiagramDirection::Bt),
+                    Some("LR") => Some(DiagramDirection::Lr),
+                    Some("RL") => Some(DiagramDirection::Rl),
+                    _ => return Err(token_error(token, "unsupported C4 direction")),
+                };
             }
             "CONFIG_MACRO" => {
                 let macro_token = cursor.advance().clone();
@@ -14154,7 +14159,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     .filter(|value| !value.is_empty())
                     .cloned()
                     .unwrap_or_else(|| id.clone());
-                groups.push(StructuralGroup {
+                upsert_c4_group(&mut groups, StructuralGroup {
                     id: id.clone(),
                     label,
                     stereotype: Some(macro_token.value.clone()),
@@ -14251,7 +14256,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         title,
         accessibility_title,
         accessibility_description,
-        direction: None,
+        direction,
         alignments: Vec::new(),
         nodes,
         groups,
@@ -14691,6 +14696,28 @@ fn upsert_c4_node(
     parent_group: Option<String>,
 ) -> usize {
     if let Some(index) = indices.get(&id).copied() {
+        let node = &mut nodes[index];
+        let style = node.style.take();
+        let style_overrides = match node.metadata.as_mut() {
+            Some(StructuralNodeMetadata::C4(metadata)) => {
+                std::mem::take(&mut metadata.style_overrides)
+            }
+            _ => Default::default(),
+        };
+        let mut metadata = metadata;
+        if let StructuralNodeMetadata::C4(c4_metadata) = &mut metadata {
+            c4_metadata.style_overrides = style_overrides;
+        }
+        *node = StructuralNode {
+            id,
+            label,
+            stereotype: Some(stereotype.clone()),
+            node_kind: c4_node_kind(&stereotype),
+            metadata: Some(metadata),
+            style,
+            compartments: Vec::new(),
+            parent_group,
+        };
         return index;
     }
     let index = nodes.len();
@@ -14707,6 +14734,34 @@ fn upsert_c4_node(
         parent_group,
     });
     index
+}
+
+fn upsert_c4_group(groups: &mut Vec<StructuralGroup>, mut group: StructuralGroup) {
+    let Some(existing) = groups.iter_mut().find(|existing| existing.id == group.id) else {
+        groups.push(group);
+        return;
+    };
+
+    let style_overrides = match existing.metadata.as_mut() {
+        Some(StructuralGroupMetadata::C4Boundary { style_overrides, .. })
+        | Some(StructuralGroupMetadata::C4DeploymentNode { style_overrides, .. }) => {
+            std::mem::take(style_overrides)
+        }
+        _ => Default::default(),
+    };
+    match group.metadata.as_mut() {
+        Some(StructuralGroupMetadata::C4Boundary {
+            style_overrides: replacement,
+            ..
+        })
+        | Some(StructuralGroupMetadata::C4DeploymentNode {
+            style_overrides: replacement,
+            ..
+        }) => *replacement = style_overrides,
+        _ => {}
+    }
+    group.style = existing.style.take();
+    *existing = group;
 }
 
 // ── gantt parser ──────────────────────────────────────────────────────────
@@ -20132,7 +20187,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.164.0");
+        assert_eq!(crate::VERSION, "0.168.0");
     }
 
     #[test]

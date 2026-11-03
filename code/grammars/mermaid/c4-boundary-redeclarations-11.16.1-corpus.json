@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 boundary alias redeclaration semantics",
+  "fixtures": [
+    {
+      "name": "boundary-alias-redeclaration",
+      "source": "C4Context\nSystem_Boundary(platform, \"Legacy Platform\") {\n  Person(user, \"User\")\n}\nUpdateElementStyle(platform, $bgColor=\"#dcfce7\", $fontColor=\"#14532d\", $borderColor=\"#166534\")\nBoundary(platform, \"Platform\", \"team\") {\n  System(api, \"API\")\n}"
+    }
+  ]
+}

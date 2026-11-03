@@ -102,8 +102,8 @@ LispyValue results
 ## Resource limits
 
 - `MAX_DISPATCH_DEPTH = 256` — caps recursion depth so adversarial input can't blow the host Rust stack.  Closures count toward this limit (`apply_closure` recurses through the same `dispatch` path as direct `call`).
-- `MAX_INSTRUCTIONS_PER_RUN = 2²⁰` — caps total instructions per top-level run as a backstop against infinite loops in hand-built malformed IIR.
-- `MAX_REGISTERS_PER_FRAME = 2¹⁶` — caps per-frame `HashMap` allocation so a hand-built module with `register_count = usize::MAX` can't abort the process at allocation time.
+- `MAX_INSTRUCTIONS_PER_RUN = 2²⁵` — caps total instructions per top-level run as a backstop against infinite loops in hand-built malformed IIR. (2²⁰ in LANG62, raised to 2²⁵ in LANG66 for the 7-file self-compile; see its doc comment.)
+- `MAX_REGISTERS_PER_FRAME = 2¹⁶` — caps per-frame `HashMap` allocation so a hand-built module with `register_count = usize::MAX` can't abort the process at allocation time. Since #18474 `twig-ir-compiler` refuses a function over this many registers at compile time (`MAX_REGISTERS_PER_FUNCTION`, pinned equal by a test here), so compiled Twig never reaches the run-time check; it still guards hand-built IIR.
 - `MAX_IC_SLOTS_PER_FUNCTION = 2¹⁶` — caps the per-function IC vector growth so `IIRInstr::ic_slot = Some(u32::MAX - 1)` can't OOM the process.
 - `MAX_IC_FUNCTIONS = 2¹⁶` — caps `ICTable`'s distinct-function-name key set so a module with millions of unique function names can't unboundedly grow IC storage.
 - `MAX_PROFILED_FUNCTIONS = 2¹⁶` — caps `ProfileTable`'s distinct-function-name key set (call_counts + per-instruction slots) for the same reason.

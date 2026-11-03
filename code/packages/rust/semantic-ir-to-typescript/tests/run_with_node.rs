@@ -374,6 +374,9 @@ const SIR_OOP_DISPATCH_STUB: &str = r#"const __SirOop = (() => {
 /// renders `new __Sir.Closure(...)`, and the OOP stub applies method closures
 /// through `__Sir.apply`), plus `write`/`toDisplay`.
 const SIR_CLOSURE_STUB: &str = r#"const __Sir = {
+  // A Ruby module selects its display convention first (#18798: the Ruby
+  // frontend now says it is Ruby); the stub formats values itself.
+  setDisplayConvention: () => null,
   Closure: class { constructor(fn) { this.fn = fn; } },
   apply: (c, args) => c.fn(...args),
   toDisplay: (v) => (v === null ? "nil" : String(v)),
@@ -545,6 +548,9 @@ fn node_available() -> bool {
 /// runtime does for the cases these tests exercise (strings verbatim); `print`
 /// writes one line to stdout.
 const SIR_STUB: &str = r#"const __Sir = {
+  // A Ruby module selects its display convention first (#18798: the Ruby
+  // frontend now says it is Ruby); the stub formats values itself.
+  setDisplayConvention: () => null,
   toDisplay: (v) => (v === null ? "nil" : String(v)),
   write: (stream, terminator, unpackArrays, ...values) => {
     console.log(values.map((v) => __Sir.toDisplay(v)).join(" "));
@@ -914,6 +920,9 @@ const SIR_OOP_P1_STUB: &str = r#"const __SirOop = (() => {
 /// A `__Sir` stub carrying `Closure` + `apply` (for method closures) plus a
 /// Ruby-flavoured `toDisplay` (strings verbatim, `null`→`nil`) and `write`.
 const SIR_CLOSURE_P1_STUB: &str = r#"const __Sir = {
+  // A Ruby module selects its display convention first (#18798: the Ruby
+  // frontend now says it is Ruby); the stub formats values itself.
+  setDisplayConvention: () => null,
   Closure: class { constructor(fn) { this.fn = fn; } },
   apply: (c, args) => c.fn(...args),
   toDisplay: (v) => (v === null ? "nil" : String(v)),
@@ -1015,6 +1024,9 @@ fn end_to_end_ruby_oop_new_and_dispatch_executes_ts() {
 /// a trailing blank line — is observable, and zero values write one
 /// newline).
 const SIR_PUTS_STUB: &str = r#"const __Sir = {
+  // A Ruby module selects its display convention first (#18798: the Ruby
+  // frontend now says it is Ruby); the stub formats values itself.
+  setDisplayConvention: () => null,
   toDisplay: (v) => (v === null ? "nil" : String(v)),
   writeOne: (out, v, unpackArrays, seen) => {
     if (unpackArrays && Array.isArray(v)) {
@@ -1126,6 +1138,9 @@ fn end_to_end_ruby_puts_executes_ts() {
 /// integer division, but an explicit `=== 0` divisor check that raises
 /// `ZeroDivisionError` through `__SirExc` before dividing.
 const SIR_T2_STUB: &str = r#"const __Sir = {
+  // A Ruby module selects its display convention first (#18798: the Ruby
+  // frontend now says it is Ruby); the stub formats values itself.
+  setDisplayConvention: () => null,
   toDisplay: (v) => (v === null ? "nil" : String(v)),
   // SIR28 §7: `print`/`puts` are gone — every frontend emits `__sys_write__`,
   // which lowers to `__Sir.write(...)` below.
@@ -1528,6 +1543,9 @@ const SIR_OOP_MIXIN_STUB: &str = r#"const __SirOop = (() => {
 /// Ruby-flavoured `write` (string+newline; the MX3 programs print via
 /// `puts`, which SIR28 §2 lowers to `__sys_write__`).
 const SIR_CLOSURE_MIXIN_STUB: &str = r#"const __Sir = {
+  // A Ruby module selects its display convention first (#18798: the Ruby
+  // frontend now says it is Ruby); the stub formats values itself.
+  setDisplayConvention: () => null,
   Closure: class { constructor(fn) { this.fn = fn; } },
   apply: (c, args) => c.fn(...args),
   toDisplay: (v) => (v === null ? "nil" : String(v)),
@@ -1691,6 +1709,9 @@ fn mx3_extend_makes_module_method_a_class_method_ts() {
 /// "everything but `false`/`null`", equality is native `===`, and
 /// `add`/`lt`/`gt` are ordinary numeric operators.
 const SIR_LOOP_CONTROL_STUB: &str = r#"const __Sir = {
+  // A Ruby module selects its display convention first (#18798: the Ruby
+  // frontend now says it is Ruby); the stub formats values itself.
+  setDisplayConvention: () => null,
   toDisplay: (v) => (v === null ? "nil" : String(v)),
   write: (stream, terminator, unpackArrays, ...values) => {
     console.log(values.map((v) => __Sir.toDisplay(v)).join(" "));

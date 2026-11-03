@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 deployment node alias redeclaration semantics",
+  "fixtures": [
+    {
+      "name": "deployment-node-alias-redeclaration",
+      "source": "C4Deployment\nDeployment_Node(runtime, \"Legacy Runtime\", \"region\", \"Initial host\") {\n  Container(old, \"Old Service\", \"Rust\")\n}\nUpdateElementStyle(runtime, $bgColor=\"#e0f2fe\", $fontColor=\"#0c4a6e\", $borderColor=\"#0369a1\")\nNode_R(runtime, \"Runtime\", \"zone\", \"Latest host\") {\n  Container(api, \"API\", \"Go\")\n}"
+    }
+  ]
+}

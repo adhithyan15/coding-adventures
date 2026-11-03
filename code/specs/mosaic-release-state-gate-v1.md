@@ -234,7 +234,7 @@ above cannot drift between apps:
 
 | Runner | Launcher | Why this one |
 | --- | --- | --- |
-| Linux | `code/scripts/run-under-xvfb.sh timeout <N>s <exe>`, run from `/`; exit `124` required | Needs a virtual display. `timeout` killing a live app is the pass. |
+| Linux | `code/scripts/run-under-xvfb.sh timeout <N>s <exe>`, run from `/`; exit `124` required; then `code/scripts/mosaic-release-check-log.sh <label> <log>` | Needs a virtual display. `timeout` killing a live app is the pass. The lane captures the log itself, so it checks the log with the shared script. |
 | macOS | `code/scripts/mosaic-release-launch.sh <N> <log> <exe-or-.app>` | macOS runners have no GNU `timeout`. |
 | Windows | `code/scripts/mosaic-release-launch.ps1 -ExePath <exe> -Seconds <N> -Label <name>` | A WinUI or Flutter GUI exe has no console. `Start-Process` with a hidden window is what TaskApp's WinUI gate proved on `windows-latest`. |
 
@@ -261,7 +261,34 @@ cannot read a GUI exe's output, so the runtime-unavailable report is checked
 the other way: Compose's `Main.kt` exits when the runtime does not load, which
 fails the liveness check.
 
-TaskApp's macOS and Windows gates and Engram's use these two scripts.
+Every launch log is shown and checked by one script,
+`code/scripts/mosaic-release-check-log.sh <label> <log>`. The Linux lanes call
+it on the log they capture, and `mosaic-release-launch.sh` calls it on its own
+log. It does two things:
+
+1. It prints the log inside `::group::<label>`, between
+   `::stop-commands::<token>` and `::<token>::`. A line the app printed, such
+   as `::add-mask::` or `::endgroup::`, is shown as text and not obeyed. The
+   token is 128 random bits generated after the app has exited, so the app
+   cannot have printed it.
+2. It fails (exit `1`) if the log contains `Mosaic Rust runtime unavailable`.
+   A Qt or Flutter host can keep its window up after printing that, so exit
+   `124` alone would pass a payload whose runtime does not load. The matching
+   line is not echoed again outside the quoted region.
+
+A missing or unreadable log also fails. No log means no evidence, and the
+check must not treat that as no problem.
+
+Before this script each lane had its own copy of the check, and the copies
+drifted. TaskApp's Qt, Flutter and Compose Linux lanes ran
+`! grep -Fq "Mosaic Rust runtime unavailable" <log>`, which a `set -e` step
+ignores, so those three checks could never fail. They also `cat`-ed the raw
+log. Engram's Compose and Flutter Linux lanes echoed the matching line outside
+the quoted region. `code/scripts/tests/test_mosaic_release_check_log.py` pins
+the script, and it fails if either release workflow contains a bare `! grep`
+line or the runtime-unavailable string itself.
+
+TaskApp's macOS and Windows gates and Engram's use the launcher scripts above.
 `code/scripts/tests/test_mosaic_release_launch.py` pins their behaviour (the
 bash one against stub executables) and pins that both workflows call them.
 

@@ -1,5 +1,125 @@
 # Changelog — twig-module-driver
 
+## Unreleased — #18474 re-review: imported name bytes; a BUILD at last
+
+- `BUILD` sets `RUST_MIN_STACK=64 MiB` for libtest's threads. The tests that interpret the Twig compiler without their own large-stack thread overflowed the default 2 MiB stack on macOS arm64 (`tw05h_tests::emit_program_two_fns`, SIGABRT), now that the crate's tests run in CI.
+
+### Fixed
+
+- **The imported-names budget counted names, not bytes.** Each exported
+  name is cloned into every importer's type-checker globals, and a name may
+  be 256 bytes. Each edge is now also charged its export clause's bytes,
+  against `MAX_IMPORTED_NAME_BYTES` (16 MiB).
+- **None of this crate's tests ran in CI.** There was no BUILD, and it was
+  listed `PENDING` in `code/BUILD-EXEMPTIONS` "until verified on Linux".
+  All 108 lib tests pass on Linux, so it now has a `BUILD`
+  (`cargo test -p twig-module-driver`) and the exemption is gone. Its
+  `BUILD_windows` skips, naming the reason that kept it exempt: the
+  self-compile tests reserve 768 MiB / 3 GiB thread stacks, which fail to
+  spawn on Windows hosts.
+
+### Tests
+
+- `imported_name_bytes_budget_charges_name_length`: 64 imports of a module
+  listing 1,024 256-byte exports (exactly 16 MiB) compile; 65 are refused
+  by bytes while still far under the name count.
+
+## Unreleased — #18474 security review: graph budgets, non-regular files
+
+### Changed
+
+- **`read_source` refuses anything but a regular file, without blocking.**
+  It now reads through the new `bounded-source-file` crate:
+  `fs::metadata(path).is_file()` before opening, `O_NONBLOCK` on Unix so a
+  path swapped for a FIFO or tty cannot block `open`, `is_file()` and the
+  size on the open handle, then the bounded read. A FIFO used to block
+  forever; `/dev/zero` is refused as not a regular file (`Io`,
+  `InvalidInput`) instead of being read to the budget.
+
+### Fixed
+
+- **The driver did graph-wide work before any graph budget.** Up to 1,000
+  modules of 1 MiB were read, parsed, extracted, type-checked and cloned
+  before Phase 4. Now:
+  - the graph's source is held to `MAX_PROGRAM_SOURCE_BYTES` (4 MiB) as
+    each file is read, before it is parsed;
+  - `twig_ir_compiler::check_cst_items` runs right after `parse_to_ast`;
+  - the export lists copied over every import edge are charged, summed,
+    against `MAX_IMPORTED_NAMES` (2²⁰) before any copying;
+  - the linked program's functions are held to `MAX_FUNCTIONS_PER_MODULE`.
+- **`library_exports` was quadratic**: `defined.contains` per export. It
+  uses a set.
+- Names over 256 bytes, and over-budget generated names, are refused in
+  Phase 1 by `twig-parser`.
+
+### Tests
+
+- `read_source_refuses_devices_and_fifos_without_blocking` (Unix):
+  `/dev/zero` and a writerless FIFO are refused; the FIFO case runs on a
+  thread with a 10 s deadline.
+- `program_source_bytes_budget_applies_to_the_whole_graph`: exactly 4 MiB
+  over five files compiles; one byte more is refused at the fifth file.
+- `cst_items_budget_runs_in_phase_one`: an oversized library is refused
+  before a strict importer's type error, which a control case shows Phase
+  3.5 would otherwise report first.
+- `imported_names_budget_bounds_edges_times_exports`: 1,024 imports of a
+  1,024-export module (exactly 2²⁰) compile; 1,025 are refused.
+- `linked_program_is_held_to_the_module_function_budget`: exactly 2¹⁶
+  linked functions link; one more is refused.
+- `long_names_are_refused_in_phase_one`: a 256-byte record name compiles;
+  the review's 512 KB one is a `Parse` error.
+
+## Unreleased — #18474: source and linked-program budgets
+
+### Added
+
+- **`read_source(path)`**, public: reads a Twig file without ever holding
+  more than the compiler's source budget (`MAX_SOURCE_BYTES`, 1 MiB). It
+  checks the open file's `metadata().len()` before reading, then reads
+  through `take(MAX + 1)` and counts, so a file that grows after the size
+  check, or never reports its size (`/dev/zero`, a pipe), is still refused
+  after at most 1 MiB + 1 bytes. A breach is `ModuleDriverError::Compile`
+  with the compiler's `source bytes` error; non-UTF-8 stays
+  `Io`/`InvalidData`. `twig-vm`'s CLI uses it too.
+
+### Fixed
+
+- **A module file of any size was read and parsed.** The driver read each
+  file with `read_to_string` and parsed it itself, so `compile_source`'s new
+  source budget never applied, and a 10 GB file cost 10 GB of memory. Every
+  file now goes through `read_source`.
+- **A linked program had no instruction budget.** Each module is held to
+  the compiler's 2²⁰-instruction module budget, but a graph may hold 1,000
+  modules, which the linker merges into the one module the VM runs. The
+  running total is now checked with
+  `twig_ir_compiler::budgets::check_linked_instructions` as each module is
+  compiled (so an oversized graph stops early, naming the module that took
+  it over), and the linked module is checked again as a backstop.
+
+### Tests
+
+- `source_bytes_budget_applies_to_every_file`: a file of exactly 1 MiB
+  compiles; one byte more is a `Compile` error naming it.
+- `read_source_checks_the_file_size_before_reading`: a sparse 1 GiB file is
+  refused by its size; a file of exactly the budget is read whole.
+- `read_source_bounds_a_file_that_is_longer_than_its_size_says` (Unix):
+  `/dev/zero` (size 0, endless) is refused by the bounded read.
+- `read_source_reports_invalid_utf8_as_invalid_data`.
+- `linked_program_is_held_to_the_module_instruction_budget`: two modules
+  (≈ 610,000 and ≈ 409,000 instructions, each under the budget) padded to a
+  linked total of exactly 2²⁰ link; one instruction more is refused at
+  `lib.tw`.
+
+### Changed
+
+- `private_library_function_gets_no_string_param_inference` had been
+  failing since #18432 with `unbound name "strlen"`: it called `lib`'s
+  *private* `strlen` from `main`, which #18432 rightly forbids, so it never
+  reached its assertion. `lib` now exports `strlen`. The property is
+  unchanged: a function other modules can call with a non-string gets no
+  `str` parameter type from its own module's string calls. All 103 tests
+  pass with `code/packages/twig/compiler/` checked out.
+
 ## Unreleased — #18438: an imported function shadows a builtin
 
 ### Tests

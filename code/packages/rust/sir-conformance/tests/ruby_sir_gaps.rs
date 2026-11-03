@@ -40,6 +40,17 @@
 //!   there;
 //! - a method ending in `x if c` returned `nil` whether or not `c` held.
 //!
+//! #18798's next batch (items 11–15 and 19) is here too:
+//!
+//! | gap                                             | what used to happen                         |
+//! |-------------------------------------------------|---------------------------------------------|
+//! | `puts true`, `puts nil`                         | `#t` and `nil` on every backend             |
+//! | `"#{true}"`                                     | refused: `true` read as an unknown local    |
+//! | `z[1]`, `z[-1]`, `z.size`, `z[3] = 7`, `h[:a]`  | `undefined method []` on Python, JS and Go; no `size` on JS; refused on Ruby; a write past the end stopped Rust and C |
+//! | `return` inside a method with `rescue`          | the `rescue` caught it (Python, JS, Go); Rust panicked; C and Ruby refused it |
+//! | `return`/`break`/`next` before the end          | ran nowhere; `return x if c` did not parse  |
+//! | a method ending in `begin … rescue … end`       | returned `nil`                              |
+//!
 //! Every program's expected stdout is the reference interpreter's: real
 //! `ruby` for the Ruby programs and CPython for the Python ones.  The run
 //! test re-checks each expectation against the interpreter when it is on
@@ -325,6 +336,88 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "rb_store_into_an_outer_local_inside_begin",
         "x = 0\nbegin\n  x = 1\nrescue\n  x = 2\nend\nputs x\ny = 0\nbegin\n  raise \"z\"\nrescue\n  y = 2\nend\nputs y\n",
         "1\n2",
+    ),
+    // ── #18798: the next batch (items 11–15 and 19) ────────────────────
+    // #18798 item 11 — `true`/`false`, and an empty `nil`, wherever a value is
+    // shown on its own: `puts`, `print`, a `puts`ed array's elements and
+    // `"#{}"`.  Every backend printed `#t` and `nil` (the frontend never said
+    // the module came from Ruby), and C, the one that did print an empty
+    // `nil`, printed `[, false]` for an array.
+    (
+        "rb_puts_and_print_show_booleans_and_nil_the_ruby_way",
+        "puts true\nputs false\nputs nil\nprint true, nil, false\nputs\nputs [1, nil, true]\nx = nil\ny = true\nputs \"a#{x}b#{y}c\"\nprint nil\nprint \"|\\n\"\n",
+        "true\nfalse\n\ntruefalse\n1\n\ntrue\nabtruec\n|",
+    ),
+    // #18798 item 12 — `"#{true}"` read `true` as an unknown local and was
+    // refused; a bare method name inside `#{}` is a call.  (A string with text
+    // around the `#{}` needs `StrConcat`, which JavaScript, Go, Rust and Ruby
+    // refused before this change.)
+    (
+        "rb_keyword_literals_inside_interpolation",
+        "puts \"#{true}\"\nputs \"#{nil}|\"\nputs \"[#{false}]\"\ndef g\n  7\nend\nputs \"g=#{g}\"\n",
+        "true\n|\n[false]\ng=7",
+    ),
+    // A lone `#{x}` is a String: it was the value itself, so `"#{1}" + "a"`
+    // was `1 + "a"` — a TypeError on most backends, and on C a pointer sum
+    // printed as a number.
+    (
+        "rb_a_lone_interpolation_is_a_string",
+        "x = \"#{1}\" + \"a\"\nputs x\nputs \"#{nil}\" == \"\"\nputs \"#{true}\" + \"!\"\nn = 4\nputs \"#{n}\" + \"#{n}\"\n",
+        "1a\ntrue\ntrue!\n44",
+    ),
+    // #18798 item 13 — `z[i]` (a negative index counts from the end, one out
+    // of range is nil), `size`/`length`, and `z[i] = v` (a negative index, and
+    // padding with nil past the end).  Python, JavaScript and Go raised
+    // `undefined method []`, JavaScript had no `size`, the Ruby backend
+    // refused `[]`, and Rust and C stopped on a write past the end.
+    (
+        "rb_array_index_size_and_index_assignment",
+        "z = [3, 4]\nputs z[1]\nputs z[-1]\nputs z[-2]\nputs z[2] == nil\nputs z[-3] == nil\nputs z.size\nputs z.length\nputs [1, 2].size\nz[0] = 5\nz[-1] = 8\nputs z[0] + z[1]\nz[3] = 7\nputs z.size\nputs z[2] == nil\nputs z[3]\n",
+        "4\n4\n3\ntrue\ntrue\n2\n2\n2\n13\n4\ntrue\n7",
+    ),
+    // `h[k]` (nil for a missing key) failed the same way on Python, JavaScript
+    // and Go.
+    (
+        "rb_hash_index_and_index_assignment",
+        "h = {a: 1}\nputs h[:a]\nputs h[:b] == nil\nh[:b] = 2\nputs h[:b]\nputs h.size\n",
+        "1\ntrue\n2\n2",
+    ),
+    // #18798 item 14 — `return` before the end of a method: inside a method
+    // with `rescue` (Python, JavaScript and Go printed 2, the `rescue`
+    // catching an "unknown builtin: return"; Rust panicked; C and Ruby refused
+    // it), the `return x if c` guard clause (it did not parse), and out
+    // through an `ensure`.
+    (
+        "rb_early_return",
+        "def f\n  return 1\nrescue\n  2\nend\nputs f\ndef g(x)\n  if x > 0\n    return \"pos\"\n  end\n  \"nonpos\"\nend\nputs g(1)\nputs g(-1)\ndef h(x)\n  return x * 2 if x > 1\n  puts \"small\"\n  x\nend\nputs h(5)\nputs h(1)\ndef e\n  begin\n    return 7\n  ensure\n    puts \"ensured\"\n  end\n  8\nend\nputs e\ndef bare\n  return\nend\nputs bare == nil\n",
+        "1\npos\nnonpos\n10\nsmall\n1\nensured\n7\ntrue",
+    ),
+    // #18798 item 19 — `return` out of a `for` and a `while`, `break` and
+    // `next` in `while`, `until` and `for` (with a modifier: `next if c`), and
+    // `next` in a block, which ends that call of the block.  No backend ran
+    // any of them.
+    (
+        "rb_return_break_and_next_in_loops",
+        "def first_big(xs)\n  for v in xs\n    return v if v > 3\n  end\n  0\nend\nputs first_big([1, 5, 9])\nputs first_big([1])\ndef count_to(n)\n  i = 0\n  while true\n    i += 1\n    return i if i == n\n  end\nend\nputs count_to(4)\ni = 0\nwhile i < 10\n  i += 1\n  next if i == 2 || i == 4\n  break if i > 5\n  puts i\nend\nputs i\nt = 0\nfor x in [1, 2, 3, 4]\n  next if x == 2\n  break if x == 4\n  t += x\nend\nputs t\nputs x\nn = 0\nuntil n == 5\n  n += 1\n  next unless n > 3\n  puts n * 10\nend\n[1, 2, 3].each do |v|\n  next if v == 2\n  puts v * 100\nend\n",
+        "5\n0\n4\n1\n3\n5\n6\n4\n4\n40\n50\n100\n300",
+    ),
+    // #18798 security review — a `for` over a huge range that `break`s or
+    // `return`s ends at once (it ran out its remaining trips with the body
+    // disabled: 10^12 of them), and a local bound between two guard clauses
+    // is visible after the second (the guards sit side by side now, with
+    // the local's `let` hoisted out of the first).
+    (
+        "rb_for_over_a_huge_range_stops_at_break_and_locals_between_guards",
+        "for i in 0...1000000000000\n  break if i == 3\nend\nputs i\ndef f(x)\n  return 0 if x == 0\n  y = x * 2\n  return 1 if x == 1\n  y + 1\nend\nputs f(0)\nputs f(1)\nputs f(5)\ndef g\n  for k in 1..1000000000000\n    return k if k == 4\n  end\nend\nputs g\n",
+        "3\n0\n1\n11\n4",
+    ),
+    // #18798 item 15 — a `begin … rescue … end` that ends a method, or an `if`
+    // branch, is its value: the body's last value, or the catching clause's.
+    // It was nil everywhere.
+    (
+        "rb_begin_rescue_as_the_last_statement",
+        "def f\n  begin\n    raise \"x\"\n  rescue\n    5\n  end\nend\nputs f\ndef g\n  begin\n    6\n  rescue\n    7\n  end\nend\nputs g\ndef h(n)\n  if n > 0\n    begin\n      raise \"y\"\n    rescue => e\n      \"caught\"\n    ensure\n      puts \"ens\"\n    end\n  else\n    \"none\"\n  end\nend\nputs h(1)\nputs h(0)\n",
+        "5\n6\nens\ncaught\nnone",
     ),
 ];
 

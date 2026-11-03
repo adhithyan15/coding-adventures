@@ -56,6 +56,7 @@ use twig_parser::{
     LetStar,
     Match, MatchPat, Program, TypedMode,
 };
+use type_checker_protocol::bounded::push_bounded;
 use type_checker_protocol::TypeErrorDiagnostic;
 
 use crate::arity::check_arity;
@@ -245,11 +246,14 @@ fn infer_var_ref(
     // Name not found.  Both Strict and Lenient modes collect the diagnostic;
     // the difference is that Strict sets ok:false while Lenient keeps ok:true.
     // Off mode never reaches here (check_program returns early for Off).
-    errors.push(TypeErrorDiagnostic {
-        message: format!("unresolved variable `{name}`"),
-        line,
-        column,
-    });
+    push_bounded(
+        errors,
+        TypeErrorDiagnostic {
+            message: format!("unresolved variable `{name}`"),
+            line,
+            column,
+        },
+    );
     TwigKind::Any
 }
 
@@ -409,11 +413,14 @@ fn infer_apply(
                 ref_mode,
             );
             for d in diags {
-                errors.push(TypeErrorDiagnostic {
-                    message: d.message,
-                    line: d.line,
-                    column: d.column,
-                });
+                push_bounded(
+                    errors,
+                    TypeErrorDiagnostic {
+                        message: d.message,
+                        line: d.line,
+                        column: d.column,
+                    },
+                );
             }
         }
     }

@@ -53,6 +53,22 @@ const C4_RELATIONSHIP_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-relationship-redeclarations-11.16.1-visual-corpus.json"
 ));
+const C4_ELEMENT_REDECLARATIONS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-redeclarations-11.16.1-corpus.json"
+));
+const C4_ELEMENT_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-redeclarations-11.16.1-visual-corpus.json"
+));
+const C4_BOUNDARY_REDECLARATIONS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-boundary-redeclarations-11.16.1-corpus.json"
+));
+const C4_BOUNDARY_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-boundary-redeclarations-11.16.1-visual-corpus.json"
+));
 const C4_DIRECTED_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-corpus.json"
@@ -117,6 +133,14 @@ const C4_LAYOUT_CONFIG_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-layout-config-11.16.1-visual-corpus.json"
 ));
+const C4_DIRECTIONS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-directions-11.16.1-corpus.json"
+));
+const C4_DIRECTIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-directions-11.16.1-visual-corpus.json"
+));
 const C4_ELEMENT_TECHNOLOGY_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-element-technology-11.16.1-corpus.json"
@@ -140,6 +164,14 @@ const C4_DEPLOYMENT_NODES_CORPUS: &str = include_str!(concat!(
 const C4_DEPLOYMENT_NODES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-deployment-nodes-11.16.1-visual-corpus.json"
+));
+const C4_DEPLOYMENT_REDECLARATIONS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-deployment-redeclarations-11.16.1-corpus.json"
+));
+const C4_DEPLOYMENT_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-deployment-redeclarations-11.16.1-visual-corpus.json"
 ));
 const C4_BOUNDARY_TYPES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -2685,6 +2717,28 @@ fn pinned_c4_relationship_redeclarations_reach_semantic_ir() {
 }
 
 #[test]
+fn pinned_c4_element_redeclarations_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ELEMENT_REDECLARATIONS_CORPUS).unwrap();
+    let visual: Value =
+        serde_json::from_str(C4_ELEMENT_REDECLARATIONS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.nodes.len(), 1);
+    let node = &diagram.nodes[0];
+    assert_eq!(node.label, "Ledger");
+    assert_eq!(node.node_kind, diagram_ir::StructuralNodeKind::Class);
+    assert_eq!(node.style.as_ref().unwrap().fill.as_deref(), Some("#fee2e2"));
+    let diagram_ir::StructuralNodeMetadata::C4(metadata) = node.metadata.as_ref().unwrap() else {
+        panic!("C4 redeclaration must retain typed node metadata");
+    };
+    assert_eq!(metadata.element_type, "container");
+    assert_eq!(metadata.technology.as_deref(), Some("PostgreSQL"));
+    assert_eq!(metadata.description.as_deref(), Some("Latest description"));
+}
+
+#[test]
 fn pinned_c4_directed_relationships_reach_semantic_ir() {
     let syntax: Value = serde_json::from_str(C4_DIRECTED_RELATIONSHIPS_CORPUS)
         .expect("C4 directed relationship corpus must be JSON");
@@ -2875,6 +2929,27 @@ fn pinned_c4_layout_config_reaches_semantic_ir() {
 }
 
 #[test]
+fn pinned_c4_directions_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_DIRECTIONS_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_DIRECTIONS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let expected = [
+        DiagramDirection::Tb,
+        DiagramDirection::Bt,
+        DiagramDirection::Lr,
+        DiagramDirection::Rl,
+    ];
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), expected.len());
+    for (fixture, direction) in fixtures.iter().zip(expected) {
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        assert_eq!(diagram.direction, Some(direction));
+        assert_eq!(diagram.nodes.len(), 2);
+        assert_eq!(diagram.relationships.len(), 1);
+    }
+}
+
+#[test]
 fn pinned_c4_element_technology_reaches_semantic_ir() {
     let syntax: Value = serde_json::from_str(C4_ELEMENT_TECHNOLOGY_CORPUS).unwrap();
     let visual: Value = serde_json::from_str(C4_ELEMENT_TECHNOLOGY_VISUAL_CORPUS).unwrap();
@@ -2955,6 +3030,58 @@ fn pinned_c4_boundary_types_reach_semantic_ir() {
         _ => panic!("expected C4 boundary metadata"),
     }).collect::<Vec<_>>();
     assert_eq!(types, ["ENTERPRISE", "SYSTEM", "CONTAINER", "security"]);
+}
+
+#[test]
+fn pinned_c4_boundary_redeclarations_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_BOUNDARY_REDECLARATIONS_CORPUS).unwrap();
+    let visual: Value =
+        serde_json::from_str(C4_BOUNDARY_REDECLARATIONS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.groups.len(), 1);
+    let group = &diagram.groups[0];
+    assert_eq!(group.label, "Platform");
+    assert_eq!(group.style.as_ref().unwrap().fill.as_deref(), Some("#dcfce7"));
+    let Some(diagram_ir::StructuralGroupMetadata::C4Boundary { boundary_type, .. }) =
+        &group.metadata
+    else {
+        panic!("C4 boundary redeclaration must retain typed group metadata");
+    };
+    assert_eq!(boundary_type, "team");
+    assert_eq!(diagram.nodes.len(), 2);
+    assert!(diagram.nodes.iter().all(|node| node.parent_group.as_deref() == Some("platform")));
+}
+
+#[test]
+fn pinned_c4_deployment_redeclarations_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_DEPLOYMENT_REDECLARATIONS_CORPUS).unwrap();
+    let visual: Value =
+        serde_json::from_str(C4_DEPLOYMENT_REDECLARATIONS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.groups.len(), 1);
+    let group = &diagram.groups[0];
+    assert_eq!(group.label, "Runtime");
+    assert_eq!(group.style.as_ref().unwrap().fill.as_deref(), Some("#e0f2fe"));
+    let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+        node_type,
+        technology,
+        description,
+        ..
+    }) = &group.metadata
+    else {
+        panic!("C4 deployment redeclaration must retain typed group metadata");
+    };
+    assert_eq!(node_type.as_str(), "nodeR");
+    assert_eq!(technology.as_deref(), Some("zone"));
+    assert_eq!(description.as_deref(), Some("Latest host"));
+    assert_eq!(diagram.nodes.len(), 2);
+    assert!(diagram.nodes.iter().all(|node| node.parent_group.as_deref() == Some("runtime")));
 }
 
 #[test]

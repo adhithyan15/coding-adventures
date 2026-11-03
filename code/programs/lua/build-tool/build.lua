@@ -35,56 +35,22 @@ local Resolver = require("build_tool.resolver")
 local Executor = require("build_tool.executor")
 local Reporter = require("build_tool.reporter")
 local Validator = require("build_tool.validator")
+local Cli = require("build_tool.cli")
 
 -- =========================================================================
 -- Argument parsing
 -- =========================================================================
 
---- Parse command-line arguments.
---
--- Lua doesn't have argparse in its stdlib, so we parse manually. This
--- is intentionally simple — the primary build tool is Go.
---
--- @return table Parsed options: root, dry_run, language, force.
-local function parse_args()
-    local opts = {
-        root = nil,
-        dry_run = false,
-        language = "all",
-        force = false,
-        validate_build_files = false,
-    }
-
-    local i = 1
-    while i <= #arg do
-        if arg[i] == "--root" then
-            i = i + 1
-            opts.root = arg[i]
-        elseif arg[i] == "--dry-run" then
-            opts.dry_run = true
-        elseif arg[i] == "--language" then
-            i = i + 1
-            opts.language = arg[i]
-        elseif arg[i] == "--force" then
-            opts.force = true
-        elseif arg[i] == "--validate-build-files" then
-            opts.validate_build_files = true
-        elseif arg[i] == "--help" or arg[i] == "-h" then
-            print("Usage: lua build.lua [OPTIONS]")
-            print()
-            print("Options:")
-            print("  --root DIR       Monorepo root directory")
-            print("  --dry-run        Show what would build without building")
-            print("  --language LANG  Only build packages for this language (default: all)")
-            print("  --force          Rebuild everything")
-            print("  --validate-build-files  Validate BUILD/CI metadata contracts before continuing")
-            print("  --help           Show this help")
-            os.exit(0)
-        end
-        i = i + 1
-    end
-
-    return opts
+local function print_help()
+    print("Usage: lua build.lua [OPTIONS]")
+    print()
+    print("Options:")
+    print("  --root DIR       Monorepo root directory")
+    print("  --dry-run        Show what would build without building")
+    print("  --language LANG  Only build packages for this language (default: all)")
+    print("  --force          Rebuild everything")
+    print("  --validate-build-files  Validate BUILD/CI metadata contracts before continuing")
+    print("  --help           Show this help")
 end
 
 -- =========================================================================
@@ -117,7 +83,15 @@ end
 -- =========================================================================
 
 local function main()
-    local opts = parse_args()
+    local opts, argument_error = Cli.parse(arg)
+    if argument_error then
+        io.stderr:write(argument_error .. "\n")
+        os.exit(2)
+    end
+    if opts.help then
+        print_help()
+        os.exit(0)
+    end
 
     -- Determine root.
     local root = opts.root or find_repo_root()
@@ -164,7 +138,8 @@ local function main()
     print("Resolving dependencies...")
     local resolution_ok, graph = pcall(Resolver.resolve_dependencies, packages)
     if not resolution_ok then
-        if Resolver.is_metadata_encoding_error(graph) then
+        if Resolver.is_metadata_encoding_error(graph)
+            or Resolver.is_dependency_self_edge_error(graph) then
             io.stderr:write(tostring(graph) .. "\n")
             os.exit(2)
         end
