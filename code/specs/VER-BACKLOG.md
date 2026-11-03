@@ -83,6 +83,12 @@ can progress independently once their prerequisites are available.
 
 ## Discoveries and current plan
 
+- Local tooling follow-up: a general fetch failed on an unrelated broken
+  `refs/codex/turn-diffs/checkpoints/...` object. A main-only fetch with an
+  explicit origin/main negotiation tip succeeded; live main matched the fetched
+  ref. Preserve those checkpoint refs and diagnose their owner separately;
+  no repository-wide integrity repair is claimed. This does not outrank I004.
+
 P004 CI triage: macOS SwiftUI step failed TrestleUiTests.swift:132 after typing
 and Add, with exit65 and one real failed test. The same UI test passed on
 bootstrap head4e608afe3bc9; its test/layout/SwiftUI emitter/bindings/task-core are
