@@ -53,6 +53,14 @@ const C4_RELATIONSHIP_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-relationship-redeclarations-11.16.1-visual-corpus.json"
 ));
+const C4_ELEMENT_REDECLARATIONS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-redeclarations-11.16.1-corpus.json"
+));
+const C4_ELEMENT_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-element-redeclarations-11.16.1-visual-corpus.json"
+));
 const C4_DIRECTED_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-corpus.json"
@@ -2682,6 +2690,28 @@ fn pinned_c4_relationship_redeclarations_reach_semantic_ir() {
         relationship.metadata.as_ref().unwrap();
     assert_eq!(metadata.technology.as_deref(), Some("gRPC"));
     assert_eq!(metadata.description.as_deref(), Some("Latest exchange"));
+}
+
+#[test]
+fn pinned_c4_element_redeclarations_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_ELEMENT_REDECLARATIONS_CORPUS).unwrap();
+    let visual: Value =
+        serde_json::from_str(C4_ELEMENT_REDECLARATIONS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.nodes.len(), 1);
+    let node = &diagram.nodes[0];
+    assert_eq!(node.label, "Ledger");
+    assert_eq!(node.node_kind, diagram_ir::StructuralNodeKind::Class);
+    assert_eq!(node.style.as_ref().unwrap().fill.as_deref(), Some("#fee2e2"));
+    let diagram_ir::StructuralNodeMetadata::C4(metadata) = node.metadata.as_ref().unwrap() else {
+        panic!("C4 redeclaration must retain typed node metadata");
+    };
+    assert_eq!(metadata.element_type, "container");
+    assert_eq!(metadata.technology.as_deref(), Some("PostgreSQL"));
+    assert_eq!(metadata.description.as_deref(), Some("Latest description"));
 }
 
 #[test]
