@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "level": "A2",
+  "maxRegularChapter": 275,
+  "firstExcludedChapter": 276,
+  "grammarLessons": [
+    {
+      "id": "MR-C159-gelo",
+      "introduces": [
+        "MR-GRAMMAR-C159-PAST-PERSON-01",
+        "MR-GRAMMAR-C159-PAST-STEMS-01"
+      ],
+      "forms": ["गेलो", "गेले", "गेला", "गेली", "आलो", "आली"]
+    },
+    {
+      "id": "MR-C159-tyane-kela",
+      "introduces": [
+        "MR-GRAMMAR-C159-ERGATIVE-NE-01",
+        "MR-GRAMMAR-C159-OBJECT-AGREEMENT-01"
+      ],
+      "forms": ["त्याने", "केलं", "खाल्ली", "पाहिला"]
+    },
+    {
+      "id": "MR-C159-hota",
+      "introduces": [
+        "MR-GRAMMAR-C159-WAS-01",
+        "MR-GRAMMAR-C159-WAS-NOT-01"
+      ],
+      "forms": ["होता", "होती", "होते", "नव्हता"]
+    },
+    {
+      "id": "MR-C160-jain",
+      "introduces": [
+        "MR-GRAMMAR-C160-FUTURE-PERSON-01",
+        "MR-GRAMMAR-C160-FUTURE-STEMS-01"
+      ],
+      "forms": ["जाईन", "जाईल", "जाऊ", "जाल", "जातील", "पडेल"]
+    },
+    {
+      "id": "MR-C160-janar-ahe",
+      "introduces": [
+        "MR-GRAMMAR-C160-NAR-PLAN-01",
+        "MR-GRAMMAR-C160-NAR-NAHI-01"
+      ],
+      "forms": ["जाणार आहे", "येणार नाही"]
+    }
+  ],
+  "functionalLessons": [
+    {
+      "id": "MR-C32-nako",
+      "introduces": ["MR-LEX-NAKO"],
+      "forms": ["नको"]
+    },
+    {
+      "id": "MR-C34-kaaran",
+      "introduces": ["MR-JOIN-KAARAN"],
+      "forms": ["कारण"]
+    },
+    {
+      "id": "MR-C111-adhi",
+      "introduces": ["MR-LEX-C111-TIME111-03"],
+      "forms": ["आधी"]
+    },
+    {
+      "id": "MR-C111-nantar",
+      "introduces": ["MR-LEX-C111-TIME111-04"],
+      "forms": ["नंतर"]
+    },
+    {
+      "id": "MR-C171-mag",
+      "introduces": ["MR-LEX-C171-VEL171-02"],
+      "forms": ["मग"]
+    },
+    {
+      "id": "MR-C171-sevti",
+      "introduces": ["MR-LEX-C171-VEL171-03"],
+      "forms": ["शेवटी"]
+    }
+  ]
+}

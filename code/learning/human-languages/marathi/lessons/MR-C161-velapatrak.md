@@ -12,7 +12,7 @@ headword: "वेळापत्रक"
 gloss: "a timetable"
 romanization: "veḷāpatrak"
 concept_tag: MR-VACH161-VELAPATRAK
-prerequisites: [MR-C160-yanantar, MR-C160-akhne]
+prerequisites: [MR-C160-yanantar, MR-C160-akhne, MR-C159-hota, MR-C160-janar-ahe]
 sounds: []
 roots: [sanskrit-vela, sanskrit-patra]
 etymology_hook: "veḷāpatrak: veḷā 'time' ← velā (CDIAL 12115) + Sanskrit pattraka 'leaf, sheet' (CDIAL 7733)"
@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [MR-LEX-C161-VACH161-01]
 practises:
-  knowledge: [MR-LEX-C161-VACH161-01, MR-LEX-C160-BHAV160-04, MR-LEX-C160-BHAV160-05]
+  knowledge: [MR-LEX-C161-VACH161-01, MR-LEX-C160-BHAV160-04, MR-LEX-C160-BHAV160-05, MR-GRAMMAR-C160-NAR-PLAN-01, MR-GRAMMAR-C160-NAR-NAHI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -60,12 +60,14 @@ so be there before eight.
 One more word for this chapter.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C161-VACH161-01, MR-LEX-C160-BHAV160-04, MR-LEX-C160-BHAV160-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C161-VACH161-01, MR-LEX-C160-BHAV160-04, MR-LEX-C160-BHAV160-05, MR-GRAMMAR-C160-NAR-PLAN-01, MR-GRAMMAR-C160-NAR-NAHI-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *veḷāpatrak*]
 - [YOU SAY: *veḷāpatrak*, once more]
 - [YOU SAY: say *veḷāpatrak*]
+- [YOU SAY: "I am going to go tomorrow" — *mī udyā jāṇār āhe*]
+- [YOU SAY: "I won't come tomorrow" — *mī udyā yeṇār nāhī*]
 - [YOU RECALL: say the Marathi for from now on, then the Marathi for to plan, then say *veḷāpatrak* again]
 
 ## Wrap-up Recall

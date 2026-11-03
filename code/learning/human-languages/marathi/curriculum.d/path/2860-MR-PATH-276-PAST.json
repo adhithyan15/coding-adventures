@@ -1,6 +1,6 @@
 {
   "id": "MR-PATH-276-PAST",
-  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "spine_node": "SPINE-NARRATE-EVENTS",
   "before": [],
   "inline": [
     "MR-EXT-276-PAST"

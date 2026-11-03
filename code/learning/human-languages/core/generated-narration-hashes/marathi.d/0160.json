@@ -1,19 +1,21 @@
 {
   "language": "marathi",
   "chapter": 160,
-  "sourceHash": "fnv1a64:4563190aace2a2e2",
+  "sourceHash": "fnv1a64:166f53d074cf1ee4",
   "lessonIds": [
     "MR-C160-bhavishya",
     "MR-C160-lavkarac",
     "MR-C160-pudhca",
     "MR-C160-yanantar",
-    "MR-C160-akhne"
+    "MR-C160-akhne",
+    "MR-C160-jain",
+    "MR-C160-janar-ahe"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "marathi/narration/ch160.txt",
   "json": "marathi/narration/ch160.json",
-  "textHash": "fnv1a64:ce62a32688beff94",
-  "jsonHash": "fnv1a64:e80f6430ba8511cc",
+  "textHash": "fnv1a64:8671897d0a1f3dbc",
+  "jsonHash": "fnv1a64:65de99fce429f66b",
   "findings": []
 }

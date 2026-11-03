@@ -4,7 +4,7 @@
   "chapter": 276,
   "title": "What Happened, Who Did It, What There Was",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:778fc2545df2fa79",
+  "sourceHash": "fnv1a64:2fd91a8a056a33b2",
   "lessons": [
     {
       "id": "MR-C276-gelo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0d34ff9b0c97023",
+      "sourceHash": "fnv1a64:299812431ec03623",
       "notice": null,
       "blocks": [
         {
@@ -216,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02b237ba155e8cae",
+      "sourceHash": "fnv1a64:1eec9cf4921a254a",
       "notice": null,
       "blocks": [
         {
@@ -392,7 +392,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:139fd969f3919956",
+      "sourceHash": "fnv1a64:022a8835b952af9c",
       "notice": null,
       "blocks": [
         {
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89a02792413c8b97",
+      "sourceHash": "fnv1a64:9eaa29e0895197f7",
       "notice": null,
       "blocks": [
         {

@@ -23,7 +23,7 @@ requires:
 introduces:
   knowledge: [MR-LEX-C161-VACH161-02]
 practises:
-  knowledge: [MR-LEX-C161-VACH161-02, MR-LEX-C160-BHAV160-05, MR-LEX-C161-VACH161-01]
+  knowledge: [MR-LEX-C161-VACH161-02, MR-LEX-C160-BHAV160-05, MR-LEX-C161-VACH161-01, MR-GRAMMAR-C159-WAS-01, MR-GRAMMAR-C159-WAS-NOT-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -60,12 +60,14 @@ another day.
 One more word for this chapter.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C161-VACH161-02, MR-LEX-C160-BHAV160-05, MR-LEX-C161-VACH161-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-C161-VACH161-02, MR-LEX-C160-BHAV160-05, MR-LEX-C161-VACH161-01, MR-GRAMMAR-C159-WAS-01, MR-GRAMMAR-C159-WAS-NOT-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: *sūcanā*]
 - [YOU SAY: *sūcanā*, once more]
 - [YOU SAY: say *sūcanā*]
+- [YOU SAY: "The shop was closed" — *dukān band hotaṃ*]
+- [YOU SAY: "The shop was not closed" — *dukān band navhtaṃ*]
 - [YOU RECALL: say the Marathi for to plan, then the Marathi for a timetable, then say *sūcanā* again]
 
 ## Wrap-up Recall
