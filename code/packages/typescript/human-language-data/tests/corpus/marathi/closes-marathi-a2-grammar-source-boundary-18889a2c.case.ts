@@ -1,0 +1,107 @@
+import { readFileSync } from "node:fs";
+import { expect, it } from "vitest";
+import { loadTrackLessons } from "../../../src/loader.js";
+
+interface BoundaryLesson {
+  id: string;
+  introduces: string[];
+  forms: string[];
+}
+
+interface A2Boundary {
+  version: number;
+  language: string;
+  level: string;
+  maxRegularChapter: number;
+  firstExcludedChapter: number;
+  lessons: BoundaryLesson[];
+}
+
+const trackRoot = new URL(
+  "../../../../../../learning/human-languages/marathi/",
+  import.meta.url,
+);
+
+it("owns Marathi A2 past and future grammar before the chapter-275 source gate", () => {
+  const boundary = JSON.parse(readFileSync(
+    new URL("assessment-boundaries/a2.json", trackRoot),
+    "utf8",
+  )) as A2Boundary;
+
+  expect(Object.keys(boundary).sort()).toEqual([
+    "firstExcludedChapter",
+    "language",
+    "lessons",
+    "level",
+    "maxRegularChapter",
+    "version",
+  ]);
+  expect(boundary).toMatchObject({
+    version: 1,
+    language: "marathi",
+    level: "A2",
+    maxRegularChapter: 275,
+    firstExcludedChapter: 276,
+  });
+  expect(boundary.lessons.map(({ id }) => id)).toEqual([
+    "MR-C159-gelo",
+    "MR-C159-tyane-kela",
+    "MR-C159-hota",
+    "MR-C160-jain",
+    "MR-C160-janar-ahe",
+  ]);
+
+  const lessons = loadTrackLessons("marathi");
+  const declaredAtoms = new Set<string>();
+  for (const declaration of boundary.lessons) {
+    expect(Object.keys(declaration).sort()).toEqual(["forms", "id", "introduces"]);
+    expect(declaration.introduces.length).toBeGreaterThan(0);
+    expect(declaration.forms.length).toBeGreaterThan(0);
+
+    const name = declaration.id.match(/^MR-C(\d{3})-[a-z0-9-]+$/u);
+    expect(name, `${declaration.id} must be a regular numbered lesson`).not.toBeNull();
+    const filenameChapter = Number(name?.[1]);
+    expect(filenameChapter).toBeLessThanOrEqual(boundary.maxRegularChapter);
+    expect(filenameChapter).toBeLessThan(boundary.firstExcludedChapter);
+
+    const lesson = lessons.find(
+      (candidate) => candidate.realization.lessonId === declaration.id,
+    );
+    expect(lesson, `${declaration.id} must load`).toBeDefined();
+    expect(Number(lesson?.frontmatter.chapter)).toBe(filenameChapter);
+    expect(Number(lesson?.frontmatter["duration.max_seconds"]))
+      .toBeLessThanOrEqual(300);
+    expect(lesson?.frontmatter.spine_node).toBe(
+      filenameChapter === 159
+        ? "SPINE-TALK-ABOUT-PAST"
+        : "SPINE-TALK-ABOUT-FUTURE",
+    );
+    expect(lesson?.frontmatter.introduces_idioms).toEqual([]);
+    expect(lesson?.frontmatter.introduces_senses).toEqual([]);
+    expect(lesson?.frontmatter.introduces_culture_claims).toEqual([]);
+    expect(lesson?.frontmatter["introduces.knowledge"])
+      .toEqual(declaration.introduces);
+
+    const authored = readFileSync(
+      new URL(`lessons/${declaration.id}.md`, trackRoot),
+      "utf8",
+    );
+    expect(authored).toContain("<!-- hl-activity:");
+    for (const form of declaration.forms) {
+      expect(authored, `${declaration.id} must visibly teach ${form}`).toContain(form);
+    }
+
+    for (const atom of declaration.introduces) {
+      expect(declaredAtoms.has(atom), `${atom} is declared twice`).toBe(false);
+      declaredAtoms.add(atom);
+      const owners = lessons.filter((candidate) =>
+        candidate.frontmatter["introduces.knowledge"].includes(atom),
+      );
+      expect(owners.map((owner) => owner.realization.lessonId)).toEqual([
+        declaration.id,
+      ]);
+    }
+  }
+
+  expect(declaredAtoms.size).toBe(10);
+});
