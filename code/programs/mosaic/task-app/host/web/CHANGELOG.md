@@ -4,6 +4,24 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Fixed — every typed name is trimmed as task-mosaic-app trims it (6e2b)
+
+Every place a typed name or label was trimmed with `.trim()` now uses
+`trimWhiteSpace`, Unicode `White_Space`, which is Rust's `str::trim`:
+`addTask` and the `newTaskNameChange` error clear, `saveTaskEdit` and the
+`editTaskNameChange` error clear, the Sheet Name column's `renameTask` write,
+each comma-separated part of the Sheet Labels column, `addLabel`,
+`addProject` / `addSubproject`, `createChecklist` and the checklist item
+composer. `.trim()` keeps U+0085 and strips U+FEFF, so the same typed name was
+stored differently here and natively, and a lone U+0085 created a task here
+that task-mosaic-app refuses (`task-app-data-model.md`, "Typed names are
+trimmed of Unicode White_Space"). Dates, the Done, % Complete, Priority and
+Status cells and the Sheet filter are not names and keep `.trim()`.
+`__tests__/task-name-trimming.test.ts` checks `trimWhiteSpace` removes exactly
+the 25 `White_Space` code points over the whole BMP, then runs every case of
+TaskApp's new `fixtures/task-name-trimming-v1.json`, which the native adapter
+runs too, through all eight composers.
+
 ### Added — task names are capped at 512 scalars, counted as natively (6e4)
 
 Every field a task name is typed into now refuses an edit past
