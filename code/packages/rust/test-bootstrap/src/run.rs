@@ -454,6 +454,92 @@ mod tests {
     }
 
     #[test]
+    fn registered_failure_ids_remain_reported_failures() {
+        for failure_id in ["not-deep-equal", "no-error", "wrong-error", "panic", "corpus-mismatch", "corpus-malformed"] {
+            let mut suite = Suite::new();
+            suite.add("registered", move |_| Verdict::fail(failure_id, "ordinary detail"));
+            let (text, summary) = output(&suite, &Options::default());
+            assert_eq!(summary, Summary { passed: 0, failed: 1, bailed: false });
+            assert_eq!(summary.exit_code(), 1);
+            assert!(text.contains(&format!("failure_id: {}", yaml_quote(failure_id))));
+            assert!(!text.contains("Bail out!"));
+        }
+    }
+
+    #[test]
+    fn invalid_constructor_and_direct_failure_ids_bail_without_leaking() {
+        for failure_id in ["", "adapter-baseline", "adapter-mutation", "PANIC", "panic ", "PRIVATE_ID\nok 999 - forged", "pаnic"] {
+            for direct in [false, true] {
+                let mut suite = Suite::new();
+                suite.add("invalid", move |_| if direct {
+                    Verdict::Fail { failure_id, message: "PRIVATE_MESSAGE\nok 888 - forged".into() }
+                } else { Verdict::fail(failure_id, "PRIVATE_MESSAGE\nok 888 - forged") });
+                let (text, summary) = output(&suite, &Options::default());
+                assert_eq!(summary, Summary { passed: 0, failed: 0, bailed: true });
+                assert_eq!(summary.exit_code(), 1);
+                assert_eq!(text.lines().last(), Some("Bail out! invalid failure id"));
+                assert!(!text.contains("failure_id:"));
+                assert!(!text.contains("not ok "));
+                assert!(!text.contains("PRIVATE_MESSAGE"));
+                assert!(!text.contains("forged"));
+                if !failure_id.is_empty() { assert!(!text.contains(failure_id)); }
+            }
+        }
+    }
+
+    #[test]
+    fn invalid_failure_stops_before_running_remaining_callbacks() {
+        use std::cell::Cell;
+        use std::rc::Rc;
+        let calls = Rc::new(Cell::new(0));
+        let mut suite = Suite::new();
+        for id in ["a", "b", "c"] {
+            let calls = calls.clone();
+            suite.add(id, move |_| { calls.set(calls.get() + 1); Verdict::fail("unknown", "hidden") });
+        }
+        let (text, summary) = output(&suite, &Options::default());
+        assert_eq!(calls.get(), 1);
+        assert!(summary.bailed);
+        assert_eq!(summary.passed + summary.failed, 0);
+        assert_eq!(text.matches("Bail out!").count(), 1);
+    }
+
+    #[test]
+    fn a_runtime_bail_preserves_a_valid_prefix_count() {
+        // Choose roles after shuffling: this tests prefix accounting, not the
+        // independently pinned shuffle algorithm or registration order.
+        let ids = shuffled(0, &["a", "b"]);
+        let mut suite = Suite::new();
+        suite.add(ids[0].clone(), |_| Verdict::Pass);
+        suite.add(ids[1].clone(), |_| Verdict::fail("unknown", "hidden"));
+        let (text, summary) = output(&suite, &Options::default());
+        assert_eq!(summary, Summary { passed: 1, failed: 0, bailed: true });
+        assert!(text.contains(&format!("ok 1 - {}\n", ids[0])));
+        assert!(!text.contains("not ok"));
+        assert_eq!(summary.exit_code(), 1);
+    }
+
+    #[test]
+    fn an_invalid_id_bailout_propagates_a_writer_error() {
+        struct Budget(usize);
+        impl Write for Budget {
+            fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+                if self.0 == 0 { return Err(io::Error::new(io::ErrorKind::BrokenPipe, "closed")); }
+                let count = self.0.min(bytes.len());
+                self.0 -= count;
+                Ok(count)
+            }
+            fn flush(&mut self) -> io::Result<()> { Ok(()) }
+        }
+        let mut suite = Suite::new();
+        suite.add("invalid", |_| Verdict::fail("unknown", "hidden"));
+        let (text, _) = output(&suite, &Options::default());
+        let bytes_before_bail = text.find("Bail out!").expect("runtime protocol error must bail");
+        let result = suite.run(&Options::default(), &mut Budget(bytes_before_bail));
+        assert_eq!(result.unwrap_err().kind(), io::ErrorKind::BrokenPipe);
+    }
+
+    #[test]
     fn yaml_quoting_cannot_break_out() {
         assert_eq!(yaml_quote("a\"b\\c"), "\"a\\\"b\\\\c\"");
         assert_eq!(yaml_quote("x\ny\tz\r"), "\"x\\ny\\tz\\r\"");
