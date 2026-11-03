@@ -52,6 +52,6 @@ Score a 90–120-second organized account of a familiar visited place, supported
 by keyword notes rather than a written answer script.
 <!-- /mock-part:a2-speaking-prepared-account -->
 <!-- mock-part:a2-speaking-information-exchange-role-play -->
-The learner must request a return bus ticket, state destination and day, ask
-both times, clarify one incomplete detail, and close appropriately.
+The learner must state the destination and day, ask both times and the fare,
+clarify one incomplete detail, and close appropriately.
 <!-- /mock-part:a2-speaking-information-exchange-role-play -->

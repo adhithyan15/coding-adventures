@@ -52,7 +52,7 @@ Score a 90–120-second organized account of a familiar helpful person, using
 keyword notes rather than a written answer script.
 <!-- /mock-part:a2-speaking-prepared-account -->
 <!-- mock-part:a2-speaking-information-exchange-role-play -->
-The learner must request information about the school book room, ask which
-paper to bring, when the room opens and how long a book may be kept, clarify
-one incomplete detail, and close appropriately.
+The learner must request information about the school book room, ask what to
+bring, when the room opens and how long a book may be kept, clarify one
+incomplete detail, and close appropriately.
 <!-- /mock-part:a2-speaking-information-exchange-role-play -->

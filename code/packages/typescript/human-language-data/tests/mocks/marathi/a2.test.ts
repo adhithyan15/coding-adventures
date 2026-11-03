@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -133,7 +134,7 @@ describe("Marathi A2 timed mock pair", () => {
     expect(read("mock-1-examiner-script.md")).not.toBe(read("mock-2-examiner-script.md"));
   });
 
-  it("pins every objective mapping and a broad taught-evidence boundary for scored content", () => {
+  it("pins every objective mapping and the complete taught-evidence boundary for scored content", () => {
     const expected = {
       1: [
         "1 B; 2 A; 3 B; 4 B; 5 B; 6 A; 7 A; 8 B.",
@@ -156,6 +157,9 @@ describe("Marathi A2 timed mock pair", () => {
       const key = read(`mock-${form}-answer-key.md`);
       for (const row of expected[form]) expect(key).toContain(row);
     }
+    expect(read("mock-1-answer-key.md")).toContain("ask both times and the fare");
+    expect(read("mock-1-examiner-script.md")).toContain("पन्नास रुपये");
+    expect(read("mock-2-answer-key.md")).toContain("ask what to\nbring");
 
     const lessonDir = join(curriculumRoot, "marathi", "lessons");
     // Only numbered chapters already taught by the A2 gate may establish a
@@ -179,6 +183,13 @@ describe("Marathi A2 timed mock pair", () => {
       read(`mock-${form}-examiner-script.md`),
     ]).join("\n");
     const scoredTokens = new Set(scoredArtifacts.match(/[\u0900-\u097F]+/gu) ?? []);
+    // Pin the complete learner-facing token inventory, not just a selected
+    // vocabulary sample. Any new or substituted Devanagari surface form must
+    // change this digest and receive a fresh source-boundary review.
+    const scoredTokenInventory = [...scoredTokens].sort();
+    expect(scoredTokenInventory).toHaveLength(855);
+    expect(createHash("sha256").update(scoredTokenInventory.join("\n"), "utf8").digest("hex"))
+      .toBe("610769072fa2a583185781fb22763e0f131b6495b57f7aa5da787ffaf4ad29fe");
     // This inventory spans the answer-bearing nouns and the open-task topic
     // roots in every reading, listening, writing, and speaking part. Each root
     // must be visible both in the scored pair and in a lesson published before
@@ -190,7 +201,7 @@ describe("Marathi A2 timed mock pair", () => {
       "इतिहास", "संगीत", "आरोग्य", "वही", "पेन", "दिवा", "कपाट",
       "पेटी", "माहिती", "पैसे", "खिडकी", "छत्री", "कपडे", "फळ",
       "सायकल", "पिशवी", "झाड", "कार्यक्रम", "घर", "काम", "ठिकाण",
-      "वेळ", "माणूस", "मदत", "भावना", "भाजी", "भाकरी",
+      "वेळ", "माणूस", "मदत", "भाजी", "भाकरी",
       "बाग", "नदी", "कुटुंब", "मित्र",
       "बटाटा", "गाजर", "टपाल", "मंदिर", "कार्यालय", "साडी", "दूध",
       "चहा", "शनिवार", "मीरा", "अरुण", "स्टेशन", "शिक्षक",
@@ -204,7 +215,11 @@ describe("Marathi A2 timed mock pair", () => {
       "डॉक्टर", "तात्पुरत", "परिचित", "परिचय", "अपुर", "विषयानुसार",
       "एकावेळी", "सव्वा", "साडे", "मेज", "मजकूर", "संभाषण", "सेकंद",
       "साफ", "क्रमांक", "रेष", "पंच्याऐंशी", "किलोमीटर", "रोमन", "लिपी",
-      "सोप", "परीक्षक",
+      "सोप", "परीक्षक", "रेल्वे", "ज्ञान", "तिकीट", "जागा", "व्यक्ती",
+      "अडचण", "मैदान", "वाहन", "कागद", "जेवण", "यंत्र", "उद्देश",
+      "वक्ता", "संदेश", "रद्द", "चौकशी", "वार्षिक", "स्नेहसंमेलन",
+      "नुकता", "वस्तू", "कृती", "अंतर", "उरले", "घोषणा", "छोटा",
+      "नागरिक", "प्रत्येक", "केवळ", "सगळे", "सर्व", "आजचा",
     ]) {
       expect(scoredArtifacts).not.toContain(untaught);
     }
