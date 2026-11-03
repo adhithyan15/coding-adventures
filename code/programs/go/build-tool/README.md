@@ -352,6 +352,17 @@ and filename lookalikes do not select these roots. Missing applicable roots
 fail planning; a single-language run selects only its own consumer. Detector
 tests check both the emitted affected roots/toolchains and reader-map drift.
 
+The flat `test-trigger-selection-*.json` case family independently seeds the
+Go and Rust build-tool fronts, which are its only current native readers. The
+relation accepts exact flat JSON case names, including deleted and renamed old
+paths, while rejecting empty stems, nested paths, backslash spellings, case
+variants, extensionless names, and backup suffixes. It unions those roots with
+ordinary changed packages on Linux, macOS, and Windows before prerequisite
+closure. Explicit language plans select only their applicable reader, and a
+missing applicable reader aborts planning before any partial plan is written.
+A source-reference drift test keeps the two-reader roster synchronized with
+the native conformance suites.
+
 The flat `toolchain-detection-*.json` case family likewise seeds its twelve
 direct native test fronts: C#, F#, Elixir, Go, Haskell, Lua, Perl, Python,
 Ruby, Rust, Swift, and TypeScript. Its exact path check includes deleted or
