@@ -21,6 +21,19 @@ Failures expose only stable mismatch or target/issuer validity categories and
 retain no certificate, response, key, signature, status, hostname, or time
 payloads.
 
+The parallel
+`bind_x509_ocsp_revocation_to_routed_reviewed_server_path` boundary consumes
+the newer
+`ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy`.
+That path retains certificate-bound algorithm and issuer-role policy plus the
+selected repository-owned RSA PKCS #1 v1.5 SHA-256, SHA-384, or SHA-512
+verifier for each exact adjacency. The binder applies the same exact target-
+then-intermediate object identity checks and the same target-then-intermediate
+validity checks at the OCSP observation time. Its distinct non-copyable result
+retains both complete inputs and the two fresh validity tokens. It does not yet
+enter the fixed-SHA-256 responder-path projection or its responder DNS and
+no-check policies.
+
 The follow-up `reify_x509_ocsp_reviewed_responder_path` projection consumes
 that complete result and reifies its delegated responder-to-reviewed-root path
 as a distinct non-copyable type for later policy composition. Earlier safe
@@ -64,6 +77,9 @@ malformed values fail with stable payload-free categories.
 This crate performs evidence composition, exact-time validity checks, the
 bounded selected-anchor and exact-intermediate responder DNS policies, and the
 RFC 6960 responder no-check branch described above only.
+The responder policy layers apply only to the fixed RSA SHA-256 path; the
+data-driven routed binding stops after exact target/intermediate identity and
+observation-time validity.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS

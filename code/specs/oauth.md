@@ -2355,6 +2355,28 @@ or intermediate revocation, interpret unsupported OCSP extensions, fetch or
 cache data, read a clock, implement TLS or HTTP, authorize OAuth transport, or
 grant network authority. Concrete HTTPS remains unavailable.
 
+A bounded data-driven follow-up in the same package now joins that exact
+authenticated OCSP target-revocation evidence to the routed constructed
+reviewed-intermediate server-path evidence. The routed input retains
+certificate-bound child algorithm policy, certificate-wide issuer role policy,
+certificate-bound issuer RSA algorithm/key policy, and the selected
+repository-owned RSA PKCS #1 v1.5 SHA-256, SHA-384, or SHA-512 verifier for each
+of the two exact constructed adjacencies. Binding still requires both inputs to
+retain the same exact decoded target and intermediate objects; independently
+decoded byte-equal certificates fail closed. It then revalidates those exact
+path certificates at the OCSP proof's retained observation time and keeps both
+fresh validity tokens with both complete non-copyable proofs. Stable failures
+preserve target-before-issuer identity and validity ordering without exposing
+certificate, response, key, signature, status, hostname, algorithm, or time
+payloads. This pure public-data composition performs no new cryptography,
+credential access, signing, storage, clock acquisition, audit event, trace
+emission, I/O, or external effect. It does not yet reify the routed responder
+path, apply routed responder name or no-check policy, generalize certificate-
+path validation, check responder or intermediate revocation, interpret
+unsupported OCSP extensions, fetch or cache data, implement TLS or HTTP,
+authorize OAuth transport, or grant network authority. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated
