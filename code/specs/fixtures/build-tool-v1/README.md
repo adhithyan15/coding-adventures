@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 179-case bootstrap corpus covers every process-free v1 domain:
+The 185-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names,
@@ -81,7 +81,9 @@ The 179-case bootstrap corpus covers every process-free v1 domain:
   digest-pinned repository input (excluding an unregistered peer), and
   exact-at-limit plus fail-closed operation-wide
   declared match-work accounting with Unicode-scalar lengths and recursive
-  BUILD-front exemptions;
+  BUILD-front exemptions, plus bounded Cargo test-trigger selection with one
+  trigger hop outside the build graph, prerequisite closure after that hop,
+  valid trigger cycles, and stable graph-cycle or unknown-relation refusal;
 - framed SHA-256 hashing over the caller-supplied, deduplicated union of local
   and repository-boundary inputs, plus hit, miss, and corrupt-cache recovery.
   Three adversarial dependency cases additionally pin reverse-ordered

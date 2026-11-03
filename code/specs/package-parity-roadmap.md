@@ -20274,3 +20274,23 @@ Lua build-tool tests, every Lua syntax check, and 1,740 lesson shards with zero
 problems. Commit this durable PR receipt, push normally, and obtain exact-head
 publication review before allowing guarded squash auto-merge; results attached
 to any earlier head cannot authorize the merge.
+
+### Rust Cargo test-trigger core and native fixture-routing follow-up
+
+The bounded Rust Cargo test-trigger selection owner is implemented as a pure
+inert-value operation with six shared `test-trigger-selection-*.json` cases.
+Its corpus-validator repair routes that closed `diff_selection` variant before
+the legacy object-package path-selection oracle and independently checks its
+one-hop trigger and prerequisite semantics, including the intentional graph
+cycle and unknown-relation failures.
+
+New pending owner
+`build-tool-test-trigger-fixture-native-ci-selection-routing` must extend the
+native fixture-change selection map so an exact flat
+`test-trigger-selection-*.json` change seeds only
+`go/programs/build-tool` and `rust/programs/build-tool`. It must reject empty
+stems, nested paths, backslash spellings, case variants, and backups; cover
+added, modified, deleted, and renamed paths; preserve ordinary package-root
+union and prerequisite closure; and prove Linux, macOS, Windows, and explicit
+language-plan behavior. This operational routing remains separate from the
+authority-free selection core and receives no merge credit here.

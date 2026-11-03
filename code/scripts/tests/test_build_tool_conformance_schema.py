@@ -369,6 +369,45 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
             4096,
         )
 
+    def test_test_trigger_selection_schema_is_closed_and_bounded(self) -> None:
+        import jsonschema
+
+        validator = jsonschema.Draft202012Validator(self.pure_schema)
+        fixtures = [
+            example
+            for example in self.examples
+            if example["id"].startswith("diff-selection/test-trigger-")
+        ]
+        self.assertEqual(len(fixtures), 6)
+        for example in fixtures:
+            with self.subTest(case=example["id"]):
+                record = {
+                    "domain": example["domain"],
+                    "outcome": example["expected"]["outcome"],
+                    "input": copy.deepcopy(example["input"]),
+                    "result": example["expected"]["result"],
+                }
+                self.assertEqual(list(validator.iter_errors(record)), [])
+                record["input"]["changed_paths"] = []
+                self.assertNotEqual(list(validator.iter_errors(record)), [])
+
+        trigger_input = self.pure_schema["$defs"]["test_trigger_selection_input"]
+        trigger_options = trigger_input["properties"]["options"]
+        self.assertFalse(trigger_input["additionalProperties"])
+        self.assertFalse(trigger_options["additionalProperties"])
+        self.assertEqual(
+            set(trigger_options["required"]),
+            {"packages", "edges", "trigger_relations", "changed_packages"},
+        )
+        self.assertEqual(
+            trigger_options["properties"]["edges"]["maxItems"],
+            16384,
+        )
+        self.assertEqual(
+            trigger_options["properties"]["trigger_relations"]["maxItems"],
+            16384,
+        )
+
     def test_every_pure_domain_rejects_unknown_input_fields(self) -> None:
         import jsonschema
 

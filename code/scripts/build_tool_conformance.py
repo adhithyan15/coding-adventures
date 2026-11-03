@@ -2633,6 +2633,11 @@ def _validate_pure_case_semantics(
                     )
     elif domain == "graph":
         _expected_graph(options)
+    elif domain == "diff_selection" and _is_test_trigger_selection(options):
+        # This closed variant carries package names directly. Route it before
+        # legacy path selection, whose packages are structured records with
+        # rel_path/source_mode fields.
+        _expected_test_trigger_selection(options)
     elif domain == "diff_selection":
         packages = options["packages"]
         by_name = _package_index(packages)
@@ -3094,6 +3099,105 @@ def _expected_ci_gate_selection(
             }
         )
     return verdicts
+
+
+def _is_test_trigger_selection(options: dict[str, Any]) -> bool:
+    """Identify the closed Cargo test-trigger variant without host probing."""
+    return "trigger_relations" in options
+
+
+def _expected_test_trigger_selection(
+    options: dict[str, Any],
+) -> tuple[set[str], set[str], set[str]] | str:
+    """Evaluate the bounded one-hop Cargo test-trigger selection contract."""
+    packages = options["packages"]
+    edges = options["edges"]
+    trigger_relations = options["trigger_relations"]
+    changed_packages = options["changed_packages"]
+
+    if len(packages) > 4096:
+        return "TEST_TRIGGER_PACKAGE_LIMIT_EXCEEDED"
+    if len(edges) > 16384:
+        return "TEST_TRIGGER_GRAPH_EDGE_LIMIT_EXCEEDED"
+    if len(trigger_relations) > 16384:
+        return "TEST_TRIGGER_RELATION_LIMIT_EXCEEDED"
+    if len(changed_packages) > 4096:
+        return "TEST_TRIGGER_CHANGED_LIMIT_EXCEEDED"
+
+    package_names = set(packages)
+    if len(package_names) != len(packages):
+        return "TEST_TRIGGER_PACKAGE_DUPLICATE"
+
+    dependents: dict[str, set[str]] = {name: set() for name in package_names}
+    prerequisites: dict[str, set[str]] = {name: set() for name in package_names}
+    indegree = dict.fromkeys(package_names, 0)
+    seen_edges: set[tuple[str, str]] = set()
+    for prerequisite, dependent in edges:
+        if prerequisite not in package_names or dependent not in package_names:
+            return "TEST_TRIGGER_GRAPH_EDGE_UNKNOWN"
+        if prerequisite == dependent:
+            return "TEST_TRIGGER_GRAPH_EDGE_SELF"
+        edge = (prerequisite, dependent)
+        if edge in seen_edges:
+            return "TEST_TRIGGER_GRAPH_EDGE_DUPLICATE"
+        seen_edges.add(edge)
+        dependents[prerequisite].add(dependent)
+        prerequisites[dependent].add(prerequisite)
+        indegree[dependent] += 1
+
+    ready = [name for name, degree in indegree.items() if degree == 0]
+    visited = 0
+    while ready:
+        name = ready.pop()
+        visited += 1
+        for dependent in dependents[name]:
+            indegree[dependent] -= 1
+            if indegree[dependent] == 0:
+                ready.append(dependent)
+    if visited != len(package_names):
+        return "TEST_TRIGGER_GRAPH_CYCLE"
+
+    triggers: dict[str, set[str]] = {name: set() for name in package_names}
+    seen_relations: set[tuple[str, str]] = set()
+    for source, target in trigger_relations:
+        if source not in package_names or target not in package_names:
+            return "TEST_TRIGGER_RELATION_UNKNOWN"
+        if source == target:
+            return "TEST_TRIGGER_RELATION_SELF"
+        relation = (source, target)
+        if relation in seen_relations:
+            return "TEST_TRIGGER_RELATION_DUPLICATE"
+        seen_relations.add(relation)
+        triggers[source].add(target)
+
+    changed = set(changed_packages)
+    if len(changed) != len(changed_packages):
+        return "TEST_TRIGGER_CHANGED_DUPLICATE"
+    if not changed.issubset(package_names):
+        return "TEST_TRIGGER_CHANGED_UNKNOWN"
+
+    build_closure = set(changed)
+    pending = list(changed)
+    while pending:
+        name = pending.pop()
+        for dependent in dependents[name]:
+            if dependent not in build_closure:
+                build_closure.add(dependent)
+                pending.append(dependent)
+
+    affected = set(build_closure)
+    for source in build_closure:
+        affected.update(triggers[source])
+
+    closed = set(affected)
+    pending = list(affected)
+    while pending:
+        name = pending.pop()
+        for prerequisite in prerequisites[name]:
+            if prerequisite not in closed:
+                closed.add(prerequisite)
+                pending.append(prerequisite)
+    return changed, affected, closed - affected
 
 
 def _expected_diff_selection(
@@ -4292,6 +4396,36 @@ def _validate_pure_result_semantics(
             raise ConformanceError(
                 f"{prefix}_GRAPH_RESULT_INVALID",
                 "graph result does not match the independent topology oracle",
+            )
+    elif domain == "diff_selection" and _is_test_trigger_selection(options):
+        expected_sets = _expected_test_trigger_selection(options)
+        if isinstance(expected_sets, str):
+            if (
+                outcome != "error"
+                or payload
+                or result["diagnostics"]
+                != [{"code": expected_sets, "severity": "error"}]
+            ):
+                raise ConformanceError(
+                    f"{prefix}_TEST_TRIGGER_ERROR_INVALID",
+                    "test-trigger selection requires an empty result and exactly "
+                    "its stable oracle error",
+                )
+            return
+        if outcome != "ok":
+            raise ConformanceError(
+                f"{prefix}_TEST_TRIGGER_OUTCOME_INVALID",
+                "successful test-trigger selection oracle requires an ok result",
+            )
+        actual_sets = (
+            set(payload["changed_packages"]),
+            set(payload["affected_packages"]),
+            set(payload["prerequisite_packages"]),
+        )
+        if actual_sets != expected_sets:
+            raise ConformanceError(
+                f"{prefix}_TEST_TRIGGER_RESULT_INVALID",
+                "test-trigger result does not match one-hop and prerequisite closure",
             )
     elif domain == "diff_selection":
         expected_sets = _expected_diff_selection(
