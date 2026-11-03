@@ -88,6 +88,16 @@ Verdict API and validates at serialization, so direct construction cannot
 bypass the guard. Publication still requires P004 merge, a fresh overlap and
 priority audit, final-source validation and security review.
 
+Local preparation evidence for I004: the new runtime tests first reproduced
+three failures on the old runner. With the guard, 31 Rust harness unit tests,
+85 self-corpus records, the CT01 18 unit + 26 L0 + 6 IR checks, and Clippy pass.
+The independent Python harness suite passes 25 tests and the CT01 suites 16.
+Actual sabotage runs retain 18 registered harness failures and three registered
+CT01 failures, with nonzero exits. Instrumented tests pass; the direct LLVM
+report is 92.53% overall harness source-line coverage (100% in verdict.rs).
+An early read-only security review passed. This remains unpublished local
+evidence and must be reconciled/validated on the final publication head.
+
 The I004 regeneration path also exposed a Windows byte-transport gap: the
 bootstrap generator's default text writer could translate LF to CRLF while its
 text check normalized that difference away. I004 writes LF explicitly and pins
