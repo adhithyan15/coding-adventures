@@ -15,9 +15,12 @@
   preserving the track's reinforcement contract instead of leaving one-use
   knowledge behind.
 - Chapters 276–277 remain later B1-seam re-teaching under separate C276/C277
-  atoms. They are no longer the first evidence for the A2 past and future,
-  are not relabelled as reinforcement of the new atoms, and cannot silently
-  bless an A2 assessment surface.
+  atoms. Their curriculum extensions are now B1-required rather than
+  A2-required, and the boundary regression enumerates every required A2
+  extension to reject any lesson after chapter 275. They are no longer the
+  first evidence for the A2 past and future, are not relabelled as
+  reinforcement of the new atoms, and cannot silently bless an A2 assessment
+  surface.
 - This is curriculum structure evidence only. It does not establish external
   certification, recording provenance, qualified recordings, independent human
   validation, standard setting, learner readiness, or learner attainment.

@@ -38,9 +38,10 @@ backlog. The project-defined A2 four-skill task shape is also published.
 Chapters 159 and 160 now own its bounded past/future grammar path before the
 chapter-275 A2 source gate. The same boundary contract pins the earlier
 **नको**, **कारण**, **आधी / नंतर**, and **मग / शेवटी** lessons as the permitted
-refusal, reason, and sequencing path. Chapters 276–277 re-teach related grammar
-at the B1 seam under separate C276/C277 atoms and cannot be used to bless A2
-evidence. Its two timed mock bundles
+refusal, reason, and sequencing path. Every required A2 curriculum extension
+must also resolve at or before chapter 275. Chapters 276–277 re-teach related
+grammar at the B1 seam under separate B1-required C276/C277 extensions and
+cannot be used to bless A2 evidence. Its two timed mock bundles
 and every later-rung mock bundle remain backlog.
 
 ## Progress

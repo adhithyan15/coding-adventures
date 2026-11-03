@@ -47,7 +47,11 @@ The repository evidence behind that decision is explicit and bounded:
 declares regular chapter 275 as the last admissible A2 chapter, chapter 276 as
 the first excluded B1-seam chapter, the five owned grammar lessons, their ten
 knowledge atoms, and the exact learner-facing forms that each lesson must make
-visible.  It separately pins six earlier functional-language owners: **नको**
+visible.  The C276 and C277 curriculum extensions are therefore B1-required,
+not A2-required.  The regression enumerates every required A2 extension and
+requires every attached lesson to resolve at or before chapter 275, preventing
+an inline path declaration from silently reopening the gate.  The contract
+separately pins six earlier functional-language owners: **नको**
 for declining, **कारण** for a reason, and **आधी / नंतर / मग / शेवटी** for
 sequencing.  A2 papers may use those owned forms; a bare later occurrence of
 **म्हणून**, **त्यानंतर**, or a B1 prohibition pattern is not admitted by this
@@ -64,6 +68,10 @@ The regression must fail closed when:
 4. an evidence lesson omits its bounded response activity or any declared
    learner-facing form; or
 5. chapter 276 or later is admitted as A2 evidence.
+
+The regression also fails if any curriculum extension still marked required
+at A2 owns a lesson after chapter 275, including an inline extension on a path
+whose shared spine node was originally introduced at A2.
 
 This grammar contract complements the mock's token/source audit.  The mock
 implementation must still trace its complete learner-facing vocabulary and

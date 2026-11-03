@@ -1,6 +1,9 @@
 import { readFileSync } from "node:fs";
 import { expect, it } from "vitest";
-import { loadTrackLessons } from "../../../src/loader.js";
+import {
+  loadTrackLanguageCurriculum,
+  loadTrackLessons,
+} from "../../../src/loader.js";
 
 interface BoundaryLesson {
   id: string;
@@ -62,6 +65,31 @@ it("owns Marathi A2 past and future grammar before the chapter-275 source gate",
   ]);
 
   const lessons = loadTrackLessons("marathi");
+  const curriculum = loadTrackLanguageCurriculum("marathi");
+  expect(curriculum, "Marathi curriculum must load").toBeDefined();
+  const lessonById = new Map(lessons.map((lesson) => [
+    lesson.realization.lessonId,
+    lesson,
+  ]));
+  const requiredA2Extensions = curriculum?.extensions.filter(
+    (extension) => extension.stage === "A2" && extension.kind === "required",
+  ) ?? [];
+  expect(requiredA2Extensions.length).toBeGreaterThan(0);
+  for (const extension of requiredA2Extensions) {
+    expect(extension.lessons.length, `${extension.id} must own lessons`).toBeGreaterThan(0);
+    for (const lessonId of extension.lessons) {
+      const extensionLesson = lessonById.get(lessonId);
+      expect(extensionLesson, `${extension.id} must resolve ${lessonId}`).toBeDefined();
+      expect(
+        Number(extensionLesson?.frontmatter.chapter),
+        `${extension.id} must not require A2 material after chapter 275`,
+      ).toBeLessThanOrEqual(boundary.maxRegularChapter);
+    }
+  }
+  expect(curriculum?.extensions.find(({ id }) => id === "MR-EXT-276-PAST")?.stage)
+    .toBe("B1");
+  expect(curriculum?.extensions.find(({ id }) => id === "MR-EXT-277-FUTURE")?.stage)
+    .toBe("B1");
   const exactPriorAtoms = new Map<string, { required: string[]; forbidden: string[] }>([
     ["MR-C159-tyane-kela", {
       required: ["MR-LEX-C89-FOOD89-02"],
