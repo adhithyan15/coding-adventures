@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C284-jia-measure",
+  "pathSegment": "ZH-PATH-284-TICKETS",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ZH-EXT-284-TICKETS",
+      "order": 7
+    }
+  ]
+}

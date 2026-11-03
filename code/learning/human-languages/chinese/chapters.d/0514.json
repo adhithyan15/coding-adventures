@@ -1,0 +1,19 @@
+{
+  "chapter": 514,
+  "title": "When the Weather Turns",
+  "label": "ch:zh-when-the-weather-turns",
+  "canDo": "I can talk about wind and storms, getting caught in the rain, things that freeze and snow that melts.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C514-ronghua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 514: I can talk about wind and storms, getting caught in the rain, things that freeze and snow that melts.",
+    "assesses": [
+      "ZH-LEX-C514-WEATHER514-03",
+      "ZH-LEX-C514-WEATHER514-04",
+      "ZH-LEX-C514-WEATHER514-05"
+    ]
+  }
+}

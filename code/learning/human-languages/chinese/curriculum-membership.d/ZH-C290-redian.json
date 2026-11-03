@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C290-redian",
+  "pathSegment": "ZH-PATH-290-NEWS290",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-290-NEWS290",
+      "order": 4
+    }
+  ]
+}

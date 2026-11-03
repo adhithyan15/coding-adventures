@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C488-chushi",
+  "pathSegment": "ZH-PATH-488-TRADES488",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-488-TRADES488",
+      "order": 1
+    }
+  ]
+}

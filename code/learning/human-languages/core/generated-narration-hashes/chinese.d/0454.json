@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:4069b022b2ed06d0",
+  "lessonIds": [
+    "ZH-C454-fuwutai",
+    "ZH-C454-zixun",
+    "ZH-C454-tushu",
+    "ZH-W454-tu-chart",
+    "ZH-C454-zhilu",
+    "ZH-C454-xuanchuance"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch454.txt",
+  "json": "chinese/narration/ch454.json",
+  "textHash": "fnv1a64:87f9700e8593e9ec",
+  "jsonHash": "fnv1a64:4bde6859d0fe9d87",
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W539-guai",
+    "language": "chinese",
+    "chapter": 539,
+    "sequence": 40305,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e70da73ae797cd4e",
+    "detachableSegments": [
+      "Script — the upright heart, then 又 over the earth piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

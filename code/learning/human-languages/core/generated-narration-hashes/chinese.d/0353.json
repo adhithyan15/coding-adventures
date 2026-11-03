@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 353,
+  "sourceHash": "fnv1a64:f657f7d94ffedc46",
+  "lessonIds": [
+    "ZH-C353-shuofu",
+    "ZH-C353-daoli",
+    "ZH-W353-dao-way",
+    "ZH-C353-bujiande",
+    "ZH-C353-fanbo",
+    "ZH-C353-rentong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch353.txt",
+  "json": "chinese/narration/ch353.json",
+  "textHash": "fnv1a64:226f5bbcaee8e565",
+  "jsonHash": "fnv1a64:06f161a74b8a08f5",
+  "findings": []
+}

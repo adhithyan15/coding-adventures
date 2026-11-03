@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+### Changed
+
+- Regenerated again for the #18798 re-review: `if`, `elsif`, `unless`,
+  `when` and `in` take an optional `then` after the condition.
+- Regenerated again for the #18798 security review: `super`, `yield`,
+  `return`, `break` and `next` may take a `;` in place of their argument
+  list (a source `;` here, so `return; 42` no longer reads `return 42`),
+  and a trailing-modifier keyword (`if_modifier`, …) is never a bare value
+  in `factor` (`puts if c` was `puts(if_modifier)`).
+- Regenerated from `code/grammars/ruby/ruby.grammar` for #18798.  The new
+  literals `( line start`, `- line start` and `+ line start` are token
+  values only the Rust `ruby-lexer` produces, so for this package's lexer
+  they change nothing (`unary_plus` takes only `+ line start`, so it never
+  matches here).  Two changes do reach this parser: a source `;` may now end
+  an expression statement and a `rescue` class list (`rescue Boom; puts
+  40`), and the lookaheads after a statement-level `method_call` compare
+  `+`/`-` by value instead of by type, which is the same test for these
+  tokens.
+- Regenerated again after a comment change in `ruby.grammar` (rule line
+  numbers only).  Note: this package's grammar parser compares a literal
+  with a token's value alone, so `puts "[ line start"` does not parse here,
+  the same as `puts "<"` (#18798).
+- `_grammar` regenerated from `code/grammars/ruby/ruby.grammar` (#18778),
+  which gained a `for_statement` (`for x in xs [do] … end`), `rescue => e`
+  with no class, a guard so a parenthesised call followed by a binary operator
+  (`f() + f`) parses as one expression statement, and a lookahead that keeps a
+  `[` re-tagged `[ line start` (only the Rust `ruby-lexer` produces it)
+  from being an index or a paren-less call's first argument.  This package's
+  lexer never produces that value, so the last change does not affect it here.
+
 ### Fixed
 
 - Eliminated runtime grammar loading: `get_grammar` now requires a

@@ -93,6 +93,38 @@ a `Const` reference, a `Const` assignment target) is validated as a constant pat
 in the SAME pre-emit traversal as the builtin scan (co-total with the emitter),
 so no name can inject.
 
+**Class names that are not Ruby constants (#18778).** A SIR class name only has
+to be an identifier, but `Object.const_set` takes only a name with an
+upper-case first letter: Python's `class dog:` (and the Python frontend's
+invented `__param_a`) died with `wrong constant name dog (NameError)`. Every
+constant position — the `const_set` of a class, module or constant,
+`Class.new(<super>)`, `sir_new`, `define_method` / `define_singleton_method`,
+`public_send` on a class, `super`, `include`/`extend`, a `Const` reference, and
+a `rescue` clause — now goes through ONE renaming map, `ruby_const`, applied to
+each `::` segment:
+
+| SIR segment | Ruby constant | rule |
+|---|---|---|
+| `Dog`, `StandardError` | unchanged | already a constant |
+| `dog`, `__param_a` | `SirCldog`, `SirCl__param_a` | `l`: lower-case or `_` first |
+| `SirPair`, `SirCldog`, `SIR_RULE` | `SirCvSirPair`, … | `v`: a reserved name, kept verbatim after the marker |
+
+Reserved names are the runtime's own namespace: `Sir` followed by an upper-case
+letter (`SirPair`, `SirNDArray`, `SirSymTerm`, and the `SirC` marker itself)
+and `SIR_` (`SIR_DISPLAY_RUBY`, …). A user `class SirPair` would otherwise
+replace the runtime's cons-pair struct through `const_set`.
+The map is one-to-one (a name that passes through is never reserved; every
+renamed one starts with the reserved `SirC` marker, and the two renamed sets
+differ in the tag after it), and built-in classes
+pass through unchanged, so a `rescue ZeroDivisionError` still names Ruby's own
+class. A renamed class or module is followed by `sir_show_class_as(<constant>,
+"<source name>")`, which gives it — and only it, not its subclasses, which
+inherit singleton methods — its source name back for `name`, `to_s`,
+`inspect`, an instance's default `to_s`/`inspect` (a leading `#<SirCldog` only),
+an exception's default message, and Ruby's own messages that ask for the name
+(`undefined method 'x' for an instance of dog`). Ruby's report of an uncaught
+exception still reads the constant (`(SirCldog)`); it goes to stderr.
+
 The second OOP slice (0.12.0) adds instance-method **definition** and
 **dispatch**: a method-bearing class lowers to a hoisted top-level function plus
 `__def_method__("Class", "m", MakeClosure(fn))` and `__method__(recv, "m",
@@ -106,7 +138,15 @@ installed by `__def_method__` — never `instance_eval`/`send`/`eval` (the
 instance. A `__method__` to a name the module never registers is a **built-in
 method call** (the Collections batch) — rejected cleanly (the scan collects the
 module's registered method names, then validates each dispatch), never a runtime
-`NoMethodError`.
+`NoMethodError`. The one exception is **`each` with a block** (#18778):
+`__method__(recv, "each", MakeClosure)` — how the Ruby frontend lowers
+`[1].each do |x| … end` — renders as the runtime's `sir_each(recv, block,
+arity)` (`arity` is the block's parameter count, or `nil`), which runs the
+receiver's own registered `each` (`sir_um_each`) when it has one, else Ruby's
+native `Array#each` (one argument per element) or `Hash#each` (a
+one-parameter block gets the `[key, value]` pair, any other the key and value
+as two arguments), and returns the receiver. The method name is
+fixed in the runtime, never source-derived, so dispatch stays closed.
 
 The third OOP slice (0.13.0) adds instance **variables**: `@v = x` and `@v`
 (`Scope::Instance`, `Feature::InstanceVars`) render as native `@v` (the name
@@ -201,12 +241,13 @@ or temporaries:
 | `VarRef { Local\|Param\|Capture }` | `<name>` |
 | `VarRef { Global }` | `sir_global_get("<name>")` |
 | `VarRef { Builtin }` | `sir_builtin_closure("<name>")` |
-| `VarRef { Const }` | `<name>` — the bare Ruby constant (`PI` / `Foo::Bar`), validated as a constant path |
-| `ClassDef { name, superclass: None, body: [] }` | `Object.const_set(:<name>, Class.new)` — reflective (a native `class` block is illegal in the `main` method) |
+| `VarRef { Const }` | `<name>` — the bare Ruby constant (`PI` / `Foo::Bar`), validated as a constant path; every class/constant name in this table goes through `ruby_const` (`dog` → `SirCldog`, see above) |
+| `ClassDef { name, superclass: None, body: [] }` | `Object.const_set(:<name>, Class.new)` — reflective (a native `class` block is illegal in the `main` method); a renamed class is followed by `sir_show_class_as(<name>, "<source name>")` |
 | `Assign { Const }` | `Object.const_set(:<name>, <value>)` — reflective constant definition |
 | `BuiltinCall("__new__", [name, args…])` | `<name>.new(<args>)` — native construction |
 | `BuiltinCall("__def_method__", [class, m, closure])` | `<class>.define_method(:sir_um_<m>, &closure)` — reserved-prefix registration |
 | `BuiltinCall("__method__", [recv, m, args…])` | `(<recv>).public_send(:sir_um_<m>, <args>)` — closed prefixed dispatch (anti-RCE) |
+| `BuiltinCall("__method__", [recv, "each", closure])` | `sir_each(<recv>, <closure>, <arity>)` — the one built-in method (a user `each` still wins) |
 | `VarRef { Instance }` / `Assign { Instance }` | `@v` — native instance variable (name incl. `@`, verbatim, validated `@<identifier>`) |
 | `BuiltinCall("__self__", [])` | `self` — native |
 | `ClassDef { superclass: Some(S) }` | `Object.const_set(:<name>, Class.new(<S>))` — native inheritance (`S` a validated constant ref) |
@@ -337,7 +378,8 @@ growing `ACCEPTED_FEATURES`, the runtime, and the conformance corpus in lockstep
    `include`/`extend`, landed 0.17 — OOP arc complete).
 6. **Collections** — the `__method__` catalog for built-in `String`/`Array`/
    `Hash`/numeric methods (Ruby methods are largely native), the remaining large
-   batch, sharing the same `__method__` dispatch surface as OOP.
+   batch, sharing the same `__method__` dispatch surface as OOP.  `each` with a
+   block landed early (#18778), because Ruby iterates with it.
 
 ## Out of scope (v0)
 

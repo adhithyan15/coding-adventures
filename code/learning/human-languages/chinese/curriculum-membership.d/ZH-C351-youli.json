@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C351-youli",
+  "pathSegment": "ZH-PATH-351-SENSE351",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-351-SENSE351",
+      "order": 1
+    }
+  ]
+}

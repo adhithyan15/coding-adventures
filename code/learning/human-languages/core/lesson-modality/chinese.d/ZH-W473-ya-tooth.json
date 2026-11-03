@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W473-ya-tooth",
+    "language": "chinese",
+    "chapter": 473,
+    "sequence": 35785,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:15a168d6ba7b4939",
+    "detachableSegments": [
+      "Script — four strokes, each one different"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

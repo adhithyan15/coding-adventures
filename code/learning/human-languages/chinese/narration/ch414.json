@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 414,
+  "title": "In the Cabin",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:301817cec9cd073c",
+  "lessons": [
+    {
+      "id": "ZH-C414-chengwuyuan",
+      "sequence": 31620,
+      "title": "chéngwùyuán — flight attendant; cabin crew",
+      "headword": "chéngwùyuán",
+      "romanization": "chéngwùyuán",
+      "gloss": "flight attendant; cabin crew",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e368dffc5dcecd5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to come down onto the runway, then the Mandarin for as fast as flying."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chéngwùyuán",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chéngwùyuán — \"flight attendant; cabin crew\"."
+            },
+            {
+              "kind": "speech",
+              "text": "chéngwùyuán zhǎohuí le wǒ de shǒujī — The flight attendant found my phone for me."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chéngwùyuán is built from chéng 'to ride', wù 'a task' and yuán 'a member of staff', all inherited from Middle Chinese, zying, mjuH and hjwen (Guangyun, in Baxter's transcription), which glosses the second 'business, affairs'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngwùyuán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngwùyuán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngwùyuán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngwùyuán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngwùyuán zhǎohuí le wǒ de shǒujī — The flight attendant found my phone for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngwùyuán zhǎohuí le wǒ de shǒujī* — The flight attendant found my phone for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to come down onto the runway, then the Mandarin for as fast as flying, then say chéngwùyuán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to come down onto the runway, then the Mandarin for as fast as flying, then say *chéngwùyuán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chéngwùyuán mean? (\"Flight attendant; cabin crew\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C414-kaochuang",
+      "sequence": 31630,
+      "title": "kàochuāng — next to the window",
+      "headword": "kàochuāng",
+      "romanization": "kàochuāng",
+      "gloss": "next to the window",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71ee0664cfeaffff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for as fast as flying, then the Mandarin for a flight attendant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: kàochuāng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kàochuāng — \"next to the window\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ xiǎng yào yí ge kàochuāng de zuòwèi — I'd like a window seat."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kàochuāng is built from kào 'to be next to' and chuāng 'a window', both inherited from Middle Chinese, khawH and tsrhaewng (Guangyun, in Baxter's transcription), which glosses the second, after an older dictionary, as an opening through a wall."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kàochuāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kàochuāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kàochuāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kàochuāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiǎng yào yí ge kàochuāng de zuòwèi — I'd like a window seat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiǎng yào yí ge kàochuāng de zuòwèi* — I'd like a window seat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for as fast as flying, then the Mandarin for a flight attendant, then say kàochuāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for as fast as flying, then the Mandarin for a flight attendant, then say *kàochuāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kàochuāng mean? (\"Next to the window\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C414-jingjicang",
+      "sequence": 31640,
+      "title": "jīngjìcāng — economy class",
+      "headword": "jīngjìcāng",
+      "romanization": "jīngjìcāng",
+      "gloss": "economy class",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e121155c5234971",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a flight attendant, then the Mandarin for next to the window."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jīngjìcāng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīngjìcāng — \"economy class\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zuò jīngjìcāng qù Běijīng — We're flying to Beijing in economy."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīngjìcāng is built from jīngjì 'economy' and cāng 'a cabin'. The first two parts are inherited from Middle Chinese, keng and tsejH (Guangyun, in Baxter's transcription), glossed 'constant' and 'to cross a river'; no dictionary we use records an older form of the third, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīngjìcāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīngjìcāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīngjìcāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīngjìcāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zuò jīngjìcāng qù Běijīng — We're flying to Beijing in economy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zuò jīngjìcāng qù Běijīng* — We're flying to Beijing in economy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a flight attendant, then the Mandarin for next to the window, then say jīngjìcāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a flight attendant, then the Mandarin for next to the window, then say *jīngjìcāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jīngjìcāng mean? (\"Economy class\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C414-yunji",
+      "sequence": 31650,
+      "title": "yùnjī — to get airsick",
+      "headword": "yùnjī",
+      "romanization": "yùnjī",
+      "gloss": "to get airsick",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:921ef4923cf5ea51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for next to the window, then the Mandarin for economy class."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yùnjī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yùnjī — \"to get airsick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zuò fēijī de shíhou huì yùnjī — I get airsick when I fly."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yùnjī is built from yùn 'dizzy' and 机 'a plane'. The second is inherited from Middle Chinese kj+j (Guangyun, in Baxter's transcription); the dictionary glosses the first, hjunH there, as a halo round the sun or moon, so how it came to mean dizziness is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yùnjī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yùnjī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yùnjī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yùnjī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zuò fēijī de shíhou huì yùnjī — I get airsick when I fly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zuò fēijī de shíhou huì yùnjī* — I get airsick when I fly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for next to the window, then the Mandarin for economy class, then say yùnjī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for next to the window, then the Mandarin for economy class, then say *yùnjī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yùnjī mean? (\"To get airsick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C414-anquandai",
+      "sequence": 31660,
+      "title": "ānquándài — seat belt",
+      "headword": "ānquándài",
+      "romanization": "ānquándài",
+      "gloss": "seat belt",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97444b795b432c56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for economy class, then the Mandarin for to get airsick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ānquándài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ānquándài — \"seat belt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "měi ge zuòwèi dōu yǒu ānquándài — Every seat on the plane has a seat belt."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ānquándài is built from ānquán 'safe' and dài 'a belt', all inherited from Middle Chinese, 'an, dzjwen and tajH (Guangyun, in Baxter's transcription), which glosses the last as a sash worn with clothes."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānquándài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānquándài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ānquándài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ānquándài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "měi ge zuòwèi dōu yǒu ānquándài — Every seat on the plane has a seat belt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *měi ge zuòwèi dōu yǒu ānquándài* — Every seat on the plane has a seat belt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for economy class, then the Mandarin for to get airsick, then say ānquándài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for economy class, then the Mandarin for to get airsick, then say *ānquándài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ānquándài mean? (\"Seat belt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

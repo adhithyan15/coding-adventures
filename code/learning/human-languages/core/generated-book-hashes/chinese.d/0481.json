@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 481,
+  "sourceHash": "fnv1a64:443a6ef72393d715",
+  "lessonIds": [
+    "ZH-C481-yaojin",
+    "ZH-W481-jin-tight",
+    "ZH-C481-bingqing",
+    "ZH-C481-bingyin",
+    "ZH-C481-ganran",
+    "ZH-C481-bingdu"
+  ],
+  "tex": "chinese/book/chapters/ch481-is-it-serious.tex"
+}

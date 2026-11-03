@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:9f2cba229bdf543a",
+  "lessonIds": [
+    "ZH-C292-guangbo",
+    "ZH-C292-guanzhong",
+    "ZH-C292-zhibo",
+    "ZH-C292-tingzhong",
+    "ZH-C292-fabiao"
+  ],
+  "tex": "chinese/book/chapters/ch292-on-the-radio.tex"
+}

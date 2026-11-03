@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:6d182614ab0f82f0",
+  "lessonIds": [
+    "ZH-C478-tangshang",
+    "ZH-C478-shangkou",
+    "ZH-W478-shang-hurt",
+    "ZH-C478-zhongshang",
+    "ZH-C478-niushang",
+    "ZH-C478-baoza"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch478.txt",
+  "json": "chinese/narration/ch478.json",
+  "textHash": "fnv1a64:251e2a5e141feb11",
+  "jsonHash": "fnv1a64:d28121f19dbea43f",
+  "findings": []
+}

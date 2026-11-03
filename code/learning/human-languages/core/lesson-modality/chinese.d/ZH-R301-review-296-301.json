@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R301-review-296-301",
+    "language": "chinese",
+    "chapter": 301,
+    "sequence": 23610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8d3c0c27dff36c8"
+  },
+  "findings": []
+}

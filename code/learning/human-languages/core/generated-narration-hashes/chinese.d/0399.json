@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:063f959e4ba1e6d4",
+  "lessonIds": [
+    "ZH-C399-yaoqiu",
+    "ZH-C399-zhiyou",
+    "ZH-W399-zhi-only",
+    "ZH-C399-zhiyao",
+    "ZH-C399-manzu",
+    "ZH-C399-chengjia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch399.txt",
+  "json": "chinese/narration/ch399.json",
+  "textHash": "fnv1a64:eeec4dbea196ab19",
+  "jsonHash": "fnv1a64:20ead2f9b96445c9",
+  "findings": []
+}

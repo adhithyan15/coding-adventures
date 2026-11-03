@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:4697d325399c8d8d",
+  "lessonIds": [
+    "ZH-C303-qiming",
+    "ZH-C303-xiaoming",
+    "ZH-C303-youeryuan",
+    "ZH-C303-kaixue",
+    "ZH-C303-xinsheng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch303.txt",
+  "json": "chinese/narration/ch303.json",
+  "textHash": "fnv1a64:7de057fb3f8acc38",
+  "jsonHash": "fnv1a64:124f558c56a72683",
+  "findings": []
+}

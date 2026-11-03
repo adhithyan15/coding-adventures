@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C292-fabiao",
+    "language": "chinese",
+    "chapter": 292,
+    "sequence": 23140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce1e716bfeee0664"
+  },
+  "findings": []
+}

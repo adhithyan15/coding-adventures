@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-486-JOBHUNT486",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-486-JOBHUNT486"
+  ],
+  "after": []
+}

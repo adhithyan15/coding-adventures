@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 343,
+  "title": "Far from Home",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a66ed47ee1a90646",
+  "lessons": [
+    {
+      "id": "ZH-C343-yueguang",
+      "sequence": 26290,
+      "title": "yuèguāng — moonlight",
+      "headword": "yuèguāng",
+      "romanization": "yuèguāng",
+      "gloss": "moonlight",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:60b0602bb0761811",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for sweet osmanthus flowers, then the Mandarin for one's native place."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yuèguāng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yuèguāng — \"moonlight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jīntiān wǎnshang de yuèguāng hěn hǎo — The moonlight is lovely tonight."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yuèguāng is built from 月 'the moon' and guāng 'light', both inherited from Middle Chinese, ngjwot and kwang (Guangyun, in Baxter's transcription), which glosses the second 'bright'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuèguāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuèguāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuèguāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuèguāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān wǎnshang de yuèguāng hěn hǎo — The moonlight is lovely tonight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān wǎnshang de yuèguāng hěn hǎo* — The moonlight is lovely tonight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for sweet osmanthus flowers, then the Mandarin for one's native place, then say yuèguāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for sweet osmanthus flowers, then the Mandarin for one's native place, then say *yuèguāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yuèguāng mean? (\"Moonlight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C343-duonian",
+      "sequence": 26300,
+      "title": "多年 (duōnián) — for many years",
+      "headword": "多年",
+      "romanization": "duōnián",
+      "gloss": "for many years",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0376f7f1e79cea6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for one's native place, then the Mandarin for bright moonlight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 多年",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多年 — duōnián — \"for many years\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们多年没有一起过中秋了 wǒmen duōnián méiyǒu yìqǐ guò Zhōngqiū le — We haven't spent the moon festival together for years."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多年 (duōnián) is built from 多 'many' and 年 'a year', both inherited from Middle Chinese, ta and nen (Guangyun, in Baxter's transcription), which glosses the first 'many'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duōnián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duōnián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duōnián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duōnián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen duōnián méiyǒu yìqǐ guò Zhōngqiū le — We haven't spent the moon festival together for years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen duōnián méiyǒu yìqǐ guò Zhōngqiū le* — We haven't spent the moon festival together for years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for one's native place, then the Mandarin for bright moonlight, then say duōnián again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for one's native place, then the Mandarin for bright moonlight, then say *duōnián* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 多年 (duōnián) mean? (\"For many years\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C343-xinzhong",
+      "sequence": 26310,
+      "title": "心中 (xīnzhōng) — in one's heart",
+      "headword": "心中",
+      "romanization": "xīnzhōng",
+      "gloss": "in one's heart",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9995a48931ca8af9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for bright moonlight, then the Mandarin for for many years now."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 心中",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "心中 — xīnzhōng — \"in one's heart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "在我心中这是最好的中秋 zài wǒ xīnzhōng zhè shì zuì hǎo de Zhōngqiū — To my mind, this is the best moon festival ever."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "心中 (xīnzhōng) is built from 心 'the heart' and 中 'the middle', both inherited from Middle Chinese, sim and trjuwng (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnzhōng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnzhōng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnzhōng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnzhōng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zài wǒ xīnzhōng zhè shì zuì hǎo de Zhōngqiū — To my mind, this is the best moon festival ever.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zài wǒ xīnzhōng zhè shì zuì hǎo de Zhōngqiū* — To my mind, this is the best moon festival ever.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for bright moonlight, then the Mandarin for for many years now, then say xīnzhōng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for bright moonlight, then the Mandarin for for many years now, then say *xīnzhōng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 心中 (xīnzhōng) mean? (\"In one's heart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C343-zhufu",
+      "sequence": 26320,
+      "title": "zhùfú — blessing; good wishes",
+      "headword": "zhùfú",
+      "romanization": "zhùfú",
+      "gloss": "blessing; good wishes",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dba0349c05cd3837",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for for many years now, then the Mandarin for deep in one's heart."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhùfú",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhùfú — \"blessing; good wishes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Zhōngqiū nà tiān wǒ shōudào le péngyou de zhùfú — On the day of the moon festival I got good wishes from my friends."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhùfú is built from 祝 'to bless' and fú 'good fortune', both inherited from Middle Chinese, tsyuwH and pjuwk (Guangyun, in Baxter's transcription), which glosses the second 'virtue' and 'divine help'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhùfú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhùfú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhùfú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhùfú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Zhōngqiū nà tiān wǒ shōudào le péngyou de zhùfú — On the day of the moon festival I got good wishes from my friends.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Zhōngqiū nà tiān wǒ shōudào le péngyou de zhùfú* — On the day of the moon festival I got good wishes from my friends.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for for many years now, then the Mandarin for deep in one's heart, then say zhùfú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for for many years now, then the Mandarin for deep in one's heart, then say *zhùfú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhùfú mean? (\"Blessing; good wishes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C343-fenxiang",
+      "sequence": 26330,
+      "title": "fēnxiǎng — to share",
+      "headword": "fēnxiǎng",
+      "romanization": "fēnxiǎng",
+      "gloss": "to share",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fa0237f8afcf1a13",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for deep in one's heart, then the Mandarin for good wishes sent to someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fēnxiǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fēnxiǎng — \"to share\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ hé tóngshì fēnxiǎng le wǒ de yuèbǐng — I shared my mooncakes with my colleagues."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fēnxiǎng is built from fēn 'to divide' and xiǎng 'to offer', both inherited from Middle Chinese, pjun and xjangX (Guangyun, in Baxter's transcription), which glosses the first 'to hand out' and lists the second under an older spelling, 'to offer up'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēnxiǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēnxiǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēnxiǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēnxiǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ hé tóngshì fēnxiǎng le wǒ de yuèbǐng — I shared my mooncakes with my colleagues.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ hé tóngshì fēnxiǎng le wǒ de yuèbǐng* — I shared my mooncakes with my colleagues.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for deep in one's heart, then the Mandarin for good wishes sent to someone, then say fēnxiǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for deep in one's heart, then the Mandarin for good wishes sent to someone, then say *fēnxiǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fēnxiǎng mean? (\"To share\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

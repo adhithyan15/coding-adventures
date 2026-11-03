@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C335-cai",
+  "pathSegment": "ZH-PATH-335-LANTERN335",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-335-LANTERN335",
+      "order": 2
+    }
+  ]
+}

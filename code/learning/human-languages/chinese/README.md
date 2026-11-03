@@ -223,6 +223,37 @@ word that first shows it (房 米 衣 茶 事 觉 杯 候 面 常 间 冷, 钱 �
 风 云 雪 花 草 头 疼 身 体 医 西 现, 校 高 读 作 写 孩 工 热 假 笑 先 老), 211 in all. With them
 Chinese attains A2 on the level gate: 1,290 headwords and 403 verbs at or below A2.
 
+**Chapters 278-289** are the B1 core, hand-authored, and they realize all five B1 spine
+nodes. Two chapters tell events in order: 先, 然后 and 最后, 了 … 以后 for after doing,
+…的时候 with 正在 for what was going on, 突然, 第二天 and 一下子, and a thirteen-line story
+about a day on a mountain. Three give opinions, reasons and advice: 我觉得 and a whole
+sentence, 意见, 因为 … 所以 … in one sentence, 比如, 应该, 该, 最好 and *děi*. Three handle
+travel: 去 … 怎么走, *wǎng*, 再, 坐 … 去 and buying, returning and counting tickets, 在
+after a verb (你坐在这儿), 家 counting shops, …不见了 and 找不到. Two describe experience:
+我感觉 and a feeling, the length of time after the verb (我学了两年汉语), 当 for a job and
+最 for the most of all. Two express conditions: 要是 … 就 …, 的话, 看 for 'it depends on',
+如果 … 就 …, 如果 … 就会 … and 不然. Sixteen characters are written, each right after the
+word or grammar lesson that first shows it (最 然 第 突 意 如 所 该 应 怎 走 坐 感 当 就 果), 227
+in all. Three compositions climb the writing ladder: one controlled line with a reason,
+a four-line note to a hotel desk and six connected lines to a friend. The core brings
+the track to 1,329 headwords at or below B1.
+
+**Chapters 290-541** are the B1 vocabulary: 1,260 words (456 verbs), five a chapter, in
+nine reviewed tranches on the five B1 nodes:
+- narrating events: news, accidents, history, legends and festivals (290-345);
+- giving reasons: opinions, rules and advice, society and the environment (346-387);
+- expressing conditions: plans, appointments and changes (388-401);
+- handling travel: stations, flights, roads, hotels and sightseeing (402-457);
+- describing experience: feelings, the body and health, work, study, sport, the arts,
+  family, weather and the household (458-527);
+- conditions again: chance, hopes, cause and consequence (528-541).
+
+449 of the words are headed in characters; the rest are taught by ear with pinyin
+headwords until every one of their characters is written. 126 more characters are
+written, fourteen a tranche, each right after the word that first shows it, 353 in all.
+With them Chinese attains B1 on the level gate: 2,589 headwords and 866 verbs at or
+below B1. The next rung is B2, whose four spine nodes are all still unrealized.
+
 ## Read and practise
 
 - [`roadmap.md`](./roadmap.md) records the original authored-and-planned path

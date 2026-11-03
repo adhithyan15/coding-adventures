@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W411-chuan-boat",
+  "pathSegment": "ZH-PATH-411-FERRY411",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-411-FERRY411",
+      "order": 2
+    }
+  ]
+}

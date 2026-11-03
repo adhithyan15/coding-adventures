@@ -1,0 +1,20 @@
+{
+  "chapter": 388,
+  "title": "Making a Date",
+  "label": "ch:zh-making-a-date",
+  "canDo": "I can talk about finding time, a date, missing an appointment, telling people early and time zones.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C388-shiqu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 388: I can talk about finding time, a date, missing an appointment, telling people early and time zones.",
+    "assesses": [
+      "ZH-LEX-C388-DATE388-03",
+      "ZH-LEX-C388-DATE388-04",
+      "ZH-LEX-C388-DATE388-05",
+      "ZH-SCRIPT-YUE-ARRANGE-01"
+    ]
+  }
+}

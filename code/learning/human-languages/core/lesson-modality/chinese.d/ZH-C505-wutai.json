@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C505-wutai",
+    "language": "chinese",
+    "chapter": 505,
+    "sequence": 38010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c65ec8689e7324c"
+  },
+  "findings": []
+}

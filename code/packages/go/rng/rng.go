@@ -68,25 +68,10 @@ func (g *LCG) NextFloat() float64 {
 
 // NextIntInRange returns a uniform random integer in [min, max] inclusive.
 //
-// Rejection sampling eliminates modulo bias. Naïve value%range
-// over-samples low values when 2^32 is not divisible by range.
-//
-// threshold = (-range) mod 2^32 mod range
-//
-// Any draw below threshold is discarded; the expected extra draws per call
-// is less than 2 for all range sizes.
+// It panics if min > max, before drawing anything. See intInRange for the
+// rejection sampling, which is the same for all three generators.
 func (g *LCG) NextIntInRange(min, max int64) int64 {
-	if min > max {
-		panic("rng: NextIntInRange requires min <= max")
-	}
-	rangeSize := uint64(max)-uint64(min) + 1
-	threshold := (-rangeSize) % rangeSize
-	for {
-		r := uint64(g.NextU32())
-		if r >= threshold {
-			return min + int64(r%rangeSize)
-		}
-	}
+	return intInRange(g.NextU32, min, max)
 }
 
 // ── Xorshift64 ────────────────────────────────────────────────────────────────
@@ -139,17 +124,7 @@ func (g *Xorshift64) NextFloat() float64 {
 // NextIntInRange returns a uniform random integer in [min, max] inclusive
 // using rejection sampling (same algorithm as LCG).
 func (g *Xorshift64) NextIntInRange(min, max int64) int64 {
-	if min > max {
-		panic("rng: NextIntInRange requires min <= max")
-	}
-	rangeSize := uint64(max)-uint64(min) + 1
-	threshold := (-rangeSize) % rangeSize
-	for {
-		r := uint64(g.NextU32())
-		if r >= threshold {
-			return min + int64(r%rangeSize)
-		}
-	}
+	return intInRange(g.NextU32, min, max)
 }
 
 // ── PCG32 ─────────────────────────────────────────────────────────────────────
@@ -212,15 +187,64 @@ func (g *PCG32) NextFloat() float64 {
 // NextIntInRange returns a uniform random integer in [min, max] inclusive
 // using rejection sampling (same algorithm as LCG and Xorshift64).
 func (g *PCG32) NextIntInRange(min, max int64) int64 {
+	return intInRange(g.NextU32, min, max)
+}
+
+// ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ────────────────────
+
+// intInRange returns a uniform integer in [min, max], drawn from a stream of
+// 32-bit outputs, identically in every language of the repository.
+//
+// span = max − min + 1 lies between 1 and 2^64. Taking r % span of a raw draw
+// over-samples small offsets whenever the number of possible draws is not a
+// multiple of span; rejecting the threshold lowest draws removes exactly the
+// excess. Three regimes, chosen by span alone:
+//
+//	span <= 2^32    draw 32 bits,  threshold = (2^32 − span) mod span
+//	span <  2^64    draw 64 bits,  threshold = (2^64 − span) mod span
+//	span == 2^64    the whole int64 domain: every uint64 is a valid offset
+//
+// Example, span = 3: 2^32 = 3 × 1431655765 + 1, so threshold = 1. Rejecting
+// r = 0 leaves 2^32 − 1 draws, an exact multiple of 3.
+//
+// v1 of this package took the threshold modulo 2^64 while drawing 32 bits.
+// That was biased, never returned more than 2^32 − 1 above min, divided by
+// zero for the whole domain (whose span wraps to 0), and for spans such as
+// 2^63 + 1 rejected every possible draw, so it never returned at all.
+func intInRange(next32 func() uint32, min, max int64) int64 {
 	if min > max {
 		panic("rng: NextIntInRange requires min <= max")
 	}
-	rangeSize := uint64(max)-uint64(min) + 1
-	threshold := (-rangeSize) % rangeSize
-	for {
-		r := uint64(g.NextU32())
-		if r >= threshold {
-			return min + int64(r%rangeSize)
+	// max − min + 1 in uint64: exact, except that 2^64 wraps to 0.
+	span := uint64(max) - uint64(min) + 1
+	next64 := func() uint64 {
+		hi := uint64(next32())
+		return hi<<32 | uint64(next32())
+	}
+	var offset uint64
+	switch {
+	case span == 0:
+		offset = next64()
+	case span <= 1<<32:
+		threshold := ((1 << 32) - span) % span
+		for {
+			r := uint64(next32())
+			if r >= threshold {
+				offset = r % span
+				break
+			}
+		}
+	default:
+		threshold := -span % span // (2^64 − span) mod span
+		for {
+			r := next64()
+			if r >= threshold {
+				offset = r % span
+				break
+			}
 		}
 	}
+	// min + offset is within [min, max]; Go's integer arithmetic wraps, so
+	// the uint64 sum converts back exactly.
+	return int64(uint64(min) + offset)
 }

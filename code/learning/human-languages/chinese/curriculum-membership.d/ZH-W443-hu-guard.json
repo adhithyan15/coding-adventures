@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W443-hu-guard",
+  "pathSegment": "ZH-PATH-443-CLEAN443",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-443-CLEAN443",
+      "order": 2
+    }
+  ]
+}

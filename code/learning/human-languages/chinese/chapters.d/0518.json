@@ -1,0 +1,19 @@
+{
+  "chapter": 518,
+  "title": "Sunshine",
+  "label": "ch:zh-sunshine",
+  "canDo": "I can talk about clear skies, sunshine, solar power, umbrellas against the sun and fog.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C518-dawu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 518: I can talk about clear skies, sunshine, solar power, umbrellas against the sun and fog.",
+    "assesses": [
+      "ZH-LEX-C518-SUN518-03",
+      "ZH-LEX-C518-SUN518-04",
+      "ZH-LEX-C518-SUN518-05"
+    ]
+  }
+}

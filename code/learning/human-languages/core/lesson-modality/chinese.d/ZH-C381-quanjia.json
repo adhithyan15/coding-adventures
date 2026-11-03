@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C381-quanjia",
+    "language": "chinese",
+    "chapter": 381,
+    "sequence": 29370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6695dd19aca2c334"
+  },
+  "findings": []
+}

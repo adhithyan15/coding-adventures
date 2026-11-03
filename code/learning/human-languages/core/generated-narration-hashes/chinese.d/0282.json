@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:313ec1d880336752",
+  "lessonIds": [
+    "ZH-C282-gai",
+    "ZH-W282-gai",
+    "ZH-C282-yinggai",
+    "ZH-W282-ying",
+    "ZH-C282-yinggai-grammar",
+    "ZH-C282-zuihao",
+    "ZH-C282-dei",
+    "ZH-C282-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch282.txt",
+  "json": "chinese/narration/ch282.json",
+  "textHash": "fnv1a64:066f81845a92fa19",
+  "jsonHash": "fnv1a64:b13fdbd4344a8a50",
+  "findings": []
+}

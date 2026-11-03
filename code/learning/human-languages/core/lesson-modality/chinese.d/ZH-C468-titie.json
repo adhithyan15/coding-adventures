@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C468-titie",
+    "language": "chinese",
+    "chapter": 468,
+    "sequence": 35550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ee9e42ed86ccfe1"
+  },
+  "findings": []
+}

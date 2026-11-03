@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C491-zhichang",
+    "language": "chinese",
+    "chapter": 491,
+    "sequence": 37280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:63476220856eda6d"
+  },
+  "findings": []
+}

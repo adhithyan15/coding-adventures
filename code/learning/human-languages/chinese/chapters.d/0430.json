@@ -1,0 +1,19 @@
+{
+  "chapter": 430,
+  "title": "Seeing the Sights",
+  "label": "ch:zh-seeing-the-sights",
+  "canDo": "I can talk about going sightseeing, historic sites, a scenic area, a selfie and the busy season.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C430-wangji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 430: I can talk about going sightseeing, historic sites, a scenic area, a selfie and the busy season.",
+    "assesses": [
+      "ZH-LEX-C430-SIGHTS430-03",
+      "ZH-LEX-C430-SIGHTS430-04",
+      "ZH-LEX-C430-SIGHTS430-05"
+    ]
+  }
+}

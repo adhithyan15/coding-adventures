@@ -1,0 +1,841 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 441,
+  "title": "Out in the Open",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:91c3fcc21c95d0ca",
+  "lessons": [
+    {
+      "id": "ZH-C441-jiaoqu",
+      "sequence": 33560,
+      "title": "jiāoqū — suburbs; outskirts",
+      "headword": "jiāoqū",
+      "romanization": "jiāoqū",
+      "gloss": "suburbs; outskirts",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb757e67ba7d9f08",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a villager, then the Mandarin for to lodge with a local family."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiāoqū",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiāoqū — \"suburbs; outskirts\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zhù zài jiāoqū zuò dìtiě qù shìzhōngxīn — We live in the suburbs and take the underground into the centre."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiāoqū is built from jiāo 'the land beyond the walls' and 区 'an area', both inherited from Middle Chinese, kaew and khju (Guangyun, in Baxter's transcription), which glosses the first as the land outside a walled town."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiāoqū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiāoqū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiāoqū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiāoqū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zhù zài jiāoqū zuò dìtiě qù shìzhōngxīn — We live in the suburbs and take the underground into the centre.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zhù zài jiāoqū zuò dìtiě qù shìzhōngxīn* — We live in the suburbs and take the underground into the centre.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a villager, then the Mandarin for to lodge with a local family, then say jiāoqū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a villager, then the Mandarin for to lodge with a local family, then say *jiāoqū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiāoqū mean? (\"Suburbs; outskirts\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C441-yewai",
+      "sequence": 33570,
+      "title": "yěwài — the open country; the wild",
+      "headword": "yěwài",
+      "romanization": "yěwài",
+      "gloss": "the open country; the wild",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89314182f65a4070",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to lodge with a local family, then the Mandarin for the outskirts of a city."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yěwài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yěwài — \"the open country; the wild\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhōumò wǒmen zuò chē qù yěwài — At the weekend we're driving out into the open country."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yěwài is built from yě 'open fields' and 外 'outside', both inherited from Middle Chinese, yaeX and ngwajH (Guangyun, in Baxter's transcription), which glosses the first, after an older dictionary, as the land beyond the town."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yěwài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yěwài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yěwài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yěwài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhōumò wǒmen zuò chē qù yěwài — At the weekend we're driving out into the open country.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhōumò wǒmen zuò chē qù yěwài* — At the weekend we're driving out into the open country.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to lodge with a local family, then the Mandarin for the outskirts of a city, then say yěwài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to lodge with a local family, then the Mandarin for the outskirts of a city, then say *yěwài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yěwài mean? (\"The open country; the wild\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C441-zhangpeng",
+      "sequence": 33580,
+      "title": "zhàngpeng — tent",
+      "headword": "zhàngpeng",
+      "romanization": "zhàngpeng",
+      "gloss": "tent",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53e98e7a987e8aac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the outskirts of a city, then the Mandarin for out in the wild."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhàngpeng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhàngpeng — \"tent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǎnshang wǒmen zài zhàngpeng lǐ shuìjiào — At night we sleep in the tent."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhàngpeng is built from zhàng 'a curtain' and péng 'an awning', both inherited from Middle Chinese, trjangH and buwng (Guangyun, in Baxter's transcription), which glosses the second as a woven cover over a boat; in this word it is said light."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhàngpeng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhàngpeng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhàngpeng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhàngpeng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎnshang wǒmen zài zhàngpeng lǐ shuìjiào — At night we sleep in the tent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎnshang wǒmen zài zhàngpeng lǐ shuìjiào* — At night we sleep in the tent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the outskirts of a city, then the Mandarin for out in the wild, then say zhàngpeng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the outskirts of a city, then the Mandarin for out in the wild, then say *zhàngpeng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhàngpeng mean? (\"Tent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C441-shenghuo",
+      "sequence": 33590,
+      "title": "生火 (shēnghuǒ) — to light a fire",
+      "headword": "生火",
+      "romanization": "shēnghuǒ",
+      "gloss": "to light a fire",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d26948b6edbe7ad8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for out in the wild, then the Mandarin for a tent."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 生火",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "生火 — shēnghuǒ — \"to light a fire\"."
+            },
+            {
+              "kind": "speech",
+              "text": "天冷了我们在村子外边生火 tiān lěng le wǒmen zài cūnzi wàibian shēnghuǒ — It's got cold, so we're lighting a fire outside the village."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "生火 (shēnghuǒ) is built from 生 'to bring to life' and 火 'fire', both inherited from Middle Chinese, srjaeng and xwaX (Guangyun, in Baxter's transcription), which glosses the first 'to grow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēnghuǒ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēnghuǒ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēnghuǒ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēnghuǒ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiān lěng le wǒmen zài cūnzi wàibian shēnghuǒ — It's got cold, so we're lighting a fire outside the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiān lěng le wǒmen zài cūnzi wàibian shēnghuǒ* — It's got cold, so we're lighting a fire outside the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for out in the wild, then the Mandarin for a tent, then say shēnghuǒ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for out in the wild, then the Mandarin for a tent, then say *shēnghuǒ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 生火 (shēnghuǒ) mean? (\"To light a fire\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C441-tianran",
+      "sequence": 33600,
+      "title": "天然 (tiānrán) — natural; made by nature",
+      "headword": "天然",
+      "romanization": "tiānrán",
+      "gloss": "natural; made by nature",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c08632b9a478b111",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a tent, then the Mandarin for to light a fire."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 天然",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "天然 — tiānrán — \"natural; made by nature\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè shì yí ge tiānrán de hú — This is a natural lake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "天然 (tiānrán) is built from 天 'heaven' and 然 'so', both inherited from Middle Chinese, then and nyen (Guangyun, in Baxter's transcription), which glosses the second as a particle and 'thus': so by heaven, not by people. How the pair came to mean 'natural' is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiānrán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiānrán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiānrán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiānrán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè shì yí ge tiānrán de hú — This is a natural lake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè shì yí ge tiānrán de hú* — This is a natural lake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a tent, then the Mandarin for to light a fire, then say tiānrán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a tent, then the Mandarin for to light a fire, then say *tiānrán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 天然 (tiānrán) mean? (\"Natural; made by nature\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R441-review-436-441",
+      "sequence": 33610,
+      "title": "Looking back: from North and South to Out in the Open",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from North and South to Out in the Open",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97c0063c82e1718d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for the lie of the land and the south of the country."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the lie of the land, the south of the country, the north of the country, a regional dialect, a regional accent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the lie of the land, the south of the country, the north of the country, a regional dialect, a regional accent]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a mountain area, flat open land, a desert, a high plateau, to emigrate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a mountain area, flat open land, a desert, a high plateau, to emigrate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to open up land for use, the northern part, the western part, a part of a whole, all of it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to open up land for use, the northern part, the western part, a part of a whole, all of it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a rice paddy, an orchard, a farm stay, a duck, to take one's mind off things",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a rice paddy, an orchard, a farm stay, a duck, to take one's mind off things]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go to market day, a mountain village, the village head, a villager, to lodge with a local family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go to market day, a mountain village, the village head, a villager, to lodge with a local family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the outskirts of a city, out in the wild, a tent, to light a fire, made by nature",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the outskirts of a city, out in the wild, a tent, to light a fire, made by nature]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "方 部 村 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 方 部 村 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The lie of the land? (dìxíng.) The south of the country? (南方, nánfāng.) The north of the country? (北方, běifāng.) A regional dialect? (fāngyán.) A regional accent? (口音, kǒuyīn.) A mountain area? (山区, shānqū.) Flat open land? (píngyuán.) A desert? (shāmò.) A high plateau? (gāoyuán.) To emigrate? (yímín.) To open up land for use? (开发, kāifā.) The northern part? (北部, běibù.) The western part? (西部, xībù.) A part of a whole? (bùfen.) All of it? (全部, quánbù.) A rice paddy? (dàotián.) An orchard? (guǒyuán.) A farm stay? (nóngjiālè.) A duck? (yāzi.) To take one's mind off things? (sànxīn.) To go to market day? (gǎnjí.) A mountain village? (山村, shāncūn.) The village head? (村长, cūnzhǎng.) A villager? (cūnmín.) To lodge with a local family? (jièsù.) The outskirts of a city? (jiāoqū.) Out in the wild? (yěwài.) A tent? (zhàngpeng.) To light a fire? (生火, shēnghuǒ.) Made by nature? (天然, tiānrán.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

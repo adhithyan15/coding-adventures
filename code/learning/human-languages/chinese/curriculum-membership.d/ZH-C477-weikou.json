@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C477-weikou",
+  "pathSegment": "ZH-PATH-477-INSIDE477",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-477-INSIDE477",
+      "order": 4
+    }
+  ]
+}

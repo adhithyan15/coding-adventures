@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C465-leguan",
+    "language": "chinese",
+    "chapter": 465,
+    "sequence": 35380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afb0ba452f1aa394"
+  },
+  "findings": []
+}

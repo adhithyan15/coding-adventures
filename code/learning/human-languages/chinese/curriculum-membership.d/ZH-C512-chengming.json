@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C512-chengming",
+  "pathSegment": "ZH-PATH-512-DREAMS512",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-512-DREAMS512",
+      "order": 3
+    }
+  ]
+}

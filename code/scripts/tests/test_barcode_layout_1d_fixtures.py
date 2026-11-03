@@ -8,10 +8,12 @@ import math
 import os
 import runpy
 import subprocess
+import tempfile
 import unittest
+import unittest.mock
 from itertools import pairwise
 from pathlib import Path, PurePosixPath
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Self
 
 from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 
@@ -162,22 +164,21 @@ def _target_package_path(entry: dict[str, Any], field: str) -> Path:
 
 # Dependency lockfiles a package may refresh after its lane was verified.
 #
-# `package_tree` binds a lane's evidence to the exact git tree that was tested
-# at `verified_revision`, so the implementation, tests, manifests, and
-# capability files cannot drift without re-verification. A lockfile is
-# different: security tooling (Dependabot, or a repo-wide advisory sweep)
-# rewrites it across hundreds of packages at once, and the lane's own CI still
-# re-runs the conformance suite against the new lock on that same PR. Pinning
-# the lock too would make every such sweep fail this test with no way to pass
-# in one PR — the new tree only exists on main after the squash merge, and
-# evidence pinned to a PR-head commit breaks main (see lessons.d
-# "evidence-pinned-to-a-pr-s-head-commit-breaks-main-once-the").
+# `package_tree` binds a lane's evidence to the exact git tree that was tested,
+# so the implementation, tests, manifests, and capability files cannot drift
+# without re-verification. A lockfile is different: security tooling
+# (Dependabot, or a repo-wide advisory sweep) rewrites it across hundreds of
+# packages at once, and the lane's own CI still re-runs the conformance suite
+# against the new lock on that same PR. Pinning the lock too would make every
+# such sweep re-verify fifteen lanes by hand for a change nobody reviews as a
+# design change.
 #
-#   changed since verified_revision        verdict
+#   HEAD's package tree vs package_tree    verdict
 #   ------------------------------------   -----------------------------------
-#   nothing                                tree matches package_tree exactly
-#   only files named below                 accepted: dependency refresh
-#   anything else (src, tests, manifests)  rejected: re-verify, repoint the pin
+#   identical                              accepted
+#   only files named below differ          accepted: dependency refresh
+#   anything else (src, tests, manifests,  rejected: re-run the lane, then set
+#   BUILD, CHANGELOG)                      package_tree to the new tree
 #
 # The manifests that *declare* dependency ranges (package.json, Cargo.toml,
 # ...) are deliberately absent: a range change is a reviewed design change.
@@ -201,25 +202,196 @@ DEPENDENCY_LOCK_FILES = frozenset(
 )
 
 
-def _paths_changed_since(revision: str, package_root: str) -> list[str]:
-    """Paths under package_root whose content differs between revision and HEAD."""
+class LaneEvidenceError(AssertionError):
+    """A conformant lane's package-tree evidence does not hold."""
+
+
+# Why the evidence is a *tree*, not a commit
+# ------------------------------------------
+#
+# Every PR in this repository is squash-merged. A squash builds one brand-new
+# commit on main and throws the PR's own commits away, so any commit id a PR
+# writes into the registry stops existing on main the moment it merges:
+#
+#   PR branch   A --- B (lane changed, tests pass) --- C (registry pins B)
+#                                 |
+#                                 |  squash merge
+#                                 v
+#   main        M --------------- S          B and C are not reachable from S
+#
+# A tree id is different. Git names a directory by the hash of its contents,
+# so `B:<package_root>` and `S:<package_root>` are the *same object* whenever
+# the squash carried the same bytes, which it always does. Pinning the tree
+# therefore survives the merge with no follow-up repoint. The commit stays in
+# the registry as provenance and is cross-checked whenever git can still see
+# it; when the squash has discarded it, the tree alone carries the proof.
+#
+#   package_tree       verified_revision       verdict
+#   -----------------  ----------------------  -----------------------------
+#   not a tree object  (any)                   rejected
+#   tree               resolvable commit,      rejected: the pin contradicts
+#                      different package tree  the tree it claims
+#   tree               resolvable commit,      checked against HEAD below
+#                      same package tree
+#   tree               unresolvable or not a   checked against HEAD below
+#                      HEAD ancestor (squash)
+#   tree               resolves, not a commit  rejected
+
+
+# Environment variables that tell git *which repository* to use. Git itself
+# sets several of them for the commands a hook runs (GIT_DIR, GIT_INDEX_FILE,
+# ...), and they beat the working directory: with GIT_DIR set, `cwd=repo` is
+# ignored and every command acts on the repository GIT_DIR names. A gate that
+# inherits them would read, and a scratch repository would write, the wrong
+# repository. They are dropped so `repo` always means `repo`.
+#
+#   variable                          what it would redirect
+#   --------------------------------  ---------------------------------------
+#   GIT_DIR / GIT_COMMON_DIR          the whole repository
+#   GIT_WORK_TREE                     the checked-out files
+#   GIT_INDEX_FILE                    the staging area
+#   GIT_OBJECT_DIRECTORY,             where objects are read and written
+#   GIT_ALTERNATE_OBJECT_DIRECTORIES
+#   GIT_NAMESPACE                     which refs are visible
+_GIT_LOCATION_VARIABLES = frozenset(
+    {
+        "GIT_DIR",
+        "GIT_COMMON_DIR",
+        "GIT_WORK_TREE",
+        "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_NAMESPACE",
+    }
+)
+
+
+def _git_env(base: dict[str, str] | None = None) -> dict[str, str]:
+    """``base`` (default: this process's environment) without location variables."""
+
+    source = os.environ if base is None else base
+    return {
+        key: value
+        for key, value in source.items()
+        if key not in _GIT_LOCATION_VARIABLES
+    }
+
+
+def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    """Run one git command in ``repo`` without raising; callers read the status."""
 
     return subprocess.run(
-        [
-            "git",
-            "diff",
-            "--name-only",
-            "--no-renames",
-            revision,
-            "HEAD",
-            "--",
-            package_root,
-        ],
-        cwd=REPO_ROOT,
-        check=True,
+        ["git", *args],
+        cwd=repo,
+        env=_git_env(),
+        check=False,
         capture_output=True,
         text=True,
-    ).stdout.split()
+    )
+
+
+def _object_type(repo: Path, object_id: str) -> str | None:
+    """The git object type of ``object_id`` (``tree``, ``commit``...), or None."""
+
+    result = _git(repo, "cat-file", "-t", object_id)
+    return result.stdout.strip() if result.returncode == 0 else None
+
+
+def _tree_at(repo: Path, revision: str, package_root: str) -> str | None:
+    """The tree id of ``package_root`` at ``revision``, or None if it is absent."""
+
+    result = _git(
+        repo, "rev-parse", "--verify", "--quiet", f"{revision}:{package_root}"
+    )
+    if result.returncode != 0:
+        return None
+    tree = result.stdout.strip()
+    return tree if _object_type(repo, tree) == "tree" else None
+
+
+def _tree_drift(
+    repo: Path, from_tree: str, to_tree: str, package_root: str
+) -> list[str]:
+    """Repository paths under package_root whose content differs between two trees.
+
+    ``git diff-tree`` on two bare trees reports paths relative to those trees,
+    i.e. relative to the package root. They are re-anchored at package_root so
+    messages name real repository paths and `_non_lockfile_changes` sees the
+    same shape it always has.
+    """
+
+    result = _git(
+        repo, "diff-tree", "-r", "--name-only", "--no-renames", from_tree, to_tree
+    )
+    if result.returncode != 0:
+        raise LaneEvidenceError(
+            f"cannot diff package_tree {from_tree} against {to_tree}: "
+            f"{result.stderr.strip()}"
+        )
+    root = PurePosixPath(package_root)
+    return [str(root / path) for path in result.stdout.splitlines() if path]
+
+
+def _check_lane_tree_evidence(
+    repo: Path,
+    *,
+    package_root: str,
+    package_tree: str,
+    verified_revision: str,
+    head: str = "HEAD",
+) -> None:
+    """Fail closed unless ``package_tree`` is a tree ``head`` still carries.
+
+    Raises LaneEvidenceError with a message that says what to change. See the
+    table above for the rule; lockfile-only drift is admitted, everything else
+    must be re-verified and repinned in the PR that changes the lane.
+    """
+
+    if _object_type(repo, package_tree) != "tree":
+        raise LaneEvidenceError(
+            f"package_tree {package_tree} is not a git tree object in this "
+            f"repository; set it to `git rev-parse <verified commit>:{package_root}`"
+        )
+
+    revision_type = _object_type(repo, verified_revision)
+    if revision_type is not None:
+        if revision_type != "commit":
+            raise LaneEvidenceError(
+                f"verified_revision {verified_revision} is a {revision_type}, "
+                "not a commit"
+            )
+        revision_tree = _tree_at(repo, verified_revision, package_root)
+        if revision_tree != package_tree:
+            raise LaneEvidenceError(
+                f"verified_revision {verified_revision} has package tree "
+                f"{revision_tree} at {package_root}, but package_tree is "
+                f"{package_tree}; pin the commit whose tree was verified"
+            )
+    # An unresolvable or non-ancestor verified_revision is the normal state
+    # after a squash merge; the content-addressed tree carries the evidence.
+
+    head_tree = _tree_at(repo, head, package_root)
+    if head_tree is None:
+        raise LaneEvidenceError(f"{package_root} is not a directory at {head}")
+    if head_tree == package_tree:
+        return
+    drift = _tree_drift(repo, package_tree, head_tree, package_root)
+    if not drift:
+        raise LaneEvidenceError(
+            f"{package_root} tree {head_tree} differs from package_tree "
+            f"{package_tree} but git reports no changed paths"
+        )
+    unverified = _non_lockfile_changes(drift)
+    if unverified:
+        raise LaneEvidenceError(
+            f"{package_root} changed outside dependency lockfiles since its "
+            f"verified package_tree {package_tree}: {', '.join(unverified)}. "
+            "Re-run this lane's tests; once they pass, in the same PR that "
+            f"changes the lane set package_tree to {head_tree} "
+            f"(`git rev-parse HEAD:{package_root}`) and set verified_revision, "
+            "together with the owner item's implementation_revision in "
+            ".claude/package-parity-loop-state.json, to the commit you verified"
+        )
 
 
 def _non_lockfile_changes(paths: list[str]) -> list[str]:
@@ -228,6 +400,92 @@ def _non_lockfile_changes(paths: list[str]) -> list[str]:
     return [
         path for path in paths if PurePosixPath(path).name not in DEPENDENCY_LOCK_FILES
     ]
+
+
+class _ScratchRepo:
+    """A throwaway git repository that replays a squash-merged lane change.
+
+    It runs with global and system git config disabled so a developer's
+    signing, hooks, or default-branch settings cannot change the outcome, and
+    with *every* inherited ``GIT_*`` variable removed first. The location
+    variables matter most (see `_GIT_LOCATION_VARIABLES`): run from inside a
+    git hook, an inherited GIT_DIR would send this class's init, add, commit
+    and merge into the developer's real repository instead of the scratch one.
+    """
+
+    def __enter__(self) -> Self:
+        self._directory = tempfile.TemporaryDirectory()
+        try:
+            self.root = Path(self._directory.name)
+            self._env = {
+                **{
+                    key: value
+                    for key, value in os.environ.items()
+                    if not key.startswith("GIT_")
+                },
+                "GIT_CONFIG_GLOBAL": os.devnull,
+                "GIT_CONFIG_SYSTEM": os.devnull,
+                "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CEILING_DIRECTORIES": str(self.root.parent),
+                "GIT_AUTHOR_NAME": "fixture",
+                "GIT_AUTHOR_EMAIL": "fixture@example.invalid",
+                "GIT_COMMITTER_NAME": "fixture",
+                "GIT_COMMITTER_EMAIL": "fixture@example.invalid",
+            }
+            self._run("init", "-q", "-b", "main")
+            self.base = self.commit(
+                {
+                    "pkg/BUILD": "build\n",
+                    "pkg/Cargo.lock": "lock\n",
+                    "pkg/deep/go.sum": "sum\n",
+                    "outside.txt": "not in the lane\n",
+                }
+            )
+        except BaseException:
+            # __exit__ never runs when __enter__ raises, so clean up here.
+            self._directory.cleanup()
+            raise
+        return self
+
+    def __exit__(self, *_exc: object) -> None:
+        self._directory.cleanup()
+
+    def _run(self, *args: str) -> str:
+        return subprocess.run(
+            ["git", *args],
+            cwd=self.root,
+            env=self._env,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+
+    def commit(self, files: dict[str, str]) -> str:
+        for relative_path, content in files.items():
+            path = self.root / relative_path
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(content, encoding="utf-8")
+        self._run("add", "-A")
+        self._run("commit", "-q", "--no-verify", "-m", "change")
+        return self._run("rev-parse", "HEAD")
+
+    def tree(self, revision: str) -> str:
+        return self._run("rev-parse", f"{revision}:pkg")
+
+    def lane_change_then_squash(self) -> tuple[str, str]:
+        """Change the lane on a branch, then squash it onto main.
+
+        Returns the branch commit that was verified (absent from main's
+        history) and its package tree (identical on main after the squash).
+        """
+
+        self._run("checkout", "-q", "-b", "feature")
+        verified = self.commit({"pkg/BUILD": "build with a new linker flag\n"})
+        self.commit({"registry.json": "pins the commit above\n"})
+        self._run("checkout", "-q", "main")
+        self._run("merge", "-q", "--squash", "feature")
+        self._run("commit", "-q", "--no-verify", "-m", "squash")
+        return verified, self.tree(verified)
 
 
 class BarcodeLayoutFixtureTests(unittest.TestCase):
@@ -498,45 +756,18 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
             self.assertEqual(
                 entry["verified_revision"], adoption_item["implementation_revision"]
             )
-            subprocess.run(
-                ["git", "merge-base", "--is-ancestor", entry["verified_revision"], "HEAD"],
-                cwd=REPO_ROOT,
-                check=True,
-                capture_output=True,
-            )
-            verified_package_tree = subprocess.run(
-                [
-                    "git",
-                    "rev-parse",
-                    f"{entry['verified_revision']}:{entry['package_root']}",
-                ],
-                cwd=REPO_ROOT,
-                check=True,
-                capture_output=True,
-                text=True,
-            ).stdout.strip()
-            current_package_tree = subprocess.run(
-                ["git", "rev-parse", f"HEAD:{entry['package_root']}"],
-                cwd=REPO_ROOT,
-                check=True,
-                capture_output=True,
-                text=True,
-            ).stdout.strip()
-            self.assertEqual(entry["package_tree"], verified_package_tree)
-            if current_package_tree != entry["package_tree"]:
-                # Only a dependency-lockfile refresh may move the tree; see
-                # DEPENDENCY_LOCK_FILES for why and for what is excluded.
-                drift = _paths_changed_since(
-                    entry["verified_revision"], entry["package_root"]
+            # Content-addressed evidence: see _check_lane_tree_evidence. No
+            # ancestry requirement, because a squash merge discards every
+            # commit the lane-changing PR could have pinned.
+            try:
+                _check_lane_tree_evidence(
+                    REPO_ROOT,
+                    package_root=entry["package_root"],
+                    package_tree=entry["package_tree"],
+                    verified_revision=entry["verified_revision"],
                 )
-                self.assertTrue(drift, entry["language"])
-                self.assertEqual(
-                    _non_lockfile_changes(drift),
-                    [],
-                    f"{entry['language']} lane changed after verified_revision "
-                    "outside dependency lockfiles; re-verify the lane and repoint "
-                    "verified_revision/package_tree at the durable merge commit",
-                )
+            except LaneEvidenceError as error:
+                self.fail(f"{entry['language']} lane: {error}")
             for relative_path in (
                 entry["conformance_test_path"],
                 entry["capability_manifest"],
@@ -649,6 +880,149 @@ class BarcodeLayoutFixtureTests(unittest.TestCase):
                     _non_lockfile_changes([f"{root}/package-lock.json", path]),
                     [path],
                 )
+
+    def test_tree_evidence_survives_a_squash_merge(self) -> None:
+        with _ScratchRepo() as repo:
+            verified, tree = repo.lane_change_then_squash()
+            # The scenario is real: the verified commit is not on main.
+            self.assertNotEqual(
+                _git(
+                    repo.root, "merge-base", "--is-ancestor", verified, "HEAD"
+                ).returncode,
+                0,
+            )
+            self.assertEqual(repo.tree("HEAD"), tree)
+            # Discarded by the squash but still in the object store.
+            _check_lane_tree_evidence(
+                repo.root,
+                package_root="pkg",
+                package_tree=tree,
+                verified_revision=verified,
+            )
+            # Absent entirely, as in a fresh clone of main.
+            _check_lane_tree_evidence(
+                repo.root,
+                package_root="pkg",
+                package_tree=tree,
+                verified_revision="1" * 40,
+            )
+
+    def test_tree_evidence_rejects_drift_outside_lockfiles(self) -> None:
+        with _ScratchRepo() as repo:
+            verified, tree = repo.lane_change_then_squash()
+            repo.commit({"pkg/BUILD": "changed again\n"})
+            head_tree = repo.tree("HEAD")
+            with self.assertRaisesRegex(
+                LaneEvidenceError,
+                "changed outside dependency lockfiles.*pkg/BUILD.*"
+                "Re-run this lane's tests.*in the same PR that changes the lane "
+                f"set package_tree to {head_tree}",
+            ):
+                _check_lane_tree_evidence(
+                    repo.root,
+                    package_root="pkg",
+                    package_tree=tree,
+                    verified_revision=verified,
+                )
+            # A lockfile change alongside does not dilute the verdict.
+            repo.commit({"pkg/Cargo.lock": "bumped\n"})
+            with self.assertRaisesRegex(LaneEvidenceError, "pkg/BUILD"):
+                _check_lane_tree_evidence(
+                    repo.root,
+                    package_root="pkg",
+                    package_tree=tree,
+                    verified_revision="1" * 40,
+                )
+
+    def test_tree_evidence_admits_lockfile_only_drift(self) -> None:
+        with _ScratchRepo() as repo:
+            verified, tree = repo.lane_change_then_squash()
+            repo.commit({"pkg/Cargo.lock": "bumped\n", "pkg/deep/go.sum": "x\n"})
+            self.assertEqual(
+                _tree_drift(repo.root, tree, repo.tree("HEAD"), "pkg"),
+                ["pkg/Cargo.lock", "pkg/deep/go.sum"],
+            )
+            _check_lane_tree_evidence(
+                repo.root,
+                package_root="pkg",
+                package_tree=tree,
+                verified_revision=verified,
+            )
+
+    def test_tree_evidence_requires_a_tree_object(self) -> None:
+        with _ScratchRepo() as repo:
+            verified, _tree = repo.lane_change_then_squash()
+            blob = _git(repo.root, "rev-parse", "HEAD:pkg/BUILD").stdout.strip()
+            for not_a_tree in (verified, blob, "2" * 40):
+                with (
+                    self.subTest(package_tree=not_a_tree),
+                    self.assertRaisesRegex(
+                        LaneEvidenceError, "is not a git tree object"
+                    ),
+                ):
+                    _check_lane_tree_evidence(
+                        repo.root,
+                        package_root="pkg",
+                        package_tree=not_a_tree,
+                        verified_revision="1" * 40,
+                    )
+
+    def test_resolvable_verified_revision_must_match_package_tree(self) -> None:
+        with _ScratchRepo() as repo:
+            _verified, tree = repo.lane_change_then_squash()
+            with self.assertRaisesRegex(
+                LaneEvidenceError, "pin the commit whose tree was verified"
+            ):
+                _check_lane_tree_evidence(
+                    repo.root,
+                    package_root="pkg",
+                    package_tree=tree,
+                    verified_revision=repo.base,
+                )
+            with self.assertRaisesRegex(LaneEvidenceError, "is a tree, not a commit"):
+                _check_lane_tree_evidence(
+                    repo.root,
+                    package_root="pkg",
+                    package_tree=tree,
+                    verified_revision=tree,
+                )
+
+    def test_git_location_variables_cannot_redirect_the_scratch_repo(self) -> None:
+        # Git exports GIT_DIR / GIT_INDEX_FILE to the commands a hook runs. If
+        # they leaked into the scratch repository, its commits would land in
+        # whatever repository they name. Point them at a decoy and check the
+        # decoy is untouched and the evidence check still reads the scratch.
+        with tempfile.TemporaryDirectory() as decoy_root:
+            decoy = Path(decoy_root)
+            subprocess.run(
+                ["git", "init", "-q", str(decoy)],
+                env={
+                    **_git_env(),
+                    "GIT_CONFIG_GLOBAL": os.devnull,
+                    "GIT_CONFIG_SYSTEM": os.devnull,
+                },
+                check=True,
+                capture_output=True,
+            )
+            before = sorted(str(path.relative_to(decoy)) for path in decoy.rglob("*"))
+            redirect = {
+                "GIT_DIR": str(decoy / ".git"),
+                "GIT_WORK_TREE": str(decoy),
+                "GIT_INDEX_FILE": str(decoy / ".git" / "index"),
+            }
+            with (
+                unittest.mock.patch.dict(os.environ, redirect),
+                _ScratchRepo() as repo,
+            ):
+                verified, tree = repo.lane_change_then_squash()
+                _check_lane_tree_evidence(
+                    repo.root,
+                    package_root="pkg",
+                    package_tree=tree,
+                    verified_revision=verified,
+                )
+            after = sorted(str(path.relative_to(decoy)) for path in decoy.rglob("*"))
+            self.assertEqual(after, before)
 
     def test_generator_is_byte_for_byte_clean(self) -> None:
         namespace = runpy.run_path(str(FIXTURE_ROOT / "generate_cases.py"))

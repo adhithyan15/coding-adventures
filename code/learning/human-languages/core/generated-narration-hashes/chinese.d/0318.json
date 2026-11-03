@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:8357d16f505b1667",
+  "lessonIds": [
+    "ZH-C318-biyou",
+    "ZH-C318-xinfeng",
+    "ZH-C318-mingxinpian",
+    "ZH-C318-huiyin",
+    "ZH-C318-zhuangao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch318.txt",
+  "json": "chinese/narration/ch318.json",
+  "textHash": "fnv1a64:82f6b449713afe82",
+  "jsonHash": "fnv1a64:c2f3f2ef5839f1ea",
+  "findings": []
+}

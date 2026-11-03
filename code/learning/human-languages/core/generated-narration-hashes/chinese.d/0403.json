@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:bd089a375493716b",
+  "lessonIds": [
+    "ZH-C403-houcheshi",
+    "ZH-C403-luke",
+    "ZH-W403-lu-travel",
+    "ZH-C403-zhengdian",
+    "ZH-C403-liecheyuan",
+    "ZH-C403-zhanzhang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch403.txt",
+  "json": "chinese/narration/ch403.json",
+  "textHash": "fnv1a64:48e2c31750ef673a",
+  "jsonHash": "fnv1a64:eaf69f4dd50fd1c0",
+  "findings": []
+}

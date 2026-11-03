@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-326-WORLD326",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-326-WORLD326"
+  ],
+  "after": []
+}

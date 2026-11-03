@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C453-sai",
+    "language": "chinese",
+    "chapter": 453,
+    "sequence": 34210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bc45b6713fd7719c"
+  },
+  "findings": []
+}

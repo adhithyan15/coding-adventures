@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "What You Have to Do",
+  "label": "ch:zh-what-you-have-to-do",
+  "canDo": "I can say what you have to do, ask someone not to be loud, and say what is fair.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C362-yiwu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say what you have to do, ask someone not to be loud, and say what is fair.",
+    "assesses": [
+      "ZH-LEX-C362-MUST362-03",
+      "ZH-LEX-C362-MUST362-04",
+      "ZH-LEX-C362-MUST362-05"
+    ]
+  }
+}

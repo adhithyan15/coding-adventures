@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C470-guzhi",
+    "language": "chinese",
+    "chapter": 470,
+    "sequence": 35630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7be3339eb6beec89"
+  },
+  "findings": []
+}

@@ -526,6 +526,8 @@ fn end_to_end_gc_manages_runtime_strings() {
             IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
             IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
             // A fresh runtime string → __twig_str_concat → __twig_alloc_bytes → __gc_alloc_kind.
+            // (The string lowering appends the module's ceiling, the helper's
+            // third argument since LANG83 PR5a.)
             IIRInstr::new(
                 "call_builtin",
                 Some("c".into()),

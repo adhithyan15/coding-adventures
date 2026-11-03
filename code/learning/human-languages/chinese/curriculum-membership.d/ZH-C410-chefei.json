@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C410-chefei",
+  "pathSegment": "ZH-PATH-410-COACH410",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-410-COACH410",
+      "order": 1
+    }
+  ]
+}

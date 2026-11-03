@@ -30,6 +30,22 @@ arithmetic/comparison/bitwise operator set that maps cleanly to WASM's typed
 numeric opcodes.  This crate exploits that richness without retrofitting it
 through a deprecated intermediate.
 
+
+## LANG83 PR5a — strings fail closed
+
+Every string failure is a registered LANG83 trap, raised through the
+`env.__trap` import before the module's `unreachable`:
+
+| failure | sequence |
+|---------|----------|
+| `str_index` / `str_slice` out of range (literal or runtime path) | `i32.const 1; call $env.__trap; unreachable` (`Trap.Bounds`) |
+| `str_concat` whose result would exceed the module's string ceiling (`IIRModule::str_ceiling`) | `i32.const 5; call $env.__trap; unreachable` (`Trap.Overflow`), checked as `u64(len a) + u64(len b) >u ceiling` before anything is allocated; a literal fold past the ceiling compiles to the same trap |
+
+So a module that uses any of the three ops imports `env.__trap`, and every
+host that runs one must provide it (this crate's string tests share one in
+`tests/common/mod.rs`). `tests/lang83_pr5a.rs` covers every edge, including
+`2³²` and `2³² + 1`, in a literal and an opaque form.
+
 ## Features
 
 - **Full numeric type support**: `u4/i8/i16/i32/u8/u16/u32/bool → i32`,
@@ -112,10 +128,11 @@ through a deprecated intermediate.
   `left.bytes.cmp(&right.bytes)` path — sign-extended to `i64` when the result slot
   is 64-bit; and **`str_slice` (v0.40.0)** bump-allocates a fresh `[i32 len]
   [bytes]` block and `memory.copy`s the source's `[start, end)` run into it (the
-  same shape as runtime `str_concat`), with a bounds trap (`unreachable` unless
-  `0 ≤ start ≤ end ≤ len`, via unsigned compares) and `i32.wrap`ped index slots.
-  and **`str_index` (v0.41.0)** reads the source's header length for the bounds
-  trap (`idx >=u len` → `unreachable`) and loads the byte with `i32.load8_u(handle
+  same shape as runtime `str_concat`), with a bounds trap unless
+  `0 ≤ start ≤ end ≤ len` (unsigned compares; each `i64` offset is checked
+  against the length *before* it is `i32.wrap`ped), and
+  **`str_index` (v0.41.0)** reads the source's header length for the bounds
+  trap (`idx >=u len`) and loads the byte with `i32.load8_u(handle
   + 4 + idx)` (skipping the header; the literal path loads `offset + idx` with no
   header) — read-only, so no bump-alloc. This **closes the E4d-3b runtime string
   surface**: every `str_*` op now has a runtime path over promoted operands.

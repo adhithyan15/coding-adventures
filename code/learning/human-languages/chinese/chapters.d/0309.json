@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "A Thief",
+  "label": "ch:zh-a-thief",
+  "canDo": "I can talk about a robbery, a thief, a con man and something done on purpose.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C309-guyi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can talk about a robbery, a thief, a con man and something done on purpose.",
+    "assesses": [
+      "ZH-LEX-C309-THIEF309-03",
+      "ZH-LEX-C309-THIEF309-04",
+      "ZH-LEX-C309-THIEF309-05"
+    ]
+  }
+}

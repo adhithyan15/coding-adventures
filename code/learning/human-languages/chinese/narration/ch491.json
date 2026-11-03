@@ -1,0 +1,992 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 491,
+  "title": "The Boss",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:39794dddb1b5067d",
+  "lessons": [
+    {
+      "id": "ZH-C491-jiaxin",
+      "sequence": 37250,
+      "title": "jiāxīn — to get a pay rise; to raise someone's pay",
+      "headword": "jiāxīn",
+      "romanization": "jiāxīn",
+      "gloss": "to get a pay rise; to raise someone's pay",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14ce6b8a54cf6377",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for exhausting (of work), then the Mandarin for to fire (from a job)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiāxīn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiāxīn — \"to get a pay rise; to raise someone's pay\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ gōngzuò le liǎng nián hái méiyǒu jiāxīn — I've worked for two years and still haven't had a pay rise."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiāxīn is built from jiā 'to add' and xīn 'firewood', both inherited from Middle Chinese, kae and sin (Guangyun, in Baxter's transcription), which glosses the first 'to increase' and the second 'firewood'. Firewood standing for pay is the usual explanation, but the dictionary does not give that sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiāxīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiāxīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiāxīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiāxīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ gōngzuò le liǎng nián hái méiyǒu jiāxīn — I've worked for two years and still haven't had a pay rise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ gōngzuò le liǎng nián hái méiyǒu jiāxīn* — I've worked for two years and still haven't had a pay rise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for exhausting (of work), then the Mandarin for to fire (from a job), then say jiāxīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for exhausting (of work), then the Mandarin for to fire (from a job), then say *jiāxīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiāxīn mean? (\"To get a pay rise; to raise someone's pay\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C491-shangsi",
+      "sequence": 37260,
+      "title": "上司 (shàngsi) — one's superior at work",
+      "headword": "上司",
+      "romanization": "shàngsi",
+      "gloss": "one's superior at work",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3485bb82693f195f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to fire (from a job), then the Mandarin for to get a pay rise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 上司",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "上司 — shàngsi — \"one's superior at work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我的新上司比以前的好 wǒ de xīn shàngsi bǐ yǐqián de hǎo — My new boss is better than the last one."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 司 (sī) — five strokes: one long stroke for the frame, a bar along the top that turns down the right side and hooks; a short bar under it; then 口 kǒu inside. The next lesson puts it in your hand."
+            },
+            {
+              "kind": "speech",
+              "text": "The second syllable is light: shàngsi, with no tone of its own."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "上司 (shàngsi) is built from 上 'above' and 司 (sī) 'to be in charge', both inherited from Middle Chinese, dzyangH and si (Guangyun, in Baxter's transcription), which glosses the first 'a ruler' and the second 'to be in charge'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shàngsi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shàngsi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shàngsi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shàngsi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de xīn shàngsi bǐ yǐqián de hǎo — My new boss is better than the last one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de xīn shàngsi bǐ yǐqián de hǎo* — My new boss is better than the last one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to fire (from a job), then the Mandarin for to get a pay rise, then say shàngsi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to fire (from a job), then the Mandarin for to get a pay rise, then say *shàngsi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 上司 (shàngsi) mean? (\"One's superior at work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W491-si-charge",
+      "sequence": 37265,
+      "title": "司 (sī) — a hooked frame, a short bar, then kǒu",
+      "headword": "司",
+      "romanization": "sī",
+      "gloss": "司 — a hooked frame, a short bar, then 口",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f01efcf344de3d7c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a hooked frame, a short bar, then kǒu",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a hooked frame, a short bar, then kǒu and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shàngsi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shàngsi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "口 公."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — kǒu, gōng",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *kǒu*, *gōng*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a hooked frame, a short bar, then kǒu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "司 (sī)."
+            },
+            {
+              "kind": "speech",
+              "text": "The frame, one stroke. A bar along the top that turns down the right side and hooks to the left at the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "A short bar inside, under the top."
+            },
+            {
+              "kind": "speech",
+              "text": "Then 口 kǒu, three strokes, under the short bar: the left side, the top that turns down, and the bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "1 + 1 + 3 = five."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "司 (sī), all five, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 司, all five, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes does 司 (sī) have? (Five.) Which stroke comes first? (The frame: a top bar that turns down and hooks.) What sits inside? (A short bar and 口.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 司 (sī), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C491-mishu",
+      "sequence": 37270,
+      "title": "mìshū — secretary",
+      "headword": "mìshū",
+      "romanization": "mìshū",
+      "gloss": "secretary",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2cca507c998fa351",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to get a pay rise, then the Mandarin for one's superior at work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mìshū",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mìshū — \"secretary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zài gōngsī dāng le sān nián mìshū — I was a secretary at a company for three years."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mìshū is built from mì 'secret' and 书 'writing', both inherited from Middle Chinese, pijH and syo (Guangyun, in Baxter's transcription), which lists the first in an older form, glossed 'close' and 'secret'. The modern mì is irregular: pijH would regularly give bì."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mìshū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mìshū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mìshū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mìshū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zài gōngsī dāng le sān nián mìshū — I was a secretary at a company for three years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zài gōngsī dāng le sān nián mìshū* — I was a secretary at a company for three years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to get a pay rise, then the Mandarin for one's superior at work, then say mìshū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to get a pay rise, then the Mandarin for one's superior at work, then say *mìshū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mìshū mean? (\"Secretary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C491-zhichang",
+      "sequence": 37280,
+      "title": "职场 (zhíchǎng) — the workplace; the world of work",
+      "headword": "职场",
+      "romanization": "zhíchǎng",
+      "gloss": "the workplace; the world of work",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:63476220856eda6d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for one's superior at work, then the Mandarin for a secretary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 职场",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "职场 — zhíchǎng — \"the workplace; the world of work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ juéde zhíchǎng bǐ xuéxiào lèi — I find working life more tiring than school."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "职场 (zhíchǎng) is built from 职 'a post' and 场 'a ground', both inherited from Middle Chinese, tsyik and drjang (Guangyun, in Baxter's transcription), which glosses the second 'a threshing floor'; the modern third tone of chǎng is irregular for drjang."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhíchǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhíchǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhíchǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhíchǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ juéde zhíchǎng bǐ xuéxiào lèi — I find working life more tiring than school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ juéde zhíchǎng bǐ xuéxiào lèi* — I find working life more tiring than school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for one's superior at work, then the Mandarin for a secretary, then say zhíchǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for one's superior at work, then the Mandarin for a secretary, then say *zhíchǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 职场 (zhíchǎng) mean? (\"The workplace; the world of work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C491-xiashu",
+      "sequence": 37290,
+      "title": "xiàshǔ — subordinate; someone under one at work",
+      "headword": "xiàshǔ",
+      "romanization": "xiàshǔ",
+      "gloss": "subordinate; someone under one at work",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:17a3197246762c48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a secretary, then the Mandarin for the world of work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xiàshǔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiàshǔ — \"subordinate; someone under one at work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā de xiàshǔ dōu hěn yǒu jīngshen — The people under him are all full of energy."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiàshǔ is built from 下 'below' and shǔ 'to belong to', both inherited from Middle Chinese, haeX and dzyowk (Guangyun, in Baxter's transcription), which glosses the first 'low' and the second 'attached to' and 'a kind'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàshǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàshǔ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàshǔ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàshǔ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā de xiàshǔ dōu hěn yǒu jīngshen — The people under him are all full of energy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā de xiàshǔ dōu hěn yǒu jīngshen* — The people under him are all full of energy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a secretary, then the Mandarin for the world of work, then say xiàshǔ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a secretary, then the Mandarin for the world of work, then say *xiàshǔ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xiàshǔ mean? (\"Subordinate; someone under one at work\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R491-review-486-491",
+      "sequence": 37300,
+      "title": "Looking back: from Looking for Work to The Boss",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Looking for Work to The Boss",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1a08e1bb1939eac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to recruit staff and a CV."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to recruit staff, a CV, to apply for a job, to do an internship, pay and conditions",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to recruit staff, a CV, to apply for a job, to do an internship, pay and conditions]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a line of business, one's life's work, to find employment, to be out of work, a factory",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a line of business, one's life's work, to find employment, to be out of work, a factory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an engineer, a chef, a scientist, to translate, to earn money",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an engineer, a chef, a scientist, to translate, to earn money]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to move to another employer, a member of staff, full-time (of a job), a position in a firm, to get promoted",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to move to another employer, a member of staff, full-time (of a job), a position in a firm, to get promoted]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to manage, to work together, the night shift, exhausting (of work), to fire (from a job)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to manage, to work together, the night shift, exhausting (of work), to fire (from a job)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get a pay rise, one's superior at work, a secretary, the world of work, someone under one at work",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get a pay rise, one's superior at work, a secretary, the world of work, someone under one at work]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "业 职 司 (sī) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 业 职 司 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To recruit staff? (zhāopìn.) A CV? (jiǎnlì.) To apply for a job? (yìngpìn.) To do an internship? (shíxí.) Pay and conditions? (dàiyù.) A line of business? (hángyè.) One's life's work? (事业, shìyè.) To find employment? (就业, jiùyè.) To be out of work? (shīyè.) A factory? (gōngchǎng.) An engineer? (gōngchéngshī.) A chef? (chúshī.) A scientist? (kēxuéjiā.) To translate? (fānyì.) To earn money? (zhuàn.) To move to another employer? (tiàocáo.) A member of staff? (职工, zhígōng.) Full-time (of a job)? (全职, quánzhí.) A position in a firm? (zhíwèi.) To get promoted? (shēngzhí.) To manage? (guǎnlǐ.) To work together? (hézuò.) The night shift? (yèbān.) Exhausting (of work)? (xīnkǔ.) To fire (from a job)? (kāichú.) To get a pay rise? (jiāxīn.) One's superior at work? (上司, shàngsi.) A secretary? (mìshū.) The world of work? (职场, zhíchǎng.) Someone under one at work? (xiàshǔ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

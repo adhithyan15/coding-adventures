@@ -271,3 +271,85 @@ drops go with the rows. The body's `min-height` drops move from
 gate already pins. `Notes`' list/editor flex split (`flex-grow` on
 `notes-editor` and `notes-empty`, `flex-shrink` on `notes-list`) is
 untouched; PR-6 (`HostNavigationSplit`) removes it.
+
+## Addendum (v1.4): one rule for matching a typed task name
+
+Mosaic backlog item 6e2. v1.1 said the *Attach to task* field resolves by
+"case-insensitive exact match", and each host read that its own way. The
+native adapter (`task-mosaic-app`) compared with Rust's
+`eq_ignore_ascii_case`, which folds only `A`–`Z`; the web host lowercased
+with JavaScript's `toLowerCase()`, which folds every cased letter. So
+"écrire" attached a note to the task "Écrire" on the web and was refused
+natively. They also disagreed on trimming and on duplicate names, below.
+Same input, same outcome, on every host, is the contract; this addendum
+states it.
+
+**The rule.** Given the active project's tasks and the typed text:
+
+1. **Trim the typed text** of Unicode `White_Space` at both ends. That is
+   Rust's `str::trim`. JavaScript's `String.prototype.trim` is a different
+   set: it also trims U+FEFF (ZERO WIDTH NO-BREAK SPACE) and does not trim
+   U+0085 (NEXT LINE), so the web host trims with
+   `/^\p{White_Space}+|\p{White_Space}+$/gu` instead. The stored task name
+   is not trimmed; Add Task already trimmed it.
+2. **A blank result means no attachment** (v1.1, unchanged).
+3. **Lowercase both names with Unicode default full lowercasing** — Rust's
+   `str::to_lowercase`, JavaScript's `String.prototype.toLowerCase`. Both
+   are locale-independent and both apply the one context-sensitive rule in
+   Unicode's default mapping, Greek final sigma. Never the locale-aware
+   `toLocaleLowerCase`: a Turkish locale would make the same name match on
+   one person's machine and not another's.
+4. **A task matches when the two lowercased strings are equal**, code
+   point for code point. Nothing else is folded or ignored.
+5. **If several tasks match, the first in ascending task-id order wins** —
+   the engine's own order (`BTreeMap<TaskId, _>`; the workspace JSON keeps
+   it). Task names are not unique, so ties happen. The native adapter
+   already took the first; the web host's name map let the last one win.
+6. **No task matches**: the Save is refused as v1.2 says.
+
+**Lowercasing, not case folding.** The rule lowercases; it does not apply
+Unicode case folding (`CaseFolding.txt`). The difference is visible, and
+pinned by the shared vectors, so that nobody "fixes" one host alone:
+
+| Task | Typed | Result | Why |
+| --- | --- | --- | --- |
+| `Écrire` | `écrire` | attaches | `É` lowercases to `é` (the 6e2 bug) |
+| `Écrire` | `ecrire` | refused | accents are not stripped |
+| `ΣΑΣ` | `σας` | attaches | the last `Σ` lowercases to final `ς` |
+| `ΣΑΣ` | `σασ` | refused | a final `σ` is not `ς`; folding would map both to `σ` |
+| `Straße` | `STRASSE` | refused | `ß` lowercases to itself; folding would give `ss` |
+| `STRAẞE` | `straße` | attaches | capital `ẞ` lowercases to `ß` |
+| `İstanbul` | `istanbul` | refused | `İ` (U+0130) lowercases to `i` + U+0307, not `i` |
+| `ISTANBUL` | `ıstanbul` | refused | no Turkish locale: `I` is `i`, never dotless `ı` |
+| `ǅemal` | `ǆemal` | attaches | title-case `ǅ` lowercases to `ǆ` |
+
+Case folding would be the more forgiving comparison, but neither standard
+library has it — Rust's `std` has no `to_casefold`, and neither does
+JavaScript — so it would mean a new dependency on the Rust side and a
+hand-written table on the web. Lowercasing is what both platforms already
+ship, identically.
+
+**Not normalized.** Names are compared as typed, with no Unicode
+normalization. `É` as one code point (U+00C9, NFC) and as `E` + U+0301
+(NFD) are different names, and a note typed with one does not attach to a
+task named with the other. JavaScript has `String.prototype.normalize`,
+but Rust's `std` does not, and `task-mosaic-app` has no normalization
+dependency; normalizing on one host only would break the contract this
+addendum exists for. Normalizing both sides is a follow-up.
+
+**Where the two platforms could still differ.** Each lowercases with the
+Unicode tables it was built with: Rust's `std`, and the ICU in the
+JavaScript engine. A letter assigned in a Unicode version one of them
+predates lowercases to itself there. Every case in the shared vectors is
+old enough that both agree.
+
+**Shared vectors.** The cases live once, in
+`code/programs/mosaic/task-app/fixtures/task-name-matching-v1.json`. The
+native test and the web test both create the listed tasks, type the name,
+press Save and check which task the note attached to, or that the Save was
+refused. A case that passes on one host and fails on the other fails CI.
+
+**Scope.** Only the note's task-name field. The Sheet's Labels column
+already lowercases both sides with these same two functions and trims each
+comma-separated part; its trim differs in the same way as step 1 and is
+not changed here.

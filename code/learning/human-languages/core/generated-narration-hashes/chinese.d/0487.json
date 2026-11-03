@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:0fcdc6e81337a493",
+  "lessonIds": [
+    "ZH-C487-hangye",
+    "ZH-C487-shiye",
+    "ZH-W487-ye-career",
+    "ZH-C487-jiuye",
+    "ZH-C487-shiye-jobless",
+    "ZH-C487-gongchang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch487.txt",
+  "json": "chinese/narration/ch487.json",
+  "textHash": "fnv1a64:25560d9e8e7c5f9e",
+  "jsonHash": "fnv1a64:0f8ae159106c1644",
+  "findings": []
+}

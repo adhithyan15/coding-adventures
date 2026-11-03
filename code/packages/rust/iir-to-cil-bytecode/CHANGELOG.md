@@ -1,5 +1,11 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — LANG83 PR5a — strings fail closed, checked before narrowing
+
+- `str_index` compares the `int64` index with `get_Length` widened to `int64` (`blt.un`, one unsigned compare for both ends) **before** the `conv.i4` that `get_Chars` takes; `str_slice` checks `end >u len` and then `start >u end` before narrowing either offset for `Substring`. A failing check runs the LANG83 trap sequence with `Trap.Bounds` (flush `Console.Out`, throw `System.Exception("Trap.Bounds")`). Before, the index was narrowed first (a silent wrong read at `2^32 + 1`), and a failure was an `IndexOutOfRangeException` / `ArgumentOutOfRangeException` with no kind.
+- `str_concat` compares the sum of the two lengths (as `int64`) with the module's string ceiling and raises `Trap.Overflow` past it (`ble.un` over the trap).
+- New `tests/lang83_pr5a.rs` checks the IL shape and runs a stack-depth model over every path of the entry method (labels reached with an empty stack, `throw` ending its path), because CoreCLR rejects IL that `ilasm` accepts. CI executes the cases on CoreCLR.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: the CLR holds dynamic values as objects (through `lang-aot`'s structural lowering) and links no tagged-word runtime. A test comment names `dyn_pair_new` (was `dyn_cons`).

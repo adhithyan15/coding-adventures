@@ -1,0 +1,910 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 317,
+  "title": "Looking Back",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:260e633fe5617dca",
+  "lessons": [
+    {
+      "id": "ZH-C317-qingnian",
+      "sequence": 24390,
+      "title": "qīngnián — young people; youth",
+      "headword": "qīngnián",
+      "romanization": "qīngnián",
+      "gloss": "young people; youth",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b71d511aeb0290f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for life from birth to death, then the Mandarin for as you would naturally expect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: qīngnián",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qīngnián — \"young people; youth\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā shì yí ge hěn yǒu nénglì de qīngnián — He's a very capable young man."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qīngnián is built from qīng 'green' and 年 'years', both inherited from Middle Chinese, tsheng and nen (Guangyun, in Baxter's transcription), which glosses the first as the colour of the east: green years."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīngnián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīngnián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīngnián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīngnián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shì yí ge hěn yǒu nénglì de qīngnián — He's a very capable young man.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shì yí ge hěn yǒu nénglì de qīngnián* — He's a very capable young man.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for life from birth to death, then the Mandarin for as you would naturally expect, then say qīngnián again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for life from birth to death, then the Mandarin for as you would naturally expect, then say *qīngnián* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does qīngnián mean? (\"Young people; youth\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C317-chengnian",
+      "sequence": 24400,
+      "title": "chéngnián — to come of age; fully grown",
+      "headword": "chéngnián",
+      "romanization": "chéngnián",
+      "gloss": "to come of age; fully grown",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ead49fb77443839",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for as you would naturally expect, then the Mandarin for young people."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chéngnián",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chéngnián — \"to come of age; fully grown\"."
+            },
+            {
+              "kind": "speech",
+              "text": "háizi chéngnián yǐhòu, jiù líkāi le jiā — Once the children were grown, they left home."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chéngnián is built from chéng 'to complete' and 年 'years', both inherited from Middle Chinese, dzyeng and nen (Guangyun, in Baxter's transcription), which glosses the first 'to finish' and 'to make'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngnián",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngnián*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngnián, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngnián*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "háizi chéngnián yǐhòu, jiù líkāi le jiā — Once the children were grown, they left home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *háizi chéngnián yǐhòu, jiù líkāi le jiā* — Once the children were grown, they left home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for as you would naturally expect, then the Mandarin for young people, then say chéngnián again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for as you would naturally expect, then the Mandarin for young people, then say *chéngnián* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chéngnián mean? (\"To come of age; fully grown\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C317-hunyin",
+      "sequence": 24410,
+      "title": "hūnyīn — marriage; the bond of marriage",
+      "headword": "hūnyīn",
+      "romanization": "hūnyīn",
+      "gloss": "marriage; the bond of marriage",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b180c8fafcd3484c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for young people, then the Mandarin for to come of age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hūnyīn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hūnyīn — \"marriage; the bond of marriage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tāmen de hūnyīn yǒu wèntí — Their marriage is in trouble."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hūnyīn is built from hūn and yīn, both inherited from Middle Chinese, xwon and 'jin (Guangyun, in Baxter's transcription), which glosses each with the pair itself, 'marriage', and explains hūn by the evening hour of old weddings."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hūnyīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hūnyīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hūnyīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hūnyīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāmen de hūnyīn yǒu wèntí — Their marriage is in trouble.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāmen de hūnyīn yǒu wèntí* — Their marriage is in trouble.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for young people, then the Mandarin for to come of age, then say hūnyīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for young people, then the Mandarin for to come of age, then say *hūnyīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hūnyīn mean? (\"Marriage; the bond of marriage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C317-jiating",
+      "sequence": 24420,
+      "title": "jiātíng — household; a family unit",
+      "headword": "jiātíng",
+      "romanization": "jiātíng",
+      "gloss": "household; a family unit",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d59ef88f2e22bd8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to come of age, then the Mandarin for a marriage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiātíng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiātíng — \"household; a family unit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen shì yí ge kuàilè de jiātíng — We're a happy family."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiātíng is built from 家 'home' and tíng 'a courtyard', both inherited from Middle Chinese, kae and deng (Guangyun, in Baxter's transcription), which glosses the second 'a gate yard': the home and its yard."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiātíng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiātíng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiātíng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiātíng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen shì yí ge kuàilè de jiātíng — We're a happy family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen shì yí ge kuàilè de jiātíng* — We're a happy family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to come of age, then the Mandarin for a marriage, then say jiātíng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to come of age, then the Mandarin for a marriage, then say *jiātíng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiātíng mean? (\"Household; a family unit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C317-shixian",
+      "sequence": 24430,
+      "title": "事先 (shìxiān) — beforehand; in advance",
+      "headword": "事先",
+      "romanization": "shìxiān",
+      "gloss": "beforehand; in advance",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46283ab4560cc2d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a marriage, then the Mandarin for a household."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 事先",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "事先 — shìxiān — \"beforehand; in advance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他又没有事先说我们都生气了 tā yòu méiyǒu shìxiān shuō, wǒmen dōu shēngqì le — Once again he didn't say so beforehand, and we were all cross."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "事先 (shìxiān) is built from 事 'a matter' and 先 'before', both inherited from Middle Chinese, dzriH and sen (Guangyun, in Baxter's transcription), which glosses the second 'first and after': before the matter."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shìxiān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shìxiān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shìxiān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shìxiān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā yòu méiyǒu shìxiān shuō, wǒmen dōu shēngqì le — Once again he didn't say so beforehand, and we were all cross.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā yòu méiyǒu shìxiān shuō, wǒmen dōu shēngqì le* — Once again he didn't say so beforehand, and we were all cross.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a marriage, then the Mandarin for a household, then say shìxiān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a marriage, then the Mandarin for a household, then say *shìxiān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 事先 (shìxiān) mean? (\"Beforehand; in advance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R317-review-313-317",
+      "sequence": 24440,
+      "title": "Looking back: from Moving House to Looking Back",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Moving House to Looking Back",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dca9a4449cf7c51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to renovate a flat and not until then."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to renovate a flat, not until then, to make a place your home, to hate to leave behind, to adjust to new surroundings",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to renovate a flat, not until then, to make a place your home, to hate to leave behind, to adjust to new surroundings]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a funeral, in someone's lifetime, to comfort someone who is sad, a cemetery, to shed tears",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a funeral, in someone's lifetime, to comfort someone who is sad, a cemetery, to shed tears]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "little by little, it happened again, at ease in a place, to my surprise, the same as before",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: little by little, it happened again, at ease in a place, to my surprise, the same as before]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to register officially, to be familiar with, of that place, life from birth to death, as you would naturally expect",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to register officially, to be familiar with, of that place, life from birth to death, as you would naturally expect]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "young people, to come of age, a marriage, a household, in advance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: young people, to come of age, a marriage, a household, in advance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "才 又 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 才 又 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To renovate a flat? (zhuāngxiū.) Not until then? (才, cái.) To make a place your home? (dìngjū.) To hate to leave behind? (shěbude.) To adjust to new surroundings? (shìyìng.) A funeral? (zànglǐ.) In someone's lifetime? (生前, shēngqián.) To comfort someone who is sad? (ānwèi.) A cemetery? (mùdì.) To shed tears? (liúlèi.) Little by little? (jiànjiàn.) It happened again? (又, yòu.) At ease in a place? (自在, zìzai.) To my surprise? (jìngrán.) The same as before? (réngrán.) To register officially? (dēngjì.) To be familiar with? (shúxī.) Of that place? (当地, dāngdì.) Life from birth to death? (人生, rénshēng.) As you would naturally expect? (自然, zìrán.) Young people? (qīngnián.) To come of age? (chéngnián.) A marriage? (hūnyīn.) A household? (jiātíng.) In advance? (事先, shìxiān.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R317-review-final-317",
+      "sequence": 24450,
+      "title": "Looking Back — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3725b3276fe634ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for young people and to come of age."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "young people, to come of age, a marriage, a household, in advance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: young people, to come of age, a marriage, a household, in advance]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Young people? (qīngnián.) To come of age? (chéngnián.) A marriage? (hūnyīn.) A household? (jiātíng.) In advance? (事先, shìxiān.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

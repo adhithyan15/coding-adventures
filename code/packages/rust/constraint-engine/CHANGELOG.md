@@ -1,5 +1,53 @@
 # Changelog — `constraint-engine`
 
+## 0.4.0 — 2026-11-02
+
+The LIA tactic is sound: `Unsat` is reported only after an exhaustive
+search (LANG24, "LIA as built, and its soundness contract").
+
+### Fixed
+
+- **False `Unsat` from an incomplete search.** The tactic is a bounded
+  enumeration, not Cooper's algorithm. When its sample ran out it answered
+  `Unsat`, which was wrong in three ways:
+  - With no lower bound, the search started at 0, so `x < 0` was "UNSAT".
+  - The range was cut to 1 001 values, so `2x = 4000` was "UNSAT".
+  - `(and (>= x a) (<= x b))` lost both bounds inside one `And`.
+
+  The search now tracks whether it is exhaustive. It is exhaustive for a
+  Bool, for an Int boxed by two real bounds at most 1 000 apart, and for
+  contradictory real bounds. When it is not, a failed search answers
+  `Unknown`. A sub-search's `Unknown` is remembered instead of being
+  treated as a failed candidate.
+
+- **A value left assigned after a failed equality branch.** This predates
+  the PR. When `x = k` pinned a variable and the branch failed, the value
+  stayed in the assignment. A later branch then judged constraints over it
+  "ground", which gave a false `Unsat` (`z = x + 10 ∧ x + z > 10`, boxed).
+  The branch now restores the assignment unless it found the model. The
+  engine also orders search variables by name, so results are
+  reproducible, not dependent on `HashMap` iteration.
+
+### Added
+
+- **Interval propagation** over the top-level linear atoms, including
+  negated comparisons. It derives the bounds the constraints imply. For
+  example, `x > 5 ∧ y > 5 ∧ x + y < 10` gives `x ≤ 3`, a contradiction,
+  and `__v = x ∧ 0 ≤ x < 256` boxes `__v`. Derived bounds are consequences
+  of the constraints, so they keep every answer the same and only let the
+  search be exhaustive. This is what keeps `lang-refinement-checker`'s
+  `clamp_byte` proof a real proof. Each atom costs work linear in its terms
+  per round (minimum sum computed once). Total work is capped at 64 rounds
+  and 2 million term visits; stopping early is sound.
+- **Conjunctions are flattened** before the search, and variables no
+  constraint mentions are not searched (they get 0 / false).
+- Sampling without bounds looks both ways: a window centred on 0, or a
+  window ending at the one real bound.
+- `tests/lia_soundness.rs` compares the tactic against brute force on
+  mixed Int+Bool problems. Boxed problems are decided (0 `Unknown` in 1 200)
+  and never wrong; unboxed problems are never wrong. It also covers every
+  input from the security review.
+
 ## 0.3.0 — 2026-11-02
 
 VER10: a QF_BV tactic.

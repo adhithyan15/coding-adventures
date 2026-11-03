@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C308-paichusuo",
+  "pathSegment": "ZH-PATH-308-SINCE308",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-308-SINCE308",
+      "order": 5
+    }
+  ]
+}

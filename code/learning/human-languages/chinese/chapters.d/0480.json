@@ -1,0 +1,21 @@
+{
+  "chapter": 480,
+  "title": "Symptoms",
+  "label": "ch:zh-symptoms",
+  "canDo": "I can say I feel dizzy or itchy, that my nose is running, that I am allergic to something, and that I cannot sleep.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R480-review-476-480",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 480: I can say I feel dizzy or itchy, that my nose is running, that I am allergic to something, and that I cannot sleep.",
+    "assesses": [
+      "ZH-LEX-C480-SYMPTOM480-01",
+      "ZH-LEX-C480-SYMPTOM480-02",
+      "ZH-LEX-C480-SYMPTOM480-03",
+      "ZH-LEX-C480-SYMPTOM480-04",
+      "ZH-LEX-C480-SYMPTOM480-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:e4d2019cced1f88a",
+  "lessonIds": [
+    "ZH-C291-caifang",
+    "ZH-C291-faming",
+    "ZH-W291-fa-send",
+    "ZH-C291-shijian",
+    "ZH-C291-tufa",
+    "ZH-C291-xuanbu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch291.txt",
+  "json": "chinese/narration/ch291.json",
+  "textHash": "fnv1a64:3d2b7e97b47f1c05",
+  "jsonHash": "fnv1a64:a2f488f1fa99200b",
+  "findings": []
+}

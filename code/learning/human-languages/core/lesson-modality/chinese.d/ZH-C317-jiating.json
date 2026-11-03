@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C317-jiating",
+    "language": "chinese",
+    "chapter": 317,
+    "sequence": 24420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5d59ef88f2e22bd8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C478-tangshang",
+    "language": "chinese",
+    "chapter": 478,
+    "sequence": 36030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6c2857b4aa7796a"
+  },
+  "findings": []
+}

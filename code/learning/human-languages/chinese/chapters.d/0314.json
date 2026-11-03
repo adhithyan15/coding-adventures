@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "Saying Goodbye",
+  "label": "ch:zh-saying-goodbye",
+  "canDo": "I can talk about a funeral: remembering a life, comforting someone, and tears at the graveside.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C314-liulei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can talk about a funeral: remembering a life, comforting someone, and tears at the graveside.",
+    "assesses": [
+      "ZH-LEX-C314-FUNERAL314-03",
+      "ZH-LEX-C314-FUNERAL314-04",
+      "ZH-LEX-C314-FUNERAL314-05"
+    ]
+  }
+}

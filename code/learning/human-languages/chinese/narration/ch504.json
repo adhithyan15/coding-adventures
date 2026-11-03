@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 504,
+  "title": "Songs",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:9092d7ee8ca9c3e8",
+  "lessons": [
+    {
+      "id": "ZH-C504-geci",
+      "sequence": 37930,
+      "title": "gēcí — the words of a song; lyrics",
+      "headword": "gēcí",
+      "romanization": "gēcí",
+      "gloss": "the words of a song; lyrics",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc3fea915b44320c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to create (art or writing), then the Mandarin for a new year print."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gēcí",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gēcí — \"the words of a song; lyrics\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ tīng le liǎng tiān cái jìzhù gēcí — It took two days of listening before I knew the words."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gēcí is built from gē 'a song' and cí 'words', both inherited from Middle Chinese, ka and zi (Guangyun, in Baxter's transcription), which glosses the first 'the voice of a person singing' and the second 'to speak'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēcí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēcí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēcí, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēcí*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ tīng le liǎng tiān cái jìzhù gēcí — It took two days of listening before I knew the words.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ tīng le liǎng tiān cái jìzhù gēcí* — It took two days of listening before I knew the words.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to create (art or writing), then the Mandarin for a new year print, then say gēcí again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to create (art or writing), then the Mandarin for a new year print, then say *gēcí* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gēcí mean? (\"The words of a song; lyrics\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C504-erge",
+      "sequence": 37940,
+      "title": "儿歌 (érgē) — nursery rhyme; children's song",
+      "headword": "儿歌",
+      "romanization": "érgē",
+      "gloss": "nursery rhyme; children's song",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fc18cbf0fda9404a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a new year print, then the Mandarin for the words of a song."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 儿歌",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "儿歌 — érgē — \"nursery rhyme; children's song\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这是我小时候最喜欢的儿歌 zhè shì wǒ xiǎoshíhou zuì xǐhuan de érgē — This was my favourite nursery rhyme when I was little."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 歌 (gē) — fourteen strokes in two pieces: on the left 可 kě twice, one over the other, ten strokes; on the right four strokes. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "儿歌 (érgē) is built from 儿 'a child' and 歌 (gē) 'a song', both inherited from Middle Chinese, nye and ka (Guangyun, in Baxter's transcription), which glosses the first 'an infant' and the second 'the voice of a person singing'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "érgē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *érgē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "érgē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *érgē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè shì wǒ xiǎoshíhou zuì xǐhuan de érgē — This was my favourite nursery rhyme when I was little.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè shì wǒ xiǎoshíhou zuì xǐhuan de érgē* — This was my favourite nursery rhyme when I was little.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a new year print, then the Mandarin for the words of a song, then say érgē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a new year print, then the Mandarin for the words of a song, then say *érgē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 儿歌 (érgē) mean? (\"Nursery rhyme; children's song\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W504-ge-song",
+      "sequence": 37945,
+      "title": "歌 (gē) — kě twice, then four strokes",
+      "headword": "歌",
+      "romanization": "gē",
+      "gloss": "歌 — 可 twice, then four strokes on the right",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:db064acbe1c807bb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — kě twice, then four strokes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — kě twice, then four strokes and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say érgē — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *érgē* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "可 儿."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — kě, ér",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *kě*, *ér*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — kě twice, then four strokes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "歌 (gē)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, ten strokes: 可 kě twice, one over the other. The upper 可 is small: a bar, 口, and a vertical with no hook. The lower 可 is wider: a long bar, 口, and a vertical that hooks to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, four strokes: a short stroke falling to the left, a bar that turns down to the left, a long stroke falling to the left, and a long stroke falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "5 + 5 + 4 = fourteen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "歌 (gē), all fourteen, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 歌, all fourteen, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes does 歌 (gē) have? (Fourteen.) What is the left piece? (可, twice.) Which of the two has a hook? (The lower one.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 歌 (gē), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C504-guoge",
+      "sequence": 37950,
+      "title": "国歌 (guógē) — national anthem",
+      "headword": "国歌",
+      "romanization": "guógē",
+      "gloss": "national anthem",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b601c4fb771e16da",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the words of a song, then the Mandarin for a nursery rhyme."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 国歌",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "国歌 — guógē — \"national anthem\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tīng guógē de shíhou wǒ gǎnjué hěn jīdòng — When I hear the national anthem, I feel very moved."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "国歌 (guógē) is built from 国 'a country' and 歌 (gē) 'a song', both inherited from Middle Chinese, kwok and ka (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guógē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guógē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guógē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guógē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīng guógē de shíhou wǒ gǎnjué hěn jīdòng — When I hear the national anthem, I feel very moved.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīng guógē de shíhou wǒ gǎnjué hěn jīdòng* — When I hear the national anthem, I feel very moved.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the words of a song, then the Mandarin for a nursery rhyme, then say guógē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the words of a song, then the Mandarin for a nursery rhyme, then say *guógē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 国歌 (guógē) mean? (\"National anthem\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C504-minge",
+      "sequence": 37960,
+      "title": "míngē — folk song",
+      "headword": "míngē",
+      "romanization": "míngē",
+      "gloss": "folk song",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c8da84e3b706bccc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a nursery rhyme, then the Mandarin for the national anthem."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: míngē",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "míngē — \"folk song\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zuì xǐhuan tīng Zhōngguó míngē — Chinese folk songs are my favourite."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "míngē is built from mín 'the people' and 歌 (gē) 'a song', both inherited from Middle Chinese, mjin and ka (Guangyun, in Baxter's transcription), which glosses the first 'the common people'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "míngē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *míngē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "míngē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *míngē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zuì xǐhuan tīng Zhōngguó míngē — Chinese folk songs are my favourite.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zuì xǐhuan tīng Zhōngguó míngē* — Chinese folk songs are my favourite.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a nursery rhyme, then the Mandarin for the national anthem, then say míngē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a nursery rhyme, then the Mandarin for the national anthem, then say *míngē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does míngē mean? (\"Folk song\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C504-yanchang-sing",
+      "sequence": 37970,
+      "title": "yǎnchàng — to perform a song (on stage)",
+      "headword": "yǎnchàng",
+      "romanization": "yǎnchàng",
+      "gloss": "to perform a song (on stage)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4cc8f8780baee865",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the national anthem, then the Mandarin for a folk song."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yǎnchàng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǎnchàng — \"to perform a song (on stage)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nàge gēshǒu lái wǒmen xuéxiào yǎnchàng — That singer is coming to sing at our school."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yǎnchàng is built from yǎn 'to perform' and chàng 'to sing', both inherited from Middle Chinese, yenX and tsyhangH (Guangyun, in Baxter's transcription), which glosses the first 'to spread wide' and the second 'to strike up a song'; the sense 'to perform' is not given for the first there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǎnchàng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǎnchàng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǎnchàng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǎnchàng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nàge gēshǒu lái wǒmen xuéxiào yǎnchàng — That singer is coming to sing at our school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nàge gēshǒu lái wǒmen xuéxiào yǎnchàng* — That singer is coming to sing at our school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the national anthem, then the Mandarin for a folk song, then say yǎnchàng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the national anthem, then the Mandarin for a folk song, then say *yǎnchàng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yǎnchàng mean? (\"To perform a song (on stage)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

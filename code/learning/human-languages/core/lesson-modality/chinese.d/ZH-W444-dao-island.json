@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W444-dao-island",
+    "language": "chinese",
+    "chapter": 444,
+    "sequence": 33735,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e57a82d3fd5eeb8a",
+    "detachableSegments": [
+      "Script — a top piece of four strokes, then 山"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

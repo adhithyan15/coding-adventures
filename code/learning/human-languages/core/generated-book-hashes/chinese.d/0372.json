@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:39e3eab20374df0d",
+  "lessonIds": [
+    "ZH-C372-fanzheng",
+    "ZH-C372-daodi",
+    "ZH-C372-tongshi",
+    "ZH-C372-yongyi",
+    "ZH-C372-youdian"
+  ],
+  "tex": "chinese/book/chapters/ch372-anyway.tex"
+}

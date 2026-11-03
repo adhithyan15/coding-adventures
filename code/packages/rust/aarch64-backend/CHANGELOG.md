@@ -1,5 +1,9 @@
 # Changelog — `aarch64-backend`
 
+## Unreleased — LANG83 PR5a — `str_concat` takes the string ceiling
+
+- The `str_concat` builtin row is now 3 arguments: `__twig_str_concat(a, b, max)`, where `max` is the module's string ceiling and the runtime raises `Trap.Overflow` past it. `twig-aot` passes the ceiling. No codegen change: the generic `call_builtin` marshaller handles three arguments like `str_slice`.
+
 ## Unreleased — `alloc_ref_array`: arrays of GC references are traced
 
 ### Added

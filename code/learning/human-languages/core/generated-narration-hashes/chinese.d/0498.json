@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 498,
+  "sourceHash": "fnv1a64:dc995549daee0564",
+  "lessonIds": [
+    "ZH-C498-tiyu",
+    "ZH-C498-qiuchang",
+    "ZH-W498-qiu-ball",
+    "ZH-C498-qiumen",
+    "ZH-C498-shemen",
+    "ZH-C498-jinqiu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch498.txt",
+  "json": "chinese/narration/ch498.json",
+  "textHash": "fnv1a64:8db05ebda27fc391",
+  "jsonHash": "fnv1a64:be7e271319870d47",
+  "findings": []
+}

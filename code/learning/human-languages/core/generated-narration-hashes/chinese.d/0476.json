@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:9742edab7792f1dc",
+  "lessonIds": [
+    "ZH-C476-bozi",
+    "ZH-C476-shetou",
+    "ZH-C476-jianbang",
+    "ZH-C476-yaotou",
+    "ZH-C476-tengtong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch476.txt",
+  "json": "chinese/narration/ch476.json",
+  "textHash": "fnv1a64:929ab91c202654a4",
+  "jsonHash": "fnv1a64:ece73c714f416093",
+  "findings": []
+}

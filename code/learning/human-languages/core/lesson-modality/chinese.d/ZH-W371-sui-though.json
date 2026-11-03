@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W371-sui-though",
+    "language": "chinese",
+    "chapter": 371,
+    "sequence": 28305,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d13ebb279c3deac0",
+    "detachableSegments": [
+      "Script — a mouth over an insect"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

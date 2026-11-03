@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 348,
+  "title": "Talking It Over",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2ec7a87fe0294901",
+  "lessons": [
+    {
+      "id": "ZH-C348-taolun",
+      "sequence": 27100,
+      "title": "tǎolùn — to discuss",
+      "headword": "tǎolùn",
+      "romanization": "tǎolùn",
+      "gloss": "to discuss",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:082f053bfa06f02a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the significance of something, then the Mandarin for to know from experience."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tǎolùn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tǎolùn — \"to discuss\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen míngtiān kāihuì tǎolùn zhège wèntí — We'll discuss this at tomorrow's meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tǎolùn is built from tǎo and lùn, both inherited from Middle Chinese, thawX and lwon (Guangyun, in Baxter's transcription), which glosses the first 'to govern' and 'to punish', and the second 'to speak' and 'to discuss'; it also lists the second in the departing tone, the tone of lùn today."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tǎolùn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tǎolùn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tǎolùn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tǎolùn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen míngtiān kāihuì tǎolùn zhège wèntí — We'll discuss this at tomorrow's meeting.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen míngtiān kāihuì tǎolùn zhège wèntí* — We'll discuss this at tomorrow's meeting.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the significance of something, then the Mandarin for to know from experience, then say tǎolùn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the significance of something, then the Mandarin for to know from experience, then say *tǎolùn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tǎolùn mean? (\"To discuss\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C348-shangliang",
+      "sequence": 27110,
+      "title": "shāngliang — to talk it over together; to consult",
+      "headword": "shāngliang",
+      "romanization": "shāngliang",
+      "gloss": "to talk it over together; to consult",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4911a9d00d168f7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to know from experience, then the Mandarin for to discuss."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shāngliang",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shāngliang — \"to talk it over together; to consult\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen yīnggāi gēn lǎoshī shāngliang — We should talk it over with the teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shāngliang is built from shāng and liáng, both inherited from Middle Chinese, syang and ljang (Guangyun, in Baxter's transcription), which glosses the first, among other senses, 'to deliberate', and the second 'to measure'. The second is said light here."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāngliang",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāngliang*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāngliang, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāngliang*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen yīnggāi gēn lǎoshī shāngliang — We should talk it over with the teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen yīnggāi gēn lǎoshī shāngliang* — We should talk it over with the teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to know from experience, then the Mandarin for to discuss, then say shāngliang again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to know from experience, then the Mandarin for to discuss, then say *shāngliang* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shāngliang mean? (\"To talk it over together; to consult\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C348-zhenglun",
+      "sequence": 27120,
+      "title": "zhēnglùn — to argue over a point; to debate",
+      "headword": "zhēnglùn",
+      "romanization": "zhēnglùn",
+      "gloss": "to argue over a point; to debate",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:280815f0c6768734",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to discuss, then the Mandarin for to talk it over together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhēnglùn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhēnglùn — \"to argue over a point; to debate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tāmen zài zhēnglùn zhège wèntí — They're arguing over this question."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhēnglùn is built from zhēng and lùn, both inherited from Middle Chinese, tsreang and lwon (Guangyun, in Baxter's transcription), which glosses the first 'to compete' and the second 'to discuss'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhēnglùn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhēnglùn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhēnglùn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhēnglùn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāmen zài zhēnglùn zhège wèntí — They're arguing over this question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāmen zài zhēnglùn zhège wèntí* — They're arguing over this question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to discuss, then the Mandarin for to talk it over together, then say zhēnglùn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to discuss, then the Mandarin for to talk it over together, then say *zhēnglùn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhēnglùn mean? (\"To argue over a point; to debate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C348-duifang",
+      "sequence": 27130,
+      "title": "duìfāng — the other side; the other party",
+      "headword": "duìfāng",
+      "romanization": "duìfāng",
+      "gloss": "the other side; the other party",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8868ddf7a14de61",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to talk it over together, then the Mandarin for to argue over a point."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: duìfāng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "duìfāng — \"the other side; the other party\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ yīnggāi tīng duìfāng shuō wán — You should hear the other side out."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "duìfāng is built from 对 'facing' and fāng 'a side', both inherited from Middle Chinese, twojH and pjang (Guangyun, in Baxter's transcription), which glosses the first 'to answer' and 'to match', and the second 'the four quarters'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duìfāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duìfāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duìfāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duìfāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ yīnggāi tīng duìfāng shuō wán — You should hear the other side out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ yīnggāi tīng duìfāng shuō wán* — You should hear the other side out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to talk it over together, then the Mandarin for to argue over a point, then say duìfāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to talk it over together, then the Mandarin for to argue over a point, then say *duìfāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does duìfāng mean? (\"The other side; the other party\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C348-yizhi",
+      "sequence": 27140,
+      "title": "yízhì — all of one mind; in agreement",
+      "headword": "yízhì",
+      "romanization": "yízhì",
+      "gloss": "all of one mind; in agreement",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b1ffa257f4f2295c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to argue over a point, then the Mandarin for the other party."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yízhì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yízhì — \"all of one mind; in agreement\"."
+            },
+            {
+              "kind": "speech",
+              "text": "dàjiā de yìjiàn hěn yízhì — Everyone was of one mind."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "The tone of yī changes here: before a falling tone it is said yí, and the spelling writes the change."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yízhì is built from 一 'one' and zhì 'to arrive', both inherited from Middle Chinese, 'jit and trijH (Guangyun, in Baxter's transcription), which glosses the first 'the start of the numbers' and the second 'to arrive'. How the pair came to mean agreement is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yízhì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yízhì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yízhì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yízhì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàjiā de yìjiàn hěn yízhì — Everyone was of one mind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàjiā de yìjiàn hěn yízhì* — Everyone was of one mind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to argue over a point, then the Mandarin for the other party, then say yízhì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to argue over a point, then the Mandarin for the other party, then say *yízhì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yízhì mean? (\"All of one mind; in agreement\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

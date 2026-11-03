@@ -1,0 +1,1598 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 284,
+  "title": "Two Tickets",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:110b41d4242d9502",
+  "lessons": [
+    {
+      "id": "ZH-C284-zhantai",
+      "sequence": 21460,
+      "title": "zhàntái — a platform",
+      "headword": "zhàntái",
+      "romanization": "zhàntái",
+      "gloss": "a platform (at a station)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef0692abcde97d8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens at the station, where the trains stand."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 去书店怎么走 — qù shūdiàn zěnme zǒu — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 去书店怎么走 — *qù shūdiàn zěnme zǒu* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 路过 — lùguò, to pass by — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 路过 — *lùguò*, to pass by — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 火车 — huǒchē, a train — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 火车 — *huǒchē*, a train — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 火车站 — huǒchēzhàn, a station — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 火车站 — *huǒchēzhàn*, a station — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhàntái",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhàntái — \"a platform\", at a station."
+            },
+            {
+              "kind": "speech",
+              "text": "huǒchē zài èr hào zhàntái — The train is at platform two."
+            },
+            {
+              "kind": "speech",
+              "text": "Its second character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhàntái is built from 站 and tái 'a raised platform'. The first is inherited from Middle Chinese treamH (Guangyun, in Baxter's transcription), which the dictionary gives as the everyday word for standing alone. tái is written with a character whose traditional form is doj, glossed as a raised square of earth; the simplified character is also an old one in its own right, with the readings yi and thoj and other senses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhàntái holds the 站 of 火车站: the station, and the platform you stand on in it."
+            },
+            {
+              "kind": "speech",
+              "text": "A number comes before 号: èr hào zhàntái, platform two."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhàntái",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhàntái*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhàntái, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhàntái*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huǒchē zài èr hào zhàntái — The train is at platform two.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huǒchē zài èr hào zhàntái* — The train is at platform two.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 火车站, then zhàntái",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 火车站, then *zhàntái*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhàntái mean? (\"A platform\".) How do you say platform two? (èr hào zhàntái.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C284-ticket",
+      "sequence": 21470,
+      "title": "坐火车去 (zuò huǒchē qù) — going by train",
+      "headword": "坐火车去",
+      "romanization": "zuò huǒchē qù",
+      "gloss": "坐 and a vehicle before 去: how you travel; zhāng counting tickets",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fca1b8b2f0a6f063",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A verb you have said since the early chapters, and the ticket that goes with it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhàntái, a platform — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhàntái*, a platform — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuò, to sit; to travel by — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuò*, to sit; to travel by — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 票 — piào, a ticket — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 票 — *piào*, a ticket — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhāng, the measure word for flat things — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhāng*, the measure word for flat things — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 坐 and a vehicle, then 去",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "坐 (zuò) and a vehicle, then 去 or 来: that is how you travel."
+            },
+            {
+              "kind": "speech",
+              "text": "我们坐火车去 wǒmen zuò huǒchē qù — We're going by train. 我们坐八点的火车 wǒmen zuò bā diǎn de huǒchē — We're taking the eight o'clock train."
+            },
+            {
+              "kind": "speech",
+              "text": "坐 is the zuò you know, to sit and to travel by; the next lesson puts it in your hand. The vehicle comes between 坐 and the verb of going."
+            },
+            {
+              "kind": "speech",
+              "text": "Tickets are counted with zhāng, as flat things are: mǎi liǎng zhāng qù Běijīng de piào, two tickets to Beijing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我们坐火车去 — wǒmen zuò huǒchē qù — We're going by train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我们坐火车去 — *wǒmen zuò huǒchē qù* — We're going by train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我们坐八点的火车 — wǒmen zuò bā diǎn de huǒchē — We're taking the eight o'clock train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我们坐八点的火车 — *wǒmen zuò bā diǎn de huǒchē* — We're taking the eight o'clock train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mǎi liǎng zhāng qù Běijīng de piào — Two tickets to Beijing, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mǎi liǎng zhāng qù Běijīng de piào* — Two tickets to Beijing, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how you get to work or school, with 坐 (zuò) … 去",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how you get to work or school, with 坐 … 去]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the vehicle go? (Between 坐 (zuò) and 去.) What counts tickets? (zhāng, as for flat things.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C284-ticket-train",
+              "prompt": "How do you say 'we're going by train', in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-TICKET-01"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "我们坐火车去",
+                "wǒmen zuò huǒchē qù",
+                "women zuo huoche qu"
+              ],
+              "feedback": {
+                "correct": "我们坐火车去: 坐, the train, then 去.",
+                "incorrect": "我们坐火车去. The vehicle sits between 坐 and 去."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W284-zuo",
+      "sequence": 21480,
+      "title": "坐 (zuò) — 人 twice, then 土",
+      "headword": "坐",
+      "romanization": "zuò",
+      "gloss": "坐 — 人 twice, then 土",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c5124dc252a8b3a4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 人 twice, then 土",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 人 twice, then 土 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The sentence first, then the character it was waiting for."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我们坐火车去 — wǒmen zuò huǒchē qù — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我们坐火车去 — *wǒmen zuò huǒchē qù* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "人 从 在."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — rén, cóng, zài",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *rén*, *cóng*, *zài*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 人 twice, then 土",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "坐 (zuò)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, and you write all of them already."
+            },
+            {
+              "kind": "speech",
+              "text": "人, twice, side by side, the left one first. Each is a left-falling stroke and then a dot: neither has the long right-falling stroke of 人 standing alone."
+            },
+            {
+              "kind": "speech",
+              "text": "土, three strokes, under them, as at the lower right of 在: the short horizontal; then the vertical, from the top between the two 人, down through it; then the long horizontal along the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 2 + 3 = seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "坐 (zuò), all seven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 坐, all seven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 坐 (zuò)? (Seven.) What shrinks to a dot in each 人? (The second stroke.) Where does the vertical of 土 start? (At the top, between the two 人.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 坐 (zuò), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C284-dancheng",
+      "sequence": 21490,
+      "title": "dānchéng — one way",
+      "headword": "dānchéng",
+      "romanization": "dānchéng",
+      "gloss": "one way (of a ticket or a trip)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e79d1081091d6df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: the train you are taking, and how you count its tickets."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我们坐八点的火车, aloud — wǒmen zuò bā diǎn de huǒchē",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我们坐八点的火车, aloud — *wǒmen zuò bā diǎn de huǒchē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mǎi liǎng zhāng piào, two tickets — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mǎi liǎng zhāng piào*, two tickets — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dānchéng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dānchéng — \"one way\", of a ticket or a trip."
+            },
+            {
+              "kind": "speech",
+              "text": "yì zhāng dānchéng piào — a one-way ticket."
+            },
+            {
+              "kind": "speech",
+              "text": "dānchéng háishi wǎngfǎn — One way or return?"
+            },
+            {
+              "kind": "speech",
+              "text": "wǎngfǎn, there and back, is the other choice. Its characters come later; for now dānchéng is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dānchéng is built from dān 'single' and chéng, both inherited from Middle Chinese, tan and drjeng (Guangyun, in Baxter's transcription). The dictionary glosses the first 'single, not double' and the second 'a term; a limit'; 'one way' for the pair, a single stage of a journey, is the word's own sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "At the window you are asked dānchéng háishi wǎngfǎn?, one way or return. 还是 is the or of a question."
+            },
+            {
+              "kind": "speech",
+              "text": "Answer with the word alone: dānchéng."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dānchéng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dānchéng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dānchéng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dānchéng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yì zhāng dānchéng piào — a one-way ticket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yì zhāng dānchéng piào* — a one-way ticket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dānchéng háishi wǎngfǎn — One way or return?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dānchéng háishi wǎngfǎn* — One way or return?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "answer the question: dānchéng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: answer the question: *dānchéng*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dānchéng mean? (\"One way\".) What is the other choice? (wǎngfǎn, there and back.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C284-zuowei",
+      "sequence": 21500,
+      "title": "zuòwèi — a seat",
+      "headword": "zuòwèi",
+      "romanization": "zuòwèi",
+      "gloss": "a seat",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f717884bfd8cc35c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, and the character you wrote this chapter."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dānchéng, one way — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dānchéng*, one way — **R1**, one lesson back]"
+            },
+            {
+              "kind": "speech",
+              "text": "坐 (zuò)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it aloud, with nothing said first — zuò",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it aloud, with nothing said first — *zuò*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zuòwèi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zuòwèi — \"a seat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhèr yǒu zuòwèi ma — Is there a seat here?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later. The first is not the 坐 (zuò) you write but one that shares its sound and holds it under a roof."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zuòwèi is built from zuò 'a seat' and wèi 'a place', both inherited from Middle Chinese, dzwaH and hwijH (Guangyun, in Baxter's transcription), glossed 'the stand of a bed' and 'a position; a rank'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "坐 (zuò) is the verb, to sit; zuòwèi is the noun, the seat itself: wǒ de zuòwèi zài nǎr?, where's my seat?"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuòwèi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuòwèi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuòwèi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuòwèi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèr yǒu zuòwèi ma — Is there a seat here?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèr yǒu zuòwèi ma* — Is there a seat here?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de zuòwèi zài nǎr — Where's my seat?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de zuòwèi zài nǎr* — Where's my seat?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 坐 (zuò), then zuòwèi: to sit, then the seat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 坐, then *zuòwèi*: to sit, then the seat]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zuòwèi mean? (\"A seat\".) Is its first character the 坐 (zuò) you write? (No: the same sound, another character.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C284-tuipiao",
+      "sequence": 21510,
+      "title": "tuìpiào — to return a ticket",
+      "headword": "tuìpiào",
+      "romanization": "tuìpiào",
+      "gloss": "to return a ticket (for a refund)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01a947aeb06d3157",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, and one you use at a hotel desk."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuòwèi, a seat — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuòwèi*, a seat — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tuìfáng, to check out — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tuìfáng*, to check out — **R3**, durable]"
+            },
+            {
+              "kind": "speech",
+              "text": "票."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it aloud, with nothing said first — piào",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it aloud, with nothing said first — *piào*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tuìpiào",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tuìpiào — \"to return a ticket\", for your money back."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ xiǎng tuìpiào — I'd like to return my ticket."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tuìpiào is built from tuì 'to give back' and 票 'a ticket'. The first is inherited from Middle Chinese thwojH (Guangyun, in Baxter's transcription), glossed 'to draw back'; the dictionary has no entry for 票, so that part's history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You know tuìfáng, to give back a hotel room; tuìpiào gives back a ticket the same way."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a verb on its own, with the ticket inside it: wǒ xiǎng tuìpiào."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuìpiào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuìpiào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuìpiào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuìpiào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiǎng tuìpiào — I'd like to return my ticket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiǎng tuìpiào* — I'd like to return my ticket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tuìfáng, then tuìpiào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tuìfáng*, then *tuìpiào*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tuìpiào mean? (\"To return a ticket\".) Which word gives back a hotel room? (tuìfáng.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C284-v-zai",
+      "sequence": 21520,
+      "title": "坐在这儿 (zuò zài zhèr) — 在 after the verb",
+      "headword": "坐在这儿",
+      "romanization": "zuò zài zhèr",
+      "gloss": "在 after a verb: where the action lands or stays",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a85d1e30a39f3530",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word you have used since the first chapters, in a new place in the sentence."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tuìpiào, to return a ticket — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tuìpiào*, to return a ticket — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我在家 — wǒ zài jiā, I'm at home — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我在家 — *wǒ zài jiā*, I'm at home — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhù, to live — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhù*, to live — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say fàng, to put — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *fàng*, to put — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 在 after the verb, for where the action lands",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "在 after a verb says where the action lands, or where it stays."
+            },
+            {
+              "kind": "speech",
+              "text": "你坐在这儿 nǐ zuò zài zhèr — You sit here. tā zhù zài xuéxiào lǐ — He lives at the school."
+            },
+            {
+              "kind": "speech",
+              "text": "Keep it apart from 在 before the verb: 我在家吃饭 says where the eating happens. After the verb, 在 marks where you end up sitting, living or putting something: fàng zài zhèr, put it here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你坐在这儿 — nǐ zuò zài zhèr — You sit here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你坐在这儿 — *nǐ zuò zài zhèr* — You sit here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā zhù zài xuéxiào lǐ — He lives at the school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā zhù zài xuéxiào lǐ* — He lives at the school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fàng zài zhèr — Put it here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fàng zài zhèr* — Put it here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where you live, with zhù zài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where you live, with *zhù zài*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does 在 go in 你坐在这儿? (After the verb.) What does it say there? (Where the sitting lands.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C284-v-zai-sit",
+              "prompt": "How do you tell someone to sit here, in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-V-ZAI-PLACE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "你坐在这儿",
+                "nǐ zuò zài zhèr",
+                "ni zuo zai zher",
+                "坐在这儿"
+              ],
+              "feedback": {
+                "correct": "你坐在这儿: 在 after 坐.",
+                "incorrect": "你坐在这儿. 在 follows the verb and the place follows 在."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C284-jia-measure",
+      "sequence": 21530,
+      "title": "一家书店 (yì jiā shūdiàn) — counting shops with 家",
+      "headword": "一家书店",
+      "romanization": "yì jiā shūdiàn",
+      "gloss": "家 after a number or 这 / 那: counting shops, hotels and restaurants",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b0c9b6f8350e6157",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word you wrote in the first chapters, doing a new job."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "你坐在这儿, aloud — nǐ zuò zài zhèr",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 你坐在这儿, aloud — *nǐ zuò zài zhèr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 书店 — shūdiàn, a bookshop — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 书店 — *shūdiàn*, a bookshop — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bīnguǎn, a hotel — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bīnguǎn*, a hotel — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 家 for counting shops",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "家 after a number, or after 这 or 那, counts shops, hotels and restaurants."
+            },
+            {
+              "kind": "speech",
+              "text": "这家书店很好 zhè jiā shūdiàn hěn hǎo — This bookshop is very good. 那家饭店的菜很好吃 nà jiā fàndiàn de cài hěn hǎochī — The food at that restaurant is delicious."
+            },
+            {
+              "kind": "speech",
+              "text": "一家书店 (yì jiā shūdiàn), a bookshop; liǎng jiā bīnguǎn, two hotels. It is the 家 of home, now counting places that do business: 家, not 个, is the measure word to use for them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "这家书店很好 — zhè jiā shūdiàn hěn hǎo — This bookshop is very good.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 这家书店很好 — *zhè jiā shūdiàn hěn hǎo* — This bookshop is very good.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "那家饭店的菜很好吃 — nà jiā fàndiàn de cài hěn hǎochī — The food at that restaurant is delicious.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 那家饭店的菜很好吃 — *nà jiā fàndiàn de cài hěn hǎochī* — The food at that restaurant is delicious.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "liǎng jiā bīnguǎn — two hotels",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *liǎng jiā bīnguǎn* — two hotels]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the name of a shop you like, with 这家",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the name of a shop you like, with 这家]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 家 count? (Shops, hotels and restaurants.) Which measure word do you use for a bookshop, 家 or 个? (家.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C284-jia-measure-shop",
+              "prompt": "Which measure word counts a bookshop?",
+              "assesses": [
+                "ZH-GRAMMAR-JIA-MEASURE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "家",
+                "jiā",
+                "jia",
+                "一家",
+                "这家"
+              ],
+              "feedback": {
+                "correct": "家: 一家书店.",
+                "incorrect": "家, as in 一家书店: the measure word for shops."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C284-practice",
+      "sequence": 21540,
+      "title": "我们坐八点的火车 (wǒmen zuò bā diǎn de huǒchē)",
+      "headword": "我们坐八点的火车",
+      "romanization": "wǒmen zuò bā diǎn de huǒchē",
+      "gloss": "a traveller buys two tickets, finds the platform and asks about a shop",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b86c78ec23e75ef6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, at the ticket window."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "这家书店很好, aloud — zhè jiā shūdiàn hěn hǎo",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 这家书店很好, aloud — *zhè jiā shūdiàn hěn hǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tuìpiào, to return a ticket — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tuìpiào*, to return a ticket — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuòwèi, a seat — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuòwèi*, a seat — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: wǒ yào liǎng zhāng qù Běijīng de piào — Two tickets to Beijing, please. B: dānchéng háishi wǎngfǎn — One way or return? A: dānchéng, wǒmen zuò bā diǎn de huǒchē — One way. We're taking the eight o'clock train. B: bā diǎn de huǒchē zài èr hào zhàntái — The eight o'clock is at platform two. A: yǒu zuòwèi ma — Are there seats? B: 有 yǒu — There are. A: 车站里有一家书店吗 chēzhàn lǐ yǒu yì jiā shūdiàn ma — Is there a bookshop in the station? B: yǒu, zài zhàntái qiánbian — There is, in front of the platform."
+            },
+            {
+              "kind": "speech",
+              "text": "The answers are short: dānchéng, 有. The station's bookshop is counted with 家, and the platform has a number before 号."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C284-practice-train",
+              "prompt": "Which train are they taking?",
+              "assesses": [
+                "ZH-PERFORMANCE-TICKET-01",
+                "ZH-GRAMMAR-TICKET-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the eight o'clock",
+                "eight",
+                "8",
+                "八点",
+                "bā diǎn",
+                "eight o'clock",
+                "the 8 o'clock",
+                "8:00"
+              ],
+              "feedback": {
+                "correct": "八点的火车: the eight o'clock.",
+                "incorrect": "A says 我们坐八点的火车: the eight o'clock."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — getting on a train",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Everything you need between the window and your seat:"
+            },
+            {
+              "kind": "speech",
+              "text": "我们坐火车去 wǒmen zuò huǒchē qù — how you travel."
+            },
+            {
+              "kind": "speech",
+              "text": "mǎi liǎng zhāng piào, dānchéng, tuìpiào — buying, and giving back."
+            },
+            {
+              "kind": "speech",
+              "text": "èr hào zhàntái, zuòwèi — where to go, and where to sit."
+            },
+            {
+              "kind": "speech",
+              "text": "你坐在这儿 nǐ zuò zài zhèr — where you land."
+            },
+            {
+              "kind": "speech",
+              "text": "一家书店 yì jiā shūdiàn — a shop, counted."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Nǐmen zuò jǐ diǎn de huǒchē?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Buy a ticket for a trip you would like to take: where, how many, one way or return."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "坐火车 — 人 twice, then the foot of 在",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 坐火车 — 人 twice, then the foot of 在]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我们坐八点的火车 — wǒmen zuò bā diǎn de huǒchē — We're taking the eight o'clock train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我们坐八点的火车 — *wǒmen zuò bā diǎn de huǒchē* — We're taking the eight o'clock train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ yào liǎng zhāng qù Běijīng de piào — Two tickets to Beijing, please.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ yào liǎng zhāng qù Běijīng de piào* — Two tickets to Beijing, please.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "我们坐火车去",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 我们坐火车去]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say you're going by train. (我们坐火车去.) Ask for one-way. (dānchéng.) Tell someone to sit here. (你坐在这儿.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

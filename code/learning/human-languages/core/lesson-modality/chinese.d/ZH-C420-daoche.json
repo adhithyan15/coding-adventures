@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C420-daoche",
+    "language": "chinese",
+    "chapter": 420,
+    "sequence": 31960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8421e4e08f8b3c79"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C522-shangmen",
+    "language": "chinese",
+    "chapter": 522,
+    "sequence": 39420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:251e49e1a1b0bccd"
+  },
+  "findings": []
+}

@@ -68,4 +68,45 @@ public final class CtCompare {
         long folded = (diff | -diff) >>> 63;
         return folded == 0L;
     }
+
+    // ── Bit-returning equality (CT01, "How a lane receives the selection bit") ──
+    //
+    // ctSelectBytes takes its selection bit as an int, because Java cannot
+    // turn a boolean into an int without a branch. A caller holding only
+    // ctEq's boolean would need `eq ? 1 : 0`, the very branch CT01 removes,
+    // so each equality also returns the bit itself, computed arithmetically
+    // from the difference accumulator:
+    //
+    //   acc = 0          (0 - 1) >>> 31 = 1        (equal)
+    //   acc = 1 .. 255   (acc - 1) >>> 31 = 0      (different)
+    //
+    // Use it as ctSelectBytes(a, b, ctEqBit(x, y)).
+
+    /** 1 when the arrays are equal, else 0; a length mismatch is 0. */
+    public static int ctEqBit(byte[] left, byte[] right) {
+        Objects.requireNonNull(left, "left");
+        Objects.requireNonNull(right, "right");
+        if (left.length != right.length) {
+            return 0;
+        }
+        int accumulator = 0;
+        for (int i = 0; i < left.length; i++) {
+            accumulator |= (left[i] ^ right[i]) & 0xFF;
+        }
+        return (accumulator - 1) >>> 31;
+    }
+
+    /** ctEqBit for inputs of a declared public width. */
+    public static int ctEqFixedBit(byte[] left, byte[] right) {
+        return ctEqBit(left, right);
+    }
+
+    /**
+     * 1 when left == right, else 0. {@code diff | -diff} has its top bit set
+     * exactly when diff != 0, so shifting it down and flipping gives the bit.
+     */
+    public static int ctEqU64Bit(long left, long right) {
+        long diff = left ^ right;
+        return (int) (((diff | -diff) >>> 63) ^ 1L);
+    }
 }

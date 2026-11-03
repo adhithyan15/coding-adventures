@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C389-yifang",
+    "language": "chinese",
+    "chapter": 389,
+    "sequence": 29800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a0b23ea5b8e7ba1"
+  },
+  "findings": []
+}

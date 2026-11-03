@@ -1,0 +1,20 @@
+{
+  "chapter": 433,
+  "title": "From Overseas",
+  "label": "ch:zh-from-overseas",
+  "canDo": "I can talk about receiving visitors from overseas, huge crowds, Chinese people abroad and going out to sea.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C433-chuhai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 433: I can talk about receiving visitors from overseas, huge crowds, Chinese people abroad and going out to sea.",
+    "assesses": [
+      "ZH-LEX-C433-OVERSEAS433-03",
+      "ZH-LEX-C433-OVERSEAS433-04",
+      "ZH-LEX-C433-OVERSEAS433-05",
+      "ZH-SCRIPT-HAI-SEA-01"
+    ]
+  }
+}

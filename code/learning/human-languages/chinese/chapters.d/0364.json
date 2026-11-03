@@ -1,0 +1,19 @@
+{
+  "chapter": 364,
+  "title": "Not Allowed",
+  "label": "ch:zh-not-allowed",
+  "canDo": "I can say what is not allowed, urge and remind someone, and say a plan was approved.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C364-tixing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 364: I can say what is not allowed, urge and remind someone, and say a plan was approved.",
+    "assesses": [
+      "ZH-LEX-C364-ALLOW364-03",
+      "ZH-LEX-C364-ALLOW364-04",
+      "ZH-LEX-C364-ALLOW364-05"
+    ]
+  }
+}

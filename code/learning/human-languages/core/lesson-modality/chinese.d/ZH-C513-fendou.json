@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C513-fendou",
+    "language": "chinese",
+    "chapter": 513,
+    "sequence": 38420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c73e9e27ae5f1fd"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:aff0a9a98f620ba2",
+  "lessonIds": [
+    "ZH-C382-zhiban",
+    "ZH-C382-baoan",
+    "ZH-W382-bao-keep",
+    "ZH-C382-jiankong",
+    "ZH-C382-baozheng",
+    "ZH-C382-xunluo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch382.txt",
+  "json": "chinese/narration/ch382.json",
+  "textHash": "fnv1a64:21923e10c49cbd15",
+  "jsonHash": "fnv1a64:bc83edb945dc0b8d",
+  "findings": []
+}

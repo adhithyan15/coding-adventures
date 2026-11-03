@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 451,
+  "title": "Specialities",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:bc1c98e39ef1e781",
+  "lessons": [
+    {
+      "id": "ZH-C451-chisu",
+      "sequence": 34080,
+      "title": "chīsù — to eat no meat; to be vegetarian",
+      "headword": "chīsù",
+      "romanization": "chīsù",
+      "gloss": "to eat no meat; to be vegetarian",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3a2e42cfb2275902",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for authentic, then the Mandarin for a restaurant's signature dish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chīsù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chīsù — \"to eat no meat; to be vegetarian\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ chīsù bù chī ròu — I'm vegetarian: I don't eat meat."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chīsù is built from 吃 'to eat' and sù 'plain'. For the first the dictionary has khek, glossed 'to eat', under another way of writing it (there 吃 itself is kj+t, 'to stammer'), though khek would regularly give qì; the second is inherited from Middle Chinese suH (Guangyun, in Baxter's transcription), glossed as plain white silk, and the sense 'meatless' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chīsù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chīsù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chīsù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chīsù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ chīsù bù chī ròu — I'm vegetarian: I don't eat meat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ chīsù bù chī ròu* — I'm vegetarian: I don't eat meat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for authentic, then the Mandarin for a restaurant's signature dish, then say chīsù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for authentic, then the Mandarin for a restaurant's signature dish, then say *chīsù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chīsù mean? (\"To eat no meat; to be vegetarian\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C451-tese",
+      "sequence": 34090,
+      "title": "特色 (tèsè) — special character; speciality",
+      "headword": "特色",
+      "romanization": "tèsè",
+      "gloss": "special character; speciality",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5754ee9d4d53243f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a restaurant's signature dish, then the Mandarin for to eat no meat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 特色",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "特色 — tèsè — \"special character; speciality\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè jiā fànguǎn de cài hěn yǒu tèsè — The food at this restaurant has a character all its own."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 色 (sè) — six strokes in two pieces: on top a short stroke falling to the left and a small bar that turns down to the left; under them a bar that turns down, a short vertical, a bar, and a long stroke that runs down the left, along the foot and hooks up. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "特色 (tèsè) is built from 特 'single, special' and 色 (sè) 'a look', both inherited from Middle Chinese, dok and srik (Guangyun, in Baxter's transcription), which glosses the second as the colour of the face."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tèsè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tèsè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tèsè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tèsè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè jiā fànguǎn de cài hěn yǒu tèsè — The food at this restaurant has a character all its own.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè jiā fànguǎn de cài hěn yǒu tèsè* — The food at this restaurant has a character all its own.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a restaurant's signature dish, then the Mandarin for to eat no meat, then say tèsè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a restaurant's signature dish, then the Mandarin for to eat no meat, then say *tèsè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 特色 (tèsè) mean? (\"Special character; speciality\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W451-se-colour",
+      "sequence": 34095,
+      "title": "色 (sè) — a small top piece, then a frame with a long hook",
+      "headword": "色",
+      "romanization": "sè",
+      "gloss": "色 — two strokes on top, then four below ending in a long hook",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ff9fbbc6e4e04d3a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a small top piece, then a frame with a long hook",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a small top piece, then a frame with a long hook and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tèsè — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tèsè* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "包 特."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — bāo, tè",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *bāo*, *tè*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a small top piece, then a frame with a long hook",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "色 (sè)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, top before bottom. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The top piece, two strokes. A short stroke falling to the left. Then a small bar that turns down to the left under it."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom piece, four strokes. A bar that turns down on the right. A short vertical in the middle. A bar across under them. Last, a long stroke that runs down the left side, turns right along the foot and hooks up."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 4 = six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "色 (sè), all six, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 色, all six, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 色 (sè)? (Six.) What is the last stroke? (A long stroke down the left that turns along the foot and hooks up.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 色 (sè), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C451-chuse",
+      "sequence": 34100,
+      "title": "出色 (chūsè) — outstanding; excellent",
+      "headword": "出色",
+      "romanization": "chūsè",
+      "gloss": "outstanding; excellent",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f3025cde743e030",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to eat no meat, then the Mandarin for a special character of its own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 出色",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "出色 — chūsè — \"outstanding; excellent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他的中文很出色 tā de Zhōngwén hěn chūsè — His spoken Chinese is outstanding."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "出色 (chūsè) is built from 出 'to stand out' and 色 (sè) 'a look', both inherited from Middle Chinese, tsyhwit and srik (Guangyun, in Baxter's transcription); how the pair came to mean 'outstanding' is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūsè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūsè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūsè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūsè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā de Zhōngwén hěn chūsè — His spoken Chinese is outstanding.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā de Zhōngwén hěn chūsè* — His spoken Chinese is outstanding.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to eat no meat, then the Mandarin for a special character of its own, then say chūsè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to eat no meat, then the Mandarin for a special character of its own, then say *chūsè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 出色 (chūsè) mean? (\"Outstanding; excellent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C451-sucai",
+      "sequence": 34110,
+      "title": "sùcài — meatless dish; vegetable dish",
+      "headword": "sùcài",
+      "romanization": "sùcài",
+      "gloss": "meatless dish; vegetable dish",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3100829fca06fe82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a special character of its own, then the Mandarin for outstanding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sùcài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sùcài — \"meatless dish; vegetable dish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè jiā fànguǎn yǒu hěn duō sùcài — This restaurant has lots of meatless dishes."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sùcài is built from sù 'plain' and 菜 'a dish', both inherited from Middle Chinese, suH and tshojH (Guangyun, in Baxter's transcription); the sense 'meatless' for the first is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sùcài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sùcài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sùcài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sùcài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè jiā fànguǎn yǒu hěn duō sùcài — This restaurant has lots of meatless dishes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè jiā fànguǎn yǒu hěn duō sùcài* — This restaurant has lots of meatless dishes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a special character of its own, then the Mandarin for outstanding, then say sùcài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a special character of its own, then the Mandarin for outstanding, then say *sùcài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sùcài mean? (\"Meatless dish; vegetable dish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C451-sheng",
+      "sequence": 34120,
+      "title": "shèng — to be left over",
+      "headword": "shèng",
+      "romanization": "shèng",
+      "gloss": "to be left over",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:921ce7f299358c3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for outstanding, then the Mandarin for a meatless dish."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shèng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shèng — \"to be left over\"."
+            },
+            {
+              "kind": "speech",
+              "text": "shèng le hěn duō cài wǒmen dǎbāo — There's a lot of food left, so we'll take it away."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shèng is inherited from Middle Chinese zyingH (Guangyun, in Baxter's transcription), glossed as what is long and to spare."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shèng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shèng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shèng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shèng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shèng le hěn duō cài wǒmen dǎbāo — There's a lot of food left, so we'll take it away.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shèng le hěn duō cài wǒmen dǎbāo* — There's a lot of food left, so we'll take it away.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for outstanding, then the Mandarin for a meatless dish, then say shèng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for outstanding, then the Mandarin for a meatless dish, then say *shèng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shèng mean? (\"To be left over\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

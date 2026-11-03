@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C536-meihao",
+    "language": "chinese",
+    "chapter": 536,
+    "sequence": 40150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cfcfe0ee3f848131"
+  },
+  "findings": []
+}

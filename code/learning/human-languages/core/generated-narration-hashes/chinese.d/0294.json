@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:a401949bbf212a67",
+  "lessonIds": [
+    "ZH-C294-qingkuang",
+    "ZH-C294-yinqi",
+    "ZH-C294-yingxiang",
+    "ZH-C294-zhongyu",
+    "ZH-C294-yushi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch294.txt",
+  "json": "chinese/narration/ch294.json",
+  "textHash": "fnv1a64:665ee83b8bd52078",
+  "jsonHash": "fnv1a64:310faf7444ac990d",
+  "findings": []
+}

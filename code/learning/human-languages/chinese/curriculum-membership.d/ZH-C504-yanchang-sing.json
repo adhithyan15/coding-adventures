@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C504-yanchang-sing",
+  "pathSegment": "ZH-PATH-504-SONGS504",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-504-SONGS504",
+      "order": 5
+    }
+  ]
+}

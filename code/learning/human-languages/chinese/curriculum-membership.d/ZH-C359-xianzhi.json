@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C359-xianzhi",
+  "pathSegment": "ZH-PATH-359-RULES359",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-359-RULES359",
+      "order": 3
+    }
+  ]
+}

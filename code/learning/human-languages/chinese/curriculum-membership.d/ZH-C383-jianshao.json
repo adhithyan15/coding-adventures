@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C383-jianshao",
+  "pathSegment": "ZH-PATH-383-ENERGY383",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-383-ENERGY383",
+      "order": 3
+    }
+  ]
+}

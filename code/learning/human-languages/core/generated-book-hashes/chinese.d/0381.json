@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:b8ed939075f5a8f3",
+  "lessonIds": [
+    "ZH-C381-fenlei",
+    "ZH-C381-quanjia",
+    "ZH-W381-quan-whole",
+    "ZH-C381-huishou",
+    "ZH-C381-quanguo",
+    "ZH-C381-anquangan"
+  ],
+  "tex": "chinese/book/chapters/ch381-the-whole-family.tex"
+}

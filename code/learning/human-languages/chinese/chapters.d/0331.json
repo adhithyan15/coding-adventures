@@ -1,0 +1,19 @@
+{
+  "chapter": 331,
+  "title": "Monsters and Treasure",
+  "label": "ch:zh-monsters-and-treasure",
+  "canDo": "I can talk about monsters, immortals, magic and treasure, and say people hid.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C331-cang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 331: I can talk about monsters, immortals, magic and treasure, and say people hid.",
+    "assesses": [
+      "ZH-LEX-C331-MAGIC331-03",
+      "ZH-LEX-C331-MAGIC331-04",
+      "ZH-LEX-C331-MAGIC331-05"
+    ]
+  }
+}

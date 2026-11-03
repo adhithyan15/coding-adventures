@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 530,
+  "sourceHash": "fnv1a64:f33e228e9ccffdfc",
+  "lessonIds": [
+    "ZH-C530-caipiao",
+    "ZH-C530-choujiang",
+    "ZH-C530-zhongjiang",
+    "ZH-C530-jiangpin",
+    "ZH-C530-toujiang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch530.txt",
+  "json": "chinese/narration/ch530.json",
+  "textHash": "fnv1a64:007d25492cae4980",
+  "jsonHash": "fnv1a64:aa3bd601cfb908e0",
+  "findings": []
+}

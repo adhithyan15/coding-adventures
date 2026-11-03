@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 478,
+  "sourceHash": "fnv1a64:fdb4cfbcfda80aa0",
+  "lessonIds": [
+    "ZH-C478-tangshang",
+    "ZH-C478-shangkou",
+    "ZH-W478-shang-hurt",
+    "ZH-C478-zhongshang",
+    "ZH-C478-niushang",
+    "ZH-C478-baoza"
+  ],
+  "tex": "chinese/book/chapters/ch478-injuries.tex"
+}

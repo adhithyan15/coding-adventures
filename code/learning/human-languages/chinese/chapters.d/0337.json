@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Best Wishes",
+  "label": "ch:zh-best-wishes",
+  "canDo": "I can congratulate someone, wish them well and good luck, give a token of my regard and make a wish.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C337-xuyuan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can congratulate someone, wish them well and good luck, give a token of my regard and make a wish.",
+    "assesses": [
+      "ZH-LEX-C337-WISH337-03",
+      "ZH-LEX-C337-WISH337-04",
+      "ZH-LEX-C337-WISH337-05"
+    ]
+  }
+}

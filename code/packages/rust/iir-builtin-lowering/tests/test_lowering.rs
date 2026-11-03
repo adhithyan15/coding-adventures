@@ -41,6 +41,7 @@ fn make_module(instrs: Vec<IIRInstr>) -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -522,6 +523,7 @@ fn test_35_two_functions_both_lowered() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -551,6 +553,7 @@ fn test_36_three_functions_independent() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -577,6 +580,7 @@ fn test_37_error_in_one_function_reports_function_name() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let errors = lower_builtins(&mut m);
     assert_eq!(errors.len(), 1);
@@ -602,6 +606,7 @@ fn test_38_empty_module_no_panic() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -678,6 +683,7 @@ fn test_41_cloned_lowers_correctly() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let (lowered, errors) = lower_builtins_cloned(&original);
     assert!(errors.is_empty());
@@ -701,6 +707,7 @@ fn test_42_cloned_leaves_original_unchanged() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let (_lowered, _errors) = lower_builtins_cloned(&original);
     // Original still shows call_builtin.
@@ -786,6 +793,7 @@ fn test_47_function_with_no_instructions() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -807,6 +815,7 @@ fn test_48_multiple_empty_functions() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
@@ -873,6 +882,7 @@ fn test_50_mixed_errors_across_functions() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let errors = lower_builtins(&mut m);
     assert_eq!(errors.len(), 2);
@@ -1306,6 +1316,7 @@ fn test_77_lower_heap_builtins_direct_call() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     lower_heap_builtins(&mut m).unwrap();
     assert_eq!(m.functions[0].instructions[0].op, "field_load");

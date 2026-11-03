@@ -1,0 +1,19 @@
+{
+  "chapter": 474,
+  "title": "Strength",
+  "label": "ch:zh-strength",
+  "canDo": "I can talk about my arms and fingers, how strong someone is, their stamina, and pressing hard.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C474-shouzhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 474: I can talk about my arms and fingers, how strong someone is, their stamina, and pressing hard.",
+    "assesses": [
+      "ZH-LEX-C474-STRENGTH474-03",
+      "ZH-LEX-C474-STRENGTH474-04",
+      "ZH-LEX-C474-STRENGTH474-05"
+    ]
+  }
+}

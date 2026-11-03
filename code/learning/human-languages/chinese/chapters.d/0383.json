@@ -1,0 +1,19 @@
+{
+  "chapter": 383,
+  "title": "Saving Energy",
+  "label": "ch:zh-saving-energy",
+  "canDo": "I can talk about the electricity bill, wasting things, energy, cutting down and throwaway things.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C383-yicixing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 383: I can talk about the electricity bill, wasting things, energy, cutting down and throwaway things.",
+    "assesses": [
+      "ZH-LEX-C383-ENERGY383-03",
+      "ZH-LEX-C383-ENERGY383-04",
+      "ZH-LEX-C383-ENERGY383-05"
+    ]
+  }
+}

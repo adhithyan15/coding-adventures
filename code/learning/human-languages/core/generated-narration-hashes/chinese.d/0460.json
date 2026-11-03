@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 460,
+  "sourceHash": "fnv1a64:4258c6b377178bea",
+  "lessonIds": [
+    "ZH-C460-yumen",
+    "ZH-C460-tanqi",
+    "ZH-C460-nanweiqing",
+    "ZH-C460-tongqing",
+    "ZH-C460-xianmu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch460.txt",
+  "json": "chinese/narration/ch460.json",
+  "textHash": "fnv1a64:a7432a10f4e3ea0f",
+  "jsonHash": "fnv1a64:4741cc4aee53cec6",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C417-chujing",
+  "pathSegment": "ZH-PATH-417-CUSTOMS417",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-417-CUSTOMS417",
+      "order": 2
+    }
+  ]
+}

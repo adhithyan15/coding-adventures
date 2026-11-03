@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:6e03b9c86d1f7eea",
+  "lessonIds": [
+    "ZH-C359-guize",
+    "ZH-C359-zunshou",
+    "ZH-C359-weifan",
+    "ZH-C359-xianzhi",
+    "ZH-C359-daode"
+  ],
+  "tex": "chinese/book/chapters/ch359-rules.tex"
+}

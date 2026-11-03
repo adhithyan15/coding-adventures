@@ -889,6 +889,20 @@ mod tests {
     }
 
     #[test]
+    fn rescue_binding_that_the_clause_reassigns_is_let_ts() {
+        // #18798 — `rescue => e` ⏎ `e = 5`: the binding was always `const`,
+        // so the reassignment did not compile.  It is `let` when the clause
+        // stores into it, `const` otherwise.
+        let module = ruby_to_semantic_ir::compile_source(
+            "begin\n  raise \"q\"\nrescue => e\n  e = 5\n  puts e\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let src = compile(&module).expect("compile to ts").source;
+        assert!(src.contains("let e: __Sir.Val = __exc;"), "got:\n{}", src);
+    }
+
+    #[test]
     fn end_to_end_ruby_raise_message_only_ts() {
         // `raise "boom"` (no class) → implicit RuntimeError carrying the
         // message, matching Ruby.

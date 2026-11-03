@@ -150,7 +150,11 @@ Fails, with a message naming `sourceApp`, unless all of these hold in order:
    `S.corrupt.9` (a dangling symlink counts). A host moves a rejected file to
    the first free one of these ten and never replaces an earlier quarantine,
    so a refusal on a machine that already holds `.corrupt` lands in
-   `.corrupt.1`. Any of them means the new build rejected a compatible file. This is checked
+   `.corrupt.1`. (The host's rules for choosing that name, including that a
+   name it cannot inspect is an error rather than a taken name and that a
+   failed attempt never uses one up, are in
+   [Corrupt-state quarantine](task-app-local-data-operations-v1.md#corrupt-state-quarantine-and-manual-recovery).)
+   Any of them means the new build rejected a compatible file. This is checked
    first because it is the most specific diagnosis: a host that quarantined
    the fixture and then wrote an empty state, or nothing, would otherwise be
    reported as a missing value or a missing file.

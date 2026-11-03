@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C520-jiadian",
+    "language": "chinese",
+    "chapter": 520,
+    "sequence": 39310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6375a06eeee8343"
+  },
+  "findings": []
+}

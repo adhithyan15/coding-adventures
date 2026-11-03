@@ -1,0 +1,11 @@
+{
+  "id": "ZH-R480-review-476-480",
+  "pathSegment": "ZH-PATH-480-SYMPTOM480",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-480-SYMPTOM480",
+      "order": 5
+    }
+  ]
+}

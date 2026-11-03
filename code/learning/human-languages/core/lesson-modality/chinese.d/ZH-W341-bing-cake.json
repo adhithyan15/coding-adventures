@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W341-bing-cake",
+    "language": "chinese",
+    "chapter": 341,
+    "sequence": 26205,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b91aa55afc0c4ad7",
+    "detachableSegments": [
+      "Script — the food piece, then two bars and two legs"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

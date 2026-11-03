@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R485-review-final-485",
+    "language": "chinese",
+    "chapter": 485,
+    "sequence": 36450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af8f5121bd75e2eb"
+  },
+  "findings": []
+}

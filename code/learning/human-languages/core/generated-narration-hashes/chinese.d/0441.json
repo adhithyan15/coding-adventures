@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:91c3fcc21c95d0ca",
+  "lessonIds": [
+    "ZH-C441-jiaoqu",
+    "ZH-C441-yewai",
+    "ZH-C441-zhangpeng",
+    "ZH-C441-shenghuo",
+    "ZH-C441-tianran",
+    "ZH-R441-review-436-441"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch441.txt",
+  "json": "chinese/narration/ch441.json",
+  "textHash": "fnv1a64:8db7b5bf4ba30452",
+  "jsonHash": "fnv1a64:276643c6bdd72f68",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C300-siyin",
+    "language": "chinese",
+    "chapter": 300,
+    "sequence": 23540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5654aa24c0fb1454"
+  },
+  "findings": []
+}

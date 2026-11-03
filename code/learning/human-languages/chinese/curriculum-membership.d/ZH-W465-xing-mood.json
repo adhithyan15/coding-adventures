@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W465-xing-mood",
+  "pathSegment": "ZH-PATH-465-FUN465",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-465-FUN465",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C427-chuangdan",
+  "pathSegment": "ZH-PATH-427-COMEGO427",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-427-COMEGO427",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W408-jiao-cross",
+  "pathSegment": "ZH-PATH-408-BUS408",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-408-BUS408",
+      "order": 2
+    }
+  ]
+}

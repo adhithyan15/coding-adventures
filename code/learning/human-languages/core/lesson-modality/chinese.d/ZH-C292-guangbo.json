@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C292-guangbo",
+    "language": "chinese",
+    "chapter": 292,
+    "sequence": 23100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be98d43756b05db9"
+  },
+  "findings": []
+}

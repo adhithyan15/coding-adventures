@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 394,
+  "title": "Success or Failure",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:78ae60249698cb54",
+  "lessons": [
+    {
+      "id": "ZH-C394-chenggong",
+      "sequence": 30030,
+      "title": "chénggōng — to succeed",
+      "headword": "chénggōng",
+      "romanization": "chénggōng",
+      "gloss": "to succeed",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c924be55f0111a69",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for at any time at all, then the Mandarin for going smoothly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chénggōng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chénggōng — \"to succeed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ nǐ nǔlì jiù huì chénggōng — If you work hard, you'll succeed."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chénggōng is built from 成 'to complete' and gōng 'merit', both inherited from Middle Chinese, dzyeng and kuwng (Guangyun, in Baxter's transcription), which glosses the second 'an achievement'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chénggōng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chénggōng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chénggōng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chénggōng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ nǐ nǔlì jiù huì chénggōng — If you work hard, you'll succeed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ nǐ nǔlì jiù huì chénggōng* — If you work hard, you'll succeed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for at any time at all, then the Mandarin for going smoothly, then say chénggōng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for at any time at all, then the Mandarin for going smoothly, then say *chénggōng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chénggōng mean? (\"To succeed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C394-shibai",
+      "sequence": 30040,
+      "title": "shībài — to fail",
+      "headword": "shībài",
+      "romanization": "shībài",
+      "gloss": "to fail",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00fed0be4b652647",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for going smoothly, then the Mandarin for to succeed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shībài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shībài — \"to fail\"."
+            },
+            {
+              "kind": "speech",
+              "text": "shībài le yě méi guānxi wǒmen zài lái — It doesn't matter if we fail; we'll try again."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shībài is built from shī 'to lose' and bài 'to fall apart', both inherited from Middle Chinese, syit and baejH (Guangyun, in Baxter's transcription), which glosses the second 'to break of itself'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shībài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shībài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shībài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shībài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shībài le yě méi guānxi wǒmen zài lái — It doesn't matter if we fail; we'll try again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shībài le yě méi guānxi wǒmen zài lái* — It doesn't matter if we fail; we'll try again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for going smoothly, then the Mandarin for to succeed, then say shībài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for going smoothly, then the Mandarin for to succeed, then say *shībài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shībài mean? (\"To fail\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C394-maoxian",
+      "sequence": 30050,
+      "title": "màoxiǎn — to take a risk",
+      "headword": "màoxiǎn",
+      "romanization": "màoxiǎn",
+      "gloss": "to take a risk",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91868d3239c8d9e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to succeed, then the Mandarin for to fail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: màoxiǎn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "màoxiǎn — \"to take a risk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ nǐ bù xiǎng màoxiǎn jiù bié qù — If you don't want to take the risk, don't go."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "màoxiǎn is built from mào 'to wade into' and xiǎn 'danger', both inherited from Middle Chinese, mawH and xjemX (Guangyun, in Baxter's transcription), which glosses the first 'to cover' and 'to wade' and the second 'perilous'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "màoxiǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *màoxiǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "màoxiǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *màoxiǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ nǐ bù xiǎng màoxiǎn jiù bié qù — If you don't want to take the risk, don't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ nǐ bù xiǎng màoxiǎn jiù bié qù* — If you don't want to take the risk, don't go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to succeed, then the Mandarin for to fail, then say màoxiǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to succeed, then the Mandarin for to fail, then say *màoxiǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does màoxiǎn mean? (\"To take a risk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C394-baifei",
+      "sequence": 30060,
+      "title": "báifèi — to be wasted (of effort)",
+      "headword": "báifèi",
+      "romanization": "báifèi",
+      "gloss": "to be wasted (of effort)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9037799062a596a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to fail, then the Mandarin for to take a risk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: báifèi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "báifèi — \"to be wasted (of effort)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yàoshi nǐ xiànzài bú zuò yǐqián de nǔlì jiù báifèi le — If you don't do it now, all your work so far will be wasted."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "báifèi is built from 白 'white, blank' and fèi 'to use up', both inherited from Middle Chinese, baek and phj+jH (Guangyun, in Baxter's transcription), which glosses the first 'the colour of the west'. 白 for 'in vain' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "báifèi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *báifèi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "báifèi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *báifèi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi nǐ xiànzài bú zuò yǐqián de nǔlì jiù báifèi le — If you don't do it now, all your work so far will be wasted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi nǐ xiànzài bú zuò yǐqián de nǔlì jiù báifèi le* — If you don't do it now, all your work so far will be wasted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to fail, then the Mandarin for to take a risk, then say báifèi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to fail, then the Mandarin for to take a risk, then say *báifèi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does báifèi mean? (\"To be wasted (of effort)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C394-bubian",
+      "sequence": 30070,
+      "title": "不变 (búbiàn) — unchanged; staying the same",
+      "headword": "不变",
+      "romanization": "búbiàn",
+      "gloss": "unchanged; staying the same",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0fcd6fcd3f4b36e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to take a risk, then the Mandarin for to be wasted (of effort)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 不变",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不变 — búbiàn — \"unchanged; staying the same\"."
+            },
+            {
+              "kind": "speech",
+              "text": "时间不变地点改了 shíjiān búbiàn dìdiǎn gǎi le — The time stays the same; the place has changed."
+            },
+            {
+              "kind": "speech",
+              "text": "Tone: 不 is said bú here, rising, because biàn after it is a falling tone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不变 (búbiàn) is built from 不 'not' and 变 'to change', both inherited from Middle Chinese, pjut and pjenH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "búbiàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *búbiàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "búbiàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *búbiàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shíjiān búbiàn dìdiǎn gǎi le — The time stays the same; the place has changed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shíjiān búbiàn dìdiǎn gǎi le* — The time stays the same; the place has changed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to take a risk, then the Mandarin for to be wasted (of effort), then say búbiàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to take a risk, then the Mandarin for to be wasted (of effort), then say *búbiàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 不变 (búbiàn) mean? (\"Unchanged; staying the same\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

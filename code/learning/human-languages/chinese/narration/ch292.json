@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 292,
+  "title": "On the Radio",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:938316a098fc2d3c",
+  "lessons": [
+    {
+      "id": "ZH-C292-guangbo",
+      "sequence": 23100,
+      "title": "guǎngbō — to broadcast; a broadcast",
+      "headword": "guǎngbō",
+      "romanization": "guǎngbō",
+      "gloss": "to broadcast; a broadcast",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:be98d43756b05db9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to break out suddenly, then the Mandarin for to announce officially."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: guǎngbō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guǎngbō — \"to broadcast; a broadcast\"."
+            },
+            {
+              "kind": "speech",
+              "text": "diàntái měitiān zǎoshang guǎngbō xīnwén — The station broadcasts the news every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guǎngbō is built from guǎng 'wide' and bō 'to scatter', both inherited from Middle Chinese, kwangX and paH (Guangyun, in Baxter's transcription), which glosses the first 'big' and 'broad' and the second 'to spread' and 'to sow': to spread far and wide. The level tone of bō is irregular for paH."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǎngbō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǎngbō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǎngbō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǎngbō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diàntái měitiān zǎoshang guǎngbō xīnwén — The station broadcasts the news every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diàntái měitiān zǎoshang guǎngbō xīnwén* — The station broadcasts the news every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to break out suddenly, then the Mandarin for to announce officially, then say guǎngbō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to break out suddenly, then the Mandarin for to announce officially, then say *guǎngbō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does guǎngbō mean? (\"To broadcast; a broadcast\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C292-guanzhong",
+      "sequence": 23110,
+      "title": "guānzhòng — viewers; spectators; the people watching a show",
+      "headword": "guānzhòng",
+      "romanization": "guānzhòng",
+      "gloss": "viewers; spectators; the people watching a show",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:665c57f5c5bd419d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to announce officially, then the Mandarin for to broadcast on the radio."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: guānzhòng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guānzhòng — \"viewers; spectators; the people watching a show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "guānzhòng dōu hěn xǐhuan zhège jiémù — The viewers all love this show."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guānzhòng is built from guān 'to watch' and zhòng 'a crowd', both inherited from Middle Chinese, kwan and tsyuwngH (Guangyun, in Baxter's transcription), which glosses the first 'to view' and the second 'many', adding that three people make a crowd."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guānzhòng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guānzhòng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guānzhòng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guānzhòng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guānzhòng dōu hěn xǐhuan zhège jiémù — The viewers all love this show.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guānzhòng dōu hěn xǐhuan zhège jiémù* — The viewers all love this show.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to announce officially, then the Mandarin for to broadcast on the radio, then say guānzhòng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to announce officially, then the Mandarin for to broadcast on the radio, then say *guānzhòng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does guānzhòng mean? (\"Viewers; spectators; the people watching a show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C292-zhibo",
+      "sequence": 23120,
+      "title": "zhíbō — to broadcast live; a live show",
+      "headword": "zhíbō",
+      "romanization": "zhíbō",
+      "gloss": "to broadcast live; a live show",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ac93b67b7549f7d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to broadcast on the radio, then the Mandarin for the people watching a show."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhíbō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhíbō — \"to broadcast live; a live show\"."
+            },
+            {
+              "kind": "speech",
+              "text": "diànshì zhèngzài zhíbō zúqiú bǐsài — The football match is on live on TV right now."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhíbō is built from zhí 'straight' and bō 'to scatter', both inherited from Middle Chinese, drik and paH (Guangyun, in Baxter's transcription), which glosses the first 'upright' and 'straight'. The level tone of bō is irregular for paH."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhíbō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhíbō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhíbō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhíbō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diànshì zhèngzài zhíbō zúqiú bǐsài — The football match is on live on TV right now.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diànshì zhèngzài zhíbō zúqiú bǐsài* — The football match is on live on TV right now.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to broadcast on the radio, then the Mandarin for the people watching a show, then say zhíbō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to broadcast on the radio, then the Mandarin for the people watching a show, then say *zhíbō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhíbō mean? (\"To broadcast live; a live show\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C292-tingzhong",
+      "sequence": 23130,
+      "title": "tīngzhòng — listeners; the people listening to the radio",
+      "headword": "tīngzhòng",
+      "romanization": "tīngzhòng",
+      "gloss": "listeners; the people listening to the radio",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:59de12e756bffbc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the people watching a show, then the Mandarin for to broadcast live."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tīngzhòng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tīngzhòng — \"listeners; the people listening to the radio\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ yǒu tīngzhòng dǎ diànhuà, zhǔchírén jiù huì huídá — If a listener calls in, the host will answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tīngzhòng is built from tīng 'to listen' and zhòng 'a crowd', both inherited from Middle Chinese, theng and tsyuwngH (Guangyun, in Baxter's transcription), which glosses the first 'to listen' and the second 'many'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīngzhòng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīngzhòng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīngzhòng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīngzhòng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ yǒu tīngzhòng dǎ diànhuà, zhǔchírén jiù huì huídá — If a listener calls in, the host will answer.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ yǒu tīngzhòng dǎ diànhuà, zhǔchírén jiù huì huídá* — If a listener calls in, the host will answer.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the people watching a show, then the Mandarin for to broadcast live, then say tīngzhòng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the people watching a show, then the Mandarin for to broadcast live, then say *tīngzhòng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tīngzhòng mean? (\"Listeners; the people listening to the radio\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C292-fabiao",
+      "sequence": 23140,
+      "title": "fābiǎo — to publish an article; to make public",
+      "headword": "fābiǎo",
+      "romanization": "fābiǎo",
+      "gloss": "to publish an article; to make public",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ce1e716bfeee0664",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to broadcast live, then the Mandarin for the people listening to the radio."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fābiǎo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fābiǎo — \"to publish an article; to make public\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā fābiǎo le yì piān xiǎoshuō — He published a short story."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fābiǎo is built from 发 'to send out' and biǎo 'the outside', both inherited from Middle Chinese, pjot and pjewX (Guangyun, in Baxter's transcription), which glosses the second 'to make clear' and 'a letter to the throne': to send out where all can see."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fābiǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fābiǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fābiǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fābiǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā fābiǎo le yì piān xiǎoshuō — He published a short story.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā fābiǎo le yì piān xiǎoshuō* — He published a short story.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to broadcast live, then the Mandarin for the people listening to the radio, then say fābiǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to broadcast live, then the Mandarin for the people listening to the radio, then say *fābiǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fābiǎo mean? (\"To publish an article; to make public\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

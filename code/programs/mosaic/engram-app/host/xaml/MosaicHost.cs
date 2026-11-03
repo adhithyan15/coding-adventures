@@ -31,8 +31,8 @@ public static class MosaicHost
 
     // A snapshot this build cannot load is someone's study history, not
     // garbage. Before the demo deck is saved in its place, HydrateSession
-    // copies it aside, and a copy never replaces an earlier one, because that
-    // earlier one may be the real history:
+    // copies it aside (QuarantineSnapshot), and a copy never replaces an
+    // earlier one, because that earlier one may be the real history:
     //
     //   first rejection    <snapshot>.corrupt      (the generated hosts' name)
     //   second             <snapshot>.corrupt.1
@@ -651,38 +651,106 @@ public static class MosaicHost
         PersistSnapshot(session);
     }
 
+    // Copy an unreadable snapshot to the first free quarantine name. The live
+    // file stays where it is; HydrateSession then saves the demo deck over it,
+    // which is safe only because the copy is complete by then.
+    //
+    //   step                          succeeds                 failure means
+    //   ----------------------------  -----------------------  ---------------------------------
+    //   1 look at the name            free: go on              taken: next name;
+    //                                                          cannot tell: stop and say why
+    //   2 open the snapshot to read   a handle on the bytes    stop and say why (nothing made)
+    //   3 CreateNew claims the name   an empty file, held open something got there: next name;
+    //                                                          anything else: stop and say why
+    //   4 copy through that handle    done                     delete that file, stop, say why
+    //
+    // Step 3 and step 4 are one claim: the name is created exclusively
+    // (O_CREAT | O_EXCL, Windows CREATE_NEW) and the bytes are written through
+    // the very handle that created it. File.Copy(..., overwrite: false) did
+    // both in one call, but when it failed partway it could leave a partial
+    // copy behind, and that file then read as "taken": every later failure
+    // (this launch's or the next one's) burned another name, until all ten
+    // were "taken" and saving was switched off with nothing to show for it.
+    // Now a failed copy removes exactly the file this attempt created and
+    // nothing else, so a failure never uses a name up.
+    //
+    // Every failure stops at the name it happened on, switches saving off
+    // (the demo deck must not be saved over a snapshot that was not copied)
+    // and says what went wrong where.
     private static void QuarantineSnapshot(string path)
     {
         for (var index = 0; index < MaxQuarantinedSnapshots; index++)
         {
             var corrupt = index == 0 ? path + ".corrupt" : $"{path}.corrupt.{index}";
-            if (QuarantineNameTaken(corrupt))
+            if (QuarantineNameTaken(corrupt, out var unreadable))
             {
                 continue;
             }
 
+            if (unreadable is not null)
+            {
+                DisablePersistence(unreadable);
+                return;
+            }
+
+            FileStream source;
             try
             {
-                // overwrite: false throws instead of replacing a file that
-                // appeared after the check above.
-                File.Copy(path, corrupt, overwrite: false);
-                Console.Error.WriteLine($"Engram copied the unreadable snapshot to {corrupt}");
+                source = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
             }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            catch (Exception ex)
             {
-                // Something got to the name after the check: try the next
-                // one. Decided by looking again, not from the exception,
-                // because Windows reports a directory there as access denied
-                // (UnauthorizedAccessException), not as "already exists".
-                if (QuarantineNameTaken(corrupt))
+                DisablePersistence($"could not read {path} to copy it aside: {ex.Message}");
+                return;
+            }
+
+            using (source)
+            {
+                FileStream copy;
+                try
                 {
-                    continue;
+                    // FileShare.Delete lets a failed copy below delete this
+                    // file while the handle is still open, so the name it
+                    // deletes is still the file this attempt created.
+                    copy = new FileStream(corrupt, FileMode.CreateNew, FileAccess.Write, FileShare.Delete);
+                }
+                catch (Exception ex)
+                {
+                    // Something got to the name after the check: try the next
+                    // one. Decided by looking again, not from the exception,
+                    // because Windows reports a directory there as access
+                    // denied (UnauthorizedAccessException), not as "already
+                    // exists".
+                    if (QuarantineNameTaken(corrupt, out unreadable))
+                    {
+                        continue;
+                    }
+
+                    DisablePersistence(unreadable ?? $"could not create {corrupt}: {ex.Message}");
+                    return;
                 }
 
-                PersistenceDisabled = true;
-                Console.Error.WriteLine(
-                    $"Engram could not copy the unreadable snapshot aside; this session will not be saved: {ex.Message}");
+                using (copy)
+                {
+                    try
+                    {
+                        source.CopyTo(copy);
+                        copy.Flush(flushToDisk: true);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Every exception, not just IOException: .NET reports
+                        // a write past the file-size limit (EFBIG) as an
+                        // ArgumentOutOfRangeException, and a partial copy
+                        // left behind by any of them would use a name up.
+                        RemovePartialCopy(corrupt);
+                        DisablePersistence($"could not copy it to {corrupt}: {ex.Message}");
+                        return;
+                    }
+                }
             }
+
+            Console.Error.WriteLine($"Engram copied the unreadable snapshot to {corrupt}");
             return;
         }
 
@@ -691,23 +759,55 @@ public static class MosaicHost
             $"Engram already holds {MaxQuarantinedSnapshots} unreadable snapshots beside {path}; this session will not be saved until they are cleared");
     }
 
+    private static void DisablePersistence(string why)
+    {
+        PersistenceDisabled = true;
+        Console.Error.WriteLine(
+            $"Engram could not copy the unreadable snapshot aside; this session will not be saved: {why}");
+    }
+
+    // Delete the partial copy QuarantineSnapshot was writing when it failed.
+    // Called while that file's handle is still open: the name cannot have
+    // been claimed by anyone else (CreateNew made it), and this host never
+    // deletes any other quarantine name. If the delete itself fails the
+    // partial file stays; it costs one name, and the original is untouched.
+    private static void RemovePartialCopy(string corrupt)
+    {
+        try
+        {
+            File.Delete(corrupt);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Engram could not remove the partial copy {corrupt}: {ex.Message}");
+        }
+    }
+
     // Whether anything is at a quarantine name: a file, a directory, or a
     // symbolic link or junction, even one whose target is gone. Exists covers
     // the first two everywhere, but whether it sees a dangling link depends
     // on the platform, so LinkTarget, which reads the link itself, settles
-    // that. A name that cannot even be inspected counts as taken: skipping it
-    // never overwrites anything.
-    private static bool QuarantineNameTaken(string corrupt)
+    // that.
+    //
+    // A name that cannot even be inspected is NOT taken: the answer is false
+    // and `unreadable` says why. Counting it as taken looks safe (skipping a
+    // name never overwrites it), but the fault that hides one name usually
+    // hides all ten, so the host would walk every one and then report ten
+    // unreadable snapshots that do not exist. QuarantineSnapshot stops there
+    // instead and reports the real error.
+    private static bool QuarantineNameTaken(string corrupt, out string? unreadable)
     {
+        unreadable = null;
         try
         {
             return File.Exists(corrupt)
                 || Directory.Exists(corrupt)
                 || new FileInfo(corrupt).LinkTarget is not null;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return true;
+            unreadable = $"could not inspect {corrupt}: {ex.Message}";
+            return false;
         }
     }
 

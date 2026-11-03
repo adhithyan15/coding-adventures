@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-488-TRADES488",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-488-TRADES488"
+  ],
+  "after": []
+}

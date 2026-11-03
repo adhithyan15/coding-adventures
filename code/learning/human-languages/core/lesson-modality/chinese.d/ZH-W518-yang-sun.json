@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W518-yang-sun",
+    "language": "chinese",
+    "chapter": 518,
+    "sequence": 39215,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0b39624b14364b6d",
+    "detachableSegments": [
+      "Script — the ear piece on the left, then 日"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

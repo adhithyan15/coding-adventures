@@ -1,0 +1,20 @@
+{
+  "chapter": 423,
+  "title": "Going South",
+  "label": "ch:zh-going-south",
+  "canDo": "I can ask how the roads are, name the southeast and southwest, say we are heading south and compare.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C423-nanbei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 423: I can ask how the roads are, name the southeast and southwest, say we are heading south and compare.",
+    "assesses": [
+      "ZH-LEX-C423-SOUTH423-03",
+      "ZH-LEX-C423-SOUTH423-04",
+      "ZH-LEX-C423-SOUTH423-05",
+      "ZH-SCRIPT-NAN-SOUTH-01"
+    ]
+  }
+}

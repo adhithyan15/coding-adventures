@@ -1,0 +1,28 @@
+{
+  "lesson": {
+    "id": "ZH-W285-a-note",
+    "language": "chinese",
+    "chapter": 285,
+    "sequence": 21610,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block",
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type",
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:010a5948483c4fed",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

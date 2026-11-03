@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C335-miyu",
+  "pathSegment": "ZH-PATH-335-LANTERN335",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-335-LANTERN335",
+      "order": 3
+    }
+  ]
+}

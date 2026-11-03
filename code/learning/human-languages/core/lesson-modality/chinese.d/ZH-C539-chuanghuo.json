@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C539-chuanghuo",
+    "language": "chinese",
+    "chapter": 539,
+    "sequence": 40330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a662f87fe490b6ac"
+  },
+  "findings": []
+}

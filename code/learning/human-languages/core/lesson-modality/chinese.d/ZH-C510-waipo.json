@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C510-waipo",
+    "language": "chinese",
+    "chapter": 510,
+    "sequence": 38240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:182137dbb9a6e21a"
+  },
+  "findings": []
+}

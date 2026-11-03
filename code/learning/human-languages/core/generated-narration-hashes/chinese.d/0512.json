@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:5501494695e8ad36",
+  "lessonIds": [
+    "ZH-C512-zhixiang",
+    "ZH-C512-zhuiqiu",
+    "ZH-C512-chengcai",
+    "ZH-C512-chengming",
+    "ZH-C512-mingxiao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch512.txt",
+  "json": "chinese/narration/ch512.json",
+  "textHash": "fnv1a64:f867669402ba738f",
+  "jsonHash": "fnv1a64:ab10db0de2d0d4f8",
+  "findings": []
+}

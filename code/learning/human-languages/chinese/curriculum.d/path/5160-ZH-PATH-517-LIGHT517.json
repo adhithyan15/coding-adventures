@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-517-LIGHT517",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-517-LIGHT517"
+  ],
+  "after": []
+}

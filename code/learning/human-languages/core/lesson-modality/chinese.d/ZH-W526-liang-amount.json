@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W526-liang-amount",
+    "language": "chinese",
+    "chapter": 526,
+    "sequence": 39645,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d77d6aca9bf81883",
+    "detachableSegments": [
+      "Script — 日, a long bar, then 里"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

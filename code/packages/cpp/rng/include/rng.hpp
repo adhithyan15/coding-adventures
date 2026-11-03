@@ -19,6 +19,7 @@
 #define RNG_HPP
 
 #include <cstdint>
+#include <stdexcept>
 
 namespace ca {
 namespace rng {
@@ -28,26 +29,53 @@ constexpr std::uint64_t LCG_MULTIPLIER = 6364136223846793005ULL;
 constexpr std::uint64_t LCG_INCREMENT = 1442695040888963407ULL;
 constexpr double FLOAT_DIV = 4294967296.0; // 2^32
 
-// Rejection-sampled uniform in [min, max]; `g` must have next_u32().
+// ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ──────────────────
+//
+// A uniform integer in [min, max], drawn from g.next_u32(), identically in
+// every language of the repository. All three generators share it.
+//
+// span = max − min + 1 lies between 1 and 2^64. Taking r % span of a raw draw
+// over-samples small offsets whenever the number of possible draws is not a
+// multiple of span; rejecting the `threshold` lowest draws removes exactly the
+// excess. Three regimes, chosen by span alone:
+//
+//     span <= 2^32    draw 32 bits,  threshold = (2^32 − span) mod span
+//     span <  2^64    draw 64 bits,  threshold = (2^64 − span) mod span
+//     span == 2^64    the whole int64 domain: every uint64 is a valid offset
+//
+// Example, span = 3: 2^32 = 3 × 1431655765 + 1, so threshold = 1. Rejecting
+// r = 0 leaves 2^32 − 1 draws, an exact multiple of 3.
+//
+// v1 took the threshold modulo 2^64 while drawing 32 bits: biased, never more
+// than 2^32 − 1 above min, and for spans such as 2^63 + 1 every draw was
+// rejected, so it never returned. It also returned min for min > max; that is
+// now std::invalid_argument, thrown before any draw.
 template <class Gen>
 std::int64_t range_from(Gen &g, std::int64_t min, std::int64_t max) {
     if (min > max) {
-        return min; // the Rust crate asserts min <= max
+        throw std::invalid_argument("rng: next_int_in_range requires min <= max");
     }
-    std::uint64_t range_size = (static_cast<std::uint64_t>(max) -
-                               static_cast<std::uint64_t>(min)) + 1ULL;
-    if (range_size == 0) { // full 64-bit range (Rust would divide by zero)
-        return static_cast<std::int64_t>(static_cast<std::uint64_t>(min) +
-                                         g.next_u32());
+    // max − min + 1 in uint64: exact, except that 2^64 wraps to 0.
+    const std::uint64_t span =
+        (static_cast<std::uint64_t>(max) - static_cast<std::uint64_t>(min)) + 1u;
+    std::uint64_t r = 0;
+    if (span == 0) {
+        r = g.next_u64();
+    } else if (span <= 0x100000000ULL) {
+        const std::uint64_t threshold = (0x100000000ULL - span) % span;
+        do {
+            r = g.next_u32();
+        } while (r < threshold);
+        r %= span;
+    } else {
+        const std::uint64_t threshold = (0ULL - span) % span; // (2^64 − span) mod span
+        do {
+            r = g.next_u64();
+        } while (r < threshold);
+        r %= span;
     }
-    std::uint64_t threshold = (0ULL - range_size) % range_size;
-    for (;;) {
-        std::uint64_t r = g.next_u32();
-        if (r >= threshold) {
-            return static_cast<std::int64_t>(
-                static_cast<std::uint64_t>(min) + (r % range_size));
-        }
-    }
+    // min + r lies in [min, max], so the unsigned sum converts back exactly.
+    return static_cast<std::int64_t>(static_cast<std::uint64_t>(min) + r);
 }
 } // namespace detail
 

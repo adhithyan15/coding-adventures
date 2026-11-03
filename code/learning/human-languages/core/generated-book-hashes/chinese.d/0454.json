@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 454,
+  "sourceHash": "fnv1a64:0b9949882d264383",
+  "lessonIds": [
+    "ZH-C454-fuwutai",
+    "ZH-C454-zixun",
+    "ZH-C454-tushu",
+    "ZH-W454-tu-chart",
+    "ZH-C454-zhilu",
+    "ZH-C454-xuanchuance"
+  ],
+  "tex": "chinese/book/chapters/ch454-the-information-desk.tex"
+}

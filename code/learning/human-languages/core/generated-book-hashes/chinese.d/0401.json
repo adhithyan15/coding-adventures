@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 401,
+  "sourceHash": "fnv1a64:5b1589fdf5cf2a01",
+  "lessonIds": [
+    "ZH-C401-qiantu",
+    "ZH-C401-gaihang",
+    "ZH-C401-chengzhang",
+    "ZH-C401-bianlao",
+    "ZH-C401-yiqie",
+    "ZH-R401-review-397-401",
+    "ZH-R401-review-final-401"
+  ],
+  "tex": "chinese/book/chapters/ch401-plans-for-the-future.tex"
+}

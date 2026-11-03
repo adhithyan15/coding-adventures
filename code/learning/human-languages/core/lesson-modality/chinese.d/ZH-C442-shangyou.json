@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C442-shangyou",
+    "language": "chinese",
+    "chapter": 442,
+    "sequence": 33640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f148f1d574317e5b"
+  },
+  "findings": []
+}

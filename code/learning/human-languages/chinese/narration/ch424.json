@@ -1,0 +1,832 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 424,
+  "title": "On the Road",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:35ea4f12d9548b84",
+  "lessons": [
+    {
+      "id": "ZH-C424-suidao",
+      "sequence": 32130,
+      "title": "suìdào — tunnel",
+      "headword": "suìdào",
+      "romanization": "suìdào",
+      "gloss": "tunnel",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1e1163b7b439426c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to head down south, then the Mandarin for north and south."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: suìdào",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "suìdào — \"tunnel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "qiánbian yǒu yì tiáo suìdào — There's a tunnel up ahead."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "suìdào is built from suì 'a passage' and dào 'a way', both inherited from Middle Chinese, zwijH and dawX (Guangyun, in Baxter's transcription), which glosses the first as the passage into a tomb and the second 'a road'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suìdào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suìdào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suìdào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suìdào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qiánbian yǒu yì tiáo suìdào — There's a tunnel up ahead.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qiánbian yǒu yì tiáo suìdào* — There's a tunnel up ahead.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to head down south, then the Mandarin for north and south, then say suìdào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to head down south, then the Mandarin for north and south, then say *suìdào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does suìdào mean? (\"Tunnel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C424-diaotou",
+      "sequence": 32140,
+      "title": "diàotóu — to turn round (in a car); to make a U-turn",
+      "headword": "diàotóu",
+      "romanization": "diàotóu",
+      "gloss": "to turn round (in a car); to make a U-turn",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:617fdb33f9d9cbaa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for north and south, then the Mandarin for a tunnel through a hill."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: diàotóu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diàotóu — \"to turn round (in a car); to make a U-turn\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhèr bù néng diàotóu wǎng qián kāi — You can't turn round here: drive on."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "diàotóu is built from diào 'to turn' and 头 'the head', both inherited from Middle Chinese, dewH and duw (Guangyun, in Baxter's transcription), which glosses the first 'to shake'; the sense 'to turn' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diàotóu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diàotóu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "diàotóu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *diàotóu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèr bù néng diàotóu wǎng qián kāi — You can't turn round here: drive on.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèr bù néng diàotóu wǎng qián kāi* — You can't turn round here: drive on.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for north and south, then the Mandarin for a tunnel through a hill, then say diàotóu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for north and south, then the Mandarin for a tunnel through a hill, then say *diàotóu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does diàotóu mean? (\"To turn round (in a car); to make a U-turn\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C424-lubiao",
+      "sequence": 32150,
+      "title": "lùbiāo — road sign",
+      "headword": "lùbiāo",
+      "romanization": "lùbiāo",
+      "gloss": "road sign",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4446cbf8d55822d7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a tunnel through a hill, then the Mandarin for to make a U-turn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lùbiāo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lùbiāo — \"road sign\"."
+            },
+            {
+              "kind": "speech",
+              "text": "lùbiāo shuō wǎng qián zǒu — The sign says go straight on."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lùbiāo is built from 路 'a road' and biāo 'a mark', both inherited from Middle Chinese, luH and pjiew (Guangyun, in Baxter's transcription), which glosses the second as the tip of a tree and 'to raise'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lùbiāo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lùbiāo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lùbiāo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lùbiāo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lùbiāo shuō wǎng qián zǒu — The sign says go straight on.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lùbiāo shuō wǎng qián zǒu* — The sign says go straight on.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a tunnel through a hill, then the Mandarin for to make a U-turn, then say lùbiāo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a tunnel through a hill, then the Mandarin for to make a U-turn, then say *lùbiāo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lùbiāo mean? (\"Road sign\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C424-shisu",
+      "sequence": 32160,
+      "title": "时速 (shísù) — speed per hour",
+      "headword": "时速",
+      "romanization": "shísù",
+      "gloss": "speed per hour",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6a28d1435e41a25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to make a U-turn, then the Mandarin for a road sign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 时速",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "时速 — shísù — \"speed per hour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们的时速是一百公里 wǒmen de shísù shì yìbǎi gōnglǐ — We're doing a hundred kilometres an hour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "时速 (shísù) is built from 时 'an hour' and 速 'speed', both inherited from Middle Chinese, dzyi and suwk (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shísù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shísù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shísù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shísù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen de shísù shì yìbǎi gōnglǐ — We're doing a hundred kilometres an hour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen de shísù shì yìbǎi gōnglǐ* — We're doing a hundred kilometres an hour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to make a U-turn, then the Mandarin for a road sign, then say shísù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to make a U-turn, then the Mandarin for a road sign, then say *shísù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 时速 (shísù) mean? (\"Speed per hour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C424-banlu",
+      "sequence": 32170,
+      "title": "半路 (bànlù) — halfway; on the way",
+      "headword": "半路",
+      "romanization": "bànlù",
+      "gloss": "halfway; on the way",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:021f2a8b34231744",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a road sign, then the Mandarin for speed per hour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 半路",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "半路 — bànlù — \"halfway; on the way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们在半路停了车 wǒmen zài bànlù tíng le chē — We stopped the car on the way."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "半路 (bànlù) is built from 半 'half' and 路 'a road', both inherited from Middle Chinese, panH and luH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bànlù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bànlù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bànlù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bànlù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zài bànlù tíng le chē — We stopped the car on the way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zài bànlù tíng le chē* — We stopped the car on the way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a road sign, then the Mandarin for speed per hour, then say bànlù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a road sign, then the Mandarin for speed per hour, then say *bànlù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 半路 (bànlù) mean? (\"Halfway; on the way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R424-review-420-424",
+      "sequence": 32180,
+      "title": "Looking back: from Parking to On the Road",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Parking to On the Road",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:749998bca9de83c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a driving licence and a traffic lane."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a driving licence, a traffic lane, a parking space, to reverse the car, to break the traffic rules",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a driving licence, a traffic lane, a parking space, to reverse the car, to break the traffic rules]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a main road between towns, the expressway, the speed of a vehicle, a toll gate, to break the speed limit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a main road between towns, the expressway, the speed of a vehicle, a toll gate, to break the speed limit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to navigate by satnav, the northeast, the northwest, to head up north, high-speed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to navigate by satnav, the northeast, the northwest, to head up north, high-speed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "road conditions, the southeast, the southwest, to head down south, north and south",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: road conditions, the southeast, the southwest, to head down south, north and south]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tunnel through a hill, to make a U-turn, a road sign, speed per hour, halfway",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tunnel through a hill, to make a U-turn, a road sign, speed per hour, halfway]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "速 北 南 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 速 北 南 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A driving licence? (jiàzhào.) A traffic lane? (车道, chēdào.) A parking space? (chēwèi.) To reverse the car? (dàochē.) To break the traffic rules? (wéizhāng.) A main road between towns? (公路, gōnglù.) The expressway? (高速, gāosù.) The speed of a vehicle? (车速, chēsù.) A toll gate? (shōufèizhàn.) To break the speed limit? (chāosù.) To navigate by satnav? (dǎoháng.) The northeast? (东北, dōngběi.) The northwest? (西北, xīběi.) To head up north? (北上, běishàng.) High-speed? (快速, kuàisù.) Road conditions? (lùkuàng.) The southeast? (东南, dōngnán.) The southwest? (西南, xīnán.) To head down south? (南下, nánxià.) North and south? (南北, nánběi.) A tunnel through a hill? (suìdào.) To make a U-turn? (diàotóu.) A road sign? (lùbiāo.) Speed per hour? (时速, shísù.) Halfway? (半路, bànlù.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C290-zhuchiren",
+  "pathSegment": "ZH-PATH-290-NEWS290",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-290-NEWS290",
+      "order": 3
+    }
+  ]
+}

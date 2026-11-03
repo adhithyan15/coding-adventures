@@ -1,0 +1,868 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 382,
+  "title": "The Security Guard",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:aff0a9a98f620ba2",
+  "lessons": [
+    {
+      "id": "ZH-C382-zhiban",
+      "sequence": 29410,
+      "title": "zhíbān — to be on duty",
+      "headword": "zhíbān",
+      "romanization": "zhíbān",
+      "gloss": "to be on duty",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d28304cf6f28b7e0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for nationwide, then the Mandarin for a sense of security."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhíbān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhíbān — \"to be on duty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jīntiān wǎnshang wǒ zhíbān — I'm on duty tonight."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhíbān is built from zhí 'to meet, to hold' and bān 'a turn', both inherited from Middle Chinese, driH and paen (Guangyun, in Baxter's transcription), which glosses the first 'to hold' and 'to meet with' and the second 'to hand out tokens'. The sense 'a shift' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhíbān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhíbān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhíbān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhíbān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān wǎnshang wǒ zhíbān — I'm on duty tonight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān wǎnshang wǒ zhíbān* — I'm on duty tonight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for nationwide, then the Mandarin for a sense of security, then say zhíbān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for nationwide, then the Mandarin for a sense of security, then say *zhíbān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhíbān mean? (\"To be on duty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C382-baoan",
+      "sequence": 29420,
+      "title": "保安 (bǎo'ān) — security guard",
+      "headword": "保安",
+      "romanization": "bǎo'ān",
+      "gloss": "security guard",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:363c6cc974b31685",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a sense of security, then the Mandarin for to be on duty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 保安",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "保安 — bǎo'ān — \"security guard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "小区门口有两个保安 xiǎoqū ménkǒu yǒu liǎng ge bǎo'ān — There are two security guards at the gate of the estate."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 保 (bǎo) — nine strokes in three pieces: the person piece 亻, then 口 high on the right over a tree of four strokes. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "保安 (bǎo'ān) is built from 保 'to keep' and 安 'calm', both inherited from Middle Chinese, pawX and 'an (Guangyun, in Baxter's transcription), which glosses the first 'to guard' and 'to keep safe': keeping the peace, and then the person who does it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bǎo'ān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bǎo'ān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bǎo'ān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bǎo'ān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiǎoqū ménkǒu yǒu liǎng ge bǎo'ān — There are two security guards at the gate of the estate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiǎoqū ménkǒu yǒu liǎng ge bǎo'ān* — There are two security guards at the gate of the estate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a sense of security, then the Mandarin for to be on duty, then say bǎo'ān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a sense of security, then the Mandarin for to be on duty, then say *bǎo'ān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 保安 (bǎo'ān) mean? (\"Security guard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W382-bao-keep",
+      "sequence": 29425,
+      "title": "保 (bǎo) — the person piece, then 口 over a tree",
+      "headword": "保",
+      "romanization": "bǎo",
+      "gloss": "保 — the person piece, then 口 over a tree",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e06da75f8187b6e4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the person piece, then 口 over a tree",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the person piece, then 口 over a tree and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bǎo'ān — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bǎo'ān* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "你 安."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — nǐ, ān",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *nǐ*, *ān*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the person piece, then 口 over a tree",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "保 (bǎo)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces: the person piece on the left, then 口 over a tree on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The person piece 亻, two strokes, as in 你 and 他."
+            },
+            {
+              "kind": "speech",
+              "text": "口, three strokes, high on the right: a short vertical, a stroke that runs right and turns down, then the bar that closes the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "The tree under it, four strokes. A long bar. A vertical down through it. A stroke falling to the left from the crossing, then one falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 3 + 4 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "保 (bǎo), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 保, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 保 (bǎo)? (Nine.) What sits over the tree? (口.) Which piece comes first? (亻, the person piece.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 保 (bǎo), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C382-jiankong",
+      "sequence": 29430,
+      "title": "jiānkòng — security camera; CCTV",
+      "headword": "jiānkòng",
+      "romanization": "jiānkòng",
+      "gloss": "security camera; CCTV",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a7d359927b29dbf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to be on duty, then the Mandarin for a security guard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiānkòng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiānkòng — \"security camera; CCTV\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yīnwèi yǒu jiānkòng suǒyǐ xiǎoqū lǐ hěn ānquán — There are cameras, so the estate is safe."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiānkòng is built from jiān 'to watch over' and kòng 'to pull', both inherited from Middle Chinese, kaem and khuwngH (Guangyun, in Baxter's transcription), which glosses the first 'to look down on and inspect' and the second 'to draw' and 'to report'. The camera is a modern sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiānkòng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiānkòng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiānkòng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiānkòng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīnwèi yǒu jiānkòng suǒyǐ xiǎoqū lǐ hěn ānquán — There are cameras, so the estate is safe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīnwèi yǒu jiānkòng suǒyǐ xiǎoqū lǐ hěn ānquán* — There are cameras, so the estate is safe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to be on duty, then the Mandarin for a security guard, then say jiānkòng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to be on duty, then the Mandarin for a security guard, then say *jiānkòng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiānkòng mean? (\"Security camera; CCTV\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C382-baozheng",
+      "sequence": 29440,
+      "title": "bǎozhèng — to promise; to guarantee",
+      "headword": "bǎozhèng",
+      "romanization": "bǎozhèng",
+      "gloss": "to promise; to guarantee",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb228f0e7434b93b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a security guard, then the Mandarin for a security camera."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bǎozhèng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bǎozhèng — \"to promise; to guarantee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ bǎozhèng yǐhòu bú zhème chǎo le — I promise I won't be this noisy again."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bǎozhèng is built from bǎo 'to keep' and zhèng 'to prove', both inherited from Middle Chinese, pawX and tsyingH (Guangyun, in Baxter's transcription), which glosses the first 'to answer for' and the second 'to test'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bǎozhèng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bǎozhèng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bǎozhèng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bǎozhèng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ bǎozhèng yǐhòu bú zhème chǎo le — I promise I won't be this noisy again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ bǎozhèng yǐhòu bú zhème chǎo le* — I promise I won't be this noisy again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a security guard, then the Mandarin for a security camera, then say bǎozhèng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a security guard, then the Mandarin for a security camera, then say *bǎozhèng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bǎozhèng mean? (\"To promise; to guarantee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C382-xunluo",
+      "sequence": 29450,
+      "title": "xúnluó — to patrol",
+      "headword": "xúnluó",
+      "romanization": "xúnluó",
+      "gloss": "to patrol",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1a53396eaadf088",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a security camera, then the Mandarin for to guarantee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xúnluó",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xúnluó — \"to patrol\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǎnshang bǎo'ān yīnggāi zài xiǎoqū lǐ xúnluó — At night the guards should patrol the estate."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xúnluó is built from xún 'to go round' and luó 'a patrol', both inherited from Middle Chinese, zwin and laH (Guangyun, in Baxter's transcription), which glosses the first 'to go about looking' and the second 'roving soldiers'. Mandarin luó has a rising tone where the dictionary gives a departing one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xúnluó",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xúnluó*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xúnluó, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xúnluó*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎnshang bǎo'ān yīnggāi zài xiǎoqū lǐ xúnluó — At night the guards should patrol the estate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎnshang bǎo'ān yīnggāi zài xiǎoqū lǐ xúnluó* — At night the guards should patrol the estate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a security camera, then the Mandarin for to guarantee, then say xúnluó again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a security camera, then the Mandarin for to guarantee, then say *xúnluó* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xúnluó mean? (\"To patrol\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

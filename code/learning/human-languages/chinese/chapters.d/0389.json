@@ -1,0 +1,19 @@
+{
+  "chapter": 389,
+  "title": "In Case",
+  "label": "ch:zh-in-case",
+  "canDo": "I can talk about spare things, using less, risks, being ready for anything and payments falling due.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C389-daoqi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 389: I can talk about spare things, using less, risks, being ready for anything and payments falling due.",
+    "assesses": [
+      "ZH-LEX-C389-INCASE389-03",
+      "ZH-LEX-C389-INCASE389-04",
+      "ZH-LEX-C389-INCASE389-05"
+    ]
+  }
+}

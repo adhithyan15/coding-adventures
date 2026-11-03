@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 525,
+  "sourceHash": "fnv1a64:c6d16943c3b8285e",
+  "lessonIds": [
+    "ZH-C525-zhoudao",
+    "ZH-C525-gewai",
+    "ZH-W525-ge-pattern",
+    "ZH-C525-shouhuoyuan",
+    "ZH-C525-tousu",
+    "ZH-C525-tuikuan",
+    "ZH-R525-review-520-525"
+  ],
+  "tex": "chinese/book/chapters/ch525-at-your-service.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C430-jingqu",
+    "language": "chinese",
+    "chapter": 430,
+    "sequence": 33020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:28fc395f09f15ed5"
+  },
+  "findings": []
+}

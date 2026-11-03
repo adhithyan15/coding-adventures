@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 521,
+  "sourceHash": "fnv1a64:021aa98e4ada7722",
+  "lessonIds": [
+    "ZH-C521-shua-scrub",
+    "ZH-C521-feng-sew",
+    "ZH-C521-buzhi",
+    "ZH-C521-zhengqi",
+    "ZH-C521-weisheng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch521.txt",
+  "json": "chinese/narration/ch521.json",
+  "textHash": "fnv1a64:ee9b6153eb38c416",
+  "jsonHash": "fnv1a64:5e3edde3b592ad5a",
+  "findings": []
+}

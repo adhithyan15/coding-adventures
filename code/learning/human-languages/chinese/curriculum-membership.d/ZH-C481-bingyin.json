@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C481-bingyin",
+  "pathSegment": "ZH-PATH-481-SERIOUS481",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-481-SERIOUS481",
+      "order": 3
+    }
+  ]
+}

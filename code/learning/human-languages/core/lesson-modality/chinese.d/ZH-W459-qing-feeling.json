@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W459-qing-feeling",
+    "language": "chinese",
+    "chapter": 459,
+    "sequence": 35065,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3be0bd369cf81e5d",
+    "detachableSegments": [
+      "Script — the heart piece, then a top over 月"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

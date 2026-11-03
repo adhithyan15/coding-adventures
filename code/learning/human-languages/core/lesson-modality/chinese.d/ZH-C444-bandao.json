@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C444-bandao",
+    "language": "chinese",
+    "chapter": 444,
+    "sequence": 33740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:115a4fc22daf4501"
+  },
+  "findings": []
+}

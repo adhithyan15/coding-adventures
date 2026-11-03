@@ -866,8 +866,11 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                     let kw = if i == 0 { "if" } else { "} else if" };
                     let _ = writeln!(out, "{ipad}{kw} (__Sir.rescueMatches(__exc, {types})) {{");
                     // `rescue Foo => e` binds the caught value as a local.
+                    // `let`, like every other binding here (#18798): with
+                    // `const`, `rescue => e` ⏎ `e = 5` threw "Assignment to
+                    // constant variable".
                     if let Some(bind) = &r.binding {
-                        let _ = writeln!(out, "{ipad}  const {} = __exc;", var_ident(bind));
+                        let _ = writeln!(out, "{ipad}  let {} = __exc;", var_ident(bind));
                     }
                     for st in &r.body {
                         emit_stmt(out, st, inner + 2);
@@ -4340,7 +4343,8 @@ mod tests {
             out.contains(r#"if (__Sir.rescueMatches(__exc, ["StandardError"])) {"#),
             "got:\n{out}"
         );
-        assert!(out.contains("const e = __exc;"), "got:\n{out}");
+        // `let`, so the clause may store into the binding (#18798).
+        assert!(out.contains("let e = __exc;"), "got:\n{out}");
         assert!(out.contains("} else {"), "got:\n{out}");
         assert!(out.contains("throw __exc;"), "got:\n{out}");
     }

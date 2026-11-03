@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
   spec.required_ruby_version = ">= 3.3.0"
 
-  spec.files         = Dir["lib/**/*.rb", "README.md", "CHANGELOG.md"]
+  spec.files         = Dir["lib/**/*.rb", "README.md", "CHANGELOG.d/*.md"]
   spec.require_paths = ["lib"]
 
   spec.add_dependency "coding_adventures_cli_builder", "~> 0.1"

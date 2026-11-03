@@ -1,0 +1,19 @@
+{
+  "chapter": 515,
+  "title": "Four Seasons",
+  "label": "ch:zh-four-seasons",
+  "canDo": "I can talk about the four seasons, the rainy season, bitter cold, getting away from the heat and the harvest.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C515-shouhuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 515: I can talk about the four seasons, the rainy season, bitter cold, getting away from the heat and the harvest.",
+    "assesses": [
+      "ZH-LEX-C515-SEASONS515-03",
+      "ZH-LEX-C515-SEASONS515-04",
+      "ZH-LEX-C515-SEASONS515-05"
+    ]
+  }
+}

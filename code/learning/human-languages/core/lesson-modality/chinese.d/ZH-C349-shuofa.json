@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C349-shuofa",
+    "language": "chinese",
+    "chapter": 349,
+    "sequence": 27170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:661cd78ffb5c6a46"
+  },
+  "findings": []
+}

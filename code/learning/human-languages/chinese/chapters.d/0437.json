@@ -1,0 +1,19 @@
+{
+  "chapter": 437,
+  "title": "Mountains and Plains",
+  "label": "ch:zh-mountains-and-plains",
+  "canDo": "I can talk about a mountain area, a plain, a desert, a plateau and moving abroad.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C437-yimin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 437: I can talk about a mountain area, a plain, a desert, a plateau and moving abroad.",
+    "assesses": [
+      "ZH-LEX-C437-LAND437-03",
+      "ZH-LEX-C437-LAND437-04",
+      "ZH-LEX-C437-LAND437-05"
+    ]
+  }
+}

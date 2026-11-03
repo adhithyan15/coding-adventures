@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C382-jiankong",
+  "pathSegment": "ZH-PATH-382-GUARD382",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-382-GUARD382",
+      "order": 3
+    }
+  ]
+}

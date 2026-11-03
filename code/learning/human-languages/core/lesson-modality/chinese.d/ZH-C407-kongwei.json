@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C407-kongwei",
+    "language": "chinese",
+    "chapter": 407,
+    "sequence": 31270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2c57ae920eaddf48"
+  },
+  "findings": []
+}

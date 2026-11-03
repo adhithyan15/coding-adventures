@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W515-ji-season",
+    "language": "chinese",
+    "chapter": 515,
+    "sequence": 39065,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5446a4883a253ece",
+    "detachableSegments": [
+      "Script — the grain piece, then 子 under it"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

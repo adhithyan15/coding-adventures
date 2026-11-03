@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:aeaa4ee2e526b947",
+  "lessonIds": [
+    "ZH-C312-jianyu",
+    "ZH-C312-fakuan",
+    "ZH-C312-dajia",
+    "ZH-C312-huogai",
+    "ZH-C312-sihuo",
+    "ZH-R312-review-308-312"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch312.txt",
+  "json": "chinese/narration/ch312.json",
+  "textHash": "fnv1a64:e0f71aaeadea724c",
+  "jsonHash": "fnv1a64:b1da41af877c4bef",
+  "findings": []
+}

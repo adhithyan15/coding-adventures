@@ -1,0 +1,19 @@
+{
+  "chapter": 304,
+  "title": "Starting School",
+  "label": "ch:zh-starting-school",
+  "canDo": "I can talk about starting school, signing in, the fees, and keeping a diary.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C304-jizhu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 304: I can talk about starting school, signing in, the fees, and keeping a diary.",
+    "assesses": [
+      "ZH-LEX-C304-SCHOOL304-03",
+      "ZH-LEX-C304-SCHOOL304-04",
+      "ZH-LEX-C304-SCHOOL304-05"
+    ]
+  }
+}

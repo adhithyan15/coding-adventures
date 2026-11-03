@@ -1,0 +1,22 @@
+{
+  "chapter": 351,
+  "title": "That Makes Sense",
+  "label": "ch:zh-that-makes-sense",
+  "canDo": "I can say someone is in the right, analyse a problem, and talk about ideals and states of mind.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R351-review-346-351",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 351: I can say someone is in the right, analyse a problem, and talk about ideals and states of mind.",
+    "assesses": [
+      "ZH-LEX-C351-SENSE351-01",
+      "ZH-LEX-C351-SENSE351-02",
+      "ZH-LEX-C351-SENSE351-03",
+      "ZH-LEX-C351-SENSE351-04",
+      "ZH-LEX-C351-SENSE351-05",
+      "ZH-SCRIPT-LI-REASON-01"
+    ]
+  }
+}

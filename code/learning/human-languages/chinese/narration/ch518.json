@@ -1,0 +1,864 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 518,
+  "title": "Sunshine",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:3bbd69c5b6f67d4e",
+  "lessons": [
+    {
+      "id": "ZH-C518-qinglang",
+      "sequence": 39200,
+      "title": "qínglǎng — clear and cloudless (of the sky)",
+      "headword": "qínglǎng",
+      "romanization": "qínglǎng",
+      "gloss": "clear and cloudless (of the sky)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cadf198bc5a5f349",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for starlight, then the Mandarin for twilight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: qínglǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qínglǎng — \"clear and cloudless (of the sky)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "míngtiān tiānqì qínglǎng wǒmen qù gōngyuán — It'll be clear tomorrow, so we're going to the park."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qínglǎng is built from qíng and lǎng, both inherited from Middle Chinese, dzjeng and langX (Guangyun, in Baxter's transcription), which glosses the first as the sky clearing and the second 'bright'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qínglǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qínglǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qínglǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qínglǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "míngtiān tiānqì qínglǎng wǒmen qù gōngyuán — It'll be clear tomorrow, so we're going to the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *míngtiān tiānqì qínglǎng wǒmen qù gōngyuán* — It'll be clear tomorrow, so we're going to the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for starlight, then the Mandarin for twilight, then say qínglǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for starlight, then the Mandarin for twilight, then say *qínglǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does qínglǎng mean? (\"Clear and cloudless (of the sky)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C518-yangguang",
+      "sequence": 39210,
+      "title": "阳光 (yángguāng) — sunshine",
+      "headword": "阳光",
+      "romanization": "yángguāng",
+      "gloss": "sunshine",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b7c8e477a58bb59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for twilight, then the Mandarin for clear and cloudless."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 阳光",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "阳光 — yángguāng — \"sunshine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这个季节的阳光最好 zhège jìjié de yángguāng zuì hǎo — The sunshine is at its best at this time of year."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 阳 (yáng) — six strokes in two pieces: on the left the ear piece, two strokes, as on the right of 那; on the right 日, four strokes. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "阳光 (yángguāng) is built from 阳 (yáng) and 光 'light', both inherited from Middle Chinese, yang and kwang (Guangyun, in Baxter's transcription). The dictionary glosses the first as the yang of yin and yang and, after an older book, 'high and bright'; the light of the yang is the sun's."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yángguāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yángguāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yángguāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yángguāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège jìjié de yángguāng zuì hǎo — The sunshine is at its best at this time of year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège jìjié de yángguāng zuì hǎo* — The sunshine is at its best at this time of year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for twilight, then the Mandarin for clear and cloudless, then say yángguāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for twilight, then the Mandarin for clear and cloudless, then say *yángguāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 阳光 (yángguāng) mean? (\"Sunshine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W518-yang-sun",
+      "sequence": 39215,
+      "title": "阳 (yáng) — the ear piece on the left, then 日",
+      "headword": "阳",
+      "romanization": "yáng",
+      "gloss": "阳 — the ear piece, then 日",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0b39624b14364b6d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the ear piece on the left, then 日",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the ear piece on the left, then 日 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yángguāng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yángguāng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "那 日."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — nà, rì",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *nà*, *rì*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the ear piece on the left, then 日",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "阳 (yáng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, the ear, two strokes, as on the right of 那 and 都: one stroke that runs right, folds down twice like an ear and hooks, then a long vertical down its left edge."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, 日, four strokes, as you wrote it: a vertical, a bar that turns down the right side, a bar across the middle, then a bar closing the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 4 = six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "阳 (yáng), all six, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 阳, all six, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 阳 (yáng) have? (Two: the ear and 日.) Which comes first? (The ear, on the left.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 阳 (yáng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C518-taiyangneng",
+      "sequence": 39220,
+      "title": "太阳能 (tàiyángnéng) — solar energy; solar power",
+      "headword": "太阳能",
+      "romanization": "tàiyángnéng",
+      "gloss": "solar energy; solar power",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a5c21f05bad7442",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for clear and cloudless, then the Mandarin for sunshine."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 太阳能",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "太阳能 — tàiyángnéng — \"solar energy; solar power\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们家用了五年太阳能 wǒmen jiā yòng le wǔ nián tàiyángnéng — We've used solar power at home for five years."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "太阳能 (tàiyángnéng) is built from 太阳 'the sun' and 能 'energy', all inherited from Middle Chinese, thajH, yang and nong (Guangyun, in Baxter's transcription). The dictionary glosses the last 'skilled' and 'able'; the sense 'energy' is modern, and is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tàiyángnéng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tàiyángnéng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tàiyángnéng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tàiyángnéng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen jiā yòng le wǔ nián tàiyángnéng — We've used solar power at home for five years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen jiā yòng le wǔ nián tàiyángnéng* — We've used solar power at home for five years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for clear and cloudless, then the Mandarin for sunshine, then say tàiyángnéng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for clear and cloudless, then the Mandarin for sunshine, then say *tàiyángnéng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 太阳能 (tàiyángnéng) mean? (\"Solar energy; solar power\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C518-dasan",
+      "sequence": 39230,
+      "title": "dǎsǎn — to put up an umbrella",
+      "headword": "dǎsǎn",
+      "romanization": "dǎsǎn",
+      "gloss": "to put up an umbrella",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8eeb8a9a9d927fe2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for sunshine, then the Mandarin for solar power."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dǎsǎn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dǎsǎn — \"to put up an umbrella\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wàipó chūmén de shíhou zǒngshì dǎsǎn — Grandma always puts up an umbrella when she goes out."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: dǎ is said with a rising tone before sǎn, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dǎsǎn is built from 打 and sǎn 'an umbrella', both inherited from Middle Chinese, taengX and sanX (Guangyun, in Baxter's transcription), which glosses the first 'to strike' and the second 'a canopy'. The vowel of dǎ is not the regular outcome of taengX."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dǎsǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dǎsǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dǎsǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dǎsǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wàipó chūmén de shíhou zǒngshì dǎsǎn — Grandma always puts up an umbrella when she goes out.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wàipó chūmén de shíhou zǒngshì dǎsǎn* — Grandma always puts up an umbrella when she goes out.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for sunshine, then the Mandarin for solar power, then say dǎsǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for sunshine, then the Mandarin for solar power, then say *dǎsǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dǎsǎn mean? (\"To put up an umbrella\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C518-dawu",
+      "sequence": 39240,
+      "title": "dàwù — thick fog",
+      "headword": "dàwù",
+      "romanization": "dàwù",
+      "gloss": "thick fog",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cf083e379892ee4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for solar power, then the Mandarin for to put up an umbrella."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dàwù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dàwù — \"thick fog\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zǎoshang yǒu dàwù wǒmen kàn bu dào shān — There was thick fog this morning, and we couldn't make out the hills."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dàwù is built from 大 'big' and wù 'fog', both inherited from Middle Chinese, dajH and mjuH (Guangyun, in Baxter's transcription), which explains the second, after an older book, as what comes when yin and yang are in disorder, and after another, as the earth's breath that the sky does not answer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàwù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàwù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàwù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàwù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǎoshang yǒu dàwù wǒmen kàn bu dào shān — There was thick fog this morning, and we couldn't make out the hills.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǎoshang yǒu dàwù wǒmen kàn bu dào shān* — There was thick fog this morning, and we couldn't make out the hills.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for solar power, then the Mandarin for to put up an umbrella, then say dàwù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for solar power, then the Mandarin for to put up an umbrella, then say *dàwù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dàwù mean? (\"Thick fog\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:2810b703278aad1b",
+  "lessonIds": [
+    "ZH-C510-waipo",
+    "ZH-C510-sunzi",
+    "ZH-C510-sunnu",
+    "ZH-C510-tengai",
+    "ZH-C510-hong"
+  ],
+  "tex": "chinese/book/chapters/ch510-grandparents.tex"
+}

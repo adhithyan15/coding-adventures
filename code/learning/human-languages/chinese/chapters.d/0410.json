@@ -1,0 +1,19 @@
+{
+  "chapter": 410,
+  "title": "Long Trips",
+  "label": "ch:zh-long-trips",
+  "canDo": "I can talk about long-distance coaches and fares, say a train passes through, a line opens and we set off.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C410-shanglu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 410: I can talk about long-distance coaches and fares, say a train passes through, a line opens and we set off.",
+    "assesses": [
+      "ZH-LEX-C410-COACH410-03",
+      "ZH-LEX-C410-COACH410-04",
+      "ZH-LEX-C410-COACH410-05"
+    ]
+  }
+}

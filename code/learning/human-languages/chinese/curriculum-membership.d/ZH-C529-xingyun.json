@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C529-xingyun",
+  "pathSegment": "ZH-PATH-529-LUCK529",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-529-LUCK529",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C503-chuangzuo",
+  "pathSegment": "ZH-PATH-503-ART503",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-503-ART503",
+      "order": 3
+    }
+  ]
+}
