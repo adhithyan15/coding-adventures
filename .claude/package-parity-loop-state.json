@@ -2928,6 +2928,19 @@
       "notes": "Discovered during exact-head review of the prepared Rust graph/diff adoption and narrowed by the 2026-11-02 Rust/Go contract audit. Implement only the authority-free selection evaluator over already validated package names, graph edges, resolved trigger pairs, and changed packages: dependent closure, exactly one trigger hop, then prerequisite closure. Return deterministic sorted results; reuse the Rust graph/diff ceilings of 4096 packages and 16384 graph edges, add a 16384 trigger-pair ceiling, and consume a small neutral fixture family shared with Go. Keep Cargo parsing, filesystem identity, orphan/config policy, discovery, command execution, and CLI integration in the separately recorded follow-up owners."
     },
     {
+      "id": "build-tool-test-trigger-fixture-native-ci-selection-routing",
+      "title": "Route test-trigger fixtures to native Go and Rust CI readers",
+      "status": "pending",
+      "depends_on": [
+        "build-tool-ci-gate-fixture-native-ci-selection",
+        "build-tool-rust-cargo-test-trigger-selection-parity"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T07:15:26Z",
+      "notes": "Recorded after the Rust Cargo test-trigger core introduced six shared test-trigger-selection-*.json cases. Extend the native fixture-change selection map so exact flat changes in that family seed only go/programs/build-tool and rust/programs/build-tool. Reject empty stems, nested paths, backslash spellings, case variants, and backups; cover added, modified, deleted, and renamed paths; preserve ordinary package-root union and prerequisite closure; and prove Linux, macOS, Windows, and explicit language-plan behavior. This operational routing is separate from the authority-free selection core and grants no native or merge credit."
+    },
+    {
       "id": "build-tool-neutral-cargo-manifest-trigger-snapshot-contract",
       "title": "Define the neutral strict Cargo manifest trigger snapshot contract",
       "status": "pending",
