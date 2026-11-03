@@ -18,11 +18,11 @@ roots: []
 duration:
   max_seconds: 286
 requires:
-  knowledge: [MR-GRAMMAR-C159-PAST-PERSON-01, MR-GRAMMAR-C159-PAST-STEMS-01, MR-GRAMMAR-C159-ERGATIVE-NE-01, MR-GRAMMAR-C159-OBJECT-AGREEMENT-01, MR-LEX-AAHE-COPULA, MR-LEX-TO-TI-TE, MR-LEX-C115-TOWN115-04, MR-LEX-C96-NATURE96-02, MR-LEX-C94-SCHOOL94-01, MR-GRAMMAR-NEGATE-NAHI, MR-LEX-GHAR, MR-LEX-C113-TOWN113-01]
+  knowledge: [MR-GRAMMAR-C159-PAST-PERSON-01, MR-GRAMMAR-C159-PAST-STEMS-01, MR-GRAMMAR-C159-ERGATIVE-NE-01, MR-GRAMMAR-C159-OBJECT-AGREEMENT-01, MR-LEX-AAHE-COPULA, MR-LEX-MI, MR-LEX-TO-TI-TE, MR-LEX-C115-TOWN115-04, MR-LEX-C96-NATURE96-05, MR-LEX-C94-SCHOOL94-01, MR-GRAMMAR-NEGATE-NAHI, MR-LEX-GHAR, MR-LEX-MOTHA, MR-LEX-C113-TOWN113-01, MR-LEX-C159-PAS159-03, MR-LEX-C159-PAS159-04, MR-LEX-C159-PAS159-05]
 introduces:
   knowledge: [MR-GRAMMAR-C159-WAS-01, MR-GRAMMAR-C159-WAS-NOT-01]
 practises:
-  knowledge: [MR-GRAMMAR-C159-WAS-01, MR-GRAMMAR-C159-WAS-NOT-01, MR-GRAMMAR-C159-PAST-PERSON-01, MR-GRAMMAR-C159-PAST-STEMS-01, MR-GRAMMAR-C159-ERGATIVE-NE-01, MR-GRAMMAR-C159-OBJECT-AGREEMENT-01, MR-LEX-AAHE-COPULA, MR-LEX-TO-TI-TE, MR-LEX-C115-TOWN115-04, MR-LEX-C96-NATURE96-02, MR-LEX-C94-SCHOOL94-01, MR-GRAMMAR-NEGATE-NAHI, MR-LEX-GHAR, MR-LEX-C113-TOWN113-01]
+  knowledge: [MR-GRAMMAR-C159-WAS-01, MR-GRAMMAR-C159-WAS-NOT-01, MR-GRAMMAR-C159-PAST-PERSON-01, MR-GRAMMAR-C159-PAST-STEMS-01, MR-GRAMMAR-C159-ERGATIVE-NE-01, MR-GRAMMAR-C159-OBJECT-AGREEMENT-01, MR-LEX-AAHE-COPULA, MR-LEX-MI, MR-LEX-TO-TI-TE, MR-LEX-C115-TOWN115-04, MR-LEX-C96-NATURE96-05, MR-LEX-C94-SCHOOL94-01, MR-GRAMMAR-NEGATE-NAHI, MR-LEX-GHAR, MR-LEX-MOTHA, MR-LEX-C113-TOWN113-01, MR-LEX-C159-PAS159-03, MR-LEX-C159-PAS159-04, MR-LEX-C159-PAS159-05]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -34,12 +34,12 @@ reviews_of: [MR-C159-gelo, MR-C159-tyane-kela, MR-C02-aahe]
 # होता / होती / होते (hotā / hotī / hote) — was, were, was not
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-C159-PAST-PERSON-01, MR-GRAMMAR-C159-OBJECT-AGREEMENT-01, MR-LEX-AAHE-COPULA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-C159-PAST-PERSON-01, MR-GRAMMAR-C159-OBJECT-AGREEMENT-01, MR-LEX-AAHE-COPULA, MR-LEX-MI] -->
 
 [PAUSE 2s] Say "I went", "he did the work", then the present **आहे**.
 
 ## You'll want to know: होता, होती, होते
-<!-- hl-knowledge: introduces=[MR-GRAMMAR-C159-WAS-01]; assesses=[MR-LEX-TO-TI-TE, MR-LEX-C115-TOWN115-04, MR-LEX-C96-NATURE96-02, MR-LEX-GHAR] -->
+<!-- hl-knowledge: introduces=[MR-GRAMMAR-C159-WAS-01]; assesses=[MR-LEX-TO-TI-TE, MR-LEX-C115-TOWN115-04, MR-LEX-C96-NATURE96-05, MR-LEX-GHAR] -->
 
 > **तो घरी होता. ती घरी होती. ते घरी होते.**
 >
@@ -50,7 +50,7 @@ The past of **आहे** agrees like an adjective: masculine **होता**, 
 नदी होती**, "There was a river in the village."
 
 ## You'll want to know: नव्हता
-<!-- hl-knowledge: introduces=[MR-GRAMMAR-C159-WAS-NOT-01]; assesses=[MR-LEX-C94-SCHOOL94-01, MR-GRAMMAR-NEGATE-NAHI, MR-LEX-C113-TOWN113-01] -->
+<!-- hl-knowledge: introduces=[MR-GRAMMAR-C159-WAS-NOT-01]; assesses=[MR-LEX-C94-SCHOOL94-01, MR-GRAMMAR-NEGATE-NAHI, MR-LEX-C113-TOWN113-01, MR-LEX-MOTHA] -->
 
 "Was not" joins the negative into the past form: **तो शाळेत नव्हता**, **ती
 शाळेत नव्हती**, **दुकान मोठं नव्हतं**. Keep the same agreement ending.
@@ -65,7 +65,8 @@ The past of **आहे** agrees like an adjective: masculine **होता**, 
 - [YOU SAY: "They were at home" — *te gharī hote*]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-C159-PAST-PERSON-01, MR-GRAMMAR-C159-PAST-STEMS-01, MR-GRAMMAR-C159-ERGATIVE-NE-01, MR-GRAMMAR-C159-OBJECT-AGREEMENT-01, MR-GRAMMAR-C159-WAS-01, MR-GRAMMAR-C159-WAS-NOT-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-C159-PAST-PERSON-01, MR-GRAMMAR-C159-PAST-STEMS-01, MR-GRAMMAR-C159-ERGATIVE-NE-01, MR-GRAMMAR-C159-OBJECT-AGREEMENT-01, MR-GRAMMAR-C159-WAS-01, MR-GRAMMAR-C159-WAS-NOT-01, MR-LEX-C159-PAS159-03, MR-LEX-C159-PAS159-04, MR-LEX-C159-PAS159-05] -->
 
 [PAUSE 3s] "She was"? (**ती होती**.) "He was not"? (**तो नव्हता**.) "I
 went"? (**मी गेलो / गेले**.) "He did the work"? (**त्याने काम केलं**.)
+"Already"? (**आधीच**.) "The past"? (**भूतकाळ**.) "To happen"? (**घडणे**.)

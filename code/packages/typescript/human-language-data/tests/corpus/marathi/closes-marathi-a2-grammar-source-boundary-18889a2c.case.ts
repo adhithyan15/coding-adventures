@@ -62,6 +62,20 @@ it("owns Marathi A2 past and future grammar before the chapter-275 source gate",
   ]);
 
   const lessons = loadTrackLessons("marathi");
+  const exactPriorAtoms = new Map<string, { required: string[]; forbidden: string[] }>([
+    ["MR-C159-tyane-kela", {
+      required: ["MR-LEX-C89-FOOD89-02"],
+      forbidden: ["MR-LEX-C89-FOOD89-01"],
+    }],
+    ["MR-C159-hota", {
+      required: [
+        "MR-LEX-MI",
+        "MR-LEX-C96-NATURE96-05",
+        "MR-LEX-MOTHA",
+      ],
+      forbidden: ["MR-LEX-C96-NATURE96-02"],
+    }],
+  ]);
   const declaredAtoms = new Set<string>();
   for (const declaration of [
     ...boundary.grammarLessons,
@@ -103,6 +117,16 @@ it("owns Marathi A2 past and future grammar before the chapter-275 source gate",
     );
     if (boundary.grammarLessons.includes(declaration)) {
       expect(authored).toContain("<!-- hl-activity:");
+    }
+    const priorAtoms = exactPriorAtoms.get(declaration.id);
+    for (const atom of priorAtoms?.required ?? []) {
+      expect(lesson?.frontmatter["requires.knowledge"], `${declaration.id} requires ${atom}`)
+        .toContain(atom);
+    }
+    for (const atom of priorAtoms?.forbidden ?? []) {
+      expect(lesson?.frontmatter["requires.knowledge"], `${declaration.id} must not bind ${atom}`)
+        .not.toContain(atom);
+      expect(authored, `${declaration.id} must not assess ${atom}`).not.toContain(atom);
     }
     for (const form of declaration.forms) {
       expect(authored, `${declaration.id} must visibly teach ${form}`).toContain(form);

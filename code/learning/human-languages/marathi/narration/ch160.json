@@ -4,7 +4,7 @@
   "chapter": 160,
   "title": "The Future, Soon, Next, From Now On, To Plan",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2f55feeafeb34fd6",
+  "sourceHash": "fnv1a64:166f53d074cf1ee4",
   "lessons": [
     {
       "id": "MR-C160-bhavishya",
@@ -827,7 +827,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3328cb52b19120df",
+      "sourceHash": "fnv1a64:748cbb23dca4e063",
       "notice": null,
       "blocks": [
         {
@@ -946,7 +946,7 @@
             },
             {
               "kind": "speech",
-              "text": "\"I will go\"? (मी जाईन (mī jāīn).) \"I am going to go\"? (मी जाणार आहे (mī jāṇār āhe).) \"I won't come\"? (मी येणार नाही.) \"Next week\"? (पुढच्या आठवड्यात.)"
+              "text": "\"I will go\"? (मी जाईन (mī jāīn).) \"I am going to go\"? (मी जाणार आहे (mī jāṇār āhe).) \"I won't come\"? (मी येणार नाही.) \"Next week\"? (पुढच्या आठवड्यात.) \"From now on\"? (यानंतर (yānantar).) \"To plan\"? (आखणे (ākhṇe).)"
             }
           ]
         }

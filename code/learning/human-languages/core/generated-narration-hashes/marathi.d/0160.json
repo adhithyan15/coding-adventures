@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 160,
-  "sourceHash": "fnv1a64:2f55feeafeb34fd6",
+  "sourceHash": "fnv1a64:166f53d074cf1ee4",
   "lessonIds": [
     "MR-C160-bhavishya",
     "MR-C160-lavkarac",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch160.txt",
   "json": "marathi/narration/ch160.json",
-  "textHash": "fnv1a64:58c2116c1bfd9a0b",
-  "jsonHash": "fnv1a64:812228160ac72a9d",
+  "textHash": "fnv1a64:8671897d0a1f3dbc",
+  "jsonHash": "fnv1a64:65de99fce429f66b",
   "findings": []
 }

@@ -14,9 +14,10 @@
 - The two chapter-161 review passes retrieve all ten new grammar atoms again,
   preserving the track's reinforcement contract instead of leaving one-use
   knowledge behind.
-- Chapters 276–277 remain later spiral reinforcement. They are no longer the
-  first evidence for the A2 past and future and cannot silently bless an A2
-  assessment surface.
+- Chapters 276–277 remain later B1-seam re-teaching under separate C276/C277
+  atoms. They are no longer the first evidence for the A2 past and future,
+  are not relabelled as reinforcement of the new atoms, and cannot silently
+  bless an A2 assessment surface.
 - This is curriculum structure evidence only. It does not establish external
   certification, recording provenance, qualified recordings, independent human
   validation, standard setting, learner readiness, or learner attainment.

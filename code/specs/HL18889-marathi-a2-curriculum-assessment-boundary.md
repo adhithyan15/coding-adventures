@@ -24,8 +24,9 @@ The repair is therefore a slow, explicit A2 grammar path inside the existing
 chapters 159 and 160.  Chapter 159 gains three lessons: the intransitive past,
 the transitive past with **-ने** and object agreement, and the past copula.
 Chapter 160 gains two lessons: person-marked future forms and **-णार आहे / नाही**
-for plans and refusals.  Chapters 276–277 remain later spiral reinforcement;
-they are not source evidence for A2.
+for plans and refusals.  Chapters 276–277 remain later B1-seam re-teaching
+under their own C276/C277 atoms; they are not source evidence for A2 and this
+repair does not relabel those separate atoms as A2 reinforcement.
 
 The repository evidence behind that decision is explicit and bounded:
 
@@ -36,8 +37,9 @@ The repository evidence behind that decision is explicit and bounded:
 - the pre-repair chapter 159–160 lessons own time vocabulary and examples but
   no productive past/future grammar atoms; and
 - `marathi/CHANGELOG.d/00780-*.md`, chapters 276–277, and their lessons describe
-  those later chapters as the bridge into the B1 core.  They are useful spiral
-  evidence, but they are downstream of the declared A2 gate.
+  those later chapters as the bridge into the B1 core.  They are downstream
+  re-teaching under separate B1-seam atoms, not admissible evidence for the
+  declared A2 gate.
 
 ## 2. Machine-readable boundary
 
@@ -80,7 +82,7 @@ The chapter payoffs and A2 curriculum extensions must own the new grammar
 atoms.  The two chapter-161 review passes must retrieve every new grammar atom,
 so the new path does not create thin one-use knowledge.  README and
 language-owned changelog text must distinguish first A2 instruction and owned
-functional language from the later B1-seam reinforcement.
+functional language from the later B1-seam re-teaching with separate atoms.
 
 ## 4. Acceptance
 

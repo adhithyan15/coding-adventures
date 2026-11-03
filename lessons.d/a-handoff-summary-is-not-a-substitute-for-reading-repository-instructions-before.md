@@ -17,4 +17,7 @@ instructions and `lessons.d/_meta.md` before the first edit.  Then read the
 lessons for the file families being touched.  A conversation summary preserves
 task state; it cannot replace the checkout's current working contract.
 
-TODO: what went wrong, what the fix was, and what to do differently. Replace this line.
+The repair was to stop, read the checkout-owned instructions in full, add the
+missing corpus shard entry point, and rerun the required generation and gate
+order before continuing.  Future resumptions must treat the handoff as a map
+of unfinished work and the repository files as the authoritative procedure.
