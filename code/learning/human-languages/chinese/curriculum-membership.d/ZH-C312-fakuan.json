@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C312-fakuan",
+  "pathSegment": "ZH-PATH-312-PRISON312",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-312-PRISON312",
+      "order": 1
+    }
+  ]
+}

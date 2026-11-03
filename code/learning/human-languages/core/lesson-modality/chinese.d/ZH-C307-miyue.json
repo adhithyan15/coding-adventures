@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C307-miyue",
+    "language": "chinese",
+    "chapter": 307,
+    "sequence": 23900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7073fa5b60b12f40"
+  },
+  "findings": []
+}

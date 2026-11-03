@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 418,
+  "sourceHash": "fnv1a64:3743da6331305aa6",
+  "lessonIds": [
+    "ZH-C418-zhiji",
+    "ZH-C418-shouxu",
+    "ZH-C418-tingfei",
+    "ZH-W418-ting-stop",
+    "ZH-C418-banli",
+    "ZH-C418-chaozhong"
+  ],
+  "tex": "chinese/book/chapters/ch418-checking-in.tex"
+}

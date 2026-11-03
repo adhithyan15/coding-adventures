@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-468-GOOD468",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say someone is kind-hearted, good-natured, strong, hard-working or considerate.",
+  "prerequisites": []
+}

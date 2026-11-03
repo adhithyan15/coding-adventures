@@ -1,0 +1,19 @@
+{
+  "chapter": 482,
+  "title": "Treatment",
+  "label": "ch:zh-treatment",
+  "canDo": "I can talk about the emergency department, treatment, tablets, cleaning a wound and nursing the sick.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C482-huli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 482: I can talk about the emergency department, treatment, tablets, cleaning a wound and nursing the sick.",
+    "assesses": [
+      "ZH-LEX-C482-TREAT482-03",
+      "ZH-LEX-C482-TREAT482-04",
+      "ZH-LEX-C482-TREAT482-05"
+    ]
+  }
+}

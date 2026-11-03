@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C460-yumen",
+    "language": "chinese",
+    "chapter": 460,
+    "sequence": 35100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:641ba5f583a022a3"
+  },
+  "findings": []
+}

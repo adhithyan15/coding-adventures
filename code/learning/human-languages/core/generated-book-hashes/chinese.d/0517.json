@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:69f37d1997fb95b0",
+  "lessonIds": [
+    "ZH-C517-tianliang",
+    "ZH-C517-guang-light",
+    "ZH-W517-guang",
+    "ZH-C517-faguang",
+    "ZH-C517-xingguang",
+    "ZH-C517-huanghun"
+  ],
+  "tex": "chinese/book/chapters/ch517-light-in-the-dark.tex"
+}

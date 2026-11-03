@@ -1,0 +1,19 @@
+{
+  "chapter": 451,
+  "title": "Specialities",
+  "label": "ch:zh-specialities",
+  "canDo": "I can say I eat no meat, talk about a place's special character, say something is outstanding, ask for meatless dishes and take food that is left over.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C451-sheng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 451: I can say I eat no meat, talk about a place's special character, say something is outstanding, ask for meatless dishes and take food that is left over.",
+    "assesses": [
+      "ZH-LEX-C451-SPECIAL451-03",
+      "ZH-LEX-C451-SPECIAL451-04",
+      "ZH-LEX-C451-SPECIAL451-05"
+    ]
+  }
+}

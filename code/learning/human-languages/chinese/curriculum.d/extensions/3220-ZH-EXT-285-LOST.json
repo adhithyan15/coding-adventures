@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-285-LOST",
+  "stage": "B1",
+  "kind": "required",
+  "category": "writing",
+  "canDo": "I can report a lost thing and write a short note about it.",
+  "prerequisites": []
+}

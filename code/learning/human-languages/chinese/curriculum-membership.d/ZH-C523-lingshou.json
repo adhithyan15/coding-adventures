@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C523-lingshou",
+  "pathSegment": "ZH-PATH-523-TRADE523",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-523-TRADE523",
+      "order": 5
+    }
+  ]
+}

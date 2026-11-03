@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:c00c3cda1c119c54",
+  "lessonIds": [
+    "ZH-C434-luyoutuan",
+    "ZH-C434-jihe",
+    "ZH-C434-gouwu",
+    "ZH-C434-liunian",
+    "ZH-C434-youji"
+  ],
+  "tex": "chinese/book/chapters/ch434-with-a-tour-group.tex"
+}

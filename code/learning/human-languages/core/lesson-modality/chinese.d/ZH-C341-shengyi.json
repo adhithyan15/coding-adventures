@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C341-shengyi",
+    "language": "chinese",
+    "chapter": 341,
+    "sequence": 26230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:96f7fe09dfa5a91b"
+  },
+  "findings": []
+}

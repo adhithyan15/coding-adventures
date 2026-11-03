@@ -1,0 +1,19 @@
+{
+  "chapter": 294,
+  "title": "How It Turned Out",
+  "label": "ch:zh-how-it-turned-out",
+  "canDo": "I can say how things stood, what caused something, what it changed and how it ended.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C294-yushi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say how things stood, what caused something, what it changed and how it ended.",
+    "assesses": [
+      "ZH-LEX-C294-RESULT294-03",
+      "ZH-LEX-C294-RESULT294-04",
+      "ZH-LEX-C294-RESULT294-05"
+    ]
+  }
+}

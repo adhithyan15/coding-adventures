@@ -92,6 +92,10 @@ pub struct DispatchCtx<'a> {
     /// (safe for trusted code); `Some(N)` returns `VMError::Custom` after N
     /// instructions (sandbox / untrusted-IIR mode).
     pub max_instructions: Option<u64>,
+    /// The module's string ceiling in bytes (LANG83 PR5a): the executing
+    /// module's [`IIRModule::str_ceiling`](interpreter_ir::IIRModule::str_ceiling).
+    /// `str_concat` traps `Trap.Overflow` rather than build a longer string.
+    pub str_max_bytes: usize,
     pub fn_call_counts: &'a mut HashMap<String, u32>,
     pub metrics_instrs: &'a mut u64,
     pub metrics_jit_hits: &'a mut u64,
@@ -935,6 +939,40 @@ fn handle_global_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option
 // `str_len` returns the UTF-8 byte count and `str_index` returns one unsigned
 // byte. Backends are free to use native managed strings or length-prefixed
 // buffers, but this is the reference behaviour they must match.
+//
+// LANG83 PR5a: every string failure is a registered trap, never an untyped
+// `VMError::Custom`:
+//
+// | op           | traps when                              | kind            |
+// |--------------|-----------------------------------------|-----------------|
+// | `str_index`  | not `0 <= i < len`                      | `Trap.Bounds`   |
+// | `str_slice`  | not `0 <= a <= b <= len`                | `Trap.Bounds`   |
+// | `str_concat` | `len a > ceiling - len b`               | `Trap.Overflow` |
+//
+// The bounds are checked on the full `i64` (no cast happens before the
+// compare), and the ceiling is the module's `str_ceiling()`, carried in
+// `DispatchCtx::str_max_bytes`.
+
+/// `true` when `0 <= i < len`, evaluated on the full `i64` (LANG83 PR5a).
+///
+/// Comparing through `u64` would accept nothing extra, but writing the two
+/// halves out keeps the rule readable: a negative index is out of range, and
+/// so is any index at or past the length.
+fn str_index_in_range(i: i64, len: usize) -> bool {
+    i >= 0 && (i as u64) < len as u64
+}
+
+/// `true` when `0 <= a <= b <= len` (LANG83 PR5a), on the full `i64`.
+fn str_slice_in_range(a: i64, b: i64, len: usize) -> bool {
+    a >= 0 && a <= b && (b as u64) <= len as u64
+}
+
+/// `true` when `str_concat` of strings of `la` and `lb` bytes would exceed
+/// `ceiling`. Written `la > ceiling - lb` so it cannot overflow; an operand
+/// already over the ceiling (impossible for validated IR) also reports `true`.
+fn str_concat_exceeds(la: usize, lb: usize, ceiling: usize) -> bool {
+    lb > ceiling || la > ceiling - lb
+}
 
 fn string_src(frame: &VMFrame, srcs: &[Operand], idx: usize, op: &str) -> Result<String, VMError> {
     match resolve_src(frame, srcs, idx)? {
@@ -983,11 +1021,8 @@ fn handle_str_index(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
                 actual: idx_value.iir_type_name().into(),
                 context: "str_index".into(),
             })?;
-        if idx < 0 || idx as usize >= s.len() {
-            return Err(VMError::Custom(format!(
-                "str_index: index {idx} out of bounds for string of length {}",
-                s.len()
-            )));
+        if !str_index_in_range(idx, s.len()) {
+            return Err(trap(interpreter_ir::exception_kind::TRAP_BOUNDS));
         }
         s.as_bytes()[idx as usize] as i64
     };
@@ -1003,6 +1038,10 @@ fn handle_str_concat(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<V
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
         let mut a = string_src(frame, &instr.srcs, 0, "str_concat")?;
         let b = string_src(frame, &instr.srcs, 1, "str_concat")?;
+        // Checked before the allocation, so an over-long result never exists.
+        if str_concat_exceeds(a.len(), b.len(), ctx.str_max_bytes) {
+            return Err(trap(interpreter_ir::exception_kind::TRAP_OVERFLOW));
+        }
         a.push_str(&b);
         Value::Str(a)
     };
@@ -1028,11 +1067,8 @@ fn handle_str_slice(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
             actual: end_value.iir_type_name().into(),
             context: "str_slice".into(),
         })?;
-        if start < 0 || end < start || end as usize > s.len() {
-            return Err(VMError::Custom(format!(
-                "str_slice: range {start}..{end} out of bounds for string of length {}",
-                s.len()
-            )));
+        if !str_slice_in_range(start, end, s.len()) {
+            return Err(trap(interpreter_ir::exception_kind::TRAP_BOUNDS));
         }
         let bytes = &s.as_bytes()[start as usize..end as usize];
         let sliced = String::from_utf8(bytes.to_vec()).map_err(|_| {

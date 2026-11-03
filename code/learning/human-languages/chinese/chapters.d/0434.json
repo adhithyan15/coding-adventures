@@ -1,0 +1,19 @@
+{
+  "chapter": 434,
+  "title": "With a Tour Group",
+  "label": "ch:zh-with-a-tour-group",
+  "canDo": "I can talk about a tour group, where we meet, going shopping, a photo to remember and travel writing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C434-youji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 434: I can talk about a tour group, where we meet, going shopping, a photo to remember and travel writing.",
+    "assesses": [
+      "ZH-LEX-C434-GROUP434-03",
+      "ZH-LEX-C434-GROUP434-04",
+      "ZH-LEX-C434-GROUP434-05"
+    ]
+  }
+}

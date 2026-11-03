@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 427,
+  "sourceHash": "fnv1a64:d06a12b7240cef59",
+  "lessonIds": [
+    "ZH-C427-gebi",
+    "ZH-C427-laiwang",
+    "ZH-W427-wang-toward",
+    "ZH-C427-zizhucan",
+    "ZH-C427-chuangdan",
+    "ZH-C427-kaiwang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch427.txt",
+  "json": "chinese/narration/ch427.json",
+  "textHash": "fnv1a64:79b9edf06bb620ef",
+  "jsonHash": "fnv1a64:53471ec2ad22fb82",
+  "findings": []
+}

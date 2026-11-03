@@ -1,0 +1,19 @@
+{
+  "chapter": 322,
+  "title": "Back Then",
+  "label": "ch:zh-back-then",
+  "canDo": "I can talk about back then, someone's early and later years, a whole life and missing the past.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C322-huainian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can talk about back then, someone's early and later years, a whole life and missing the past.",
+    "assesses": [
+      "ZH-LEX-C322-BACKTHEN322-03",
+      "ZH-LEX-C322-BACKTHEN322-04",
+      "ZH-LEX-C322-BACKTHEN322-05"
+    ]
+  }
+}

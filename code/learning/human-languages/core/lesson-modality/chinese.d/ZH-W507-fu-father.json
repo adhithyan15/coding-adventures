@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W507-fu-father",
+    "language": "chinese",
+    "chapter": 507,
+    "sequence": 38095,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7a11c50324553c5a",
+    "detachableSegments": [
+      "Script — two short strokes, then two long ones"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

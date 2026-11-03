@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C488-fanyi",
+  "pathSegment": "ZH-PATH-488-TRADES488",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-488-TRADES488",
+      "order": 3
+    }
+  ]
+}

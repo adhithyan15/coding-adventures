@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C530-choujiang",
+  "pathSegment": "ZH-PATH-530-PRIZE530",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-530-PRIZE530",
+      "order": 1
+    }
+  ]
+}

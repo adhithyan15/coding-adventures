@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C306-jingguo",
+    "language": "chinese",
+    "chapter": 306,
+    "sequence": 23830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5c5b72cec3856c43"
+  },
+  "findings": []
+}

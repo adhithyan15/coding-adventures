@@ -1,0 +1,988 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 295,
+  "title": "Starting Over",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:6a7480b7a030e90f",
+  "lessons": [
+    {
+      "id": "ZH-C295-zuichu",
+      "sequence": 23250,
+      "title": "zuìchū — at the very start; initially",
+      "headword": "zuìchū",
+      "romanization": "zuìchū",
+      "gloss": "at the very start; initially",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9961536fd6437dc9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for at long last, then the Mandarin for and so it followed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zuìchū",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zuìchū — \"at the very start; initially\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zuìchū wǒ bù xǐhuan zhèr — At first I didn't like it here."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zuìchū is built from 最 'most' and chū 'the start', both inherited from Middle Chinese, tswajH and tsrhjo (Guangyun, in Baxter's transcription), which glosses the second 'the beginning': the very start."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuìchū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuìchū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuìchū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuìchū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuìchū wǒ bù xǐhuan zhèr — At first I didn't like it here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuìchū wǒ bù xǐhuan zhèr* — At first I didn't like it here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for at long last, then the Mandarin for and so it followed, then say zuìchū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for at long last, then the Mandarin for and so it followed, then say *zuìchū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zuìchū mean? (\"At the very start; initially\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C295-chongxin",
+      "sequence": 23260,
+      "title": "重新 (chóngxīn) — anew; over again from the start",
+      "headword": "重新",
+      "romanization": "chóngxīn",
+      "gloss": "anew; over again from the start",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7d5b4c6ed1c1951f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for and so it followed, then the Mandarin for at the very start."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 重新",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "重新 — chóngxīn — \"anew; over again from the start\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你得重新写 nǐ děi chóngxīn xiě — You'll have to write it over again."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 新 (xīn) — thirteen strokes in three pieces: top left, the piece on the left of 站, five strokes; under it a bar, a vertical with a hook, a short sweep and a dot; on the right two strokes falling to the left, a bar and a long vertical. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "重新 (chóngxīn) is built from 重 'to repeat' and 新 (xīn) 'new', both inherited from Middle Chinese, drjowng and sin (Guangyun, in Baxter's transcription), which glosses the first, in this reading, 'to double' and 'to layer'; the same character read drjowngX, glossed 'much' and 'thick', is the source of zhòng 'heavy'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chóngxīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chóngxīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chóngxīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chóngxīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ děi chóngxīn xiě — You'll have to write it over again.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ děi chóngxīn xiě* — You'll have to write it over again.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for and so it followed, then the Mandarin for at the very start, then say chóngxīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for and so it followed, then the Mandarin for at the very start, then say *chóngxīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 重新 (chóngxīn) mean? (\"Anew; over again from the start\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W295-xin-new",
+      "sequence": 23265,
+      "title": "新 (xīn) — two pieces on the left, one on the right",
+      "headword": "新",
+      "romanization": "xīn",
+      "gloss": "新 — the left piece of 站 over a hooked tree piece, then two sweeps, a bar and a post",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:87f65cef21d2d6b0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — two pieces on the left, one on the right",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — two pieces on the left, one on the right and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chóngxīn — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chóngxīn* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "站 机."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — zhàn, jī",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *zhàn*, *jī*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — two pieces on the left, one on the right",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "新 (xīn)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces: two stacked on the left, one on the right. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "Top left, five strokes. The piece on the left of 站: a dot, a bar, a dot falling to the right and a short stroke falling to the left under it, then a bar across the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "Bottom left, four strokes. A bar, a vertical that hooks to the left at the foot, a short sweep to the lower left and a dot to the lower right: the tree piece of 机, with a hook."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, four strokes. A short sweep down to the left at the top. A long stroke down from under it that curves to the lower left. A bar across to the right. Then a long vertical down to the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "5 + 4 + 4 = thirteen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "新 (xīn), all thirteen, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 新, all thirteen, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces in 新 (xīn)? (Three.) Where have you made the top left piece? (On the left of 站.) What is the last stroke? (A long vertical on the right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 新 (xīn), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C295-dangtian",
+      "sequence": 23270,
+      "title": "当天 (dàngtiān) — that same day; on that very day",
+      "headword": "当天",
+      "romanization": "dàngtiān",
+      "gloss": "that same day; on that very day",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:456cc6041986c5fe",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for at the very start, then the Mandarin for over again from the start."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 当天",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当天 — dàngtiān — \"that same day; on that very day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他当天就回来了 tā dàngtiān jiù huílái le — He came back that same day."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当天 (dàngtiān) is built from 当 and 天 'a day', both inherited from Middle Chinese, tangH and then (Guangyun, in Baxter's transcription), which glosses the first, in this departing-tone reading, 'to be in charge'; how it came to mean 'that very (day)' is not settled. Read tang, the same character gives dāng."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàngtiān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàngtiān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàngtiān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàngtiān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā dàngtiān jiù huílái le — He came back that same day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā dàngtiān jiù huílái le* — He came back that same day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for at the very start, then the Mandarin for over again from the start, then say dàngtiān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for at the very start, then the Mandarin for over again from the start, then say *dàngtiān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 当天 (dàngtiān) mean? (\"That same day; on that very day\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C295-shihou",
+      "sequence": 23280,
+      "title": "事后 (shìhòu) — after the event; in hindsight",
+      "headword": "事后",
+      "romanization": "shìhòu",
+      "gloss": "after the event; in hindsight",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57d47cee0edcd3f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for over again from the start, then the Mandarin for on that very day."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 事后",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "事后 — shìhòu — \"after the event; in hindsight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "事后我们都笑了 shìhòu wǒmen dōu xiào le — Afterwards we all laughed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "事后 (shìhòu) is built from 事 'a matter' and 后 'after', both inherited from Middle Chinese, dzriH and huwX (Guangyun, in Baxter's transcription), which glosses the second 'first and after'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shìhòu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shìhòu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shìhòu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shìhòu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shìhòu wǒmen dōu xiào le — Afterwards we all laughed.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shìhòu wǒmen dōu xiào le* — Afterwards we all laughed.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for over again from the start, then the Mandarin for on that very day, then say shìhòu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for over again from the start, then the Mandarin for on that very day, then say *shìhòu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 事后 (shìhòu) mean? (\"After the event; in hindsight\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C295-dangchang",
+      "sequence": 23290,
+      "title": "dāngchǎng — on the spot; there and then",
+      "headword": "dāngchǎng",
+      "romanization": "dāngchǎng",
+      "gloss": "on the spot; there and then",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a73bbd0ce59bfaad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for on that very day, then the Mandarin for after the event."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dāngchǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dāngchǎng — \"on the spot; there and then\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā dāngchǎng jiù kū le — He burst into tears there and then."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dāngchǎng is built from 当 'at' and chǎng 'an open ground', both inherited from Middle Chinese, tang and drjang (Guangyun, in Baxter's transcription), which glosses the first 'to face' and 'to meet' and the second 'a place for offerings' and 'a threshing floor'. Middle Chinese drjang would regularly give cháng; the dipping tone of chǎng is irregular."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāngchǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāngchǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāngchǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāngchǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā dāngchǎng jiù kū le — He burst into tears there and then.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā dāngchǎng jiù kū le* — He burst into tears there and then.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for on that very day, then the Mandarin for after the event, then say dāngchǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for on that very day, then the Mandarin for after the event, then say *dāngchǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dāngchǎng mean? (\"On the spot; there and then\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R295-review-290-295",
+      "sequence": 23300,
+      "title": "Looking back: from In the News to Starting Over",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from In the News to Starting Over",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66bf2ffab1bca7b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for the news on TV and to report on the news."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the news on TV, to report on the news, a radio station, the presenter of a show, what everyone is talking about",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the news on TV, to report on the news, a radio station, the presenter of a show, what everyone is talking about]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to interview someone for the news, to invent something, an incident in the news, to break out suddenly, to announce officially",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to interview someone for the news, to invent something, an incident in the news, to break out suddenly, to announce officially]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to broadcast on the radio, the people watching a show, to broadcast live, the people listening to the radio, to publish an article",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to broadcast on the radio, the people watching a show, to broadcast live, the people listening to the radio, to publish an article]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a magazine, the daily paper, to make the papers, the front-page story, to follow a story closely",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a magazine, the daily paper, to make the papers, the front-page story, to follow a story closely]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how things stand, to give rise to something, to have an effect on, at long last, and so it followed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how things stand, to give rise to something, to have an effect on, at long last, and so it followed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "at the very start, over again from the start, on that very day, after the event, right there on the spot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: at the very start, over again from the start, on that very day, after the event, right there on the spot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "发 报 新 (xīn) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 发 报 新 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The news on TV? (xīnwén.) To report on the news? (bàodào.) A radio station? (diàntái.) The presenter of a show? (zhǔchírén.) What everyone is talking about? (热点, rèdiǎn.) To interview someone for the news? (cǎifǎng.) To invent something? (发明, fāmíng.) An incident in the news? (shìjiàn.) To break out suddenly? (突发, tūfā.) To announce officially? (xuānbù.) To broadcast on the radio? (guǎngbō.) The people watching a show? (guānzhòng.) To broadcast live? (zhíbō.) The people listening to the radio? (tīngzhòng.) To publish an article? (fābiǎo.) A magazine? (zázhì.) The daily paper? (报, bào.) To make the papers? (见报, jiànbào.) The front-page story? (tóutiáo.) To follow a story closely? (guānzhù.) How things stand? (qíngkuàng.) To give rise to something? (yǐnqǐ.) To have an effect on? (yǐngxiǎng.) At long last? (zhōngyú.) And so it followed? (yúshì.) At the very start? (zuìchū.) Over again from the start? (重新, chóngxīn.) On that very day? (当天, dàngtiān.) After the event? (事后, shìhòu.) Right there on the spot? (dāngchǎng.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

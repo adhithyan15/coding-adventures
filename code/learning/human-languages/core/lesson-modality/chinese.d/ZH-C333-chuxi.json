@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C333-chuxi",
+    "language": "chinese",
+    "chapter": 333,
+    "sequence": 25780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4db8d5bcc7dc9d8a"
+  },
+  "findings": []
+}

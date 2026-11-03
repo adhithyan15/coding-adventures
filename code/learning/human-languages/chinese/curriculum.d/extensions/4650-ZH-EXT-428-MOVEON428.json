@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-428-MOVEON428",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say where a door leads, follow an announcement, and talk about the trip back, the plan and receipts.",
+  "prerequisites": []
+}

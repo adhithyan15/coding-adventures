@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 452,
+  "sourceHash": "fnv1a64:9fe76977ee138a07",
+  "lessonIds": [
+    "ZH-C452-xiaohua",
+    "ZH-C452-haoping",
+    "ZH-C452-xiaofei",
+    "ZH-C452-tianse",
+    "ZH-C452-canjinzhi",
+    "ZH-R452-review-448-452"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch452.txt",
+  "json": "chinese/narration/ch452.json",
+  "textHash": "fnv1a64:9eb57a032f036d46",
+  "jsonHash": "fnv1a64:95c1f5bd783cd67d",
+  "findings": []
+}

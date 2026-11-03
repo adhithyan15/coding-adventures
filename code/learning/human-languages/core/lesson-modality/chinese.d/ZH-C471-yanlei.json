@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C471-yanlei",
+    "language": "chinese",
+    "chapter": 471,
+    "sequence": 35670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d21b75342a449a4a"
+  },
+  "findings": []
+}

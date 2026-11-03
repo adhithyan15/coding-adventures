@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 495,
+  "title": "Marks",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4d21f0925b24981a",
+  "lessons": [
+    {
+      "id": "ZH-C495-qizhong",
+      "sequence": 37460,
+      "title": "期中 (qīzhōng) — the middle of the term; midterm",
+      "headword": "期中",
+      "romanization": "qīzhōng",
+      "gloss": "the middle of the term; midterm",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e07ceecf163fd92a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to pass the entrance exam for, then the Mandarin for to fail an entrance exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 期中",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "期中 — qīzhōng — \"the middle of the term; midterm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè cì qīzhōng kǎoshì wǒ gǎnjué hái xíng — I think this midterm went all right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "期中 (qīzhōng) is built from 期 'a set time' and 中 'the middle', both inherited from Middle Chinese, gi and trjuwng (Guangyun, in Baxter's transcription), which glosses the first 'an appointed time'. The modern first tone of qī is irregular: gi would regularly give qí."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīzhōng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīzhōng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīzhōng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīzhōng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè cì qīzhōng kǎoshì wǒ gǎnjué hái xíng — I think this midterm went all right.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè cì qīzhōng kǎoshì wǒ gǎnjué hái xíng* — I think this midterm went all right.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to pass the entrance exam for, then the Mandarin for to fail an entrance exam, then say qīzhōng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to pass the entrance exam for, then the Mandarin for to fail an entrance exam, then say *qīzhōng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 期中 (qīzhōng) mean? (\"The middle of the term; midterm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C495-kaochang",
+      "sequence": 37470,
+      "title": "考场 (kǎochǎng) — exam hall; exam room",
+      "headword": "考场",
+      "romanization": "kǎochǎng",
+      "gloss": "exam hall; exam room",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16cb2e453076673c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to fail an entrance exam, then the Mandarin for the middle of the term."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 考场",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "考场 — kǎochǎng — \"exam hall; exam room\"."
+            },
+            {
+              "kind": "speech",
+              "text": "进考场以前我喝了一杯水 jìn kǎochǎng yǐqián wǒ hē le yì bēi shuǐ — Before going into the exam hall, I drank a glass of water."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: kǎo is said with a rising tone before chǎng, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "考场 (kǎochǎng) is built from 考 'to examine' and 场 'a ground', both inherited from Middle Chinese, khawX and drjang (Guangyun, in Baxter's transcription), which glosses the second 'a threshing floor'; the third tone of chǎng is irregular for drjang."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎochǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎochǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎochǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎochǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìn kǎochǎng yǐqián wǒ hē le yì bēi shuǐ — Before going into the exam hall, I drank a glass of water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìn kǎochǎng yǐqián wǒ hē le yì bēi shuǐ* — Before going into the exam hall, I drank a glass of water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to fail an entrance exam, then the Mandarin for the middle of the term, then say kǎochǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to fail an entrance exam, then the Mandarin for the middle of the term, then say *kǎochǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 考场 (kǎochǎng) mean? (\"Exam hall; exam room\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C495-manfen",
+      "sequence": 37480,
+      "title": "mǎnfēn — full marks",
+      "headword": "mǎnfēn",
+      "romanization": "mǎnfēn",
+      "gloss": "full marks",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca3c587faef51ba3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the middle of the term, then the Mandarin for an exam hall."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mǎnfēn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mǎnfēn — \"full marks\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè cì shùxué kǎoshì tā shì mǎnfēn — He got full marks in this maths test."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mǎnfēn is built from mǎn 'full' and fēn 'a part', both inherited from Middle Chinese, manX and pjun (Guangyun, in Baxter's transcription), which glosses the first 'brimming' and the second 'to divide'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mǎnfēn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mǎnfēn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mǎnfēn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mǎnfēn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè cì shùxué kǎoshì tā shì mǎnfēn — He got full marks in this maths test.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè cì shùxué kǎoshì tā shì mǎnfēn* — He got full marks in this maths test.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the middle of the term, then the Mandarin for an exam hall, then say mǎnfēn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the middle of the term, then the Mandarin for an exam hall, then say *mǎnfēn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mǎnfēn mean? (\"Full marks\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C495-zuobi",
+      "sequence": 37490,
+      "title": "zuòbì — to cheat in an exam",
+      "headword": "zuòbì",
+      "romanization": "zuòbì",
+      "gloss": "to cheat in an exam",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9bf90135ea0f94ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an exam hall, then the Mandarin for full marks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zuòbì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zuòbì — \"to cheat in an exam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "kǎoshì de shíhou bù yīnggāi zuòbì — You shouldn't cheat in an exam."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zuòbì is built from 作 'to do' and bì 'harm', both inherited from Middle Chinese, tsak and bjiejH (Guangyun, in Baxter's transcription), which glosses the second 'worn out' and 'bad'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuòbì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuòbì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuòbì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuòbì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎoshì de shíhou bù yīnggāi zuòbì — You shouldn't cheat in an exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎoshì de shíhou bù yīnggāi zuòbì* — You shouldn't cheat in an exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an exam hall, then the Mandarin for full marks, then say zuòbì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an exam hall, then the Mandarin for full marks, then say *zuòbì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zuòbì mean? (\"To cheat in an exam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C495-nanti",
+      "sequence": 37500,
+      "title": "难题 (nántí) — hard problem; difficult question",
+      "headword": "难题",
+      "romanization": "nántí",
+      "gloss": "hard problem; difficult question",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6df91d0adbf538d0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for full marks, then the Mandarin for to cheat in an exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 难题",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "难题 — nántí — \"hard problem; difficult question\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这个难题我想了一个小时 zhège nántí wǒ xiǎng le yí ge xiǎoshí — I spent an hour thinking about this hard question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "难题 (nántí) is built from 难 'hard' and 题 'a heading', both inherited from Middle Chinese, nan and dej (Guangyun, in Baxter's transcription), which glosses the first 'hard to do' and the second 'a written heading'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nántí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nántí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nántí, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nántí*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège nántí wǒ xiǎng le yí ge xiǎoshí — I spent an hour thinking about this hard question.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège nántí wǒ xiǎng le yí ge xiǎoshí* — I spent an hour thinking about this hard question.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for full marks, then the Mandarin for to cheat in an exam, then say nántí again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for full marks, then the Mandarin for to cheat in an exam, then say *nántí* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 难题 (nántí) mean? (\"Hard problem; difficult question\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

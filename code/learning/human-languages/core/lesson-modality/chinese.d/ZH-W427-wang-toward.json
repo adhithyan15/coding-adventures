@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W427-wang-toward",
+    "language": "chinese",
+    "chapter": 427,
+    "sequence": 32305,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:83e3e6a509d4a91c",
+    "detachableSegments": [
+      "Script — the left piece of 很, then a dot over three bars"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

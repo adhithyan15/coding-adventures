@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 438,
+  "sourceHash": "fnv1a64:032429022d1af27f",
+  "lessonIds": [
+    "ZH-C438-kaifa",
+    "ZH-C438-beibu",
+    "ZH-W438-bu-part",
+    "ZH-C438-xibu",
+    "ZH-C438-bufen",
+    "ZH-C438-quanbu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch438.txt",
+  "json": "chinese/narration/ch438.json",
+  "textHash": "fnv1a64:2b54cab280e4fd93",
+  "jsonHash": "fnv1a64:1fbac2f7e5e89dd5",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-480-SYMPTOM480",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say I feel dizzy or itchy, that my nose is running, that I am allergic to something, and that I cannot sleep.",
+  "prerequisites": []
+}

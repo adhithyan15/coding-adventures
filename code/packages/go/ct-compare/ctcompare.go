@@ -55,3 +55,52 @@ func CTEqU64(left, right uint64) bool {
 	diff := left ^ right
 	return bits.LeadingZeros64(diff) == 64
 }
+
+// ── Bit-returning equality (CT01, "How a lane receives the selection bit") ──
+//
+// CTSelectBytes takes its selection bit as an int, because Go cannot turn a
+// bool into an integer without a branch. A caller that writes
+//
+//	CTSelectBytes(a, b, CTEq(x, y))   // does not compile: bool, not int
+//
+// would need `if CTEq(x, y) { bit = 1 }`, the very branch CT01 removes. So
+// each equality also comes in a form that returns the bit itself, computed
+// arithmetically from the difference accumulator:
+//
+//	acc = 0          uint32(acc) - 1 = 0xFFFFFFFF  >> 31 = 1   (equal)
+//	acc = 1 .. 255   uint32(acc) - 1 < 2^31        >> 31 = 0   (different)
+//
+// This is the same identity as crypto/subtle.ConstantTimeByteEq. Use it as
+//
+//	CTSelectBytes(a, b, CTEqBit(x, y))
+
+// CTEqBit returns 1 when left and right are equal and 0 otherwise. A length
+// mismatch returns 0 without reading either input; lengths are public.
+func CTEqBit(left, right []byte) int {
+	if len(left) != len(right) {
+		return 0
+	}
+	var accumulator byte
+	for index := range left {
+		accumulator |= left[index] ^ right[index]
+	}
+	return int((uint32(accumulator) - 1) >> 31)
+}
+
+// CTEqFixedBit is CTEqBit for inputs of a declared public width.
+func CTEqFixedBit(left, right []byte) int {
+	return CTEqBit(left, right)
+}
+
+// CTEqU64Bit returns 1 when left == right and 0 otherwise.
+//
+// diff | -diff has its top bit set exactly when diff != 0 (for diff > 0,
+// one of diff and its two's-complement negation has the top bit set), so
+// shifting it down and flipping gives the equality bit:
+//
+//	diff = 0   0 | 0 = 0        >> 63 = 0   xor 1 = 1
+//	diff ≠ 0   top bit set      >> 63 = 1   xor 1 = 0
+func CTEqU64Bit(left, right uint64) int {
+	diff := left ^ right
+	return int(((diff | -diff) >> 63) ^ 1)
+}

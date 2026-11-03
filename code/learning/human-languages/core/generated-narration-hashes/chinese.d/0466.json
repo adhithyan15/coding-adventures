@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 466,
+  "sourceHash": "fnv1a64:db4e772dbef99c7a",
+  "lessonIds": [
+    "ZH-C466-fadai",
+    "ZH-C466-lengjing",
+    "ZH-W466-jing-still",
+    "ZH-C466-xintiao",
+    "ZH-C466-weixiao",
+    "ZH-C466-pingjing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch466.txt",
+  "json": "chinese/narration/ch466.json",
+  "textHash": "fnv1a64:88353fb1e6c96044",
+  "jsonHash": "fnv1a64:8942ded7ffef117a",
+  "findings": []
+}

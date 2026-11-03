@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W288-jiu",
+    "language": "chinese",
+    "chapter": 288,
+    "sequence": 21780,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:137a7626e63a03b8",
+    "detachableSegments": [
+      "Script — a dot, a bar, 口 and 小, then a four-stroke right side"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

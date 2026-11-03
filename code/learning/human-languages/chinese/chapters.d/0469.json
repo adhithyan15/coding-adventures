@@ -1,0 +1,22 @@
+{
+  "chapter": 469,
+  "title": "Gentle and Steady",
+  "label": "ch:zh-gentle-and-steady",
+  "canDo": "I can say someone is impulsive, gentle, decent or steady, and that someone is an impatient sort.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R469-review-464-469",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 469: I can say someone is impulsive, gentle, decent or steady, and that someone is an impatient sort.",
+    "assesses": [
+      "ZH-LEX-C469-GENTLE469-01",
+      "ZH-LEX-C469-GENTLE469-02",
+      "ZH-LEX-C469-GENTLE469-03",
+      "ZH-LEX-C469-GENTLE469-04",
+      "ZH-LEX-C469-GENTLE469-05",
+      "ZH-SCRIPT-WEN-WARM-01"
+    ]
+  }
+}

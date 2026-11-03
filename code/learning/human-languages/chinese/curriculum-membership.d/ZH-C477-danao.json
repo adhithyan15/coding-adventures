@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C477-danao",
+  "pathSegment": "ZH-PATH-477-INSIDE477",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-477-INSIDE477",
+      "order": 2
+    }
+  ]
+}

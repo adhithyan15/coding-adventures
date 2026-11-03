@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C292-guangbo",
+  "pathSegment": "ZH-PATH-292-RADIO292",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-292-RADIO292",
+      "order": 0
+    }
+  ]
+}

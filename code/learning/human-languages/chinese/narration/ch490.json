@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 490,
+  "title": "Pressure at Work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7dcde604059e3e0b",
+  "lessons": [
+    {
+      "id": "ZH-C490-guanli",
+      "sequence": 37200,
+      "title": "guǎnlǐ — to manage; to be in charge of",
+      "headword": "guǎnlǐ",
+      "romanization": "guǎnlǐ",
+      "gloss": "to manage; to be in charge of",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eb6c8b48e13064dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a position in a firm, then the Mandarin for to get promoted."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: guǎnlǐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guǎnlǐ — \"to manage; to be in charge of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā guǎnlǐ yì jiā fàndiàn — She manages a restaurant."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: guǎn is said with a rising tone before lǐ, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guǎnlǐ is built from guǎn 'to be in charge' and 理 'to put in order', both inherited from Middle Chinese, kwanX and liX (Guangyun, in Baxter's transcription), which glosses the first 'a pipe (a wind instrument)' and 'to be in charge', and the second 'to work jade' and 'a pattern'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǎnlǐ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǎnlǐ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǎnlǐ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǎnlǐ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā guǎnlǐ yì jiā fàndiàn — She manages a restaurant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā guǎnlǐ yì jiā fàndiàn* — She manages a restaurant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a position in a firm, then the Mandarin for to get promoted, then say guǎnlǐ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a position in a firm, then the Mandarin for to get promoted, then say *guǎnlǐ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does guǎnlǐ mean? (\"To manage; to be in charge of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C490-hezuo",
+      "sequence": 37210,
+      "title": "hézuò — to work together; to cooperate",
+      "headword": "hézuò",
+      "romanization": "hézuò",
+      "gloss": "to work together; to cooperate",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:633ea10f757367e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to get promoted, then the Mandarin for to manage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hézuò",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hézuò — \"to work together; to cooperate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "gēn tā hézuò wǒ gǎnjué hěn kāixīn — I really enjoy working with him."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hézuò is built from hé 'to join' and 作 'to do', both inherited from Middle Chinese, hop and tsak (Guangyun, in Baxter's transcription), which glosses the first 'to join together' and the second 'to do' and 'to make'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hézuò",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hézuò*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hézuò, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hézuò*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēn tā hézuò wǒ gǎnjué hěn kāixīn — I really enjoy working with him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēn tā hézuò wǒ gǎnjué hěn kāixīn* — I really enjoy working with him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to get promoted, then the Mandarin for to manage, then say hézuò again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to get promoted, then the Mandarin for to manage, then say *hézuò* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hézuò mean? (\"To work together; to cooperate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C490-yeban",
+      "sequence": 37220,
+      "title": "yèbān — night shift",
+      "headword": "yèbān",
+      "romanization": "yèbān",
+      "gloss": "night shift",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02f3a6249dac3623",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to manage, then the Mandarin for to work together."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yèbān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yèbān — \"night shift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zuò le yì nián yèbān yǐhòu tā chángcháng shīmián — After a year of night shifts, he often couldn't sleep."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yèbān is built from yè 'night' and bān 'a shift', both inherited from Middle Chinese, yaeH and paen (Guangyun, in Baxter's transcription), which glosses the first 'dusk' and the second 'to divide jade tokens'; the sense 'a turn of work' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yèbān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yèbān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yèbān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yèbān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuò le yì nián yèbān yǐhòu tā chángcháng shīmián — After a year of night shifts, he often couldn't sleep.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuò le yì nián yèbān yǐhòu tā chángcháng shīmián* — After a year of night shifts, he often couldn't sleep.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to manage, then the Mandarin for to work together, then say yèbān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to manage, then the Mandarin for to work together, then say *yèbān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yèbān mean? (\"Night shift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C490-xinku",
+      "sequence": 37230,
+      "title": "xīnkǔ — exhausting; toilsome (of work)",
+      "headword": "xīnkǔ",
+      "romanization": "xīnkǔ",
+      "gloss": "exhausting; toilsome (of work)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b605d7d4090d1bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to work together, then the Mandarin for the night shift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xīnkǔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xīnkǔ — \"exhausting; toilsome (of work)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "gōngzuò yālì dà de shíhou wǒ gǎnjué hěn xīnkǔ — When the pressure at work is high, I find it really hard going."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xīnkǔ is built from xīn 'pungent' and kǔ 'bitter', both inherited from Middle Chinese, sin and khuX (Guangyun, in Baxter's transcription), which glosses the first as the taste of ginger and the second 'coarse' and 'toil'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnkǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnkǔ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnkǔ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnkǔ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōngzuò yālì dà de shíhou wǒ gǎnjué hěn xīnkǔ — When the pressure at work is high, I find it really hard going.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōngzuò yālì dà de shíhou wǒ gǎnjué hěn xīnkǔ* — When the pressure at work is high, I find it really hard going.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to work together, then the Mandarin for the night shift, then say xīnkǔ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to work together, then the Mandarin for the night shift, then say *xīnkǔ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xīnkǔ mean? (\"Exhausting; toilsome (of work)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C490-kaichu",
+      "sequence": 37240,
+      "title": "kāichú — to fire; to dismiss (from a job or school)",
+      "headword": "kāichú",
+      "romanization": "kāichú",
+      "gloss": "to fire; to dismiss (from a job or school)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:41ef02af1eb007eb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the night shift, then the Mandarin for exhausting (of work)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: kāichú",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kāichú — \"to fire; to dismiss (from a job or school)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā chángcháng chídào suǒyǐ lǎobǎn kāichú le tā — He was often late, so the boss fired him."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kāichú is built from 开 'to open' and chú 'to remove', both inherited from Middle Chinese, khoj and drjo (Guangyun, in Baxter's transcription), which glosses the first 'to release' and the second 'to take away'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāichú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāichú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāichú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāichú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā chángcháng chídào suǒyǐ lǎobǎn kāichú le tā — He was often late, so the boss fired him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā chángcháng chídào suǒyǐ lǎobǎn kāichú le tā* — He was often late, so the boss fired him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the night shift, then the Mandarin for exhausting (of work), then say kāichú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the night shift, then the Mandarin for exhausting (of work), then say *kāichú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kāichú mean? (\"To fire; to dismiss (from a job or school)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

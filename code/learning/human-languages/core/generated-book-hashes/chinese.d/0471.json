@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 471,
+  "sourceHash": "fnv1a64:4b5e96b195889104",
+  "lessonIds": [
+    "ZH-C471-yanlei",
+    "ZH-C471-yanqian",
+    "ZH-W471-yan-eye",
+    "ZH-C471-xiaoxinyan",
+    "ZH-C471-jinshi",
+    "ZH-C471-zhayan"
+  ],
+  "tex": "chinese/book/chapters/ch471-eyes.tex"
+}

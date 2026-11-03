@@ -1,0 +1,20 @@
+{
+  "chapter": 465,
+  "title": "Spoiling the Fun",
+  "label": "ch:zh-spoiling-the-fun",
+  "canDo": "I can say we had a great time, that something spoiled the fun, and talk about being optimistic, gloomy or sure of myself.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C465-zixin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 465: I can say we had a great time, that something spoiled the fun, and talk about being optimistic, gloomy or sure of myself.",
+    "assesses": [
+      "ZH-LEX-C465-FUN465-03",
+      "ZH-LEX-C465-FUN465-04",
+      "ZH-LEX-C465-FUN465-05",
+      "ZH-SCRIPT-XING-MOOD-01"
+    ]
+  }
+}

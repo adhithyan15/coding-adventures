@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-422-NORTH422",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can use a satnav, name the northeast and the northwest, say we are heading north and take a fast bus.",
+  "prerequisites": []
+}

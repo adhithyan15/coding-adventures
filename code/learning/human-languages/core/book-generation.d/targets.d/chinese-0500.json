@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 500,
+  "output": "chinese/book/chapters/ch500-match-day.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C387-cunkuan",
+  "pathSegment": "ZH-PATH-387-MONEY387",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-387-MONEY387",
+      "order": 1
+    }
+  ]
+}

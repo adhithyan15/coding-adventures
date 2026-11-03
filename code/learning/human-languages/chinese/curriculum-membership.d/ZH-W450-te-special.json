@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W450-te-special",
+  "pathSegment": "ZH-PATH-450-LOCAL450",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-450-LOCAL450",
+      "order": 2
+    }
+  ]
+}

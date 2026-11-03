@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W278-ran",
+    "language": "chinese",
+    "chapter": 278,
+    "sequence": 21030,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:962577368ab4d16a",
+    "detachableSegments": [
+      "Script — a four-stroke piece, 大 with a dot, and four dots"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

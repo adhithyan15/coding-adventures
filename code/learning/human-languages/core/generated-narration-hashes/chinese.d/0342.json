@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:755bad6647d260ff",
+  "lessonIds": [
+    "ZH-C342-shangyue",
+    "ZH-C342-zhongqiu",
+    "ZH-W342-qiu-autumn",
+    "ZH-C342-qijian",
+    "ZH-C342-guihua",
+    "ZH-C342-jiaxiang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch342.txt",
+  "json": "chinese/narration/ch342.json",
+  "textHash": "fnv1a64:69c0d50e577a2e99",
+  "jsonHash": "fnv1a64:f9794d59d11c1919",
+  "findings": []
+}

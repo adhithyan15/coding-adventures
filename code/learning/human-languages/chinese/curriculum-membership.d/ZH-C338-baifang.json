@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C338-baifang",
+  "pathSegment": "ZH-PATH-338-VISIT338",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-338-VISIT338",
+      "order": 1
+    }
+  ]
+}

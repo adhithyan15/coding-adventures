@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:4b9ca2b8cc0dd5a5",
+  "lessonIds": [
+    "ZH-C366-bimian",
+    "ZH-C366-dangxin",
+    "ZH-C366-jianchi",
+    "ZH-C366-fangqi",
+    "ZH-C366-zhide"
+  ],
+  "tex": "chinese/book/chapters/ch366-take-my-advice.tex"
+}

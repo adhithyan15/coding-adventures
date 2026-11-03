@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C390-dayue",
+  "pathSegment": "ZH-PATH-390-AGREE390",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-390-AGREE390",
+      "order": 5
+    }
+  ]
+}

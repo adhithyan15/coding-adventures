@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C501-jinpai",
+  "pathSegment": "ZH-PATH-501-WINNERS501",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-501-WINNERS501",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:47ee0d783ecd7639",
+  "lessonIds": [
+    "ZH-C383-dianfei",
+    "ZH-C383-langfei",
+    "ZH-C383-nengyuan",
+    "ZH-C383-jianshao",
+    "ZH-C383-yicixing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch383.txt",
+  "json": "chinese/narration/ch383.json",
+  "textHash": "fnv1a64:d20b1e5c69d73bc5",
+  "jsonHash": "fnv1a64:d3629ee3e2bdeaea",
+  "findings": []
+}

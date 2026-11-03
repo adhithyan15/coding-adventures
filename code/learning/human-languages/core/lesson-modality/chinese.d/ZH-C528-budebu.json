@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C528-budebu",
+    "language": "chinese",
+    "chapter": 528,
+    "sequence": 39730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0e062e507fcafe0"
+  },
+  "findings": []
+}

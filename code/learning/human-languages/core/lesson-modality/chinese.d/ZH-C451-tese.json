@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C451-tese",
+    "language": "chinese",
+    "chapter": 451,
+    "sequence": 34090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5754ee9d4d53243f"
+  },
+  "findings": []
+}

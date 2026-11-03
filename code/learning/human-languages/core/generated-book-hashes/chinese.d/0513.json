@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:65833d424855a0c8",
+  "lessonIds": [
+    "ZH-C513-chuangye",
+    "ZH-C513-dadao",
+    "ZH-C513-zhengqu",
+    "ZH-C513-fendou",
+    "ZH-C513-qinshou",
+    "ZH-R513-review-509-513",
+    "ZH-R513-review-final-513"
+  ],
+  "tex": "chinese/book/chapters/ch513-ambitions.tex"
+}

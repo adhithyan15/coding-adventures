@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C478-niushang",
+  "pathSegment": "ZH-PATH-478-HURT478",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-478-HURT478",
+      "order": 4
+    }
+  ]
+}

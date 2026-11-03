@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C374-fazhan",
+  "pathSegment": "ZH-PATH-374-SOCIETY374",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-374-SOCIETY374",
+      "order": 4
+    }
+  ]
+}

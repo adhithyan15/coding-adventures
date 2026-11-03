@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C349-xiangfa",
+  "pathSegment": "ZH-PATH-349-VIEW349",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-349-VIEW349",
+      "order": 1
+    }
+  ]
+}

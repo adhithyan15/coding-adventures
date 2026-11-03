@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:9092d7ee8ca9c3e8",
+  "lessonIds": [
+    "ZH-C504-geci",
+    "ZH-C504-erge",
+    "ZH-W504-ge-song",
+    "ZH-C504-guoge",
+    "ZH-C504-minge",
+    "ZH-C504-yanchang-sing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch504.txt",
+  "json": "chinese/narration/ch504.json",
+  "textHash": "fnv1a64:1f95ae8adca27cb1",
+  "jsonHash": "fnv1a64:8a3b75d0bce6252f",
+  "findings": []
+}

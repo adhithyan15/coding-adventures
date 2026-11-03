@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:f5549ec87595f83a",
+  "lessonIds": [
+    "ZH-C422-daohang",
+    "ZH-C422-dongbei",
+    "ZH-W422-bei-north",
+    "ZH-C422-xibei",
+    "ZH-C422-beishang",
+    "ZH-C422-kuaisu"
+  ],
+  "tex": "chinese/book/chapters/ch422-going-north.tex"
+}

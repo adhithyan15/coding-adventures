@@ -1,0 +1,19 @@
+{
+  "chapter": 382,
+  "title": "The Security Guard",
+  "label": "ch:zh-the-security-guard",
+  "canDo": "I can talk about being on duty, security guards, cameras, promising and patrols.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C382-xunluo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 382: I can talk about being on duty, security guards, cameras, promising and patrols.",
+    "assesses": [
+      "ZH-LEX-C382-GUARD382-03",
+      "ZH-LEX-C382-GUARD382-04",
+      "ZH-LEX-C382-GUARD382-05"
+    ]
+  }
+}

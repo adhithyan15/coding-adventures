@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:ac7875c8abceb0a4",
+  "lessonIds": [
+    "ZH-C456-zousan",
+    "ZH-C456-qiuzhu",
+    "ZH-C456-luren",
+    "ZH-C456-shizhu",
+    "ZH-C456-renling"
+  ],
+  "tex": "chinese/book/chapters/ch456-lost-and-found.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 308,
+  "title": "Ever Since",
+  "label": "ch:zh-ever-since",
+  "canDo": "I can say since when, where someone comes from, and that a person went missing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C308-paichusuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can say since when, where someone comes from, and that a person went missing.",
+    "assesses": [
+      "ZH-LEX-C308-SINCE308-03",
+      "ZH-LEX-C308-SINCE308-04",
+      "ZH-LEX-C308-SINCE308-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 375,
+  "title": "Helping Others",
+  "label": "ch:zh-helping-others",
+  "canDo": "I can talk about being poor, society, giving money, volunteers and helping each other.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C375-huxiang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 375: I can talk about being poor, society, giving money, volunteers and helping each other.",
+    "assesses": [
+      "ZH-LEX-C375-HELP375-03",
+      "ZH-LEX-C375-HELP375-04",
+      "ZH-LEX-C375-HELP375-05"
+    ]
+  }
+}

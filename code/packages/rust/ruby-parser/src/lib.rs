@@ -105,6 +105,40 @@ mod tests {
     // Helpers
     // -----------------------------------------------------------------------
 
+    /// #18814 — the legacy entry point inherits the lexer's source budget:
+    /// one byte past `MAX_SOURCE_BYTES` is refused with the lexer's
+    /// message, before anything is lexed.
+    #[test]
+    fn try_create_ruby_parser_refuses_source_past_the_lexer_budget() {
+        use coding_adventures_ruby_lexer::MAX_SOURCE_BYTES;
+        let source = " ".repeat(MAX_SOURCE_BYTES + 1);
+        let err = try_create_ruby_parser(&source).err().expect("refused");
+        assert_eq!(
+            err,
+            format!(
+                "ruby lexer: source bytes ({}) exceed the limit of {MAX_SOURCE_BYTES}",
+                MAX_SOURCE_BYTES + 1
+            )
+        );
+    }
+
+    /// #18814 review — the lexer's infallible entry points fail closed on
+    /// an oversized source: the parser rejects the refusal tokens, where an
+    /// empty token list (or a lone `Eof`) would parse as an empty program.
+    #[test]
+    fn budget_refusal_tokens_fail_to_parse() {
+        use coding_adventures_ruby_lexer::{tokenize_ruby, MAX_SOURCE_BYTES};
+        let parses = |tokens| {
+            GrammarParser::new(tokens, _grammar::unversioned_parser_grammar())
+                .with_max_depth(MAX_RULE_DEPTH)
+                .parse()
+                .is_ok()
+        };
+        assert!(parses(tokenize_ruby("")), "a lone Eof is the empty program");
+        let refused = tokenize_ruby(&" ".repeat(MAX_SOURCE_BYTES + 1));
+        assert!(!parses(refused), "the refusal must not parse");
+    }
+
     fn assert_program_root(ast: &GrammarASTNode) {
         assert_eq!(
             ast.rule_name, "program",
@@ -3561,6 +3595,110 @@ mod tests {
         // On the same line it is still an index.
         let ast = parse_ruby("x = a[1]");
         assert!(find_descendant(&ast, "index_suffix").is_some());
+    }
+
+    /// #18798 — a `-`, `+` or `(` that starts a line after a complete
+    /// expression starts a new statement too, while an operator at the end
+    /// of a line still continues it.
+    #[test]
+    fn test_parse_sign_or_paren_on_a_new_line_starts_a_new_statement() {
+        assert_eq!(
+            statement_rules(&parse_ruby("x = 5\n-1\ny = 6\n+2\nz = foo\n(3)\n")),
+            vec!["assignment", "expression_stmt", "assignment", "expression_stmt", "assignment", "expression_stmt"]
+        );
+        let ast = parse_ruby("x = 5\n-1");
+        assert!(find_descendant(&ast, "unary_minus").is_some());
+        assert!(find_descendant(&ast, "method_call").is_none());
+        assert_eq!(statement_rules(&parse_ruby("x = 5 -\n1")), vec!["assignment"]);
+        // `f(1).g` ⏎ `-1`: the whole call is the first statement.
+        assert_eq!(
+            statement_rules(&parse_ruby("f(1).g\n-1")),
+            vec!["method_call", "expression_stmt"]
+        );
+        // An untagged `+` is never unary: `super + 1` is a sum.
+        let ast = parse_ruby("super + 1");
+        assert!(find_descendant(&ast, "unary_plus").is_none());
+    }
+
+    /// #18798 — a name alone on its line takes nothing from the next line:
+    /// `puts` ⏎ `puts 2` is two statements (the lexer ends the first with a
+    /// `;`, which `expression_stmt` consumes), and so is `foo` ⏎ `(1)`.
+    #[test]
+    fn test_parse_a_lone_name_is_a_whole_statement() {
+        assert_eq!(
+            statement_rules(&parse_ruby("puts\nputs 2\nfoo\n(1)\n")),
+            vec!["expression_stmt", "method_call_no_paren", "expression_stmt", "expression_stmt"]
+        );
+    }
+
+    /// #18798 (security review) — a keyword with a paren-less argument list
+    /// takes nothing from the next line or past a `;`: `super` ⏎ `puts
+    /// "hi"` read as `super(puts)` then `"hi"`, and `return; 42` as
+    /// `return 42`.
+    #[test]
+    fn test_parse_a_keyword_ending_its_line_takes_no_arguments() {
+        for src in [
+            "super\nputs \"hi\"",
+            "super; setup",
+            "x = super\nputs x",
+        ] {
+            let ast = parse_ruby(src);
+            assert!(find_descendant(&ast, "super_args").is_none(), "{src:?}");
+            assert_eq!(statement_rules(&ast).len(), 2, "{src:?}");
+        }
+        for src in ["yield\nputs \"x\"", "yield; foo"] {
+            let ast = parse_ruby(src);
+            assert!(find_descendant(&ast, "yield_args").is_none(), "{src:?}");
+            let rules = statement_rules(&ast);
+            assert_eq!((rules.len(), rules[0].as_str()), (2, "yield_statement"), "{src:?}");
+        }
+        for (src, rule) in [
+            ("return\n42", "return_statement"),
+            ("return; 42", "return_statement"),
+            ("break\nx", "break_statement"),
+            ("next; x", "next_statement"),
+        ] {
+            let ast = parse_ruby(src);
+            let stmt = find_descendant(&ast, rule).expect(rule);
+            assert!(find_descendant(stmt, "expression").is_none(), "{src:?}");
+            assert_eq!(statement_rules(&ast).len(), 2, "{src:?}");
+        }
+        // Arguments on the keyword's own line are still its arguments.
+        let ast = parse_ruby("super 1\nputs 2");
+        assert!(find_descendant(&ast, "super_args").is_some());
+        let ast = parse_ruby("return 42");
+        assert!(find_descendant(&ast, "expression").is_some());
+    }
+
+    /// #18798 re-review — an optional `then` after a condition, so `then`
+    /// is never read as a keyword-led call of the next statement.
+    #[test]
+    fn test_parse_then_after_a_condition() {
+        for (src, rule) in [
+            ("if c then foo; bar end", "if_statement"),
+            ("unless c then foo end", "unless_statement"),
+            ("if a\n  1\nelsif b then 2\nend", "elsif_clause"),
+            ("case a\nwhen 1 then foo; bar\nend", "when_clause"),
+        ] {
+            let ast = parse_ruby(src);
+            let node = find_descendant(&ast, rule).unwrap_or_else(|| panic!("{src:?}"));
+            assert!(tree_has_token_value(node, "then"), "{src:?}");
+            assert!(find_descendant(&ast, "method_call_no_paren").is_none(), "{src:?}");
+        }
+    }
+
+    /// #18798 — `rescue Boom` ⏎ `puts 40`: the class list ends at the line
+    /// break (it read `Boom(puts 40)`), and `;` separates statements.
+    #[test]
+    fn test_parse_rescue_class_list_ends_at_the_line_break() {
+        let ast = parse_ruby("begin\n  raise Boom\nrescue Boom\n  puts 40\nend");
+        let rc = find_descendant(&ast, "rescue_clause").expect("rescue_clause");
+        let el = find_descendant(rc, "exception_list").expect("exception_list");
+        assert!(tree_has_token_value(el, "Boom"));
+        assert!(!tree_has_token_value(el, "puts"));
+        assert!(find_descendant(rc, "method_call_no_paren").is_some(), "`puts 40` is the body");
+        let ast = parse_ruby("def risky; raise \"x\"; rescue => e; \"rescued\"; end");
+        assert!(find_descendant(&ast, "rescue_clause").is_some());
     }
 
     #[test]

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:9f5d67531789831e",
+  "lessonIds": [
+    "ZH-C335-yuanxiao",
+    "ZH-C335-denglong",
+    "ZH-C335-cai",
+    "ZH-C335-miyu",
+    "ZH-C335-bianpao",
+    "ZH-R335-review-330-335"
+  ],
+  "tex": "chinese/book/chapters/ch335-lanterns-and-riddles.tex"
+}

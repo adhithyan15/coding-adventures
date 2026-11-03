@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C477-gutou",
+  "pathSegment": "ZH-PATH-477-INSIDE477",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-477-INSIDE477",
+      "order": 1
+    }
+  ]
+}

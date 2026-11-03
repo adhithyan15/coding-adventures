@@ -1,0 +1,19 @@
+{
+  "chapter": 488,
+  "title": "What Do You Want to Be",
+  "label": "ch:zh-what-do-you-want-to-be",
+  "canDo": "I can say what I want to be: an engineer, a chef or a scientist, and talk about translating and earning.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C488-zhuan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 488: I can say what I want to be: an engineer, a chef or a scientist, and talk about translating and earning.",
+    "assesses": [
+      "ZH-LEX-C488-TRADES488-03",
+      "ZH-LEX-C488-TRADES488-04",
+      "ZH-LEX-C488-TRADES488-05"
+    ]
+  }
+}

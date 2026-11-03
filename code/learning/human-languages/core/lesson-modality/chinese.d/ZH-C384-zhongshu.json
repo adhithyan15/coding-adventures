@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C384-zhongshu",
+    "language": "chinese",
+    "chapter": 384,
+    "sequence": 29510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9ec313f3c4a5aa55"
+  },
+  "findings": []
+}

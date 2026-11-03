@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C482-yaopian",
+  "pathSegment": "ZH-PATH-482-TREAT482",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-482-TREAT482",
+      "order": 2
+    }
+  ]
+}

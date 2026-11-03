@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 446,
+  "sourceHash": "fnv1a64:0b292db2e8d525eb",
+  "lessonIds": [
+    "ZH-C446-hutong",
+    "ZH-C446-cheng",
+    "ZH-W446-cheng-town",
+    "ZH-C446-gucheng",
+    "ZH-C446-chengqiang",
+    "ZH-C446-jincheng"
+  ],
+  "tex": "chinese/book/chapters/ch446-the-old-town.tex"
+}

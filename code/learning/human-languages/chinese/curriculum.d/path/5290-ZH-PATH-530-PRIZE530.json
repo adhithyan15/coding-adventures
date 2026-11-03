@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-530-PRIZE530",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-530-PRIZE530"
+  ],
+  "after": []
+}

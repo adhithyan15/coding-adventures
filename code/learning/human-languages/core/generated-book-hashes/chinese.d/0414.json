@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 414,
+  "sourceHash": "fnv1a64:390b3ad924a641ed",
+  "lessonIds": [
+    "ZH-C414-chengwuyuan",
+    "ZH-C414-kaochuang",
+    "ZH-C414-jingjicang",
+    "ZH-C414-yunji",
+    "ZH-C414-anquandai"
+  ],
+  "tex": "chinese/book/chapters/ch414-in-the-cabin.tex"
+}

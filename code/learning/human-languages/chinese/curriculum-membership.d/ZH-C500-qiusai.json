@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C500-qiusai",
+  "pathSegment": "ZH-PATH-500-MATCH500",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-500-MATCH500",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C450-tedian",
+    "language": "chinese",
+    "chapter": 450,
+    "sequence": 34040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e3be4dc2ce58e29e"
+  },
+  "findings": []
+}

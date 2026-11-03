@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C360-gonggong",
+    "language": "chinese",
+    "chapter": 360,
+    "sequence": 27720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:204f5a16b549e2b7"
+  },
+  "findings": []
+}

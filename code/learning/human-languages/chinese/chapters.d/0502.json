@@ -1,0 +1,19 @@
+{
+  "chapter": 502,
+  "title": "Painting",
+  "label": "ch:zh-painting",
+  "canDo": "I can talk about oil painting, Chinese painting, painters, famous paintings and art shows.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C502-huazhan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 502: I can talk about oil painting, Chinese painting, painters, famous paintings and art shows.",
+    "assesses": [
+      "ZH-LEX-C502-PAINT502-03",
+      "ZH-LEX-C502-PAINT502-04",
+      "ZH-LEX-C502-PAINT502-05"
+    ]
+  }
+}

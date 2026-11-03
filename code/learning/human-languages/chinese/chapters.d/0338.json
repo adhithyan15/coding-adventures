@@ -1,0 +1,19 @@
+{
+  "chapter": 338,
+  "title": "Festival Visits",
+  "label": "ch:zh-festival-visits",
+  "canDo": "I can talk about spending a festival at home, paying visits, family reunions, days off and local customs.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C338-fengsu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 338: I can talk about spending a festival at home, paying visits, family reunions, days off and local customs.",
+    "assesses": [
+      "ZH-LEX-C338-VISIT338-03",
+      "ZH-LEX-C338-VISIT338-04",
+      "ZH-LEX-C338-VISIT338-05"
+    ]
+  }
+}

@@ -626,6 +626,90 @@ internal static class Driver
             "no quarantine was replaced");
     }
 
+    /// A quarantine name the host cannot even inspect is an error, not a taken
+    /// name. The state file here is called 245 `q`s plus `.json`, 250
+    /// characters: a legal name. Every quarantine name adds at least
+    /// `.corrupt`, 258 characters, past the 255 a file system allows in one
+    /// name, so looking at it fails (`ENAMETOOLONG` on POSIX):
+    ///
+    /// <code>
+    ///   inspection fails   old host                          this host
+    ///   ----------------   -------------------------------   ---------------------------------
+    ///   at `.corrupt`      "taken"; tries `.corrupt.1` ...   stops at `.corrupt`, says why
+    ///   ...                ... all ten "taken"               (nothing more is tried)
+    ///   warning            "All 10 ... names are taken"      "Could not ... `.corrupt`: ..."
+    /// </code>
+    ///
+    /// The old message was false and sent the user hunting for ten files
+    /// that do not exist. Either way the rejected file stays at the live
+    /// path, so saving must still be off.
+    private static async Task CaseQuarantineUninspectable()
+    {
+        var path = Environment.GetEnvironmentVariable("MOSAIC_APP_STATE_PATH");
+        if (string.IsNullOrEmpty(path))
+        {
+            Check(false, "MOSAIC_APP_STATE_PATH names the quarantine state file");
+            return;
+        }
+        MosaicRuntimeHost.Close();
+        // The host reads the variable on every StatePath() call, so the
+        // runtime loaded next uses this name.
+        var directory = Path.GetDirectoryName(Path.GetFullPath(path))!;
+        var longPath = Path.Combine(directory, new string('q', 245) + ".json");
+        Environment.SetEnvironmentVariable("MOSAIC_APP_STATE_PATH", longPath);
+        const string rejected = "{}";
+        File.WriteAllText(longPath, rejected);
+
+        MosaicRuntimeHost.LoadRequired();
+        var warning = MosaicRuntimeHost.ApplyProps(new EffectComponent()) ?? string.Empty;
+        Console.WriteLine($"uninspectable warning: {warning}");
+        Check(
+            !warning.Contains("quarantine names beside it are taken", StringComparison.Ordinal),
+            "an uninspectable name is not reported as taken");
+        Check(
+            warning.Contains("Could not", StringComparison.Ordinal)
+                && warning.Contains(longPath + ".corrupt:", StringComparison.Ordinal)
+                && !warning.Contains(longPath + ".corrupt.", StringComparison.Ordinal),
+            "the warning names the first name and stops there");
+        Check(
+            warning.Contains("This session will not be saved.", StringComparison.Ordinal),
+            "an uninspectable name leaves saving off");
+        await MosaicRuntimeHost.HandleEvent(new EffectComponent(), new Increment());
+        Check(File.ReadAllText(longPath) == rejected, "the rejected file is not written over");
+    }
+
+    /// The same rule one level down, where it can be forced. A real file
+    /// system almost never makes the host's inspection throw (.NET reports a
+    /// name it cannot read as absent, and the claim then fails and is
+    /// reported), so the move is called directly, by reflection, with a path
+    /// .NET refuses to even look at: one holding a NUL character, which
+    /// <c>new FileInfo</c> rejects with <c>ArgumentException</c> on every
+    /// platform. The old helper caught that and answered "taken" for all ten
+    /// names.
+    private static void CaseQuarantineInspectionError()
+    {
+        var move = typeof(MosaicRuntimeHost)
+            .GetNestedTypes(System.Reflection.BindingFlags.NonPublic)
+            .Select(type => type.GetMethod(
+                "MovePersistedStateAside",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static))
+            .FirstOrDefault(method => method is not null);
+        if (move is null)
+        {
+            Check(false, "the host has a MovePersistedStateAside to call");
+            return;
+        }
+        var path = Path.Combine(Path.GetTempPath(), "mosaic-uninspectable\0state.json");
+        var failure = move.Invoke(null, new object[] { path }) as string ?? string.Empty;
+        Console.WriteLine($"inspection failure: {failure}");
+        Check(
+            failure.StartsWith($"Could not inspect {path}.corrupt: ", StringComparison.Ordinal),
+            "an inspection error is reported with the name it hit");
+        Check(
+            !failure.Contains("quarantine names beside it are taken", StringComparison.Ordinal),
+            "an inspection error is not counted as a taken name");
+    }
+
     public static async Task<int> Main()
     {
         var probeCase = Environment.GetEnvironmentVariable("MOSAIC_PROBE_CASE") ?? string.Empty;
@@ -786,6 +870,8 @@ internal static class Driver
             case "deferred": await CaseDeferred(); break;
             case "scoped": await CaseScopedAcrossRetry(); break;
             case "quarantine": await CaseQuarantine(); break;
+            case "quarantine-uninspectable": await CaseQuarantineUninspectable(); break;
+            case "quarantine-inspection-error": CaseQuarantineInspectionError(); break;
             default:
                 Console.WriteLine($"unknown MOSAIC_PROBE_CASE `{probeCase}`");
                 return 2;

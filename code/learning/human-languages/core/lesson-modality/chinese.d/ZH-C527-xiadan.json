@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C527-xiadan",
+    "language": "chinese",
+    "chapter": 527,
+    "sequence": 39670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:075f24f28e099cdd"
+  },
+  "findings": []
+}

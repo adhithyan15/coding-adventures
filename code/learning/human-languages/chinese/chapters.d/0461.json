@@ -1,0 +1,19 @@
+{
+  "chapter": 461,
+  "title": "Love and Kindness",
+  "label": "ch:zh-love-and-kindness",
+  "canDo": "I can say whom I admire, talk about kindness, love stories and the things I love, and what I look forward to.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C461-panwang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 461: I can say whom I admire, talk about kindness, love stories and the things I love, and what I look forward to.",
+    "assesses": [
+      "ZH-LEX-C461-KIND461-03",
+      "ZH-LEX-C461-KIND461-04",
+      "ZH-LEX-C461-KIND461-05"
+    ]
+  }
+}

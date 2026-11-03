@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C437-shanqu",
+    "language": "chinese",
+    "chapter": 437,
+    "sequence": 33360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab64312c276352c9"
+  },
+  "findings": []
+}

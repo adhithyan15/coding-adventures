@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C496-beishu",
+  "pathSegment": "ZH-PATH-496-LEVELS496",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-496-LEVELS496",
+      "order": 0
+    }
+  ]
+}

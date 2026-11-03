@@ -252,6 +252,30 @@ Ruby; the rules below follow Ruby's own:
 | a loop body | statements only: a trailing expression is an `ExprStmt`, never the body's value (the C and Ruby backends emit only a loop body's statements). |
 | `x if c` as a method's last statement | the method's value is `x` when `c` holds, `nil` otherwise. |
 
+### Statement ends and lowering rules added for #18798
+
+The Rust lexer's last pass, `mark_statement_ends`, says where a newline (or
+a `;`) ends a statement.  Each rule below re-tags a token or inserts one; the
+grammar refuses or consumes it with a plain literal, so the other languages'
+lexers, which never produce these, parse as before.
+
+| construct | rule |
+|---|---|
+| `;` between statements | a line break: the token becomes a `Newline` (value `;`), which the parser steps over.  The `;` that starts block-local names (`do \|x; y\|`) is kept. |
+| `(`, `-`, `+` at the start of a line, after an expression-ending token | starts a new statement, like `[`: re-tagged `( line start`, `- line start`, `+ line start` (type kept).  A call's argument list (`method_call`, `dot_call`, `method_with_block`, a `def` header) refuses the `(`; `sum` refuses the signs as binary operators; a paren-less call's first argument refuses all three.  `x = 5` ⏎ `-1` leaves `x` at 5; `x = foo` ⏎ `(1)` does not pass 1 to `foo`.  An operator ending a line (`x = 5 -` ⏎ `1`) and a `.` starting one still continue the expression. |
+| unary `+` | `unary_plus = "+ line start" factor`, lowered to the operand.  It takes only the tagged token, so `super + 1` stays a sum. |
+| `then` after an `if`/`elsif`/`unless` condition, a `when` list or an `in` pattern | optional, and consumed by that rule. |
+| a name alone on its line, where a statement starts | "where a statement starts" means right after a token that opens one (`{`, a block's closing `\|`, `do`, `then`, `else`, `begin`, `ensure`, `rescue`, a synthetic `;`) on the same line or not, or first on its line after a token that ends an expression (which includes `super` and `yield`).  Then it is followed by a synthetic `;` (`Semicolon`, flagged `TOKEN_SYNTHETIC`) when the next line could be its argument; `expression_stmt = expression [ ";" ]` consumes it.  `puts` ⏎ `puts 2` is two statements. |
+| `rescue` with no `=>` on its line | a synthetic `;` after the class list (or after a bare `rescue`); `rescue_clause` accepts `exception_list ";"` and `";"`.  `rescue Boom` ⏎ `puts 40` rescues `Boom`. |
+| `super`, `yield`, `return`, `break`, `next` ending a line (or before a `;`) | followed by a synthetic `;`, which the keyword's own rule takes in place of its argument list (`super_expr = "super" ( ";" \| [ super_args ] )`, and the same for the others), so `super` ⏎ `puts "hi"` and `return; 42` take nothing from what follows.  `super` gets it anywhere but a method-name position (`obj.super`, `def super`, `:super`); the four statement keywords only where a statement starts. |
+| a trailing-modifier keyword (`if_modifier`, …) | never a bare value: `factor`'s KEYWORD alternative refuses it, so `puts if c` is `puts`, guarded by `c`. |
+| a bare `puts` that is a whole statement (not a local, not a user `def`) | lowers like `puts()`: a `__sys_write__` with no values, which prints a newline.  As a value (`x = puts`) it stays an unknown name. |
+| a `def` with method-level `rescue`/`ensure` | its value is the body's last value, or the catching clause's, through an invented local `__rescue_value_<n>` (`let` nil, stored as the last statement of the body and of each `rescue` clause, returned).  `ensure` never changes it. |
+| invented names (`__for_<n>`, `__rescue_value_<n>`) | claimed from one pool holding every name the source spells (including every word inside a string, which covers `#{…}`), so no program name, even one assigned later, can be one. |
+
+`mark_statement_ends` is linear in the number of tokens: its insertions are
+spliced in by one rebuild of the token vector.
+
 ## End-to-end success criteria
 
 A program of moderate complexity must round-trip:

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W524-jia-price",
+    "language": "chinese",
+    "chapter": 524,
+    "sequence": 39525,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:75fed9b1257e15b7",
+    "detachableSegments": [
+      "Script — the person piece, then 人 with two legs under it"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

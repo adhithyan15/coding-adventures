@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C443-buyu",
+  "pathSegment": "ZH-PATH-443-CLEAN443",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-443-CLEAN443",
+      "order": 5
+    }
+  ]
+}

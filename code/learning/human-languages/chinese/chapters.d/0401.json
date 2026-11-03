@@ -1,0 +1,21 @@
+{
+  "chapter": 401,
+  "title": "Plans for the Future",
+  "label": "ch:zh-plans-for-the-future",
+  "canDo": "I can talk about prospects, changing career, growing up, getting older and everything being fine.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-R401-review-final-401",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 401: I can talk about prospects, changing career, growing up, getting older and everything being fine.",
+    "assesses": [
+      "ZH-LEX-C401-FUTURE401-01",
+      "ZH-LEX-C401-FUTURE401-02",
+      "ZH-LEX-C401-FUTURE401-03",
+      "ZH-LEX-C401-FUTURE401-04",
+      "ZH-LEX-C401-FUTURE401-05"
+    ]
+  }
+}

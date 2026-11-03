@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W284-zuo",
+    "language": "chinese",
+    "chapter": 284,
+    "sequence": 21480,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c5124dc252a8b3a4",
+    "detachableSegments": [
+      "Script — 人 twice, then 土"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

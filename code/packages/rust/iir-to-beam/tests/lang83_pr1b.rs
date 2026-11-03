@@ -44,6 +44,7 @@ fn lower(name: &str, params: Vec<(String, String)>, ret: &str, body: Vec<IIRInst
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
     lower_iir_to_beam(&module, &IIRBeamConfig::new("lang83")).expect("lowers")
@@ -232,6 +233,7 @@ fn trap_raises_the_kind_atom() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     assert!(lower_iir_to_beam(&bad, &IIRBeamConfig::new("lang83")).is_err());
 }

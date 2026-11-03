@@ -16,3 +16,5 @@ $harness = Join-Path $d 'code\packages\c\iso-harness'
 $env:ISO_INCLUDE = "include $harness\include"
 . (Join-Path $harness 'lib\iso-lib.ps1')
 Iso-BuildAndRun -Lang cpp -Name rng-tests -Sources @("tests\rng_test.cpp")
+# The shared rng-v1 corpus, read from its flat form (spec rng.md).
+Iso-BuildAndRun -Lang cpp -Name rng-conformance -Sources @("tests\conformance_test.cpp")

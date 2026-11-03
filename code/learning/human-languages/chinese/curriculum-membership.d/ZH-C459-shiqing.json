@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C459-shiqing",
+  "pathSegment": "ZH-PATH-459-MIND459",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-459-MIND459",
+      "order": 1
+    }
+  ]
+}

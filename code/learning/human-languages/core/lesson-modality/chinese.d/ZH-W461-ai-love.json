@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W461-ai-love",
+    "language": "chinese",
+    "chapter": 461,
+    "sequence": 35165,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:483ea45f9ac9c5ab",
+    "detachableSegments": [
+      "Script — a hand on top, a cover, and 又 under them"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

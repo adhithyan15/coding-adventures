@@ -1,0 +1,23 @@
+{
+  "lesson": {
+    "id": "ZH-C279-reading",
+    "language": "chinese",
+    "chapter": 279,
+    "sequence": 21140,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "reading-type",
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "reading-type",
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:34e947f768d341a2"
+  },
+  "findings": []
+}

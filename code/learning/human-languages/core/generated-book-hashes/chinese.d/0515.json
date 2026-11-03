@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:57005f6854735a75",
+  "lessonIds": [
+    "ZH-C515-hanleng",
+    "ZH-C515-siji",
+    "ZH-W515-ji-season",
+    "ZH-C515-yuji",
+    "ZH-C515-bishu",
+    "ZH-C515-shouhuo"
+  ],
+  "tex": "chinese/book/chapters/ch515-four-seasons.tex"
+}

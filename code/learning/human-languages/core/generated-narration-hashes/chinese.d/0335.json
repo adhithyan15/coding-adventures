@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:cf96145be5e1fffc",
+  "lessonIds": [
+    "ZH-C335-yuanxiao",
+    "ZH-C335-denglong",
+    "ZH-C335-cai",
+    "ZH-C335-miyu",
+    "ZH-C335-bianpao",
+    "ZH-R335-review-330-335"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch335.txt",
+  "json": "chinese/narration/ch335.json",
+  "textHash": "fnv1a64:a3058b20096519ad",
+  "jsonHash": "fnv1a64:318090f17172beba",
+  "findings": []
+}

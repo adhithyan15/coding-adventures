@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 420,
+  "sourceHash": "fnv1a64:d4b2ea52de3bfcb8",
+  "lessonIds": [
+    "ZH-C420-jiazhao",
+    "ZH-C420-chedao",
+    "ZH-C420-chewei",
+    "ZH-C420-daoche",
+    "ZH-C420-weizhang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch420.txt",
+  "json": "chinese/narration/ch420.json",
+  "textHash": "fnv1a64:0ce2c996614e89aa",
+  "jsonHash": "fnv1a64:639b6a5e01506592",
+  "findings": []
+}

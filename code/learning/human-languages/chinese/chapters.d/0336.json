@@ -1,0 +1,19 @@
+{
+  "chapter": 336,
+  "title": "Seeing Friends Off",
+  "label": "ch:zh-seeing-friends-off",
+  "canDo": "I can say goodbye, give someone a send-off, see a guest to the door, give a present and shake hands.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C336-woshou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 336: I can say goodbye, give someone a send-off, see a guest to the door, give a present and shake hands.",
+    "assesses": [
+      "ZH-LEX-C336-SEEOFF336-03",
+      "ZH-LEX-C336-SEEOFF336-04",
+      "ZH-LEX-C336-SEEOFF336-05"
+    ]
+  }
+}

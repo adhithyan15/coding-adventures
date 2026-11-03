@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C500-juesai",
+    "language": "chinese",
+    "chapter": 500,
+    "sequence": 37740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2d371f96937587f2"
+  },
+  "findings": []
+}

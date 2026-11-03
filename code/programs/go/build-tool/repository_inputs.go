@@ -100,6 +100,30 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		matches:  isRngCorpus,
 	},
 	{
+		name:     "go/rng",
+		language: "go",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "c/rng",
+		language: "c",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "cpp/rng",
+		language: "cpp",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "swift/rng",
+		language: "swift",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
 		name:     "rust/test-bootstrap",
 		language: "rust",
 		inputs:   "the TF01 self-corpus and its Python reference",

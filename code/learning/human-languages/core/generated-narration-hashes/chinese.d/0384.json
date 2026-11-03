@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:83114342f01456dd",
+  "lessonIds": [
+    "ZH-C384-zhongshu",
+    "ZH-C384-chengwei",
+    "ZH-W384-cheng-become",
+    "ZH-C384-chengben",
+    "ZH-C384-ziyuan",
+    "ZH-C384-zengjia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch384.txt",
+  "json": "chinese/narration/ch384.json",
+  "textHash": "fnv1a64:fbedc632e1c77ae2",
+  "jsonHash": "fnv1a64:71593632cbded465",
+  "findings": []
+}

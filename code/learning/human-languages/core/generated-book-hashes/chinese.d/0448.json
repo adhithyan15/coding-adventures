@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:8192ac2a35012385",
+  "lessonIds": [
+    "ZH-C448-tanwei",
+    "ZH-C448-shichang",
+    "ZH-W448-shi-market",
+    "ZH-C448-shiqu",
+    "ZH-C448-zaoshi",
+    "ZH-C448-baitan"
+  ],
+  "tex": "chinese/book/chapters/ch448-at-the-market.tex"
+}

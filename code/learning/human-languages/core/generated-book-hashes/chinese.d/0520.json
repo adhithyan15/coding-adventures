@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:ccff65d2b0646b2f",
+  "lessonIds": [
+    "ZH-C520-jiadian",
+    "ZH-C520-kaiguan",
+    "ZH-C520-reshuiqi",
+    "ZH-C520-nuanqi",
+    "ZH-C520-shengdian"
+  ],
+  "tex": "chinese/book/chapters/ch520-around-the-house.tex"
+}

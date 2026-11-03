@@ -1,0 +1,19 @@
+{
+  "chapter": 487,
+  "title": "A Career",
+  "label": "ch:zh-a-career",
+  "canDo": "I can talk about lines of work, a career, finding a job, being out of work and factories.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C487-gongchang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 487: I can talk about lines of work, a career, finding a job, being out of work and factories.",
+    "assesses": [
+      "ZH-LEX-C487-CAREER487-03",
+      "ZH-LEX-C487-CAREER487-04",
+      "ZH-LEX-C487-CAREER487-05"
+    ]
+  }
+}

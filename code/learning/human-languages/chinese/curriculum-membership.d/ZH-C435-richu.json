@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C435-richu",
+  "pathSegment": "ZH-PATH-435-SUMMIT435",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-435-SUMMIT435",
+      "order": 2
+    }
+  ]
+}

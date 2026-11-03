@@ -1,0 +1,19 @@
+{
+  "chapter": 506,
+  "title": "Music on Stage",
+  "label": "ch:zh-music-on-stage",
+  "canDo": "I can talk about a band, performing on an instrument, the violin, Beijing opera and fans.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C506-gemi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 506: I can talk about a band, performing on an instrument, the violin, Beijing opera and fans.",
+    "assesses": [
+      "ZH-LEX-C506-BAND506-03",
+      "ZH-LEX-C506-BAND506-04",
+      "ZH-LEX-C506-BAND506-05"
+    ]
+  }
+}

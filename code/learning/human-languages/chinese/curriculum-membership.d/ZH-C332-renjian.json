@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C332-renjian",
+  "pathSegment": "ZH-PATH-332-GHOST332",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-332-GHOST332",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C286-yihan",
+    "language": "chinese",
+    "chapter": 286,
+    "sequence": 21680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b4a570d80607b353"
+  },
+  "findings": []
+}

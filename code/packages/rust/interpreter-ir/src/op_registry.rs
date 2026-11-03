@@ -373,7 +373,11 @@ pub const STANDARD_OPS: &[OpSpec] = &[
     spec("str_len", Op, Str, 1, true, &["str"], NO_TRAP, "LANG-FULL E4"),
     spec("str_index", Op, Str, 2, true, &["str", "int"], BOUNDS_ONLY, "LANG-FULL E4"),
     spec("str_slice", Op, Str, 3, true, &["str", "int", "int"], BOUNDS_ONLY, "LANG-FULL E4"),
-    spec("str_concat", Op, Str, 2, true, &["str", "str"], NO_TRAP, "LANG-FULL E4"),
+    // LANG83 PR5a: `str_concat` is the one string op that can grow a string,
+    // so it is the one that can pass the module's string ceiling
+    // (`IIRModule::str_max_bytes`). Past it the result's length does not fit
+    // the type's range, which is `Trap.Overflow` (owner decision Q2).
+    spec("str_concat", Op, Str, 2, true, &["str", "str"], OVERFLOW_ONLY, "LANG-FULL E4"),
     spec("str_eq", Op, Str, 2, true, &["str", "str"], NO_TRAP, "LANG-FULL E4"),
     spec("str_cmp", Op, Str, 2, true, &["str", "str"], NO_TRAP, "LANG-FULL E4"),
     // ── Arithmetic ───────────────────────────────────────────────────────────
@@ -1093,6 +1097,23 @@ mod tests {
             assert!(crate::opcodes::has_side_effects(spec.name), "{} must survive DCE", spec.name);
             assert!(crate::opcodes::may_trap(spec.name), "{}", spec.name);
         }
+    }
+
+    /// LANG83 PR5a: the same rule for the E4 string family, which entered the
+    /// registry before LANG83 and so is not covered by the test above. Every
+    /// string op that may trap must be kept by dead-code elimination.
+    #[test]
+    fn every_trapping_string_op_has_side_effects() {
+        let trapping: Vec<&str> = STANDARD_OPS
+            .iter()
+            .filter(|s| s.kind == OpKind::Op && s.family == OpFamily::String && !s.may_trap.is_empty())
+            .map(|s| s.name)
+            .collect();
+        assert_eq!(trapping, ["str_index", "str_slice", "str_concat"]);
+        for name in trapping {
+            assert!(crate::opcodes::has_side_effects(name), "{name} must survive DCE");
+        }
+        assert_eq!(lookup("str_concat").unwrap().may_trap, [TRAP_OVERFLOW]);
     }
 
     #[test]

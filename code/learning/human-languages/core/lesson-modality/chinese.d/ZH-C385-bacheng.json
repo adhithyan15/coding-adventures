@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C385-bacheng",
+    "language": "chinese",
+    "chapter": 385,
+    "sequence": 29570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e2843591c77c699"
+  },
+  "findings": []
+}

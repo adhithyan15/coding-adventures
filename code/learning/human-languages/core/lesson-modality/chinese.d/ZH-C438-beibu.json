@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C438-beibu",
+    "language": "chinese",
+    "chapter": 438,
+    "sequence": 33420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e6944a82e9dd9b8c"
+  },
+  "findings": []
+}

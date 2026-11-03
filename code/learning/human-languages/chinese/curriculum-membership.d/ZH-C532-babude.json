@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C532-babude",
+  "pathSegment": "ZH-PATH-532-HOPE532",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-532-HOPE532",
+      "order": 2
+    }
+  ]
+}

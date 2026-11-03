@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 475,
+  "sourceHash": "fnv1a64:062bad1794a3a369",
+  "lessonIds": [
+    "ZH-C475-shouxin",
+    "ZH-C475-xigai",
+    "ZH-C475-houbei",
+    "ZH-C475-shengao",
+    "ZH-C475-wan-bend",
+    "ZH-R475-review-470-475"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch475.txt",
+  "json": "chinese/narration/ch475.json",
+  "textHash": "fnv1a64:3d3a82da5ffe664e",
+  "jsonHash": "fnv1a64:58314a77b72e409a",
+  "findings": []
+}

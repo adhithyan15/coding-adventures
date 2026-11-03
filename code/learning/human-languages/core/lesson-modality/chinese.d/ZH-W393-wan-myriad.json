@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W393-wan-myriad",
+    "language": "chinese",
+    "chapter": 393,
+    "sequence": 29995,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9dd0fec3031d6b2e",
+    "detachableSegments": [
+      "Script — a bar, a turning hook, a long fall"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

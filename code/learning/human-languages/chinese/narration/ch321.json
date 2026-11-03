@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 321,
+  "title": "People of Long Ago",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:03fd186bb1f54634",
+  "lessons": [
+    {
+      "id": "ZH-C321-lishi",
+      "sequence": 25150,
+      "title": "lìshǐ — history",
+      "headword": "lìshǐ",
+      "romanization": "lìshǐ",
+      "gloss": "history",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c10e6fde4e700354",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to bring up a subject, then the Mandarin for a voice message."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lìshǐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lìshǐ — \"history\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zài dàxué xué guo Zhōngguó de lìshǐ — I studied Chinese history at university."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lìshǐ is built from lì 'to pass through' and shǐ 'a record', both inherited from Middle Chinese, lek and sriX (Guangyun, in Baxter's transcription), which glosses the first 'to go through' and calls the second 'one who records events'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lìshǐ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lìshǐ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lìshǐ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lìshǐ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zài dàxué xué guo Zhōngguó de lìshǐ — I studied Chinese history at university.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zài dàxué xué guo Zhōngguó de lìshǐ* — I studied Chinese history at university.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to bring up a subject, then the Mandarin for a voice message, then say lìshǐ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to bring up a subject, then the Mandarin for a voice message, then say *lìshǐ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lìshǐ mean? (\"History\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C321-guren",
+      "sequence": 25160,
+      "title": "古人 (gǔrén) — the ancients; people of long ago",
+      "headword": "古人",
+      "romanization": "gǔrén",
+      "gloss": "the ancients; people of long ago",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:655bde5c88450499",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a voice message, then the Mandarin for the history of a country."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 古人",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "古人 — gǔrén — \"the ancients; people of long ago\"."
+            },
+            {
+              "kind": "speech",
+              "text": "古人没有电话 gǔrén méiyǒu diànhuà — People long ago had no telephones."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 古 (gǔ) — five strokes: 十 on top, and 口 under it. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "古人 (gǔrén) is built from 古 (gǔ) 'ancient' and 人 'a person', both inherited from Middle Chinese, kuX and nyin (Guangyun, in Baxter's transcription), which glosses the first 'former'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǔrén",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǔrén*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǔrén, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǔrén*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǔrén méiyǒu diànhuà — People long ago had no telephones.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǔrén méiyǒu diànhuà* — People long ago had no telephones.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a voice message, then the Mandarin for the history of a country, then say gǔrén again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a voice message, then the Mandarin for the history of a country, then say *gǔrén* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 古人 (gǔrén) mean? (\"The ancients; people of long ago\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W321-gu-ancient",
+      "sequence": 25165,
+      "title": "古 (gǔ) — 十 over 口",
+      "headword": "古",
+      "romanization": "gǔ",
+      "gloss": "古 — 十 over 口",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:018cee19f561d060",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 十 over 口",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 十 over 口 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gǔrén — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gǔrén* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "十 口."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — shí, kǒu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *shí*, *kǒu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 十 over 口",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "古 (gǔ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, top to bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The top piece, 十, two strokes. A long bar from left to right, then a vertical down through its middle."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom piece, 口, three strokes. A short vertical on the left; a bar that runs right and turns down; then the bar that closes the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 3 = five."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "古 (gǔ), all five, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 古, all five, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 古 (gǔ)? (Five.) What is on top? (十.) What is under it? (口.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 古 (gǔ), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C321-gushu",
+      "sequence": 25170,
+      "title": "古书 (gǔshū) — ancient book; old book",
+      "headword": "古书",
+      "romanization": "gǔshū",
+      "gloss": "ancient book; old book",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:729877eab820efe7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the history of a country, then the Mandarin for the people of long ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 古书",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "古书 — gǔshū — \"ancient book; old book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我在书店里看到了一本古书 wǒ zài shūdiàn lǐ kàndào le yì běn gǔshū — I came across an old book in the bookshop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "古书 (gǔshū) is built from 古 (gǔ) 'ancient' and 书 'a book', both inherited from Middle Chinese, kuX and syo (Guangyun, in Baxter's transcription), which glosses the first 'former' and says of the second that it sets things down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǔshū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǔshū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǔshū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǔshū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zài shūdiàn lǐ kàndào le yì běn gǔshū — I came across an old book in the bookshop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zài shūdiàn lǐ kàndào le yì běn gǔshū* — I came across an old book in the bookshop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the history of a country, then the Mandarin for the people of long ago, then say gǔshū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the history of a country, then the Mandarin for the people of long ago, then say *gǔshū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 古书 (gǔshū) mean? (\"Ancient book; old book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C321-gulao",
+      "sequence": 25180,
+      "title": "古老 (gǔlǎo) — ancient; age-old",
+      "headword": "古老",
+      "romanization": "gǔlǎo",
+      "gloss": "ancient; age-old",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac19f883415d5730",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the people of long ago, then the Mandarin for an old book from long ago."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 古老",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "古老 — gǔlǎo — \"ancient; age-old\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他们家的房子很古老 tāmen jiā de fángzi hěn gǔlǎo — Their family's house is ancient."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: gǔ is said with a rising tone before lǎo, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "古老 (gǔlǎo) is built from 古 (gǔ) 'ancient' and 老 'old', both inherited from Middle Chinese, kuX and lawX (Guangyun, in Baxter's transcription), which glosses the first 'former' and the second 'aged'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǔlǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǔlǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǔlǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǔlǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tāmen jiā de fángzi hěn gǔlǎo — Their family's house is ancient.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tāmen jiā de fángzi hěn gǔlǎo* — Their family's house is ancient.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the people of long ago, then the Mandarin for an old book from long ago, then say gǔlǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the people of long ago, then the Mandarin for an old book from long ago, then say *gǔlǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 古老 (gǔlǎo) mean? (\"Ancient; age-old\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C321-wenzi",
+      "sequence": 25190,
+      "title": "文字 (wénzì) — script; written language",
+      "headword": "文字",
+      "romanization": "wénzì",
+      "gloss": "script; written language",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5195793429f4d70a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an old book from long ago, then the Mandarin for age-old."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 文字",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "文字 — wénzì — \"script; written language\"."
+            },
+            {
+              "kind": "speech",
+              "text": "汉字是很古老的文字 Hànzì shì hěn gǔlǎo de wénzì — Chinese characters are a very old script."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "文字 (wénzì) is built from 文 'writing' and 字 'a character', both inherited from Middle Chinese, mjun and dziH (Guangyun, in Baxter's transcription), which glosses the first 'writing' and 'beautiful'; for the second it gives 'an ornament' and 'to nurse', and the sense 'a written character' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wénzì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wénzì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wénzì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wénzì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Hànzì shì hěn gǔlǎo de wénzì — Chinese characters are a very old script.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Hànzì shì hěn gǔlǎo de wénzì* — Chinese characters are a very old script.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an old book from long ago, then the Mandarin for age-old, then say wénzì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an old book from long ago, then the Mandarin for age-old, then say *wénzì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 文字 (wénzì) mean? (\"Script; written language\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

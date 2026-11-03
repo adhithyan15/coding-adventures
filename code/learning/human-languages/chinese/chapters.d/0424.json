@@ -1,0 +1,21 @@
+{
+  "chapter": 424,
+  "title": "On the Road",
+  "label": "ch:zh-on-the-road",
+  "canDo": "I can talk about tunnels, turning round, road signs, speed per hour and stopping halfway.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-R424-review-420-424",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 424: I can talk about tunnels, turning round, road signs, speed per hour and stopping halfway.",
+    "assesses": [
+      "ZH-LEX-C424-ROADS424-01",
+      "ZH-LEX-C424-ROADS424-02",
+      "ZH-LEX-C424-ROADS424-03",
+      "ZH-LEX-C424-ROADS424-04",
+      "ZH-LEX-C424-ROADS424-05"
+    ]
+  }
+}

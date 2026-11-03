@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:0bf7e413f11a6f60",
+  "lessonIds": [
+    "ZH-C330-jicheng",
+    "ZH-C330-wangzi",
+    "ZH-W330-wang-king",
+    "ZH-C330-guowang",
+    "ZH-C330-wanghou",
+    "ZH-C330-wangguo"
+  ],
+  "tex": "chinese/book/chapters/ch330-the-king-s-son.tex"
+}

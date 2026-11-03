@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-343-FARAWAY343",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-343-FARAWAY343"
+  ],
+  "after": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:ff291f4c304f6922",
+  "lessonIds": [
+    "ZH-C526-cheng-weigh",
+    "ZH-C526-gongjin",
+    "ZH-C526-zhongliang",
+    "ZH-W526-liang-amount",
+    "ZH-C526-daliang",
+    "ZH-C526-shaoliang"
+  ],
+  "tex": "chinese/book/chapters/ch526-how-heavy.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:a39f5d8c60ea2f74",
+  "lessonIds": [
+    "ZH-C289-ruguo",
+    "ZH-W289-guo-fruit",
+    "ZH-C289-ruguo-jiu",
+    "ZH-C289-would",
+    "ZH-C289-buran",
+    "ZH-W289-six-lines",
+    "ZH-R289-review-final-289"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch289.txt",
+  "json": "chinese/narration/ch289.json",
+  "textHash": "fnv1a64:d2121b83d6970092",
+  "jsonHash": "fnv1a64:efac892236696fb9",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C459-ganqing",
+  "pathSegment": "ZH-PATH-459-MIND459",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-459-MIND459",
+      "order": 3
+    }
+  ]
+}

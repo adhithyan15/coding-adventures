@@ -1,0 +1,23 @@
+{
+  "chapter": 285,
+  "title": "Lost on the Way",
+  "label": "ch:zh-lost-on-the-way",
+  "canDo": "I can report a lost thing and write a short note about it.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C285-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Reporting a problem with …不见了, saying you can't find it with 找不到, papers, reporting a loss and getting in touch, and writing four connected lines to a hotel desk.",
+    "assesses": [
+      "ZH-LEX-C285-ZHAOHUI-01",
+      "ZH-GRAMMAR-PROBLEM-01",
+      "ZH-LEX-C285-ZHENGJIAN-01",
+      "ZH-LEX-C285-GUASHI-01",
+      "ZH-LEX-C285-LIANXI-01",
+      "ZH-GRAMMAR-POTENTIAL-01",
+      "ZH-PERFORMANCE-PROBLEM-01"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:80f76ae91f0f7a82",
+  "lessonIds": [
+    "ZH-C527-xiadan",
+    "ZH-C527-baozhuang",
+    "ZH-C527-huiyuan",
+    "ZH-C527-youhui",
+    "ZH-C527-gezi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch527.txt",
+  "json": "chinese/narration/ch527.json",
+  "textHash": "fnv1a64:43ee3d2b06688b2f",
+  "jsonHash": "fnv1a64:91c0b41dce694a36",
+  "findings": []
+}

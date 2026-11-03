@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C478-baoza",
+    "language": "chinese",
+    "chapter": 478,
+    "sequence": 36070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:673c08a22dcf52dc"
+  },
+  "findings": []
+}

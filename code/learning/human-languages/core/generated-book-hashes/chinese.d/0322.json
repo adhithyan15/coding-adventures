@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:ca2b0d32d5b1501a",
+  "lessonIds": [
+    "ZH-C322-dangnian",
+    "ZH-C322-zaonian",
+    "ZH-C322-wannian",
+    "ZH-C322-yisheng",
+    "ZH-C322-huainian"
+  ],
+  "tex": "chinese/book/chapters/ch322-back-then.tex"
+}

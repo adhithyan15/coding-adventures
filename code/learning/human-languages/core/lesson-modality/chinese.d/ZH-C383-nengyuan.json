@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C383-nengyuan",
+    "language": "chinese",
+    "chapter": 383,
+    "sequence": 29480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bda383c076ba038f"
+  },
+  "findings": []
+}

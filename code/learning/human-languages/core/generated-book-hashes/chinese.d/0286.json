@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:2988d0f9b2f64a91",
+  "lessonIds": [
+    "ZH-C286-ganjue",
+    "ZH-W286-gan",
+    "ZH-C286-feeling",
+    "ZH-C286-duration",
+    "ZH-C286-duojiu",
+    "ZH-C286-yihan",
+    "ZH-C286-practice"
+  ],
+  "tex": "chinese/book/chapters/ch286-how-it-felt.tex"
+}

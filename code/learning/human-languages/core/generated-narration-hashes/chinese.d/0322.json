@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:f89ba30081236cc7",
+  "lessonIds": [
+    "ZH-C322-dangnian",
+    "ZH-C322-zaonian",
+    "ZH-C322-wannian",
+    "ZH-C322-yisheng",
+    "ZH-C322-huainian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch322.txt",
+  "json": "chinese/narration/ch322.json",
+  "textHash": "fnv1a64:c41fccc81a1c1943",
+  "jsonHash": "fnv1a64:95a8e82708f931e2",
+  "findings": []
+}

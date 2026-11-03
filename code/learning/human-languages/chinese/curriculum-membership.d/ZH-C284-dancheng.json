@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C284-dancheng",
+  "pathSegment": "ZH-PATH-284-TICKETS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-284-TICKETS",
+      "order": 3
+    }
+  ]
+}

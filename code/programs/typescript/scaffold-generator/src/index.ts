@@ -1795,6 +1795,14 @@ done_testing;
 // Haskell generator
 // -------------------------------------------------------------------------
 
+/**
+ * The Darwin-only DEVELOPER_DIR selection every generated Haskell BUILD line
+ * carries (explained in generateHaskell). It is the exact prefix shape that
+ * `build-tool --validate-build-files` accepts, so it is kept as one constant.
+ */
+export const HASKELL_DARWIN_CLT_PREFIX =
+  'if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; ';
+
 export function generateHaskell(
   targetDir: string,
   pkgName: string,
@@ -1868,13 +1876,43 @@ main = pure ()
     cabalProject += `          ../${dep}\n`;
   }
 
-  const build = `cabal test all\n`;
+  // --- BUILD: select the Command Line Tools linker on macOS ---
+  //
+  // GHC 9.4.8's macOS bindist hardcodes a Command Line Tools (CLT) SDK
+  // sysroot. On a runner whose default developer directory is an *older*
+  // Xcode, that Xcode's linker is handed CLT SDK stubs it cannot parse
+  // (`arm64e.x1`) and every link fails. Exporting DEVELOPER_DIR selects the
+  // matching CLT linker:
+  //
+  //   uname -s   effect of the prefix               then
+  //   Darwin     export DEVELOPER_DIR=<CLT path>    run cabal test all
+  //   Linux      nothing                            run cabal test all
+  //
+  // The build tool runs every BUILD line as its own `sh -c`, so the export
+  // lives only as long as that line's process tree, and `cabal test all` runs
+  // last, so its exit status is the line's. Cabal builds the whole local
+  // project inside that one process, so the package root itself must carry
+  // the selection. `build-tool --validate-build-files` rejects a Haskell
+  // BUILD without it (see lessons.d/
+  // ghc-must-select-the-linker-matching-its-hardcoded-macos-sdk.md).
+  const build =
+    "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.\n" +
+    "# Scope the selection to Cabal and its children, keeping other packages intact.\n" +
+    `${HASKELL_DARWIN_CLT_PREFIX}cabal test all\n`;
+
+  // --- BUILD_windows: the plain command, without the POSIX prefix ---
+  //
+  // Windows runs BUILD lines under `cmd /C`, which cannot parse
+  // `if [ ... ]; then ...; fi`. Before the prefix existed Windows simply ran
+  // BUILD's `cabal test all`; this override keeps exactly that.
+  const buildWindows = `cabal test all\n`;
 
   writeFile(path.join(targetDir, `${pkgNameHaskell}.cabal`), cabal);
   writeFile(path.join(targetDir, "cabal.project"), cabalProject);
   writeFile(path.join(targetDir, "src", `${moduleName}.hs`), libHs);
   writeFile(path.join(targetDir, "test", "Spec.hs"), specHs);
   writeFile(path.join(targetDir, "BUILD"), build);
+  writeFile(path.join(targetDir, "BUILD_windows"), buildWindows);
   writeFile(
     path.join(targetDir, "required_capabilities.json"),
     JSON.stringify(

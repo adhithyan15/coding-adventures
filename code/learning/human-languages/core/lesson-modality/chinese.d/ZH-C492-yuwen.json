@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C492-yuwen",
+    "language": "chinese",
+    "chapter": 492,
+    "sequence": 37310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:73c898564e1a8589"
+  },
+  "findings": []
+}

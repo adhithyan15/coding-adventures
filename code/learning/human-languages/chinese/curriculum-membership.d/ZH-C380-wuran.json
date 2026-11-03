@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C380-wuran",
+  "pathSegment": "ZH-PATH-380-AIR380",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-380-AIR380",
+      "order": 2
+    }
+  ]
+}

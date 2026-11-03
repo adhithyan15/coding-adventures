@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-364-ALLOW364",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what is not allowed, urge and remind someone, and say a plan was approved.",
+  "prerequisites": []
+}

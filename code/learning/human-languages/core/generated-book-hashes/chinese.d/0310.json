@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:4ef08fa8aa5120bd",
+  "lessonIds": [
+    "ZH-C310-huaiyi",
+    "ZH-C310-zhengren",
+    "ZH-C310-zhengju",
+    "ZH-C310-shuohuang",
+    "ZH-C310-chengren"
+  ],
+  "tex": "chinese/book/chapters/ch310-who-did-it.tex"
+}

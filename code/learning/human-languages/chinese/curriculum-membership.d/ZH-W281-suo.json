@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W281-suo",
+  "pathSegment": "ZH-PATH-281-EXAMPLE",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-281-EXAMPLE",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:8db5745786732172",
+  "lessonIds": [
+    "ZH-C316-dengji",
+    "ZH-C316-shuxi",
+    "ZH-C316-dangdi",
+    "ZH-C316-rensheng",
+    "ZH-C316-ziran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch316.txt",
+  "json": "chinese/narration/ch316.json",
+  "textHash": "fnv1a64:e435d90961188d71",
+  "jsonHash": "fnv1a64:cbb9b151b01399d1",
+  "findings": []
+}

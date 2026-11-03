@@ -396,6 +396,8 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
         imports,
         // The release ID is not on the wire (see `IIRModule::release`).
         release: None,
+        // Nor is the string ceiling (LANG83 PR5a): `None` is the registry's.
+        str_max_bytes: None,
     })
 }
 

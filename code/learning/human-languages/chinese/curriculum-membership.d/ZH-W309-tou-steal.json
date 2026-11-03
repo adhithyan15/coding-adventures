@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W309-tou-steal",
+  "pathSegment": "ZH-PATH-309-THIEF309",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-309-THIEF309",
+      "order": 2
+    }
+  ]
+}

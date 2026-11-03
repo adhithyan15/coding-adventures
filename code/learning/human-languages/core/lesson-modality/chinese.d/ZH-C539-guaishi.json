@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C539-guaishi",
+    "language": "chinese",
+    "chapter": 539,
+    "sequence": 40310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e055e7dcc751c404"
+  },
+  "findings": []
+}

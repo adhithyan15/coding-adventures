@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:5c40b5959da13339",
+  "lessonIds": [
+    "ZH-C347-zhuyi",
+    "ZH-C347-yisi",
+    "ZH-W347-si-think",
+    "ZH-C347-sikao",
+    "ZH-C347-yiyi",
+    "ZH-C347-tihui"
+  ],
+  "tex": "chinese/book/chapters/ch347-what-do-you-mean.tex"
+}

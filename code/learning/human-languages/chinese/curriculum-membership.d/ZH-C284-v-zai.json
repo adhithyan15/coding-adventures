@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C284-v-zai",
+  "pathSegment": "ZH-PATH-284-TICKETS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-284-TICKETS",
+      "order": 6
+    }
+  ]
+}

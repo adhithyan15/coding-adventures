@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 372,
+  "sourceHash": "fnv1a64:a230132790e97451",
+  "lessonIds": [
+    "ZH-C372-fanzheng",
+    "ZH-C372-daodi",
+    "ZH-C372-tongshi",
+    "ZH-C372-yongyi",
+    "ZH-C372-youdian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch372.txt",
+  "json": "chinese/narration/ch372.json",
+  "textHash": "fnv1a64:9aa49bf16956a0ee",
+  "jsonHash": "fnv1a64:fadf4b980f8faddf",
+  "findings": []
+}

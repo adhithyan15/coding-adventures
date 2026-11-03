@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 455,
+  "sourceHash": "fnv1a64:66fbab92e14781ce",
+  "lessonIds": [
+    "ZH-C455-xingming",
+    "ZH-C455-guoji",
+    "ZH-C455-guoqi",
+    "ZH-C455-youxiao",
+    "ZH-C455-shenqing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch455.txt",
+  "json": "chinese/narration/ch455.json",
+  "textHash": "fnv1a64:982bc4a73989a972",
+  "jsonHash": "fnv1a64:7644a4e9c198be44",
+  "findings": []
+}

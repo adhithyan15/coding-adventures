@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W535-yuan-wish",
+    "language": "chinese",
+    "chapter": 535,
+    "sequence": 40085,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2d4da7a7537b7517",
+    "detachableSegments": [
+      "Script — a cliff over 白 and 小, then 心"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

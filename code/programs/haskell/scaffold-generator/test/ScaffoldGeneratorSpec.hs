@@ -2,7 +2,13 @@ module ScaffoldGeneratorSpec (scaffoldGeneratorSpec) where
 
 import Test.Hspec
 
+import Data.List (isInfixOf)
+
 import ScaffoldGenerator
+
+-- | Whether a needle occurs anywhere in a haystack.
+containsText :: String -> String -> Bool
+containsText = isInfixOf
 
 scaffoldGeneratorSpec :: Spec
 scaffoldGeneratorSpec = do
@@ -44,6 +50,22 @@ scaffoldGeneratorSpec = do
                 readFile
                     "../../../specs/fixtures/scaffold-generator/haskell_program_required_capabilities.json"
             capabilityManifestContents "program" "build-helper" `shouldBe` expected
+
+    describe "buildFileContents" $ do
+        it "selects the Darwin CLT linker in the shape the validator accepts" $ do
+            buildFileContents
+                `shouldBe` unlines
+                    [ "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker."
+                    , "# Scope the selection to Cabal and its children, keeping other packages intact."
+                    , "if [ \"$(uname -s)\" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; if command -v cabal >/dev/null 2>&1; then cabal test all; else echo 'cabal not found -- skipping'; fi"
+                    ]
+
+    describe "buildWindowsFileContents" $ do
+        it "keeps the Windows skip record without the POSIX prefix" $ do
+            buildWindowsFileContents
+                `shouldBe` "echo \"haskell support not enabled in windows CI yet -- skipping\"\n"
+            buildWindowsFileContents `shouldNotSatisfy` containsText "uname"
+            buildWindowsFileContents `shouldNotSatisfy` containsText "DEVELOPER_DIR"
 
     describe "parseArgs" $ do
         it "parses the basic invocation" $ do

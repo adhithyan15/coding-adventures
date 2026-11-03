@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W300-si-die",
+    "language": "chinese",
+    "chapter": 300,
+    "sequence": 23525,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5b11ec1ff727fd87",
+    "detachableSegments": [
+      "Script — a long bar over two small pieces"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

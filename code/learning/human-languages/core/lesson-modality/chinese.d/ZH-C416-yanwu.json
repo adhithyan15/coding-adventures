@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C416-yanwu",
+    "language": "chinese",
+    "chapter": 416,
+    "sequence": 31720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cf0f1e393b6dab8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C362-gongzheng",
+    "language": "chinese",
+    "chapter": 362,
+    "sequence": 27850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8958afe16b17afbd"
+  },
+  "findings": []
+}

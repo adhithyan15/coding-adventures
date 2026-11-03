@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:82b48f5781654b80",
+  "lessonIds": [
+    "ZH-C483-haozhuan",
+    "ZH-C483-kangfu",
+    "ZH-C483-yingyang",
+    "ZH-C483-baojian",
+    "ZH-C483-manxing"
+  ],
+  "tex": "chinese/book/chapters/ch483-getting-better.tex"
+}

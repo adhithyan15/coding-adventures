@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C375-qiong",
+    "language": "chinese",
+    "chapter": 375,
+    "sequence": 29050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:415e3dc17f8462b9"
+  },
+  "findings": []
+}

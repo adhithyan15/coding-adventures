@@ -1,0 +1,841 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 475,
+  "title": "Head to Knees",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:062bad1794a3a369",
+  "lessons": [
+    {
+      "id": "ZH-C475-shouxin",
+      "sequence": 35870,
+      "title": "手心 (shǒuxīn) — the palm of the hand",
+      "headword": "手心",
+      "romanization": "shǒuxīn",
+      "gloss": "the palm of the hand",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a23c4783b329d3b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to put one's strength into it, then the Mandarin for a finger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 手心",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "手心 — shǒuxīn — \"the palm of the hand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我手心很热是不是体温高了 wǒ shǒuxīn hěn rè shì bu shì tǐwēn gāo le — My palms are hot. Is my temperature up?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "手心 (shǒuxīn) is built from 手 'hand' and 心 'heart', both inherited from Middle Chinese, syuwX and sim (Guangyun, in Baxter's transcription): the heart, or middle, of the hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǒuxīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǒuxīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǒuxīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǒuxīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ shǒuxīn hěn rè shì bu shì tǐwēn gāo le — My palms are hot. Is my temperature up?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ shǒuxīn hěn rè shì bu shì tǐwēn gāo le* — My palms are hot. Is my temperature up?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to put one's strength into it, then the Mandarin for a finger, then say shǒuxīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to put one's strength into it, then the Mandarin for a finger, then say *shǒuxīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 手心 (shǒuxīn) mean? (\"The palm of the hand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C475-xigai",
+      "sequence": 35880,
+      "title": "xīgài — knee",
+      "headword": "xīgài",
+      "romanization": "xīgài",
+      "gloss": "knee",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:34eee5f922f22df0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a finger, then the Mandarin for the palm of the hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xīgài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xīgài — \"knee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zǒu le yì tiān lù xīgài hěn téng — I walked all day, and my knees really hurt."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xīgài is built from xī 'the knee' and gài 'a cover', both inherited from Middle Chinese, sit and kajH (Guangyun, in Baxter's transcription), which explains the first, after an older book, as the joint of the leg and glosses the second 'to cover'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīgài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīgài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīgài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīgài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zǒu le yì tiān lù xīgài hěn téng — I walked all day, and my knees really hurt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zǒu le yì tiān lù xīgài hěn téng* — I walked all day, and my knees really hurt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a finger, then the Mandarin for the palm of the hand, then say xīgài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a finger, then the Mandarin for the palm of the hand, then say *xīgài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xīgài mean? (\"Knee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C475-houbei",
+      "sequence": 35890,
+      "title": "hòubèi — the back of the body",
+      "headword": "hòubèi",
+      "romanization": "hòubèi",
+      "gloss": "the back of the body",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62d5fc2cf2980e77",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the palm of the hand, then the Mandarin for the knee."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hòubèi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hòubèi — \"the back of the body\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ gǎnjué hòubèi yǒudiǎnr téng — My back feels a bit sore."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hòubèi is built from 后 'behind' and bèi 'the back', both inherited from Middle Chinese, huwX and pwojH (Guangyun, in Baxter's transcription), which glosses the second 'the spine and back'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hòubèi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hòubèi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hòubèi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hòubèi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ gǎnjué hòubèi yǒudiǎnr téng — My back feels a bit sore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ gǎnjué hòubèi yǒudiǎnr téng* — My back feels a bit sore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the palm of the hand, then the Mandarin for the knee, then say hòubèi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the palm of the hand, then the Mandarin for the knee, then say *hòubèi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hòubèi mean? (\"The back of the body\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C475-shengao",
+      "sequence": 35900,
+      "title": "身高 (shēngāo) — a person's height; body height",
+      "headword": "身高",
+      "romanization": "shēngāo",
+      "gloss": "a person's height; body height",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c1d249b3585b521",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the knee, then the Mandarin for the back of the body."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 身高",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "身高 — shēngāo — \"a person's height; body height\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你身高多少 nǐ shēngāo duōshao — How tall are you?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "身高 (shēngāo) is built from 身 'body' and 高 'high', both inherited from Middle Chinese, syin and kaw (Guangyun, in Baxter's transcription), which glosses the first 'oneself' and the second 'high'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēngāo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēngāo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēngāo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēngāo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ shēngāo duōshao — How tall are you?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ shēngāo duōshao* — How tall are you?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the knee, then the Mandarin for the back of the body, then say shēngāo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the knee, then the Mandarin for the back of the body, then say *shēngāo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 身高 (shēngāo) mean? (\"A person's height; body height\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C475-wan-bend",
+      "sequence": 35910,
+      "title": "wān — to bend",
+      "headword": "wān",
+      "romanization": "wān",
+      "gloss": "to bend",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c0b12e7d7f8208a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the back of the body, then the Mandarin for a person's height."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wān — \"to bend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ de gēbo bù néng wān — I can't bend my arm."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wān is inherited from Middle Chinese 'waen (Guangyun, in Baxter's transcription), explained after an older book as drawing a bow with the arrow set: the bow bends."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de gēbo bù néng wān — I can't bend my arm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de gēbo bù néng wān* — I can't bend my arm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the back of the body, then the Mandarin for a person's height, then say wān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the back of the body, then the Mandarin for a person's height, then say *wān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wān mean? (\"To bend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R475-review-470-475",
+      "sequence": 35920,
+      "title": "Looking back: from Faults to Head to Knees",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Faults to Head to Knees",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69f94263a250a60a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for selfish and stubborn."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "selfish, stubborn, full of oneself, slapdash, slow-witted",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: selfish, stubborn, full of oneself, slapdash, slow-witted]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tears, right before one's eyes, petty and narrow-minded, short-sighted, to wink",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tears, right before one's eyes, petty and narrow-minded, short-sighted, to wink]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an eyebrow, the colour of one's face, to turn hostile suddenly, the look on one's face, the forehead",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an eyebrow, the colour of one's face, to turn hostile suddenly, the look on one's face, the forehead]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the mouth, a dentist, the teeth, to have a tooth pulled, to have a tooth filled",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the mouth, a dentist, the teeth, to have a tooth pulled, to have a tooth filled]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the arm, physical strength, stamina, to put one's strength into it, a finger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the arm, physical strength, stamina, to put one's strength into it, a finger]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the palm of the hand, the knee, the back of the body, a person's height, to bend",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the palm of the hand, the knee, the back of the body, a person's height, to bend]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "眼 脸 牙 力 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 眼 脸 牙 力 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Selfish? (zìsī.) Stubborn? (gùzhí.) Full of oneself? (jiāo'ào.) Slapdash? (mǎhu.) Slow-witted? (bèn.) Tears? (yǎnlèi.) Right before one's eyes? (眼前, yǎnqián.) Petty and narrow-minded? (小心眼, xiǎoxīnyǎn.) Short-sighted? (jìnshì.) To wink? (zhǎyǎn.) An eyebrow? (méimao.) The colour of one's face? (脸色, liǎnsè.) To turn hostile suddenly? (变脸, biànliǎn.) The look on one's face? (biǎoqíng.) The forehead? (étóu.) The mouth? (zuǐ.) A dentist? (牙医, yáyī.) The teeth? (yáchǐ.) To have a tooth pulled? (báyá.) To have a tooth filled? (bǔyá.) The arm? (gēbo.) Physical strength? (力气, lìqi.) Stamina? (体力, tǐlì.) To put one's strength into it? (用力, yònglì.) A finger? (shǒuzhǐ.) The palm of the hand? (手心, shǒuxīn.) The knee? (xīgài.) The back of the body? (hòubèi.) A person's height? (身高, shēngāo.) To bend? (wān.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

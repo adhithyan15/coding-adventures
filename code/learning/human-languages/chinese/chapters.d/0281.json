@@ -1,0 +1,23 @@
+{
+  "chapter": 281,
+  "title": "For Example",
+  "label": "ch:zh-for-example",
+  "canDo": "I can give a reason and an example.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C281-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Giving a reason with 因为 … 所以 … in one sentence, for instance, for this reason and an example, and writing one line of your own with a reason in it, built on two new written characters: 如 and 所.",
+    "assesses": [
+      "ZH-LEX-C281-BIRU-01",
+      "ZH-SCRIPT-RU-01",
+      "ZH-GRAMMAR-YINWEI-SUOYI-01",
+      "ZH-SCRIPT-SUO-01",
+      "ZH-LEX-C281-YINCI-01",
+      "ZH-LEX-C281-LIZI-01",
+      "ZH-PERFORMANCE-REASON-01"
+    ]
+  }
+}

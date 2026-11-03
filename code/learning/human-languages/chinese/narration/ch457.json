@@ -1,0 +1,906 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 457,
+  "title": "Thanks for the Help",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:3eb31a6d663fe1b0",
+  "lessons": [
+    {
+      "id": "ZH-C457-laojia",
+      "sequence": 34390,
+      "title": "láojià — may I trouble you (asking a favour)",
+      "headword": "láojià",
+      "romanization": "láojià",
+      "gloss": "may I trouble you (asking a favour)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3118fdafc5af3669",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the owner of a lost item, then the Mandarin for to claim lost property."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: láojià",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "láojià — \"may I trouble you (asking a favour)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "láojià qù huǒchēzhàn zěnme zǒu — Excuse me, how do I get to the railway station?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "láojià is built from láo 'to tire' and jià 'a carriage', both inherited from Middle Chinese, law and kaeH (Guangyun, in Baxter's transcription), which glosses the first 'weary' and the second 'to ride'. The pair is usually explained as an old polite way of asking someone to trouble their carriage."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "láojià",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *láojià*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "láojià, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *láojià*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "láojià qù huǒchēzhàn zěnme zǒu — Excuse me, how do I get to the railway station?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *láojià qù huǒchēzhàn zěnme zǒu* — Excuse me, how do I get to the railway station?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the owner of a lost item, then the Mandarin for to claim lost property, then say láojià again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the owner of a lost item, then the Mandarin for to claim lost property, then say *láojià* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does láojià mean? (\"May I trouble you (asking a favour)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C457-baituo",
+      "sequence": 34400,
+      "title": "bàituō — to ask a favour of someone",
+      "headword": "bàituō",
+      "romanization": "bàituō",
+      "gloss": "to ask a favour of someone",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3716524cefe85d3e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to claim lost property, then the Mandarin for may I trouble you."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bàituō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bàituō — \"to ask a favour of someone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "bàituō nǐ bāng wǒ ná xíngli — Could you carry my luggage for me, please?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bàituō is built from bài 'to bow' and tuō 'to entrust', both inherited from Middle Chinese, peajH and thak (Guangyun, in Baxter's transcription), which glosses the second 'to entrust'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàituō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàituō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàituō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàituō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàituō nǐ bāng wǒ ná xíngli — Could you carry my luggage for me, please?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàituō nǐ bāng wǒ ná xíngli* — Could you carry my luggage for me, please?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to claim lost property, then the Mandarin for may I trouble you, then say bàituō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to claim lost property, then the Mandarin for may I trouble you, then say *bàituō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bàituō mean? (\"To ask a favour of someone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C457-duoxie",
+      "sequence": 34410,
+      "title": "多谢 (duōxiè) — many thanks; thanks a lot",
+      "headword": "多谢",
+      "romanization": "duōxiè",
+      "gloss": "many thanks; thanks a lot",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fb462ba2aeed704",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for may I trouble you, then the Mandarin for to ask a favour of someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 多谢",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多谢 — duōxiè — \"many thanks; thanks a lot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "多谢你我找到地图了 duōxiè nǐ wǒ zhǎodào dìtú le — Thanks so much: I've found my map."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多谢 (duōxiè) is built from 多 'many' and 谢 'to thank', both inherited from Middle Chinese, ta and zjaeH (Guangyun, in Baxter's transcription), which glosses the second 'to decline'; the sense 'to thank' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duōxiè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duōxiè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duōxiè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duōxiè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duōxiè nǐ wǒ zhǎodào dìtú le — Thanks so much: I've found my map.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duōxiè nǐ wǒ zhǎodào dìtú le* — Thanks so much: I've found my map.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for may I trouble you, then the Mandarin for to ask a favour of someone, then say duōxiè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for may I trouble you, then the Mandarin for to ask a favour of someone, then say *duōxiè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 多谢 (duōxiè) mean? (\"Many thanks; thanks a lot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C457-ganji-grateful",
+      "sequence": 34420,
+      "title": "gǎnjī — to feel deeply grateful",
+      "headword": "gǎnjī",
+      "romanization": "gǎnjī",
+      "gloss": "to feel deeply grateful",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0cb1cd50d14b314",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to ask a favour of someone, then the Mandarin for thanks a lot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gǎnjī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gǎnjī — \"to feel deeply grateful\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ bāng le wǒ hěn duō wǒ hěn gǎnjī — You've helped me so much; I'm very grateful."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gǎnjī is built from gǎn 'to be moved' and jī 'to surge', both inherited from Middle Chinese, komX and kek (Guangyun, in Baxter's transcription), which glosses the first 'to move' and the second as a rushing wave."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎnjī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎnjī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎnjī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎnjī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ bāng le wǒ hěn duō wǒ hěn gǎnjī — You've helped me so much; I'm very grateful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ bāng le wǒ hěn duō wǒ hěn gǎnjī* — You've helped me so much; I'm very grateful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to ask a favour of someone, then the Mandarin for thanks a lot, then say gǎnjī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to ask a favour of someone, then the Mandarin for thanks a lot, then say *gǎnjī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gǎnjī mean? (\"To feel deeply grateful\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C457-fangfa",
+      "sequence": 34430,
+      "title": "方法 (fāngfǎ) — a way to solve a problem; means",
+      "headword": "方法",
+      "romanization": "fāngfǎ",
+      "gloss": "a way to solve a problem; means",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:232102b02b44fbf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for thanks a lot, then the Mandarin for to feel deeply grateful."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 方法",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "方法 — fāngfǎ — \"a way to solve a problem; means\"."
+            },
+            {
+              "kind": "speech",
+              "text": "找不到路的时候你有什么好方法 zhǎo bu dào lù de shíhou nǐ yǒu shénme hǎo fāngfǎ — When you can't find the way, what do you do?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "方法 (fāngfǎ) is built from 方 'a technique' and 法 'a rule', both inherited from Middle Chinese, pjang and pjop (Guangyun, in Baxter's transcription), which glosses the first, among other senses, as an art or technique and the second 'a rule'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāngfǎ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāngfǎ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāngfǎ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāngfǎ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǎo bu dào lù de shíhou nǐ yǒu shénme hǎo fāngfǎ — When you can't find the way, what do you do?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǎo bu dào lù de shíhou nǐ yǒu shénme hǎo fāngfǎ* — When you can't find the way, what do you do?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for thanks a lot, then the Mandarin for to feel deeply grateful, then say fāngfǎ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for thanks a lot, then the Mandarin for to feel deeply grateful, then say *fāngfǎ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 方法 (fāngfǎ) mean? (\"A way to solve a problem; means\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R457-review-453-457",
+      "sequence": 34440,
+      "title": "Looking back: from Bags and Cases to Thanks for the Help",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Bags and Cases to Thanks for the Help",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3176235599bac45f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a backpack and a travel case."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a backpack, a travel case, to stuff into a bag, to carry in the hand, a luggage tag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a backpack, a travel case, to stuff into a bag, to carry in the hand, a luggage tag]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an information desk, to make an inquiry, books on the shelves, to show someone the way, a travel brochure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an information desk, to make an inquiry, books on the shelves, to show someone the way, a travel brochure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one's full name, one's citizenship, to be out of date, still valid, to apply for",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one's full name, one's citizenship, to be out of date, still valid, to apply for]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get separated, to turn to someone for help, a passer-by, the owner of a lost item, to claim lost property",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get separated, to turn to someone for help, a passer-by, the owner of a lost item, to claim lost property]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "may I trouble you, to ask a favour of someone, thanks a lot, to feel deeply grateful, a way to solve a problem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: may I trouble you, to ask a favour of someone, thanks a lot, to feel deeply grateful, a way to solve a problem]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "图 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 图 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A backpack? (bēibāo.) A travel case? (xínglixiāng.) To stuff into a bag? (sāi.) To carry in the hand? (līn.) A luggage tag? (biāoqiān.) An information desk? (fúwùtái.) To make an inquiry? (zīxún.) Books on the shelves? (图书, túshū.) To show someone the way? (zhǐlù.) A travel brochure? (xuānchuáncè.) One's full name? (xìngmíng.) One's citizenship? (guójí.) To be out of date? (过期, guòqī.) Still valid? (yǒuxiào.) To apply for? (shēnqǐng.) To get separated? (zǒusàn.) To turn to someone for help? (qiúzhù.) A passer-by? (路人, lùrén.) The owner of a lost item? (shīzhǔ.) To claim lost property? (rènlǐng.) May I trouble you? (láojià.) To ask a favour of someone? (bàituō.) Thanks a lot? (多谢, duōxiè.) To feel deeply grateful? (gǎnjī.) A way to solve a problem? (方法, fāngfǎ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R457-review-final-457",
+      "sequence": 34450,
+      "title": "Thanks for the Help — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e67938fd792d045",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for may I trouble you and to ask a favour of someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "may I trouble you, to ask a favour of someone, thanks a lot, to feel deeply grateful, a way to solve a problem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: may I trouble you, to ask a favour of someone, thanks a lot, to feel deeply grateful, a way to solve a problem]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "May I trouble you? (láojià.) To ask a favour of someone? (bàituō.) Thanks a lot? (多谢, duōxiè.) To feel deeply grateful? (gǎnjī.) A way to solve a problem? (方法, fāngfǎ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

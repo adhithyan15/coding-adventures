@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 499,
+  "sourceHash": "fnv1a64:8ea2704ba4a44f81",
+  "lessonIds": [
+    "ZH-C499-qiudui",
+    "ZH-C499-qiuyuan",
+    "ZH-C499-duizhang",
+    "ZH-C499-xunlian",
+    "ZH-C499-chuanqiu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch499.txt",
+  "json": "chinese/narration/ch499.json",
+  "textHash": "fnv1a64:bad1137ca5c9df87",
+  "jsonHash": "fnv1a64:18fc2a728ac12376",
+  "findings": []
+}

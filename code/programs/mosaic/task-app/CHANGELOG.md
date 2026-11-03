@@ -7,6 +7,16 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.16` accumulate here until the next version is
 cut.
 
+### Fixed
+
+- A note's *Attach to task* name now finds the same task on every host
+  (backlog 6e2). The native adapter compared names ASCII-only, so "écrire"
+  attached to "Écrire" on the web and was refused natively; both hosts now
+  lowercase with Unicode's default mapping, trim Unicode `White_Space`, and
+  give a tie to the first task by id (`code/specs/task-app-notes-ui-v1.md`,
+  addendum v1.4). New `fixtures/task-name-matching-v1.json` holds the cases,
+  run by both `task-mosaic-app` and the web host.
+
 ## [0.5.16] - 2026-10-30
 
 ### Fixed

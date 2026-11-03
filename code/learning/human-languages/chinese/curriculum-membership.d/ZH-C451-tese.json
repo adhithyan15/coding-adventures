@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C451-tese",
+  "pathSegment": "ZH-PATH-451-SPECIAL451",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-451-SPECIAL451",
+      "order": 1
+    }
+  ]
+}

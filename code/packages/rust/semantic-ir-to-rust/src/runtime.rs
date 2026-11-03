@@ -2547,6 +2547,10 @@ pub const RUNTIME: &str = r##"mod __sir {
                 Value::Float(f) => Value::Float(-f),
                 other => Value::Int(-as_i64(&other)),
             },
+            // #18798 — boolean negation by SIR truthiness, for a first-class
+            // reference to the builtin (a direct `not(x)` call is inlined by
+            // the emitter).  With no argument it negates nil, as `!nil` does.
+            "not" => Value::Bool(!truthy(&args.into_iter().next().unwrap_or(Value::Nil))),
             // `==` is a synonym for `=`; both call `eq`.  This covers a
             // first-class builtin reference (`:==` passed as a symbol) — the
             // infix form is routed directly by the emitter.

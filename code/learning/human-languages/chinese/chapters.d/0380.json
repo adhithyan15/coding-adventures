@@ -1,0 +1,19 @@
+{
+  "chapter": 380,
+  "title": "Clean Air",
+  "label": "ch:zh-clean-air",
+  "canDo": "I can talk about the environment, the air, pollution, the earth and green ways to travel.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C380-huanbao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 380: I can talk about the environment, the air, pollution, the earth and green ways to travel.",
+    "assesses": [
+      "ZH-LEX-C380-AIR380-03",
+      "ZH-LEX-C380-AIR380-04",
+      "ZH-LEX-C380-AIR380-05"
+    ]
+  }
+}

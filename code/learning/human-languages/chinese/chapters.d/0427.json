@@ -1,0 +1,20 @@
+{
+  "chapter": 427,
+  "title": "Comings and Goings",
+  "label": "ch:zh-comings-and-goings",
+  "canDo": "I can talk about the room next door, traffic coming and going, the buffet, the sheets and a bus's route.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C427-kaiwang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 427: I can talk about the room next door, traffic coming and going, the buffet, the sheets and a bus's route.",
+    "assesses": [
+      "ZH-LEX-C427-COMEGO427-03",
+      "ZH-LEX-C427-COMEGO427-04",
+      "ZH-LEX-C427-COMEGO427-05",
+      "ZH-SCRIPT-WANG-TOWARD-01"
+    ]
+  }
+}

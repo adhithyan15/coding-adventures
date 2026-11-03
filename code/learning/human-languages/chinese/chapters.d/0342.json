@@ -1,0 +1,19 @@
+{
+  "chapter": 342,
+  "title": "Mid-Autumn",
+  "label": "ch:zh-mid-autumn",
+  "canDo": "I can talk about the Mid-Autumn Festival, enjoying the moon, the festival days, osmanthus and home.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C342-jiaxiang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 342: I can talk about the Mid-Autumn Festival, enjoying the moon, the festival days, osmanthus and home.",
+    "assesses": [
+      "ZH-LEX-C342-AUTUMN342-03",
+      "ZH-LEX-C342-AUTUMN342-04",
+      "ZH-LEX-C342-AUTUMN342-05"
+    ]
+  }
+}

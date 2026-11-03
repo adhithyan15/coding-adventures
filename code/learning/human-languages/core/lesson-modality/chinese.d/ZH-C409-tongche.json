@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C409-tongche",
+    "language": "chinese",
+    "chapter": 409,
+    "sequence": 31380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23d425149a47a4a1"
+  },
+  "findings": []
+}

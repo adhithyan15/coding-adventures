@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Re-verify the Haskell lane after #18812 added the Darwin CLT-linker
+  selection to its `BUILD` and an entry to its `CHANGELOG.md`: `package_tree`
+  is now `fcd26e71df41f1766cbbd4ca7568f595c587c89c`, verified at `2920eadb3ea`.
 - Make `package_tree` the content-addressed evidence anchor so a lane change
   survives its own squash merge. The gate now requires `package_tree` to be a
   git tree object and diffs it directly against the checked-out package tree;

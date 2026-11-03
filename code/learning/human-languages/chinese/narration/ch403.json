@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 403,
+  "title": "Travellers",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:bd089a375493716b",
+  "lessons": [
+    {
+      "id": "ZH-C403-houcheshi",
+      "sequence": 31050,
+      "title": "hòuchēshì — station waiting room",
+      "headword": "hòuchēshì",
+      "romanization": "hòuchēshì",
+      "gloss": "station waiting room",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eae1a6ea66691ce1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to change trains, then the Mandarin for a railway carriage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hòuchēshì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hòuchēshì — \"station waiting room\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ zuò zài hòuchēshì děng wǒ — Sit in the waiting room and wait for me."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hòuchēshì is built from 候车 'to wait for a train' and shì 'a room', all inherited from Middle Chinese, huwH, tsyhae and syit (Guangyun, in Baxter's transcription), which glosses the last 'a room'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hòuchēshì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hòuchēshì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hòuchēshì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hòuchēshì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ zuò zài hòuchēshì děng wǒ — Sit in the waiting room and wait for me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ zuò zài hòuchēshì děng wǒ* — Sit in the waiting room and wait for me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to change trains, then the Mandarin for a railway carriage, then say hòuchēshì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to change trains, then the Mandarin for a railway carriage, then say *hòuchēshì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hòuchēshì mean? (\"Station waiting room\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C403-luke",
+      "sequence": 31060,
+      "title": "旅客 (lǚkè) — traveller; passenger on a long journey",
+      "headword": "旅客",
+      "romanization": "lǚkè",
+      "gloss": "traveller; passenger on a long journey",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b680ed048d98b66e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a railway carriage, then the Mandarin for a station waiting room."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 旅客",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "旅客 — lǚkè — \"traveller; passenger on a long journey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "旅客都上车了 lǚkè dōu shàngchē le — The passengers have all got on."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 旅 (lǚ) — ten strokes in two pieces: on the left a dot, a bar, a stroke that runs right and turns down with a hook, and a long stroke falling to the left; on the right a short stroke falling to the left and a bar, then a short stroke falling to the left, a vertical that turns up at the foot, a short stroke falling to the left and a long stroke falling to the right. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "旅客 (lǚkè) is built from 旅 (lǚ) and 客 'a guest', both inherited from Middle Chinese, ljoX and khaek (Guangyun, in Baxter's transcription). The dictionary glosses the first as a body of troops, five hundred men after an older book; the sense 'to travel' is not given there, so how it came is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǚkè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǚkè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǚkè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǚkè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǚkè dōu shàngchē le — The passengers have all got on.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǚkè dōu shàngchē le* — The passengers have all got on.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a railway carriage, then the Mandarin for a station waiting room, then say lǚkè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a railway carriage, then the Mandarin for a station waiting room, then say *lǚkè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 旅客 (lǚkè) mean? (\"Traveller; passenger on a long journey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W403-lu-travel",
+      "sequence": 31065,
+      "title": "旅 (lǚ) — a left piece of four strokes, then a right piece of six",
+      "headword": "旅",
+      "romanization": "lǚ",
+      "gloss": "旅 — four strokes on the left, then six on the right",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ad6d29d7faa75c5c",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a left piece of four strokes, then a right piece of six",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a left piece of four strokes, then a right piece of six and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lǚkè — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lǚkè* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "客 走."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — kè, zǒu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *kè*, *zǒu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a left piece of four strokes, then a right piece of six",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "旅 (lǚ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, four strokes. A dot on top. A bar under it. A stroke that runs right, turns down and hooks to the left at the foot. Then a long stroke falling to the left from under the bar."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, six strokes. A short stroke falling to the left and a bar to its right, like a small roof. Under them a short stroke falling to the left, a vertical that turns up to the right at the foot, another short stroke falling to the left, and last a long stroke falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 6 = ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "旅 (lǚ), all ten, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 旅, all ten, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 旅 (lǚ) have? (Two: four strokes and six.) What is the last stroke? (A long stroke falling to the right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 旅 (lǚ), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C403-zhengdian",
+      "sequence": 31070,
+      "title": "正点 (zhèngdiǎn) — on schedule (of a train or plane)",
+      "headword": "正点",
+      "romanization": "zhèngdiǎn",
+      "gloss": "on schedule (of a train or plane)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e635f80c4993725",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a station waiting room, then the Mandarin for a passenger on a long journey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 正点",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "正点 — zhèngdiǎn — \"on schedule (of a train or plane)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们的火车正点到了 wǒmen de huǒchē zhèngdiǎn dào le — Our train got in on time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "正点 (zhèngdiǎn) is built from 正 'exactly' and 点 'o'clock', both inherited from Middle Chinese, tsyengH and temX (Guangyun, in Baxter's transcription), which glosses the first 'right, proper' and the second as a dot made with the brush: on the hour the timetable gives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèngdiǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèngdiǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèngdiǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèngdiǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen de huǒchē zhèngdiǎn dào le — Our train got in on time.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen de huǒchē zhèngdiǎn dào le* — Our train got in on time.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a station waiting room, then the Mandarin for a passenger on a long journey, then say zhèngdiǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a station waiting room, then the Mandarin for a passenger on a long journey, then say *zhèngdiǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 正点 (zhèngdiǎn) mean? (\"On schedule (of a train or plane)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C403-liecheyuan",
+      "sequence": 31080,
+      "title": "lièchēyuán — train attendant",
+      "headword": "lièchēyuán",
+      "romanization": "lièchēyuán",
+      "gloss": "train attendant",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad95372c4fbbbb42",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a passenger on a long journey, then the Mandarin for on schedule."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lièchēyuán",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lièchēyuán — \"train attendant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhǎo bu dào zuòwèi dehuà kěyǐ wèn lièchēyuán — If you can't find your seat, ask the train attendant."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lièchēyuán is built from liè 'a row', 车 'vehicle' and yuán 'a member of staff', all inherited from Middle Chinese, ljet, tsyhae and hjwen (Guangyun, in Baxter's transcription). The dictionary glosses the first 'a row, an order' and the third as the number of things; a train is a row of carriages, and the sense 'staff' for the third is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lièchēyuán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lièchēyuán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lièchēyuán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lièchēyuán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǎo bu dào zuòwèi dehuà kěyǐ wèn lièchēyuán — If you can't find your seat, ask the train attendant.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǎo bu dào zuòwèi dehuà kěyǐ wèn lièchēyuán* — If you can't find your seat, ask the train attendant.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a passenger on a long journey, then the Mandarin for on schedule, then say lièchēyuán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a passenger on a long journey, then the Mandarin for on schedule, then say *lièchēyuán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lièchēyuán mean? (\"Train attendant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C403-zhanzhang",
+      "sequence": 31090,
+      "title": "站长 (zhànzhǎng) — stationmaster; head of a station",
+      "headword": "站长",
+      "romanization": "zhànzhǎng",
+      "gloss": "stationmaster; head of a station",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fdb4871ad0d684c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for on schedule, then the Mandarin for a train attendant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 站长",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "站长 — zhànzhǎng — \"stationmaster; head of a station\"."
+            },
+            {
+              "kind": "speech",
+              "text": "旅客去找站长 lǚkè qù zhǎo zhànzhǎng — The passenger goes to find the stationmaster."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "站长 (zhànzhǎng) is built from 站 'a station' and 长 'the head', both inherited from Middle Chinese, treamH and trjangX (Guangyun, in Baxter's transcription). The dictionary glosses the first as an everyday word for standing alone and the second 'big'; a station is usually explained as a place where vehicles stand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhànzhǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhànzhǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhànzhǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhànzhǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǚkè qù zhǎo zhànzhǎng — The passenger goes to find the stationmaster.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǚkè qù zhǎo zhànzhǎng* — The passenger goes to find the stationmaster.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for on schedule, then the Mandarin for a train attendant, then say zhànzhǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for on schedule, then the Mandarin for a train attendant, then say *zhànzhǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 站长 (zhànzhǎng) mean? (\"Stationmaster; head of a station\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
