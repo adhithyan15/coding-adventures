@@ -16,15 +16,13 @@
       "external-approval"
     ]
   },
-  "active_pr": 18842,
-  "active_prs": [
-    18842
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-11-03T06:03:19Z",
+    "observed_at": "2026-11-03T08:09:56Z",
     "pr_number": 18842,
-    "head_revision": "a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a",
-    "action": "Independently reviewed current-main Lua CLI argument-validation head a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a opened as ready PR #18842 over exact base 4cedfcff47130c26823f2f54c1f1b333b0e98481 at 2026-11-03T06:03:19Z. GitHub reports it mergeable and fresh exact-head CI, CodeQL, and human-language detection are queued. Auto-merge remains disabled until every check on the final lifecycle head is terminal acceptable and GitHub still reports the PR mergeable.",
+    "head_revision": "360b9fffb2a220e29b8209f6311d04e0e91c6288",
+    "action": "All 37 checks on exact independently reviewed Lua CLI argument-validation head 360b9fffb2a220e29b8209f6311d04e0e91c6288 completed terminal acceptable: 13 succeeded and 24 were expected skips. GitHub reported CLEAN and MERGEABLE, guarded squash auto-merge was enabled, and PR #18842 merged at 2026-11-03T08:09:56Z as e76c294a30577a58e5bd22610b83ffb2abd8a776. The receipt is an ancestor of origin/main; the clean completed worktree is archived.",
     "manual_merge": false
   },
   "last_inventory": {
@@ -2791,13 +2789,13 @@
     {
       "id": "build-tool-lua-cli-argument-validation-hardening",
       "title": "Reject unknown and value-less Lua build-tool CLI options",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/build-tool-lua-cli-args-hardening",
       "pr_number": 18842,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18842",
       "pr_opened_at": "2026-11-03T06:03:19Z",
-      "publication_head": "a00192b6a4a1583e2a12b4bd8727a1f87a6ea76a",
+      "publication_head": "360b9fffb2a220e29b8209f6311d04e0e91c6288",
       "publication_base": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
       "publication_notes": "The independently reviewed current-main head opened as ready PR #18842. GitHub reports it mergeable; fresh CI, CodeQL, and human-language detection checks are queued. Guarded squash auto-merge remains disabled until the durable PR receipt is pushed and reviewed and every check on that resulting exact head is terminal acceptable while GitHub still reports it mergeable.",
       "registered_at": "2026-10-30T20:40:43Z",
@@ -2807,6 +2805,10 @@
       "main_refresh_revision": "4cedfcff47130c26823f2f54c1f1b333b0e98481",
       "main_merge_revision": "b10e0853d6c7175258bfa2c1502ae9df2dfc2979",
       "main_merge_notes": "A normal current-main merge incorporated the completed discovery fallback, Lua graph/diff performance work, Cargo link-table resolution hardening, and all intervening repository changes. README.md and build.lua auto-merged disjoint hunks; the only textual merge conflict was the Lua build-tool changelog, whose resolution preserves both complete entry sets. Exact merged-head validation passes 11 focused CLI cases, 242 complete Lua build-tool cases, every Lua syntax check, 1,789 lesson shards, and 11 quirk shards with zero problems.",
+      "merged_head_revision": "360b9fffb2a220e29b8209f6311d04e0e91c6288",
+      "merged_at": "2026-11-03T08:09:56Z",
+      "merge_revision": "e76c294a30577a58e5bd22610b83ffb2abd8a776",
+      "merge_notes": "Every one of 37 exact-head checks reached a terminal acceptable conclusion: 13 succeeded and 24 were expected skips. GitHub reported CLEAN and MERGEABLE before guarded squash auto-merge. The merge commit is an ancestor of current origin/main; the completed worktree is archived and its recoverable snapshot retains the PR attachment.",
       "validation_notes": "The parser is now a process-free all-or-error module. It rejects unknown options, unexpected positional arguments, empty or value-less --root and --language options, and option tokens in value position before discovery; diagnostics name only fixed option labels and never echo untrusted path-bearing input. Supported flags, help, Windows paths with spaces, and single-hyphen values remain accepted. The exact current-main tree passes 11 focused cases, 242 complete Lua build-tool tests, all Lua syntax checks, 1,789 lesson shards, and 11 quirk shards with zero problems.",
       "notes": "Discovered during independent review of the Lua Windows discovery fallback repair. Unknown options were ignored, a missing --root value fell through to auto-detection, and a missing --language value could succeed after selecting zero packages. Implement strict, path-redacted stable diagnostics without widening filesystem or process authority; keep this parser hardening separate from discovery fallback behavior."
     },
@@ -2948,6 +2950,10 @@
       "corpus_repair_revision": "e471100cc9256c7f59596ac4cc8dc47ad516bd98",
       "preparation_head_revision": "9cded3754af849517f9b1f0e889bcb488b015498",
       "reconciled_main_revision": "462710b53fc4340de8360b286c407b7dcec4e54b",
+      "selected_at": "2026-11-03T08:12:29Z",
+      "selection_revision": "e76c294a30577a58e5bd22610b83ffb2abd8a776",
+      "current_main_merge_revision": "73f109f73bacd9546a989c81d94e055f86efb5e7",
+      "selection_notes": "Selected immediately after PR #18842 completed all 37 exact-head checks acceptably and merged through guarded squash auto-merge, opening the publication slot. This dependency-free, authority-free Rust core is already fully implemented, current-main reconciled, independently reviewed, and clean; it directly unlocks the strict Cargo snapshot contract, native adapter, CLI integration, and native fixture-routing owners. It ranks ahead of beginning a new unprepared owner because it is the highest-leverage reviewed local preparation and has no open-PR path overlap.",
       "preparation_notes": "Complete local-only preparation at exact clean head 9cded3754af849517f9b1f0e889bcb488b015498 after a normal path-disjoint merge of current origin/main. Keep this owner pending and unpublished while Lua CLI validation PR #18842 occupies the publication slot. The pure evaluator, six neutral fixtures, Go witness, closed schema variant, canonical semantic validator, documentation, five strict-reader/integration follow-ups, and separate native fixture-routing owner are recorded without claiming Cargo parsing or native authority.",
       "preparation_validation_notes": "Independent exact-head review issued SHIP. Pinned canonical corpus validation reports 185 cases and 328 files; Python schema 27/27 and runner 93/93 pass; Rust test-trigger 4/4 plus all-targets 259/259 and Clippy with warnings denied pass; focused and forced uncached full Go build-tool tests pass; rustfmt, gofmt, diff hygiene, the 1,572-owner dependency-complete acyclic state graph, current-main ancestry, path-disjoint merge receipt, and ignored-inclusive cleanliness pass.",
       "notes": "Discovered during exact-head review of the prepared Rust graph/diff adoption and narrowed by the 2026-11-02 Rust/Go contract audit. Implement only the authority-free selection evaluator over already validated package names, graph edges, resolved trigger pairs, and changed packages: dependent closure, exactly one trigger hop, then prerequisite closure. Return deterministic sorted results; reuse the Rust graph/diff ceilings of 4096 packages and 16384 graph edges, add a 16384 trigger-pair ceiling, and consume a small neutral fixture family shared with Go. Keep Cargo parsing, filesystem identity, orphan/config policy, discovery, command execution, and CLI integration in the separately recorded follow-up owners."

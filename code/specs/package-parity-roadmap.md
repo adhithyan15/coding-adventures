@@ -20301,8 +20301,8 @@ main `462710b53fc4340de8360b286c407b7dcec4e54b`. Independent review passed the
 185-case canonical corpus, 27 schema tests, 93 runner tests, all 259 Rust
 all-target tests, Clippy with warnings denied, the focused Go witness, format
 and diff checks, state-graph integrity, authority boundary, and ignored-file
-hygiene. Keep it unpublished while Lua CLI validation PR #18842 occupies the
-publication slot.
+hygiene. It remained unpublished while Lua CLI validation PR #18842 occupied
+the publication slot.
 
 #### Lua fallback PR #18756 merge and CLI validation reprioritization
 
@@ -20343,3 +20343,20 @@ human-language detection checks are queued. Keep guarded squash auto-merge
 disabled until this durable receipt is committed, pushed normally, and
 independently reviewed, then require every exact-head check to complete
 terminal acceptable while GitHub still reports the PR mergeable.
+
+#### Lua CLI PR #18842 merge and Rust trigger-core selection
+
+All 37 checks on exact reviewed Lua CLI head
+`360b9fffb2a220e29b8209f6311d04e0e91c6288` completed terminal acceptable:
+13 succeeded and 24 were expected skips. GitHub reported CLEAN and MERGEABLE;
+guarded squash auto-merge completed at `2026-11-03T08:09:56Z` as
+`e76c294a30577a58e5bd22610b83ffb2abd8a776`. The receipt is an ancestor of
+current main, and the clean completed worktree is archived.
+
+The opened slot selects the already reviewed Rust Cargo test-trigger core.
+Normal merge `73f109f73bacd9546a989c81d94e055f86efb5e7` reconciles current main while
+preserving both histories and the complete Lua receipt. The pure core is
+dependency-free, gains no host authority, and directly unlocks the strict
+snapshot, native adapter, CLI integration, and fixture-routing follow-ups.
+Publish only after the durable selection receipt is committed and pushed
+normally, then require a fresh exact-head publication review.
