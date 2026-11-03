@@ -233,9 +233,9 @@ Declarations and required forms are:
 | `claim name:` | One Bool expression, with all logical variables explicitly bound |
 | `assume platform:` | Dotted catalogue identifiers or the sole item `none` |
 | `assume environment:` | `name: predicate` rows or the sole item `none` |
-| `labels operation:` | `parameter[.contents|.length] public|secret` rows |
+| `labels operation:` | `parameter[.contents\|.length] public\|secret` rows |
 | `input operation.parameter:` | `hostile`, zero/more `rejects predicate with Error.CASE`, then `ensures` flags |
-| `bound operation:` | One/more distinct `steps|heap|depth <= expression` rows |
+| `bound operation:` | One/more distinct `steps\|heap\|depth <= expression` rows |
 
 Parameters are `name: type [| Bool refinement]`, comma separated. Refinements
 on operation parameters are input admission predicates, not permission to
@@ -244,6 +244,50 @@ outside the domain. Static Nat parameters are type-level compile-time values.
 Subject calls may specify static arguments with `<N, ...>` and runtime values
 with `(arguments)`; arity/types must match. No overload resolution, defaults,
 implicit model dispatch or variadic calls exist.
+
+The grammar-facing declaration shape is below. `expr` follows §4's precedence;
+NAME/QNAME denote identifiers/dotted names, NAT a nonnegative decimal token,
+and layout/EOF tokens come from the source reader. Semantic rules above impose
+the named limits, namespaces and required contract fields. `list(rule)` means
+one or more comma-separated instances; it is notation here, not a new grammar-
+tools operator. Blank/comment-only lines do not create empty declarations.
+
+```text
+file       = "warrant" NAME NEWLINE INDENT { declaration } DEDENT EOF ;
+declaration = alias | model_fn | error_type | operation | example | claim
+            | assumptions | labels | input | bound ;
+alias      = "model" NAME "=" type NEWLINE ;
+model_fn   = "model" NAME "(" [ list(parameter) ] ")" "->" type "=" expr NEWLINE ;
+error_type = "error" NAME "=" NAME { "|" NAME } NEWLINE ;
+operation  = "op" NAME [ "<" list(static_parameter) ">" ]
+             "(" [ list(parameter) ] ")" "->" type [ "fresh" ] NEWLINE ;
+static_parameter = NAME ":" "Nat" ;
+parameter  = NAME ":" type [ "|" expr ] ;
+example    = "example" NAME ":" NEWLINE INDENT expr NEWLINE DEDENT ;
+claim      = "claim" NAME ":" NEWLINE INDENT expr NEWLINE DEDENT ;
+assumptions = "assume" ("platform" | "environment") ":" NEWLINE
+              INDENT assumption_rows DEDENT ;
+labels     = "labels" NAME ":" NEWLINE INDENT label_rows DEDENT ;
+input      = "input" QNAME ":" NEWLINE INDENT "hostile" NEWLINE
+             { "rejects" expr "with" QNAME NEWLINE }
+             "ensures" list(NAME) NEWLINE DEDENT ;
+bound      = "bound" NAME ":" NEWLINE INDENT bound_rows DEDENT ;
+type       = primitive | NAME | "Bytes" [ "<" width ">" ]
+           | ("List" | "Option") "<" type ">"
+           | "Result" "<" type "," NAME ">" ;
+width      = NAT | NAME ;
+```
+
+`primitive` is Bool/Int/Nat/U8/U64. An assumption suite is either the sole row
+`none`, or nonempty platform identifier rows / environment `name: expr` rows.
+A labels suite is nonempty path/classification rows; bound rows are nonempty
+metric/`<=`/expression rows as in the table. These row lists terminate at DEDENT.
+Expression atoms are literals, in-scope names, typed constructors, list
+literals and parenthesized expressions; calls/static applications, conditionals,
+exhaustive matches and quantifiers have exactly the forms in §3–4. A quantifier
+separator `.` must be followed by whitespace/newline, distinguishing it from a
+joined dotted name. No implicit semicolon, juxtaposition call or indentation-
+free alternative is admitted by these descriptions.
 
 ## 6. Bind real public operations
 

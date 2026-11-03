@@ -40,8 +40,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P003 | TF01 Rust L0 bootstrap | #18807 merged as 6a09869c279; expected head 4e608afe3bc9 verified on fetched main; all checks acceptable |
 | done / VER-P004 | Rust CT01 corpus through L0 | #18849 merged as 0bee67f3a81; expected head ca72cad1191 verified on fetched main; all 44 checks acceptable |
 | P2 / VER-CI001 | Retain diagnostics for intermittent macOS iPad UI failure | original job125811351687 failed; bounded same-head retry125843044183 and run41602352046 attempt2 passed; root cause and missing UI-state artifacts remain unresolved; no assertions weakened |
-| P1 / VER-I004 | Enforce TF01's closed failure vocabulary at the Rust harness boundary | selected after verified P004 merge and overlap audit; local spec-first work replayed onto fetched main; final-source validation/security review before publication |
-| P1 / VER-P005 | Warrant v0 specification | after I004; VER04 syntax/types/bindings and negative examples |
+| done / VER-I004 | Enforce TF01's closed failure vocabulary at the Rust harness boundary | #18875 merged as 089fb8e7bf7 at expected d2b5ae4db2c; verified on fetched main; all 39 checks acceptable |
+| P1 / VER-P005 | Warrant v0 specification | selected after I004 merge and 8-open-PR overlap audit; spec committed first; pure-profile syntax, exact types, binding checks and named positive/negative design inventory; no implemented compiler claimed |
 | P1 / VER-P006 | Warrant grammar/generated lexer/parser | waiting P005; positive/negative corpus and drift gate |
 | P1 / VER-P007 | Warrant type checker/Rust bindings | waiting P006; missing exports, wrong types and vacuous bindings reject |
 | P1 / VER-P008 | Rust backend and ct-compare.warrant | waiting P007; generated tests through L0, checked regeneration |
@@ -82,6 +82,21 @@ can progress independently once their prerequisites are available.
 | VER26 follow-on | Busicom-to-gates, a capability-bearing pilot, then other languages |
 
 ## Discoveries and current plan
+
+Post-I004 prioritization: #18875's expected head d2b5ae4db2c merged as
+089fb8e7bf7 and is reachable on fetched main. No overlapping open Warrant/TF01
+PR was found. Select P005, then P006 grammar/corpus, before backend/property
+implementation. The Warrant draft now makes two parent constraints explicit:
+CT01 secrets split contents/choice from public lengths/widths, and L1 must
+emit input/bound checks rather than merely reserve their keywords. Missing
+analyzers, observers, solver or proof layers block the corresponding evidence;
+sample tests and logical input-shape counts cannot fill those rows.
+
+GitHub rejected explicit squash auto-merge for the already-clean P004 and I004
+PRs. Their actual expected-head merges were observed externally and verified;
+this agent performed no direct merge. The direct-squash fallback authorization
+question remains pending, and heartbeats are not an answer. Keep that workflow
+limitation separate from language semantics and publishing/approval blockers.
 
 Post-P004 prioritization: expected head ca72cad1191 merged as 0bee67f3a81,
 reachable on fetched main. No overlapping open TF01/bootstrap/Warrant PR was
