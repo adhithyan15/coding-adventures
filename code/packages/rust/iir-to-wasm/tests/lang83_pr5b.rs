@@ -88,3 +88,16 @@ fn runtime_blocks_are_keyed_by_bytes_not_by_lossy_text() {
     assert_eq!(byte_picked(1), 0xA9);
     assert_eq!(byte_picked(0), 0xFF, "the FF branch must not share the A9 block");
 }
+
+/// PR5b security review (L2): the WASM validator runs the shared
+/// string-literal checks, so a raw-byte literal in a name position is refused
+/// as `BytesOperand` before any lowering (it ran only the ceiling check).
+#[test]
+fn a_raw_byte_operand_outside_str_const_is_refused() {
+    let m = module(vec![IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("global_load", Some("g".into()), vec![Operand::Bytes(b"x".to_vec())], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("g".into())], "i64"),
+    ])]);
+    let errors = validate_for_wasm(&m);
+    assert!(errors.iter().any(|e| e.starts_with("BytesOperand")), "{errors:?}");
+}

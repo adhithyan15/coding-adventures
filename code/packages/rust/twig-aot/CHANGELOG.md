@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — literals are bytes
 
+- The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.
 - **`lower_string_literals_for_aot` stores every literal byte exactly.** The printable-ASCII filter is gone: a `str_const` of any `Str` (its UTF-8) or raw-byte `Operand::Bytes` literal becomes `alloc_bytes` plus one `store_byte` per byte, NUL and 0x80–0xFF included. Before, any other literal was left for the backend, which refused it. The fold table holds bytes, so a literal `str_slice` that splits a UTF-8 character (`"é"[1..2]` is `A9`) and a literal `str_concat` of non-ASCII literals fold instead of falling back to the runtime helpers.
 - The constant-compare helper treats an `Operand::Bytes` as not a signed word, like `Str`.
 - Tests `non_ascii_and_raw_byte_literals_lower_to_exact_byte_stores` and `literal_folds_keep_bytes_that_are_not_utf8` (both fail on the previous lowering).

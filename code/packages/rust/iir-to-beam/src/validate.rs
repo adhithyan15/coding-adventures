@@ -284,7 +284,7 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
     // this, but nothing on the way to a backend called it, so every column
     // compiled such a module.  The shared check lives in `interpreter-ir`, so
     // every column refuses exactly the same modules.
-    errors.extend(module.str_ceiling_errors());
+    errors.extend(module.str_literal_errors());
 
     // ── Check 1.5: Atom length (trust-boundary guard) ────────────────────────
     //

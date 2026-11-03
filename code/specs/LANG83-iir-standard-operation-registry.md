@@ -1316,9 +1316,17 @@ a Rust `String`:
 | `Operand::Bytes(vec![0xFF])` | `FF`, which no `Str` can carry |
 
 - **Where it may appear.** Only as `str_const`'s literal. A name position
-  (`global_load`, `call`, `trap`, …) still takes `Str`, and every backend
-  already refuses anything else there. `IIRModule::validate` reports a
-  `Bytes` operand on any other op (`BytesOperand`).
+  (`global_load`, `call`, `trap`, …) still takes `Str`. A `Bytes` operand
+  anywhere else is `BytesOperand`, reported by
+  `IIRModule::bytes_operand_errors()`. Every column runs it before it
+  compiles or runs a module, through `IIRModule::str_literal_errors()` (the
+  ceiling checks plus this one), in each place that called
+  `str_ceiling_errors()`; `validate()` includes it too. The JIT refuses to
+  compile a function that carries a `Bytes` operand, and CIR never spells
+  one as a name: it lifts to a reserved register name holding a NUL. (A first
+  draft lifted a UTF-8 `Bytes(b"record")` to `Var("record")`, so on the JIT
+  `call_builtin [Bytes(b"record")]` called the builtin `record` while vm-core
+  refused the module. PR5b security review, L2.)
 - **One accessor.** `Operand::as_lit_bytes()` returns the bytes of a `Str` or
   a `Bytes` literal. `as_str_lit()` keeps answering `Str` only, so a name can
   never be a byte literal. Every fold table keys on bytes, so `Str("é")` and

@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — literals are bytes
 
+- The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.
 - **`validate_for_beam` accepts any `str_const` literal**, a `Str` or a raw-byte `Operand::Bytes`; the printable-ASCII check is gone. A string is a list of integers 0–255, so the lowering emits one `put_list` element per byte, whatever its value.
 - New `tests/lang83_pr5b.rs` (`any_literal_byte_becomes_one_list_element`), which fails on the previous validator.
 

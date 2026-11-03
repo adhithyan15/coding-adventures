@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — strings are bytes
 
+- **New `IIRModule::bytes_operand_errors()` and `str_literal_errors()`** (security review L2). The `BytesOperand` check moves out of `validate()` into `bytes_operand_errors()`; `validate()` still reports it. `str_literal_errors()` returns the ceiling checks plus `BytesOperand`, and every column now calls it where it called `str_ceiling_errors()`, so a raw-byte literal in a name position is refused before any code runs. Test `str_literal_errors_is_the_ceiling_and_the_bytes_operand_checks`.
 - **New `Operand::Bytes(Vec<u8>)`**: a raw-byte string literal beside `Operand::Str` (owner decision Q4). It means what a `Str` literal means, with the bytes given directly, so a literal can hold bytes that are not UTF-8 (Perl's `"\xff"`, a Python `bytes` literal). `str_const` is the only op that takes it; `IIRModule::validate` reports it anywhere else (`BytesOperand`).
 - **New `Operand::as_lit_bytes()`**: the bytes of a `Str` or `Bytes` literal. `as_str_lit()` still answers `Str` only, so a name is never a byte literal. Display writes `b"…"` with `\xNN` for every byte outside printable ASCII.
 - `str_ceiling_errors` measures a `Bytes` literal like a `Str` one (`StrTooLong`).

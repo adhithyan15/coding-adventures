@@ -112,27 +112,25 @@ impl fmt::Display for CIROperand {
     }
 }
 
-/// The register name a raw-byte literal that is not UTF-8 lifts to: it holds
-/// a NUL, which no IIR register, global or trap kind contains, so any CIR
-/// consumer that reads it as a name fails closed ("undefined") rather than
-/// using some other string's bytes.
+/// The register name every raw-byte literal lifts to: it holds a NUL, which no
+/// IIR register, global, builtin or trap kind contains, so a CIR consumer that
+/// reads it as a name fails closed ("undefined") rather than using it as one.
 pub const RAW_BYTES_LITERAL_NAME: &str = "\0<raw-byte literal>";
 
 /// Lift an `Operand::Bytes` literal (LANG83 PR5b) into CIR.
 ///
-/// CIR has no string operand: a `Str` literal travels as a `Var` naming its
-/// text (the convention every CIR consumer of a trap kind or a global relies
-/// on). A raw-byte literal whose bytes are valid UTF-8 is the same literal as
-/// that `Str`, so it lifts the same way. One that is not has no `Var`
-/// spelling that would keep its bytes, so it lifts to
-/// [`RAW_BYTES_LITERAL_NAME`]: never a lossy decode, which would silently
-/// change the string. (No CIR backend lowers `str_const` itself: the native
-/// columns expand it to byte stores first, and the JIT refuses string ops.)
-fn raw_bytes_to_cir(bytes: &[u8]) -> CIROperand {
-    match std::str::from_utf8(bytes) {
-        Ok(text) => CIROperand::Var(text.to_string()),
-        Err(_) => CIROperand::Var(RAW_BYTES_LITERAL_NAME.to_string()),
-    }
+/// CIR has no string operand: a `Str` travels as a `Var` naming its text, the
+/// convention every CIR consumer of a trap kind, a global or a builtin relies
+/// on. A raw-byte literal is a string *value*, never a name, so it must not
+/// take that spelling. A first draft lifted a UTF-8 `Bytes(b"record")` to
+/// `Var("record")`, and `call_builtin [Bytes(b"record"), …]` then called the
+/// builtin `record` on the JIT, where vm-core refuses the module (PR5b
+/// security review, L2). Every raw-byte literal therefore lifts to
+/// [`RAW_BYTES_LITERAL_NAME`]. `JITCore` also refuses to compile a function
+/// that carries one, and no CIR backend lowers `str_const` itself: the native
+/// columns expand it to byte stores first, and the JIT refuses string ops.
+fn raw_bytes_to_cir(_bytes: &[u8]) -> CIROperand {
+    CIROperand::Var(RAW_BYTES_LITERAL_NAME.to_string())
 }
 
 /// Convert from `interpreter_ir::instr::Operand` to `CIROperand`.

@@ -1653,7 +1653,7 @@ fn check_no_aot_registers(module: &IIRModule) -> Result<(), AotError> {
 ///
 /// [`AotError::Compile`] listing every violation.
 fn check_str_ceiling(module: &IIRModule) -> Result<(), AotError> {
-    let errors = module.str_ceiling_errors();
+    let errors = module.str_literal_errors();
     if errors.is_empty() {
         Ok(())
     } else {

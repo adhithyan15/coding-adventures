@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — strings are bytes
 
+- The load-time check (`check_str_ceiling`) runs `IIRModule::str_literal_errors()`, so a raw-byte literal anywhere but `str_const`'s literal is `VMError::InvalidModule` before any instruction runs (security review L2). Test `a_raw_byte_operand_outside_str_const_is_refused_at_load`.
 - **`Value::Str` holds `Arc<[u8]>`** (was `String`; owner decision Q9: in place, no parallel variant). A VM string is bytes. New `Value::str(bytes)` builds one from `&str`, `String`, `&[u8]` or `Vec<u8>`; new `Value::as_bytes()` reads it; `Value::as_str()` stays for UTF-8 callers and answers `None` for bytes that are not UTF-8. Copying a register shares the bytes. `Arc` rather than the `Rc` LANG83 first named, because `Value` must stay `Send + Sync` (embedders record values from `Send + Sync` builtins).
 - **`str_slice` drops its UTF-8 check**: `str_slice "é", 1, 2` is the byte `A9` (it was `VMError::Custom("… UTF-8 boundaries")`).
 - `str_const` accepts `Operand::Bytes`; a `Bytes` operand resolves to a string of its bytes.

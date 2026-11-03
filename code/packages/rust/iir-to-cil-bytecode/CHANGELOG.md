@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — a CLR string holds one char per byte
 
+- The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.
 - **Any literal** (`Str` or raw-byte `Operand::Bytes`) emits: printable ASCII keeps the quoted `ldstr "…"`, anything else is `ldstr bytearray (b0 00 b1 00 …)`, the UTF-16LE of one char per byte, so NUL and 0x80–0xFF need no escape. (The IL text path accepted printable ASCII only.)
 - **`print_str` and `putchar` write bytes** through a synthetic `__iir_write_bytes(string)`: flush `Console.Out`, copy each char into a `uint8[]`, write it to a cached `Console.OpenStandardOutput()` stream (static field `__iir_stdout`) and flush it. `Console.Write(string)` / `Write(char)` encoded with the console's encoding, so `putchar 0xFF` wrote `C3 BF`. The writer is emitted only when used; a module function may not take its name. Its stack is empty at every label and branch.
 - **`input_str` reads Latin-1**: a module that uses it sets `Console.InputEncoding = Encoding.Latin1` in the launcher, before the entry runs, so each input byte is one char.

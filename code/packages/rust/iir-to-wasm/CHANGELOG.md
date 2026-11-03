@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — literals are bytes
 
+- The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2). Test `a_raw_byte_operand_outside_str_const_is_refused`, which fails on the previous validator.
 - **`validate_for_wasm` accepts any `str_const` literal**, a `Str` (it accepted ASCII only) or a raw-byte `Operand::Bytes`. The data segment holds the bytes verbatim.
 - **Runtime string blocks are keyed by bytes.** The per-function table of promoted literal blocks was keyed by a lossy UTF-8 decode, so the distinct one-byte strings `A9` and `FF` (both U+FFFD) shared one block and one branch returned the other's byte. It is now `HashMap<Vec<u8>, u32>`.
 - `const`, `call` and `ret` refuse a `Bytes` operand like a `Str` one.

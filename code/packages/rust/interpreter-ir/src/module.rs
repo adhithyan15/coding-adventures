@@ -178,6 +178,43 @@ impl IIRModule {
         self.str_max_bytes.map_or(STR_MAX_BYTES, |n| n.min(STR_MAX_BYTES))
     }
 
+    /// LANG83 PR5b: every `Operand::Bytes` that is not `str_const`'s literal
+    /// (`BytesOperand`), and nothing else.
+    ///
+    /// A raw-byte literal is a string value. In a name position it would be
+    /// read as a name on some tiers and refused on others: the JIT used to lift
+    /// `call_builtin [Bytes(b"record"), …]` to a call of the builtin `record`,
+    /// which vm-core refused (PR5b security review, L2). So the module is
+    /// malformed, and [`IIRModule::str_literal_errors`] — the check every
+    /// column runs — reports it.
+    pub fn bytes_operand_errors(&self) -> Vec<String> {
+        let mut errors = Vec::new();
+        for fn_ in &self.functions {
+            for instr in &fn_.instructions {
+                for (idx, src) in instr.srcs.iter().enumerate() {
+                    if matches!(src, Operand::Bytes(_)) && !(instr.op == "str_const" && idx == 0) {
+                        errors.push(format!(
+                            "BytesOperand: function {:?}: op {:?} operand {idx} is a raw-byte \
+                             literal, which only str_const's literal may be",
+                            fn_.name, instr.op
+                        ));
+                    }
+                }
+            }
+        }
+        errors
+    }
+
+    /// The string-literal checks every column runs before it compiles or runs
+    /// a module: [`IIRModule::str_ceiling_errors`] (#18800) and
+    /// [`IIRModule::bytes_operand_errors`] (LANG83 PR5b). [`IIRModule::validate`]
+    /// includes both.
+    pub fn str_literal_errors(&self) -> Vec<String> {
+        let mut errors = self.str_ceiling_errors();
+        errors.extend(self.bytes_operand_errors());
+        errors
+    }
+
     /// The LANG83 PR5a string-ceiling checks, and nothing else (empty = the
     /// module is within its ceiling).
     ///
@@ -312,6 +349,9 @@ impl IIRModule {
             }
         }
 
+        // LANG83 PR5b: a raw-byte literal anywhere but `str_const`'s literal.
+        errors.extend(self.bytes_operand_errors());
+
         if let Some(ep) = &self.entry_point {
             if self.get_function(ep).is_none() {
                 errors.push(format!(
@@ -335,20 +375,6 @@ impl IIRModule {
                 .collect();
 
             for instr in &fn_.instructions {
-                // LANG83 PR5b: a raw-byte literal is a `str_const` literal and
-                // nothing else. Anywhere else it would be a name or a value
-                // that no op defines (a `global_load` of a byte-string name,
-                // a `const` holding a string), so it is malformed here even
-                // though each backend would also refuse it on its own.
-                for (idx, src) in instr.srcs.iter().enumerate() {
-                    if matches!(src, Operand::Bytes(_)) && !(instr.op == "str_const" && idx == 0) {
-                        errors.push(format!(
-                            "BytesOperand: function {:?}: op {:?} operand {idx} is a raw-byte \
-                             literal, which only str_const's literal may be",
-                            fn_.name, instr.op
-                        ));
-                    }
-                }
                 if matches!(instr.op.as_str(), "jmp" | "jmp_if_true" | "jmp_if_false") {
                     if let Some(label) = instr.srcs.last().and_then(|s| s.as_var()) {
                         if !label_positions.contains_key(label) {
@@ -562,6 +588,24 @@ mod tests {
         assert!(errors.iter().all(|e| e.starts_with("BytesOperand")), "{errors:?}");
         assert!(errors[0].contains("\"str_const\" operand 1"), "{errors:?}");
         assert!(errors[1].contains("\"global_load\" operand 0"), "{errors:?}");
+    }
+
+    /// `str_literal_errors` — what every column runs — is the ceiling checks
+    /// plus `BytesOperand` (PR5b security review L2), and `validate` reports
+    /// each of them.
+    #[test]
+    fn str_literal_errors_is_the_ceiling_and_the_bytes_operand_checks() {
+        let mut module = module_with_literal("0123456789abcdefg", Some(16));
+        module.functions[0].instructions.insert(
+            1,
+            IIRInstr::new("call_builtin", None, vec![Operand::Bytes(b"record".to_vec())], "void"),
+        );
+        let literal = module.str_literal_errors();
+        assert_eq!(literal.len(), 2, "{literal:?}");
+        assert!(literal[0].starts_with("StrTooLong") && literal[1].starts_with("BytesOperand"), "{literal:?}");
+        assert_eq!(module.bytes_operand_errors(), literal[1..].to_vec());
+        assert!(literal.iter().all(|e| module.validate().contains(e)));
+        assert!(module_with_literal("ok", None).str_literal_errors().is_empty());
     }
 
     #[test]

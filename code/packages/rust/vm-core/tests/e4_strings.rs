@@ -415,3 +415,32 @@ fn print_str_passes_the_bytes_unchanged() {
     vm.execute(&mut module, "main", &[]).unwrap();
     assert_eq!(*printed.lock().unwrap(), vec![b'A', 0xA9, 0x00, 0xFF]);
 }
+
+/// PR5b security review (L2): a raw-byte literal in a name position is
+/// refused at load (`BytesOperand`), before any instruction runs. Before,
+/// only `validate()` (which nothing outside tests calls) reported it, and the
+/// VM ran the module up to the bad instruction.
+#[test]
+fn a_raw_byte_operand_outside_str_const_is_refused_at_load() {
+    let printed: Arc<Mutex<Vec<u8>>> = Arc::default();
+    let sink = Arc::clone(&printed);
+    let f = IIRFunction::new("main", vec![], "void", vec![
+        ins("str_const", Some("s"), vec![Operand::Str("ran".into())], "str"),
+        ins("print_str", None, vec![Operand::Var("s".into())], "void"),
+        ins("global_load", Some("g"), vec![Operand::Bytes(b"x".to_vec())], "i64"),
+        ins("ret_void", None, vec![], "void"),
+    ]);
+    let mut module = IIRModule::new("e4", "e4");
+    module.add_or_replace(f);
+    let mut vm = VMCore::new();
+    vm.builtins_mut().register("print_str", move |args: &[Value]| {
+        sink.lock().unwrap().extend_from_slice(args[0].as_bytes().expect("a string"));
+        Ok(Value::Null)
+    });
+    let err = vm.execute(&mut module, "main", &[]).unwrap_err();
+    assert!(
+        matches!(&err, vm_core::errors::VMError::InvalidModule { errors } if errors[0].starts_with("BytesOperand")),
+        "{err:?}"
+    );
+    assert!(printed.lock().unwrap().is_empty(), "nothing ran");
+}

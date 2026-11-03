@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — literals are bytes
 
+- The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.
 - **`validate_for_llvm` accepts any `str_const` literal**, a `Str` or a raw-byte `Operand::Bytes`; the printable-ASCII check is gone. The constant was already written as `c"\XX…"`, one hex escape per byte, so every byte is emitted exactly.
 - The literal pre-pass and the lowering key literals and fold facts on **bytes** (`Vec<u8>`), so a `Str` and a `Bytes` literal with the same bytes share one constant, and a literal `str_slice` that splits a UTF-8 character folds to its bytes. Before, the pre-pass skipped such a slice and the lowering then refused to compile it ("does not preserve UTF-8"). The ceiling checks of the concat fold are unchanged and measure bytes.
 - Test `e4_str_const_rejects_non_ascii_literal`, which pinned the old refusal, is replaced by `e4_str_const_emits_any_literal_byte_exactly`; new `e4_literal_str_slice_may_split_a_utf8_character`. Both fail on the previous lowering.

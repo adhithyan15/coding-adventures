@@ -2,6 +2,7 @@
 
 ## Unreleased — LANG83 PR5b — strings are bytes
 
+- The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.
 - **A JVM string holds one char per byte (U+0000–U+00FF).** `str_const` accepts any `Str` or raw-byte `Operand::Bytes` literal (the printable-ASCII `checked_jvm_string_literal` is gone) and widens each byte to one char. `length`, `charAt`, `substring`, `concat` and `compareTo` then compute the byte semantics unchanged.
 - **Chunked literals.** A literal whose modified UTF-8 exceeds one constant-pool entry (65 535 bytes) is loaded in chunks and joined with `String.concat`.
 - **The constant pool is written in modified UTF-8**: U+0000 is `C0 80` (a zero byte is illegal there). Every name is ASCII, where nothing changes.

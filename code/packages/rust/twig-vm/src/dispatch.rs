@@ -1075,7 +1075,7 @@ pub fn run_with_debug(
 /// Both entry points that start a run ([`run_with_profile`] and
 /// [`run_with_debug`]; the others delegate to the first) call it.
 fn check_str_ceiling(module: &IIRModule) -> Result<(), RunError> {
-    let errors = module.str_ceiling_errors();
+    let errors = module.str_literal_errors();
     if errors.is_empty() {
         Ok(())
     } else {
