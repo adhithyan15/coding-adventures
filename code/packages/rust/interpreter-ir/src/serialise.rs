@@ -13,18 +13,29 @@
 //!
 //! A `Bytes` literal is a byte string that need not be UTF-8 (Perl's
 //! `"\xff"`), so it cannot ride in kind 4, whose payload the reader decodes
-//! as UTF-8. In 1.3 the string-ceiling section is **optional**: after the
-//! imports the stream either ends (`str_max_bytes = None`) or carries tag
-//! `0x12` and the `u32` ceiling and then ends. A 1.3 stream with anything
-//! after that is an error, and so is kind 5 in a 1.0, 1.1 or 1.2 stream. The
-//! full table of what the writer picks:
+//! as UTF-8. In 1.3 the string-ceiling section is **always written**, with a
+//! presence byte, and it ends the stream:
+//!
+//! ```text
+//!     1 byte   tag         0x12 = string-ceiling section
+//!     1 byte   present     0 = str_max_bytes is None, 1 = Some
+//!     4 bytes  str_max_bytes  (u32; only when present = 1)
+//! ```
+//!
+//! Always writing it means a 1.3 stream cut anywhere is an error, as a 1.2 one
+//! is. (A first draft made the section "present iff bytes remain", so a stream
+//! cut just before it read back with no ceiling — a module compiled under a
+//! ceiling of 5 silently ran under the registry's. PR5b security review, L1.)
+//! A presence byte other than 0 or 1, anything after the section, and kind 5
+//! in a 1.0, 1.1 or 1.2 stream are errors too. The full table of what the
+//! writer picks:
 //!
 //! | module                                   | version written | trailing sections                 |
 //! |------------------------------------------|-----------------|-----------------------------------|
 //! | no `Bytes`, `str_max_bytes = None`       | 1.1             | exports, imports                  |
 //! | no `Bytes`, `str_max_bytes = Some(n)`    | 1.2             | exports, imports, ceiling `n`     |
-//! | some `Bytes`, `str_max_bytes = None`     | 1.3             | exports, imports                  |
-//! | some `Bytes`, `str_max_bytes = Some(n)`  | 1.3             | exports, imports, ceiling `n`     |
+//! | some `Bytes`, `str_max_bytes = None`     | 1.3             | exports, imports, `0x12 00`       |
+//! | some `Bytes`, `str_max_bytes = Some(n)`  | 1.3             | exports, imports, `0x12 01` + `n` |
 //!
 //! So a module without a raw-byte literal is written exactly as before, and
 //! no digest of an existing module moves.
@@ -256,11 +267,23 @@ pub fn serialise(module: &IIRModule) -> Vec<u8> {
         serialise_import(&mut buf, import);
     }
 
-    // ── LANG83 PR5a: string-ceiling section (version 1.2, and 1.3 when set) ─
+    // ── LANG83 PR5a: string-ceiling section ─────────────────────────────────
     // The raw field, not `str_ceiling()`: a malformed value above
     // `STR_MAX_BYTES` round-trips as itself, so the reader's `validate` (and
     // every column's ceiling check) still sees and refuses it.
-    if let Some(max) = module.str_max_bytes {
+    //
+    // | version | section                                              |
+    // |---------|------------------------------------------------------|
+    // | 1.1     | none                                                 |
+    // | 1.2     | tag, u32                                             |
+    // | 1.3     | tag, presence byte, u32 when present — always written |
+    if minor == VERSION_MINOR_BYTES {
+        write_u8(&mut buf, TAG_STR_CEILING);
+        write_u8(&mut buf, u8::from(module.str_max_bytes.is_some()));
+        if let Some(max) = module.str_max_bytes {
+            write_u32_le(&mut buf, max);
+        }
+    } else if let Some(max) = module.str_max_bytes {
         write_u8(&mut buf, TAG_STR_CEILING);
         write_u32_le(&mut buf, max);
     }
@@ -504,24 +527,36 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
         (Vec::new(), Vec::new())
     };
 
-    // ── LANG83 PR5a: the string ceiling (version 1.2; optional in 1.3) ──────
-    // A 1.2 stream *must* carry the section: a truncated one is an error, not
-    // a module silently back on the registry ceiling. A 1.3 stream carries it
-    // only for a module that sets one, so there the section is present iff
-    // bytes remain, and nothing may follow it (PR5b).
-    let read_ceiling = |r: &mut Reader<'_>| -> Result<u32, DeserialiseError> {
+    // ── LANG83 PR5a: the string ceiling (version 1.2 and 1.3) ───────────────
+    // Both versions *must* carry the section, so a truncated stream is an
+    // error, never a module silently back on the registry ceiling. 1.3 says
+    // with a presence byte whether there is a ceiling, and nothing may
+    // follow the section (PR5b; see the module docs for why it is mandatory).
+    let read_tag = |r: &mut Reader<'_>| -> Result<(), DeserialiseError> {
         let tag = r.u8()?;
         if tag != TAG_STR_CEILING {
             return Err(DeserialiseError(format!(
                 "expected string-ceiling tag 0x{TAG_STR_CEILING:02x}, got 0x{tag:02x}"
             )));
         }
-        r.u32_le()
+        Ok(())
     };
     let str_max_bytes = match minor {
-        VERSION_MINOR_STR_CEILING => Some(read_ceiling(&mut r)?),
+        VERSION_MINOR_STR_CEILING => {
+            read_tag(&mut r)?;
+            Some(r.u32_le()?)
+        }
         VERSION_MINOR_BYTES => {
-            let max = if r.at_end() { None } else { Some(read_ceiling(&mut r)?) };
+            read_tag(&mut r)?;
+            let max = match r.u8()? {
+                0 => None,
+                1 => Some(r.u32_le()?),
+                b => {
+                    return Err(DeserialiseError(format!(
+                        "string-ceiling presence byte must be 0 or 1, got {b}"
+                    )))
+                }
+            };
             if !r.at_end() {
                 return Err(DeserialiseError(format!(
                     "{} trailing byte(s) after the end of a version 1.3 module",
@@ -822,8 +857,27 @@ mod tests {
         assert_eq!(serialise(&m)[5], 2);
     }
 
+    /// PR5b security review (L1): no proper prefix of a 1.3 stream is a
+    /// module. When the ceiling section was "present iff bytes remain", a
+    /// stream cut just before it read back with `str_max_bytes = None`,
+    /// silently lifting a ceiling of 5 to the registry's. The section is now
+    /// always written (tag, presence byte, ceiling when present), so every cut
+    /// is an error, as in 1.2.
+    #[test]
+    fn no_truncation_of_a_version_1_3_stream_reads_as_a_module() {
+        for max in [None, Some(5)] {
+            let mut m = module_with_raw_bytes();
+            m.str_max_bytes = max;
+            let bytes = serialise(&m);
+            assert_eq!(deserialise(&bytes).unwrap().str_max_bytes, max);
+            for cut in 0..bytes.len() {
+                assert!(deserialise(&bytes[..cut]).is_err(), "{max:?}: a stream cut to {cut} of {} bytes", bytes.len());
+            }
+        }
+    }
+
     /// Kind 5 is a 1.3 operand: in a 1.1 or 1.2 stream it is corruption, and a
-    /// 1.3 stream may not carry anything after its (optional) ceiling.
+    /// 1.3 stream may not carry anything after its ceiling section.
     #[test]
     fn a_raw_byte_operand_needs_version_1_3_and_nothing_trails_it() {
         for max in [None, Some(16)] {
@@ -840,10 +894,16 @@ mod tests {
             trailing.push(0);
             assert!(deserialise(&trailing).is_err(), "a trailing byte after a 1.3 module");
         }
-        // Where the optional ceiling would be, only its tag is accepted.
-        let mut wrong = serialise(&module_with_raw_bytes());
-        wrong.extend_from_slice(&[0x13, 16, 0, 0, 0]);
+        // Where the ceiling section belongs, only its tag is accepted, and
+        // its presence byte is 0 or 1.
+        let bytes = serialise(&module_with_raw_bytes());
+        let mut wrong = bytes.clone();
+        let at = wrong.len() - 2;
+        wrong[at] = 0x13;
         assert!(deserialise(&wrong).unwrap_err().0.contains("string-ceiling tag"));
+        let mut wrong = bytes.clone();
+        *wrong.last_mut().unwrap() = 2;
+        assert!(deserialise(&wrong).unwrap_err().0.contains("presence byte"));
         // A cut-short raw-byte payload is an error, not a shorter literal.
         let bytes = serialise(&module_with_raw_bytes());
         let at = bytes.windows(4).position(|w| w == [0x00, 0x0A, 0x80, 0xFF]).unwrap();

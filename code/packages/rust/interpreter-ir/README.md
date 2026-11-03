@@ -210,8 +210,8 @@ The writer uses the oldest version that can hold the module: **1.1** (functions,
 exports, imports) unless the module lowers its string ceiling, and **1.2** (1.1
 plus a `0x12` section holding `str_max_bytes`) when it does (#18800), and **1.3**
 when some `str_const` carries a raw-byte `Operand::Bytes` literal (operand kind
-`5`: a `u32` length and the raw bytes; the ceiling section is then optional and
-ends the stream; LANG83 PR5b). So a module without a ceiling or a raw-byte
+`5`: a `u32` length and the raw bytes; the ceiling section is then always
+written, with a presence byte, and ends the stream; LANG83 PR5b). So a module without a ceiling or a raw-byte
 literal serialises byte for byte as before. The reader accepts 1.0 to 1.3. Profiling fields and `release` are **not** serialised (they are
 runtime-only state and provenance).
 

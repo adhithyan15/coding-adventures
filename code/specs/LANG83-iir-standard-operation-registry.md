@@ -1337,13 +1337,20 @@ a Rust `String`:
   | --- | --- | --- |
   | no `Bytes`, `str_max_bytes = None` | 1.1 | exports, imports |
   | no `Bytes`, `str_max_bytes = Some(n)` | 1.2 | exports, imports, ceiling |
-  | any `Bytes` | 1.3 | exports, imports, then the ceiling section if and only if `Some(n)` |
+  | any `Bytes`, `str_max_bytes = None` | 1.3 | exports, imports, ceiling section `0x12 00` |
+  | any `Bytes`, `str_max_bytes = Some(n)` | 1.3 | exports, imports, ceiling section `0x12 01` + `u32 n` |
 
-  In 1.3 the ceiling section is optional and must be the last thing in the
-  stream: after the imports a 1.3 reader sees either the end, or tag `0x12`
-  and a `u32`, then the end. Trailing bytes are an error. Kind `5` in a 1.0,
-  1.1 or 1.2 stream is an error (`unknown operand kind byte`). The reader
-  accepts 1.0 to 1.3.
+  In 1.3 the ceiling section is **mandatory** and is the last thing in the
+  stream: tag `0x12`, a presence byte (`0` for `None`, `1` for `Some`), and
+  the `u32` ceiling when present. So a 1.3 stream cut anywhere is an error, as
+  a 1.2 one is. A presence byte other than 0 or 1, trailing bytes, and kind `5`
+  in a 1.0, 1.1 or 1.2 stream (`unknown operand kind byte`) are errors too. The
+  reader accepts 1.0 to 1.3.
+
+  (The first PR5b draft made the section optional, "present iff bytes
+  remain". The security review (L1) showed that a stream cut just before it
+  then read back with no ceiling: a module compiled under a ceiling of 5 ran
+  under the registry's. 1.3 was unreleased, so the format was changed.)
 
 **vm-core.** `Value::Str` holds `Arc<[u8]>` (owner decision Q9: in place, no
 parallel `Value::Bytes`). The plan above said `Rc<[u8]>`; `Rc` would make
