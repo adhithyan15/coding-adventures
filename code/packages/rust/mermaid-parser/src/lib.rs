@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.165.0";
+pub const VERSION: &str = "0.166.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14154,7 +14154,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     .filter(|value| !value.is_empty())
                     .cloned()
                     .unwrap_or_else(|| id.clone());
-                groups.push(StructuralGroup {
+                upsert_c4_group(&mut groups, StructuralGroup {
                     id: id.clone(),
                     label,
                     stereotype: Some(macro_token.value.clone()),
@@ -14729,6 +14729,34 @@ fn upsert_c4_node(
         parent_group,
     });
     index
+}
+
+fn upsert_c4_group(groups: &mut Vec<StructuralGroup>, mut group: StructuralGroup) {
+    let Some(existing) = groups.iter_mut().find(|existing| existing.id == group.id) else {
+        groups.push(group);
+        return;
+    };
+
+    let style_overrides = match existing.metadata.as_mut() {
+        Some(StructuralGroupMetadata::C4Boundary { style_overrides, .. })
+        | Some(StructuralGroupMetadata::C4DeploymentNode { style_overrides, .. }) => {
+            std::mem::take(style_overrides)
+        }
+        _ => Default::default(),
+    };
+    match group.metadata.as_mut() {
+        Some(StructuralGroupMetadata::C4Boundary {
+            style_overrides: replacement,
+            ..
+        })
+        | Some(StructuralGroupMetadata::C4DeploymentNode {
+            style_overrides: replacement,
+            ..
+        }) => *replacement = style_overrides,
+        _ => {}
+    }
+    group.style = existing.style.take();
+    *existing = group;
 }
 
 // ── gantt parser ──────────────────────────────────────────────────────────
@@ -20154,7 +20182,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.165.0");
+        assert_eq!(crate::VERSION, "0.166.0");
     }
 
     #[test]
