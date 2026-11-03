@@ -1438,20 +1438,22 @@ or non-DNS anchor constraints, derive the initial path-length cap, check
 revocation, generalize path validation, perform TLS or HTTP, authorize OAuth
 transport, or grant network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
-An additive bounded intermediate DNS-policy follow-up now consumes that exact
-anchor-policy proof. It derives the intermediate certificate, target
+An additive bounded intermediate name-constraints follow-up now consumes that
+exact anchor-policy proof. It derives the intermediate certificate, target
 certificate, and already-validated target SAN extension index only through the
 retained routed construction. An absent NameConstraints extension succeeds
 without manufacturing evidence; a present extension must be critical and must
-decode under a separate caller-owned limit before every target dNSName is
-checked against the supported permitted-and-excluded-DNS subset. Success keeps
-the complete target policy, both routed signatures, complete intermediate
-policy, advanced caller-owned path-length state, reviewed root selection,
-anchor-policy evidence, and optional payload-free intermediate constrained-
-name evidence together. This pure public-certificate composition performs no
+decode under a separate caller-owned limit before every retained target
+dNSName and IPv4 or IPv6 iPAddress is evaluated together against the supported
+permitted-and-excluded DNS and IP subsets. Success keeps the complete target
+policy, both routed signatures, complete intermediate policy, advanced
+construction-derived path-length state, reviewed root selection, anchor-policy
+evidence, and optional payload-free DNS/IP counts together. The earlier DNS
+count remains available as compatibility evidence only after the combined
+evaluation succeeds. This pure public-certificate composition performs no
 credential access, signing, storage, clock acquisition, audit event, trace
 emission, I/O, or external effect. It does not support additional
-intermediates, derive the initial path-length cap, apply IP or other name-form
+intermediates, apply other GeneralName forms or excluded or non-DNS anchor
 constraints, verify a hostname, check revocation, generalize path validation,
 perform TLS or HTTP, authorize OAuth transport, or grant network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.

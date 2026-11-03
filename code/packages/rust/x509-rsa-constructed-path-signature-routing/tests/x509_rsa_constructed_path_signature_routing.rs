@@ -945,6 +945,7 @@ fn retains_exact_routed_server_path_through_unconstrained_anchor_and_intermediat
         .unwrap();
 
     assert_eq!(validated.constrained_dns_names(), None);
+    assert_eq!(validated.constrained_names(), None);
     assert!(std::ptr::eq(
         validated
             .anchor_policy()
