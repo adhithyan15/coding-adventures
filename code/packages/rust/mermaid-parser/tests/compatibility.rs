@@ -157,6 +157,14 @@ const C4_DEPLOYMENT_NODES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-deployment-nodes-11.16.1-visual-corpus.json"
 ));
+const C4_DEPLOYMENT_REDECLARATIONS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-deployment-redeclarations-11.16.1-corpus.json"
+));
+const C4_DEPLOYMENT_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-deployment-redeclarations-11.16.1-visual-corpus.json"
+));
 const C4_BOUNDARY_TYPES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-boundary-types-11.16.1-corpus.json"
@@ -3016,6 +3024,35 @@ fn pinned_c4_boundary_redeclarations_reach_semantic_ir() {
     assert_eq!(boundary_type, "team");
     assert_eq!(diagram.nodes.len(), 2);
     assert!(diagram.nodes.iter().all(|node| node.parent_group.as_deref() == Some("platform")));
+}
+
+#[test]
+fn pinned_c4_deployment_redeclarations_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_DEPLOYMENT_REDECLARATIONS_CORPUS).unwrap();
+    let visual: Value =
+        serde_json::from_str(C4_DEPLOYMENT_REDECLARATIONS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram = parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.groups.len(), 1);
+    let group = &diagram.groups[0];
+    assert_eq!(group.label, "Runtime");
+    assert_eq!(group.style.as_ref().unwrap().fill.as_deref(), Some("#e0f2fe"));
+    let Some(diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+        node_type,
+        technology,
+        description,
+        ..
+    }) = &group.metadata
+    else {
+        panic!("C4 deployment redeclaration must retain typed group metadata");
+    };
+    assert_eq!(node_type.as_str(), "nodeR");
+    assert_eq!(technology.as_deref(), Some("zone"));
+    assert_eq!(description.as_deref(), Some("Latest host"));
+    assert_eq!(diagram.nodes.len(), 2);
+    assert!(diagram.nodes.iter().all(|node| node.parent_group.as_deref() == Some("runtime")));
 }
 
 #[test]
