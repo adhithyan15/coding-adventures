@@ -20528,3 +20528,16 @@ pushed normally. Require fresh independent review of the resulting exact head
 before marking it ready; keep auto-merge disabled until every check on that
 exact reviewed head is terminal acceptable and GitHub still reports the PR
 mergeable.
+
+#### Duplicate-discovery fixture selector PR #18885 ready receipt
+
+Independent publication reviews issued SHIP for exact lifecycle head
+`849e3c322e83f6f71dac7521e0e69d71b555d361`. They verified exact local,
+remote, and GitHub head parity, the exact base, mergeability, the four-product-
+path scope and other-live-PR non-overlap, stable implementation patch identity,
+ignored-inclusive cleanliness, the dependency-complete acyclic state graph,
+the corrected GitHub-authoritative creation time, and time-scoped predecessor
+ancestry. Mark PR #18885 ready at GitHub's authoritative ready-for-review event
+time `2026-11-03T14:16:20Z`. Commit and push this ready receipt normally, then
+require fresh independent review and terminal acceptable hosted qualification
+on the resulting exact head before guarded squash auto-merge.
