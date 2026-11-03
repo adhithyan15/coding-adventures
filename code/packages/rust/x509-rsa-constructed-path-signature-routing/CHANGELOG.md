@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.2.0 - 2026-11-03
+
+### Added
+
+- Added exact-object binding between one routed constructed-path signature
+  proof and complete policy for its non-terminal intermediate issuer.
+- Added a path-length handoff that derives its transition only from the
+  retained complete intermediate policy and retains the ordered proof with the
+  advanced state.
+- Added coverage for terminal issuers, byte-equal detached policy, successful
+  evidence retention, and exhausted non-self-issued capacity.
+
+### Security
+
+- Terminal roots and cross-certificate policy fail closed with payload-free
+  categories.
+- The composition grants no complete traversal, trust, revocation, TLS, HTTP,
+  OAuth transport, or network authority.
+
 ## 0.1.0 - 2026-10-30
 
 ### Added

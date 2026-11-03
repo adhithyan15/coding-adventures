@@ -19,11 +19,19 @@ fails before signature verification. Success retains the path projection,
 role evidence, both algorithm-policy inputs, validated issuer key, and exact
 fixed-verifier result.
 
-This package authenticates one projected link only. It does not define full
-Name comparison, authenticate another link, apply path length or name
-constraints, establish a trust anchor, validate target identity or time, check
-revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
-connection. It does not make concrete HTTPS or live-provider use ready.
+A follow-up can consume that routed proof with complete policy for its exact
+non-terminal intermediate issuer. It rejects the construction's terminal root
+and policy from any other decoded certificate object, including a byte-equal
+independent decode. A second follow-up advances caller-owned path-length state
+using only the retained complete policy and keeps the authenticated adjacency,
+policy, and advanced state together.
+
+This package authenticates one projected link and can retain one intermediate
+path-length transition. It does not define full Name comparison, authenticate
+another link, prove prior traversal, apply name constraints, establish a trust
+anchor, validate target identity or time, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or open a network connection. It does not
+make concrete HTTPS or live-provider use ready.
 
 ## Validation
 

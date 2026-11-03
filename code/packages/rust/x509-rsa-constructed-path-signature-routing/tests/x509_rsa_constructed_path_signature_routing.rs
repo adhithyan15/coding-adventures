@@ -1,19 +1,29 @@
-use der_asn1::Asn1Limits;
+use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_path_construction::{
     construct_unique_x509_certificate_path_by, ConstructedX509CertificatePath,
 };
+use x509_certificate_path_length_policy::{
+    X509CertificatePathLengthErrorKind, X509CertificatePathLengthState,
+};
 use x509_certificate_policy::{
-    validate_certificate_algorithm_policy, validate_certificate_role_policy,
-    ValidatedCertificateAlgorithmPolicy, ValidatedCertificateRolePolicy,
-    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile, X509CertificateRole,
+    classify_certificate_self_issued, validate_certificate_algorithm_policy,
+    validate_certificate_role_policy, ValidatedCertificateAlgorithmPolicy,
+    ValidatedCertificateRolePolicy, X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
+    X509CertificateRole,
+};
+use x509_intermediate_certificate_policy::{
+    validate_x509_intermediate_certificate_policy, ValidatedX509IntermediateCertificatePolicy,
 };
 use x509_rsa_algorithm_policy::{
     validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
 };
 use x509_rsa_constructed_path_signature_routing::{
+    advance_x509_rsa_constructed_path_intermediate_path_length,
+    bind_x509_rsa_constructed_path_intermediate_policy,
     verify_x509_rsa_constructed_path_policy_signature,
+    X509RsaConstructedPathIntermediatePolicyErrorKind,
     X509RsaConstructedPathSignatureRoutingErrorKind,
 };
 use x509_rsa_public_key::RsaPublicKeyPolicy;
@@ -21,6 +31,7 @@ use x509_rsa_signature_routing::{
     VerifiedX509RsaPolicySignature, X509RsaSignatureRoute, X509RsaSignatureRoutingErrorKind,
     X509RsaSignatureVerifier,
 };
+use x509_time::{decode_x509_time, X509Time};
 
 const TARGET_HEX: &str = include_str!(
     "../../x509-rsa-sha256-reviewed-server-link/tests/fixtures/valid_isrgrootx1_r13_precertificate.hex"
@@ -111,6 +122,33 @@ fn route() -> X509RsaSignatureRoute {
 
 fn limits() -> RsaPublicOperationLimits {
     RsaPublicOperationLimits::new(512).unwrap()
+}
+
+fn observed_time() -> X509Time {
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    decode_x509_time(decoder.decode_exact(b"\x17\x0d260201000000Z").unwrap()).unwrap()
+}
+
+fn intermediate_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+    profiles: &[X509CertificateAlgorithmProfile<'static>],
+    is_self_issued: bool,
+) -> ValidatedX509IntermediateCertificatePolicy<'certificate, 'encoded> {
+    let role_policy = role_policy(
+        certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+    );
+    let algorithm_policy = algorithm_policy(certificate, profiles);
+    let self_issued =
+        classify_certificate_self_issued(certificate, |_issuer, _subject| is_self_issued);
+
+    validate_x509_intermediate_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        self_issued,
+        &observed_time(),
+    )
+    .unwrap()
 }
 
 #[test]
@@ -343,5 +381,187 @@ fn propagates_route_failure_only_after_all_evidence_gates() {
         X509RsaConstructedPathSignatureRoutingErrorKind::Signature(
             X509RsaSignatureRoutingErrorKind::UnsupportedProfileRoute
         )
+    );
+}
+
+#[test]
+fn binds_routed_intermediate_policy_and_advances_path_length() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+
+    let verified = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let authenticated = bind_x509_rsa_constructed_path_intermediate_policy(
+        verified,
+        intermediate_policy(&candidates[0], &profiles, false),
+    )
+    .unwrap();
+    let advanced = advance_x509_rsa_constructed_path_intermediate_path_length(
+        X509CertificatePathLengthState::new(1),
+        authenticated,
+    )
+    .unwrap();
+
+    assert_eq!(
+        advanced
+            .path_length_state()
+            .remaining_non_self_issued_intermediate_cas(),
+        0
+    );
+    assert!(std::ptr::eq(
+        advanced
+            .authenticated_intermediate()
+            .verified_signature()
+            .adjacent_link()
+            .constructed_path(),
+        &path
+    ));
+    assert_eq!(
+        advanced
+            .authenticated_intermediate()
+            .verified_signature()
+            .adjacent_link()
+            .issuer_depth(),
+        0
+    );
+    assert!(std::ptr::eq(
+        advanced
+            .authenticated_intermediate()
+            .intermediate_policy()
+            .certificate(),
+        &candidates[0]
+    ));
+    assert_eq!(
+        format!("{advanced:?}"),
+        "ValidatedX509RsaConstructedPathIntermediatePathLength"
+    );
+}
+
+#[test]
+fn rejects_terminal_issuer_as_intermediate() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+
+    let verified = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let error = bind_x509_rsa_constructed_path_intermediate_policy(
+        verified,
+        intermediate_policy(&candidates[1], &profiles, true),
+    )
+    .expect_err("the construction terminal is not an intermediate");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathIntermediatePolicyErrorKind::TerminalIssuer
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 RSA constructed-path intermediate policy error TerminalIssuer"
+    );
+}
+
+#[test]
+fn rejects_byte_equal_detached_intermediate_policy() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let detached_intermediate_encoded = intermediate_encoded.clone();
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let detached_intermediate = decode(&detached_intermediate_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+    assert_eq!(detached_intermediate.encoded(), candidates[0].encoded());
+
+    let verified = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let error = bind_x509_rsa_constructed_path_intermediate_policy(
+        verified,
+        intermediate_policy(&detached_intermediate, &profiles, false),
+    )
+    .expect_err("a byte-equal independent decode is detached evidence");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathIntermediatePolicyErrorKind::EvidenceMismatch
+    );
+}
+
+#[test]
+fn rejects_exhausted_path_length_for_non_self_issued_intermediate() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+
+    let verified = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let authenticated = bind_x509_rsa_constructed_path_intermediate_policy(
+        verified,
+        intermediate_policy(&candidates[0], &profiles, false),
+    )
+    .unwrap();
+    let error = advance_x509_rsa_constructed_path_intermediate_path_length(
+        X509CertificatePathLengthState::new(0),
+        authenticated,
+    )
+    .expect_err("the non-self-issued intermediate consumes capacity");
+
+    assert_eq!(
+        error.kind(),
+        X509CertificatePathLengthErrorKind::MaximumExceeded
     );
 }
