@@ -7,6 +7,10 @@ Computed string slices use the shared checked runtime helper and clear stale lit
 IIR → textual LLVM IR backend.  Emits a `.ll` source string for an LLVM
 target triple, without depending on `llvm-sys` or a native LLVM install.
 
+On Windows targets, modules that write output initialize CRT stdout in binary
+mode before execution, so LF, NUL and high bytes remain exact on pipes and files.
+This also covers bare `putchar` without linking a string runtime.
+
 **Status: v0.44.0 — LANG-FULL E4 runtime string ordering.**  The backend now
 lowers scalar control/data ops, Brainfuck byte-tape I/O, arrays, globals,
 numeric conversions, and the `str_const` + `print_str` literal-output slice.

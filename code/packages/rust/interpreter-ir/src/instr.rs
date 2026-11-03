@@ -75,6 +75,25 @@ pub enum Operand {
     ///
     /// Example: `global_store("x", %v)` has `srcs[0] = Operand::Str("x".into())`.
     Str(String),
+    /// A raw-byte string literal (LANG83 PR5b, owner decision Q4).
+    ///
+    /// A `str` value is a sequence of bytes with no encoding (LANG83 "What a
+    /// string is in the IIR"). `Str` can only carry the UTF-8 of a Rust
+    /// `String`, so a literal whose bytes are not valid UTF-8 — Perl's
+    /// `"\xff"` without `use utf8`, a Python `bytes` literal — needs this
+    /// operand. It means exactly what a `Str` literal means, with the bytes
+    /// given directly:
+    ///
+    /// | literal                         | bytes of the `str` value |
+    /// |---------------------------------|--------------------------|
+    /// | `Str("é".into())`               | `C3 A9`                  |
+    /// | `Bytes(vec![0xC3, 0xA9])`       | `C3 A9` (the same string) |
+    /// | `Bytes(vec![0xFF])`             | `FF` (no `Str` can say it) |
+    ///
+    /// It is legal only as `str_const`'s literal; a name position
+    /// (`global_load`, `call`, `trap`, …) still takes `Str`.
+    /// `IIRModule::validate` reports it anywhere else (`BytesOperand`).
+    Bytes(Vec<u8>),
 }
 
 impl Operand {
@@ -96,6 +115,52 @@ impl Operand {
             _ => None,
         }
     }
+
+    /// Return the bytes of a string literal — a `Str` (its UTF-8) or a
+    /// `Bytes` (as given) — else `None` (LANG83 PR5b).
+    ///
+    /// This is the accessor for `str_const`: both literal kinds denote a
+    /// byte string, and a backend that keys a fold table on these bytes
+    /// treats `Str("é")` and `Bytes([0xC3, 0xA9])` as the same literal.
+    /// A *name* (a global, a callee, a trap kind) is read with
+    /// [`Operand::as_str_lit`] instead, which never answers for `Bytes`.
+    ///
+    /// ```
+    /// use interpreter_ir::Operand;
+    /// assert_eq!(Operand::Str("é".into()).as_lit_bytes(), Some(&[0xC3, 0xA9][..]));
+    /// assert_eq!(Operand::Bytes(vec![0xFF]).as_lit_bytes(), Some(&[0xFF][..]));
+    /// assert_eq!(Operand::Bytes(vec![0xFF]).as_str_lit(), None);
+    /// assert_eq!(Operand::Var("s".into()).as_lit_bytes(), None);
+    /// ```
+    pub fn as_lit_bytes(&self) -> Option<&[u8]> {
+        match self {
+            Operand::Str(s) => Some(s.as_bytes()),
+            Operand::Bytes(b) => Some(b.as_slice()),
+            _ => None,
+        }
+    }
+}
+
+/// Write `bytes` as the body of a `b"…"` literal: printable ASCII as itself
+/// (with `"` and `\` escaped), every other byte as `\xNN` (LANG83 PR5b).
+///
+/// | byte          | written as |
+/// |---------------|------------|
+/// | `0x41` (`A`)  | `A`        |
+/// | `0x22` (`"`)  | `\"`       |
+/// | `0x5C` (`\`)  | `\\`       |
+/// | `0x0A`        | `\x0a`     |
+/// | `0xFF`        | `\xff`     |
+fn write_byte_literal(f: &mut std::fmt::Formatter<'_>, bytes: &[u8]) -> std::fmt::Result {
+    for &b in bytes {
+        match b {
+            b'"' => f.write_str("\\\"")?,
+            b'\\' => f.write_str("\\\\")?,
+            0x20..=0x7e => write!(f, "{}", b as char)?,
+            _ => write!(f, "\\x{b:02x}")?,
+        }
+    }
+    Ok(())
 }
 
 impl std::fmt::Display for Operand {
@@ -106,6 +171,11 @@ impl std::fmt::Display for Operand {
             Operand::Float(v) => write!(f, "{v}"),
             Operand::Bool(b)  => write!(f, "{b}"),
             Operand::Str(s)   => write!(f, "\"{s}\""),
+            Operand::Bytes(b) => {
+                f.write_str("b\"")?;
+                write_byte_literal(f, b)?;
+                f.write_str("\"")
+            }
         }
     }
 }
@@ -378,5 +448,31 @@ mod tests {
         assert_eq!(format!("{}", Operand::Var("x".into())), "x");
         assert_eq!(format!("{}", Operand::Int(42)), "42");
         assert_eq!(format!("{}", Operand::Bool(true)), "true");
+    }
+
+    /// LANG83 PR5b: a raw-byte literal displays as `b"…"`, printable ASCII
+    /// as itself and every other byte as `\xNN`, so it can never be mistaken
+    /// for a `Str` literal or hide a byte.
+    #[test]
+    fn a_raw_byte_literal_displays_with_hex_escapes() {
+        let op = Operand::Bytes(vec![b'A', b'"', b'\\', 0x0A, 0x00, 0x7F, 0xA9, 0xFF, b' ']);
+        assert_eq!(format!("{op}"), r#"b"A\"\\\x0a\x00\x7f\xa9\xff ""#);
+        assert_eq!(format!("{}", Operand::Bytes(vec![])), r#"b"""#);
+    }
+
+    /// The literal accessors: `as_lit_bytes` answers both literal kinds,
+    /// `as_str_lit` only `Str` (a name is never a byte literal).
+    #[test]
+    fn literal_accessors_distinguish_names_from_byte_strings() {
+        let s = Operand::Str("é".into());
+        let b = Operand::Bytes(vec![0xC3, 0xA9]);
+        assert_eq!(s.as_lit_bytes(), b.as_lit_bytes());
+        assert_eq!(s.as_str_lit(), Some("é"));
+        assert_eq!(b.as_str_lit(), None);
+        assert_eq!(b.as_var(), None);
+        assert_ne!(s, b, "the two spellings are different operands");
+        for other in [Operand::Var("x".into()), Operand::Int(1), Operand::Float(1.0), Operand::Bool(true)] {
+            assert_eq!(other.as_lit_bytes(), None);
+        }
     }
 }

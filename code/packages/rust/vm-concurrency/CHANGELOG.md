@@ -6,6 +6,10 @@ Version numbers follow [Semantic Versioning](https://semver.org/).
 
 ---
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- A failed task's error string is built with `Value::str` (vm-core's `Value::Str` now holds bytes).
+
 ## [0.1.0] — 2026-05-11
 
 ### Added (LANG28B — cooperative scheduler)

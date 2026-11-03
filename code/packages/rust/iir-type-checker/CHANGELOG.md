@@ -1,5 +1,9 @@
 # Changelog — iir-type-checker
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- `Operand::Bytes` (a raw-byte `str_const` literal) carries no SSA type, like `Operand::Str`.
+
 ## [0.2.0] — 2026-05-11
 
 ### Changed (LANG32 — Operand::Str exhaustiveness)

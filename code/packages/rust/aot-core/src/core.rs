@@ -130,6 +130,14 @@ impl AOTCore {
     pub fn compile(&mut self, module: &IIRModule) -> Result<Vec<u8>, AOTError> {
         let t_start = Instant::now();
 
+        // LANG83 PR5b (security re-review, L2-a): the string-literal checks
+        // every column runs, before `aot_specialise` lifts a raw-byte literal
+        // to a reserved name that a backend could take for its bytes.
+        let errors = module.str_literal_errors();
+        if !errors.is_empty() {
+            return Err(AOTError::InvalidModule { message: errors.join("; ") });
+        }
+
         let mut fn_binaries: Vec<(String, Vec<u8>)> = Vec::new();
         let mut untyped_fns: Vec<IIRFunction> = Vec::new();
 
@@ -253,6 +261,29 @@ mod tests {
         let mut m = IIRModule::new("typed_test", "tetrad");
         m.add_or_replace(fn_);
         m
+    }
+
+    /// LANG83 PR5b (security re-review, L2-a): a module that breaks the
+    /// string-literal rules is refused before `aot_specialise`, which would
+    /// lift a raw-byte literal to a reserved name that is not its bytes.
+    #[test]
+    fn compile_refuses_a_module_that_breaks_the_string_literal_rules() {
+        let mut misplaced = tiny_module();
+        misplaced.functions[0].instructions.insert(
+            0,
+            IIRInstr::new("global_load", Some("g".into()), vec![Operand::Bytes(b"x".to_vec())], "i64"),
+        );
+        let mut too_long = tiny_module();
+        too_long.str_max_bytes = Some(1);
+        too_long.functions[0].instructions.insert(
+            0,
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Bytes(b"hi".to_vec())], "str"),
+        );
+        for (module, kind) in [(misplaced, "BytesOperand"), (too_long, "StrTooLong")] {
+            let mut core = AOTCore::new(Box::new(NullBackend), None, 1);
+            let err = core.compile(&module).unwrap_err();
+            assert!(matches!(&err, AOTError::InvalidModule { message } if message.starts_with(kind)), "{err}");
+        }
     }
 
     #[test]

@@ -248,6 +248,7 @@ fn operand_type<'a>(
         Operand::Float(_) => None,
         Operand::Bool(_) => None,
         Operand::Str(_) => None,    // LANG32 compile-time string name — not a typed SSA value
+        Operand::Bytes(_) => None,  // LANG83 PR5b raw-byte str_const literal — not an SSA value
     }
 }
 

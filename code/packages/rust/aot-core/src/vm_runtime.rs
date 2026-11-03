@@ -148,6 +148,8 @@ fn type_status_value(status: &FunctionTypeStatus) -> u8 {
 /// | `Operand::Int(n)` | `n` (number) |
 /// | `Operand::Float(f)` | `f` (number) |
 /// | `Operand::Bool(b)` | `true`/`false` |
+/// | `Operand::Str(s)` | `"s"` (string) |
+/// | `Operand::Bytes(b)` | `{"bytes": [b0, b1, …]}` (LANG83 PR5b) |
 fn operand_to_json(op: &Operand) -> Value {
     match op {
         Operand::Var(s)    => Value::String(s.clone()),
@@ -156,6 +158,9 @@ fn operand_to_json(op: &Operand) -> Value {
         Operand::Bool(b)   => Value::Bool(*b),
         // LANG32: Str is a compile-time string literal — serialize as a JSON string.
         Operand::Str(s)    => Value::String(s.clone()),
+        // LANG83 PR5b: a raw-byte literal need not be UTF-8, so it cannot be
+        // a JSON string; it is an object holding the byte values.
+        Operand::Bytes(b)  => json!({ "bytes": b }),
     }
 }
 

@@ -505,6 +505,33 @@ pub fn build_minimal_class_file(
     Ok(class_bytes)
 }
 
+/// Decode a `CONSTANT_Utf8` payload (JVMS §4.4.7, "modified UTF-8").
+///
+/// Modified UTF-8 is standard UTF-8 except that U+0000 is the two bytes
+/// `C0 80` (a zero byte is illegal in the pool) and a supplementary character
+/// is its two surrogates, three bytes each. `C0 80` is never valid standard
+/// UTF-8, so mapping it to a zero byte first cannot change the meaning of any
+/// other sequence. A string constant holding U+0000 is what a byte-string
+/// literal with a NUL byte becomes (LANG83 PR5b); a surrogate-encoded
+/// character is still refused, as before.
+fn decode_modified_utf8(bytes: &[u8]) -> Result<String, std::str::Utf8Error> {
+    if !bytes.windows(2).any(|w| w == [0xC0, 0x80]) {
+        return std::str::from_utf8(bytes).map(str::to_string);
+    }
+    let mut standard = Vec::with_capacity(bytes.len());
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == 0xC0 && bytes.get(i + 1) == Some(&0x80) {
+            standard.push(0);
+            i += 2;
+        } else {
+            standard.push(bytes[i]);
+            i += 1;
+        }
+    }
+    String::from_utf8(standard).map_err(|e| e.utf8_error())
+}
+
 pub fn parse_class_file(data: &[u8]) -> Result<JvmClassFile, ClassFileFormatError> {
     let mut reader = ClassReader::new(data);
     let magic = reader.u4()?;
@@ -528,11 +555,9 @@ pub fn parse_class_file(data: &[u8]) -> Result<JvmClassFile, ClassFileFormatErro
             CONSTANT_UTF8 => {
                 let length = usize::from(reader.u2()?);
                 let bytes = reader.read(length)?;
-                let value = std::str::from_utf8(bytes)
-                    .map_err(|err| {
-                        class_file_error(format!("Invalid modified UTF-8 payload: {err}"))
-                    })?
-                    .to_string();
+                let value = decode_modified_utf8(bytes).map_err(|err| {
+                    class_file_error(format!("Invalid modified UTF-8 payload: {err}"))
+                })?;
                 JvmConstantPoolEntry::Utf8(value)
             }
             CONSTANT_INTEGER => JvmConstantPoolEntry::Integer(reader.i4()?),
@@ -882,6 +907,17 @@ impl<'a> ClassReader<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// LANG83 PR5b: a string constant holding U+0000 is written `C0 80`
+    /// (modified UTF-8) and must read back as U+0000; plain `from_utf8`
+    /// refused it, so a class with a NUL in a literal did not parse.
+    #[test]
+    fn modified_utf8_nul_decodes_to_u0000() {
+        assert_eq!(decode_modified_utf8(&[0xC0, 0x80, 0x41, 0xC3, 0xBF]).unwrap(), "\u{0}A\u{FF}");
+        assert_eq!(decode_modified_utf8(b"plain").unwrap(), "plain");
+        assert!(decode_modified_utf8(&[0xC0]).is_err(), "a lone C0 is still invalid");
+        assert!(decode_modified_utf8(&[0xC0, 0x80, 0xFF]).is_err());
+    }
 
     #[test]
     fn builds_and_parses_minimal_class_file() {

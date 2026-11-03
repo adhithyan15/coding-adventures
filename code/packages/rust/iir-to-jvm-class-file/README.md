@@ -143,13 +143,13 @@ assert_eq!(class_file.this_class_name, "MyClass");
 | `array_get`      | `aload handle; <idx>; [l2i]; <T>aload; store dest` — native bounds check (E5); a `str` element uses `aaload` (E4d-BA-arr) |
 | `array_set`      | `aload handle; <idx>; [l2i]; <val>; <T>astore` — native bounds check (E5); a `str` element uses `aastore` (E4d-BA-arr) |
 | `array_len`      | `aload handle; arraylength; [i2l]; store dest` — E5 |
-| `str_const`      | `ldc CONSTANT_String; astore dest` — ASCII literal-output foothold (E4) |
+| `str_const`      | `ldc CONSTANT_String; astore dest` — one char per literal byte, chunks joined with `concat` past the 65 535-byte constant limit (LANG83 PR5b) |
 | `str_concat`     | `long(a.length()) + long(b.length())` `lcmp` the module's string ceiling, `Trap.Overflow` past it (LANG83 PR5a; `validate_for_jvm` refuses a `str_const` longer than the ceiling, #18800); then `aload a; aload b; invokevirtual java/lang/String.concat(String); astore dest` (E4) |
 | `str_len`        | `aload s; invokevirtual java/lang/String.length()I; [i2l]; store dest` — literal length foothold (E4) |
 | `str_index`      | `0 ≤ idx < length()` checked with `lcmp` on the full `long` index, `Trap.Bounds` otherwise (LANG83 PR5a); then `aload s; <idx>; [l2i]; invokevirtual java/lang/String.charAt(I)C; [i2l]; store dest` (E4). `str_slice` checks `0 ≤ a ≤ b ≤ length()` the same way before narrowing either offset for `substring` |
 | `str_eq`         | `aload a; aload b; invokevirtual java/lang/String.equals(Object)Z; [i2l]; store dest` — literal equality foothold (E4) |
 | `str_cmp`        | `aload a; aload b; invokevirtual java/lang/String.compareTo(String)I; invokestatic java/lang/Integer.signum(I)I; [i2l]; store dest` — literal ordering foothold (E4) |
-| `print_str`      | `getstatic System.out; aload s; invokevirtual PrintStream.print(String)` — E4 |
+| `print_str`      | `aload s; invokestatic __iir_print_str(String)` — the class's own writer: `getBytes("ISO-8859-1")`, `System.out.write([BII)V` (LANG83 PR5b) |
 
 The byte-tape ops (`alloc_bytes`/`load_byte`/`store_byte`) are how Brainfuck runs on
 the JVM (LANG-MATRIX LM-J): the tape is a host-provided static `byte[]`, `baload`/`bastore`

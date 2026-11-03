@@ -163,7 +163,7 @@ the program artifact whenever any `alloc_closure` instruction appears.
 | Heap | `alloc` (`ref<LispyPair>` only), `field_load`, `field_store`, `is_null` |
 | Register | `load_reg`, `store_reg` |
 | Coercion | `type_assert` (becomes `nop`) |
-| Strings | `str_const`, `str_concat`, `str_slice`, `str_len`, `str_index`, `str_eq`, `str_cmp`, `print_str` on the textual `.il` path (ASCII literal foothold) |
+| Strings | `str_const`, `str_concat`, `str_slice`, `str_len`, `str_index`, `str_eq`, `str_cmp`, `print_str` on the textual `.il` path: one char per byte (LANG83 PR5b) — any literal (`ldstr bytearray` when not printable ASCII), and `print_str` / `putchar` through the synthetic `__iir_write_bytes` |
 
 As of 0.16.0 the **textual `.il`** emitter (`emit_il`, the `ilasm`/`dotnet` path) also
 covers the integer **arithmetic** (`add`/`sub`/`mul`/`div`/`mod` → `add`/`sub`/`mul`/`div`/`rem`)

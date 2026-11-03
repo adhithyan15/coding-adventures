@@ -52,8 +52,14 @@ assert_eq!(result, Some(Value::Int(42)));
 ### `Value` — the register type
 
 ```rust
-pub enum Value { Int(i64), Float(f64), Bool(bool), Str(String), HeapRef(gc_core::HeapRef), Null }
+pub enum Value { Int(i64), Float(f64), Bool(bool), Str(Arc<[u8]>), HeapRef(gc_core::HeapRef), Symbol(u32), Null }
 ```
+
+A `Str` is bytes, not UTF-8 text (LANG83 PR5b): build one with `Value::str(…)`
+from `&str`, `String`, `&[u8]` or `Vec<u8>`, read it with `as_bytes()`, and use
+`as_str()` only when you want UTF-8 text (it answers `None` otherwise).
+`str_slice "é", 1, 2` is the one-byte string `A9`, and the default `print_str`
+writes the bytes unchanged.
 
 `iir_type_name()` maps a `Value` to its IIR type string, with range-aware
 integer classification (`0–255 → "u8"`, `0–65535 → "u16"`, etc.).
@@ -92,7 +98,7 @@ use vm_core::value::Value;
 
 let reg = BuiltinRegistry::new();
 assert_eq!(reg.call("<", &[Value::Int(-5), Value::Int(0)]).unwrap(), Value::Bool(true));
-assert!(reg.call("<", &[Value::Str("a".into()), Value::Int(1)]).is_err());
+assert!(reg.call("<", &[Value::str("a"), Value::Int(1)]).is_err());
 assert_eq!(reg.call("pair?", &[Value::Int(42)]).unwrap(), Value::Bool(false));
 ```
 
@@ -125,7 +131,7 @@ use vm_core::builtins::BuiltinRegistry;
 use vm_core::value::Value;
 
 let reg = BuiltinRegistry::new();
-let a = reg.call("dyn_symbol", &[Value::Str("a".into())]).unwrap();
+let a = reg.call("dyn_symbol", &[Value::str("a")]).unwrap();
 assert_eq!(reg.call("dyn_tag", &[a]).unwrap(), Value::Int(2));
 assert_eq!(reg.call("dyn_tag", &[Value::Int(0)]).unwrap(), Value::Int(0)); // 0 is not nil
 assert_eq!(reg.call("dyn_is_nil", &[Value::Null]).unwrap(), Value::Bool(true));

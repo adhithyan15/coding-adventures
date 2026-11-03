@@ -553,7 +553,7 @@ fn resolve_i64(
         // Brainfuck operates on raw byte cells — string operands should never appear
         // in a well-formed BF IIR program, but we handle the variant defensively to
         // keep the match exhaustive as the Operand enum evolves.
-        Operand::Str(_) => 0,
+        Operand::Str(_) | Operand::Bytes(_) => 0,
         Operand::Var(name) => {
             match ctx.frames.last().and_then(|f| f.resolve(name)) {
                 Some(Value::Int(n)) => *n,
@@ -577,7 +577,9 @@ fn resolve_value(
         Operand::Float(f) => Value::Float(*f),
         // String literals pass through as Value::Str; Brainfuck programs should
         // not produce these, but we keep the match exhaustive for forward compat.
-        Operand::Str(s) => Value::Str(s.clone()),
+        Operand::Str(s) => Value::str(s),
+        // LANG83 PR5b: a raw-byte literal is a string of exactly its bytes.
+        Operand::Bytes(b) => Value::str(b),
         Operand::Var(name) => {
             ctx.frames
                 .last()

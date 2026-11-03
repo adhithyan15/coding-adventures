@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased — non-ASCII INSPECT reconstruction runs byte-based (LANG83 PR5b)
+
+LANG83 PR5b makes an IIR `str` a string of bytes, and `str_slice` no longer
+refuses to cut a UTF-8 character. The compiled INSPECT reconstruction on a
+non-ASCII source therefore no longer traps. It runs byte-based, which is what a
+byte-oriented `PIC X(n)` means: `"aéaba"` in `PIC X(5)` is the five bytes
+`a é a b`, so `REPLACING ALL "a" BY "x" BEFORE "b"` gives `xéxb`. The
+byte-vs-char chip (task_396ba6f6) now shows as a different answer from the
+char-based oracle instead of a trap.
+
+- Nine characterization asserts in `tests/jit_e2e.rs` that pinned the trap now
+  pin the exact compiled output; the oracle asserts are unchanged.
+- `inspect_converting_non_ascii_to_data_name_traps_the_compiler_reconstruction_chip`
+  is renamed `inspect_converting_non_ascii_to_data_name_is_the_byte_vs_char_chip`.
+  Its `PIC X(1)` TO item holds one byte (0xC3), so the output `C3 'Y' 'Z' '\n'`
+  is not UTF-8 and is pinned as bytes through a new `run_on_jit_bytes_result`.
+- The test `print_str` sinks read `Value::as_bytes`. `Value::as_str` answers
+  only for valid UTF-8, so it silently dropped such output.
+
 ## Unreleased — encoded CLR wide-scaling refusal (CLR01)
 
 Nested-division compatibility now verifies explicit encoded CLR refusal of

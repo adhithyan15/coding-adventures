@@ -369,6 +369,9 @@ fn encode_function_json(func: &IIRFunction) -> String {
             // Rust's {:?} on &str emits a double-quoted, escape-safe representation,
             // e.g. `"hello\nworld"`, which is valid JSON for the string field.
             Operand::Str(s) => format!("{{\"str\":{:?}}}", s),
+            // LANG83 PR5b: a raw-byte literal need not be UTF-8, so it is the
+            // list of byte values (decimal numbers are valid JSON).
+            Operand::Bytes(b) => format!("{{\"bytes\":{:?}}}", b),
         }).collect();
         format!(
             "{{\"op\":\"{}\",\"dest\":{},\"srcs\":[{}],\"type_hint\":\"{}\"}}",

@@ -91,7 +91,8 @@ host that runs one must provide it (this crate's string tests share one in
   offset. A folded str literal stored via `array_set` is promoted to a runtime
   block handle so the element holds a real offset rather than an uninitialised `0`.
 - **String literal foothold (v0.23.0 — LANG-FULL E4 / BA4)**: `str_const` writes
-  printable ASCII literal bytes into a linear-memory data segment and stores the
+  the literal's bytes (any bytes, from a `Str` or a raw-byte `Operand::Bytes`,
+  since LANG83 PR5b) into a linear-memory data segment and stores the
   byte pointer in an `i32` local; `print_str` calls the host import
   `env.__print_str(ptr,len)`. `str_len` over a direct literal materialises that
   literal's byte count as an integer constant, `str_eq` over two direct literals

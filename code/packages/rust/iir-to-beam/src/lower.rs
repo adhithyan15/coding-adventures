@@ -2032,11 +2032,11 @@ pub fn lower_iir_to_beam(
                     ]));
                 }
 
-                // ── str_const → ASCII Erlang character list ───────────────
+                // ── str_const → Erlang list of bytes ───────────────────────
                 //
                 // BEAM's compact encoder exposes list construction, not an
-                // arbitrary binary literal term. Lower the validated ASCII
-                // text to `[byte, ...]` with `put_list`, building right to
+                // arbitrary binary literal term. Lower the literal's bytes
+                // (any value, LANG83 PR5b) to `[byte, ...]` with `put_list`, building right to
                 // left from BEAM nil (`{a,0}`). This is the representation
                 // consumed by `erlang:'++'/2` and `io:put_chars/1` below.
                 //
@@ -2064,8 +2064,10 @@ pub fn lower_iir_to_beam(
                             detail: "str_const must have a destination".into(),
                         }),
                     };
-                    let text = match instr.srcs.as_slice() {
-                        [Operand::Str(text)] => text,
+                    // A `Str` or raw-byte `Bytes` literal (LANG83 PR5b): one
+                    // list element per byte, any value 0–255.
+                    let text: &[u8] = match instr.srcs.as_slice() {
+                        [lit @ (Operand::Str(_) | Operand::Bytes(_))] => lit.as_lit_bytes().unwrap_or_default(),
                         _ => return Err(IIRBeamError::InvalidOperand {
                             function: fn_name.clone(),
                             detail: "str_const must have one string literal source".into(),
@@ -2084,7 +2086,7 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::a(0),
                         BEAMOperand::x(rd),
                     ]));
-                    for byte in text.bytes().rev() {
+                    for &byte in text.iter().rev() {
                         instrs.push(BEAMInstruction::new(OP_PUT_LIST, vec![
                             BEAMOperand::i(byte as u64),
                             BEAMOperand::x(rd),

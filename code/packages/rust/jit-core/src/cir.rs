@@ -112,6 +112,33 @@ impl fmt::Display for CIROperand {
     }
 }
 
+/// The register name every raw-byte literal lifts to: it holds a NUL, which no
+/// IIR register, global, builtin or trap kind contains, so a CIR consumer that
+/// reads it as a name fails closed ("undefined") rather than using it as one.
+pub const RAW_BYTES_LITERAL_NAME: &str = "\0<raw-byte literal>";
+
+/// Lift an `Operand::Bytes` literal (LANG83 PR5b) into CIR.
+///
+/// CIR has no string operand: a `Str` travels as a `Var` naming its text, the
+/// convention every CIR consumer of a trap kind, a global or a builtin relies
+/// on. A raw-byte literal is a string *value*, never a name, so it must not
+/// take that spelling. A first draft lifted a UTF-8 `Bytes(b"record")` to
+/// `Var("record")`, and `call_builtin [Bytes(b"record"), …]` then called the
+/// builtin `record` on the JIT, where vm-core refuses the module (PR5b
+/// security review, L2). Every raw-byte literal therefore lifts to
+/// [`RAW_BYTES_LITERAL_NAME`]. That name is not the literal's bytes, so no
+/// CIR consumer may use it as a literal: `JITCore` refuses to compile a
+/// function that carries a `Bytes` operand; `riscv-backend`, the one CIR
+/// backend that lowers `str_const` itself (it takes the `Var` text as the
+/// literal), refuses this name; and `aot-core` / `lang-aot` run
+/// `IIRModule::str_literal_errors` before `aot_specialise`. The x86-64 and
+/// AArch64 columns never see a `str_const` in CIR: `twig-aot` expands it to
+/// byte stores first. (PR5b security re-review, L2-a: the first version of
+/// this comment claimed no CIR backend lowered `str_const`.)
+fn raw_bytes_to_cir(_bytes: &[u8]) -> CIROperand {
+    CIROperand::Var(RAW_BYTES_LITERAL_NAME.to_string())
+}
+
 /// Convert from `interpreter_ir::instr::Operand` to `CIROperand`.
 ///
 /// Used by the specialiser to lift IIR operands into CIR without cloning
@@ -124,6 +151,7 @@ impl From<interpreter_ir::instr::Operand> for CIROperand {
             interpreter_ir::instr::Operand::Float(v) => CIROperand::Float(v),
             interpreter_ir::instr::Operand::Bool(b)  => CIROperand::Bool(b),
             interpreter_ir::instr::Operand::Str(s)   => CIROperand::Var(s),
+            interpreter_ir::instr::Operand::Bytes(b) => raw_bytes_to_cir(&b),
         }
     }
 }
@@ -136,6 +164,7 @@ impl From<&interpreter_ir::instr::Operand> for CIROperand {
             interpreter_ir::instr::Operand::Float(v) => CIROperand::Float(*v),
             interpreter_ir::instr::Operand::Bool(b)  => CIROperand::Bool(*b),
             interpreter_ir::instr::Operand::Str(s)   => CIROperand::Var(s.clone()),
+            interpreter_ir::instr::Operand::Bytes(b) => raw_bytes_to_cir(b),
         }
     }
 }

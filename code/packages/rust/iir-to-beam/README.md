@@ -183,8 +183,8 @@ instruction with `type_hint` of `"any"`, `"polymorphic"`, or unsupported
 `"str"`/`"ref<…>"` shapes. `call_builtin` is supported ONLY for the exact
 name set in the table above (`putchar`/`print_i64`/`pair?`/`equal?`/`not`/
 `input_more`/`input_i64`/`input_str`) — any other builtin name is rejected.
-The supported string subset is printable-ASCII
-`str_const`, `str_concat`, `str_slice`, `str_len`, `str_index`, `str_eq`,
+The supported string subset is `str_const` (any literal bytes, `Str` or
+raw-byte `Operand::Bytes`, since LANG83 PR5b), `str_concat`, `str_slice`, `str_len`, `str_index`, `str_eq`,
 `str_cmp`, `print_str`, `array_set`/`array_get` (BEAM06 — a `str`-typed
 array element read/write), and ordinary call/return/move transport,
 represented as proper Erlang character lists. `str_slice`'s `[start, end)` bounds lower to

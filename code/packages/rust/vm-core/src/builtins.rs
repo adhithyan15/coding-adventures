@@ -323,7 +323,8 @@ pub const MAX_SYMBOL_TABLE_BYTES: usize = 16 << 20;
 /// The interning table behind `dyn_symbol`: name → id, and the bytes held.
 #[derive(Default)]
 struct SymbolTable {
-    ids: HashMap<String, u32>,
+    /// Keyed on the name's bytes: a symbol name is an IIR string (LANG83 PR5b).
+    ids: HashMap<Vec<u8>, u32>,
     bytes: usize,
 }
 
@@ -357,7 +358,7 @@ fn intern_symbol(table: &std::sync::Mutex<SymbolTable>, args: &[Value]) -> Resul
     let mut table = table
         .lock()
         .map_err(|_| VMError::Custom("dyn_symbol: symbol table poisoned".into()))?;
-    if let Some(id) = table.ids.get(name) {
+    if let Some(id) = table.ids.get(&name[..]) {
         return Ok(Value::Symbol(*id));
     }
     if name.len() > MAX_SYMBOL_NAME_BYTES {
@@ -379,7 +380,7 @@ fn intern_symbol(table: &std::sync::Mutex<SymbolTable>, args: &[Value]) -> Resul
     // `MAX_SYMBOLS` is far below `u32::MAX`, so the conversion cannot fail.
     let id = u32::try_from(table.ids.len()).expect("MAX_SYMBOLS fits in u32");
     table.bytes += name.len();
-    table.ids.insert(name.clone(), id);
+    table.ids.insert(name.to_vec(), id);
     Ok(Value::Symbol(id))
 }
 
@@ -419,15 +420,19 @@ impl BuiltinRegistry {
 
         // print_str — writes a single string to stdout with no implicit newline.
         reg.register("print_str", |args| {
+            // The bytes, unchanged (LANG83 PR5b): not `print!` of UTF-8
+            // text, which a lone `0xA9` could not even reach.
             let s = args.first()
-                .and_then(Value::as_str)
+                .and_then(Value::as_bytes)
                 .ok_or_else(|| VMError::TypeError {
                     expected: "str".into(),
                     actual: args.first().map(Value::iir_type_name).unwrap_or("missing").into(),
                     context: "print_str".into(),
                 })?;
-            print!("{s}");
-            io::stdout()
+            let mut out = io::stdout();
+            out.write_all(s)
+                .map_err(|e| VMError::Custom(format!("print_str write failed: {e}")))?;
+            out
                 .flush()
                 .map_err(|e| VMError::Custom(format!("print_str flush failed: {e}")))?;
             Ok(Value::Null)
@@ -754,7 +759,7 @@ mod tests {
         let reg = BuiltinRegistry::new();
         let bad: &[(Value, Value)] = &[
             (Value::Bool(true), Value::Int(2)),
-            (Value::Int(1), Value::Str("a".into())),
+            (Value::Int(1), Value::str("a")),
             (Value::Null, Value::Int(0)),
             (Value::Int(1), Value::Float(2.0)),
             (Value::HeapRef(gc_core::HeapRef::new(0x1000)), Value::Int(0)),
@@ -784,7 +789,7 @@ mod tests {
         assert_eq!(pair(Value::HeapRef(gc_core::HeapRef::new(0x1000))), Value::Bool(true));
         assert_eq!(pair(Value::HeapRef(gc_core::HeapRef::NULL)), Value::Bool(false), "null ref is nil");
         assert_eq!(pair(Value::Int(0)), Value::Bool(false), "`const 0 : ref<LispyPair>` nil");
-        for atom in [Value::Int(42), Value::Bool(true), Value::Str("s".into()), Value::Float(1.5), Value::Null] {
+        for atom in [Value::Int(42), Value::Bool(true), Value::str("s"), Value::Float(1.5), Value::Null] {
             assert_eq!(pair(atom.clone()), Value::Bool(false), "{atom:?}");
         }
         assert_eq!(pair(Value::Symbol(0)), Value::Bool(false), "a symbol is an atom");
@@ -803,7 +808,7 @@ mod tests {
     fn dyn_tag_numbers_every_kind() {
         let reg = BuiltinRegistry::new();
         let tag = |v: Value| reg.call("dyn_tag", &[v]).unwrap();
-        let sym = reg.call("dyn_symbol", &[Value::Str("a".into())]).unwrap();
+        let sym = reg.call("dyn_symbol", &[Value::str("a")]).unwrap();
         let cases = [
             (Value::Int(0), DYN_TAG_INT),
             (Value::Int(-7), DYN_TAG_INT),
@@ -814,7 +819,7 @@ mod tests {
             (Value::Bool(true), DYN_TAG_TRUE),
             (Value::HeapRef(gc_core::HeapRef::new(0x1000)), DYN_TAG_PAIR),
             (Value::Float(0.0), DYN_TAG_NONE),
-            (Value::Str(String::new()), DYN_TAG_NONE),
+            (Value::str(""), DYN_TAG_NONE),
         ];
         for (v, want) in cases {
             assert_eq!(tag(v.clone()), Value::Int(want), "dyn_tag {v:?}");
@@ -834,7 +839,7 @@ mod tests {
         let nil = |v: Value| reg.call("dyn_is_nil", &[v]).unwrap();
         assert_eq!(nil(Value::Null), Value::Bool(true));
         assert_eq!(nil(Value::HeapRef(gc_core::HeapRef::NULL)), Value::Bool(true));
-        for v in [Value::Int(0), Value::Bool(false), Value::Symbol(0), Value::Str(String::new())] {
+        for v in [Value::Int(0), Value::Bool(false), Value::Symbol(0), Value::str("")] {
             assert_eq!(nil(v.clone()), Value::Bool(false), "{v:?}");
         }
         assert!(reg.call("dyn_is_nil", &[]).is_err());
@@ -866,7 +871,7 @@ mod tests {
     #[test]
     fn dyn_symbol_interns_by_name() {
         let reg = BuiltinRegistry::new();
-        let sym = |n: &str| reg.call("dyn_symbol", &[Value::Str(n.into())]).unwrap();
+        let sym = |n: &str| reg.call("dyn_symbol", &[Value::str(n)]).unwrap();
         let a = sym("a");
         let b = sym("b");
         assert_eq!(a, Value::Symbol(0));
@@ -881,7 +886,7 @@ mod tests {
         assert!(reg.call("dyn_symbol", &[]).is_err());
         // A second registry has its own table.
         let other = BuiltinRegistry::new();
-        assert_eq!(other.call("dyn_symbol", &[Value::Str("b".into())]).unwrap(), Value::Symbol(0));
+        assert_eq!(other.call("dyn_symbol", &[Value::str("b")]).unwrap(), Value::Symbol(0));
     }
 
     /// The table is capped by count, so a program cannot grow it without
@@ -890,10 +895,10 @@ mod tests {
     fn dyn_symbol_table_is_capped() {
         let table = std::sync::Mutex::new(SymbolTable::default());
         for i in 0..MAX_SYMBOLS {
-            table.lock().unwrap().ids.insert(format!("s{i}"), i as u32);
+            table.lock().unwrap().ids.insert(format!("s{i}").into_bytes(), i as u32);
         }
-        assert!(intern_symbol(&table, &[Value::Str("s0".into())]).is_ok(), "an old name still resolves");
-        assert!(intern_symbol(&table, &[Value::Str("new".into())]).is_err());
+        assert!(intern_symbol(&table, &[Value::str("s0")]).is_ok(), "an old name still resolves");
+        assert!(intern_symbol(&table, &[Value::str("new")]).is_err());
     }
 
     /// …and by bytes: one name is at most `MAX_SYMBOL_NAME_BYTES`, and all
@@ -903,21 +908,21 @@ mod tests {
     fn dyn_symbol_names_are_capped_by_length_and_total_bytes() {
         let table = std::sync::Mutex::new(SymbolTable::default());
         let longest = "x".repeat(MAX_SYMBOL_NAME_BYTES);
-        assert_eq!(intern_symbol(&table, &[Value::Str(longest.clone())]).unwrap(), Value::Symbol(0));
+        assert_eq!(intern_symbol(&table, &[Value::str(&longest)]).unwrap(), Value::Symbol(0));
         let too_long = "y".repeat(MAX_SYMBOL_NAME_BYTES + 1);
-        let err = intern_symbol(&table, &[Value::Str(too_long)]).unwrap_err();
+        let err = intern_symbol(&table, &[Value::str(too_long)]).unwrap_err();
         assert!(format!("{err:?}").contains("longer than"), "{err:?}");
         assert_eq!(table.lock().unwrap().bytes, MAX_SYMBOL_NAME_BYTES, "the refused name is not counted");
 
         // Fill the byte budget to one byte short, then a 2-byte name fails
         // and a 1-byte name fits exactly.
         table.lock().unwrap().bytes = MAX_SYMBOL_TABLE_BYTES - 1;
-        let err = intern_symbol(&table, &[Value::Str("ab".into())]).unwrap_err();
+        let err = intern_symbol(&table, &[Value::str("ab")]).unwrap_err();
         assert!(format!("{err:?}").contains("exceed"), "{err:?}");
-        assert_eq!(intern_symbol(&table, &[Value::Str("a".into())]).unwrap(), Value::Symbol(1));
+        assert_eq!(intern_symbol(&table, &[Value::str("a")]).unwrap(), Value::Symbol(1));
         assert_eq!(table.lock().unwrap().bytes, MAX_SYMBOL_TABLE_BYTES);
-        assert!(intern_symbol(&table, &[Value::Str("b".into())]).is_err(), "the budget is full");
-        assert_eq!(intern_symbol(&table, &[Value::Str(longest)]).unwrap(), Value::Symbol(0), "known names still resolve");
+        assert!(intern_symbol(&table, &[Value::str("b")]).is_err(), "the budget is full");
+        assert_eq!(intern_symbol(&table, &[Value::str(longest)]).unwrap(), Value::Symbol(0), "known names still resolve");
     }
 
     /// The Lisp rules themselves are never builtins here (LANG83 PR7).
@@ -953,7 +958,7 @@ mod tests {
         assert!(reg.has("write_i64"));
         // Non-integers are clean type errors, never a panic or a silent 0.
         for name in ["print_i64", "putchar", "write_i64"] {
-            let err = reg.call(name, &[Value::Str("x".into())]).unwrap_err();
+            let err = reg.call(name, &[Value::str("x")]).unwrap_err();
             assert!(matches!(err, VMError::TypeError { .. }), "{name}");
             let err = reg.call(name, &[]).unwrap_err();
             assert!(matches!(err, VMError::TypeError { .. }), "{name}");

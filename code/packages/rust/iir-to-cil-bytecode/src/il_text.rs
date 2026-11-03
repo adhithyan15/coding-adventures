@@ -182,6 +182,131 @@ fn cil_string_literal(ctx: &str, s: &str) -> Result<String, IIRClrError> {
     Ok(out)
 }
 
+// ---------------------------------------------------------------------------
+// LANG83 PR5b — a CLR string holds one char per byte
+// ---------------------------------------------------------------------------
+//
+// An IIR `str` is bytes. On the CLR it is a `System.String` whose every char
+// is one byte (U+0000–U+00FF), so `get_Length`, `get_Chars`, `Substring`,
+// `Concat` and `CompareOrdinal` compute the byte semantics unchanged. Only the
+// edges know the rule:
+//
+// | edge          | how                                                         |
+// |---------------|-------------------------------------------------------------|
+// | a literal     | `ldstr bytearray (b0 00 b1 00 …)`: the UTF-16LE of one char per byte |
+// | `print_str`   | `__iir_write_bytes(string)`: each char becomes one byte      |
+// | `putchar`     | the masked byte as a one-char string, through the same method |
+// | `input_str`   | the launcher sets `Console.InputEncoding` to Latin-1          |
+//
+// `Console.Write(string)` / `Write(char)` encode with the console's encoding
+// (UTF-8 on CI), so the char U+00FF came out as the two bytes `C3 BF`.
+
+/// The literal operand of an `ldstr` for a string of `bytes` (LANG83 PR5b).
+///
+/// Printable ASCII (with `\t`, `\n`, `\r`) keeps the quoted form every
+/// earlier slice emitted, so existing IL does not change. Any other literal
+/// is a `bytearray`: the string's UTF-16LE code units, one char per byte, so
+/// NUL and 0x80–0xFF need no escape at all.
+///
+/// ```text
+///   "HELLO"         → ldstr "HELLO"
+///   C3 A9 ("é")     → ldstr bytearray (C3 00 A9 00)
+///   00 FF           → ldstr bytearray (00 00 FF 00)
+/// ```
+fn cil_byte_string_literal(ctx: &str, bytes: &[u8]) -> Result<String, IIRClrError> {
+    let printable = bytes.iter().all(|&b| matches!(b, b'\n' | b'\r' | b'\t' | 0x20..=0x7e));
+    if printable {
+        // Printable ASCII is valid UTF-8, so this cannot fail.
+        let text = std::str::from_utf8(bytes).unwrap_or_default();
+        return cil_string_literal(ctx, text);
+    }
+    let mut out = String::from("bytearray (");
+    for (i, b) in bytes.iter().enumerate() {
+        if i > 0 {
+            out.push(' ');
+        }
+        let _ = write!(out, "{b:02X} 00");
+    }
+    out.push(')');
+    Ok(out)
+}
+
+/// The synthetic byte writer and its cached stdout stream (LANG83 PR5b).
+const WRITE_BYTES_METHOD: &str = "__iir_write_bytes";
+const STDOUT_FIELD: &str = "__iir_stdout";
+
+/// `void __iir_write_bytes(string s)`: write each char of `s` as one byte.
+///
+/// ```text
+///   Console.Out.Flush();                 // what Console.Write wrote goes first
+///   n = s.Length; b = new uint8[n];
+///   for (i = 0; i < n; i++) b[i] = (uint8) s[i];
+///   if (__iir_stdout == null) __iir_stdout = Console.OpenStandardOutput();
+///   __iir_stdout.Write(b, 0, n); __iir_stdout.Flush();
+/// ```
+///
+/// `Console.Out` and the raw stream share the process's stdout, and each
+/// flushes before the other writes, so `print_str`, `putchar`, `write_i64`
+/// and `print_i64` stay one ordered stream; the trap sequence's
+/// `Console.Out.Flush()` finds the raw stream already flushed. As in the
+/// float helpers, the stack is empty at every label and branch (CoreCLR
+/// rejects IL whose stack shape differs between the edges into a label).
+/// `{ASM}` is replaced with the assembly name.
+const WRITE_BYTES_IL: &str = r#"  .method private static void __iir_write_bytes(string s) cil managed {
+    .maxstack 8
+    .locals init (uint8[] bytes, int32 i, int32 n)
+    call class [System.Runtime]System.IO.TextWriter [System.Console]System.Console::get_Out()
+    callvirt instance void [System.Runtime]System.IO.TextWriter::Flush()
+    ldarg 0
+    callvirt instance int32 [System.Runtime]System.String::get_Length()
+    stloc n
+    ldloc n
+    newarr [System.Runtime]System.Byte
+    stloc bytes
+    ldc.i4 0
+    stloc i
+    br IIR_WB_COND
+  IIR_WB_LOOP:
+    ldloc bytes
+    ldloc i
+    ldarg 0
+    ldloc i
+    callvirt instance char [System.Runtime]System.String::get_Chars(int32)
+    conv.u1
+    stelem.i1
+    ldloc i
+    ldc.i4 1
+    add
+    stloc i
+  IIR_WB_COND:
+    ldloc i
+    ldloc n
+    blt IIR_WB_LOOP
+    ldsfld class [System.Runtime]System.IO.Stream {ASM}Program::__iir_stdout
+    brtrue IIR_WB_OPEN
+    call class [System.Runtime]System.IO.Stream [System.Console]System.Console::OpenStandardOutput()
+    stsfld class [System.Runtime]System.IO.Stream {ASM}Program::__iir_stdout
+  IIR_WB_OPEN:
+    ldsfld class [System.Runtime]System.IO.Stream {ASM}Program::__iir_stdout
+    ldloc bytes
+    ldc.i4 0
+    ldloc n
+    callvirt instance void [System.Runtime]System.IO.Stream::Write(uint8[], int32, int32)
+    ldsfld class [System.Runtime]System.IO.Stream {ASM}Program::__iir_stdout
+    callvirt instance void [System.Runtime]System.IO.Stream::Flush()
+    ret
+  }
+"#;
+
+/// `true` if any instruction is `call_builtin <name>`.
+fn module_uses_builtin(module: &IIRModule, name: &str) -> bool {
+    module
+        .functions
+        .iter()
+        .flat_map(|f| &f.instructions)
+        .any(|i| i.op == "call_builtin" && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == name))
+}
+
 /// The CIL local type for an IIR register, from the producing instruction's
 /// `type_hint`. A cons cell (`ref<LispyPair>`) is a `System.Object[]`; a boxed
 /// atom or a loaded field (`ref<any>`) is a `System.Object`; a 64-bit integer is
@@ -933,11 +1058,28 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
         }
     }
 
+    // LANG83 PR5b: the byte writer's cached stdout stream, when used.
+    let writes_bytes = module_uses_op(module, "print_str") || module_uses_builtin(module, "putchar");
+    if writes_bytes {
+        let _ = writeln!(il, "  .field private static class [System.Runtime]System.IO.Stream {STDOUT_FIELD}");
+    }
+
     // Every IIR function becomes a static method. Order is irrelevant — `ilasm`
     // resolves `call`s by name across the whole class, so forward references and
     // self-recursion just work.
     for f in &module.functions {
         emit_method(&mut il, module, f, asm, &globals)?;
+    }
+
+    // LANG83 PR5b: the byte writer behind `print_str` and `putchar`.
+    if writes_bytes {
+        if let Some(f) = module.functions.iter().find(|f| f.name == WRITE_BYTES_METHOD) {
+            return Err(IIRClrError::InvalidOperand {
+                function: f.name.clone(),
+                detail: format!("a module function may not take the synthetic method name {WRITE_BYTES_METHOD}"),
+            });
+        }
+        il.push_str(&WRITE_BYTES_IL.replace("{ASM}", asm));
     }
 
     // LANG83 PR7b: the two digit queries, each once and only when used,
@@ -1001,6 +1143,20 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
         "callvirt instance void [System.Runtime]System.IO.TextWriter::Write(string)";
     let write_int =
         "callvirt instance void [System.Runtime]System.IO.TextWriter::Write(int32)";
+    // LANG83 PR5b: `input_str` reads one char per input byte. `ReadLine`
+    // decodes with `Console.InputEncoding` (UTF-8 on CI), which would turn the
+    // input byte 0xFF into U+FFFD; Latin-1 maps each byte to the char of the
+    // same value. Set before the entry runs, so `Console.In` is created with it.
+    if module_uses_builtin(module, "input_str") {
+        let _ = writeln!(
+            il,
+            "    call class [System.Runtime]System.Text.Encoding [System.Runtime]System.Text.Encoding::get_Latin1()"
+        );
+        let _ = writeln!(
+            il,
+            "    call void [System.Console]System.Console::set_InputEncoding(class [System.Runtime]System.Text.Encoding)"
+        );
+    }
     let _ = writeln!(il, "    {err}");
     let _ = writeln!(il, "    ldstr \"<<EXIT>>\"");
     let _ = writeln!(il, "    {write_str}");
@@ -1402,8 +1558,12 @@ fn emit_method(
                     function: f.name.clone(),
                     detail: "str_const must have a dest".to_string(),
                 })?;
+                // A `Str` or raw-byte `Bytes` literal: any bytes, one char
+                // per byte (LANG83 PR5b; this accepted printable ASCII only).
                 let literal = match instr.srcs.first() {
-                    Some(Operand::Str(s)) => cil_string_literal(&f.name, s)?,
+                    Some(lit @ (Operand::Str(_) | Operand::Bytes(_))) => {
+                        cil_byte_string_literal(&f.name, lit.as_lit_bytes().unwrap_or_default())?
+                    }
                     other => {
                         return Err(IIRClrError::InvalidOperand {
                             function: f.name.clone(),
@@ -1571,7 +1731,9 @@ fn emit_method(
                 let _ = writeln!(il, "    call int32 [System.Runtime]System.Math::Sign(int32)");
                 store_var_from(il, &regs, dest, "int32")?;
             }
-            // print_str <src>  ->  Console.Write(string)
+            // print_str <src>  ->  __iir_write_bytes(string) (LANG83 PR5b: one
+            // byte per char; Console.Write(string) encoded with the console's
+            // encoding, so U+00E9 came out as C3 A9)
             "print_str" => {
                 if instr.dest.is_some() {
                     return Err(IIRClrError::InvalidOperand {
@@ -1581,10 +1743,7 @@ fn emit_method(
                 }
                 let src = var_src(f, instr, 0, "print_str")?;
                 load_var(il, &regs, src)?;
-                let _ = writeln!(
-                    il,
-                    "    call void [System.Console]System.Console::Write(string)"
-                );
+                let _ = writeln!(il, "    call void {asm}Program::{WRITE_BYTES_METHOD}(string)");
             }
             // const <dest> = Int(n)  →  ldc.i4 n / ldc.i8 n; st<dest>
             //
@@ -2470,13 +2629,18 @@ fn emit_method(
                     // so an i64 cell value narrows first — its low byte, the only
                     // part a character can carry, is unchanged.
                     load_var_as(il, &regs, val, "int32")?;
+                    // LANG83 PR5b: the byte as a one-char string, written by
+                    // `__iir_write_bytes`. `Console.Write(char)` encoded the
+                    // char with the console's encoding, so 0xFF came out as
+                    // the two bytes C3 BF.
                     let _ = writeln!(il, "    ldc.i4 0xFF");
                     let _ = writeln!(il, "    and");
                     let _ = writeln!(il, "    conv.u2");
                     let _ = writeln!(
                         il,
-                        "    call void [System.Console]System.Console::Write(char)"
+                        "    call string [System.Runtime]System.Char::ToString(char)"
                     );
+                    let _ = writeln!(il, "    call void {asm}Program::{WRITE_BYTES_METHOD}(string)");
                     continue;
                 }
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
@@ -3623,10 +3787,14 @@ mod tests {
         let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
         assert!(il.contains("string V_"), "str_const must allocate a string local; got:\n{il}");
         assert!(il.contains("ldstr \"HELLO\""), "str_const must emit ldstr; got:\n{il}");
+        // LANG83 PR5b: through the byte writer, not Console.Write(string),
+        // which encoded with the console's encoding.
         assert!(
-            il.contains("call void [System.Console]System.Console::Write(string)"),
-            "print_str must call Console.Write(string); got:\n{il}"
+            il.contains("call void MainProgram::__iir_write_bytes(string)"),
+            "print_str must call the byte writer; got:\n{il}"
         );
+        assert!(!il.contains("System.Console::Write(string)"), "{il}");
+        assert_eq!(il.matches(".method private static void __iir_write_bytes(string s)").count(), 1, "{il}");
         let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
         assert!(!launcher.contains("pop"),
             "a string-printing program keeps its result too, on stderr; got:\n{il}");
@@ -4297,7 +4465,7 @@ mod tests {
     /// A Brainfuck-shaped program: allocate a tape, store a byte, load it, print it
     /// with `putchar`. The `.il` declares an `unsigned int8[]` tape local and uses
     /// `newarr Byte` / `ldelem.u1` / `stelem.i1` to access it; `.` becomes
-    /// `Console::Write(char)`; the launcher discards the entry result (no double-print).
+    /// one byte through `__iir_write_bytes` (LANG83 PR5b); the launcher discards the entry result (no double-print).
     #[test]
     fn brainfuck_byte_tape_and_putchar_lower_to_cil() {
         let instrs = vec![
@@ -4326,10 +4494,14 @@ mod tests {
         assert!(il.contains("newarr [System.Runtime]System.Byte"), "alloc_bytes → newarr Byte; got:\n{il}");
         assert!(il.contains("ldelem.u1"), "load_byte → ldelem.u1 (unsigned); got:\n{il}");
         assert!(il.contains("stelem.i1"), "store_byte → stelem.i1; got:\n{il}");
+        // LANG83 PR5b: the masked byte as a one-char string through the byte
+        // writer (so `.` of 65 is the byte `A`, and 255 is the byte FF, not
+        // Console.Write(char)'s UTF-8 C3 BF).
         assert!(
-            il.contains("call void [System.Console]System.Console::Write(char)"),
-            "putchar writes a char (so `.` of 65 is `A`, not `65`); got:\n{il}"
+            il.contains("call string [System.Runtime]System.Char::ToString(char)\n    call void MainProgram::__iir_write_bytes(string)"),
+            "putchar writes one byte; got:\n{il}"
         );
+        assert!(!il.contains("System.Console::Write(char)"), "{il}");
         // A putchar program "prints" → the launcher discards the entry result.
         let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
         // A putchar program keeps its result too now — it goes to stderr, so it

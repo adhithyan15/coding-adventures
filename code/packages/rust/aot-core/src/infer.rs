@@ -271,6 +271,8 @@ fn resolve_operand(src: &Operand, env: &HashMap<String, String>) -> String {
         // LANG32: Str is a compile-time string literal (global variable name).
         // It is not a typed value operand; treat as "str" sentinel.
         Operand::Str(_) => "str".into(),
+        // LANG83 PR5b: a raw-byte `str_const` literal is a string.
+        Operand::Bytes(_) => "str".into(),
     }
 }
 
@@ -308,6 +310,8 @@ pub fn literal_type(src: Option<&Operand>) -> String {
         Some(Operand::Var(_)) => "str".into(),
         // LANG32: Str is a compile-time string literal (e.g. a global variable name).
         Some(Operand::Str(_)) => "str".into(),
+        // LANG83 PR5b: a raw-byte `str_const` literal is a string.
+        Some(Operand::Bytes(_)) => "str".into(),
     }
 }
 

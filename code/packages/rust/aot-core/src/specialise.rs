@@ -529,6 +529,8 @@ fn operand_concrete_ty(op: &Operand, env: &HashMap<String, String>) -> Option<St
         Operand::Float(_) => Some("f64".to_string()),
         // LANG32: Str is a compile-time string literal (global name) — not a concrete numeric type.
         Operand::Str(_)   => None,
+        // LANG83 PR5b: a raw-byte `str_const` literal — not numeric either.
+        Operand::Bytes(_) => None,
     }
 }
 

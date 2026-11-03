@@ -785,9 +785,11 @@ pub fn check_register_limits(module: &IIRModule) -> Result<(), VMError> {
 ///
 /// This is the second load-time check [`VMCore::execute`] and
 /// [`VMCore::execute_traced`] run, after [`check_register_limits`]. It is
-/// `interpreter-ir`'s shared [`IIRModule::str_ceiling_errors`], the check every
+/// `interpreter-ir`'s shared [`IIRModule::str_literal_errors`], the check every
 /// compiled column runs before code generation, so the reference interpreter
-/// refuses exactly the modules they refuse. Without it the VM printed a
+/// refuses exactly the modules they refuse: a literal over the ceiling
+/// (#18800), and since LANG83 PR5b a raw-byte literal anywhere but
+/// `str_const`'s literal (`BytesOperand`). Without it the VM printed a
 /// literal longer than the ceiling, which `str_concat`'s `Trap.Overflow` says
 /// no string may be.
 ///
@@ -797,7 +799,7 @@ pub fn check_register_limits(module: &IIRModule) -> Result<(), VMError> {
 ///
 /// [`VMError::InvalidModule`] listing every violation.
 pub fn check_str_ceiling(module: &IIRModule) -> Result<(), VMError> {
-    let errors = module.str_ceiling_errors();
+    let errors = module.str_literal_errors();
     if errors.is_empty() {
         Ok(())
     } else {

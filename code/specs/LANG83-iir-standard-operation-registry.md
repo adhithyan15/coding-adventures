@@ -142,7 +142,7 @@ does not gate it).
 | | `write_f64_py` | Builtin | PR6a | **Removed in PR7e** (language-specific). Python `repr(float)` (= `str` = what `print` writes), **no** newline: shortest round-trip digits; fixed notation when the decimal exponent `e` satisfies `-4 <= e < 16`, else `d.ddde±XX` (at least two exponent digits); integral values keep `.0`; `-0.0`, `inf`, `-inf`, `nan`. |
 | | `write_f64_js` | Builtin | PR6a | **Removed in PR7e** (language-specific). JavaScript `Number.prototype.toString()` (what `console.log` writes for a number), **no** newline: the same digits; fixed when `-7 < e < 21`, else `d.ddde±X` (no padding); integral values print bare (`1`, not `1.0`); `-0` → `0`, `Infinity`, `-Infinity`, `NaN`. |
 | | `write_f64_rb` | Builtin | Later | **Withdrawn by PR7**: the Ruby compiler emits a helper. Ruby `Float#to_s` (fixed when `-4 <= e < 16`, `1.0e+16` style otherwise). |
-| Strings | `str_const` `str_len` `str_index` `str_slice` `str_concat` `str_eq` `str_cmp` | Op | Exists | LANG-FULL E4 byte strings; `str_index`/`str_slice` out of range → `Trap.Bounds`. Declared `Lowered` on eight columns. Since PR5a every column reports `Trap.Bounds` (and `str_concat` `Trap.Overflow` past the string ceiling); three are not yet byte-exact (PR5b), and PR5d lowers them on the JIT (see "PR5 — runtime strings"). |
+| Strings | `str_const` `str_len` `str_index` `str_slice` `str_concat` `str_eq` `str_cmp` | Op | Exists | LANG-FULL E4 byte strings; `str_index`/`str_slice` out of range → `Trap.Bounds`. Declared `Lowered` on eight columns. Since PR5a every column reports `Trap.Bounds` (and `str_concat` `Trap.Overflow` past the string ceiling); since PR5b every column is byte-exact and a literal may be `Operand::Bytes`, and PR5d lowers them on the JIT (see "PR5 — runtime strings"). |
 | | `str_from_byte`, `str_builder_*`, `str_to_i64` | Op | Later | Defined in "PR5 — runtime strings" ("Not in the family, and why"); each enters with the first frontend that needs it. |
 | Errors | `trap` | Op | PR1b | Terminator; no dest; `srcs = [Str(kind)]` with `kind` from the closed table below. |
 | | `trap_msg` | Op | Later | `trap` plus a `str` message. |
@@ -439,7 +439,7 @@ fail. This was checked by mutation.
   `i64_neg_ovf`), registered and lowered on all nine backends in one slice;
   see "PR4 — the overflow family". `i64_div_trunc` / `i64_mod_trunc` stay
   `Later`.
-- **PR5 — runtime strings** (PR5a landed; PR5b–PR5e planned): the E4 byte-string family
+- **PR5 — runtime strings** (PR5a and PR5b landed; PR5c–PR5e planned): the E4 byte-string family
   fails closed with registered traps and a size ceiling (5a), is byte-exact on
   every column (5b), gains `i64_to_str` (5c), compiles on the JIT (5d), and is
   a binary on BEAM (5e). It unblocks LANG84 Perl 4d, Python 7d, JavaScript 6f
@@ -657,8 +657,8 @@ all of them. CLR and BEAM run in CI.
 
 ## PR5 — runtime strings
 
-**Status:** PR5a landed (2026-11-02; see "What PR5a landed"); PR5b–PR5e
-planned. PR5 makes LANG-FULL E4's byte
+**Status:** PR5a landed (2026-11-02; see "What PR5a landed"); PR5b
+implemented (2026-11-03; see "What PR5b landed"); PR5c–PR5e planned. PR5 makes LANG-FULL E4's byte
 strings a registry family that means the same thing on all nine columns, and
 adds one op, `i64_to_str`. It unblocks the first string subsets of four
 frontends: Perl 4d, Python 7d, JavaScript 6f and Ruby `rb-str-puts` (LANG84).
@@ -1298,6 +1298,213 @@ The follow-ups touch `interpreter-ir`, `lang-runtime-core`, `dynval-runtime`
 and `twig-vm`, so the per-PR Miri job (`lang-runtime-core`, `dynval-runtime`)
 and the local twig-vm Miri script both apply.
 
+### PR5b — bytes, not text: the design
+
+PR5b makes every column hold, print and fold a string as bytes. This section
+fixes the details the PR sequence above leaves open. Where it is more specific
+than "Representation on each backend", it takes precedence.
+
+**`Operand::Bytes(Vec<u8>)`.** A raw-byte literal operand beside
+`Operand::Str` in `interpreter-ir` (owner decision Q4). It means exactly what a
+`Str` literal means, with the bytes given directly instead of as the UTF-8 of
+a Rust `String`:
+
+| Literal | Bytes of the `str` value |
+| --- | --- |
+| `Operand::Str("é")` | `C3 A9` |
+| `Operand::Bytes(vec![0xC3, 0xA9])` | `C3 A9`, the same string |
+| `Operand::Bytes(vec![0xFF])` | `FF`, which no `Str` can carry |
+
+- **Where it may appear.** Only as `str_const`'s literal. A name position
+  (`global_load`, `call`, `trap`, …) still takes `Str`. A `Bytes` operand
+  anywhere else is `BytesOperand`, reported by
+  `IIRModule::bytes_operand_errors()`. Every column runs it before it
+  compiles or runs a module, through `IIRModule::str_literal_errors()` (the
+  ceiling checks plus this one), in each place that called
+  `str_ceiling_errors()`; `validate()` includes it too. So do `aot-core`'s
+  `AOTCore::compile` and `lang-aot`'s source pipelines, before
+  `aot_specialise`.
+- **In CIR.** CIR has no byte-string operand, and a `Str` literal travels as
+  a `Var` naming its text, which is also how a name travels. A `Bytes`
+  literal therefore lifts to one reserved name, `RAW_BYTES_LITERAL_NAME`
+  (it holds a NUL). That name is **not** the literal's bytes, so no CIR
+  consumer may use it as a literal or a name:
+  - the JIT refuses to compile a function that carries a `Bytes` operand;
+  - `riscv-backend`, the one CIR backend that lowers `str_const` itself
+    (taking the `Var` text as the literal), refuses the reserved name;
+  - the x86-64 and AArch64 columns never see a `str_const` in CIR, because
+    `twig-aot` expands it to byte stores first.
+
+  Raw-byte literals are therefore not supported on the RISC-V column. A
+  `Str` literal whose text is exactly the reserved name is refused there
+  too: a false refusal, never a miscompile.
+
+  How this was found, in two security reviews: a first draft lifted a UTF-8
+  `Bytes(b"record")` to `Var("record")`, so on the JIT
+  `call_builtin [Bytes(b"record")]` called the builtin `record` while vm-core
+  refused the module (L2). The fix lifted every `Bytes` to the reserved name.
+  A re-review found that `riscv-backend` then emitted the name's text as the
+  literal, the same text for every raw-byte literal (L2-a).
+- **One accessor.** `Operand::as_lit_bytes()` returns the bytes of a `Str` or
+  a `Bytes` literal. `as_str_lit()` keeps answering `Str` only, so a name can
+  never be a byte literal. Every fold table keys on bytes, so `Str("é")` and
+  `Bytes([C3, A9])` fold as the same literal.
+- **Display.** `b"…"`, with printable ASCII as itself (`"` and `\` escaped)
+  and every other byte as `\xNN`.
+- **The ceiling.** `str_ceiling_errors` measures a `Bytes` literal like a
+  `Str` one (`StrTooLong`), and the LLVM and WASM fold pre-passes stop at the
+  ceiling for either.
+- **The wire format, 1.3.** Operand kind byte `5` is a `Bytes` literal: a
+  `u32` length and the raw bytes. The writer still picks the oldest version
+  that can say what the module says, so no existing serialised module or
+  digest moves:
+
+  | Module | Version written | Trailing sections |
+  | --- | --- | --- |
+  | no `Bytes`, `str_max_bytes = None` | 1.1 | exports, imports |
+  | no `Bytes`, `str_max_bytes = Some(n)` | 1.2 | exports, imports, ceiling |
+  | any `Bytes`, `str_max_bytes = None` | 1.3 | exports, imports, ceiling section `0x12 00` |
+  | any `Bytes`, `str_max_bytes = Some(n)` | 1.3 | exports, imports, ceiling section `0x12 01` + `u32 n` |
+
+  In 1.3 the ceiling section is **mandatory** and is the last thing in the
+  stream: tag `0x12`, a presence byte (`0` for `None`, `1` for `Some`), and
+  the `u32` ceiling when present. So a 1.3 stream cut anywhere is an error, as
+  a 1.2 one is. A presence byte other than 0 or 1, trailing bytes, and kind `5`
+  in a 1.0, 1.1 or 1.2 stream (`unknown operand kind byte`) are errors too. The
+  reader accepts 1.0 to 1.3.
+
+  (The first PR5b draft made the section optional, "present iff bytes
+  remain". The security review (L1) showed that a stream cut just before it
+  then read back with no ceiling: a module compiled under a ceiling of 5 ran
+  under the registry's. 1.3 was unreleased, so the format was changed.)
+
+**vm-core.** `Value::Str` holds `Arc<[u8]>` (owner decision Q9: in place, no
+parallel `Value::Bytes`). The plan above said `Rc<[u8]>`; `Rc` would make
+`Value` neither `Send` nor `Sync`, and embedders record values from inside
+builtins that must be both (`BuiltinRegistry::register`, the JIT's
+`register_builtin`, the matrix harness's sinks), so it is `Arc`. `Value::str(bytes)` builds one from anything that is
+`AsRef<[u8]>` (`&str`, `String`, `Vec<u8>`, `&[u8]`). `Value::as_bytes()` is
+the byte view. `Value::as_str()` stays for UTF-8 callers and answers `None`
+for a string that is not valid UTF-8, exactly as it does for a non-string.
+`str_slice` drops its UTF-8 check: `str_slice "é", 1, 2` is the one-byte
+string `A9`. The default `print_str` builtin writes the bytes unchanged.
+Reading a string no longer copies its bytes (an `Arc` clone).
+
+**Backends.** Each printable-ASCII validator goes; each literal is encoded
+byte for byte:
+
+| Column | Literal encoding | Output path for bytes 0x80–0xFF |
+| --- | --- | --- |
+| native x86-64 / AArch64 | `alloc_bytes` + one `store_byte` per byte (`lower_string_literals_for_aot`); its fold table holds bytes | `fwrite`, unchanged |
+| LLVM | `{i64, [N x i8]}` constant written as `c"\XX…"` (already hex for every byte); fold tables hold bytes | `__print_str`, unchanged |
+| WASM | data segment, bytes verbatim; runtime blocks keyed by bytes | `env.__print_str(ptr, len)`, unchanged |
+| JVM | `ldc` of a `String` whose chars are the bytes (U+0000–U+00FF). The constant pool stores **modified UTF-8** (JVMS §4.4.7): NUL as `C0 80`, 0x80–0xFF as two bytes. A literal whose modified UTF-8 exceeds 65 535 bytes is split into chunks of at most 65 535 encoded bytes, each `ldc`'d and joined with `String.concat` | synthetic `private static void __iir_print_str(String)`: `getBytes("ISO-8859-1")`, then `System.out.write([BII)V`, the same `PrintStream` as `print(J)` and `BFRuntime.putchar` |
+| CLR | `ldstr bytearray (b0 00 b1 00 …)`, the UTF-16LE of one char per byte, so NUL and 0x80–0xFF need no escape | synthetic `__iir_write_bytes(string)`: flush `Console.Out`, copy the chars into a `uint8[]`, write it to a cached `Console.OpenStandardOutput()` stream and flush that. `print_str` calls it, and so does `putchar` (`Char.ToString` of the masked byte), which wrote `Console.Write(char)` and so turned `0xFF` into `C3 BF` |
+| BEAM | the byte list, any byte 0–255 | `io:put_chars/1` on the latin1 `standard_io`, unchanged |
+| VM | `Value::Str` of the literal's bytes | the `print_str` builtin, bytes unchanged |
+| JIT | (refused until PR5d) | — |
+
+`input_str` keeps one char per byte on the hosts that hold strings as chars.
+The JVM's host `BasicRuntime.readLine()` already appends each byte as one
+`(char)` (ISO-8859-1), and the backend's comment now states that as the host
+contract. The CLR reads through `Console.ReadLine`, which decodes with
+`Console.InputEncoding` (UTF-8 on CI); a module that uses `input_str` sets
+`Console.InputEncoding = Encoding.Latin1` in its launcher before the entry
+runs, so each input byte becomes one char.
+
+**Conformance.** PR5b's cases, each in a literal and an opaque form where an
+op reads the string, gated by `pr5b_strings_are_bytes_on_every_column`:
+
+| Case | Expect |
+| --- | --- |
+| the UTF-8 literal `"h\u{e9}llo \u{20ac}\u{1d11e}"`: `str_len` (14), `str_index` at 0, 1, 2 and 13, then `print_str` | `StdoutBytes` |
+| the same bytes as an `Operand::Bytes` literal (equal to the `Str` one under `str_eq`) | `StdoutBytes` |
+| a raw-byte literal `Bytes([0x00, 0x0A, 0x0D, 0x7F, 0x80, 0xA9, 0xFF])` through `print_str`, and its `str_len` | `StdoutBytes` |
+| `str_slice "é", 1, 2`, then `print_str`: the lone byte `A9` | `StdoutBytes(b"\xA9")` |
+| the byte table: every byte 0x80–0xFF, built by slicing UTF-8 literals, through `print_str`; `putchar 0xFF` | `StdoutBytes` |
+| `str_cmp` of `"\x7f"` and `"é"` (`-1`: unsigned) | `StdoutBytes` |
+
+**What PR5b does not decide: `dynval-runtime`'s characters.** The
+`dynval-runtime` builtins `string-length`, `string-ref` and `substring` count
+**code points** (`chars()`), while `str_len`, `str_index` and `str_slice`
+count **bytes**. Twig lowers `(string-ref s i)` to `str_index` on the compiled
+columns and to the builtin on `twig-vm`, so for a non-ASCII string the same
+Twig program gives different answers on `twig-vm` and on every other column.
+No Twig row has a non-ASCII string, so nothing observes it today. This spec
+does not settle it, and PR5b leaves both as they are, because it is a
+question about Twig's string model, not about the IIR: if a Twig string is a
+byte string, the builtins should count bytes (and `make-string`'s
+`n × len_utf8(ch)` stays the byte count); if it is a character string, Twig's
+compiler should emit the code-point walk ("What a compiler writes itself")
+instead of a bare `str_index`. It is open question 10.
+
+### What PR5b landed
+
+PR5b ("bytes, not text") is complete on the eight columns that lower strings;
+the JIT still refuses them until PR5d. Locally the PR5b cases ran on WASM, VM,
+LLVM, native x86-64 and JVM; CLR and BEAM are compiled and pinned structurally
+(IL with a stack-depth model of the new writer, BEAM instruction streams), and
+CI executes them.
+
+| Part | What changed |
+| --- | --- |
+| `interpreter-ir` | `Operand::Bytes(Vec<u8>)`, `Operand::as_lit_bytes()`, `b"…"` display, `BytesOperand` in `validate()`, `StrTooLong` for a `Bytes` literal, wire format 1.3 (operand kind 5) as designed above |
+| vm-core | `Value::Str(Arc<[u8]>)` with `Value::str` / `as_bytes` / `as_str`; `str_slice` without the UTF-8 check; `str_const` of either literal; byte-exact default `print_str`; `dyn_symbol` keyed on bytes |
+| native (`twig-aot`) | every literal byte through `store_byte`; the fold table holds bytes |
+| LLVM | any literal; literal table and fold facts keyed on bytes |
+| WASM | any literal into the data segment; runtime blocks keyed on bytes |
+| JVM | one char per byte; chunked constants; modified UTF-8 in the pool; `__iir_print_str`; a class past a class-file limit is `IIRJvmError::ClassFileLimit`. The limits are 65 535 pool entries, 65 535 bytes of method code, 65 535 local slots, a `__callClosure` arm within a 16-bit branch, and a 65 535-byte `CONSTANT_Utf8`. Two security reviews (I2) found panics on those paths: a ceiling-sized literal of bytes ≥ 0x80 overflowed the pool, and very many locals, a 7 000-parameter closure target or a 70 000-character name each panicked. `lower_iir_to_jvm` and `IIRJvmCodeGenerator::try_generate` return the error. `generate` still panics on a lowering error, as it documents, and `iir-codegen-adapters` uses `try_generate`. `serialize_jvm_class_file` panics only on a class this crate did not lower. |
+| CLR | `ldstr bytearray` for a literal that is not printable ASCII; `__iir_write_bytes` behind `print_str` and `putchar`; Latin-1 `input_str` |
+| BEAM | any literal byte as a list element |
+| `lang-aot` | 14 `(PR5b)` cases and the gate `pr5b_strings_are_bytes_on_every_column`; byte-exact VM/JIT sinks and `input_str` line drain |
+
+**Bugs found on the way, and fixed.**
+
+- WASM keyed its promoted literal blocks by `String::from_utf8_lossy` of the
+  bytes. Harmless while every literal was UTF-8; with byte literals the
+  strings `A9` and `FF` (both U+FFFD) shared one block, and a branch returned
+  the other branch's byte. Keyed by bytes now.
+- LLVM: a literal `str_slice` that split a UTF-8 character was skipped by the
+  literal pre-pass and then refused by the lowering ("does not preserve
+  UTF-8"), so `"é"[1..2]` did not compile. It folds to `A9`.
+- On Windows, an LLVM module that writes output must select CRT binary stdout
+  before any output runs. The backend emits a module constructor that calls
+  `_setmode(1, 0x8000)` (`_O_BINARY`), for both MSVC and GNU Windows targets.
+  This covers `print_str`, `print_i64`, `write_i64` and bare `putchar`: byte
+  `0A` stays `0A`, including when no string helper or native runtime is linked.
+  Other targets and modules without output need no constructor. Conformance
+  compares the captured bytes without newline normalization.
+- `twig-vm`'s `str_slice` had the same UTF-8 check as vm-core; it is dropped
+  too, so the two interpreters agree with the contract.
+
+**Divergences from the plan, and why.**
+
+- `Value::Str` is `Arc<[u8]>`, not `Rc<[u8]>` (see "PR5b — bytes, not text:
+  the design"): `Value` must stay `Send + Sync`.
+- The CLR keeps the quoted `ldstr "…"` for a printable-ASCII literal and uses
+  `bytearray` only otherwise. Both denote the same chars; keeping the quoted
+  form leaves every earlier IL text unchanged.
+- The byte table (every byte 0x80–0xFF) is a raw-byte literal, not slices of
+  UTF-8 literals as the case table planned: no UTF-8 string contains the bytes
+  C0, C1 or F5–FF on their own, so slicing cannot build them. The lone-byte
+  case still slices a UTF-8 literal.
+- The `print_i64` newline is left out of the ordered-stream case: the JVM's
+  `println` writes the platform line separator, which differs on Windows.
+
+**What remains.**
+
+- The LLVM GC-stress case and its base-handle fact, which PR5a moved here, are
+  not in PR5b. Native rooting is unchanged and still covered by PR5a's tests.
+- CLR and BEAM run the PR5b cases in CI only. The CLR's `Encoding.Latin1` and
+  `Console.set_InputEncoding` are resolved against the reference assemblies by
+  `ilasm` there.
+- The CLR's binary `lower.rs` path (the clr-simulator column) still lowers only
+  the literals it did; it refuses a `Bytes` operand in `const` and as a call
+  argument.
+- Open question 10 (`dynval-runtime`'s code-point builtins).
+- PR5b touches `interpreter-ir`, vm-core and `twig-vm`, so the twig-vm Miri
+  script applies.
+
 ### Owner decisions (2026-11-02)
 
 The owner settled four of the open questions below:
@@ -1350,6 +1557,12 @@ owner says otherwise.
    embedders match on (the `lang_matrix` harness sinks, `input_str`
    closures). Accept the break, or add a `Value::Bytes` variant beside it and
    retire `Str` later?
+10. **Characters in `dynval-runtime`.** Should `string-length`, `string-ref`
+    and `substring` count bytes, like `str_len` / `str_index` / `str_slice`
+    (Twig strings are byte strings), or code points, with Twig's compiler
+    emitting the code-point walk on the compiled columns (Twig strings are
+    character strings)? See "What PR5b does not decide". Until it is settled
+    the two disagree on non-ASCII strings, and no Twig row has one.
 
 ## PR6a — shortest round-trip float output
 

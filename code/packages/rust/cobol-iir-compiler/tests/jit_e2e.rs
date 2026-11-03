@@ -41,8 +41,11 @@ fn run_on_jit(src: &str) -> String {
     {
         let out = Arc::clone(&out);
         vm.builtins_mut().register("print_str", move |args| {
-            let s = args.first().and_then(Value::as_str).unwrap_or("");
-            out.lock().unwrap().extend_from_slice(s.as_bytes());
+            // The bytes, unchanged (LANG83 PR5b): a string is bytes, and
+            // `as_str` answers only for valid UTF-8, so it would silently drop
+            // a string that splits a character.
+            let s = args.first().and_then(Value::as_bytes).unwrap_or(b"");
+            out.lock().unwrap().extend_from_slice(s);
             Ok(Value::Null)
         });
     }
@@ -66,7 +69,21 @@ fn assert_matches_oracle(src: &str) -> String {
 /// Compile and run on the JIT, returning `Err` if either compilation or the run
 /// itself fails (e.g. an out-of-bounds `str_slice` trap) — the compiled-side
 /// mirror of the oracle's `Result`.
+///
+/// The output must be UTF-8. A case whose compiled output may not be (a
+/// byte-based reconstruction that splits a multi-byte character, LANG83 PR5b)
+/// uses [`run_on_jit_bytes_result`] and pins the exact bytes instead.
 fn run_on_jit_result(src: &str) -> Result<String, String> {
+    run_on_jit_bytes_result(src).map(|bytes| {
+        String::from_utf8(bytes)
+            .expect("compiled output is UTF-8 (use run_on_jit_bytes_result for raw bytes)")
+    })
+}
+
+/// [`run_on_jit_result`], but the output is the raw bytes the program wrote.
+/// Since LANG83 PR5b an IIR `str` is bytes, so a compiled program may print a
+/// byte sequence that is not UTF-8; this keeps it exact instead of lossy.
+fn run_on_jit_bytes_result(src: &str) -> Result<Vec<u8>, String> {
     let mut module = compile_source(src, "e2e").map_err(|e| format!("compile: {e:?}"))?;
     if !module.validate().is_empty() {
         return Err(format!("validate: {:?}", module.validate()));
@@ -84,8 +101,11 @@ fn run_on_jit_result(src: &str) -> Result<String, String> {
     {
         let out = Arc::clone(&out);
         vm.builtins_mut().register("print_str", move |args| {
-            let s = args.first().and_then(Value::as_str).unwrap_or("");
-            out.lock().unwrap().extend_from_slice(s.as_bytes());
+            // The bytes, unchanged (LANG83 PR5b): a string is bytes, and
+            // `as_str` answers only for valid UTF-8, so it would silently drop
+            // a string that splits a character.
+            let s = args.first().and_then(Value::as_bytes).unwrap_or(b"");
+            out.lock().unwrap().extend_from_slice(s);
             Ok(Value::Null)
         });
     }
@@ -94,7 +114,7 @@ fn run_on_jit_result(src: &str) -> Result<String, String> {
     jit.execute_with_jit(&mut vm, &mut module, "main", &[])
         .map_err(|e| format!("run: {e:?}"))?;
     let bytes = out.lock().unwrap().clone();
-    Ok(String::from_utf8(bytes).unwrap())
+    Ok(bytes)
 }
 
 /// A computed reference modification that is out of range must **trap on both
@@ -6262,10 +6282,15 @@ fn inspect_replacing_characters_region_non_ascii_source_shares_the_reconstructio
         &["01  S  PIC X(5) VALUE \"Aé,BC\"."],
         &["INSPECT S REPLACING CHARACTERS BY \"*\" AFTER \",\".", "DISPLAY S.", "STOP RUN."],
     );
-    // Compiler: the reconstruction traps on the multi-byte char (pre-existing chip).
-    assert!(
-        run_on_jit_result(&src).is_err(),
-        "compiled CHARACTERS+region reconstruction must trap on a non-ASCII source (shared chip)"
+    // LANG83 PR5b: an IIR `str` is bytes and `str_slice` no longer refuses to split a
+    // UTF-8 character, so the compiled reconstruction no longer traps. It runs
+    // byte-based, which is what a byte-oriented `PIC X(n)` means (n bytes), and the
+    // byte-vs-char chip (task_396ba6f6) now shows as a different answer from the
+    // char-based oracle instead of a trap. Both engines stay pinned.
+    assert_eq!(
+        run_on_jit_result(&src),
+        Ok("Aé,*\n".to_string()),
+        "compiled CHARACTERS+region runs byte-based: PIC X(5) holds the 5 bytes 'Aé,B', so AFTER ',' rewrites only 'B'"
     );
     // Oracle: succeeds char-based (the documented pre-existing chip, unchanged).
     assert_eq!(
@@ -6753,16 +6778,20 @@ fn inspect_replacing_multi_non_ascii_source_shares_the_reconstruction_chip() {
         &["01  S  PIC X(5) VALUE \"aéaba\"."],
         &["INSPECT S REPLACING ALL \"a\" BY \"x\".", "STOP RUN."],
     );
-    // The compiled reconstruction traps on the multi-byte char on BOTH the multi path
-    // (per-item regions) and the pre-existing single-item path — the chip is shared,
-    // unchanged by this rung.
-    assert!(
-        run_on_jit_result(&multi).is_err(),
-        "multi + per-item-region path must trap on a non-ASCII source, like single-item"
+    // LANG83 PR5b: an IIR `str` is bytes and `str_slice` no longer refuses to split a
+    // UTF-8 character, so the compiled reconstruction no longer traps. It runs
+    // byte-based, which is what a byte-oriented `PIC X(n)` means (n bytes), and the
+    // byte-vs-char chip (task_396ba6f6) now shows as a different answer from the
+    // char-based oracle instead of a trap. Both engines stay pinned.
+    assert_eq!(
+        run_on_jit_result(&multi),
+        Ok("xéxy\n".to_string()),
+        "multi + per-item-region runs byte-based over the 5 bytes 'aéab': a→x before 'b', then b→y"
     );
-    assert!(
-        run_on_jit_result(&single).is_err(),
-        "single-item REPLACING ALL traps on a non-ASCII source (pre-existing chip)"
+    assert_eq!(
+        run_on_jit_result(&single),
+        Ok(String::new()),
+        "single-item REPLACING ALL runs byte-based (no DISPLAY, so no output)"
     );
     // The oracle iterates chars and succeeds on the multi path: item 1
     // `ALL "a" BY "x" BEFORE "b"` (window [0, index_of_b)=[0,3)) rewrites the two "a"s
@@ -6978,9 +7007,15 @@ fn inspect_replacing_multi_characters_non_ascii_shares_the_reconstruction_chip()
             "STOP RUN.",
         ],
     );
-    assert!(
-        run_on_jit_result(&src).is_err(),
-        "multi-item CHARACTERS path traps on a non-ASCII kept char, like every REPLACING lowering"
+    // LANG83 PR5b: an IIR `str` is bytes and `str_slice` no longer refuses to split a
+    // UTF-8 character, so the compiled reconstruction no longer traps. It runs
+    // byte-based, which is what a byte-oriented `PIC X(n)` means (n bytes), and the
+    // byte-vs-char chip (task_396ba6f6) now shows as a different answer from the
+    // char-based oracle instead of a trap. Both engines stay pinned.
+    assert_eq!(
+        run_on_jit_result(&src),
+        Ok("xéxb\n".to_string()),
+        "multi-item CHARACTERS runs byte-based over the 5 bytes 'aéab' (nothing follows 'b')"
     );
     assert_eq!(run_cobol(&src).expect("oracle succeeds char-based"), "xéxb*\n");
 }
@@ -7151,9 +7186,15 @@ fn inspect_replacing_multi_leading_non_ascii_source_shares_the_reconstruction_ch
             "STOP RUN.",
         ],
     );
-    assert!(
-        run_on_jit_result(&src).is_err(),
-        "compiled LEADING-multi reconstruction traps on a non-ASCII source (pre-existing chip)"
+    // LANG83 PR5b: an IIR `str` is bytes and `str_slice` no longer refuses to split a
+    // UTF-8 character, so the compiled reconstruction no longer traps. It runs
+    // byte-based, which is what a byte-oriented `PIC X(n)` means (n bytes), and the
+    // byte-vs-char chip (task_396ba6f6) now shows as a different answer from the
+    // char-based oracle instead of a trap. Both engines stay pinned.
+    assert_eq!(
+        run_on_jit_result(&src),
+        Ok("XéaY\n".to_string()),
+        "compiled LEADING-multi runs byte-based over the 5 bytes 'aéab'"
     );
     assert_eq!(run_cobol(&src).expect("oracle succeeds char-based"), "XéaYa\n");
 }
@@ -9000,10 +9041,15 @@ fn inspect_combined_characters_non_ascii_shares_the_reconstruction_chip() {
             "STOP RUN.",
         ],
     );
-    // Compiler traps in the REPLACING reconstruction (pre-existing byte-vs-char chip)…
-    assert!(
-        run_on_jit_result(&src).is_err(),
-        "compiled combined CHARACTERS reconstruction must trap on a non-ASCII source (shared chip)"
+    // LANG83 PR5b: an IIR `str` is bytes and `str_slice` no longer refuses to split a
+    // UTF-8 character, so the compiled reconstruction no longer traps. It runs
+    // byte-based, which is what a byte-oriented `PIC X(n)` means (n bytes), and the
+    // byte-vs-char chip (task_396ba6f6) now shows as a different answer from the
+    // char-based oracle instead of a trap. Both engines stay pinned.
+    assert_eq!(
+        run_on_jit_result(&src),
+        Ok(String::new()),
+        "compiled combined CHARACTERS reconstruction runs byte-based (no DISPLAY, so no output)"
     );
     // …while the oracle iterates chars and succeeds — the documented, pre-existing gap.
     assert!(
@@ -9032,10 +9078,15 @@ fn inspect_combined_leading_region_non_ascii_shares_the_reconstruction_chip() {
             "STOP RUN.",
         ],
     );
-    // Compiler traps in the reconstruction (pre-existing byte-vs-char chip)…
-    assert!(
-        run_on_jit_result(&src).is_err(),
-        "compiled combined LEADING+region reconstruction must trap on a non-ASCII source (shared chip)"
+    // LANG83 PR5b: an IIR `str` is bytes and `str_slice` no longer refuses to split a
+    // UTF-8 character, so the compiled reconstruction no longer traps. It runs
+    // byte-based, which is what a byte-oriented `PIC X(n)` means (n bytes), and the
+    // byte-vs-char chip (task_396ba6f6) now shows as a different answer from the
+    // char-based oracle instead of a trap. Both engines stay pinned.
+    assert_eq!(
+        run_on_jit_result(&src),
+        Ok(String::new()),
+        "compiled combined LEADING+region reconstruction runs byte-based (no DISPLAY, so no output)"
     );
     // …while the oracle iterates chars and succeeds — the documented, pre-existing gap.
     assert!(
@@ -9211,10 +9262,15 @@ fn inspect_combined_replacing_characters_non_ascii_shares_the_reconstruction_chi
             "STOP RUN.",
         ],
     );
-    // Compiler: the CHARACTERS reconstruction traps on the multi-byte char (shared chip).
-    assert!(
-        run_on_jit_result(&src).is_err(),
-        "compiled combined CHARACTERS reconstruction must trap on a non-ASCII source (shared chip)"
+    // LANG83 PR5b: an IIR `str` is bytes and `str_slice` no longer refuses to split a
+    // UTF-8 character, so the compiled reconstruction no longer traps. It runs
+    // byte-based, which is what a byte-oriented `PIC X(n)` means (n bytes), and the
+    // byte-vs-char chip (task_396ba6f6) now shows as a different answer from the
+    // char-based oracle instead of a trap. Both engines stay pinned.
+    assert_eq!(
+        run_on_jit_result(&src),
+        Ok("001\nAé,*\n".to_string()),
+        "compiled combined TALLYING+CHARACTERS runs byte-based: one 'A', then PIC X(5) holds 'Aé,B' and AFTER ',' rewrites 'B'"
     );
     // Oracle: succeeds char-based (the documented pre-existing chip, unchanged).
     assert_eq!(
@@ -9567,7 +9623,7 @@ fn inspect_converting_non_ascii_data_name_table_is_the_byte_vs_char_chip() {
 // traps, oracle succeeds), documenting the trap so a change is caught. The supported
 // ASCII surface is unaffected.
 #[test]
-fn inspect_converting_non_ascii_to_data_name_traps_the_compiler_reconstruction_chip() {
+fn inspect_converting_non_ascii_to_data_name_is_the_byte_vs_char_chip() {
     // F = "A" (ASCII key), T = "é" (1 char / 2 bytes). Source "AYZ": the oracle maps
     // A→"é" → "éYZ"; the compiler's up-front `str_slice(T, 0, 1)` cuts the 2-byte "é"
     // and traps. Deterministic (the trap is in the up-front table build, independent
@@ -9578,10 +9634,17 @@ fn inspect_converting_non_ascii_to_data_name_traps_the_compiler_reconstruction_c
     );
     // Oracle: char-based, succeeds with the mapped multibyte char.
     assert_eq!(run_cobol(&src).expect("oracle run"), "éYZ\n", "oracle characterization");
-    // Compiled: byte-based `str_slice` on the multibyte TO item traps (pre-existing chip).
-    assert!(
-        run_on_jit_result(&src).is_err(),
-        "compiled non-ASCII TO-item reconstruction traps (pre-existing byte-vs-char chip)"
+    // LANG83 PR5b: an IIR `str` is bytes and `str_slice` no longer refuses to split a
+    // UTF-8 character, so the compiled reconstruction no longer traps. It runs
+    // byte-based, which is what a byte-oriented `PIC X(n)` means (n bytes), and the
+    // byte-vs-char chip (task_396ba6f6) now shows as a different answer from the
+    // char-based oracle instead of a trap. Both engines stay pinned.
+    // T is PIC X(1), so it holds one byte: the first byte of "é" (0xC3). CONVERTING
+    // maps "A" to that byte, so the output is not UTF-8 and is pinned as bytes.
+    assert_eq!(
+        run_on_jit_bytes_result(&src),
+        Ok(b"\xC3YZ\n".to_vec()),
+        "compiled CONVERTING maps A to the single byte the PIC X(1) TO item holds"
     );
 }
 

@@ -103,8 +103,11 @@ fn jit_execute_and_capture_prints(source: &str) -> String {
     {
         let printed = Arc::clone(&printed);
         vm.builtins_mut().register("print_str", move |args| {
-            let s = args.first().and_then(Value::as_str).unwrap_or("");
-            printed.lock().unwrap().extend_from_slice(s.as_bytes());
+            // The bytes, unchanged (LANG83 PR5b): a string is bytes, and
+            // `as_str` answers only for valid UTF-8, so it would silently drop
+            // a string that splits a character.
+            let s = args.first().and_then(Value::as_bytes).unwrap_or(b"");
+            printed.lock().unwrap().extend_from_slice(s);
             Ok(Value::Null)
         });
     }

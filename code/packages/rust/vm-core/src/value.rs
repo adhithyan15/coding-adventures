@@ -8,7 +8,7 @@
 //! | `Int(i64)` | `"u8"` .. `"i64"` | Includes all unsigned widths |
 //! | `Float(f64)` | `"f64"`, `"f32"` | Single 64-bit slot |
 //! | `Bool(bool)` | `"bool"` | |
-//! | `Str(String)` | `"str"` | Heap-allocated (plain Rust `String`, not GC-managed) |
+//! | `Str(Arc<[u8]>)` | `"str"` | Immutable bytes, reference-counted (not GC-managed) |
 //! | `HeapRef(gc_core::HeapRef)` | `"ref<T>"` | A `gc_alloc`'d object on the shared `FlatHeap` collector |
 //! | `Symbol(u32)` | none (`dyn_symbol`'s result) | An interned atom: equal iff the ids are (#18470) |
 //! | `Null` | `"void"`, none | Default register value; ret_void result; the dynamic nil (`dyn_nil`) |
@@ -24,6 +24,31 @@
 //! `array_set` (E5 arrays) still allocate on `ctx.arrays`, a separate, plain
 //! Rust bump arena that is never collected — arrays have no analogous real
 //! collector to reuse yet, a deliberate, separate gap, not an oversight.
+//!
+//! ## A string is bytes (LANG83 PR5b)
+//!
+//! An IIR `str` is an immutable sequence of bytes with no encoding: `str_len`
+//! counts bytes and `str_index` reads one. Until PR5b this VM held a Rust
+//! `String`, which must be valid UTF-8, so `str_slice "é", 1, 2` — the lone
+//! byte `A9`, a perfectly good IIR string — was refused, and a literal could
+//! never hold the byte `FF`. `Str` now holds `Arc<[u8]>`:
+//!
+//! | need | how |
+//! |------|-----|
+//! | build one | [`Value::str`] from `&str`, `String`, `&[u8]` or `Vec<u8>` |
+//! | read the bytes | [`Value::as_bytes`] |
+//! | read UTF-8 text (an embedder printing a name) | [`Value::as_str`], `None` if the bytes are not UTF-8 |
+//! | copy a register | `clone()` bumps a count; the bytes are shared, never copied |
+//!
+//! Sharing is safe because no op mutates a string: `str_concat` and
+//! `str_slice` build a fresh one.
+//!
+//! Why `Arc` and not the `Rc` LANG83 first named: a `Value` must stay `Send`
+//! and `Sync`. Embedders record values from inside builtins, which must be
+//! `Send + Sync` (`BuiltinRegistry::register`, the JIT's `register_builtin`),
+//! for example into an `Arc<Mutex<Vec<Value>>>`; with `Rc` inside, that no
+//! longer compiled. A string's count changes only when a register is copied,
+//! so the atomic increment is not on any hot path that `Rc` would have saved.
 //!
 //! ## Dynamic values: nil, booleans and symbols are kinds of their own (#18470, #18493)
 //!
@@ -81,8 +106,9 @@ pub enum Value {
     Float(f64),
     /// A boolean.
     Bool(bool),
-    /// A heap-allocated string.
-    Str(String),
+    /// An immutable byte string (LANG83 PR5b: bytes, not UTF-8 text).
+    /// Build one with [`Value::str`]; read it with [`Value::as_bytes`].
+    Str(std::sync::Arc<[u8]>),
     /// A reference to an object allocated with `gc_alloc`, managed by the
     /// shared `FlatHeap` collector (`gc-core`) — traced, reclaimed, and
     /// relocated under compaction. `HeapRef::NULL` (address `0`) represents
@@ -132,12 +158,40 @@ impl Value {
         }
     }
 
-    /// Return the string slice if this is `Value::Str`, else `None`.
-    pub fn as_str(&self) -> Option<&str> {
+    /// Build a `Value::Str` holding exactly `bytes` (LANG83 PR5b).
+    ///
+    /// ```
+    /// use vm_core::value::Value;
+    /// assert_eq!(Value::str("hé").as_bytes(), Some(&b"h\xC3\xA9"[..]));
+    /// assert_eq!(Value::str([0xFFu8]).as_bytes(), Some(&[0xFF][..]));
+    /// ```
+    pub fn str(bytes: impl AsRef<[u8]>) -> Value {
+        Value::Str(std::sync::Arc::from(bytes.as_ref()))
+    }
+
+    /// Return the string's bytes if this is `Value::Str`, else `None`.
+    pub fn as_bytes(&self) -> Option<&[u8]> {
         match self {
-            Value::Str(s) => Some(s.as_str()),
+            Value::Str(s) => Some(s),
             _ => None,
         }
+    }
+
+    /// Return the string as UTF-8 text if this is a `Value::Str` whose bytes
+    /// are valid UTF-8, else `None`.
+    ///
+    /// For an embedder that wants text (a symbol name, a diagnostic). A
+    /// string's *contents* are bytes: write them with [`Value::as_bytes`],
+    /// or a lone `0xA9` disappears here.
+    ///
+    /// ```
+    /// use vm_core::value::Value;
+    /// assert_eq!(Value::str("hé").as_str(), Some("hé"));
+    /// assert_eq!(Value::str([0xA9u8]).as_str(), None);
+    /// assert_eq!(Value::Int(1).as_str(), None);
+    /// ```
+    pub fn as_str(&self) -> Option<&str> {
+        std::str::from_utf8(self.as_bytes()?).ok()
     }
 
     /// Return the heap reference if this is `Value::HeapRef`, else `None`.
@@ -229,7 +283,13 @@ impl std::fmt::Display for Value {
             Value::Int(n)     => write!(f, "{n}"),
             Value::Float(v)   => write!(f, "{v}"),
             Value::Bool(b)    => write!(f, "{b}"),
-            Value::Str(s)     => write!(f, "{s:?}"),
+            // UTF-8 text displays as a Rust string literal, as before PR5b;
+            // other bytes display quoted with each byte that is not printable
+            // ASCII as `\xNN`, so nothing is lost (LANG83 PR5b).
+            Value::Str(s)     => match std::str::from_utf8(s) {
+                Ok(text) => write!(f, "{text:?}"),
+                Err(_) => write!(f, "\"{}\"", s.escape_ascii()),
+            },
             Value::HeapRef(r) => write!(f, "{r}"),
             Value::Symbol(id) => write!(f, "symbol#{id}"),
             Value::Null       => write!(f, "null"),
@@ -255,8 +315,8 @@ mod tests {
         assert!(Value::Bool(true).is_truthy());
         assert!(!Value::Bool(false).is_truthy());
         assert!(!Value::Null.is_truthy());
-        assert!(Value::Str("hi".into()).is_truthy());
-        assert!(!Value::Str("".into()).is_truthy());
+        assert!(Value::str("hi").is_truthy());
+        assert!(!Value::str("").is_truthy());
         assert!(Value::HeapRef(gc_core::HeapRef::new(0x1000)).is_truthy());
         assert!(!Value::HeapRef(gc_core::HeapRef::NULL).is_truthy());
         assert!(Value::Symbol(0).is_truthy());
@@ -284,6 +344,29 @@ mod tests {
         assert_eq!(Value::Null.as_heap_ref(), None);
     }
 
+    /// LANG83 PR5b: a string holds any bytes, not only UTF-8.
+    #[test]
+    fn a_string_holds_bytes_and_offers_text_only_when_it_is_utf8() {
+        let lone = Value::str([0xA9u8]);
+        assert_eq!(lone.as_bytes(), Some(&[0xA9][..]));
+        assert_eq!(lone.as_str(), None, "a lone continuation byte is not UTF-8");
+        assert!(lone.is_truthy());
+        assert_eq!(lone.iir_type_name(), "str");
+        assert_eq!(lone.to_string(), r#""\xa9""#);
+        let text = Value::str(String::from("hé"));
+        assert_eq!(text.as_str(), Some("hé"));
+        assert_eq!(text.as_bytes(), Some(&b"h\xC3\xA9"[..]));
+        assert_eq!(text.to_string(), r#""hé""#);
+        // The same bytes are the same string, however they were spelled.
+        assert_eq!(text, Value::str(vec![b'h', 0xC3, 0xA9]));
+        assert_eq!(Value::Int(1).as_bytes(), None);
+        // A clone shares the bytes rather than copying them.
+        let Value::Str(a) = &text else { unreachable!() };
+        let copy = text.clone();
+        let Value::Str(b) = &copy else { unreachable!() };
+        assert!(std::sync::Arc::ptr_eq(a, b));
+    }
+
     #[test]
     fn iir_type_name_ranges() {
         assert_eq!(Value::Int(0).iir_type_name(), "u8");
@@ -293,7 +376,7 @@ mod tests {
         assert_eq!(Value::Int(-1).iir_type_name(), "u64");
         assert_eq!(Value::Float(1.0).iir_type_name(), "f64");
         assert_eq!(Value::Bool(true).iir_type_name(), "bool");
-        assert_eq!(Value::Str("hi".into()).iir_type_name(), "str");
+        assert_eq!(Value::str("hi").iir_type_name(), "str");
         assert_eq!(Value::HeapRef(gc_core::HeapRef::new(0x1000)).iir_type_name(), "ref");
         assert_eq!(Value::Null.iir_type_name(), "any");
     }

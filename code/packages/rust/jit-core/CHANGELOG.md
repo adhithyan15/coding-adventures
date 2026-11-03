@@ -5,6 +5,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- The `RAW_BYTES_LITERAL_NAME` comment now lists every consumer that must refuse the name. The previous comment wrongly said no CIR backend lowers `str_const`; `riscv-backend` does.
+- **Security review L2:** a UTF-8 `Bytes` literal used to lift to `Var(text)`, the CIR spelling of a name, so `call_builtin [Bytes(b"record")]` called the builtin `record` on the JIT while vm-core refused the module. Every `Bytes` now lifts to `RAW_BYTES_LITERAL_NAME`, and `JITCore` refuses to compile a function that carries one. Tests in `tests/raw_byte_operands.rs` (both fail on the previous lift).
+- An `Operand::Bytes` literal lifts to CIR like the `Str` with the same bytes when it is UTF-8, and otherwise to `RAW_BYTES_LITERAL_NAME` (a name with a NUL, which nothing defines), never a lossy decode. The JIT still refuses every string op. `literal_type` of a `Bytes` operand is `"str"`. Tests construct strings with `Value::str`.
+
 ## Unreleased — LANG83 PR5a — trapping string ops survive DCE
 
 - `CIRInstr::is_pure` treats `str_index`, `str_slice` and `str_concat` as impure: the first two may trap `Trap.Bounds` and the third `Trap.Overflow`, so `CIROptimizer`'s dead-code elimination (which `aot-core` runs at opt levels 1 and 2) keeps them when their result is unused. New test `dce_keeps_unused_trapping_string_ops`. The generic JIT still refuses every string op (`INTERPRETER_TIER_ONLY`) until LANG83 PR5d.

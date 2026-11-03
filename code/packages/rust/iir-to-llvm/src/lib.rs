@@ -477,7 +477,7 @@ pub fn validate_for_llvm(module: &IIRModule) -> Vec<String> {
     // this, but nothing on the way to a backend called it, so every column
     // compiled such a module.  The shared check lives in `interpreter-ir`, so
     // every column refuses exactly the same modules.
-    errors.extend(module.str_ceiling_errors());
+    errors.extend(module.str_literal_errors());
 
     for func in &module.functions {
         // Return type check.
@@ -581,14 +581,13 @@ fn validate_str_const(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<Str
             func.name, instr.type_hint
         ));
     }
+    // Any bytes (LANG83 PR5b): the constant is written as `c"\XX…"`, one
+    // hex escape per byte, so no byte needs a special case. This accepted
+    // printable ASCII plus tab, newline and carriage return only.
     match instr.srcs.as_slice() {
-        [Operand::Str(s)] if is_printable_ascii_str(s) => {}
-        [Operand::Str(_)] => errors.push(format!(
-            "InvalidOperand: function {:?}, str_const only supports printable ASCII plus tab/newline/carriage-return",
-            func.name
-        )),
+        [Operand::Str(_) | Operand::Bytes(_)] => {}
         _ => errors.push(format!(
-            "InvalidOperand: function {:?}, str_const requires exactly one Operand::Str literal",
+            "InvalidOperand: function {:?}, str_const requires exactly one string literal (Operand::Str or Operand::Bytes)",
             func.name
         )),
     }
@@ -746,11 +745,6 @@ fn validate_str_cmp(func: &IIRFunction, instr: &IIRInstr, errors: &mut Vec<Strin
             func.name
         )),
     }
-}
-
-fn is_printable_ascii_str(s: &str) -> bool {
-    s.bytes()
-        .all(|b| matches!(b, b'\n' | b'\r' | b'\t' | 0x20..=0x7e))
 }
 
 // ===========================================================================
@@ -1028,6 +1022,29 @@ pub fn lower_iir_to_llvm(
                     .into(),
             });
         }
+    }
+    // The Windows CRT starts stdout in text mode, even when redirected to a
+    // pipe: fwrite/putchar then turn byte 0A into 0D 0A. LANG83 output is one
+    // byte stream, so select _O_BINARY before *any* generated output, including
+    // bare putchar with no print-string or native runtime linked. LLVM lowers
+    // global_ctors to the target's startup mechanism on both MSVC and MinGW.
+    // Keep this target-driven (cross-compilation), and leave pure modules alone.
+    let windows_stdout = (cfg.target_triple.contains("windows")
+        || cfg.target_triple.contains("mingw32"))
+        && (used_print_i64 || used_print_str || used_write_i64 || used_putchar);
+    if windows_stdout {
+        if let Some(f) = module.functions.iter().find(|f| f.name == "__iir_windows_stdout_binary") {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: f.name.clone(),
+                detail: "a module function may not use the reserved Windows stdout constructor name".into(),
+            });
+        }
+        out.push_str("\ndeclare i32 @_setmode(i32, i32)\n\
+@llvm.global_ctors = appending global [1 x { i32, ptr, ptr }] [{ i32, ptr, ptr } { i32 65535, ptr @__iir_windows_stdout_binary, ptr null }]\n\
+define internal void @__iir_windows_stdout_binary() {\n\
+  %mode = call i32 @_setmode(i32 1, i32 32768)\n\
+  ret void\n\
+}\n");
     }
     if used_print_i64 {
         out.push('\n');
@@ -1337,29 +1354,32 @@ pub fn lower_iir_to_llvm(
 
 fn collect_string_literals(
     module: &IIRModule,
-) -> (Vec<LlvmStringLiteralDef>, HashMap<String, LlvmStringLiteralRef>) {
+) -> (Vec<LlvmStringLiteralDef>, HashMap<Vec<u8>, LlvmStringLiteralRef>) {
     // LANG83 PR5a: the most bytes a folded `str_concat` may produce (#18800).
     let str_ceiling = module.str_ceiling();
     let mut defs = Vec::new();
     let mut map = HashMap::new();
+    // Literals are keyed by their BYTES (LANG83 PR5b): a `Str` and a raw-byte
+    // `Bytes` literal with the same bytes share one constant, and a folded
+    // slice that splits a UTF-8 character is a literal like any other.
     fn intern_string_literal(
-        text: &str,
+        text: &[u8],
         defs: &mut Vec<LlvmStringLiteralDef>,
-        map: &mut HashMap<String, LlvmStringLiteralRef>,
+        map: &mut HashMap<Vec<u8>, LlvmStringLiteralRef>,
     ) {
         if map.contains_key(text) {
             return;
         }
         let symbol = format!("@__twig_str_{}", defs.len());
-        let bytes = text.as_bytes().to_vec();
-        map.insert(text.to_string(), LlvmStringLiteralRef {
+        let bytes = text.to_vec();
+        map.insert(text.to_vec(), LlvmStringLiteralRef {
             symbol: symbol.clone(),
             len: bytes.len(),
         });
         defs.push(LlvmStringLiteralDef { symbol, bytes });
     }
     for func in &module.functions {
-        let mut fn_values: HashMap<String, String> = HashMap::new();
+        let mut fn_values: HashMap<String, Vec<u8>> = HashMap::new();
         let mut fn_ints: HashMap<String, i64> = HashMap::new();
         for instr in &func.instructions {
             match instr.op.as_str() {
@@ -1409,12 +1429,12 @@ fn collect_string_literals(
                     }
                 }
                 "str_const" => {
-                    let Some(Operand::Str(s)) = instr.srcs.first() else {
+                    let Some(s) = instr.srcs.first().and_then(Operand::as_lit_bytes) else {
                         continue;
                     };
                     intern_string_literal(s, &mut defs, &mut map);
                     if let Some(dest) = instr.dest.as_ref() {
-                        fn_values.insert(dest.clone(), s.clone());
+                        fn_values.insert(dest.clone(), s.to_vec());
                     }
                 }
                 "str_concat" => {
@@ -1442,7 +1462,7 @@ fn collect_string_literals(
                         fn_values.remove(dest);
                         continue;
                     }
-                    let value = format!("{left}{right}");
+                    let value = [left.as_slice(), right.as_slice()].concat();
                     intern_string_literal(&value, &mut defs, &mut map);
                     fn_values.insert(dest.clone(), value);
                 }
@@ -1470,10 +1490,10 @@ fn collect_string_literals(
                     if start < 0 || end < start || end as usize > source.len() {
                         continue;
                     }
-                    let bytes = source.as_bytes()[start as usize..end as usize].to_vec();
-                    let Ok(value) = String::from_utf8(bytes) else {
-                        continue;
-                    };
+                    // Any in-range slice is a literal (LANG83 PR5b). One that
+                    // split a UTF-8 character used to be skipped here, and the
+                    // lowering then refused to compile it.
+                    let value = source[start as usize..end as usize].to_vec();
                     intern_string_literal(&value, &mut defs, &mut map);
                     fn_values.insert(dest.clone(), value);
                 }
@@ -1625,7 +1645,7 @@ struct FnState<'a> {
     /// general string value model for LLVM locals.
     str_lens: HashMap<String, usize>,
     /// IIR string var name → literal text for literal-only E4 folds (`str_eq`).
-    str_values: HashMap<String, String>,
+    str_values: HashMap<String, Vec<u8>>,
     /// Per-function counter for synthesized SSA names — used both for
     /// post-cmp zext'd values and for fallthrough block labels.
     counter: u32,
@@ -1641,7 +1661,7 @@ struct FnState<'a> {
     /// Module-wide map: global variable name → its LLVM storage type.
     global_types: &'a HashMap<String, &'static str>,
     /// Module-wide map of source literal text → LLVM private constant metadata.
-    string_literals: &'a HashMap<String, LlvmStringLiteralRef>,
+    string_literals: &'a HashMap<Vec<u8>, LlvmStringLiteralRef>,
     /// Is the current LLVM basic block still **open** (no terminator yet)?
     /// LLVM requires every block to end in a terminator (`br`/`ret`/…). IIR
     /// blocks fall through to the next `label` implicitly, and a block whose
@@ -1732,7 +1752,7 @@ fn lower_function(
     callee_sigs: &HashMap<String, FnSig>,
     globals: &HashMap<String, String>,
     global_types: &HashMap<String, &'static str>,
-    string_literals: &HashMap<String, LlvmStringLiteralRef>,
+    string_literals: &HashMap<Vec<u8>, LlvmStringLiteralRef>,
     str_ceiling: u32,
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
@@ -2359,24 +2379,24 @@ fn lower_str_const(
     state: &mut FnState,
 ) -> Result<(), IIRLlvmError> {
     let dest = require_dest(instr, "str_const", state.fn_name)?.to_string();
-    let literal = match instr.srcs.first() {
-        Some(Operand::Str(s)) => s,
-        _ => {
+    let literal = match instr.srcs.first().and_then(Operand::as_lit_bytes) {
+        Some(bytes) => bytes,
+        None => {
             return Err(IIRLlvmError::InvalidOperand {
                 function: state.fn_name.into(),
-                detail: "str_const requires srcs[0] = Operand::Str(literal)".into(),
+                detail: "str_const requires srcs[0] = a string literal (Operand::Str or Operand::Bytes)".into(),
             });
         }
     };
     let info = state.string_literals.get(literal).ok_or_else(|| {
         IIRLlvmError::InvalidOperand {
             function: state.fn_name.into(),
-            detail: format!("str_const literal {literal:?} was not collected"),
+            detail: format!("str_const literal {:?} was not collected", literal.escape_ascii().to_string()),
         }
     })?;
     state.env.insert(dest.clone(), info.symbol.clone());
     state.str_lens.insert(dest.clone(), info.len);
-    state.str_values.insert(dest, literal.clone());
+    state.str_values.insert(dest, literal.to_vec());
     Ok(())
 }
 
@@ -2527,11 +2547,11 @@ fn lower_str_concat(
         _ => None,
     };
     if let Some((left_value, right_value)) = fold {
-        let value = format!("{left_value}{right_value}");
+        let value = [left_value.as_slice(), right_value.as_slice()].concat();
         let info = state.string_literals.get(&value).ok_or_else(|| {
             IIRLlvmError::InvalidOperand {
                 function: state.fn_name.into(),
-                detail: format!("str_concat value {value:?} was not collected"),
+                detail: format!("str_concat value {:?} was not collected", value.escape_ascii().to_string()),
             }
         })?;
         state.env.insert(dest.clone(), info.symbol.clone());
@@ -2681,20 +2701,16 @@ fn lower_str_slice(
         emit_lang83_trap_mid_block(interpreter_ir::exception_kind::TRAP_BOUNDS, state, out);
         state.env.insert(dest.clone(), "null".to_string());
         state.str_lens.insert(dest.clone(), 0);
-        state.str_values.insert(dest, String::new());
+        state.str_values.insert(dest, Vec::new());
         return Ok(());
     }
-    let value = String::from_utf8(
-        literal.as_bytes()[start_value as usize..end_value as usize].to_vec(),
-    )
-    .map_err(|_| IIRLlvmError::InvalidOperand {
-        function: state.fn_name.into(),
-        detail: format!("str_slice range {start_value}..{end_value} does not preserve UTF-8"),
-    })?;
+    // LANG83 PR5b: any in-range slice is a string, even one that splits a
+    // UTF-8 character (`"é"[1..2]` is `A9`); this refused to compile it.
+    let value = literal[start_value as usize..end_value as usize].to_vec();
     let info = state.string_literals.get(&value).ok_or_else(|| {
         IIRLlvmError::InvalidOperand {
             function: state.fn_name.into(),
-            detail: format!("str_slice value {value:?} was not collected"),
+            detail: format!("str_slice value {:?} was not collected", value.escape_ascii().to_string()),
         }
     })?;
     state.env.insert(dest.clone(), info.symbol.clone());
@@ -2766,7 +2782,7 @@ fn lower_str_index(
         })?;
     let Some(byte) = usize::try_from(idx_value)
         .ok()
-        .and_then(|idx| literal.as_bytes().get(idx))
+        .and_then(|idx| literal.get(idx))
         .copied()
     else {
         // LANG83 PR5a: `Trap.Bounds` through `@__iir_trap`, as above.
@@ -2875,7 +2891,7 @@ fn lower_str_cmp(
     if let (Some(left_value), Some(right_value)) =
         (state.str_values.get(left), state.str_values.get(right))
     {
-        let value = match left_value.as_bytes().cmp(right_value.as_bytes()) {
+        let value = match left_value.cmp(right_value) {
             Ordering::Less => "-1",
             Ordering::Equal => "0",
             Ordering::Greater => "1",

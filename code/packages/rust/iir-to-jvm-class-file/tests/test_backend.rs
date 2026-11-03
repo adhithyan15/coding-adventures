@@ -2434,8 +2434,12 @@ fn string_print_module() -> IIRModule {
     module_with(f)
 }
 
+/// `print_str` calls the class's own `__iir_print_str` (LANG83 PR5b), which
+/// writes one byte per char: `getBytes("ISO-8859-1")`, then
+/// `System.out.write([BII)V`. Before PR5b it was `PrintStream.print(String)`,
+/// which encoded with the platform charset (the char U+00E9 became `C3 A9`).
 #[test]
-fn e4_string_print_lowers_to_ldc_and_printstream_print() {
+fn e4_string_print_lowers_to_ldc_and_the_byte_writer() {
     let module = string_print_module();
     let errors = validate_for_jvm(&module);
     assert!(errors.is_empty(), "string literal print should validate: {:?}", errors);
@@ -2453,8 +2457,7 @@ fn e4_string_print_lowers_to_ldc_and_printstream_print() {
         "str_const must load a CONSTANT_String with ldc/ldc_w; got: {:?}",
         code
     );
-    assert!(code.contains(&0xB2), "print_str must getstatic System.out; got: {:?}", code);
-    assert!(code.contains(&0xB6), "print_str must invokevirtual PrintStream.print; got: {:?}", code);
+    assert!(code.contains(&0xB8), "print_str must invokestatic __iir_print_str; got: {:?}", code);
 
     let has_hello_string = class.constant_pool.iter().any(|entry| {
         let Some(JvmConstantPoolEntry::String { string_index }) = entry else {
@@ -2467,13 +2470,176 @@ fn e4_string_print_lowers_to_ldc_and_printstream_print() {
     });
     assert!(has_hello_string, "constant pool must contain CONSTANT_String HELLO");
 
-    let print_ref = find_methodref_in_cp(
-        &class.constant_pool,
-        "java/io/PrintStream",
-        "print",
-        "(Ljava/lang/String;)V",
+    let cp = &class.constant_pool;
+    assert_ne!(find_methodref_in_cp(cp, "TestClass", "__iir_print_str", "(Ljava/lang/String;)V"), 0);
+    assert_ne!(find_methodref_in_cp(cp, "java/lang/String", "getBytes", "(Ljava/lang/String;)[B"), 0);
+    assert_ne!(find_methodref_in_cp(cp, "java/io/PrintStream", "write", "([BII)V"), 0);
+    assert_eq!(
+        find_methodref_in_cp(cp, "java/io/PrintStream", "print", "(Ljava/lang/String;)V"),
+        0,
+        "no charset-encoding print(String) any more"
     );
-    assert_ne!(print_ref, 0, "constant pool must contain PrintStream.print(String)");
+    let writer = class.methods.iter().find(|m| m.name == "__iir_print_str").expect("the synthetic writer");
+    assert_eq!(writer.descriptor, "(Ljava/lang/String;)V");
+}
+
+/// Every `CONSTANT_String` value in `class`'s pool, in pool order.
+fn string_constants(class: &JvmClassFile) -> Vec<String> {
+    class
+        .constant_pool
+        .iter()
+        .filter_map(|e| match e {
+            Some(JvmConstantPoolEntry::String { string_index }) => match class.constant_pool.get(*string_index as usize) {
+                Some(Some(JvmConstantPoolEntry::Utf8(s))) => Some(s.clone()),
+                _ => None,
+            },
+            _ => None,
+        })
+        .collect()
+}
+
+fn literal_module(literal: Operand) -> IIRModule {
+    module_with(IIRFunction::new("lit", vec![], "void", vec![
+        IIRInstr::new("str_const", Some("s".into()), vec![literal], "str"),
+        IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]))
+}
+
+/// LANG83 PR5b: any literal byte is one char U+0000–U+00FF. A non-ASCII
+/// `Str` (refused before PR5b) is its UTF-8 bytes widened, not its code
+/// points, and a raw-byte `Bytes` literal is its bytes. In the class file the
+/// pool holds modified UTF-8, so U+0000 is `C0 80`, never a zero byte.
+#[test]
+fn e4_any_literal_byte_is_one_latin1_char() {
+    let class = lower(&literal_module(Operand::Str("é".into())));
+    assert!(string_constants(&class).contains(&"\u{C3}\u{A9}".to_string()), "{:?}", string_constants(&class));
+
+    let module = literal_module(Operand::Bytes(vec![0x00, 0x41, 0xFF]));
+    assert!(validate_for_jvm(&module).is_empty(), "{:?}", validate_for_jvm(&module));
+    let class = lower(&module);
+    assert!(string_constants(&class).contains(&"\u{0}A\u{FF}".to_string()), "{:?}", string_constants(&class));
+    let bytes = serialize_jvm_class_file(&class);
+    // tag 1 (Utf8), u2 length 5, then C0 80 41 C3 BF.
+    let entry = [0x01, 0x00, 0x05, 0xC0, 0x80, 0x41, 0xC3, 0xBF];
+    assert!(bytes.windows(entry.len()).any(|w| w == entry), "modified UTF-8 of NUL A U+00FF");
+    // And the class reads back: the parser decodes `C0 80` to U+0000.
+    let parsed = jvm_class_file::parse_class_file(&bytes).expect("the class parses");
+    assert!(parsed.constant_pool.iter().any(|e| matches!(e, Some(JvmConstantPoolEntry::Utf8(v)) if v == "\u{0}A\u{FF}")));
+}
+
+/// LANG83 PR5b: a literal whose modified UTF-8 exceeds one constant-pool
+/// entry (65 535 bytes) is loaded in chunks and joined with `String.concat`.
+/// 40 000 bytes of `0xFF` are 80 000 bytes of modified UTF-8: two chunks.
+#[test]
+fn e4_a_literal_past_the_constant_pool_limit_is_chunked() {
+    let class = lower(&literal_module(Operand::Bytes(vec![0xFF; 40_000])));
+    let chunks: Vec<usize> = string_constants(&class)
+        .iter()
+        .filter(|s| s.starts_with('\u{FF}'))
+        .map(|s| s.chars().count())
+        .collect();
+    assert_eq!(chunks, vec![32_767, 7_233], "two chunks, each within 65 535 encoded bytes");
+    assert_ne!(
+        find_methodref_in_cp(&class.constant_pool, "java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;"),
+        0
+    );
+    let bytes = serialize_jvm_class_file(&class);
+    assert_eq!(&bytes[0..4], &[0xCA, 0xFE, 0xBA, 0xBE]);
+}
+
+/// PR5b security review (I2): a class whose constant pool would pass 65 535
+/// entries is an `Err`, never a panic. The review's reproducer is one literal
+/// of ~2³⁰ bytes ≥ 0x80 (~32 768 chunks, two entries each); the same pool
+/// overflow is reached here with 34 000 distinct short literals spread over
+/// 40 functions (so no method passes the code limit first). The pool's
+/// `assert!` used to panic.
+#[test]
+fn a_constant_pool_past_the_class_file_limit_is_an_error_not_a_panic() {
+    let mut module = module_with(void_fn("main"));
+    for f in 0..40 {
+        let mut body = Vec::new();
+        for i in 0..850 {
+            body.push(IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str(format!("{f}:{i}"))], "str"));
+        }
+        body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+        module.functions.push(IIRFunction::new(format!("f{f}"), vec![], "void", body));
+    }
+    let err = std::panic::catch_unwind(|| lower_iir_to_jvm(&module, &IIRJvmConfig::new("TestClass")))
+        .expect("no panic")
+        .unwrap_err();
+    assert!(matches!(err, IIRJvmError::ClassFileLimit { .. }), "{err}");
+    assert!(format!("{err}").contains("constant pool"), "{err}");
+}
+
+/// PR5b security review (I2): a method of more than 65 535 bytes of code is
+/// an `Err` too. It was emitted, and the JVM would have refused the class at
+/// load (`code_length` must be below 65 536).
+#[test]
+fn a_method_past_the_code_limit_is_an_error() {
+    let mut body = Vec::new();
+    for _ in 0..40_000 {
+        body.push(IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"));
+    }
+    body.push(IIRInstr::new("ret_void", None, vec![], "void"));
+    let module = module_with(IIRFunction::new("big", vec![], "void", body));
+    let err = lower_iir_to_jvm(&module, &IIRJvmConfig::new("TestClass")).unwrap_err();
+    assert!(matches!(err, IIRJvmError::ClassFileLimit { ref function, .. } if function == "big"), "{err}");
+    assert!(format!("{err}").contains("bytes of code"), "{err}");
+}
+
+/// PR5b security re-review (I2.1): more than 65 535 local slots is an `Err`.
+/// `allocate_slots` asserted (and `max_locals` panicked behind it).
+#[test]
+fn too_many_locals_is_an_error_not_a_panic() {
+    let body: Vec<IIRInstr> = (0..70_000)
+        .map(|i| IIRInstr::new("const", Some(format!("v{i}")), vec![Operand::Int(1)], "i64"))
+        .chain([IIRInstr::new("ret_void", None, vec![], "void")])
+        .collect();
+    let module = module_with(IIRFunction::new("many", vec![], "void", body));
+    let err = std::panic::catch_unwind(|| lower_iir_to_jvm(&module, &IIRJvmConfig::new("TestClass")))
+        .expect("no panic")
+        .unwrap_err();
+    assert!(format!("{err}").contains("local variable slots"), "{err}");
+}
+
+/// PR5b security re-review (I2.2): a `__callClosure` arm past a JVM branch's
+/// reach (a target with 7 000 `i64` parameters) is an `Err`. It panicked.
+#[test]
+fn a_closure_dispatch_arm_past_a_branch_is_an_error_not_a_panic() {
+    let params: Vec<(String, String)> = (0..7_000).map(|i| (format!("p{i}"), "i64".to_string())).collect();
+    let target = IIRFunction::new("__big", params, "i64", vec![IIRInstr::new("ret", None, vec![Operand::Var("p0".into())], "i64")]);
+    let caller = IIRFunction::new("main", vec![], "void", vec![
+        IIRInstr::new("alloc_closure", Some("cl".into()), vec![Operand::Str("__big".into())], "closure"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let mut module = module_with(caller);
+    module.functions.push(target);
+    let err = std::panic::catch_unwind(|| lower_iir_to_jvm(&module, &IIRJvmConfig::new("TestClass")))
+        .expect("no panic")
+        .unwrap_err();
+    assert!(matches!(&err, IIRJvmError::ClassFileLimit { function, .. } if function == "__callClosure"), "{err}");
+}
+
+/// PR5b security re-review (I2.3): a name longer than one `CONSTANT_Utf8`
+/// entry (65 535 bytes) is an `Err` from lowering. It lowered `Ok`, and
+/// `serialize_jvm_class_file` then panicked.
+#[test]
+fn a_name_past_the_utf8_constant_limit_is_an_error() {
+    let long_fn = module_with(void_fn(&"a".repeat(70_000)));
+    let err = lower_iir_to_jvm(&long_fn, &IIRJvmConfig::new("TestClass")).unwrap_err();
+    assert!(format!("{err}").contains("bytes of modified UTF-8"), "{err}");
+    let err = lower_iir_to_jvm(&module_with(void_fn("main")), &IIRJvmConfig::new("C".repeat(70_000))).unwrap_err();
+    assert!(matches!(err, IIRJvmError::ClassFileLimit { .. }), "{err}");
+}
+
+/// A module function may not take the synthetic writer's name.
+#[test]
+fn e4_a_function_may_not_be_named_iir_print_str() {
+    let mut module = string_print_module();
+    module.functions.push(void_fn("__iir_print_str"));
+    let err = lower_iir_to_jvm(&module, &IIRJvmConfig::new("TestClass")).unwrap_err();
+    assert!(format!("{err}").contains("__iir_print_str"), "{err}");
 }
 
 #[test]

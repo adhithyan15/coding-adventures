@@ -1,5 +1,9 @@
 # Changelog — brainfuck-iir-compiler
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- The VM operand helpers handle `Operand::Bytes` (a string of its bytes; `0` as an integer), and build strings with `Value::str` now that a VM string is bytes.
+
 ## Unreleased — LANG84 phase 4b — `IIRModule::release`
 
 - Every `IIRModule { .. }` struct literal (code, tests and doc examples)
