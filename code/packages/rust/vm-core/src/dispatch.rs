@@ -175,7 +175,9 @@ fn resolve_operand(frame: &VMFrame, operand: &Operand) -> Result<Value, VMError>
         Operand::Int(n)   => Ok(Value::Int(*n)),
         Operand::Float(f) => Ok(Value::Float(*f)),
         Operand::Bool(b)  => Ok(Value::Bool(*b)),
-        Operand::Str(s)   => Ok(Value::Str(s.clone())),
+        Operand::Str(s)   => Ok(Value::str(s)),
+        // LANG83 PR5b: a raw-byte literal is a string of exactly its bytes.
+        Operand::Bytes(b) => Ok(Value::str(b)),
     }
 }
 
@@ -935,10 +937,12 @@ fn handle_global_store(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option
 
 // Strings (LANG-FULL E4) -----------------------------------------------------
 //
-// A VM string is `Value::Str(String)`. The IIR semantics are byte-based:
-// `str_len` returns the UTF-8 byte count and `str_index` returns one unsigned
-// byte. Backends are free to use native managed strings or length-prefixed
-// buffers, but this is the reference behaviour they must match.
+// A VM string is `Value::Str(Arc<[u8]>)`: bytes, with no encoding (LANG83
+// PR5b; it was a UTF-8 `String`). `str_len` returns the byte count and
+// `str_index` one unsigned byte; `str_slice` may cut anywhere in range, so
+// `str_slice "é", 1, 2` is the lone byte `A9`. Backends are free to use native
+// managed strings or length-prefixed buffers, but this is the reference
+// behaviour they must match.
 //
 // LANG83 PR5a: every string failure is a registered trap, never an untyped
 // `VMError::Custom`:
@@ -974,7 +978,9 @@ fn str_concat_exceeds(la: usize, lb: usize, ceiling: usize) -> bool {
     lb > ceiling || la > ceiling - lb
 }
 
-fn string_src(frame: &VMFrame, srcs: &[Operand], idx: usize, op: &str) -> Result<String, VMError> {
+/// The string operand at `srcs[idx]`: its bytes, shared (an `Arc` clone, not
+/// a copy of the bytes).
+fn string_src(frame: &VMFrame, srcs: &[Operand], idx: usize, op: &str) -> Result<std::sync::Arc<[u8]>, VMError> {
     match resolve_src(frame, srcs, idx)? {
         Value::Str(s) => Ok(s),
         other => Err(VMError::TypeError {
@@ -986,11 +992,14 @@ fn string_src(frame: &VMFrame, srcs: &[Operand], idx: usize, op: &str) -> Result
 }
 
 fn handle_str_const(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-    let s = instr.srcs.first()
-        .and_then(Operand::as_str_lit)
-        .ok_or_else(|| VMError::Custom("str_const expects srcs[0] to be Operand::Str".into()))?
-        .to_string();
-    let value = Value::Str(s);
+    // A `Str` literal (its UTF-8) or a raw-byte `Bytes` literal (LANG83
+    // PR5b): either way the string is exactly those bytes.
+    let bytes = instr.srcs.first()
+        .and_then(Operand::as_lit_bytes)
+        .ok_or_else(|| VMError::Custom(
+            "str_const expects srcs[0] to be a string literal (Operand::Str or Operand::Bytes)".into(),
+        ))?;
+    let value = Value::str(bytes);
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
     }
@@ -1024,7 +1033,7 @@ fn handle_str_index(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
         if !str_index_in_range(idx, s.len()) {
             return Err(trap(interpreter_ir::exception_kind::TRAP_BOUNDS));
         }
-        s.as_bytes()[idx as usize] as i64
+        s[idx as usize] as i64
     };
     let value = Value::Int(byte);
     if let Some(dest) = &instr.dest {
@@ -1036,14 +1045,17 @@ fn handle_str_index(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
 fn handle_str_concat(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
     let value = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
-        let mut a = string_src(frame, &instr.srcs, 0, "str_concat")?;
+        let a = string_src(frame, &instr.srcs, 0, "str_concat")?;
         let b = string_src(frame, &instr.srcs, 1, "str_concat")?;
         // Checked before the allocation, so an over-long result never exists.
         if str_concat_exceeds(a.len(), b.len(), ctx.str_max_bytes) {
             return Err(trap(interpreter_ir::exception_kind::TRAP_OVERFLOW));
         }
-        a.push_str(&b);
-        Value::Str(a)
+        // A fresh string: the operands are shared and never mutated.
+        let mut joined = Vec::with_capacity(a.len() + b.len());
+        joined.extend_from_slice(&a);
+        joined.extend_from_slice(&b);
+        Value::str(joined)
     };
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
@@ -1070,11 +1082,10 @@ fn handle_str_slice(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Va
         if !str_slice_in_range(start, end, s.len()) {
             return Err(trap(interpreter_ir::exception_kind::TRAP_BOUNDS));
         }
-        let bytes = &s.as_bytes()[start as usize..end as usize];
-        let sliced = String::from_utf8(bytes.to_vec()).map_err(|_| {
-            VMError::Custom("str_slice: range does not preserve UTF-8 boundaries".into())
-        })?;
-        Value::Str(sliced)
+        // LANG83 PR5b: any in-range slice is a string. There used to be a
+        // UTF-8 check here ("range does not preserve UTF-8 boundaries"), which
+        // refused `str_slice "é", 1, 2` — the byte `A9` the contract defines.
+        Value::str(&s[start as usize..end as usize])
     };
     if let Some(dest) = &instr.dest {
         ctx.frames.last_mut().unwrap().assign(dest, value.clone())?;
@@ -1101,7 +1112,7 @@ fn handle_str_cmp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Valu
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
         let a = string_src(frame, &instr.srcs, 0, "str_cmp")?;
         let b = string_src(frame, &instr.srcs, 1, "str_cmp")?;
-        a.as_bytes().cmp(b.as_bytes())
+        a.cmp(&b)
     };
     let value = Value::Int(match ordering {
         Ordering::Less => -1,
@@ -2136,7 +2147,7 @@ fn handle_cast(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>,
         "u32"      => Value::Int(value.as_i64().unwrap_or(0) & 0xFFFF_FFFF),
         "u64"|"i64" => Value::Int(value.as_i64().unwrap_or(0)),
         "bool"     => Value::Bool(value.is_truthy()),
-        "str"      => Value::Str(value.to_string()),
+        "str"      => Value::str(value.to_string()),
         _          => value,
     };
     if let Some(dest) = &instr.dest {

@@ -1720,3 +1720,42 @@ def test_respond_to_finds_an_inherited_or_mixed_in_method() -> None:
     assert oop.call_method(obj, "respond_to?", "greet") is True  # inherited
     assert oop.call_method(obj, "respond_to?", "grep") is True  # via module
     assert oop.call_method(obj, "respond_to?", "absent") is False
+
+
+# --- #18798: indexing an Array or a Hash ------------------------------------
+
+
+def test_array_index_reads_with_negative_and_out_of_range_indices() -> None:
+    z: list[Val] = [3, 4]
+    assert oop.call_method(z, "[]", 1) == 4
+    assert oop.call_method(z, "[]", -1) == 4
+    assert oop.call_method(z, "[]", -2) == 3
+    assert oop.call_method(z, "[]", 2) is None
+    assert oop.call_method(z, "[]", -3) is None
+    assert oop.call_method(z, "respond_to?", "[]") is True
+
+
+def test_array_index_assignment_stores_and_pads_with_nil() -> None:
+    z: list[Val] = [3, 4]
+    assert oop.call_method(z, "[]=", 0, 5) == 5
+    assert oop.call_method(z, "[]=", -1, 8) == 8
+    assert z == [5, 8]
+    oop.call_method(z, "[]=", 4, 1)
+    assert z == [5, 8, None, None, 1]
+    with pytest.raises(SirError, match="too small for array"):
+        oop.call_method(z, "[]=", -9, 0)
+    with pytest.raises(SirError, match="too big"):
+        oop.call_method(z, "[]=", 1 << 40, 0)
+
+
+def test_array_index_must_be_an_integer() -> None:
+    with pytest.raises(SirError, match="into Integer"):
+        oop.call_method([1], "[]", "0")
+    with pytest.raises(SirError, match="into Integer"):
+        oop.call_method([1], "[]", True)
+
+
+def test_hash_index_reads_a_value_or_nil() -> None:
+    h: dict[Val, Val] = {"a": 1}
+    assert oop.call_method(h, "[]", "a") == 1
+    assert oop.call_method(h, "[]", "b") is None

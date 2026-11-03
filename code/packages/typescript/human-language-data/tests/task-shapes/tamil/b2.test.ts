@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   listTaskShapeInventories,
-  loadLessons,
+  loadTrackLessons,
   loadTaskShapeInventory,
 } from "../../../src/loader.js";
 import { measureReadingReach } from "../../../src/reading-reach.js";
@@ -125,7 +125,7 @@ describe("Tamil B2 task shapes", () => {
   it("makes B2 reading measurable without claiming present attainment", () => {
     const inventories = listTaskShapeInventories().map(({ language, level }) =>
       loadTaskShapeInventory(language, level));
-    const report = measureReadingReach(loadLessons(), inventories);
+    const report = measureReadingReach(loadTrackLessons("tamil"), inventories);
     const row = report.rows.find((entry) =>
       entry.language === "tamil" && entry.level === "B2");
 

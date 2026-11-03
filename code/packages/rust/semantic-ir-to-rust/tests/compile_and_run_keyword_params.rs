@@ -24,8 +24,8 @@
 //!
 //! Why return `name` rather than the full `"hi, world"` interpolation
 //! the spec's cross-backend reference program prints?  Building that
-//! string needs `StrConcat` (SIR18 interpolation), a feature this Rust
-//! backend does not accept — so, exactly as the default-params proof
+//! string needed `StrConcat` (SIR18 interpolation), a feature this Rust
+//! backend did not accept when this proof was written — so, exactly as the default-params proof
 //! returns `b` to expose the resolved default, we return `name` to
 //! expose the resolved keyword.  The observable `"world"` / `"ada"`
 //! outputs still match what the Python/TS reference prints for `name`

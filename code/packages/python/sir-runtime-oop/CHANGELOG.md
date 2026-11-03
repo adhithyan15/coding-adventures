@@ -2,6 +2,25 @@
 
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
+## Unreleased — `[]` and `[]=` on an Array, `[]` on a Hash (#18798)
+
+The Ruby frontend lowers `z[1]` and `z[0] = 5` to the method calls `[]` and
+`[]=`, and neither was in the Array catalog (nor `[]` in the Hash one), so
+`z[1]` raised `undefined method '[]' for Array` and `h[:a]` the same for Hash.
+
+- `Array#[]`: a negative index counts from the end; out of range is `nil`.
+- `Array#[]=`: a negative index counts from the end; past the end the array
+  is padded with `nil`; before the start is `IndexError`, and so is an index
+  past `_ARRAY_MAX_INDEX` (2^28), the limit every SIR backend shares.  It
+  bounds one write's padding; it is not a memory budget.
+- A non-integer index (a `bool` included) is `TypeError`.
+- `Hash#[]`: the value, or `nil` for a missing key.
+- `respond_to?` reports all three.
+
+Tests `test_array_index_reads_with_negative_and_out_of_range_indices`,
+`test_array_index_assignment_stores_and_pads_with_nil`,
+`test_array_index_must_be_an_integer`, `test_hash_index_reads_a_value_or_nil`.
+
 ## 0.2.0 — reflection on a rescued exception
 
 A `SirError` is not a `SirInstance`, but it carries its Ruby class tag the same

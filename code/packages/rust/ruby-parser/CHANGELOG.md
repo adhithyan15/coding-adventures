@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## Unreleased — a jump with a modifier (#18798)
+
+- `_grammar.rs` regenerated from `ruby.grammar`: `statement` takes
+  `return`/`break`/`next` only when no `*_modifier` follows, and
+  `modifier_statement` takes a jump on its left, so `return x if c` is one
+  `modifier_statement` (it was `return x` followed by a bogus statement
+  starting at `if_modifier`).  Test `test_parse_a_jump_with_a_modifier`.
+
 ## Unreleased — the legacy path inherits the lexer's source budget (#18814)
 
 - `try_create_ruby_parser` now refuses a source past `ruby-lexer`'s

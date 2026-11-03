@@ -1,0 +1,10 @@
+## Unreleased — 2026-11-03 — LANG83 PR5b — strings are bytes
+
+- Windows follow-up: the LLVM backend initializes binary stdout before output.
+  `putchar_preserves_lf_cr_nul_and_high_bytes_without_a_string_runtime` executes
+  bare `putchar` without a print shim or native runtime and compares exact
+  `0A 0D 00 FF` bytes. Together with the existing 14-case gate this catches both
+  libc-only and string-output CRT newline translation.
+- `op_conformance`: 14 PR5b cases (each name ends in `(PR5b)`), every one in a literal (foldable) and an opaque (parameter of a call-free `f`) form, all compared byte for byte: the 14-byte UTF-8 literal `"h\u{e9}llo \u{20ac}\u{1d11e}"` (`str_len`, `str_index` at 0, 1, 2, 13, then printed); the same bytes as an `Operand::Bytes` literal, equal to the `Str` spelling under `str_eq`; a raw-byte literal `00 0A 0D 7F 80 A9 FF`; the lone byte `A9` from `str_slice "é", 1, 2`; every byte 0x80–0xFF through `print_str` and `putchar 0xFF`; the edges (`str_len ""`, concat with `""`, slices `[0,0)`, `[len,len)`, `[0,len)`, unsigned `str_cmp` of `7F` and `é`); and the ordered stream of `print_str`, `write_i64` and `putchar` with bytes ≥ 0x80. The gate `pr5b_strings_are_bytes_on_every_column` runs them on each executable column whose toolchain is present (locally WASM, VM, LLVM, native x86-64 and JVM) and compiles them for CLR and BEAM. On the previous backends the first case already fails to compile (WASM: "only supports printable ASCII").
+- The VM and JIT runners' `print_str` sinks write `Value::as_bytes()` (a VM string is bytes now; `as_str()` dropped one that is not UTF-8). `lang_matrix`'s `drain_stdin_line` returns the input line's raw bytes for `input_str` (it decoded them lossily), and `portable_text_stdout_generic_input_more_peek` checks a non-UTF-8 line.
+- Every source pipeline (`compile_request_to_iir`) runs `IIRModule::str_literal_errors()` on the module it builds, before any function reaches `aot_specialise` (security re-review L2-a). Test `source_pipelines_check_the_string_literal_rules`.

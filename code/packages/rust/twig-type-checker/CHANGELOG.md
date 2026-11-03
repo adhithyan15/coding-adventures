@@ -1,5 +1,46 @@
 # Changelog — twig-type-checker
 
+## Unreleased — #18474 security review: bounded diagnostics
+
+### Fixed
+
+- **A non-exhaustive `match` listed every unmatched variant.** On a union
+  of ~60,000 variants each match formatted ~600 KB, and ~50,000 matches
+  asked for ~33 GB of messages before any compile budget applied. The
+  message now names at most 8 variants, then "… and K more". The count
+  takes one pass with no allocation, and the check is skipped once
+  diagnostics are closed.
+- **Diagnostics were unbounded.** Every diagnostic (unresolved name, arity,
+  refinement, exhaustiveness) now goes through
+  `type_checker_protocol::bounded::push_bounded`: at most 256 kept, 4 KiB
+  each, 512 KiB in all, then one truncation note.
+
+### Tests
+
+- `tests/diagnostics.rs`: 8 missing variants are all named and 9 are
+  summarised; exactly 256 diagnostics are kept and 257 add one note, for
+  exhaustiveness and for unresolved names, through both `check_program`
+  and `type_check_source`'s grammar checker; 20,000 variants × 5,000
+  matches stay within the 512 KiB byte cap.
+
+## Unreleased — #18474 security review: generated-name budget before Pass 1
+
+### Fixed
+
+- **`register_record` / `register_union` formatted one `name-field` global
+  per field with no limit**, so a long record name times many fields was
+  tens of GB of names. A `Program` from `twig_parser::extract_program` is
+  now refused there; `check_program` and `check_program_with_globals` also
+  run `twig_parser::check_generated_names` before Pass 1, for a `Program`
+  built some other way. A refusal is one error with `ok: false` in every
+  mode, since the checker never looked at the program.
+
+### Tests
+
+- `tests/generated_names.rs`: a hand-built program over the budget is
+  refused by both entry points with no accessor registered; one under it is
+  checked as before.
+
 ## Unreleased — tests no longer assert a false proof (LANG24 LIA soundness)
 
 ### Changed

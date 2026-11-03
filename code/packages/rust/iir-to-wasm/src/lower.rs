@@ -222,10 +222,13 @@ type ModuleStringLiterals = HashMap<String, FunctionStringLiterals>;
 type FunctionRuntimeStrVars = HashSet<String>;
 type ModuleRuntimeStrVars = HashMap<String, FunctionRuntimeStrVars>;
 
-/// Per-function map: literal text → linear-memory offset of its length-prefixed
-/// runtime block `[i32 len][bytes]`.  Dedadup'd by text, so two `str_const`s of
-/// the same string in different blocks share one block.
-type FunctionRuntimeStrBlocks = HashMap<String, u32>;
+/// Per-function map: literal bytes → linear-memory offset of its length-prefixed
+/// runtime block `[i32 len][bytes]`.  Deduplicated by bytes, so two `str_const`s
+/// of the same string in different blocks share one block. Keyed by the bytes
+/// themselves (LANG83 PR5b): the key used to be a lossy UTF-8 decode, under which
+/// the distinct one-byte strings `A9` and `FF` both read as U+FFFD and shared a
+/// block — the second would have printed the first's byte.
+type FunctionRuntimeStrBlocks = HashMap<Vec<u8>, u32>;
 type ModuleRuntimeStrBlocks = HashMap<String, FunctionRuntimeStrBlocks>;
 
 /// Compute the set of string variables that, at some point in this function,
@@ -1513,17 +1516,18 @@ fn emit_instr(
             // is live.  The block was laid down in `collect_module_features`,
             // keyed by the literal text.
             if runtime_str_vars.contains(dest) {
-                let text = match instr.srcs.first() {
-                    Some(Operand::Str(s)) => s.as_str(),
-                    _ => return Err(IIRWasmError::InvalidOperand {
+                // A `Str` or raw-byte `Bytes` literal (LANG83 PR5b): its bytes.
+                let text = match instr.srcs.first().and_then(Operand::as_lit_bytes) {
+                    Some(bytes) => bytes,
+                    None => return Err(IIRWasmError::InvalidOperand {
                         function: fn_name.to_string(),
-                        detail: "str_const requires Operand::Str".to_string(),
+                        detail: "str_const requires a string literal (Operand::Str or Operand::Bytes)".to_string(),
                     }),
                 };
                 let block_offset = runtime_str_blocks.get(text).copied().ok_or_else(|| {
                     IIRWasmError::InvalidOperand {
                         function: fn_name.to_string(),
-                        detail: format!("str_const missing runtime block for {text:?}"),
+                        detail: format!("str_const missing runtime block for {:?}", text.escape_ascii().to_string()),
                     }
                 })?;
                 code.extend(encode_i32_const(block_offset as i32));
@@ -1608,9 +1612,8 @@ fn emit_instr(
                 // emit the runtime-block handle laid down in `collect_module_features`
                 // instead — keyed by the folded text exactly as at laydown.
                 if runtime_str_vars.contains(dest) {
-                    let key = String::from_utf8_lossy(&lit.bytes);
                     let block_offset =
-                        runtime_str_blocks.get(key.as_ref()).copied().ok_or_else(|| {
+                        runtime_str_blocks.get(&lit.bytes).copied().ok_or_else(|| {
                             IIRWasmError::InvalidOperand {
                                 function: fn_name.to_string(),
                                 detail: format!(
@@ -1779,9 +1782,8 @@ fn emit_instr(
                 // runtime block handle (with a real header), not the raw
                 // sliced-bytes offset.
                 if runtime_str_vars.contains(dest) {
-                    let key = String::from_utf8_lossy(&lit.bytes);
                     let block_offset =
-                        runtime_str_blocks.get(key.as_ref()).copied().ok_or_else(|| {
+                        runtime_str_blocks.get(&lit.bytes).copied().ok_or_else(|| {
                             IIRWasmError::InvalidOperand {
                                 function: fn_name.to_string(),
                                 detail: format!("str_slice missing runtime block for folded {dest:?}"),
@@ -2385,6 +2387,13 @@ fn emit_instr(
                         detail: format!("const: Operand::Str({:?}) is not a WASM value type", s),
                     });
                 }
+                // LANG83 PR5b: a raw-byte literal is `str_const`'s alone.
+                Operand::Bytes(_) => {
+                    return Err(IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "const: a raw-byte string literal is not a WASM value".to_string(),
+                    });
+                }
             }
             code.extend(encode_local_set(rd));
         }
@@ -2941,6 +2950,13 @@ fn emit_instr(
                             detail: format!("call: Operand::Str({:?}) cannot be a call argument", s),
                         });
                     }
+                    // LANG83 PR5b: a raw-byte literal is `str_const`'s alone.
+                    Operand::Bytes(_) => {
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: "call: a raw-byte string literal is not a WASM value".to_string(),
+                        });
+                    }
                 }
             }
 
@@ -2988,6 +3004,13 @@ fn emit_instr(
                         return Err(IIRWasmError::InvalidOperand {
                             function: fn_name.to_string(),
                             detail: format!("ret: Operand::Str({:?}) is not a WASM return value", s),
+                        });
+                    }
+                    // LANG83 PR5b: a raw-byte literal is `str_const`'s alone.
+                    Operand::Bytes(_) => {
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: "ret: a raw-byte string literal is not a WASM value".to_string(),
                         });
                     }
                 }
@@ -5043,10 +5066,10 @@ struct ModuleFeatures {
 /// must present a real header (the callee has no compile-time length), so it is
 /// materialised as a runtime block exactly like a control-flow-selected string.
 ///
-/// Keyed by the folded text so identical literals (across ops or blocks) share one
-/// block.  All frontends that reach here emit UTF-8 string literals, so the lossy
-/// conversion is lossless and the key is a faithful, collision-free stand-in for
-/// the bytes; the lowering side recomputes the identical key from the same bytes.
+/// Keyed by the literal's bytes so identical literals (across ops or blocks) share
+/// one block, and distinct ones never do (LANG83 PR5b: a literal need not be
+/// UTF-8, so the old lossy-text key could collide). The lowering side looks the
+/// block up by the same bytes.
 fn lay_runtime_str_block(
     runtime_str_blocks: &mut ModuleRuntimeStrBlocks,
     runtime_str_vars: &mut ModuleRuntimeStrVars,
@@ -5056,7 +5079,7 @@ fn lay_runtime_str_block(
     bytes: &[u8],
     len: u32,
 ) {
-    let key = String::from_utf8_lossy(bytes).into_owned();
+    let key = bytes.to_vec();
     let fn_blocks = runtime_str_blocks.entry(fn_name.to_string()).or_default();
     fn_blocks.entry(key).or_insert_with(|| {
         let block_offset = string_data.len() as u32;
@@ -5504,8 +5527,10 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                     }
                 }
                 "str_const" => {
-                    if let (Some(dest), Some(Operand::Str(s))) =
-                        (instr.dest.as_ref(), instr.srcs.first())
+                    // A `Str` or raw-byte `Bytes` literal (LANG83 PR5b): its
+                    // bytes go into the data segment verbatim.
+                    if let (Some(dest), Some(s)) =
+                        (instr.dest.as_ref(), instr.srcs.first().and_then(Operand::as_lit_bytes))
                     {
                         let len = s.len() as u32;
                         // A variable that ever holds a runtime string gets NO literal
@@ -5520,14 +5545,14 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         // the uniform runtime path stays correct for it too.
                         if !fn_runtime_valued.contains(dest) {
                             let offset = string_data.len() as u32;
-                            string_data.extend_from_slice(s.as_bytes());
+                            string_data.extend_from_slice(s);
                             string_literals
                                 .entry(fn_.name.clone())
                                 .or_default()
                                 .insert(dest.clone(), WasmStringLiteral {
                                     offset,
                                     len,
-                                    bytes: s.as_bytes().to_vec(),
+                                    bytes: s.to_vec(),
                                 });
                         }
 
@@ -5546,7 +5571,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                 &mut string_data,
                                 &fn_.name,
                                 dest,
-                                s.as_bytes(),
+                                s,
                                 len,
                             );
                         }

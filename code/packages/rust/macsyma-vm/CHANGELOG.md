@@ -1,5 +1,9 @@
 # Changelog — macsyma-vm
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- An `Operand::Bytes` (LANG83 PR5b's raw-byte `str_const` literal) is a `Malformed` operand here, like `Str`.
+
 ## v0.1.0 — 2026-08-14 — initial release (macsyma-iir-vm.md, v0)
 
 Macsyma's own VM — a small interpreter built directly on `dynval-runtime`,

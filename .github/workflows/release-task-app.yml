@@ -15,8 +15,10 @@ on:
       - code/scripts/mosaic_release_state_gate.py
       - code/scripts/tests/test_mosaic_release_state_gate.py
       # The shared macOS and Windows launchers the SwiftUI and WinUI gates
-      # start Trestle through.
+      # start Trestle through, and the launch-log check every gate shares.
       - code/scripts/mosaic-release-launch.sh
+      - code/scripts/mosaic-release-check-log.sh
+      - code/scripts/tests/test_mosaic_release_check_log.py
       - code/scripts/mosaic-release-launch.ps1
       - code/scripts/tests/test_mosaic_release_launch.py
       - code/scripts/taskapp-xaml-smoke.ps1
@@ -398,9 +400,8 @@ jobs:
             >release-work/qt-launch.log 2>&1
           status=$?
           set -e
-          cat release-work/qt-launch.log
+          bash code/scripts/mosaic-release-check-log.sh "TaskApp Qt upgrade launch" release-work/qt-launch.log
           test "$status" -eq 124
-          ! grep -Fq "Mosaic Rust runtime unavailable" release-work/qt-launch.log
           python code/scripts/taskapp_release.py verify-upgrade-state \
             --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
             --state "$state_file"
@@ -414,7 +415,7 @@ jobs:
             >release-work/qt-recovery.log 2>&1
           status=$?
           set -e
-          cat release-work/qt-recovery.log
+          bash code/scripts/mosaic-release-check-log.sh "TaskApp Qt recovery launch" release-work/qt-recovery.log
           test "$status" -eq 124
           python code/scripts/mosaic_release_state_gate.py verify-quarantine \
             --app task-app --state "$state_file" --probe "$probe"
@@ -469,9 +470,8 @@ jobs:
             >release-work/flutter-launch.log 2>&1
           status=$?
           set -e
-          cat release-work/flutter-launch.log
+          bash code/scripts/mosaic-release-check-log.sh "TaskApp Flutter upgrade launch" release-work/flutter-launch.log
           test "$status" -eq 124
-          ! grep -Fq "Mosaic Rust runtime unavailable" release-work/flutter-launch.log
           python code/scripts/taskapp_release.py verify-upgrade-state \
             --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
             --state "$state_file"
@@ -484,7 +484,7 @@ jobs:
             >release-work/flutter-recovery.log 2>&1
           status=$?
           set -e
-          cat release-work/flutter-recovery.log
+          bash code/scripts/mosaic-release-check-log.sh "TaskApp Flutter recovery launch" release-work/flutter-recovery.log
           test "$status" -eq 124
           python code/scripts/mosaic_release_state_gate.py verify-quarantine \
             --app task-app --state "$state_file" --probe "$probe"
@@ -533,9 +533,8 @@ jobs:
             >release-work/compose-launch.log 2>&1
           status=$?
           set -e
-          cat release-work/compose-launch.log
+          bash code/scripts/mosaic-release-check-log.sh "TaskApp Compose upgrade launch" release-work/compose-launch.log
           test "$status" -eq 124
-          ! grep -Fq "Mosaic Rust runtime unavailable" release-work/compose-launch.log
           python code/scripts/taskapp_release.py verify-upgrade-state \
             --fixture code/programs/mosaic/task-app/fixtures/release-upgrade-v0.1.0.json \
             --state "$state_file"
@@ -548,7 +547,7 @@ jobs:
             >release-work/compose-recovery.log 2>&1
           status=$?
           set -e
-          cat release-work/compose-recovery.log
+          bash code/scripts/mosaic-release-check-log.sh "TaskApp Compose recovery launch" release-work/compose-recovery.log
           test "$status" -eq 124
           python code/scripts/mosaic_release_state_gate.py verify-quarantine \
             --app task-app --state "$state_file" --probe "$probe"
@@ -866,7 +865,7 @@ jobs:
           pwsh -NoProfile -ExecutionPolicy Bypass `
             -File code/scripts/taskapp-xaml-smoke.ps1 `
             -ExePath $firstExecutable `
-            -RestartExePath $replacementExecutable
+            -RestartExePath $replacementExecutable 2>&1 | Tee-Object -FilePath release-work/xaml-smoke.log
           if ($LASTEXITCODE -ne 0) { throw 'Packaged Windows UI lifecycle failed' }
           if (!(Test-Path $state)) { throw 'Packaged app did not persist under stable LocalApplicationData identity' }
 
@@ -901,6 +900,23 @@ jobs:
           Remove-Item Env:MOSAIC_EXPECT_RESTORED -ErrorAction SilentlyContinue
           Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
 
+      # Failure evidence stays separate from artifacts eligible for publication.
+      - name: Collect XAML failure diagnostics
+        if: failure() && matrix.backend == 'xaml'
+        shell: pwsh
+        env:
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: ./code/scripts/taskapp-xaml-diagnostics.ps1 -Commit $env:RELEASE_COMMIT
+
+      - name: Upload XAML failure diagnostics
+        if: failure() && matrix.backend == 'xaml'
+        uses: actions/upload-artifact@v7
+        with:
+          name: task-app-xaml-failure-diagnostics
+          path: xaml-failure-diagnostics/
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Upload the verified native payload
         uses: actions/upload-artifact@v7
         with:
@@ -932,6 +948,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           path: release-assets
+          pattern: task-app-*-release
           merge-multiple: true
 
       - name: Build provenance, checksums, and product-scoped release notes

@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
+import { listTaskShapeInventories, loadTrackLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
 it("states its own rule beside the richest real Indic ladder rather than borrowing it", () => {
@@ -43,7 +43,7 @@ it("scores the subscript consonant, which is the thing a Latin-script hand has n
 it("declares a published stimulus length, so reading reach can measure it rather than skip it", () => {
   const inventories = listTaskShapeInventories().map(({ language, level }) =>
     loadTaskShapeInventory(language, level));
-  const report = measureReadingReach(loadLessons(), inventories);
+  const report = measureReadingReach(loadTrackLessons("telugu"), inventories);
   const row = report.rows.find((r) => r.language === "telugu" && r.level === "pre-A1");
   expect(row?.status).toBe("measurable");
   expect(row?.partsMeasurable).toBe(3);

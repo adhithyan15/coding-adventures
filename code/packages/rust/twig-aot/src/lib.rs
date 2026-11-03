@@ -514,6 +514,21 @@ impl From<std::io::Error> for AotError {
     fn from(e: std::io::Error) -> Self { AotError::Io(e) }
 }
 
+/// Read a Twig source file for compilation without ever holding more than
+/// the compiler's source budget (`twig_ir_compiler::MAX_SOURCE_BYTES`,
+/// 1 MiB; #18474 security review).
+///
+/// Every `compile_file_*` entry point used `std::fs::read_to_string`, which
+/// reads a whole file before anything can measure it: a 10 GB file cost
+/// 10 GB, `/dev/zero` never returned and a FIFO blocked forever.
+/// `bounded_source_file` refuses anything but a regular file (without
+/// blocking), checks the size first, and reads at most the budget plus one
+/// byte.  Failures are `AotError::Io`, as before: `InvalidInput` for not a
+/// regular file, `FileTooLarge` for over the budget.
+fn read_twig_source(path: &Path) -> std::io::Result<String> {
+    bounded_source_file::read_to_string(path, twig_ir_compiler::MAX_SOURCE_BYTES as u64)
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -850,7 +865,7 @@ pub fn compile_file_macos_arm64(
     src_path: &Path,
     out_path: &Path,
 ) -> Result<(), AotError> {
-    let source = std::fs::read_to_string(src_path)?;
+    let source = read_twig_source(src_path)?;
     let stem = src_path.file_stem()
         .and_then(|s| s.to_str())
         .unwrap_or("twig");
@@ -1653,7 +1668,7 @@ fn check_no_aot_registers(module: &IIRModule) -> Result<(), AotError> {
 ///
 /// [`AotError::Compile`] listing every violation.
 fn check_str_ceiling(module: &IIRModule) -> Result<(), AotError> {
-    let errors = module.str_ceiling_errors();
+    let errors = module.str_literal_errors();
     if errors.is_empty() {
         Ok(())
     } else {
@@ -2269,7 +2284,7 @@ pub fn emit_object_to_disk(
     target: EmitObjectTarget,
 ) -> Result<EmittedObject, AotError> {
     use std::io::Write as _;
-    let source = std::fs::read_to_string(src)?;
+    let source = read_twig_source(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
 
     // Produce the object bytes (no linking).
@@ -2347,7 +2362,7 @@ fn with_extension(base: &Path, ext: &str) -> PathBuf {
 /// that wasn't done on Linux.
 #[cfg(target_os = "linux")]
 pub fn compile_file_linux_x86_64(src: &Path, out: &Path) -> Result<(), AotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_twig_source(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
     let obj_bytes = compile_linux_x86_64_object(&source, stem)?;
     link_linux_x86_64_executable(&obj_bytes, stem, out)
@@ -2451,7 +2466,7 @@ pub fn link_linux_x86_64_executable(
 /// message if none is available.
 #[cfg(target_os = "windows")]
 pub fn compile_file_windows_x86_64(src: &Path, out: &Path) -> Result<(), AotError> {
-    let source = std::fs::read_to_string(src)?;
+    let source = read_twig_source(src)?;
     let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("twig");
     let obj_bytes = compile_windows_x86_64_object(&source, stem)?;
     link_windows_x86_64_executable(&obj_bytes, stem, out)
@@ -3051,7 +3066,7 @@ fn sign_word_comparisons(func: &mut IIRFunction) {
         Operand::Var(name) => written
             .get(name.as_str())
             .is_some_and(|tys| tys.iter().all(|ty| is_signed_word(ty))),
-        Operand::Float(_) | Operand::Str(_) => false,
+        Operand::Float(_) | Operand::Str(_) | Operand::Bytes(_) => false,
     };
 
     // Decide first, rewrite second: `written` borrows the instruction list.
@@ -3375,8 +3390,8 @@ fn strip_dead_aot_string_allocs(func: &mut IIRFunction) {
 fn push_aot_string_literal(
     lowered: &mut Vec<IIRInstr>,
     next: &mut usize,
-    literal: String,
-) -> (String, String, String) {
+    literal: Vec<u8>,
+) -> (String, String, Vec<u8>) {
     let base = format!("__aot_str{next}");
     *next += 1;
     let len_var  = format!("{base}_len");
@@ -3425,7 +3440,10 @@ fn push_aot_string_literal(
         "void",
     ));
     // write string bytes at offset 8 + idx
-    for (idx, byte) in literal.bytes().enumerate() {
+    // One `store_byte` per byte, whatever its value (LANG83 PR5b): NUL,
+    // newline, 0x80–0xFF and every other byte is stored exactly, so the block
+    // holds the literal's bytes and nothing decodes them.
+    for (idx, &byte) in literal.iter().enumerate() {
         let off_var  = format!("{base}_off{idx}");
         let byte_var = format!("{base}_byte{idx}");
         lowered.push(IIRInstr::new(
@@ -3561,7 +3579,10 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
         }
     }
     let mut lowered = Vec::with_capacity(func.instructions.len());
-    let mut strings: HashMap<String, (String, String, String)> = HashMap::new();
+    // dest → (dest, length register, the literal's bytes). Bytes, not text
+    // (LANG83 PR5b): a fold may produce any byte, e.g. a slice that splits a
+    // UTF-8 character.
+    let mut strings: HashMap<String, (String, String, Vec<u8>)> = HashMap::new();
     let mut ints: HashMap<String, i64> = HashMap::new();
     let mut next = 0usize;
 
@@ -3706,17 +3727,16 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
                     continue;
                 }
             };
-            let literal = match instr.srcs.first() {
-                Some(Operand::Str(literal)) => literal.clone(),
-                _ => {
+            // A `Str` or a raw-byte `Bytes` literal (LANG83 PR5b). Any byte
+            // is stored exactly; this used to accept printable ASCII only and
+            // leave every other literal for the backend, which refused it.
+            let literal = match instr.srcs.first().and_then(Operand::as_lit_bytes) {
+                Some(literal) => literal.to_vec(),
+                None => {
                     lowered.push(instr);
                     continue;
                 }
             };
-            if !is_printable_ascii_str(&literal) {
-                lowered.push(instr);
-                continue;
-            }
 
             let (buf_var, len_var, lit) = push_aot_string_literal(&mut lowered, &mut next, literal);
             // Emit `mov dest = buf_var` so that `dest` is defined for any instruction
@@ -3763,11 +3783,11 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
             // into the data segment — no runtime call, and the result is itself a known
             // literal (so downstream `str_len`/`str_index` keep folding).
             if let (Some(ll), Some(rl)) = (&left_lit, &right_lit) {
-                let literal = format!("{ll}{rl}");
+                let literal = [ll.as_slice(), rl.as_slice()].concat();
                 // LANG83 PR5a: a fold past the ceiling would build a string the
                 // module may not hold. Leave it to the runtime helper, which
                 // raises `Trap.Overflow` before it allocates anything.
-                if is_printable_ascii_str(&literal) && literal.len() <= ceiling as usize {
+                if literal.len() <= ceiling as usize {
                     let (buf_var, len_var, lit) =
                         push_aot_string_literal(&mut lowered, &mut next, literal);
                     lowered.push(IIRInstr::new(
@@ -3862,11 +3882,11 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
                     // `dest` is still bound to an empty literal, so code after
                     // the trap — unreachable — keeps a well-formed register.
                     lowered.push(aot_trap(interpreter_ir::exception_kind::TRAP_BOUNDS));
-                    Some(String::new())
+                    Some(Vec::new())
                 } else {
-                    String::from_utf8(literal.as_bytes()[start as usize..end as usize].to_vec())
-                        .ok()
-                        .filter(|s| is_printable_ascii_str(s))
+                    // Any in-range slice folds, even one that splits a UTF-8
+                    // character (LANG83 PR5b): a string is bytes.
+                    Some(literal[start as usize..end as usize].to_vec())
                 };
                 if let Some(literal) = folded {
                     let (buf_var, len_var, lit) =
@@ -3955,7 +3975,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
             };
             let Some(byte) = usize::try_from(idx)
                 .ok()
-                .and_then(|idx| literal.as_bytes().get(idx))
+                .and_then(|idx| literal.get(idx))
                 .copied()
             else {
                 // LANG83 PR5a: a folded out-of-range read is `Trap.Bounds`
@@ -4027,7 +4047,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
             let left_literal = strings.get(left).map(|(_, _, value)| value.clone());
             let right_literal = strings.get(right).map(|(_, _, value)| value.clone());
             if let (Some(left_literal), Some(right_literal)) = (left_literal, right_literal) {
-                let value = match left_literal.as_bytes().cmp(right_literal.as_bytes()) {
+                let value = match left_literal.cmp(&right_literal) {
                     Ordering::Less => -1,
                     Ordering::Equal => 0,
                     Ordering::Greater => 1,
@@ -4131,11 +4151,6 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
         func.source_map = new_map;
     }
     func.instructions = lowered;
-}
-
-fn is_printable_ascii_str(s: &str) -> bool {
-    s.bytes()
-        .all(|b| matches!(b, b'\n' | b'\r' | b'\t' | 0x20..=0x7e))
 }
 
 fn int_metadata_value(src: Option<&Operand>, ints: &HashMap<String, i64>) -> Option<i64> {
@@ -4702,6 +4717,33 @@ mod dynval_runtime_golden;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// #18474 review: an object is emitted only from a regular file within
+    /// the source budget. A sparse file one byte over the budget, and a
+    /// directory, are refused as `AotError::Io` before they are read; a
+    /// file of exactly the budget is read (and compiled).
+    #[test]
+    fn source_files_are_read_within_the_budget() {
+        use std::io::ErrorKind;
+        let dir = tempfile::tempdir().unwrap();
+        let kind = |src: &Path| match emit_object_to_disk(src, &dir.path().join("out"), EmitObjectTarget::LinuxX86_64) {
+            Err(AotError::Io(e)) => Some(e.kind()),
+            Err(other) => panic!("expected an I/O refusal, got {other}"),
+            Ok(_) => None,
+        };
+        let limit = twig_ir_compiler::MAX_SOURCE_BYTES as u64;
+
+        let over = dir.path().join("over.tw");
+        std::fs::File::create(&over).unwrap().set_len(limit + 1).unwrap();
+        assert_eq!(kind(&over), Some(ErrorKind::FileTooLarge));
+        assert_eq!(kind(dir.path()), Some(ErrorKind::InvalidInput));
+
+        let at = dir.path().join("at.tw");
+        let src = format!(";{}\n42", "a".repeat(limit as usize - 4));
+        assert_eq!(src.len() as u64, limit);
+        std::fs::write(&at, src).unwrap();
+        assert_eq!(kind(&at), None, "a file of exactly the budget compiles");
+    }
 
     #[test]
     fn msvc_dynamic_crt_libraries_follow_dependency_order() {
@@ -5472,6 +5514,86 @@ mod tests {
             }),
             "print_str should lower to call_builtin print_string"
         );
+    }
+
+    /// The bytes every `store_byte` of `f` writes, in order (each `store_byte`
+    /// reads a `const` byte register).
+    fn stored_bytes(f: &IIRFunction) -> Vec<i64> {
+        let consts: HashMap<&str, i64> = f
+            .instructions
+            .iter()
+            .filter(|i| i.op == "const")
+            .filter_map(|i| match (i.dest.as_deref(), i.srcs.first()) {
+                (Some(d), Some(Operand::Int(n))) => Some((d, *n)),
+                _ => None,
+            })
+            .collect();
+        f.instructions
+            .iter()
+            .filter(|i| i.op == "store_byte")
+            .map(|i| match i.srcs.get(2) {
+                Some(Operand::Var(v)) => consts[v.as_str()],
+                other => panic!("store_byte value {other:?}"),
+            })
+            .collect()
+    }
+
+    /// LANG83 PR5b: every literal byte is stored exactly — NUL, newline,
+    /// 0x80–0xFF — whether it comes from a UTF-8 `Str` or a raw-byte `Bytes`
+    /// literal. The pass used to lower printable ASCII only and leave any
+    /// other `str_const` for the backend, which refused it.
+    #[test]
+    fn non_ascii_and_raw_byte_literals_lower_to_exact_byte_stores() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("é€".into())], "str"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+                IIRInstr::new("str_const", Some("t".into()), vec![Operand::Bytes(vec![0x00, 0x0A, 0x7F, 0x80, 0xFF])], "str"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("t".into())], "void"),
+                IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        assert!(f.instructions.iter().all(|i| i.op != "str_const"), "{:?}", f.instructions);
+        assert_eq!(stored_bytes(&f), vec![0xC3, 0xA9, 0xE2, 0x82, 0xAC, 0x00, 0x0A, 0x7F, 0x80, 0xFF]);
+    }
+
+    /// LANG83 PR5b: a literal slice that splits a UTF-8 character folds to its
+    /// bytes (`"é"[1..2]` is `A9`), and a literal concat of two non-ASCII
+    /// literals folds too; both used to fall back to the runtime helpers.
+    #[test]
+    fn literal_folds_keep_bytes_that_are_not_utf8() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("é".into())], "str"),
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(2)], "i64"),
+                IIRInstr::new("str_slice", Some("t".into()), vec![
+                    Operand::Var("s".into()), Operand::Var("a".into()), Operand::Var("b".into()),
+                ], "str"),
+                IIRInstr::new("str_const", Some("u".into()), vec![Operand::Bytes(vec![0xFF])], "str"),
+                IIRInstr::new("str_concat", Some("v".into()), vec![Operand::Var("t".into()), Operand::Var("u".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("v".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        assert!(
+            f.instructions.iter().all(|i| i.op != "call_builtin"),
+            "every op folds at compile time: {:?}",
+            f.instructions
+        );
+        // "é", then the slice A9, then FF, then the join A9 FF.
+        assert_eq!(stored_bytes(&f), vec![0xC3, 0xA9, 0xA9, 0xFF, 0xA9, 0xFF]);
+        let n = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n")).unwrap();
+        assert_eq!(n.srcs, vec![Operand::Int(2)]);
     }
 
     #[test]

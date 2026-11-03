@@ -82,6 +82,12 @@ type repositoryInputConsumer struct {
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name:     "rust/ct-compare",
+		language: "rust",
+		inputs:   "the CT01 corpus, L0 transport and independent projection",
+		matches:  isCtCompareInput,
+	},
+	{
 		name:     "rust/mosaic-package-resolver",
 		language: "rust",
 		inputs:   "Mosaic manifests and sources under code/",
@@ -189,6 +195,42 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the shared rng conformance corpus",
 		matches:  isRngCorpus,
 	},
+	{
+		name:     "rust/test-bootstrap",
+		language: "rust",
+		inputs:   "the TF01 self-corpus and its Python reference",
+		matches:  isTestBootstrapInput,
+	},
+}
+
+// CT01 is embedded in an L0 test, so edits outside the crate must still run it.
+// Exact reference paths and the slash-delimited fixture prefix exclude other
+// versions, path lookalikes and unrelated scripts. Missing consumers fail closed.
+func isCtCompareInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/ct-compare-v1/") ||
+		changed == "code/scripts/ct_compare_tfv.py" ||
+		changed == "code/scripts/ct_compare_conformance.py" ||
+		changed == "code/scripts/tfv.py"
+}
+
+// isTestBootstrapInput reports whether a changed path is one the bootstrap
+// harness's BUILD reads: its self-corpus (embedded with include_str!, so a
+// corpus edit changes the test binary) or the stdlib reference that
+// re-derives the corpus and generates cases.tfv.
+//
+//	code/specs/fixtures/test-bootstrap-v1/cases.json     → true
+//	code/specs/fixtures/test-bootstrap-v1/cases.tfv      → true
+//	code/scripts/tfv.py                                  → true
+//	code/scripts/bootstrap_harness_conformance.py        → true
+//	code/specs/fixtures/test-bootstrap-v10/cases.json    → false
+//	code/specs/fixtures/ct-compare-v1/cases.json         → false
+//	code/scripts/tests/test_bootstrap_harness_conformance.py → false
+func isTestBootstrapInput(changed string) bool {
+	switch changed {
+	case "code/scripts/tfv.py", "code/scripts/bootstrap_harness_conformance.py":
+		return true
+	}
+	return strings.HasPrefix(changed, "code/specs/fixtures/test-bootstrap-v1/")
 }
 
 // isRngCorpus reports whether a changed path is in the shared rng corpus,

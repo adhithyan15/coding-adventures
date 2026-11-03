@@ -29,6 +29,11 @@ from itertools import pairwise
 from pathlib import Path
 from typing import Any
 
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10 compatibility for repository tooling.
+    import tomli as tomllib  # type: ignore[no-redef]
+
 import tracked_artifact_unicode17 as tracked_unicode
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -94,6 +99,7 @@ CLI_LANGUAGES = (
 )
 EXECUTION_CAPABILITIES = {"execution", "trusted_execution"}
 PURE_DOMAINS = {
+    "cargo_manifest_snapshot",
     "ci_gate_selection",
     "cli",
     "diff_selection",
@@ -130,6 +136,7 @@ ESTABLISHED_LANGUAGES = (
     "typescript",
 )
 DOMAIN_CAPABILITIES = {
+    "cargo_manifest_snapshot": {"resolution"},
     "ci_gate_selection": {"ci_gate_selection"},
     "discovery": {"discovery"},
     "resolution": {"resolution"},
@@ -2591,6 +2598,458 @@ def _toolchain_for_language(language: str) -> str:
     return toolchain
 
 
+CARGO_MANIFEST_MAX_BYTES = 1 << 20
+CARGO_ENTRY_MAX_LINES = 256
+CARGO_ENTRY_MAX_BYTES = 1 << 16
+CARGO_STRUCTURE_MAX_DEPTH = 128
+CARGO_TRIGGER_TABLES = {
+    "rust_root": {
+        "dev-dependencies",
+        "dev_dependencies",
+        "patch",
+    },
+    "mosaic_root": {
+        "dependencies",
+        "build-dependencies",
+        "build_dependencies",
+        "dev-dependencies",
+        "dev_dependencies",
+        "patch",
+    },
+    "crate_closure": {
+        "dependencies",
+        "build-dependencies",
+        "build_dependencies",
+    },
+}
+CARGO_SCREEN_TABLES = {
+    "rust_root": {"dependencies", "build-dependencies", "build_dependencies"},
+    "mosaic_root": set(),
+    "crate_closure": set(),
+}
+CARGO_FIELD_NAMES = {
+    "version",
+    "path",
+    "git",
+    "branch",
+    "tag",
+    "rev",
+    "registry",
+    "package",
+    "workspace",
+    "optional",
+    "default-features",
+    "features",
+}
+
+
+def _cargo_error(code: str) -> str:
+    return code
+
+
+def _strip_toml_comment(line: str) -> str:
+    quote = ""
+    escaped = False
+    for index, character in enumerate(line):
+        if quote:
+            if quote == '"' and escaped:
+                escaped = False
+            elif quote == '"' and character == "\\":
+                escaped = True
+            elif character == quote:
+                quote = ""
+        elif character in {'"', "'"}:
+            quote = character
+        elif character == "#":
+            return line[:index]
+    return line
+
+
+def _decode_cargo_header(header: str) -> list[str] | None:
+    if "\\" in header:
+        return None
+    segments: list[str] = []
+    index = 0
+    while index < len(header):
+        while index < len(header) and header[index] in " \t":
+            index += 1
+        if index >= len(header):
+            return None
+        if header[index] in {'"', "'"}:
+            quote = header[index]
+            end = header.find(quote, index + 1)
+            if end < 0 or end == index + 1:
+                return None
+            segment = header[index + 1 : end]
+            index = end + 1
+        else:
+            match = re.match(r"[A-Za-z0-9_-]+", header[index:])
+            if not match:
+                return None
+            segment = match.group(0)
+            index += len(segment)
+        segments.append(segment)
+        while index < len(header) and header[index] in " \t":
+            index += 1
+        if index == len(header):
+            return segments
+        if header[index] != ".":
+            return None
+        index += 1
+    return None
+
+
+def _cargo_table_role(
+    segments: list[str], allowed: set[str]
+) -> tuple[str, str | None] | None:
+    if len(segments) == 2 and segments[0] == "patch" and "patch" in allowed:
+        return "patch", segments[1]
+    if len(segments) == 1 and segments[0] in allowed and segments[0] != "patch":
+        return segments[0].replace("_", "-"), None
+    if (
+        len(segments) == 3
+        and segments[0] == "target"
+        and segments[2] in allowed
+        and segments[2] != "patch"
+    ):
+        return "target-" + segments[2].replace("_", "-"), segments[1]
+    return None
+
+
+def _cargo_header_context(
+    segments: list[str], profile: str
+) -> tuple[str, str, str | None, str | None] | None:
+    trigger_tables = CARGO_TRIGGER_TABLES[profile]
+    screen_tables = CARGO_SCREEN_TABLES[profile]
+    if role := _cargo_table_role(segments, trigger_tables):
+        return "emit", role[0], role[1], None
+    if role := _cargo_table_role(segments, screen_tables):
+        return "screen", role[0], role[1], None
+    if len(segments) == 2 and segments[0] in screen_tables:
+        role = segments[0].replace("_", "-")
+        return "screen_fields", role, None, segments[1]
+    if (
+        len(segments) == 4
+        and segments[0] == "target"
+        and segments[2] in screen_tables
+    ):
+        role = "target-" + segments[2].replace("_", "-")
+        return "screen_fields", role, segments[1], segments[3]
+    return None
+
+
+def _cargo_key_reaches_modeled_table(segments: list[str], profile: str) -> bool:
+    if not segments:
+        return False
+    modeled = CARGO_TRIGGER_TABLES[profile] | CARGO_SCREEN_TABLES[profile]
+    if segments[0] == "replace":
+        return True
+    if segments[0] == "target" and len(segments) == 1:
+        return True
+    if segments[0] in modeled:
+        return True
+    return (
+        segments[0] == "target"
+        and len(segments) >= 3
+        and segments[2] in modeled
+    )
+
+
+def _cargo_bracket_state(text: str) -> tuple[list[str], bool]:
+    stack: list[str] = []
+    quote = ""
+    escaped = False
+    for character in text:
+        if quote:
+            if quote == '"' and escaped:
+                escaped = False
+            elif quote == '"' and character == "\\":
+                escaped = True
+            elif character == quote:
+                quote = ""
+            continue
+        if character in {'"', "'"}:
+            quote = character
+        elif character in "[{":
+            stack.append(character)
+        elif character in "]}":
+            expected = "[" if character == "]" else "{"
+            if not stack or stack[-1] != expected:
+                return stack, False
+            stack.pop()
+    return stack, not quote
+
+
+def _cargo_structure_depth_supported(text: str) -> bool:
+    stack: list[str] = []
+    quote = ""
+    escaped = False
+    for line in text.split("\n"):
+        for character in _strip_toml_comment(line):
+            if quote:
+                if quote == '"' and escaped:
+                    escaped = False
+                elif quote == '"' and character == "\\":
+                    escaped = True
+                elif character == quote:
+                    quote = ""
+                continue
+            if character in {'"', "'"}:
+                quote = character
+            elif character in "[{":
+                stack.append(character)
+                if len(stack) > CARGO_STRUCTURE_MAX_DEPTH:
+                    return False
+            elif character in "]}":
+                expected = "[" if character == "]" else "{"
+                if not stack or stack[-1] != expected:
+                    return True
+                stack.pop()
+        quote = ""
+        escaped = False
+    return True
+
+
+def _portable_cargo_path(path: str) -> bool:
+    return bool(
+        path
+        and "\\" not in path
+        and not path.startswith("/")
+        and not path.startswith("//")
+        and not re.match(r"^[A-Za-z]:", path)
+    )
+
+
+def _parse_cargo_entry(value: str) -> dict[str, Any] | str:
+    return _parse_cargo_entry_mode(value, allow_quoted_fields=False)
+
+
+def _parse_cargo_entry_mode(
+    value: str, *, allow_quoted_fields: bool
+) -> dict[str, Any] | str:
+    if "\\" in value:
+        return _cargo_error("CARGO_MANIFEST_SYNTAX_UNSUPPORTED")
+    if not allow_quoted_fields and re.search(
+        r"(?:\{|,)\s*[\"'][^\"']+[\"']\s*=", value
+    ):
+        return _cargo_error("CARGO_MANIFEST_FIELD_UNSUPPORTED")
+    try:
+        parsed = tomllib.loads("entry = " + value)["entry"]
+    except (tomllib.TOMLDecodeError, KeyError):
+        return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+    if isinstance(parsed, str):
+        return {"version_present": True}
+    if not isinstance(parsed, dict):
+        return _cargo_error("CARGO_MANIFEST_ENTRY_UNSUPPORTED")
+    if "workspace" in parsed:
+        return _cargo_error("CARGO_MANIFEST_WORKSPACE_UNSUPPORTED")
+    if any(
+        not isinstance(key, str)
+        or key not in CARGO_FIELD_NAMES
+        or key.lower() != key
+        for key in parsed
+    ):
+        return _cargo_error("CARGO_MANIFEST_FIELD_UNSUPPORTED")
+    fields: dict[str, Any] = {}
+    for key, item in parsed.items():
+        if key == "features":
+            if (
+                not isinstance(item, list)
+                or any(not isinstance(feature, str) for feature in item)
+                or any(len(feature) > CARGO_ENTRY_MAX_BYTES for feature in item)
+                or len(item) > 4096
+            ):
+                return _cargo_error("CARGO_MANIFEST_FIELD_UNSUPPORTED")
+        elif key in {"workspace", "optional", "default-features"}:
+            if not isinstance(item, bool):
+                return _cargo_error("CARGO_MANIFEST_FIELD_UNSUPPORTED")
+        elif not isinstance(item, str):
+            return _cargo_error("CARGO_MANIFEST_FIELD_UNSUPPORTED")
+        if isinstance(item, str) and len(item) > CARGO_ENTRY_MAX_BYTES:
+            return _cargo_error("CARGO_ENTRY_LIMIT_EXCEEDED")
+        if key == "version":
+            fields["version_present"] = True
+        elif key == "git":
+            if not item.startswith(("https://", "ssh://")):
+                return _cargo_error("CARGO_MANIFEST_GIT_UNSAFE")
+            fields["git_scheme"] = "https" if item.startswith("https://") else "ssh"
+        elif key == "registry":
+            fields["registry_present"] = True
+        elif key in {"branch", "tag", "rev"}:
+            fields[key + "_present"] = True
+        else:
+            fields[key] = item
+    if "path" in fields and not _portable_cargo_path(fields["path"]):
+        return _cargo_error("CARGO_MANIFEST_PATH_UNSAFE")
+    return fields
+
+
+def _expected_cargo_manifest_snapshot(
+    options: dict[str, Any],
+) -> list[dict[str, Any]] | str:
+    profile = options["profile"]
+    manifest = options["manifest_utf8"]
+    if len(manifest.encode("utf-8")) > CARGO_MANIFEST_MAX_BYTES:
+        return _cargo_error("CARGO_MANIFEST_TOO_LARGE")
+    if "\x00" in manifest or "\r" in manifest.replace("\r\n", ""):
+        return _cargo_error("CARGO_MANIFEST_ENCODING_INVALID")
+    manifest = manifest.replace("\r\n", "\n")
+    if manifest.startswith("\ufeff"):
+        manifest = manifest[1:]
+    if "\ufeff" in manifest:
+        return _cargo_error("CARGO_MANIFEST_ENCODING_INVALID")
+    if '\"\"\"' in manifest or "'''" in manifest:
+        return _cargo_error("CARGO_MANIFEST_SYNTAX_UNSUPPORTED")
+    if not _cargo_structure_depth_supported(manifest):
+        return _cargo_error("CARGO_MANIFEST_TABLE_UNSUPPORTED")
+    try:
+        tomllib.loads(manifest)
+    except tomllib.TOMLDecodeError:
+        return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+    except RecursionError:
+        return _cargo_error("CARGO_MANIFEST_TABLE_UNSUPPORTED")
+
+    lines = manifest.split("\n")
+    current: tuple[str, str, str | None, str | None] | None = None
+    seen_tables: set[tuple[str, str | None]] = set()
+    seen_aliases: set[tuple[str, str | None, str]] = set()
+    entries: list[dict[str, Any]] = []
+    at_root = True
+    index = 0
+    while index < len(lines):
+        raw = lines[index]
+        index += 1
+        line = _strip_toml_comment(raw).strip()
+        if not line:
+            continue
+        if line.startswith("[["):
+            if not line.endswith("]]"):
+                return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+            decoded = _decode_cargo_header(line[2:-2].strip())
+            if decoded is None:
+                return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+            if _cargo_key_reaches_modeled_table(decoded, profile):
+                return _cargo_error("CARGO_MANIFEST_TABLE_UNSUPPORTED")
+            current = None
+            at_root = False
+            continue
+        if line.startswith("["):
+            if not line.endswith("]"):
+                return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+            decoded = _decode_cargo_header(line[1:-1].strip())
+            if decoded is None:
+                return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+            if decoded[0] == "replace":
+                return _cargo_error("CARGO_MANIFEST_REPLACE_UNSUPPORTED")
+            current = _cargo_header_context(decoded, profile)
+            at_root = False
+            if current is None and _cargo_key_reaches_modeled_table(decoded, profile):
+                return _cargo_error("CARGO_MANIFEST_TABLE_UNSUPPORTED")
+            if current is not None and current[0] in {"emit", "screen"}:
+                identity = (current[1], current[2])
+                if identity in seen_tables:
+                    return _cargo_error("CARGO_MANIFEST_DUPLICATE")
+                seen_tables.add(identity)
+            continue
+        if current is None:
+            if not at_root:
+                continue
+            # Dotted/root writes into modeled tables can hide Cargo entries.
+            if "=" not in line:
+                # The full-document TOML parse above already proved this is a
+                # valid continuation of an unrelated value.
+                continue
+            left, right = (part.strip() for part in line.split("=", 1))
+            decoded = _decode_cargo_header(left)
+            if decoded is None:
+                return _cargo_error("CARGO_MANIFEST_SYNTAX_UNSUPPORTED")
+            if decoded[0] == "replace":
+                return _cargo_error("CARGO_MANIFEST_REPLACE_UNSUPPORTED")
+            if (
+                decoded[0] == "target"
+                and len(decoded) <= 2
+                and right.startswith("{")
+            ):
+                return _cargo_error("CARGO_MANIFEST_TABLE_UNSUPPORTED")
+            if _cargo_key_reaches_modeled_table(decoded, profile):
+                return _cargo_error("CARGO_MANIFEST_TABLE_UNSUPPORTED")
+            continue
+        if "=" not in line:
+            return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+        alias, value = (part.strip() for part in line.split("=", 1))
+        if current[0] == "screen_fields":
+            decoded_field = _decode_cargo_header(alias)
+            if decoded_field is None or len(decoded_field) != 1:
+                return _cargo_error("CARGO_MANIFEST_FIELD_UNSUPPORTED")
+            field = decoded_field[0]
+            if field == "workspace":
+                return _cargo_error("CARGO_MANIFEST_WORKSPACE_UNSUPPORTED")
+            if field not in CARGO_FIELD_NAMES:
+                return _cargo_error("CARGO_MANIFEST_FIELD_UNSUPPORTED")
+            stack, balanced = _cargo_bracket_state(value)
+            if not balanced or stack:
+                return _cargo_error("CARGO_MANIFEST_TABLE_UNSUPPORTED")
+            screened = _parse_cargo_entry_mode(
+                "{ " + alias + " = " + value + " }",
+                allow_quoted_fields=True,
+            )
+            if isinstance(screened, str):
+                return screened
+            continue
+        if not re.fullmatch(r"[A-Za-z0-9_-]+", alias) or len(alias) > 256:
+            return _cargo_error("CARGO_MANIFEST_ENTRY_UNSUPPORTED")
+        joined = value
+        entry_lines = 1
+        stack, balanced = _cargo_bracket_state(joined)
+        if not balanced:
+            return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+        if stack and "[" not in stack:
+            return _cargo_error("CARGO_MANIFEST_ENTRY_UNSUPPORTED")
+        while stack:
+            if index >= len(lines):
+                return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+            continuation = _strip_toml_comment(lines[index]).strip()
+            index += 1
+            if not continuation:
+                continue
+            entry_lines += 1
+            if entry_lines > CARGO_ENTRY_MAX_LINES:
+                return _cargo_error("CARGO_ENTRY_LIMIT_EXCEEDED")
+            joined += "\n" + continuation
+            normalized_entry = alias + " = " + joined
+            if len(normalized_entry.encode("utf-8")) > CARGO_ENTRY_MAX_BYTES:
+                return _cargo_error("CARGO_ENTRY_LIMIT_EXCEEDED")
+            stack, balanced = _cargo_bracket_state(joined)
+            if not balanced:
+                return _cargo_error("CARGO_MANIFEST_SYNTAX_INVALID")
+        fields = _parse_cargo_entry_mode(
+            joined,
+            allow_quoted_fields=current[0] == "screen",
+        )
+        if isinstance(fields, str):
+            return fields
+        if current[0] == "screen":
+            continue
+        if current[2] is not None and len(current[2]) > 512:
+            return _cargo_error("CARGO_SNAPSHOT_LIMIT_EXCEEDED")
+        identity = (current[1], current[2], alias)
+        if identity in seen_aliases:
+            return _cargo_error("CARGO_MANIFEST_DUPLICATE")
+        seen_aliases.add(identity)
+        entries.append(
+            {
+                "alias": alias,
+                "table": current[1],
+                "target": current[2],
+                "source_order": len(entries),
+                "fields": fields,
+            }
+        )
+        if len(entries) > 4096:
+            return _cargo_error("CARGO_SNAPSHOT_LIMIT_EXCEEDED")
+    return entries
+
+
 def _validate_pure_case_semantics(
     case: dict[str, Any],
     staged_files: list[WorkspaceFile],
@@ -2607,7 +3066,14 @@ def _validate_pure_case_semantics(
         )
 
     options = case["input"]["options"]
-    if domain == "ci_gate_selection":
+    if domain == "cargo_manifest_snapshot":
+        if staged_files:
+            raise ConformanceError(
+                "CASE_CARGO_MANIFEST_AUTHORITY",
+                "Cargo manifest snapshots accept manifest text only; workspace files are forbidden",
+            )
+        _expected_cargo_manifest_snapshot(options)
+    elif domain == "ci_gate_selection":
         gate_ids: set[str] = set()
         output_names: set[str] = set()
         for gate in options["registry"]["gates"]:
@@ -2633,6 +3099,11 @@ def _validate_pure_case_semantics(
                     )
     elif domain == "graph":
         _expected_graph(options)
+    elif domain == "diff_selection" and _is_test_trigger_selection(options):
+        # This closed variant carries package names directly. Route it before
+        # legacy path selection, whose packages are structured records with
+        # rel_path/source_mode fields.
+        _expected_test_trigger_selection(options)
     elif domain == "diff_selection":
         packages = options["packages"]
         by_name = _package_index(packages)
@@ -3094,6 +3565,105 @@ def _expected_ci_gate_selection(
             }
         )
     return verdicts
+
+
+def _is_test_trigger_selection(options: dict[str, Any]) -> bool:
+    """Identify the closed Cargo test-trigger variant without host probing."""
+    return "trigger_relations" in options
+
+
+def _expected_test_trigger_selection(
+    options: dict[str, Any],
+) -> tuple[set[str], set[str], set[str]] | str:
+    """Evaluate the bounded one-hop Cargo test-trigger selection contract."""
+    packages = options["packages"]
+    edges = options["edges"]
+    trigger_relations = options["trigger_relations"]
+    changed_packages = options["changed_packages"]
+
+    if len(packages) > 4096:
+        return "TEST_TRIGGER_PACKAGE_LIMIT_EXCEEDED"
+    if len(edges) > 16384:
+        return "TEST_TRIGGER_GRAPH_EDGE_LIMIT_EXCEEDED"
+    if len(trigger_relations) > 16384:
+        return "TEST_TRIGGER_RELATION_LIMIT_EXCEEDED"
+    if len(changed_packages) > 4096:
+        return "TEST_TRIGGER_CHANGED_LIMIT_EXCEEDED"
+
+    package_names = set(packages)
+    if len(package_names) != len(packages):
+        return "TEST_TRIGGER_PACKAGE_DUPLICATE"
+
+    dependents: dict[str, set[str]] = {name: set() for name in package_names}
+    prerequisites: dict[str, set[str]] = {name: set() for name in package_names}
+    indegree = dict.fromkeys(package_names, 0)
+    seen_edges: set[tuple[str, str]] = set()
+    for prerequisite, dependent in edges:
+        if prerequisite not in package_names or dependent not in package_names:
+            return "TEST_TRIGGER_GRAPH_EDGE_UNKNOWN"
+        if prerequisite == dependent:
+            return "TEST_TRIGGER_GRAPH_EDGE_SELF"
+        edge = (prerequisite, dependent)
+        if edge in seen_edges:
+            return "TEST_TRIGGER_GRAPH_EDGE_DUPLICATE"
+        seen_edges.add(edge)
+        dependents[prerequisite].add(dependent)
+        prerequisites[dependent].add(prerequisite)
+        indegree[dependent] += 1
+
+    ready = [name for name, degree in indegree.items() if degree == 0]
+    visited = 0
+    while ready:
+        name = ready.pop()
+        visited += 1
+        for dependent in dependents[name]:
+            indegree[dependent] -= 1
+            if indegree[dependent] == 0:
+                ready.append(dependent)
+    if visited != len(package_names):
+        return "TEST_TRIGGER_GRAPH_CYCLE"
+
+    triggers: dict[str, set[str]] = {name: set() for name in package_names}
+    seen_relations: set[tuple[str, str]] = set()
+    for source, target in trigger_relations:
+        if source not in package_names or target not in package_names:
+            return "TEST_TRIGGER_RELATION_UNKNOWN"
+        if source == target:
+            return "TEST_TRIGGER_RELATION_SELF"
+        relation = (source, target)
+        if relation in seen_relations:
+            return "TEST_TRIGGER_RELATION_DUPLICATE"
+        seen_relations.add(relation)
+        triggers[source].add(target)
+
+    changed = set(changed_packages)
+    if len(changed) != len(changed_packages):
+        return "TEST_TRIGGER_CHANGED_DUPLICATE"
+    if not changed.issubset(package_names):
+        return "TEST_TRIGGER_CHANGED_UNKNOWN"
+
+    build_closure = set(changed)
+    pending = list(changed)
+    while pending:
+        name = pending.pop()
+        for dependent in dependents[name]:
+            if dependent not in build_closure:
+                build_closure.add(dependent)
+                pending.append(dependent)
+
+    affected = set(build_closure)
+    for source in build_closure:
+        affected.update(triggers[source])
+
+    closed = set(affected)
+    pending = list(affected)
+    while pending:
+        name = pending.pop()
+        for prerequisite in prerequisites[name]:
+            if prerequisite not in closed:
+                closed.add(prerequisite)
+                pending.append(prerequisite)
+    return changed, affected, closed - affected
 
 
 def _expected_diff_selection(
@@ -4254,7 +4824,26 @@ def _validate_pure_result_semantics(
     outcome = result["outcome"]
     diagnostic_codes = [item["code"] for item in result["diagnostics"]]
 
-    if domain == "ci_gate_selection":
+    if domain == "cargo_manifest_snapshot":
+        expected = _expected_cargo_manifest_snapshot(options)
+        if isinstance(expected, str):
+            if (
+                outcome != "error"
+                or payload
+                or result["diagnostics"]
+                != [{"code": expected, "severity": "error"}]
+            ):
+                raise ConformanceError(
+                    f"{prefix}_CARGO_MANIFEST_ERROR_INVALID",
+                    "Cargo manifest snapshot failure requires an empty result and exactly its stable oracle error",
+                )
+            return
+        if outcome != "ok" or payload.get("entries") != expected:
+            raise ConformanceError(
+                f"{prefix}_CARGO_MANIFEST_SNAPSHOT_INVALID",
+                "Cargo manifest snapshot does not match the strict source-order oracle",
+            )
+    elif domain == "ci_gate_selection":
         expected_gates = _expected_ci_gate_selection(options)
         if isinstance(expected_gates, str):
             if (
@@ -4292,6 +4881,36 @@ def _validate_pure_result_semantics(
             raise ConformanceError(
                 f"{prefix}_GRAPH_RESULT_INVALID",
                 "graph result does not match the independent topology oracle",
+            )
+    elif domain == "diff_selection" and _is_test_trigger_selection(options):
+        expected_sets = _expected_test_trigger_selection(options)
+        if isinstance(expected_sets, str):
+            if (
+                outcome != "error"
+                or payload
+                or result["diagnostics"]
+                != [{"code": expected_sets, "severity": "error"}]
+            ):
+                raise ConformanceError(
+                    f"{prefix}_TEST_TRIGGER_ERROR_INVALID",
+                    "test-trigger selection requires an empty result and exactly "
+                    "its stable oracle error",
+                )
+            return
+        if outcome != "ok":
+            raise ConformanceError(
+                f"{prefix}_TEST_TRIGGER_OUTCOME_INVALID",
+                "successful test-trigger selection oracle requires an ok result",
+            )
+        actual_sets = (
+            set(payload["changed_packages"]),
+            set(payload["affected_packages"]),
+            set(payload["prerequisite_packages"]),
+        )
+        if actual_sets != expected_sets:
+            raise ConformanceError(
+                f"{prefix}_TEST_TRIGGER_RESULT_INVALID",
+                "test-trigger result does not match one-hop and prerequisite closure",
             )
     elif domain == "diff_selection":
         expected_sets = _expected_diff_selection(

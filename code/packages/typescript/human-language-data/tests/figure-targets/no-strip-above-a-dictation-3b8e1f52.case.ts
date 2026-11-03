@@ -9,7 +9,6 @@
 // order in front of you". See "A Writing block that is a dictation" in
 // src/figure-targets.ts and the matching HL06 section.
 import { describe, expect, it } from "vitest";
-import { resolvedFigureTargets } from "../../src/figure-cli.js";
 import {
   filmstripBlockIndex,
   filmstripCandidates,
@@ -19,9 +18,14 @@ import {
   writingLetterOf,
 } from "../../src/figure-targets.js";
 import { writtenLettersOf } from "../../src/letter-anchoring.js";
-import { defaultCurriculumRoot, loadLessons } from "../../src/loader.js";
 import type { ParsedLesson } from "../../src/parse.js";
 import { lesson } from "./fixture.js";
+import {
+  realCorpusLessonIds,
+  realCorpusStripProseLessons,
+  realCorpusTargetOwners,
+  realCorpusTargets,
+} from "./real-corpus-fixture.js";
 
 const NO_MODEL_STAGES = [
   "dictation-transcription",
@@ -89,14 +93,10 @@ describe("no strip above a dictation", () => {
 });
 
 describe("no-model Writing blocks in the real corpus", () => {
-  const root = defaultCurriculumRoot();
-  const lessons = loadLessons(root);
-  const byId = new Map(lessons.map((entry) => [entry.realization.lessonId, entry]));
-  const drawn = new Set(
-    resolvedFigureTargets(root, lessons)
-      .filter((target) => target.kind === "script-filmstrip")
-      .map((target) => target.lessonId),
-  );
+  // The suite's one scan of the real corpus: `byId` holds every lesson that can
+  // own a target, which covers every drawn one; existence is asked of all ids.
+  const byId = realCorpusTargetOwners;
+  const drawn = new Set(realCorpusTargets.map((target) => target.lessonId));
 
   it("prints no strip in a block that shows no model", () => {
     const blind = [...drawn].filter((id) => {
@@ -145,7 +145,7 @@ describe("no-model Writing blocks in the real corpus", () => {
       "SA-W05-vocalic-r-dictation",
       "TE-S01-dictation",
     ]) {
-      expect(byId.has(id), id).toBe(true);
+      expect(realCorpusLessonIds.has(id), id).toBe(true);
       expect(drawn.has(id), id).toBe(false);
     }
     for (const id of ["ES-W00-hola-delayed-copy", "SA-S02-letter-na", "GU-W01-haa-delayed-copy"]) {
@@ -166,23 +166,16 @@ describe("a lesson that prints no filmstrip", () => {
   // The converse of a-strip-lesson-never-disclaims-its-stroke-order: the
   // prose written for strip lessons ("follow the numbered strip", "The strip
   // shows where to start") must not be left on a lesson whose strip has gone.
-  const FIGURE_PROSE = /numbered strip|\bthe strip (?:shows|names|writes|gives|draws)\b/i;
-  const root = defaultCurriculumRoot();
-  const lessons = loadLessons(root);
-  const drawn = new Set(
-    resolvedFigureTargets(root, lessons)
-      .filter((target) => target.kind === "script-filmstrip")
-      .map((target) => target.lessonId),
-  );
+  // That prose is `STRIP_PROSE` in ./strip-prose.ts, matched once per lesson
+  // while the shared fixture scans the corpus.
+  const drawn = new Set(realCorpusTargets.map((target) => target.lessonId));
 
   it("never tells the learner to follow a strip", () => {
-    const orphaned = lessons
-      .filter((entry) => !drawn.has(entry.realization.lessonId) && FIGURE_PROSE.test(entry.body))
-      .map((entry) => entry.realization.lessonId);
+    const orphaned = [...realCorpusStripProseLessons].filter((id) => !drawn.has(id));
     expect(orphaned).toEqual([]);
   });
 
   it("is a live check: strip lessons do use that wording", () => {
-    expect(lessons.some((entry) => drawn.has(entry.realization.lessonId) && FIGURE_PROSE.test(entry.body))).toBe(true);
+    expect([...realCorpusStripProseLessons].some((id) => drawn.has(id))).toBe(true);
   });
 });

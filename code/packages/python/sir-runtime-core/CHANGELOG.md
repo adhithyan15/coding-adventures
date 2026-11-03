@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — Ruby's `nil.to_s` (#18798)
+
+Under the `"ruby"` display convention `to_display(None)` is the empty string,
+Ruby's `nil.to_s`, so `puts nil` prints an empty line, `print nil` prints
+nothing, and `"a#{nil}b"` is `ab`.  It was `nil`.  The Lisp convention is
+unchanged.  (An array still renders through `str`, so its elements are not
+affected.)  Tests `test_display_convention_ruby_booleans` (updated) and
+`test_ruby_puts_and_print_of_nil`.
+
 ## Unreleased — `ArityError`: a strict closure's error is SIR's `ArgumentError` (issue #18466)
 
 `apply` now checks a lambda's (strict closure's) argument count before the

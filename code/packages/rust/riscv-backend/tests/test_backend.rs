@@ -1,7 +1,7 @@
 //! End-to-end byte and simulator tests for the RV32I CIR backend.
 
 use jit_core::backend::{Backend, FunctionContext};
-use jit_core::cir::{CIRInstr, CIROperand};
+use jit_core::cir::{CIRInstr, CIROperand, RAW_BYTES_LITERAL_NAME};
 use riscv_backend::{compile, compile_module, run_binary, run_binary_with_input, BackendError, ModuleFunction, Riscv32Backend};
 use riscv_simulator::HOST_ECALL_FLOAT_CONVERSION_FAULT_EXIT_CODE;
 use vm_core::value::Value;
@@ -1958,6 +1958,23 @@ fn linked_module_loads_initialized_string_data_images() {
     assert!(result.halted);
     assert_eq!(result.return_value, i32::from(b'H') + i32::from(b'I'));
     assert_eq!(result.return_value_high, 0);
+}
+
+/// LANG83 PR5b (security re-review, L2-a): a raw-byte `Operand::Bytes` literal
+/// reaches CIR as the reserved name `RAW_BYTES_LITERAL_NAME`, which is not its
+/// bytes. This backend takes a `str_const` operand's text as the literal, so it
+/// emitted "\0<raw-byte literal>" for every raw-byte literal (all sharing one
+/// data image). It now refuses one.
+#[test]
+fn a_raw_byte_literal_str_const_is_refused_not_miscompiled() {
+    let main = vec![
+        ci("str_const", Some("s"), vec![CIROperand::Var(RAW_BYTES_LITERAL_NAME.into())], "str"),
+        ci("const_i64", Some("zero"), vec![CIROperand::Int(0)], "i64"),
+        ci("ret_i64", None, vec![CIROperand::Var("zero".into())], "i64"),
+    ];
+    let functions = [ModuleFunction { context: ctx("main", &[], "i64"), cir: &main }];
+    let err = compile_module(&functions, Some("main")).expect_err("a raw-byte literal must be refused");
+    assert!(format!("{err}").contains("raw-byte"), "{err}");
 }
 
 #[test]

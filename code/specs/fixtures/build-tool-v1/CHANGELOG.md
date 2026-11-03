@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-03
+
+- Added twelve closed `cargo_manifest_snapshot` fixtures and the matching pure
+  schema/oracle contract. Explicit Rust-root, Mosaic-root, and crate-closure
+  profiles consume only inert manifest text and preserve source-order Cargo
+  dependency provenance; unsafe portable paths, unmodeled table shapes, and
+  unsupported nested fields fail closed. The runner also pins the inclusive
+  1 MiB manifest and 256-line continued-entry boundaries. The corpus now has
+  197 cases.
+
 ## 2026-11-02
 
 - `resolution/rust-field-aware` pins quoted field and sub-table keys, which

@@ -1,0 +1,11 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 HTML line-break normalization vertical slice",
+  "fixtures": [
+    {
+      "name": "visible-c4-text-line-breaks",
+      "source": "C4Deployment\ntitle Banking<br/>Platform\nPerson(customer, \"Retail<br>Customer\", \"Uses<br />banking\")\nNode(host, \"Application<br/>Host\", \"Linux<br>VM\", \"Primary<br />runtime\") {\n  Container(app, \"Banking<br/>App\", \"TypeScript<br>Node\", \"Handles<br />accounts\")\n}\nRel(customer, app, \"Uses<br/>daily\", \"HTTPS<br>JSON\", \"Browser<br />request\")"
+    }
+  ]
+}

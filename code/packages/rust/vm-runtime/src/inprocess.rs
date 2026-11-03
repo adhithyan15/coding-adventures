@@ -127,7 +127,7 @@ impl InProcessVMRuntime {
 fn vmresult_to_value(r: &VmResult) -> Option<Value> {
     Some(match r.tag {
         VmResultTag::Bool => Value::Bool(r.payload != 0),
-        VmResultTag::Str => Value::Str(String::new()), // intern pool TBD
+        VmResultTag::Str => Value::str(""), // intern pool TBD
         VmResultTag::Void => Value::Null,
         VmResultTag::Trap => Value::Null,
         // A symbol id is a `u32`; a wider payload was not made by

@@ -16,6 +16,7 @@ import {
   loadReadingReachFloors,
   loadEverything,
 } from "../src/loader.js";
+import { parseLesson } from "../src/parse.js";
 import { measureReadingReach, passageLength } from "../src/reading-reach.js";
 
 const root = defaultCurriculumRoot();
@@ -24,6 +25,42 @@ const inventories = inventoryIds.map(({ language, level }) => loadTaskShapeInven
 const report = measureReadingReach(loadEverything().lessons, inventories);
 
 const floors = loadReadingReachFloors(root);
+
+describe("a reading-reach row uses only its own track", () => {
+  function passageLesson(language: string, id: string, passage: string) {
+    return parseLesson(
+      [
+        "---",
+        "schema_version: 2",
+        `id: ${id}`,
+        "chapter: 1",
+        "type: reading",
+        "headword: passage",
+        "gloss: passage",
+        "concept_tag: READING-PASSAGE",
+        "---",
+        `# ${id}`,
+        "",
+        "## Reading",
+        "",
+        `> ${passage}`,
+        "",
+      ].join("\n"),
+      language,
+    );
+  }
+
+  it("keeps Spanish's row when an unrelated track has a much longer passage", () => {
+    const spanish = passageLesson("spanish", "ES-C01-short", "Uno dos.");
+    const french = passageLesson("french", "FR-C01-long", "mot ".repeat(500));
+    const inventory = loadTaskShapeInventory("spanish", "A2");
+
+    const local = measureReadingReach([spanish], [inventory]).rows[0];
+    const withOther = measureReadingReach([spanish, french], [inventory]).rows[0];
+    expect(local?.longestPassageWords).toBe(2);
+    expect(withOther).toEqual(local);
+  });
+});
 
 describe("reading reach is measured for every task shape, not a chosen few", () => {
   // The bug this guards against is not a wrong number, it is a MISSING ROW. Four

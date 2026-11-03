@@ -357,6 +357,46 @@ pub fn run_module_tree(
 mod tests {
     use super::*;
 
+    // ── The compiler's register budget is this VM's frame (#18474) ──
+    //
+    // `twig-ir-compiler` cannot depend on this crate (we depend on it), so
+    // it writes the frame limit down as `MAX_REGISTERS_PER_FUNCTION`; this
+    // is the test that keeps the two numbers equal, and that runs both
+    // sides of the boundary on the dispatcher itself.  Each top-level `1`
+    // is one `const` into a fresh register, so N of them need N registers.
+
+    #[test]
+    fn compiler_register_budget_is_the_frame_limit() {
+        assert_eq!(twig_ir_compiler::MAX_REGISTERS_PER_FUNCTION, MAX_REGISTERS_PER_FRAME);
+        // The module's instruction budget is sized so that a profiled run
+        // of any module the compiler accepts fits the profile table: a
+        // module has at most one profile slot per instruction.
+        const { assert!(twig_ir_compiler::MAX_IIR_INSTRUCTIONS_PER_MODULE <= MAX_PROFILED_INSTRUCTION_SLOTS) };
+    }
+
+    #[test]
+    #[cfg_attr(miri, ignore = "2^16 safe-Rust parse + dispatch steps; very slow under Miri, no unsafe reached")]
+    fn a_main_of_exactly_the_frame_limit_runs() {
+        let src = "1\n".repeat(MAX_REGISTERS_PER_FRAME);
+        let v = TwigVM::new().run(&src).expect("65,536 registers fit the frame");
+        assert_eq!(v.as_int(), Some(1));
+    }
+
+    #[test]
+    #[cfg_attr(miri, ignore = "2^16 safe-Rust parse steps; very slow under Miri, no unsafe reached")]
+    fn a_main_one_register_over_the_frame_is_a_compile_error() {
+        // Before #18474 this compiled and then failed in the dispatcher
+        // with "frame register count exceeds MAX_REGISTERS_PER_FRAME".
+        let src = "1\n".repeat(MAX_REGISTERS_PER_FRAME + 1);
+        match TwigVM::new().run(&src) {
+            Err(TwigRunError::Compile(e)) => {
+                assert!(e.message.starts_with("registers per function exceeds"), "{e}");
+                assert_eq!((e.line, e.column), (MAX_REGISTERS_PER_FRAME + 1, 1));
+            }
+            other => panic!("expected a compile-time budget error, got {other:?}"),
+        }
+    }
+
     // ── Compile-only tests (preserved from PR 3) ────────────────────
 
     #[test]

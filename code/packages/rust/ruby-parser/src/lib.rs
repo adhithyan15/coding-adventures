@@ -3687,6 +3687,30 @@ mod tests {
         }
     }
 
+    /// #18798 — a jump with a trailing modifier (`return x if c`, `next if
+    /// c`, `break unless c`) is a `modifier_statement` whose left side is the
+    /// jump.  The jump rule took `return x` and left `if_modifier c` to start
+    /// a statement of its own (read as a call of a method `if_modifier`), and
+    /// `next if c` took an `if` statement as its argument.
+    #[test]
+    fn test_parse_a_jump_with_a_modifier() {
+        for (src, jump) in [
+            ("def f(c)\n  return 1 if c\n  2\nend", "return_statement"),
+            ("while true\n  next if c\n  puts 1\nend", "next_statement"),
+            ("while true\n  break unless c\nend", "break_statement"),
+        ] {
+            let ast = parse_ruby(src);
+            let modifier = find_descendant(&ast, "modifier_statement").unwrap_or_else(|| panic!("{src:?}"));
+            assert!(find_descendant(modifier, jump).is_some(), "{src:?}");
+            assert!(find_descendant(&ast, "if_statement").is_none(), "{src:?}");
+            assert!(!tree_has_token_value(modifier, "puts"), "{src:?}: the next line is its own statement");
+        }
+        // A jump with no modifier is still a plain statement.
+        let ast = parse_ruby("def f\n  return 1\nend");
+        assert!(find_descendant(&ast, "modifier_statement").is_none());
+        assert!(find_descendant(&ast, "return_statement").is_some());
+    }
+
     /// #18798 — `rescue Boom` ⏎ `puts 40`: the class list ends at the line
     /// break (it read `Boom(puts 40)`), and `;` separates statements.
     #[test]

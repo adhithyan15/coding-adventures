@@ -26,7 +26,7 @@
 //! 2. All node shapes (filled over edges so endpoints are hidden).
 //! 3. All text (node labels + edge labels + title) via `layout-to-paint`.
 
-pub const VERSION: &str = "0.90.0";
+pub const VERSION: &str = "0.95.0";
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -7533,18 +7533,20 @@ where
         } else {
             (group.x + 10.0, group.width - 20.0)
         };
+        let label_height = label.split('\n').count() as f64 * group.style.font_size * 1.3;
         text_children.push(text_node(
             &label,
             label_x,
             group.y + 6.0,
             label_width,
-            ls * 1.3,
+            label_height,
             {
                 let mut font = lf.clone();
                 font.size = group.style.font_size;
                 font.weight = group.style.font_weight;
                 font.italic = group.style.font_italic;
                 font.family.clone_from(&group.style.font_family);
+                font.line_height = 1.3;
                 font
             },
             css_to_color(&group.style.text_color),
@@ -7567,13 +7569,18 @@ where
                 diagram_ir::StructuralGroupMetadata::Architecture { .. } => String::new(),
             };
             if !details.is_empty() {
+                let detail_height = details.split('\n').count() as f64 * ls * 1.4;
                 text_children.push(text_node(
                     &details,
                     group.x + 10.0,
-                    group.y + 20.0,
+                    group.y + 6.0 + label_height,
                     group.width - 20.0,
-                    ls,
-                    lf.clone(),
+                    detail_height,
+                    {
+                        let mut font = lf.clone();
+                        font.line_height = 1.4;
+                        font
+                    },
                     css_to_color(&group.style.text_color),
                 ));
             }
@@ -7616,12 +7623,13 @@ where
             )));
         }
         if let Some((pos, lbl)) = rel.label.as_ref().filter(|(_, label)| !label.is_empty()) {
+            let label_height = lbl.split('\n').count() as f64 * ls * 1.4;
             instructions.push(PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
                 x: pos.x - 44.0,
-                y: pos.y - ls * 0.7,
+                y: pos.y - label_height / 2.0,
                 width: 88.0,
-                height: ls * 1.4,
+                height: label_height,
                 fill: Some("#ffffff".into()),
                 stroke: None,
                 stroke_width: None,
@@ -7632,10 +7640,14 @@ where
             text_children.push(text_node(
                 lbl,
                 pos.x - 40.0,
-                pos.y - ls / 2.0,
+                pos.y - label_height / 2.0,
                 80.0,
-                ls * 1.2,
-                lf.clone(),
+                label_height,
+                {
+                    let mut font = lf.clone();
+                    font.line_height = 1.4;
+                    font
+                },
                 css_to_color(&rel.style.text_color),
             ));
         }
@@ -10350,7 +10362,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.90.0");
+        assert_eq!(crate::VERSION, "0.95.0");
     }
 
     #[test]

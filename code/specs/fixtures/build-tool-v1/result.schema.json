@@ -296,6 +296,7 @@
     },
     "domain": {
       "enum": [
+        "cargo_manifest_snapshot",
         "ci_gate_selection",
         "discovery",
         "resolution",

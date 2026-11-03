@@ -14,6 +14,7 @@ use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
 pub const MAX_GRAPH_PACKAGES: usize = 4_096;
 pub const MAX_GRAPH_EDGES: usize = 16_384;
+pub const MAX_TEST_TRIGGER_RELATIONS: usize = 16_384;
 pub const MAX_SOURCE_GLOBS: usize = 256;
 pub const MAX_DIFF_SELECTION_MATCH_WORK: u64 = 50_000_000;
 pub const MAX_UNIQUE_GLOB_DECLARATION_BYTES: usize = 4_194_304;
@@ -116,6 +117,28 @@ pub struct DiffSelectionResult {
     pub prerequisite_packages: Vec<String>,
 }
 
+/// Inert inputs for Cargo-style test-trigger selection.
+///
+/// `edges` are ordinary prerequisite-to-dependent graph edges.
+/// `trigger_relations` use the same representation, but mean "when the
+/// prerequisite-side package is selected for building, also test the
+/// dependent-side package". Trigger relations are intentionally not graph
+/// edges: they are followed exactly once and may contain cycles.
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct TestTriggerSelectionInput {
+    pub packages: Vec<String>,
+    pub edges: Vec<Edge>,
+    pub trigger_relations: Vec<Edge>,
+    pub changed_packages: Vec<String>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct TestTriggerSelectionResult {
+    pub changed_packages: Vec<String>,
+    pub affected_packages: Vec<String>,
+    pub prerequisite_packages: Vec<String>,
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Evaluation<T> {
     Success(T),
@@ -171,6 +194,108 @@ pub fn evaluate_diff_selection(input: &DiffSelectionInput) -> Evaluation<DiffSel
     match try_evaluate_diff_selection(input) {
         Ok(result) => Evaluation::Success(result),
         Err(code) => Evaluation::Failure(code),
+    }
+}
+
+/// Select Cargo test targets from already-validated repository facts.
+///
+/// The operation first closes changed packages over ordinary dependents,
+/// follows test-trigger relations exactly one hop from that build closure,
+/// and finally adds ordinary prerequisites for the resulting union. It does
+/// not read manifests, inspect a checkout, or otherwise acquire authority.
+pub fn evaluate_test_trigger_selection(
+    input: &TestTriggerSelectionInput,
+) -> Evaluation<TestTriggerSelectionResult> {
+    match try_evaluate_test_trigger_selection(input) {
+        Ok(result) => Evaluation::Success(result),
+        Err(code) => Evaluation::Failure(code),
+    }
+}
+
+fn try_evaluate_test_trigger_selection(
+    input: &TestTriggerSelectionInput,
+) -> Result<TestTriggerSelectionResult, &'static str> {
+    if input.packages.len() > MAX_GRAPH_PACKAGES {
+        return Err("TEST_TRIGGER_PACKAGE_LIMIT_EXCEEDED");
+    }
+    if input.edges.len() > MAX_GRAPH_EDGES {
+        return Err("TEST_TRIGGER_GRAPH_EDGE_LIMIT_EXCEEDED");
+    }
+    if input.trigger_relations.len() > MAX_TEST_TRIGGER_RELATIONS {
+        return Err("TEST_TRIGGER_RELATION_LIMIT_EXCEEDED");
+    }
+    if input.changed_packages.len() > MAX_GRAPH_PACKAGES {
+        return Err("TEST_TRIGGER_CHANGED_LIMIT_EXCEEDED");
+    }
+
+    let graph =
+        validate_graph(&input.packages, &input.edges).map_err(test_trigger_graph_diagnostic)?;
+    if graph_levels(&graph).is_none() {
+        return Err("TEST_TRIGGER_GRAPH_CYCLE");
+    }
+
+    let mut triggers = BTreeMap::<String, Vec<String>>::new();
+    let mut seen_relations = BTreeSet::new();
+    for relation in &input.trigger_relations {
+        if !graph.names.contains(&relation.prerequisite)
+            || !graph.names.contains(&relation.dependent)
+        {
+            return Err("TEST_TRIGGER_RELATION_UNKNOWN");
+        }
+        if relation.prerequisite == relation.dependent {
+            return Err("TEST_TRIGGER_RELATION_SELF");
+        }
+        if !seen_relations.insert(relation.clone()) {
+            return Err("TEST_TRIGGER_RELATION_DUPLICATE");
+        }
+        triggers
+            .entry(relation.prerequisite.clone())
+            .or_default()
+            .push(relation.dependent.clone());
+    }
+    for values in triggers.values_mut() {
+        values.sort();
+    }
+
+    let mut changed = BTreeSet::new();
+    for name in &input.changed_packages {
+        if !changed.insert(name.clone()) {
+            return Err("TEST_TRIGGER_CHANGED_DUPLICATE");
+        }
+        if !graph.names.contains(name) {
+            return Err("TEST_TRIGGER_CHANGED_UNKNOWN");
+        }
+    }
+
+    let build_closure = closure(&changed, &graph.dependents);
+    let mut affected = build_closure.clone();
+    for source in &build_closure {
+        if let Some(targets) = triggers.get(source) {
+            affected.extend(targets.iter().cloned());
+        }
+    }
+    let mut prerequisites = closure(&affected, &graph.prerequisites);
+    for name in &affected {
+        prerequisites.remove(name);
+    }
+
+    Ok(TestTriggerSelectionResult {
+        changed_packages: changed.into_iter().collect(),
+        affected_packages: affected.into_iter().collect(),
+        prerequisite_packages: prerequisites.into_iter().collect(),
+    })
+}
+
+fn test_trigger_graph_diagnostic(code: &'static str) -> &'static str {
+    match code {
+        "GRAPH_PACKAGE_LIMIT_EXCEEDED" => "TEST_TRIGGER_PACKAGE_LIMIT_EXCEEDED",
+        "GRAPH_PACKAGE_INVALID" => "TEST_TRIGGER_PACKAGE_INVALID",
+        "GRAPH_PACKAGE_DUPLICATE" => "TEST_TRIGGER_PACKAGE_DUPLICATE",
+        "GRAPH_EDGE_LIMIT_EXCEEDED" => "TEST_TRIGGER_GRAPH_EDGE_LIMIT_EXCEEDED",
+        "GRAPH_EDGE_UNKNOWN" => "TEST_TRIGGER_GRAPH_EDGE_UNKNOWN",
+        "GRAPH_EDGE_SELF" => "TEST_TRIGGER_GRAPH_EDGE_SELF",
+        "GRAPH_EDGE_DUPLICATE" => "TEST_TRIGGER_GRAPH_EDGE_DUPLICATE",
+        _ => "TEST_TRIGGER_GRAPH_INVALID",
     }
 }
 

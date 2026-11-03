@@ -96,7 +96,7 @@ fn pop_removes_and_returns_the_last_element() {
 #[test]
 fn pop_on_empty_is_nil() {
     match run_ruby("puts [].pop\n") {
-        Some(out) => assert_eq!(out, "nil\n"),
+        Some(out) => assert_eq!(out, "\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -112,7 +112,7 @@ fn shift_removes_and_returns_the_first_element_and_shifts_the_rest() {
 #[test]
 fn shift_on_empty_is_nil() {
     match run_ruby("puts [].shift\n") {
-        Some(out) => assert_eq!(out, "nil\n"),
+        Some(out) => assert_eq!(out, "\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -132,7 +132,7 @@ fn array_include_and_index() {
     match run_ruby(
         "puts [1, 2, 3].include?(2)\nputs [1, 2, 3].include?(9)\nputs [1, 2, 3].index(2)\nputs [1, 2, 3].index(9)\n",
     ) {
-        Some(out) => assert_eq!(out, "#t\n#f\n1\nnil\n"),
+        Some(out) => assert_eq!(out, "true\nfalse\n1\n\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -158,7 +158,7 @@ fn array_fetch_negative_index_counts_from_the_end() {
 #[test]
 fn array_values_at_multiple_indices() {
     match run_ruby("puts [10, 20, 30, 40].values_at(0, 2, 9, -1)\n") {
-        Some(out) => assert_eq!(out, "10\n30\nnil\n40\n"),
+        Some(out) => assert_eq!(out, "10\n30\n\n40\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -188,7 +188,7 @@ fn array_zip_pads_shorter_others_with_nil() {
     // unpacked to scalars, not just the outer `[[1,4], [2,5], [3,nil]]`
     // level.
     match run_ruby("puts [1, 2, 3].zip([4, 5])\n") {
-        Some(out) => assert_eq!(out, "1\n4\n2\n5\n3\nnil\n"),
+        Some(out) => assert_eq!(out, "1\n4\n2\n5\n3\n\n"),
         None => eprintln!("skip: no cc"),
     }
 }

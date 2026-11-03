@@ -54,7 +54,7 @@
 use interpreter_ir::IIRModule;
 use jvm_class_file::JvmClassFile;
 
-use crate::lower::{lower_iir_to_jvm, IIRJvmConfig};
+use crate::lower::{lower_iir_to_jvm, IIRJvmConfig, IIRJvmError};
 use crate::validate::validate_for_jvm;
 
 // ── IIRJvmCodeGenerator ───────────────────────────────────────────────────────
@@ -149,6 +149,18 @@ impl IIRJvmCodeGenerator {
     pub fn generate(&self, ir: &IIRModule) -> JvmClassFile {
         lower_iir_to_jvm(ir, &self.config)
             .expect("IIRJvmCodeGenerator::generate called on invalid IIRModule; call validate() first")
+    }
+
+    /// Lower `ir` to a `JvmClassFile`, or say why it cannot be.
+    ///
+    /// Use this, not [`IIRJvmCodeGenerator::generate`], on a module you did
+    /// not build. `validate` cannot see every limit: a module may validate
+    /// and still exceed the class-file format (65 535 pool entries, 65 535
+    /// bytes of code or local slots, a 65 535-byte name), which lowering
+    /// reports as [`IIRJvmError::ClassFileLimit`] (LANG83 PR5b security
+    /// re-review, I2).
+    pub fn try_generate(&self, ir: &IIRModule) -> Result<JvmClassFile, IIRJvmError> {
+        lower_iir_to_jvm(ir, &self.config)
     }
 }
 

@@ -191,7 +191,7 @@ fn shift_binds_looser_than_plus_and_tighter_than_comparison_end_to_end() {
     // `tests/emit.rs`), so this runtime's default Lisp-style boolean
     // display (`#f`, not `false`) applies here.
     match run_ruby("puts((1 + 2 << 3) == 10)\nputs(1 + 2 << 3)\n") {
-        Some(out) => assert_eq!(out, "#f\n24\n"),
+        Some(out) => assert_eq!(out, "false\n24\n"),
         None => eprintln!("skip: no cc"),
     }
 }

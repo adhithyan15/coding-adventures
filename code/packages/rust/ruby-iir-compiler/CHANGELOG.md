@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased — #18475: `run_module`'s step budget comes from the module
+
+### Fixed
+
+- **`run_module` gave every module a flat 1,000,000 steps.** A hand-built
+  module passed to this public function, `label L; jmp L`, spun a million
+  steps before stopping. The budget is now `step_budget(module)` =
+  `len(main) + 1`, capped at `MAX_IIR_INSTRUCTIONS + 1`, as Python's
+  runner derives its own: the compiler's output is one straight-line
+  `main`, so each instruction runs at most once and that is exactly
+  enough. The loop now stops after 3 steps.
+
+### Tests
+
+- `compiled_output_runs_on_a_budget_of_its_own_length`: compiler output
+  gets `len(main) + 1` and runs to the end.
+- `a_module_that_revisits_an_instruction_passes_its_budget`: an 8-instruction
+  module that runs 10 steps (one backward jump) is stopped at its budget
+  of 9; before #18475 it ran to the end.
+- `a_spinning_module_stops_after_its_own_length_plus_one`: `label L;
+  jmp L` stops at 3; no `main` gets 1; a hand-built `main` longer than the
+  instruction budget is capped.
+
 ## Unreleased — grammar-tools automatic insertion (E6 `@asi`)
 
 ### Changed

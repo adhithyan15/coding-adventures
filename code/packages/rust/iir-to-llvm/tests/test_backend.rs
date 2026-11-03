@@ -1581,8 +1581,11 @@ fn e4_string_literal_cmp_folds_to_integer_return() {
     );
 }
 
+/// LANG83 PR5b: a literal is bytes. A non-ASCII `Str` literal (this test
+/// pinned its refusal before PR5b) and a raw-byte `Bytes` literal both
+/// validate, and each is one `c"\XX…"` constant of exactly its bytes.
 #[test]
-fn e4_str_const_rejects_non_ascii_literal() {
+fn e4_str_const_emits_any_literal_byte_exactly() {
     let f = IIRFunction::new(
         "main",
         vec![],
@@ -1590,14 +1593,43 @@ fn e4_str_const_rejects_non_ascii_literal() {
         vec![
             IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hé".into())], "str"),
             IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+            IIRInstr::new("str_const", Some("t".into()), vec![Operand::Bytes(vec![0x00, 0x0A, 0xFF])], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("t".into())], "void"),
             IIRInstr::new("ret_void", None, vec![], "void"),
         ],
     );
-    let errors = validate_for_llvm(&module_with(f));
-    assert!(
-        errors.iter().any(|e| e.contains("printable ASCII")),
-        "non-ASCII literal should be rejected in this foothold; got {errors:?}"
+    let module = module_with(f);
+    let errors = validate_for_llvm(&module);
+    assert!(errors.is_empty(), "any literal validates; got {errors:?}");
+    let ll = lower(&module);
+    assert!(ll.contains(r#"[3 x i8] c"\68\C3\A9""#), "\"hé\" is its three UTF-8 bytes:\n{ll}");
+    assert!(ll.contains(r#"[3 x i8] c"\00\0A\FF""#), "the raw bytes, exactly:\n{ll}");
+}
+
+/// LANG83 PR5b: a literal `str_slice` that splits a UTF-8 character folds to
+/// the lone byte (`"é"[1..2]` is `A9`). The pre-pass skipped it and the
+/// lowering then refused to compile it ("does not preserve UTF-8").
+#[test]
+fn e4_literal_str_slice_may_split_a_utf8_character() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("é".into())], "str"),
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(2)], "i64"),
+            IIRInstr::new("str_slice", Some("t".into()), vec![
+                Operand::Var("s".into()), Operand::Var("a".into()), Operand::Var("b".into()),
+            ], "str"),
+            IIRInstr::new("print_str", None, vec![Operand::Var("t".into())], "void"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
     );
+    let module = module_with(f);
+    assert!(validate_for_llvm(&module).is_empty());
+    let ll = lower(&module);
+    assert!(ll.contains(r#"[1 x i8] c"\A9""#), "the slice is the byte A9:\n{ll}");
 }
 
 // ===========================================================================

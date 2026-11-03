@@ -278,7 +278,7 @@ impl Scheduler {
         match target_state {
             (TaskState::Completed, Some(v), _) => return Ok(Some(v)),
             (TaskState::Completed, None, _)     => return Ok(Some(Value::Null)),
-            (TaskState::Failed, _, Some(e))     => return Ok(Some(Value::Str(e))),
+            (TaskState::Failed, _, Some(e))     => return Ok(Some(Value::str(e))),
             (TaskState::Cancelled, _, _)        => return Ok(Some(Value::Null)),
             _ => {}
         }

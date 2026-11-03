@@ -1075,7 +1075,7 @@ pub fn run_with_debug(
 /// Both entry points that start a run ([`run_with_profile`] and
 /// [`run_with_debug`]; the others delegate to the first) call it.
 fn check_str_ceiling(module: &IIRModule) -> Result<(), RunError> {
-    let errors = module.str_ceiling_errors();
+    let errors = module.str_literal_errors();
     if errors.is_empty() {
         Ok(())
     } else {
@@ -1476,6 +1476,9 @@ fn exec_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
         Operand::Str(text) => {
             dynval_runtime::heap::alloc_string(text.as_bytes())
         }
+        // LANG83 PR5b: a raw-byte literal is a heap string of exactly its
+        // bytes, like a `Str` one (a `LangString` holds bytes, not UTF-8).
+        Operand::Bytes(bytes) => dynval_runtime::heap::alloc_string(bytes),
     };
     frame.set(dest.clone(), value)?;
     Ok(())
@@ -1488,12 +1491,14 @@ fn exec_str_const(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     let src = instr.srcs.first().ok_or_else(|| {
         RunError::MalformedInstruction("str_const requires srcs[0]".into())
     })?;
-    let Operand::Str(text) = src else {
+    // A `Str` literal (its UTF-8) or a raw-byte `Bytes` literal (LANG83
+    // PR5b): either way, exactly these bytes.
+    let Some(bytes) = src.as_lit_bytes() else {
         return Err(RunError::MalformedInstruction(format!(
-            "str_const requires Operand::Str, got {src:?}"
+            "str_const requires a string literal (Operand::Str or Operand::Bytes), got {src:?}"
         )));
     };
-    let value = dynval_runtime::heap::alloc_string(text.as_bytes());
+    let value = dynval_runtime::heap::alloc_string(bytes);
     frame.set(dest.clone(), value)?;
     Ok(())
 }
@@ -1525,8 +1530,9 @@ fn e4_string_arg(
     let src = instr.srcs.get(pos).ok_or_else(|| {
         RunError::MalformedInstruction(format!("{op} requires srcs[{pos}]"))
     })?;
-    if let Operand::Str(text) = src {
-        return Ok(text.as_bytes().to_vec());
+    // An inline literal, `Str` or raw-byte `Bytes` (LANG83 PR5b).
+    if let Some(bytes) = src.as_lit_bytes() {
+        return Ok(bytes.to_vec());
     }
     let value = e4_value_arg(op, instr, frame, pos)?;
     // SAFETY: dispatch values come from the VM's tagged value space.
@@ -1701,13 +1707,9 @@ fn exec_str_slice(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError> {
     if lo > hi || hi > bytes.len() {
         return Err(out_of_range());
     }
-    if let Ok(text) = std::str::from_utf8(&bytes) {
-        if !text.is_char_boundary(lo) || !text.is_char_boundary(hi) {
-            return Err(RunError::Runtime(RuntimeError::TypeError(format!(
-                "str_slice: range {start}..{end} splits a UTF-8 character"
-            ))));
-        }
-    }
+    // LANG83 PR5b: a string is bytes, so any in-range slice is a string —
+    // `str_slice "é", 1, 2` is the lone byte `A9`. (A check that refused a
+    // range splitting a UTF-8 character used to sit here, as in vm-core.)
     frame.set(dest.clone(), dynval_runtime::heap::alloc_string(&bytes[lo..hi]))?;
     Ok(())
 }
@@ -1801,7 +1803,7 @@ fn exec_field_store(instr: &IIRInstr, frame: &mut Frame) -> Result<(), RunError>
         Operand::Float(_) => return Err(RunError::OperandConversion(
             RuntimeError::TypeError("field_store: floats not supported".into()),
         )),
-        Operand::Str(_) => return Err(RunError::OperandConversion(
+        Operand::Str(_) | Operand::Bytes(_) => return Err(RunError::OperandConversion(
             RuntimeError::TypeError("field_store: string operands not supported".into()),
         )),
     };
@@ -4527,19 +4529,39 @@ mod tests {
             // LANG83 PR5a: the registered kind, not an untyped TypeError.
             assert_eq!(e, RunError::Trap { kind: "Trap.Bounds".into() }, "{start}..{end}");
         }
-        // A range that splits a UTF-8 character is rejected too.
+        // LANG83 PR5b: a range that splits a UTF-8 character is an ordinary
+        // byte slice (it used to be refused): `str_slice "é", 1, 2` is the
+        // one byte `A9`, and `str_index` of it reads 0xA9.
         let instrs = vec![
             IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("é".into())], "str"),
             IIRInstr::new(
                 "str_slice",
                 Some("r".into()),
-                vec![Operand::Var("s".into()), Operand::Int(0), Operand::Int(1)],
+                vec![Operand::Var("s".into()), Operand::Int(1), Operand::Int(2)],
                 "str",
             ),
-            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("r".into())], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![Operand::Var("r".into()), Operand::Int(0)], "i64"),
+            IIRInstr::new("call_builtin", Some("k".into()), vec![Operand::Var("*".into()), Operand::Var("n".into()), Operand::Int(1000)], "any"),
+            IIRInstr::new("call_builtin", Some("v".into()), vec![Operand::Var("+".into()), Operand::Var("k".into()), Operand::Var("b".into())], "any"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
         ];
-        let e = run(&module_with_main(instrs, 2)).unwrap_err();
-        assert!(format!("{e:?}").contains("UTF-8"), "{e:?}");
+        assert_eq!(run(&module_with_main(instrs, 6)).unwrap(), LispyValue::int(1000 + 0xA9));
+    }
+
+    /// LANG83 PR5b: a raw-byte `str_const` literal is a heap string of
+    /// exactly its bytes, bytes that no `Str` literal can carry.
+    #[test]
+    fn a_raw_byte_str_const_holds_exactly_its_bytes() {
+        let instrs = vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Bytes(vec![0x00, 0xFF, 0x80])], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("str_index", Some("b".into()), vec![Operand::Var("s".into()), Operand::Int(1)], "i64"),
+            IIRInstr::new("call_builtin", Some("k".into()), vec![Operand::Var("*".into()), Operand::Var("n".into()), Operand::Int(1000)], "any"),
+            IIRInstr::new("call_builtin", Some("v".into()), vec![Operand::Var("+".into()), Operand::Var("k".into()), Operand::Var("b".into())], "any"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ];
+        assert_eq!(run(&module_with_main(instrs, 5)).unwrap(), LispyValue::int(3000 + 0xFF));
     }
 
     #[test]

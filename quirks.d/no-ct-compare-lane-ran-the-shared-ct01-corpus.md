@@ -13,5 +13,7 @@ but no lane's tests reference it. Each lane tests itself with its own
 hand-written cases, so the lanes drifted apart (error types, `eq_fixed`
 meaning) without any test noticing.
 
-**Open:** the Rust lane adopts the corpus in VER26 step 4; the other lanes are
+**Partially addressed:** the Rust lane runs every corpus record through TF01's
+L0 harness (VER26 step 4), with independently checked TFV transport and generated
+fixed-width dispatch. The quirk remains open across the other lanes, owned by
 the package-parity loop's `ct-compare-existing-lane-conformance-adoption` item.

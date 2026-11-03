@@ -239,7 +239,7 @@ const LISTY_PAIR_TYPE: &str = "ref<LispyPair>";
 ///
 /// `IIRClrError::ValidationFailed` with `interpreter-ir`'s messages.
 pub(crate) fn check_str_ceiling(module: &IIRModule) -> Result<(), crate::lower::IIRClrError> {
-    let errors = module.str_ceiling_errors();
+    let errors = module.str_literal_errors();
     if errors.is_empty() {
         Ok(())
     } else {
@@ -269,7 +269,7 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
     // this, but nothing on the way to a backend called it, so every column
     // compiled such a module.  The shared check lives in `interpreter-ir`, so
     // every column refuses exactly the same modules.
-    errors.extend(module.str_ceiling_errors());
+    errors.extend(module.str_literal_errors());
 
     for func in &module.functions {
         // ── Check 2: EmptyFunction ───────────────────────────────────────────

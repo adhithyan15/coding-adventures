@@ -75,7 +75,7 @@ fn abs_works_on_int_and_float() {
 #[test]
 fn even_and_odd_predicates() {
     match run_ruby("puts 4.even?\nputs 4.odd?\nputs 5.even?\nputs 5.odd?\n") {
-        Some(out) => assert_eq!(out, "#t\n#f\n#f\n#t\n"),
+        Some(out) => assert_eq!(out, "true\nfalse\nfalse\ntrue\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -83,7 +83,7 @@ fn even_and_odd_predicates() {
 #[test]
 fn zero_positive_negative_predicates() {
     match run_ruby("puts 0.zero?\nputs 5.positive?\nputs((-5).negative?)\n") {
-        Some(out) => assert_eq!(out, "#t\n#t\n#t\n"),
+        Some(out) => assert_eq!(out, "true\ntrue\ntrue\n"),
         None => eprintln!("skip: no cc"),
     }
 }
@@ -149,7 +149,7 @@ fn clamp_bounds_a_value_into_a_range() {
 #[test]
 fn between_checks_an_inclusive_range() {
     match run_ruby("puts 3.between?(1, 5)\nputs 10.between?(1, 5)\n") {
-        Some(out) => assert_eq!(out, "#t\n#f\n"),
+        Some(out) => assert_eq!(out, "true\nfalse\n"),
         None => eprintln!("skip: no cc"),
     }
 }

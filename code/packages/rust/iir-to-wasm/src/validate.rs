@@ -243,7 +243,7 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
     // this, but nothing on the way to a backend called it, so every column
     // compiled such a module.  The shared check lives in `interpreter-ir`, so
     // every column refuses exactly the same modules.
-    errors.extend(module.str_ceiling_errors());
+    errors.extend(module.str_literal_errors());
 
     for func in &module.functions {
         // ── Check 2: EmptyFunction ───────────────────────────────────────────
@@ -379,25 +379,15 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
             // `putchar` / `getchar` flow through while still rejecting
             // unknown / unsafe builtins.
             if instr.op == "str_const" {
+                // Any bytes (LANG83 PR5b), from a `Str` or a raw-byte `Bytes`
+                // literal: lower.rs copies them into a data segment verbatim,
+                // so no byte needs a special case. This accepted ASCII only.
                 match (instr.dest.as_ref(), instr.srcs.first()) {
-                    (Some(_), Some(interpreter_ir::Operand::Str(s)))
-                        if s.is_ascii()
-                            && s.bytes()
-                                .all(|b| b >= 0x20 || matches!(b, b'\n' | b'\r' | b'\t')) =>
-                    {
-                        // Accepted — lower.rs puts the literal in a data segment.
-                    }
-                    (Some(_), Some(interpreter_ir::Operand::Str(_))) => {
-                        errors.push(format!(
-                            "UnsupportedOp: function {:?}, op \"str_const\" only supports \
-                             printable ASCII string literals in the WASM literal-output slice",
-                            func.name
-                        ));
-                    }
+                    (Some(_), Some(interpreter_ir::Operand::Str(_) | interpreter_ir::Operand::Bytes(_))) => {}
                     _ => {
                         errors.push(format!(
                             "UnsupportedOp: function {:?}, op \"str_const\" requires \
-                             a dest and srcs[0] = Operand::Str(literal)",
+                             a dest and srcs[0] = a string literal (Operand::Str or Operand::Bytes)",
                             func.name
                         ));
                     }

@@ -1,7 +1,10 @@
 # VER26 — The `ct-compare` verification pilot (Rust)
 
-**Status:** Draft. This spec plans the pilot; each step below lands as its own
-PR, spec first, on its own branch.
+**Status:** Pilot in progress. VER09, VER11 and VER10's first bit-vector slice,
+the taxonomy extension and quirks log are on main. TF01 is tracked in #18807.
+The Rust CT01 L0 adapter implements step 4; it is hand-written until Warrant's
+backend replaces it. Each step lands as its own PR, spec first, on its own
+branch. [VER-BACKLOG.md](VER-BACKLOG.md) tracks dependencies and merge evidence.
 
 **Layer:** Repository-wide verification program.
 
@@ -219,8 +222,8 @@ has shipped, the private-advisory path of VER00 §7.3 applies instead.
 whoever owns those lanes (§8.3). The pilot touches only the Rust lane, so it
 does not fix them.
 
-- **No lane runs the CT01 corpus.** `code/specs/fixtures/ct-compare-v1/` is
-  referenced by no package.
+- **Originally no lane ran the CT01 corpus.** Step 4 adds the Rust L0 adapter
+  with checked TFV generation; the other lanes remain with package-parity.
 - **`eq_fixed` is not one operation across lanes.** Some lanes enforce the
   width in the type system, one takes an explicit length with a caller
   precondition, and the rest delegate to `eq`. CT01 needs to say which of

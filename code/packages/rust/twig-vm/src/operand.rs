@@ -104,6 +104,12 @@ pub fn operand_to_value(
                 RuntimeError::Custom(format!("undefined variable: {name}"))
             })
         }
+        // LANG83 PR5b: a raw-byte literal is `str_const`'s alone (where
+        // `exec_str_const` turns it into a heap string). As a general operand
+        // it has no Lispy value: it is not a name, so it cannot be interned.
+        Operand::Bytes(_) => Err(RuntimeError::TypeError(
+            "a raw-byte string literal is only a str_const operand".into(),
+        )),
         // LANG32: Str is a compile-time string literal (e.g. global variable name).
         // In Twig-VM, intern it as a symbol — the same convention used for
         // `Operand::Var` string-shaped names in exec_const.

@@ -351,6 +351,10 @@ Checked integer additions and subtractions may translate one such square root
 before `entier`. Subtraction reverses the root sign and therefore uses the
 same ceiling-root adjustment; overflow, multiple roots, multiplication, real
 division, overrides, and dynamic roots remain conservative.
+Checked integer multiplication may also scale one square root before
+`entier`. The compiler computes the floor from the exact squared coefficient
+in `u128`, including the negated ceiling-root case; overflow, multiple roots,
+division, overrides, and dynamic roots remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.

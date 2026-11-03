@@ -174,14 +174,26 @@ diagram titles may come from YAML front matter or an inline `title` statement,
 with inline titles taking precedence. Standard Mermaid init directives and comments
 are removed before C4 grammar parsing while preserving source line positions; the
 resolved title then survives semantic IR, structural layout, and backend-neutral
-text paint. C4
-bidirectional and backward relationships also preserve their authored endpoint
-arrows through structural layout and backend-neutral PaintInstructions. Core
+text paint. C4 `direction` statements preserve all four Mermaid axes in semantic
+IR and drive structural node placement plus backend-neutral relationship paint. C4
+visible titles, element and deployment text, and relationship details normalize
+Mermaid HTML break variants into line-aware semantic and paint geometry. C4
+bidirectional and backward relationships, including the short `Rel_B` form, also
+preserve their authored endpoint arrows through structural layout and backend-neutral
+PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same
 pipeline for C4 elements and boundaries. Element technology and description
 are distinct in semantic IR, and keyed or positional `UpdateElementStyle`
 technology overrides replace the rendered technology without losing the
-description. Repeated C4 relationships with the same endpoint pair update the
+description. Repeated C4 elements with the same alias update the existing
+semantic node's label, type, details, and enclosing boundary while retaining
+prior `UpdateElementStyle` paint and semantic style overrides. Repeated C4
+boundaries with the same alias likewise update the existing structural group,
+including its label, type metadata, and enclosing boundary, while retaining
+authored boundary styling. Repeated C4
+deployment nodes follow the same alias-based update behavior while preserving
+their typed deployment metadata and portable detail paint. Repeated C4
+relationships with the same endpoint pair update the
 existing semantic relationship, including its arrow and detail metadata, while
 retaining prior `UpdateRelStyle` paint and label offsets. C4 relationship
 technology and description are preserved in typed

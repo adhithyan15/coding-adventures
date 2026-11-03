@@ -39,14 +39,19 @@ preflight above so invalid input remains distinguishable from a non-match.
 The reusable `graph_diff` core accepts only caller-supplied values. It
 canonicalizes graph edges and prerequisite-first levels, performs exact
 package and shared-repository-input selection, and returns either one complete
-result or one stable error code. Strict-glob work is preflighted across the
-whole operation with the neutral 50,000,000 Unicode-scalar ceiling before the
-first match, while first-seen glob declarations are charged by exact UTF-8
-bytes against a separate 4 MiB ceiling before normalization. Repository-boundary
-inputs are depth, node, container, and string bounded; their versioned canonical
-SHA-256 and schema are verified before request-dependent path-classification
-preflights. The core never reads a checkout or acquires process, environment,
-clock, randomness, or network authority.
+result or one stable error code. Its Cargo test-trigger operation starts from
+inert package, graph, relation, and changed-package lists: it closes ordinary
+dependents, follows trigger relations exactly one hop, and only then closes
+ordinary prerequisites. Trigger relations never become graph edges, so valid
+dev-dependency cycles cannot poison build ordering. Strict-glob work is
+preflighted across the whole operation with the neutral 50,000,000
+Unicode-scalar ceiling before the first match, while first-seen glob
+declarations are charged by exact UTF-8 bytes against a separate 4 MiB ceiling
+before normalization. Repository-boundary inputs are depth, node, container,
+and string bounded; their versioned canonical SHA-256 and schema are verified
+before request-dependent path-classification preflights. The core never reads a
+checkout or acquires process, environment, clock, randomness, or network
+authority.
 
 Diff validation retains only compact per-package glob work factors. After the
 whole-operation preflight succeeds, one validated pattern is compiled at a
@@ -177,6 +182,10 @@ Graph/diff conformance tests dynamically enumerate and pin the exact eight
 shared-input multi-consumer reverse index, deterministic transitive closures,
 strict character classes, unknown-path policies, repository-boundary digest,
 and the exact-at/over 50,000,000 match-work boundary.
+The Cargo test-trigger suite separately pins all six
+`test-trigger-selection-*.json` cases. The same successful cases are evaluated
+through Go's established one-hop selection helpers, while Rust additionally
+pins fail-closed graph/relation diagnostics and exact cardinality ceilings.
 
 ## Discovery and metadata diagnostics
 

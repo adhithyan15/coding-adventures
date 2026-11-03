@@ -284,7 +284,7 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
     // this, but nothing on the way to a backend called it, so every column
     // compiled such a module.  The shared check lives in `interpreter-ir`, so
     // every column refuses exactly the same modules.
-    errors.extend(module.str_ceiling_errors());
+    errors.extend(module.str_literal_errors());
 
     // ── Check 1.5: Atom length (trust-boundary guard) ────────────────────────
     //
@@ -589,17 +589,16 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                 }
             }
 
-            // ALGOL runtime strings are Erlang character lists. Restrict the
-            // source literal to printable ASCII plus familiar whitespace so
-            // lowering never needs an unvalidated binary or Unicode codec.
+            // Runtime strings are Erlang lists of bytes, one integer 0–255
+            // per byte, so any literal byte is representable (LANG83 PR5b):
+            // a `Str` literal is its UTF-8, a raw-byte `Bytes` literal its
+            // bytes. This accepted printable ASCII plus tab, newline and
+            // carriage return only.
             match instr.op.as_str() {
                 "str_const" => match (instr.dest.as_ref(), instr.srcs.as_slice()) {
-                    (Some(_), [Operand::Str(text)])
-                        if text.bytes().all(|byte| {
-                            matches!(byte, b'\n' | b'\r' | b'\t' | b' '..=b'~')
-                        }) => {}
+                    (Some(_), [Operand::Str(_) | Operand::Bytes(_)]) => {}
                     _ => errors.push(format!(
-                        "InvalidString: function {:?}, str_const requires a destination and printable ASCII text",
+                        "InvalidString: function {:?}, str_const requires a destination and one string literal",
                         func.name
                     )),
                 },

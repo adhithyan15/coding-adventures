@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.164.0";
+pub const VERSION: &str = "0.170.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14076,12 +14076,15 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let mut groups = Vec::new();
     let mut group_stack: Vec<String> = Vec::new();
     let mut relationships = Vec::new();
+    let mut direction = None;
 
     while !cursor.at_eof() {
         match token_name(cursor.current()) {
             "TITLE" => {
                 let value = cursor.advance().value.clone();
-                title = Some(value.trim_start_matches("title").trim().to_string());
+                title = Some(normalize_mermaid_line_breaks(
+                    value.trim_start_matches("title").trim(),
+                ));
             }
             "ACC_TITLE" => {
                 accessibility_title = cursor
@@ -14121,10 +14124,14 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 );
             }
             "DIRECTION" => {
-                cursor.advance();
-                if token_name(cursor.current()) == "LPAREN" {
-                    parse_c4_arguments(&mut cursor)?;
-                }
+                let token = cursor.advance();
+                direction = match token.value.split_whitespace().last() {
+                    Some("TB") => Some(DiagramDirection::Tb),
+                    Some("BT") => Some(DiagramDirection::Bt),
+                    Some("LR") => Some(DiagramDirection::Lr),
+                    Some("RL") => Some(DiagramDirection::Rl),
+                    _ => return Err(token_error(token, "unsupported C4 direction")),
+                };
             }
             "CONFIG_MACRO" => {
                 let macro_token = cursor.advance().clone();
@@ -14152,9 +14159,9 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 let label = args
                     .get(1)
                     .filter(|value| !value.is_empty())
-                    .cloned()
+                    .map(|value| normalize_mermaid_line_breaks(value))
                     .unwrap_or_else(|| id.clone());
-                groups.push(StructuralGroup {
+                upsert_c4_group(&mut groups, StructuralGroup {
                     id: id.clone(),
                     label,
                     stereotype: Some(macro_token.value.clone()),
@@ -14178,7 +14185,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 let label = args
                     .get(1)
                     .filter(|value| !value.is_empty())
-                    .cloned()
+                    .map(|value| normalize_mermaid_line_breaks(value))
                     .unwrap_or_else(|| id.clone());
                 let index = upsert_c4_node(
                     &mut nodes,
@@ -14213,7 +14220,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 }
                 let (start_arrow, end_arrow) = match macro_token.value.as_str() {
                     "BiRel" => (true, true),
-                    "Rel_Back" => (true, false),
+                    "Rel_B" | "Rel_Back" => (true, false),
                     _ => (false, true),
                 };
                 upsert_c4_relationship(&mut relationships, StructuralRelationship {
@@ -14229,7 +14236,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                     routing: StructuralRouting::Direct,
                     from_mult: None,
                     to_mult: None,
-                    label: Some(relationship_args[2].clone()),
+                    label: Some(normalize_mermaid_line_breaks(&relationship_args[2])),
                     label_offset_x: 0.0,
                     label_offset_y: 0.0,
                     metadata: Some(c4_relationship_metadata(
@@ -14251,7 +14258,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
         title,
         accessibility_title,
         accessibility_description,
-        direction: None,
+        direction,
         alignments: Vec::new(),
         nodes,
         groups,
@@ -14394,7 +14401,7 @@ fn apply_c4_element_metadata_arguments(args: &[String], node: &mut StructuralNod
         metadata.sprite = Some(value);
     }
     if let Some(value) = technology.as_ref() {
-        metadata.technology = Some(value.clone());
+        metadata.technology = Some(normalize_mermaid_line_breaks(value));
     }
     apply_c4_style_override_arguments(args, &mut metadata.style_overrides);
     if technology.is_some() {
@@ -14420,7 +14427,7 @@ fn apply_c4_group_element_metadata_arguments(args: &[String], group: &mut Struct
             ..
         } => {
             if let Some(value) = technology {
-                *group_technology = Some(value);
+                *group_technology = Some(normalize_mermaid_line_breaks(&value));
             }
             if let Some(value) = sprite {
                 *group_sprite = Some(value);
@@ -14448,8 +14455,13 @@ fn c4_node_metadata(macro_name: &str, args: &[String]) -> StructuralNodeMetadata
     };
     StructuralNodeMetadata::C4(C4NodeMetadata {
         element_type: c4_element_type(macro_name).into(),
-        technology: uses_technology.then(|| keyed("$techn").or_else(|| positional(2))).flatten(),
-        description: keyed("$descr").or_else(|| positional(if uses_technology { 3 } else { 2 })),
+        technology: uses_technology
+            .then(|| keyed("$techn").or_else(|| positional(2)))
+            .flatten()
+            .map(|value| normalize_mermaid_line_breaks(&value)),
+        description: keyed("$descr")
+            .or_else(|| positional(if uses_technology { 3 } else { 2 }))
+            .map(|value| normalize_mermaid_line_breaks(&value)),
         sprite: keyed("$sprite").or_else(|| positional(if uses_technology { 4 } else { 3 })),
         tags: keyed("$tags").or_else(|| positional(if uses_technology { 5 } else { 4 })),
         link: keyed("$link").or_else(|| positional(if uses_technology { 6 } else { 5 })),
@@ -14497,8 +14509,10 @@ fn c4_group_metadata(macro_name: &str, args: &[String]) -> Option<StructuralGrou
                     "Node_R" => diagram_ir::C4DeploymentNodeType::Right,
                     _ => diagram_ir::C4DeploymentNodeType::Node,
                 },
-                technology: argument("$type", 2),
-                description: argument("$descr", 3),
+                technology: argument("$type", 2)
+                    .map(|value| normalize_mermaid_line_breaks(&value)),
+                description: argument("$descr", 3)
+                    .map(|value| normalize_mermaid_line_breaks(&value)),
                 sprite: argument("$sprite", 4),
                 tags: argument("$tags", 5),
                 link: argument("$link", 6),
@@ -14576,8 +14590,12 @@ fn c4_relationship_metadata(
             "Rel_R" | "Rel_Right" => Some(diagram_ir::C4RelationshipDirection::Right),
             _ => None,
         },
-        technology: keyed("$techn").or_else(|| positional(3)),
-        description: keyed("$descr").or_else(|| positional(4)),
+        technology: keyed("$techn")
+            .or_else(|| positional(3))
+            .map(|value| normalize_mermaid_line_breaks(&value)),
+        description: keyed("$descr")
+            .or_else(|| positional(4))
+            .map(|value| normalize_mermaid_line_breaks(&value)),
         sprite: keyed("$sprite").or_else(|| positional(5)),
         tags: keyed("$tags").or_else(|| positional(6)),
         link: keyed("$link").or_else(|| positional(7)),
@@ -14691,6 +14709,28 @@ fn upsert_c4_node(
     parent_group: Option<String>,
 ) -> usize {
     if let Some(index) = indices.get(&id).copied() {
+        let node = &mut nodes[index];
+        let style = node.style.take();
+        let style_overrides = match node.metadata.as_mut() {
+            Some(StructuralNodeMetadata::C4(metadata)) => {
+                std::mem::take(&mut metadata.style_overrides)
+            }
+            _ => Default::default(),
+        };
+        let mut metadata = metadata;
+        if let StructuralNodeMetadata::C4(c4_metadata) = &mut metadata {
+            c4_metadata.style_overrides = style_overrides;
+        }
+        *node = StructuralNode {
+            id,
+            label,
+            stereotype: Some(stereotype.clone()),
+            node_kind: c4_node_kind(&stereotype),
+            metadata: Some(metadata),
+            style,
+            compartments: Vec::new(),
+            parent_group,
+        };
         return index;
     }
     let index = nodes.len();
@@ -14707,6 +14747,34 @@ fn upsert_c4_node(
         parent_group,
     });
     index
+}
+
+fn upsert_c4_group(groups: &mut Vec<StructuralGroup>, mut group: StructuralGroup) {
+    let Some(existing) = groups.iter_mut().find(|existing| existing.id == group.id) else {
+        groups.push(group);
+        return;
+    };
+
+    let style_overrides = match existing.metadata.as_mut() {
+        Some(StructuralGroupMetadata::C4Boundary { style_overrides, .. })
+        | Some(StructuralGroupMetadata::C4DeploymentNode { style_overrides, .. }) => {
+            std::mem::take(style_overrides)
+        }
+        _ => Default::default(),
+    };
+    match group.metadata.as_mut() {
+        Some(StructuralGroupMetadata::C4Boundary {
+            style_overrides: replacement,
+            ..
+        })
+        | Some(StructuralGroupMetadata::C4DeploymentNode {
+            style_overrides: replacement,
+            ..
+        }) => *replacement = style_overrides,
+        _ => {}
+    }
+    group.style = existing.style.take();
+    *existing = group;
 }
 
 // ── gantt parser ──────────────────────────────────────────────────────────
@@ -20132,7 +20200,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.164.0");
+        assert_eq!(crate::VERSION, "0.170.0");
     }
 
     #[test]

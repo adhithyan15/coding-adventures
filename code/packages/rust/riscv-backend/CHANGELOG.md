@@ -1,5 +1,9 @@
 # Changelog — riscv-backend
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- `str_const` refuses `jit_core::cir::RAW_BYTES_LITERAL_NAME`, the reserved name every raw-byte `Operand::Bytes` literal lifts to in CIR. The backend takes a `str_const` operand's text as the literal, so it emitted that name's text, and the same data image, for every raw-byte literal (security re-review L2-a). Test `a_raw_byte_literal_str_const_is_refused_not_miscompiled`, which fails on the previous backend.
+
 ## Unreleased — the 2^31 edge of a 64-bit compare (#18463 item 2)
 
 - Test only. `wide_bool_compare_orders_values_either_side_of_two_to_the_31`

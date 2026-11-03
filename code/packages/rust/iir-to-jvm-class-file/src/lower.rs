@@ -649,23 +649,142 @@ fn compute_max_stack(code: &[u8], cp: &[Option<JvmConstantPoolEntry>]) -> Result
     Ok(max)
 }
 
-fn checked_jvm_string_literal(ctx: &str, s: &str) -> Result<(), IIRJvmError> {
-    for ch in s.chars() {
-        match ch {
-            '\n' | '\r' | '\t' => {}
-            c if c.is_ascii_graphic() || c == ' ' => {}
-            c => {
-                return Err(IIRJvmError::InvalidOperand {
-                    function: ctx.to_string(),
-                    detail: format!(
-                        "str_const literal contains unsupported non-printable/non-ASCII character U+{:04X}",
-                        c as u32
-                    ),
-                })
+// ---------------------------------------------------------------------------
+// LANG83 PR5b — a JVM string holds one char per byte
+// ---------------------------------------------------------------------------
+//
+// An IIR `str` is bytes. On the JVM it is a `java.lang.String` whose every
+// char is one byte, U+0000–U+00FF ("Latin-1 chars"). The host's own string
+// operations then compute the byte semantics exactly:
+//
+// | IIR op       | JVM                      | why it is the byte op               |
+// |--------------|--------------------------|-------------------------------------|
+// | `str_len`    | `length()`               | one char per byte                   |
+// | `str_index`  | `charAt(i)`              | the char *is* the byte value        |
+// | `str_slice`  | `substring(a, b)`        | char offsets are byte offsets       |
+// | `str_concat` | `concat`                 |                                     |
+// | `str_cmp`    | `compareTo`              | chars 0–255 order as unsigned bytes |
+//
+// So only what ENTERS a string (a literal, `input_str`) and what LEAVES one
+// (`print_str`) must know the rule:
+//
+// - a literal's bytes are widened to chars here (`latin1_chunks`);
+// - `print_str` calls the synthetic `__iir_print_str`, which narrows each char
+//   back to a byte with `getBytes("ISO-8859-1")` and writes the bytes to
+//   `System.out` (`PrintStream.print(String)` would encode with the platform
+//   charset, turning the char U+00E9 into the two bytes `C3 A9`);
+// - `input_str`'s host `BasicRuntime.readLine()` appends each input byte as
+//   one `(char)`, which is ISO-8859-1 decoding.
+
+/// The most bytes one `CONSTANT_Utf8` entry may hold (JVMS §4.4.7: a `u2`).
+const JVM_UTF8_MAX: usize = 65_535;
+
+/// The bytes a char U+00bb takes in the constant pool's **modified UTF-8**
+/// (JVMS §4.4.7): one for U+0001–U+007F, two for U+0000 (written `C0 80`,
+/// never a zero byte) and for U+0080–U+00FF.
+fn modified_utf8_len(byte: u8) -> usize {
+    if (0x01..=0x7F).contains(&byte) { 1 } else { 2 }
+}
+
+/// Split a literal's bytes into Latin-1 strings (one char per byte) whose
+/// modified UTF-8 fits one constant-pool entry each (LANG83 PR5b).
+///
+/// A literal of up to 65 535 ASCII bytes is one chunk, as before. A longer
+/// one, or one heavy in two-byte chars, is several, which `str_const` loads
+/// and joins with `String.concat`. The empty literal is one empty chunk.
+///
+/// ```text
+///   bytes  68 C3 A9 00            → one chunk "h\u{C3}\u{A9}\u{0}"
+///   modified UTF-8 in the pool    → 68 C3 83 C2 A9 C0 80   (7 bytes)
+/// ```
+fn latin1_chunks(bytes: &[u8]) -> Vec<String> {
+    let mut chunks = Vec::new();
+    let mut current = String::new();
+    let mut encoded = 0usize;
+    for &b in bytes {
+        let n = modified_utf8_len(b);
+        if encoded + n > JVM_UTF8_MAX {
+            chunks.push(std::mem::take(&mut current));
+            encoded = 0;
+        }
+        current.push(char::from(b));
+        encoded += n;
+    }
+    chunks.push(current);
+    chunks
+}
+
+/// Encode `s` as the constant pool's modified UTF-8 (JVMS §4.4.7): standard
+/// UTF-8, except U+0000 is `C0 80` and a supplementary character is its two
+/// UTF-16 surrogates, each encoded as three bytes.
+///
+/// Every name this backend writes is ASCII, where the two encodings agree; a
+/// string literal (LANG83 PR5b) may hold U+0000, which standard UTF-8 would
+/// write as a zero byte that the JVM rejects ("Illegal UTF8 string in
+/// constant pool").
+fn modified_utf8(s: &str) -> Vec<u8> {
+    let mut out = Vec::with_capacity(s.len());
+    for c in s.chars() {
+        match c as u32 {
+            0 => out.extend_from_slice(&[0xC0, 0x80]),
+            0x1_0000.. => {
+                let mut units = [0u16; 2];
+                for unit in c.encode_utf16(&mut units).iter() {
+                    let u = u32::from(*unit);
+                    out.push(0xE0 | (u >> 12) as u8);
+                    out.push(0x80 | ((u >> 6) & 0x3F) as u8);
+                    out.push(0x80 | (u & 0x3F) as u8);
+                }
+            }
+            _ => {
+                let mut buf = [0u8; 4];
+                out.extend_from_slice(c.encode_utf8(&mut buf).as_bytes());
             }
         }
     }
-    Ok(())
+    out
+}
+
+/// The length of [`modified_utf8`]`(s)`, without building it.
+fn modified_utf8_str_len(s: &str) -> usize {
+    s.chars()
+        .map(|c| match c as u32 {
+            0 => 2,
+            0x01..=0x7F => 1,
+            0x80..=0x7FF => 2,
+            0x800..=0xFFFF => 3,
+            _ => 6, // two surrogates, three bytes each
+        })
+        .sum()
+}
+
+/// The synthetic `print_str` method (LANG83 PR5b), and its descriptor.
+const PRINT_STR_METHOD: &str = "__iir_print_str";
+const PRINT_STR_DESCRIPTOR: &str = "(Ljava/lang/String;)V";
+
+/// Build `private static void __iir_print_str(String s)`:
+///
+/// ```java
+/// byte[] b = s.getBytes("ISO-8859-1");   // one byte per char (every char < 256)
+/// System.out.write(b, 0, b.length);       // the same PrintStream as print(J)
+/// ```
+///
+/// `getBytes(String)` and `PrintStream.write([BII)V` are Java 1.1 APIs, so a
+/// version-49 class may call them on any JVM. `write` goes through the same
+/// `System.out` buffer as `print(J)` and the host `BFRuntime.putchar`, so the
+/// ordered output stream stays ordered.
+fn build_print_str_method(cp: &mut ConstantPoolBuilder) -> Result<JvmMethodInfo, IIRJvmError> {
+    const S: u8 = 0;
+    const B: u8 = 1;
+    let out = cp.add_fieldref("java/lang/System", "out", "Ljava/io/PrintStream;");
+    let latin1 = cp.add_string("ISO-8859-1");
+    let get_bytes = cp.add_methodref("java/lang/String", "getBytes", "(Ljava/lang/String;)[B");
+    let write = cp.add_methodref("java/io/PrintStream", "write", "([BII)V");
+    let mut b = Bytecode::new();
+    b.op_u8(ALOAD, S).op_u16(LDC_W, latin1).op_u16(INVOKEVIRTUAL, get_bytes).op_u8(ASTORE, B);
+    b.op_u16(GETSTATIC, out).op_u8(ALOAD, B).op(ICONST_0).op_u8(ALOAD, B).op(ARRAYLENGTH);
+    b.op_u16(INVOKEVIRTUAL, write).op(RETURN);
+    synthetic_method(cp, PRINT_STR_METHOD, PRINT_STR_DESCRIPTOR, b, 2)
 }
 
 // ---------------------------------------------------------------------------
@@ -754,6 +873,18 @@ pub enum IIRJvmError {
         /// What the analysis found.
         detail: String,
     },
+
+    /// The class would exceed a limit of the class-file format (JVMS §4): a
+    /// constant pool of more than 65 535 entries, or a method of more than
+    /// 65 535 bytes of code. Reported instead of panicking (LANG83 PR5b
+    /// security review, I2: a long literal of bytes ≥ 0x80 is ~32 768 chunks
+    /// of two pool entries each, which overflowed the pool's `assert!`).
+    ClassFileLimit {
+        /// Name of the function being lowered when the limit was reached.
+        function: String,
+        /// Which limit, and by how much.
+        detail: String,
+    },
 }
 
 impl std::fmt::Display for IIRJvmError {
@@ -806,6 +937,9 @@ impl std::fmt::Display for IIRJvmError {
                     "function {:?}: cannot size the JVM operand stack — {}",
                     function, detail
                 )
+            }
+            IIRJvmError::ClassFileLimit { function, detail } => {
+                write!(f, "function {:?}: exceeds a JVM class-file limit — {}", function, detail)
             }
         }
     }
@@ -1801,12 +1935,21 @@ fn emit_long_compare(code: &mut Vec<u8>, cmp_opcode: u8) {
 fn allocate_slots(
     func: &IIRFunction,
     type_map: &HashMap<String, JvmType>,
-) -> HashMap<String, (u16, JvmType)> {
+) -> Result<HashMap<String, (u16, JvmType)>, IIRJvmError> {
     let mut slots: HashMap<String, (u16, JvmType)> = HashMap::new();
     // Use u32 internally to detect overflow before narrowing to u16.
-    // JVM local slots are 16-bit; exceeding 65,535 slots would produce
-    // silently aliased locals, so we assert-guard the cast.
+    // JVM local slots are 16-bit (`max_locals` is a `u2`); exceeding them
+    // would alias locals. A function past the limit is
+    // `IIRJvmError::ClassFileLimit`, never a panic: it was an `assert!`, which
+    // 70 000 `const v{i}` instructions reached (LANG83 PR5b security
+    // re-review, I2).
     let mut next_slot: u32 = 0;
+    let too_many = || IIRJvmError::ClassFileLimit {
+        function: func.name.clone(),
+        detail: format!("the method needs more than {} local variable slots", u16::MAX),
+    };
+    // Every slot ends below 65 536, so `max_locals` (index + width) fits a u16.
+    let fits = |next: u32, t: JvmType| next + t.slot_width() as u32 <= u16::MAX as u32;
 
     // ── Step 1: allocate params ──────────────────────────────────────────────
     //
@@ -1816,10 +1959,9 @@ fn allocate_slots(
     for (param_name, param_type_str) in &func.params {
         let jvm_type = iir_type_to_jvm(param_type_str.as_str())
             .unwrap_or(JvmType::Int); // fallback; validator should catch bad types
-        assert!(
-            next_slot <= u16::MAX as u32,
-            "JVM local slot overflow: too many variables in function {:?}", func.name
-        );
+        if !fits(next_slot, jvm_type) {
+            return Err(too_many());
+        }
         slots.insert(param_name.clone(), (next_slot as u16, jvm_type));
         next_slot += jvm_type.slot_width() as u32;
     }
@@ -1841,10 +1983,9 @@ fn allocate_slots(
                     .get(dest.as_str())
                     .copied()
                     .unwrap_or(instr_type);
-                assert!(
-                    next_slot <= u16::MAX as u32,
-                    "JVM local slot overflow: too many variables in function {:?}", func.name
-                );
+                if !fits(next_slot, var_type) {
+                    return Err(too_many());
+                }
                 slots.insert(dest.clone(), (next_slot as u16, var_type));
                 next_slot += var_type.slot_width() as u32;
             }
@@ -1854,10 +1995,9 @@ fn allocate_slots(
             if let Operand::Var(name) = src {
                 if !slots.contains_key(name.as_str()) {
                     let var_type = type_map.get(name.as_str()).copied().unwrap_or(instr_type);
-                    assert!(
-                        next_slot <= u16::MAX as u32,
-                        "JVM local slot overflow: too many variables in function {:?}", func.name
-                    );
+                    if !fits(next_slot, var_type) {
+                        return Err(too_many());
+                    }
                     slots.insert(name.clone(), (next_slot as u16, var_type));
                     next_slot += var_type.slot_width() as u32;
                 }
@@ -1865,7 +2005,7 @@ fn allocate_slots(
         }
     }
 
-    slots
+    Ok(slots)
 }
 
 /// Build a variable-to-type map for a function.
@@ -2051,6 +2191,54 @@ struct ConstantPoolBuilder {
     entries: Vec<Option<JvmConstantPoolEntry>>,
     /// Quick lookup: key string → 1-based index.
     index_map: HashMap<String, u16>,
+    /// Set when an entry did not fit the 65 535-entry pool. The add methods
+    /// then return the unusable index 0 instead of panicking, and
+    /// [`check_class_file_limits`] turns the flag into
+    /// [`IIRJvmError::ClassFileLimit`] before any method is finished, so no
+    /// class with a 0 index is ever emitted (LANG83 PR5b security review, I2).
+    overflowed: bool,
+    /// The longest `CONSTANT_Utf8` entry added, in modified-UTF-8 bytes. An
+    /// entry is at most 65 535 bytes (a `u2` length); a longer name (a
+    /// 70 000-character function or class name) is refused by
+    /// [`check_class_file_limits`] instead of panicking in
+    /// [`serialize_jvm_class_file`] (LANG83 PR5b security re-review, I2).
+    longest_utf8: usize,
+}
+
+/// The most entries a constant pool may hold: `constant_pool_count` is a `u2`
+/// and index 0 is reserved, so indices run 1..=65 534 (JVMS §4.1).
+const JVM_CP_MAX_ENTRIES: usize = u16::MAX as usize;
+
+/// The most bytes of code a method may have (JVMS §4.7.3: `code_length` <
+/// 65 536).
+const JVM_CODE_MAX: usize = 65_535;
+
+/// Refuse a method whose code, or a class whose pool, exceeds the class-file
+/// format: [`IIRJvmError::ClassFileLimit`], never a panic and never a class
+/// the JVM would reject at load.
+fn check_class_file_limits(cp: &ConstantPoolBuilder, code: &[u8], function: &str) -> Result<(), IIRJvmError> {
+    if cp.overflowed {
+        return Err(IIRJvmError::ClassFileLimit {
+            function: function.to_string(),
+            detail: format!("the constant pool needs more than {} entries", JVM_CP_MAX_ENTRIES - 1),
+        });
+    }
+    if cp.longest_utf8 > JVM_UTF8_MAX {
+        return Err(IIRJvmError::ClassFileLimit {
+            function: function.to_string(),
+            detail: format!(
+                "a name or constant is {} bytes of modified UTF-8 (limit {JVM_UTF8_MAX})",
+                cp.longest_utf8
+            ),
+        });
+    }
+    if code.len() > JVM_CODE_MAX {
+        return Err(IIRJvmError::ClassFileLimit {
+            function: function.to_string(),
+            detail: format!("the method has {} bytes of code (limit {JVM_CODE_MAX})", code.len()),
+        });
+    }
+    Ok(())
 }
 
 impl ConstantPoolBuilder {
@@ -2058,6 +2246,8 @@ impl ConstantPoolBuilder {
         Self {
             entries: vec![None], // index 0 is always unused in JVM
             index_map: HashMap::new(),
+            overflowed: false,
+            longest_utf8: 0,
         }
     }
 
@@ -2071,12 +2261,12 @@ impl ConstantPoolBuilder {
         if let Some(&idx) = self.index_map.get(&key) {
             return idx;
         }
-        assert!(
-            self.entries.len() < u16::MAX as usize,
-            "JVM constant pool overflow: too many entries (limit 65535)"
-        );
+        if self.entries.len() >= JVM_CP_MAX_ENTRIES {
+            self.overflowed = true;
+            return 0;
+        }
         self.entries.push(Some(entry));
-        // Safe: bounded by the assert above.
+        // Safe: bounded by the check above.
         let idx = (self.entries.len() - 1) as u16;
         self.index_map.insert(key, idx);
         idx
@@ -2084,6 +2274,7 @@ impl ConstantPoolBuilder {
 
     /// Add a UTF8 string entry.
     fn add_utf8(&mut self, s: &str) -> u16 {
+        self.longest_utf8 = self.longest_utf8.max(modified_utf8_str_len(s));
         let key = format!("Utf8:{}", s);
         self.add_entry(key, JvmConstantPoolEntry::Utf8(s.to_string()))
     }
@@ -2176,10 +2367,10 @@ impl ConstantPoolBuilder {
             return idx;
         }
         // We need two free slots.
-        assert!(
-            self.entries.len() + 1 < u16::MAX as usize,
-            "JVM constant pool overflow: too many entries (limit 65535)"
-        );
+        if self.entries.len() + 1 >= JVM_CP_MAX_ENTRIES {
+            self.overflowed = true;
+            return 0;
+        }
         self.entries.push(Some(JvmConstantPoolEntry::Long(value)));
         let idx = (self.entries.len() - 1) as u16;
         self.index_map.insert(key, idx);
@@ -2200,10 +2391,10 @@ impl ConstantPoolBuilder {
             return idx;
         }
         // We need two free slots.
-        assert!(
-            self.entries.len() + 1 < u16::MAX as usize,
-            "JVM constant pool overflow: too many entries (limit 65535)"
-        );
+        if self.entries.len() + 1 >= JVM_CP_MAX_ENTRIES {
+            self.overflowed = true;
+            return 0;
+        }
         self.entries.push(Some(JvmConstantPoolEntry::Double(value)));
         let idx = (self.entries.len() - 1) as u16;
         self.index_map.insert(key, idx);
@@ -2330,7 +2521,7 @@ fn lower_function(
 
     // ── Pass 1: build type map and allocate slots ────────────────────────────
     let type_map = build_type_map(func);
-    let slots = allocate_slots(func, &type_map);
+    let slots = allocate_slots(func, &type_map)?;
 
     // Compute max_locals: the maximum slot index + width across all variables.
     // Use u32 arithmetic to avoid u16 overflow before the final bounds check.
@@ -2344,14 +2535,12 @@ fn lower_function(
             .unwrap_or(0);
         let from_params = func.params.len() as u32;
         let raw = from_slots.max(from_params);
-        u16::try_from(raw).unwrap_or_else(|_| {
-            // allocate_slots should have already asserted; this is belt-and-braces.
-            panic!(
-                "max_locals {} overflows u16 for function {:?}; \
-                 this should have been caught in allocate_slots",
-                raw, func.name
-            )
-        })
+        // `allocate_slots` keeps every slot below 65 536; a parameter count
+        // past it is refused here too, as an error rather than a panic.
+        u16::try_from(raw).map_err(|_| IIRJvmError::ClassFileLimit {
+            function: func.name.clone(),
+            detail: format!("the method needs {raw} local variable slots (limit {})", u16::MAX),
+        })?
     };
 
     // ── Pass 2: emit bytecode ────────────────────────────────────────────────
@@ -2402,16 +2591,19 @@ fn lower_function(
                     function: fname.clone(),
                     detail: "str_const instruction has no dest".to_string(),
                 })?;
-                let literal = match instr.srcs.first() {
-                    Some(Operand::Str(s)) => s,
-                    other => {
+                // A `Str` or raw-byte `Bytes` literal: any bytes (LANG83
+                // PR5b; this accepted printable ASCII only). Each byte is one
+                // char, and a literal too long for one constant is loaded in
+                // chunks joined with `String.concat` (see `latin1_chunks`).
+                let literal = match instr.srcs.first().and_then(Operand::as_lit_bytes) {
+                    Some(bytes) => bytes,
+                    None => {
                         return Err(IIRJvmError::InvalidOperand {
                             function: fname.clone(),
-                            detail: format!("str_const expects a string literal, got {other:?}"),
+                            detail: format!("str_const expects a string literal, got {:?}", instr.srcs.first()),
                         })
                     }
                 };
-                checked_jvm_string_literal(fname, literal)?;
                 let (dest_slot, dest_type) = lookup_var(dest_name)?;
                 if dest_type != JvmType::Ref {
                     return Err(IIRJvmError::UnsupportedType {
@@ -2419,8 +2611,18 @@ fn lower_function(
                         type_hint: instr.type_hint.clone(),
                     });
                 }
-                let idx = cp.add_string(literal);
-                emit_ldc_index(&mut code, idx);
+                let chunks = latin1_chunks(literal);
+                let concat = (chunks.len() > 1).then(|| {
+                    cp.add_methodref("java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;")
+                });
+                for (i, chunk) in chunks.iter().enumerate() {
+                    let idx = cp.add_string(chunk);
+                    emit_ldc_index(&mut code, idx);
+                    if let (true, Some(concat)) = (i > 0, concat) {
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&concat.to_be_bytes());
+                    }
+                }
                 emit_astore(&mut code, dest_slot);
             }
 
@@ -2799,20 +3001,12 @@ fn lower_function(
                         type_hint: instr.type_hint.clone(),
                     });
                 }
-                let out_ref = cp.add_fieldref(
-                    "java/lang/System",
-                    "out",
-                    "Ljava/io/PrintStream;",
-                );
-                code.push(GETSTATIC);
-                code.extend_from_slice(&out_ref.to_be_bytes());
+                // LANG83 PR5b: the class's own `__iir_print_str`, which writes
+                // one byte per char. `PrintStream.print(String)` encoded with
+                // the platform charset, so the byte 0xE9 came out as C3 A9.
                 emit_aload(&mut code, src_slot);
-                let print_ref = cp.add_methodref(
-                    "java/io/PrintStream",
-                    "print",
-                    "(Ljava/lang/String;)V",
-                );
-                code.push(INVOKEVIRTUAL);
+                let print_ref = cp.add_methodref(class_name, PRINT_STR_METHOD, PRINT_STR_DESCRIPTOR);
+                code.push(INVOKESTATIC);
                 code.extend_from_slice(&print_ref.to_be_bytes());
             }
 
@@ -2897,6 +3091,14 @@ fn lower_function(
                     Operand::Str(_) => {
                         i += 1;
                         continue;
+                    }
+                    // LANG83 PR5b: a raw-byte literal is `str_const`'s alone
+                    // (`IIRModule::validate`: `BytesOperand`), never a `const`.
+                    Operand::Bytes(_) => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: "const cannot hold a raw-byte string literal".to_string(),
+                        });
                     }
                 }
                 emit_typed_store(&mut code, dest_slot, dest_type);
@@ -3610,7 +3812,7 @@ fn lower_function(
                     }
                     // LANG32: Str is a compile-time string literal (global variable name).
                     // Returning a string from a function is not supported in V1.
-                    Operand::Str(_) => {
+                    Operand::Str(_) | Operand::Bytes(_) => {
                         return Err(IIRJvmError::UnsupportedOp {
                             function: fname.clone(),
                             op: "ret with Str operand — string return values not yet supported".into(),
@@ -4142,7 +4344,9 @@ fn lower_function(
                     "input_str" => {
                         // BASIC string `INPUT A$` (E4-dyn): read a whole line *as
                         // the string value itself* — no numeric parse, unlike
-                        // `input_i64`. The host `BasicRuntime.readLine()` returns a
+                        // `input_i64`. LANG83 PR5b host contract: `readLine()`
+                        // returns one char per input byte (ISO-8859-1), the
+                        // representation every string op here assumes. The host `BasicRuntime.readLine()` returns a
                         // `java.lang.String`, which is exactly how a `str` value is
                         // carried on the JVM (`iir_type_to_jvm("str") = Ref`), so the
                         // returned reference `astore`s straight into the `str`-typed
@@ -4276,7 +4480,7 @@ fn lower_function(
                         Operand::Float(f) => emit_fconst(&mut code, *f as f32),
                         // LANG32: Str is a compile-time string literal — not
                         // a passable argument in V1; return an error.
-                        Operand::Str(_) => {
+                        Operand::Str(_) | Operand::Bytes(_) => {
                             return Err(IIRJvmError::UnsupportedOp {
                                 function: fname.clone(),
                                 op: "call with Str argument — string args not yet supported".into(),
@@ -5392,6 +5596,7 @@ fn lower_function(
     // ── Build method descriptor ────────────────────────────────────────────
     let descriptor = make_descriptor(&func.params, &func.return_type);
 
+    check_class_file_limits(cp, &code, fname)?;
     // max_stack is measured from the emitted bytecode, never guessed.
     let max_stack = compute_max_stack(&code, &cp.entries).map_err(|detail| {
         IIRJvmError::StackDepthAnalysis { function: fname.clone(), detail }
@@ -5655,7 +5860,7 @@ fn generate_call_closure_dispatch(
 
             code.push(ALOAD);
             code.push(0u8); // closure array
-            emit_iconst(&mut code, (cap_i + 1) as i32); // closure[cap_i + 1]
+            emit_iconst_cp(&mut code, cp, (cap_i + 1) as i32); // closure[cap_i + 1] (any index, via the pool past ±32 767)
             code.push(LALOAD); // push as long
 
             if cap_jtype == JvmType::Int {
@@ -5676,7 +5881,7 @@ fn generate_call_closure_dispatch(
 
             code.push(ALOAD);
             code.push(1u8); // args array
-            emit_iconst(&mut code, arg_i as i32); // args[arg_i]
+            emit_iconst_cp(&mut code, cp, arg_i as i32); // args[arg_i] (any index, via the pool past ±32 767)
             code.push(LALOAD); // push as long
 
             if arg_jtype == JvmType::Int {
@@ -5711,15 +5916,16 @@ fn generate_call_closure_dispatch(
         let body_end = code.len();
         let raw_offset = (body_end as i64) - (ifne_pos as i64);
         if raw_offset < i16::MIN as i64 || raw_offset > i16::MAX as i64 {
-            // This is an internal limit of the JVM's 16-bit branch offsets.
-            // In practice it would require tens of thousands of closure entries
-            // to trigger, but we guard it explicitly for correctness.
-            panic!(
-                "__callClosure dispatch body too large for JVM i16 branch offset \
-                 ({} bytes, max {}); split the closure dispatch table or reduce \
-                 the number of closure-eligible functions",
-                raw_offset, i16::MAX
-            );
+            // An internal limit of the JVM's 16-bit branch offsets: one
+            // closure target with ~7 000 parameters reaches it. An error, not
+            // a panic (LANG83 PR5b security re-review, I2).
+            return Err(IIRJvmError::ClassFileLimit {
+                function: "__callClosure".to_string(),
+                detail: format!(
+                    "a closure dispatch arm is {raw_offset} bytes, past the {} a JVM branch can skip",
+                    i16::MAX
+                ),
+            });
         }
         let offset = raw_offset as i16;
         let ob = offset.to_be_bytes();
@@ -5740,6 +5946,7 @@ fn generate_call_closure_dispatch(
     // A closure target whose return type the dispatch does not widen to
     // `long` leaves the stack short of the closing `lreturn`; that is
     // reported, not emitted.
+    check_class_file_limits(cp, &code, "__callClosure")?;
     let max_stack = compute_max_stack(&code, &cp.entries).map_err(|detail| {
         IIRJvmError::StackDepthAnalysis { function: "__callClosure".to_string(), detail }
     })?;
@@ -5872,6 +6079,7 @@ fn synthetic_method(
 ) -> Result<JvmMethodInfo, IIRJvmError> {
     let internal = |detail: String| IIRJvmError::StackDepthAnalysis { function: name.to_string(), detail };
     let code = b.finish().map_err(internal)?;
+    check_class_file_limits(cp, &code, name)?;
     let max_stack = compute_max_stack(&code, &cp.entries).map_err(internal)?;
     cp.add_utf8(name);
     cp.add_utf8(descriptor);
@@ -6085,6 +6293,13 @@ fn module_uses_op(module: &IIRModule, op: &str) -> bool {
 ///
 /// Used by the real-JVM integration test (see `test_backend.rs`).  The
 /// output should be accepted by any Java 8+ JVM.
+///
+/// # Panics
+///
+/// Only for a class this crate did not lower: a `CONSTANT_Utf8` entry longer
+/// than 65 535 bytes cannot be written. [`lower_iir_to_jvm`] refuses such a
+/// class with [`IIRJvmError::ClassFileLimit`] (LANG83 PR5b security
+/// re-review, I2), so its output always serialises.
 pub fn serialize_jvm_class_file(class: &JvmClassFile) -> Vec<u8> {
     let mut out = Vec::new();
 
@@ -6200,7 +6415,9 @@ fn serialize_cp_entry(out: &mut Vec<u8>, entry: &JvmConstantPoolEntry) {
     match entry {
         JvmConstantPoolEntry::Utf8(s) => {
             out.push(1); // CONSTANT_Utf8
-            let b = s.as_bytes();
+            // Modified UTF-8 (LANG83 PR5b): a string literal may hold U+0000,
+            // which must be `C0 80`; every name is ASCII, where it is the same.
+            let b = &modified_utf8(s);
             // JVMS §4.4.7: the length field is u16 — guard against truncation.
             // In practice JVM class-name and method-name strings are always
             // well under 65,535 bytes; the check catches adversarially long
@@ -6455,6 +6672,20 @@ pub fn lower_iir_to_jvm(
             methods.push(build_f64_query_method(&mut cp, &config.class_name, false)?);
         }
     }
+
+    // ── Step 3d: LANG83 PR5b byte-exact `print_str` ──────────────────────────
+    if module_uses_op(module, "print_str") {
+        if let Some(f) = module.functions.iter().find(|f| f.name == PRINT_STR_METHOD) {
+            return Err(IIRJvmError::InvalidOperand {
+                function: f.name.clone(),
+                detail: format!("a module function may not take the synthetic method name {PRINT_STR_METHOD}"),
+            });
+        }
+        methods.push(build_print_str_method(&mut cp)?);
+    }
+
+    // The class-level entries (fields, the class's own name) must fit too.
+    check_class_file_limits(&cp, &[], &config.class_name)?;
 
     // ── Step 4: assemble JvmClassFile ─────────────────────────────────────────
     Ok(JvmClassFile {

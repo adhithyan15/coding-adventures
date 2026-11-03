@@ -64,6 +64,7 @@
 
 pub mod ast_extract;
 pub mod ast_nodes;
+pub mod budgets;
 pub mod type_decls;
 
 use std::fmt;
@@ -103,6 +104,10 @@ pub use ast_extract::{
     check_membership_int_count, extract_program, MAX_AST_DEPTH, MAX_MEMBERSHIP_INT_VALUES,
 };
 pub use type_decls::emit_type_declarations;
+pub use budgets::{
+    check_generated_names, check_name_token, check_tokens, generated_name_bytes,
+    GeneratedNameBudget, MAX_GENERATED_NAME_BYTES, MAX_NAME_BYTES, MAX_TOKENS,
+};
 pub use ast_nodes::{
     // ── Atoms ─────────────────────────────────────────────────────────────
     Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let,
@@ -192,6 +197,8 @@ impl From<LexerError> for TwigParseError {
 /// character in the source).
 pub fn create_twig_parser(source: &str) -> Result<GrammarParser, TwigParseError> {
     let tokens = tokenize_twig(source)?;
+    // Token and name budgets (`budgets`), before a parser is built.
+    check_tokens(&tokens)?;
     Ok(create_twig_parser_from_tokens(tokens))
 }
 
@@ -326,6 +333,11 @@ fn check_paren_depth(tokens: &[Token]) -> Result<(), TwigParseError> {
 /// [`MAX_PAREN_DEPTH`].  Source positions point at the offending token.
 pub fn parse_to_ast(source: &str) -> Result<GrammarASTNode, TwigParseError> {
     let tokens = tokenize_twig(source)?;
+    // Token and name budgets (`budgets`, #18474 review): a name is capped
+    // before anything copies it into a tree, and the token count is capped
+    // before the grammar parser builds a tree from it, which is what bounds
+    // the parser's peak memory.
+    check_tokens(&tokens)?;
     check_paren_depth(&tokens)?;
     let mut p = create_twig_parser_from_tokens(tokens);
     p.parse().map_err(Into::into)

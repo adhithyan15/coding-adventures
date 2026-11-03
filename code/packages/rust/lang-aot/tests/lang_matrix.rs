@@ -7267,6 +7267,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // An integer coefficient scales one exact square root without binary64
+    // widening; a negative coefficient uses the negated ceiling root.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(entier(9223372030926249000)))) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("2"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -12062,7 +12073,10 @@ fn compile_native(
 }
 
 /// Drain one newline-terminated line from a shared in-process stdin buffer and
-/// return it as an owned `String` (the terminating `\n` is consumed, not kept).
+/// return its bytes, exactly (the terminating `\n` is consumed, not kept). A
+/// VM string is bytes (LANG83 PR5b), so no byte is decoded or replaced: this
+/// used to return a lossy `String`, which turned an input byte `0xFF` into
+/// U+FFFD's three bytes.
 /// This is the string sibling of the inline `input_i64` line-drain: BASIC
 /// `INPUT A$` reads a *whole line as the string value*, so — unlike `input_i64` —
 /// there is no `parse`/`trim` step. An empty or drained buffer yields `""` (EOF).
@@ -12070,7 +12084,7 @@ fn compile_native(
 /// registration sites agree byte-for-byte.
 fn drain_stdin_line(
     buf: &std::sync::Arc<std::sync::Mutex<std::collections::VecDeque<u8>>>,
-) -> String {
+) -> Vec<u8> {
     let mut b = buf.lock().expect("lang-matrix stdin buffer poisoned");
     let mut line = Vec::new();
     loop {
@@ -12079,7 +12093,7 @@ fn drain_stdin_line(
             Some(byte) => line.push(byte),
         }
     }
-    String::from_utf8_lossy(&line).into_owned()
+    line
 }
 
 /// The stdin bytes a Brainfuck `,` program reads. The matrix is otherwise stdin-free —
@@ -13928,11 +13942,13 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     // `putchar` (their `__py_write_float` / `__js_write_number` helpers).
     let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
-        let s = args.first().and_then(Value::as_str).unwrap_or("");
+        // The bytes, unchanged (LANG83 PR5b): `as_str` would drop a
+        // string that is not UTF-8.
+        let s = args.first().and_then(Value::as_bytes).unwrap_or(b"");
         bytes
             .lock()
             .expect("lang-matrix VM print_str buffer poisoned")
-            .extend_from_slice(s.as_bytes());
+            .extend_from_slice(s);
         Ok(Value::Null)
     });
     // The program's stdin, drained one byte per `getchar` (Brainfuck `,`); empty for
@@ -13971,7 +13987,7 @@ fn run_vm(p: &Prog) -> Option<RunResult> {
     // stdin, so it is not foldable at compile time; `PRINT A$` prints it via `print_str`.
     let input = Arc::clone(&stdin_buf);
     vm.builtins_mut().register("input_str", move |_args: &[Value]| {
-        Ok(Value::Str(drain_stdin_line(&input)))
+        Ok(Value::str(drain_stdin_line(&input)))
     });
     assert_harness_builtins_name_no_language("Vm", vm.builtins_mut().names());
 
@@ -14062,11 +14078,13 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     });
     let bytes = Arc::clone(&printed_bytes);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
-        let s = args.first().and_then(Value::as_str).unwrap_or("");
+        // The bytes, unchanged (LANG83 PR5b): `as_str` would drop a
+        // string that is not UTF-8.
+        let s = args.first().and_then(Value::as_bytes).unwrap_or(b"");
         bytes
             .lock()
             .expect("lang-matrix JIT print_str buffer poisoned")
-            .extend_from_slice(s.as_bytes());
+            .extend_from_slice(s);
         Ok(Value::Null)
     });
     // The program's stdin, shared by BOTH tiers' `getchar` (a function runs on one tier,
@@ -14099,7 +14117,7 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     });
     let input = Arc::clone(&stdin_buf);
     vm.builtins_mut().register("input_str", move |_args: &[Value]| {
-        Ok(Value::Str(drain_stdin_line(&input)))
+        Ok(Value::str(drain_stdin_line(&input)))
     });
 
     // --- compiled path: the same builtins on the JIT backend (closures return Value) ---
@@ -14153,7 +14171,7 @@ fn run_jit(p: &Prog) -> Option<RunResult> {
     });
     let input = Arc::clone(&stdin_buf);
     backend.register_builtin("input_str", move |_args: &[Value]| {
-        Value::Str(drain_stdin_line(&input))
+        Value::str(drain_stdin_line(&input))
     });
     // The generic JIT intentionally starts with an empty, caller-owned builtin
     // registry. Twig's symbol equality is direct dynamic Value equality, matching
@@ -18481,6 +18499,34 @@ fn algol_translated_floor_root_nested_wide_static_integer_normalizers_run_on_eve
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but translated floor-root nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_scaled_floor_root_nested_wide_static_integer_normalizers_run_on_every_available_standard_backend()
+{
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("entier(3 * sqrt(entier(9223372030926249000)))")
+        })
+        .expect(
+            "the scaled floor-root nested wide-static-normalizer ALGOL program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but scaled floor-root nested wide static integer normalizers did not complete"
             );
             continue;
         };
@@ -29135,8 +29181,8 @@ fn portable_text_stdout_generic_input_more_peek() {
     use vm_core::{core::VMCore, value::Value};
     use jit_core::{core::JITCore, GenericCirJit};
 
-    let input = Arc::new(Mutex::new(VecDeque::from(b"5\nhello\n-3".to_vec())));
-    for line in ["5", "hello", "-3"] {
+    let input = Arc::new(Mutex::new(VecDeque::from(b"5\nhello\n-3\n\xFF\xA9".to_vec())));
+    for line in [&b"5"[..], b"hello", b"-3", b"\xFF\xA9"] {
         assert_eq!(peek_stdin(&input), 1);
         assert_eq!(peek_stdin(&input), 1);
         assert_eq!(drain_stdin_line(&input), line);

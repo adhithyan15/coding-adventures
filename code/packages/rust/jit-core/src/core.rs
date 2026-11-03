@@ -423,6 +423,20 @@ impl JITCore {
     fn compile_fn(&mut self, vm: &mut VMCore, fn_: &IIRFunction) -> bool {
         let t0 = Instant::now();
 
+        // LANG83 PR5b (security review L2): a raw-byte literal is a string
+        // value, and the JIT compiles no string op until PR5d. In any other
+        // position it is malformed (`BytesOperand`), and CIR would otherwise
+        // read it as a name. Either way the function stays on the interpreter
+        // tier, which refuses a malformed module at load.
+        if fn_
+            .instructions
+            .iter()
+            .flat_map(|i| i.srcs.iter())
+            .any(|op| matches!(op, interpreter_ir::Operand::Bytes(_)))
+        {
+            return false;
+        }
+
         // Specialise: IIRFunction → Vec<CIRInstr>.
         let raw_cir = specialise(fn_, self.min_observations);
 

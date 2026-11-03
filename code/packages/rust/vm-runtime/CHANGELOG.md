@@ -1,5 +1,9 @@
 # Changelog — vm-runtime
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- `iir_table`'s JSON encodes an `Operand::Bytes` literal as `{"bytes":[…]}`. `Value::str("")` stands for the not-yet-interned string result.
+
 ## Unreleased — #18470 review — a malformed symbol argument is refused
 
 - The in-process path used to turn a `Symbol` result whose payload does not

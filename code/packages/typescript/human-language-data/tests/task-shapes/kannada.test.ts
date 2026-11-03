@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
+import { listTaskShapeInventories, loadTrackLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
 it("names a consequential real ladder and still does not borrow it", () => {
@@ -42,7 +42,7 @@ it("scores the subscript conjunct and the curve the palm leaf put there", () => 
 it("declares a published stimulus length, so reading reach can measure it rather than skip it", () => {
   const inventories = listTaskShapeInventories().map(({ language, level }) =>
     loadTaskShapeInventory(language, level));
-  const report = measureReadingReach(loadLessons(), inventories);
+  const report = measureReadingReach(loadTrackLessons("kannada"), inventories);
   const row = report.rows.find((r) => r.language === "kannada" && r.level === "pre-A1");
   expect(row?.status).toBe("measurable");
   expect(row?.partsMeasurable).toBe(3);
@@ -132,7 +132,7 @@ describe("Kannada B2 task shapes", () => {
   it("makes the B2 reading target measurable without claiming present attainment", () => {
     const inventories = listTaskShapeInventories().map(({ language, level }) =>
       loadTaskShapeInventory(language, level));
-    const report = measureReadingReach(loadLessons(), inventories);
+    const report = measureReadingReach(loadTrackLessons("kannada"), inventories);
     const row = report.rows.find((entry) =>
       entry.language === "kannada" && entry.level === "B2");
 

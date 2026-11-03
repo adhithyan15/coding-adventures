@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../../src/loader.js";
+import { listTaskShapeInventories, loadTrackLessons, loadTaskShapeInventory } from "../../../src/loader.js";
 import { measureReadingReach } from "../../../src/reading-reach.js";
 
 it("gives a classical language all four skills, and records why that is not a category error", () => {
@@ -50,7 +50,7 @@ it("scores the word ending, because in Sanskrit that is where the grammar lives"
 it("declares a published stimulus length, so reading reach can measure it rather than skip it", () => {
   const inventories = listTaskShapeInventories().map(({ language, level }) =>
     loadTaskShapeInventory(language, level));
-  const report = measureReadingReach(loadLessons(), inventories);
+  const report = measureReadingReach(loadTrackLessons("sanskrit"), inventories);
   const row = report.rows.find((r) => r.language === "sanskrit" && r.level === "pre-A1");
   expect(row?.status).toBe("measurable");
   expect(row?.partsMeasurable).toBe(3);

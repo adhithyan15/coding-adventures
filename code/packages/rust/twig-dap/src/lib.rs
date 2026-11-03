@@ -69,7 +69,10 @@ impl LanguageDebugAdapter for TwigDebugAdapter {
         source_path: &Path,
         _workspace_root: &Path,
     ) -> Result<(PathBuf, Vec<u8>), String> {
-        let source = std::fs::read_to_string(source_path)
+        // Bounded (#18474 review): only a regular file, never blocking on a
+        // FIFO or tty, at most the compiler's 1 MiB source budget read.
+        let limit = twig_ir_compiler::MAX_SOURCE_BYTES as u64;
+        let source = bounded_source_file::read_to_string(source_path, limit)
             .map_err(|e| format!("read {}: {e}", source_path.display()))?;
         let module = twig_ir_compiler::compile_source(&source, "twig")
             .map_err(|e| format!("twig compile: {e}"))?;
