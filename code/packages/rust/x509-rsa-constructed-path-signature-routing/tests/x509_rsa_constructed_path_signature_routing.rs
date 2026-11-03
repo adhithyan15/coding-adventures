@@ -1,5 +1,6 @@
 use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
+use tls_server_identity::ReferenceIdentity;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_path_construction::{
     construct_unique_x509_certificate_path_by, ConstructedX509CertificatePath,
@@ -11,7 +12,7 @@ use x509_certificate_policy::{
     classify_certificate_self_issued, validate_certificate_algorithm_policy,
     validate_certificate_role_policy, ValidatedCertificateAlgorithmPolicy,
     ValidatedCertificateRolePolicy, X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
-    X509CertificateRole,
+    X509CertificatePurposePolicy, X509CertificateRole,
 };
 use x509_intermediate_certificate_policy::{
     validate_x509_intermediate_certificate_policy, ValidatedX509IntermediateCertificatePolicy,
@@ -24,16 +25,22 @@ use x509_rsa_constructed_path_signature_routing::{
     bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor,
     bind_x509_rsa_constructed_path_intermediate_policy,
     bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
+    bind_x509_rsa_constructed_reviewed_intermediate_server_path,
     verify_x509_rsa_constructed_path_policy_signature,
+    BoundX509RsaConstructedReviewedIntermediatePath,
     X509RsaConstructedPathIntermediatePolicyErrorKind,
     X509RsaConstructedPathReviewedAnchorErrorKind,
     X509RsaConstructedPathReviewedIntermediatePathErrorKind,
+    X509RsaConstructedPathReviewedServerPolicyErrorKind,
     X509RsaConstructedPathSignatureRoutingErrorKind,
 };
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_signature_routing::{
     VerifiedX509RsaPolicySignature, X509RsaSignatureRoute, X509RsaSignatureRoutingErrorKind,
     X509RsaSignatureVerifier,
+};
+use x509_server_certificate_policy::{
+    validate_x509_server_certificate_policy, ValidatedX509ServerCertificatePolicy,
 };
 use x509_time::{decode_x509_time, X509Time};
 use x509_webpki_root_anchor_selection::select_reviewed_webpki_root_anchor;
@@ -48,6 +55,7 @@ const ROOT_HEX: &str =
 
 const SHA256_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
 const RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 1];
+const SERVER_AUTH_OID: &[u64] = &[1, 3, 6, 1, 5, 5, 7, 3, 1];
 const NULL_DER: &[u8] = &[0x05, 0x00];
 
 fn fixture(hexadecimal: &str) -> Vec<u8> {
@@ -154,6 +162,99 @@ fn intermediate_policy<'certificate, 'encoded>(
         &observed_time(),
     )
     .unwrap()
+}
+
+fn server_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+) -> ValidatedX509ServerCertificatePolicy<'certificate, 'encoded> {
+    let role_policy = validate_certificate_role_policy(
+        certificate,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| {
+            oid.equals(&[2, 5, 29, 15])
+                || oid.equals(&[2, 5, 29, 19])
+                || oid.equals(&[1, 3, 6, 1, 4, 1, 11129, 2, 4, 3])
+        },
+    )
+    .unwrap();
+    let profiles = [profile()];
+    let algorithm_policy = validate_certificate_algorithm_policy(certificate, &profiles).unwrap();
+    let reference = ReferenceIdentity::parse("valid-isrgrootx1.letsencrypt.org").unwrap();
+    let purpose = X509CertificatePurposePolicy::new(SERVER_AUTH_OID).unwrap();
+
+    validate_x509_server_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        &reference,
+        &observed_time(),
+        purpose,
+        Asn1Limits::default(),
+    )
+    .unwrap()
+}
+
+fn reviewed_path<'path, 'target, 'target_encoded, 'candidates, 'candidate_encoded>(
+    path: &'path ConstructedX509CertificatePath<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> BoundX509RsaConstructedReviewedIntermediatePath<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    let profiles = [profile()];
+    let intermediate = path.issuer_certificate(0).unwrap();
+    let root = path.issuer_certificate(1).unwrap();
+    let intermediate_signature = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(0).unwrap(),
+        algorithm_policy(path.target_certificate(), &profiles),
+        role_policy(
+            intermediate,
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(intermediate, &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let intermediate = bind_x509_rsa_constructed_path_intermediate_policy(
+        intermediate_signature,
+        intermediate_policy(intermediate, &profiles, false),
+    )
+    .unwrap();
+    let intermediate = advance_x509_rsa_constructed_path_intermediate_path_length(
+        X509CertificatePathLengthState::new(1),
+        intermediate,
+    )
+    .unwrap();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(1).unwrap(),
+        algorithm_policy(
+            intermediate
+                .authenticated_intermediate()
+                .intermediate_policy()
+                .certificate(),
+            &profiles,
+        ),
+        role_policy(root, X509CertificateRole::IssuingCertificateAuthority),
+        rsa_policy(root, &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(root).unwrap(),
+    )
+    .unwrap();
+
+    bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor(intermediate, terminal).unwrap()
 }
 
 #[test]
@@ -792,6 +893,68 @@ fn binds_complete_routed_two_link_path_to_reviewed_anchor() {
     assert_eq!(
         format!("{bound:?}"),
         "BoundX509RsaConstructedReviewedIntermediatePath"
+    );
+}
+
+#[test]
+fn binds_complete_server_policy_to_exact_routed_reviewed_target() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+
+    let bound = bind_x509_rsa_constructed_reviewed_intermediate_server_path(
+        server_policy(&target),
+        reviewed_path(&path),
+    )
+    .unwrap();
+
+    let constructed_target = bound
+        .reviewed_path()
+        .authenticated_intermediate()
+        .authenticated_intermediate()
+        .verified_signature()
+        .adjacent_link()
+        .constructed_path()
+        .target_certificate();
+    assert!(std::ptr::eq(
+        bound.server_policy().certificate(),
+        constructed_target
+    ));
+    assert!(std::ptr::eq(constructed_target, &target));
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundX509RsaConstructedReviewedIntermediateServerPath"
+    );
+}
+
+#[test]
+fn rejects_server_policy_for_byte_equal_detached_target() {
+    let target_encoded = fixture(TARGET_HEX);
+    let detached_target_encoded = target_encoded.clone();
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let detached_target = decode(&detached_target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+
+    assert_eq!(target.encoded(), detached_target.encoded());
+    let error = bind_x509_rsa_constructed_reviewed_intermediate_server_path(
+        server_policy(&detached_target),
+        reviewed_path(&path),
+    )
+    .expect_err("byte-equal independently decoded target policy must not attach");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathReviewedServerPolicyErrorKind::EvidenceMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 RSA constructed-path reviewed server policy error EvidenceMismatch"
     );
 }
 
