@@ -16,16 +16,14 @@
       "external-approval"
     ]
   },
-  "active_pr": 18853,
-  "active_prs": [
-    18853
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-11-03T10:09:45Z",
+    "observed_at": "2026-11-03T11:42:23Z",
     "pr_number": 18853,
-    "head_revision": "6f334e07991729ed5b22779d502e4add1ea4c577",
-    "action": "Exact-head CI confirmed the Java repair and then failed at the analogous Kotlin legacy fixture roster; the aggregate CI gate failed only because that required contract job failed. Audit found Dart uses the same non-adopting roster shape and would run next. Keep auto-merge disabled. Apply the same closed trigger_relations discriminator to Kotlin and Dart, preserve all legacy mandatory case sets, validate all three consumers plus the canonical corpus, push normally, independently review the resulting exact head, and require fresh hosted qualification.",
-    "manual_merge": false
+    "head_revision": "b97d8a07fb70de23932ed71242d37e51ba2ea794",
+    "action": "All 42 checks on exact independently reviewed head b97d8a07fb70de23932ed71242d37e51ba2ea794 completed terminal acceptable: 18 succeeded, 23 were expected skips, and the CodeQL aggregate was neutral. PR #18853 was manually squash-merged by adhithyan15 at 2026-11-03T11:27:40Z as 0490c52415e26f1f4f6f0b10be4dd0e4da37bbb9; no guarded auto-merge claim is made. The receipt is an ancestor of current origin/main and the clean completed worktree is archived. Reprioritize from current main c36b5728fb75e283b90fa4dcc3aa093939a2a119.",
+    "manual_merge": true
   },
   "last_inventory": {
     "revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
@@ -2940,7 +2938,7 @@
     {
       "id": "build-tool-rust-cargo-test-trigger-selection-parity",
       "title": "Adopt the bounded Cargo test-trigger selection core in the Rust build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/build-tool-rust-cargo-test-trigger",
       "pr_number": 18853,
@@ -2957,6 +2955,10 @@
       "ci_failure_notes": "Repo-wide metadata contracts failed only the Java BuildToolCoreTest legacy fixture-roster test. The new closed diff_selection trigger variant carries package-name strings, while that non-adopting Java test assumes every diff_selection fixture carries legacy package records with source_mode. The repair makes the Java legacy roster ignore only options containing trigger_relations, matching the documented distinct variant while leaving all existing graph and path-selection fixtures mandatory.",
       "ci_second_failure_revision": "6f334e07991729ed5b22779d502e4add1ea4c577",
       "ci_second_failure_notes": "Fresh hosted qualification passed the repaired Java roster and then exposed the same closed-variant decoding assumption in the Kotlin roster; the CI gate failed only as the required-job aggregate. A complete audit found Dart has the same sequential legacy consumer. The bounded repair applies the exact trigger_relations discriminator to Kotlin and Dart while retaining each unchanged mandatory graph and path-selection case set; canonical schema and semantic validation continue to validate every trigger fixture independently.",
+      "merged_head_revision": "b97d8a07fb70de23932ed71242d37e51ba2ea794",
+      "merge_revision": "0490c52415e26f1f4f6f0b10be4dd0e4da37bbb9",
+      "merged_at": "2026-11-03T11:27:40Z",
+      "merge_notes": "All 42 exact-head checks completed terminal acceptable: 18 successes, 23 expected skips, and one neutral CodeQL aggregate. GitHub reported the reviewed head mergeable with no conflict. adhithyan15 manually squash-merged the PR, so no guarded auto-merge claim is made. The squash receipt is an ancestor of current origin/main and the clean completed worktree is archived.",
       "registered_at": "2026-10-30T12:39:41Z",
       "preparation_branch": "codex/build-tool-rust-cargo-test-trigger",
       "prepared_at": "2026-11-03T07:36:31Z",
@@ -2989,13 +2991,16 @@
     {
       "id": "build-tool-neutral-cargo-manifest-trigger-snapshot-contract",
       "title": "Define the neutral strict Cargo manifest trigger snapshot contract",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-rust-cargo-test-trigger-selection-parity"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-neutral-cargo-trigger-snapshot",
       "pr_number": null,
       "registered_at": "2026-11-03T06:22:44Z",
+      "selected_at": "2026-11-03T11:42:23Z",
+      "selection_revision": "c36b5728fb75e283b90fa4dcc3aa093939a2a119",
+      "selection_notes": "Selected after PR #18853 completed all 42 checks acceptably and was manually squash-merged, opening the publication slot. This authority-free neutral contract is the first dependency for the Rust Cargo snapshot resolver, native adapter, CLI integration, and repository consumer-selection descendants. A read-only security audit found the slice feasible as manifest bytes plus an explicit profile producing an immutable snapshot or one bounded stable error, with filesystem, path identity, environment, process, discovery, closure, and CLI authority explicitly deferred. Current main adds only path-disjoint SHA-512 policy work after the merge receipt.",
       "notes": "Recorded by the 2026-11-03 Rust/Go contract audit after the original test-trigger owner proved too broad for one independently reviewable slice. Define a shared authority-free strict TOML subset and snapshot fixtures for trigger tables, link-table screening, BOM and malformed-shape diagnostics, and the established 1 MiB manifest, 64 KiB continued-entry, and 256-line continuation ceilings. Do not open files, resolve paths or symlinks, consult environment state, or integrate a language-specific CLI in this owner."
     },
     {

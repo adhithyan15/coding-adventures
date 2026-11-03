@@ -20412,3 +20412,26 @@ their unchanged exact rosters. The canonical schema and semantic oracle still
 validate every trigger fixture independently. Keep auto-merge disabled; require
 all three consumer suites, the canonical corpus, independent exact-head review,
 and fresh terminal acceptable hosted qualification after a normal push.
+
+#### Rust Cargo test-trigger PR #18853 merge and snapshot-contract selection
+
+All 42 checks on exact independently reviewed head
+`b97d8a07fb70de23932ed71242d37e51ba2ea794` completed terminal acceptable:
+18 succeeded, 23 were expected skips, and the CodeQL aggregate was neutral.
+GitHub reported no merge conflict. `adhithyan15` manually squash-merged PR
+#18853 at `2026-11-03T11:27:40Z` as
+`0490c52415e26f1f4f6f0b10be4dd0e4da37bbb9`; no guarded auto-merge claim is
+made. The receipt is an ancestor of current main and the clean completed
+worktree is archived.
+
+Reprioritization from current main
+`c36b5728fb75e283b90fa4dcc3aa093939a2a119` selects the neutral strict Cargo
+manifest trigger snapshot contract. It is the first dependency for the Rust
+snapshot resolver, native adapter, CLI integration, and repository consumer
+selection descendants. Keep this owner authority-free: inert manifest bytes
+plus an explicit parsing profile produce one immutable snapshot or one bounded
+stable error. Filesystem identity, path resolution, Cargo configuration,
+closure traversal, discovery, environment, processes, and CLI integration
+remain in later owners. Before implementation, pin valid UTF-8 and newline
+rules, portable absolute-path rejection, duplicate behavior, deterministic
+ordering/provenance, and exact 1 MiB, 64 KiB, and 256-line boundary semantics.
