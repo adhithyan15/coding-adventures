@@ -82,6 +82,12 @@ can progress independently once their prerequisites are available.
 
 ## Discoveries and current plan
 
+I004 is being prepared locally on its own branch while #18849 waits for CI;
+it has no PR and is not delivered. Its spec preserves the string-taking
+Verdict API and validates at serialization, so direct construction cannot
+bypass the guard. Publication still requires P004 merge, a fresh overlap and
+priority audit, final-source validation and security review.
+
 - During pending CI for P004, its two negative-check failure paths were found
   to invent adapter-specific IDs outside TF01's closed vocabulary. Correct them
   to corpus-mismatch and validate the actual failing TAP with sabotage mode.
