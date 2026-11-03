@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cigates"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/plan"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
@@ -249,6 +250,18 @@ func TestNativePerlRecipesRequestRustForHelperOnlyChanges(t *testing.T) {
 		needed := computeLanguagesNeeded(packages, consumers, false, nil)
 		if !needed["perl"] || !needed["rust"] {
 			t.Fatalf("%s helper-only edit needs Perl and Rust: %v", platform, needed)
+		}
+		registry, err := cigates.Load(filepath.Join(root, filepath.FromSlash(cigates.DefaultRegistryPath)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		verdicts, err := cigates.Evaluate(registry, consumers,
+			[]string{"code/scripts/check-perl-extension-windows.ps1"}, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !verdicts["build-windows-os-suites"] {
+			t.Fatalf("%s helper-only plan must execute the Windows native suite", platform)
 		}
 	}
 }

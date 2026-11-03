@@ -10,6 +10,8 @@
 - Both platform fronts declare Rust for all three native recipes. A test reads
   the real BUILD files and verifies helper-only changes request both Perl and
   Rust for Linux, macOS and Windows, so cold CI does not rely on ambient Cargo.
+- The Windows native-suite gate includes these consumers and the helper path;
+  the same real-metadata test checks that helper-only plans execute Windows CI.
 
 ## 2026-11-02 — `windows-posix-syntax`: BUILD_windows lines must be cmd syntax
 

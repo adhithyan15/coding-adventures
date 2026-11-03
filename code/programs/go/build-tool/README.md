@@ -7,6 +7,8 @@ manifest, build script and source directory also select Conduit, IRC Server
 Native and Conduit Hello for all/Perl builds. These external inputs must still
 run the real XS consumers when no Perl package file changed. Missing consumers
 fail closed; other language filters and lookalike helper paths stay separate.
+The native recipes explicitly request Rust, and their shared helper also enables
+the Windows native-suite gate, including for helper-only edits.
 
 Changes to the exact `code/specs/fixtures/starlark-opcode-provider-v1/cases.json`
 path also schedule the committed `go/starlark-compiler` native conformance reader
