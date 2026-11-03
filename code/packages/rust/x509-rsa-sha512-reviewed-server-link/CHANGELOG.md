@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.0 - 2026-11-02
+
+### Added
+
+- Added selected reviewed-anchor DNS policy for the complete RSA SHA-512
+  two-link server proof that retains advanced path-length state.
+- Derived the constraint bytes and target SAN only from the consumed proof and
+  retained that full proof beside optional constrained-name evidence.
+
+### Security
+
+- No detached target or reviewed snapshot entry can be substituted during the
+  selected-anchor decision, and caller-owned limits bound both decoders.
+- This supported DNS subset does not apply intermediate or non-DNS
+  constraints, verify hostnames, check revocation, construct paths, or grant
+  TLS, HTTP, OAuth, or network authority.
+
 ## 0.4.0 - 2026-11-02
 
 ### Added

@@ -33,6 +33,13 @@ complete intermediate policy, both authenticated links, the caller-seeded and
 already-advanced path-length state, and exact reviewed-root selection. It does
 not derive the initial state or perform another path-length transition.
 
+`validate_x509_rsa_sha512_reviewed_intermediate_server_anchor_policy` consumes
+that complete path-length-preserving proof and applies the exact selected
+reviewed snapshot entry's optional out-of-band DNS constraints to the exact
+retained target SAN. Separate caller-owned ASN.1 budgets bound both decoders.
+The non-copyable success retains the complete server path and advanced
+path-length state beside optional constrained-name evidence.
+
 `validate_x509_rsa_sha512_reviewed_server_anchor_policy` then consumes that
 complete proof and derives both inputs to its DNS-policy decision from it:
 
@@ -49,11 +56,11 @@ payload-free categories. The non-copyable success retains the complete input
 proof beside optional constrained-name evidence.
 
 This composition performs no new signature work or root lookup. Its bounded
-parsing is limited to the direct-link policy's exact reviewed-anchor constraint
-bytes and exact target SAN retained by the consumed proof. The two-link binding
-and path-length binding perform no parsing. None of these APIs constructs or
-validates a path, applies intermediate or IP constraints, checks revocation or
-hostnames, performs TLS or HTTP, authorizes OAuth transport, or opens a network
+parsing is limited to exact reviewed-anchor constraint bytes and the exact
+target SAN retained by the consumed direct or two-link proof. The two-link
+bindings perform no parsing. None of these APIs constructs or validates a
+path, applies intermediate or IP constraints, checks revocation or hostnames,
+performs TLS or HTTP, authorizes OAuth transport, or opens a network
 connection. It does not make concrete HTTPS or live-provider use ready.
 
 ## Validation
