@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.171.0";
+pub const VERSION: &str = "0.172.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14069,6 +14069,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let mut accessibility_description = None;
     let mut render_config = StructuralRenderConfig {
         c4_diagram_type: Some(c4_diagram_type),
+        c4_shape_in_row: Some(4),
+        c4_boundary_in_row: Some(2),
         ..StructuralRenderConfig::default()
     };
     let mut nodes = Vec::new();
@@ -20200,7 +20202,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.171.0");
+        assert_eq!(crate::VERSION, "0.172.0");
     }
 
     #[test]

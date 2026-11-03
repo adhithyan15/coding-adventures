@@ -5358,11 +5358,11 @@ line "Target" [35, 50, 68, 82]"##,
             let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
             let columns = diagram.render_config.c4_shape_in_row.unwrap();
             let layout = layout_structural_diagram(&diagram);
-            if columns == 1 {
-                assert!(layout.nodes[1].y > layout.nodes[0].y);
-            } else {
-                assert_eq!(layout.nodes[0].y, layout.nodes[1].y);
-                assert!(layout.nodes[2].y > layout.nodes[0].y);
+            for node in layout.nodes.iter().take(columns) {
+                assert_eq!(node.y, layout.nodes[0].y);
+            }
+            if let Some(next_row) = layout.nodes.get(columns) {
+                assert!(next_row.y > layout.nodes[0].y);
             }
             let shaper = CoreTextShaper;
             let metrics = CoreTextMetrics;
