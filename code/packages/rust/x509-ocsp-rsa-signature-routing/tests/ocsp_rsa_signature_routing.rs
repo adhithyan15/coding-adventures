@@ -6,6 +6,7 @@ use x509_ocsp_rsa_algorithm_policy::{
     X509OcspRsaAlgorithmParametersPolicy, X509OcspRsaAlgorithmProfile,
 };
 use x509_ocsp_rsa_pkcs1_v1_5_sha256_signature::X509OcspRsaSha256SignatureErrorKind;
+use x509_ocsp_rsa_pkcs1_v1_5_sha384_signature::X509OcspRsaSha384SignatureErrorKind;
 use x509_ocsp_rsa_pkcs1_v1_5_sha512_signature::X509OcspRsaSha512SignatureErrorKind;
 use x509_ocsp_rsa_signature_routing::{
     verify_x509_ocsp_rsa_policy_signature, VerifiedX509OcspRsaPolicySignature,
@@ -15,9 +16,12 @@ use x509_rsa_public_key::{validate_rsa_public_key, RsaPublicKeyPolicy, Validated
 use x509_subject_public_key_info::decode_x509_subject_public_key_info;
 
 const SHA256_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
+const SHA384_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 12];
 const SHA512_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 13];
 const SHA256_WITH_RSA_ENCRYPTION_OID_DER: &[u8] =
     &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
+const SHA384_WITH_RSA_ENCRYPTION_OID_DER: &[u8] =
+    &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0c];
 const SHA512_WITH_RSA_ENCRYPTION_OID_DER: &[u8] =
     &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0d];
 const NULL_DER: &[u8] = &[0x05, 0x00];
@@ -50,6 +54,28 @@ const SHA256_SIGNATURE_HEX: &str = concat!(
     "b80a4df8a6ad10abf07a5b7aa879511d2b25f56663405cd6bf77abedd5a5fa",
     "f906fb5b073c78134731d0d92c8201065a3c2bcebb5464a1d65cbdad4f21fb",
     "850c0bf8a1f",
+);
+const SHA384_PUBLIC_SPKI_HEX: &str = concat!(
+    "30820122300d06092a864886f70d01010105000382010f003082010a02820101",
+    "00d55c8dc03f3903bace760f486dcf94f5e8c13da191b6daa22ff3e3a1aa02",
+    "9c4f69c86de686820a513b9f7d876a76c444a7afd944fb49ececb7c79b21e6",
+    "84ccd710b39c59bcc7249a24b0a36a3899cb9d7a299c51dcc820c35396e5ec",
+    "bc722b98bcd9e2ee78c7e7ea92ce2f428e994174969514e7bb959e96017372",
+    "c3d92fd4575ce9a7d8a8e93710b504bb3e7c2e9d229b92391b487a27f7efd",
+    "31ea60e5b0a11e98760bc909d7b058501897dda566f90e5eb5ca6cb44805dd",
+    "62a948e02aa13b4f36c42fe150499198309aca94b6d4fbd6d1eeae3a345678",
+    "a8af60800bb0da7c7a1f02c1fbbd9b602ec0f26af496b1426082b67b33c02",
+    "75d3444a9e06dc64f49d0203010001",
+);
+const SHA384_SIGNATURE_HEX: &str = concat!(
+    "2c37793c890866bdc75e9e4090d33b4764f7d21fb9e394956ef1f3c0f7c99a79",
+    "56b07589d6e6e3279b6409124b8924ed49ee8efbaa9d68040f283adcf7b91bdd",
+    "61948a479d006c0e6fa4a7b528f601bb0b16c52a2ea59fd34b838bde7ca18a34",
+    "496efeb304de4d14535ff201625ee26c4844d68998728a50fbd0879d31b4ad3d",
+    "ccb7d9d026ca417e0376567ab7e699a1eff3ae4f19a2d79903fecefe8394b96a",
+    "19f79942b034d16859ac16e1a62af7b37e3cef2acee492cc90f3f7df23d6ea2c",
+    "35ab1b7dc0dc1e15a035ab6c9588e0d16bce31e9ecd4f4d49c5d9c0c227495a3",
+    "b03e33ca27c004efc328fff3673e56fb8a0f93f801c70ec810ee29e99fe308d9",
 );
 const SHA512_PUBLIC_SPKI_HEX: &str = concat!(
     "30820122300d06092a864886f70d01010105000382010f003082010a02820101",
@@ -206,6 +232,50 @@ fn routes_sha256_by_selected_profile_index_and_binds_evidence() {
 }
 
 #[test]
+fn routes_sha384_and_binds_evidence() {
+    let encoded = fixture_response(SHA384_WITH_RSA_ENCRYPTION_OID_DER, SHA384_SIGNATURE_HEX);
+    let response = decode_response(&encoded);
+    let spki = decode_hex(SHA384_PUBLIC_SPKI_HEX);
+    let key = validated_key(&spki);
+    let profiles = [profile(SHA384_WITH_RSA_ENCRYPTION_OID)];
+    let policy = algorithm_policy(&response, key, &profiles);
+    let routes = [X509OcspRsaSignatureRoute::new(
+        0,
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha384,
+    )];
+
+    let verified = verify_x509_ocsp_rsa_policy_signature(
+        policy,
+        &routes,
+        RsaPublicOperationLimits::new(256).unwrap(),
+    )
+    .unwrap();
+    assert_eq!(
+        verified.verifier(),
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha384
+    );
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedX509OcspRsaPolicySignature::Sha384"
+    );
+    let VerifiedX509OcspRsaPolicySignature::Sha384(verified) = verified else {
+        panic!("selected the wrong verifier")
+    };
+    assert_eq!(
+        format!("{verified:?}"),
+        "VerifiedX509OcspRsaSha384PolicySignature"
+    );
+    assert!(std::ptr::eq(
+        verified.algorithm_policy().response(),
+        verified.signature().response()
+    ));
+    assert_eq!(
+        verified.algorithm_policy().responder_public_key(),
+        verified.signature().responder_public_key()
+    );
+}
+
+#[test]
 fn routes_sha512_and_binds_evidence() {
     let encoded = fixture_response(SHA512_WITH_RSA_ENCRYPTION_OID_DER, SHA512_SIGNATURE_HEX);
     let response = decode_response(&encoded);
@@ -297,6 +367,22 @@ fn rejects_missing_duplicate_and_mismatched_routes_with_redacted_errors() {
         )
     );
 
+    let sha384_mismatch = verify_x509_ocsp_rsa_policy_signature(
+        algorithm_policy(&response, key, &profiles),
+        &[X509OcspRsaSignatureRoute::new(
+            0,
+            X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha384,
+        )],
+        limits,
+    )
+    .unwrap_err();
+    assert_eq!(
+        sha384_mismatch.kind(),
+        X509OcspRsaSignatureRoutingErrorKind::Sha384(
+            X509OcspRsaSha384SignatureErrorKind::UnsupportedSignatureAlgorithm
+        )
+    );
+
     let sha512_encoded = fixture_response(SHA512_WITH_RSA_ENCRYPTION_OID_DER, SHA512_SIGNATURE_HEX);
     let sha512_response = decode_response(&sha512_encoded);
     let sha512_spki = decode_hex(SHA512_PUBLIC_SPKI_HEX);
@@ -317,7 +403,13 @@ fn rejects_missing_duplicate_and_mismatched_routes_with_redacted_errors() {
             X509OcspRsaSha256SignatureErrorKind::UnsupportedSignatureAlgorithm
         )
     );
-    for error in [missing, duplicate, mismatch, sha256_mismatch] {
+    for error in [
+        missing,
+        duplicate,
+        mismatch,
+        sha384_mismatch,
+        sha256_mismatch,
+    ] {
         let rendered = format!("{error:?} {error}");
         assert!(!rendered.contains(RESPONSE_DATA_HEX));
         assert!(!rendered.contains(SHA256_PUBLIC_SPKI_HEX));

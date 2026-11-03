@@ -3,7 +3,7 @@
 //! Fixed signature verifiers deliberately do not choose algorithms. This
 //! crate supplies the narrow composition step between caller-owned,
 //! response-bound algorithm/key policy and the repository-owned OCSP RSA
-//! PKCS #1 v1.5 SHA-256 and SHA-512 verifiers.
+//! PKCS #1 v1.5 SHA-256, SHA-384, and SHA-512 verifiers.
 //!
 //! The routing table is public policy data keyed only by the selected profile
 //! index. Verification consumes the non-copyable policy evidence and derives
@@ -26,6 +26,10 @@ use x509_ocsp_rsa_pkcs1_v1_5_sha256_signature::{
     verify_x509_ocsp_rsa_pkcs1_v1_5_sha256_signature, VerifiedX509OcspRsaSha256Signature,
     X509OcspRsaSha256SignatureErrorKind,
 };
+use x509_ocsp_rsa_pkcs1_v1_5_sha384_signature::{
+    verify_x509_ocsp_rsa_pkcs1_v1_5_sha384_signature, VerifiedX509OcspRsaSha384Signature,
+    X509OcspRsaSha384SignatureErrorKind,
+};
 use x509_ocsp_rsa_pkcs1_v1_5_sha512_signature::{
     verify_x509_ocsp_rsa_pkcs1_v1_5_sha512_signature, VerifiedX509OcspRsaSha512Signature,
     X509OcspRsaSha512SignatureErrorKind,
@@ -35,6 +39,7 @@ use x509_ocsp_rsa_pkcs1_v1_5_sha512_signature::{
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum X509OcspRsaSignatureVerifier {
     RsaPkcs1V15Sha256,
+    RsaPkcs1V15Sha384,
     RsaPkcs1V15Sha512,
 }
 
@@ -68,6 +73,7 @@ pub enum X509OcspRsaSignatureRoutingErrorKind {
     UnsupportedProfileRoute,
     AmbiguousProfileRoute,
     Sha256(X509OcspRsaSha256SignatureErrorKind),
+    Sha384(X509OcspRsaSha384SignatureErrorKind),
     Sha512(X509OcspRsaSha512SignatureErrorKind),
 }
 
@@ -127,6 +133,34 @@ impl fmt::Debug for VerifiedX509OcspRsaSha256PolicySignature<'_, '_, '_> {
     }
 }
 
+/// Policy and SHA-384 signature evidence for the same exact response and key.
+pub struct VerifiedX509OcspRsaSha384PolicySignature<'response, 'encoded, 'key> {
+    algorithm_policy: ValidatedX509OcspRsaAlgorithmPolicy<'response, 'encoded, 'key>,
+    signature: VerifiedX509OcspRsaSha384Signature<'response, 'encoded, 'key>,
+}
+
+impl<'response, 'encoded, 'key>
+    VerifiedX509OcspRsaSha384PolicySignature<'response, 'encoded, 'key>
+{
+    pub const fn algorithm_policy(
+        &self,
+    ) -> &ValidatedX509OcspRsaAlgorithmPolicy<'response, 'encoded, 'key> {
+        &self.algorithm_policy
+    }
+
+    pub const fn signature(
+        &self,
+    ) -> &VerifiedX509OcspRsaSha384Signature<'response, 'encoded, 'key> {
+        &self.signature
+    }
+}
+
+impl fmt::Debug for VerifiedX509OcspRsaSha384PolicySignature<'_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedX509OcspRsaSha384PolicySignature")
+    }
+}
+
 /// Policy and SHA-512 signature evidence for the same exact response and key.
 pub struct VerifiedX509OcspRsaSha512PolicySignature<'response, 'encoded, 'key> {
     algorithm_policy: ValidatedX509OcspRsaAlgorithmPolicy<'response, 'encoded, 'key>,
@@ -158,6 +192,7 @@ impl fmt::Debug for VerifiedX509OcspRsaSha512PolicySignature<'_, '_, '_> {
 /// Non-copyable policy-bound signature evidence from one fixed verifier.
 pub enum VerifiedX509OcspRsaPolicySignature<'response, 'encoded, 'key> {
     Sha256(VerifiedX509OcspRsaSha256PolicySignature<'response, 'encoded, 'key>),
+    Sha384(VerifiedX509OcspRsaSha384PolicySignature<'response, 'encoded, 'key>),
     Sha512(VerifiedX509OcspRsaSha512PolicySignature<'response, 'encoded, 'key>),
 }
 
@@ -165,6 +200,7 @@ impl VerifiedX509OcspRsaPolicySignature<'_, '_, '_> {
     pub const fn verifier(&self) -> X509OcspRsaSignatureVerifier {
         match self {
             Self::Sha256(_) => X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha256,
+            Self::Sha384(_) => X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha384,
             Self::Sha512(_) => X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha512,
         }
     }
@@ -174,6 +210,7 @@ impl fmt::Debug for VerifiedX509OcspRsaPolicySignature<'_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str(match self {
             Self::Sha256(_) => "VerifiedX509OcspRsaPolicySignature::Sha256",
+            Self::Sha384(_) => "VerifiedX509OcspRsaPolicySignature::Sha384",
             Self::Sha512(_) => "VerifiedX509OcspRsaPolicySignature::Sha512",
         })
     }
@@ -206,9 +243,10 @@ pub fn verify_x509_ocsp_rsa_policy_signature<'response, 'encoded, 'key>(
         )
     })?;
 
-    use X509OcspRsaSignatureVerifier::{RsaPkcs1V15Sha256, RsaPkcs1V15Sha512};
+    use X509OcspRsaSignatureVerifier::{RsaPkcs1V15Sha256, RsaPkcs1V15Sha384, RsaPkcs1V15Sha512};
     match verifier {
         RsaPkcs1V15Sha256 => sha256(algorithm_policy, operation_limits),
+        RsaPkcs1V15Sha384 => sha384(algorithm_policy, operation_limits),
         RsaPkcs1V15Sha512 => sha512(algorithm_policy, operation_limits),
     }
 }
@@ -232,6 +270,31 @@ fn sha256<'response, 'encoded, 'key>(
     })?;
     Ok(VerifiedX509OcspRsaPolicySignature::Sha256(
         VerifiedX509OcspRsaSha256PolicySignature {
+            algorithm_policy,
+            signature,
+        },
+    ))
+}
+
+fn sha384<'response, 'encoded, 'key>(
+    algorithm_policy: ValidatedX509OcspRsaAlgorithmPolicy<'response, 'encoded, 'key>,
+    operation_limits: RsaPublicOperationLimits,
+) -> Result<
+    VerifiedX509OcspRsaPolicySignature<'response, 'encoded, 'key>,
+    X509OcspRsaSignatureRoutingError,
+> {
+    let signature = verify_x509_ocsp_rsa_pkcs1_v1_5_sha384_signature(
+        algorithm_policy.response(),
+        algorithm_policy.responder_public_key(),
+        operation_limits,
+    )
+    .map_err(|error| {
+        X509OcspRsaSignatureRoutingError::new(X509OcspRsaSignatureRoutingErrorKind::Sha384(
+            error.kind(),
+        ))
+    })?;
+    Ok(VerifiedX509OcspRsaPolicySignature::Sha384(
+        VerifiedX509OcspRsaSha384PolicySignature {
             algorithm_policy,
             signature,
         },
