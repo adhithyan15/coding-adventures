@@ -20460,3 +20460,16 @@ hygiene pass; independent correctness and security reviews issued SHIP. No
 filesystem, path-resolution, Cargo-config, closure, environment, process,
 network, CLI, BUILD, workflow, or dependency authority was added. Reconcile
 current main and live PR overlap before a normal first publication.
+
+#### Neutral Cargo manifest snapshot PR #18879 draft receipt
+
+Open draft PR #18879 at `2026-11-03T12:57:11Z` from exact independently
+reviewed head `3a85e71c4277bb166d878208002cd38e05e0f82d` over exact base
+`6d1eada894ed5b6b9acadc65a3761e3c249fc6dc`. GitHub reports the draft
+mergeable. The branch did not previously exist remotely, the first push was
+normal, and every live open PR at the final review snapshot was path-disjoint
+from all 23 changed paths. Keep the PR draft while this PR-number receipt is
+committed and pushed normally. Require fresh independent review of the
+resulting exact head before marking it ready; keep auto-merge disabled until
+every check on that exact reviewed head is terminal acceptable and GitHub still
+reports the PR mergeable.
