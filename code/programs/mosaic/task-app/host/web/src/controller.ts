@@ -2050,8 +2050,12 @@ export function trimWhiteSpace(text: string): string {
 //   "é" × 256    512          512             512   (scalars, not graphemes)
 //
 // So this host counts code points, which is what string iteration yields. A
-// lone surrogate (which only JavaScript can hold) counts as one, and reaches
-// the engine as one U+FFFD after UTF-8 encoding, so the counts still agree.
+// lone surrogate (which only JavaScript can hold) counts as one. It never
+// reaches the engine as a scalar at all: the bridge sends payloads through
+// `JSON.stringify`, which escapes it as `\udXXX`, and serde_json refuses that
+// escape when parsing a `String`, so the engine answers with a parse error and
+// stores nothing. Counting it as one can therefore only make this host
+// stricter than the engine, never looser.
 // The cases both hosts run are
 // `code/programs/mosaic/task-app/fixtures/task-name-limit-v1.json`.
 

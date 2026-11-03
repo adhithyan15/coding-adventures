@@ -433,8 +433,10 @@ the bound that makes that per-name work safe.
 
 `String.length` counts an astral character such as 😀 (U+1F600) twice, so the web host would refuse a
 name of 512 emoji that the native host accepts. A lone surrogate, which only JavaScript can hold,
-counts as one code point there and reaches the engine as one U+FFFD (the encoder replaces it), so the
-counts still agree. These are scalars, not grapheme clusters: `e` + U+0301 is two.
+counts as one code point there. It never reaches the engine as a scalar: the web bridge sends
+payloads through `JSON.stringify`, which escapes it as `\udXXX`, and the engine's JSON parser refuses
+that escape, so the operation fails with a parse error and stores nothing. The web count can therefore
+only be stricter than the engine's, never looser. These are scalars, not grapheme clusters: `e` + U+0301 is two.
 
 **What is measured.** The engine measures the name it stores. A composer measures its draft *as
 typed*, untrimmed, because the cap also bounds the draft: a draft is trimmed only when it becomes a
