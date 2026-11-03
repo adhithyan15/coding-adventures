@@ -2,6 +2,33 @@
 //!
 //! # Wire format (little-endian throughout)
 //!
+//! ## Version 1.3 (LANG83 PR5b — raw-byte string literals)
+//!
+//! Version 1.2 plus one operand kind, written **only** when some instruction
+//! carries an [`Operand::Bytes`] literal:
+//!
+//! ```text
+//!     5 = Bytes  → 4 bytes u32 length, then that many raw bytes
+//! ```
+//!
+//! A `Bytes` literal is a byte string that need not be UTF-8 (Perl's
+//! `"\xff"`), so it cannot ride in kind 4, whose payload the reader decodes
+//! as UTF-8. In 1.3 the string-ceiling section is **optional**: after the
+//! imports the stream either ends (`str_max_bytes = None`) or carries tag
+//! `0x12` and the `u32` ceiling and then ends. A 1.3 stream with anything
+//! after that is an error, and so is kind 5 in a 1.0, 1.1 or 1.2 stream. The
+//! full table of what the writer picks:
+//!
+//! | module                                   | version written | trailing sections                 |
+//! |------------------------------------------|-----------------|-----------------------------------|
+//! | no `Bytes`, `str_max_bytes = None`       | 1.1             | exports, imports                  |
+//! | no `Bytes`, `str_max_bytes = Some(n)`    | 1.2             | exports, imports, ceiling `n`     |
+//! | some `Bytes`, `str_max_bytes = None`     | 1.3             | exports, imports                  |
+//! | some `Bytes`, `str_max_bytes = Some(n)`  | 1.3             | exports, imports, ceiling `n`     |
+//!
+//! So a module without a raw-byte literal is written exactly as before, and
+//! no digest of an existing module moves.
+//!
 //! ## Version 1.2 (LANG83 PR5a follow-up, #18800 — a lowered string ceiling)
 //!
 //! Version 1.1 followed by one more section, written **only** when the
@@ -73,6 +100,7 @@
 //!     2 = Float  → 8 bytes f64
 //!     3 = Bool   → 1 byte (0=false, 1=true)
 //!     4 = Str    → str (compile-time string literal, e.g. global variable name)
+//!     5 = Bytes  → u32 length + raw bytes (version 1.3 only; LANG83 PR5b)
 //! ```
 //!
 //! **Note:** Runtime profiling fields (`observed_type`, `observation_count`,
@@ -107,6 +135,13 @@ const VERSION_MINOR: u8 = 1;
 /// The version written for a module with a lowered string ceiling (#18800).
 /// The deserialiser accepts 1.0, 1.1 and 1.2.
 const VERSION_MINOR_STR_CEILING: u8 = 2;
+
+/// The version written for a module with a raw-byte literal (LANG83 PR5b).
+/// The deserialiser accepts 1.0 to 1.3.
+const VERSION_MINOR_BYTES: u8 = 3;
+
+/// Operand kind byte of a raw-byte literal (version 1.3).
+const KIND_BYTES: u8 = 5;
 
 /// Tag byte marking the start of the exports section (LANG33).
 const TAG_EXPORTS: u8 = 0x10;
@@ -146,7 +181,12 @@ fn write_f64_le(buf: &mut Vec<u8>, v: f64) {
 }
 
 fn write_str(buf: &mut Vec<u8>, s: &str) {
-    let encoded = s.as_bytes();
+    write_bytes(buf, s.as_bytes());
+}
+
+/// A `u32` length prefix and the bytes: the encoding of every `str` field, and
+/// of a raw-byte literal (kind 5).
+fn write_bytes(buf: &mut Vec<u8>, encoded: &[u8]) {
     // Use a 4-byte (u32) length prefix so strings longer than 65 535 bytes
     // cannot silently corrupt the stream (a u16 prefix would truncate).
     //
@@ -170,8 +210,22 @@ pub fn serialise(module: &IIRModule) -> Vec<u8> {
     let mut buf = Vec::new();
     buf.extend_from_slice(MAGIC);
     write_u8(&mut buf, VERSION_MAJOR);
-    // 1.2 only when there is a ceiling to record; otherwise exactly 1.1.
-    let minor = if module.str_max_bytes.is_some() { VERSION_MINOR_STR_CEILING } else { VERSION_MINOR };
+    // The oldest version that can say what the module says: 1.3 when a
+    // raw-byte literal needs operand kind 5, else 1.2 when there is a ceiling
+    // to record, otherwise exactly 1.1.
+    let has_bytes = module
+        .functions
+        .iter()
+        .flat_map(|f| f.instructions.iter())
+        .flat_map(|i| i.srcs.iter())
+        .any(|op| matches!(op, Operand::Bytes(_)));
+    let minor = if has_bytes {
+        VERSION_MINOR_BYTES
+    } else if module.str_max_bytes.is_some() {
+        VERSION_MINOR_STR_CEILING
+    } else {
+        VERSION_MINOR
+    };
     write_u8(&mut buf, minor);
     write_u32_le(&mut buf, module.functions.len().try_into()
         .expect("function count exceeds u32::MAX — cannot serialise"));
@@ -202,7 +256,7 @@ pub fn serialise(module: &IIRModule) -> Vec<u8> {
         serialise_import(&mut buf, import);
     }
 
-    // ── LANG83 PR5a: string-ceiling section (version 1.2 only) ─────────────
+    // ── LANG83 PR5a: string-ceiling section (version 1.2, and 1.3 when set) ─
     // The raw field, not `str_ceiling()`: a malformed value above
     // `STR_MAX_BYTES` round-trips as itself, so the reader's `validate` (and
     // every column's ceiling check) still sees and refuses it.
@@ -293,6 +347,13 @@ fn serialise_instr(buf: &mut Vec<u8>, instr: &IIRInstr) {
                 write_u8(buf, 4);
                 write_str(buf, s);
             }
+            // LANG83 PR5b: a raw-byte literal (kind 5, version 1.3). The same
+            // u32 length prefix as a `str`, but the payload is raw bytes the
+            // reader does not decode.
+            Operand::Bytes(b) => {
+                write_u8(buf, KIND_BYTES);
+                write_bytes(buf, b);
+            }
         }
     }
 }
@@ -374,6 +435,17 @@ impl<'a> Reader<'a> {
         Ok(f64::from_le_bytes(b.try_into().unwrap()))
     }
 
+    /// A `u32`-length-prefixed run of raw bytes (a kind-5 literal's payload).
+    fn bytes_(&mut self) -> Result<Vec<u8>, DeserialiseError> {
+        let len = self.u32_le()? as usize;
+        Ok(self.read_exact(len)?.to_vec())
+    }
+
+    /// `true` once every byte has been read.
+    fn at_end(&self) -> bool {
+        self.pos >= self.data.len()
+    }
+
     fn str_(&mut self) -> Result<String, DeserialiseError> {
         // Read 4-byte u32 length prefix (matches the u32 written by write_str).
         let len = self.u32_le()? as usize;
@@ -397,15 +469,16 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
     let major = r.u8()?;
     let minor = r.u8()?;
     // Accept 1.0 (legacy — no exports/imports), 1.1 (LANG33 — with
-    // exports/imports) and 1.2 (1.1 plus the string ceiling, #18800).
+    // exports/imports), 1.2 (1.1 plus the string ceiling, #18800) and 1.3
+    // (raw-byte literals, an optional ceiling; LANG83 PR5b).
     // Any other version is rejected.
-    if major != VERSION_MAJOR || minor > VERSION_MINOR_STR_CEILING {
+    if major != VERSION_MAJOR || minor > VERSION_MINOR_BYTES {
         return Err(DeserialiseError(format!(
-            "unsupported version {major}.{minor} (supported: 1.0, 1.1, 1.2)"
+            "unsupported version {major}.{minor} (supported: 1.0, 1.1, 1.2, 1.3)"
         )));
     }
     let has_lang33 = minor >= 1;
-    let has_str_ceiling = minor >= VERSION_MINOR_STR_CEILING;
+    let has_bytes = minor >= VERSION_MINOR_BYTES;
 
     let fn_count = r.u32_le()? as usize;
     let name = r.str_()?;
@@ -419,7 +492,7 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
     // that exceed this sentinel.
     let mut functions = Vec::with_capacity(fn_count.min(MAX_SAFE_PREALLOC));
     for _ in 0..fn_count {
-        functions.push(deserialise_function(&mut r)?);
+        functions.push(deserialise_function(&mut r, has_bytes)?);
     }
 
     // ── LANG33: read exports and imports (version 1.1+) ─────────────────────
@@ -431,19 +504,33 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
         (Vec::new(), Vec::new())
     };
 
-    // ── LANG83 PR5a: the string ceiling (version 1.2) ───────────────────────
+    // ── LANG83 PR5a: the string ceiling (version 1.2; optional in 1.3) ──────
     // A 1.2 stream *must* carry the section: a truncated one is an error, not
-    // a module silently back on the registry ceiling.
-    let str_max_bytes = if has_str_ceiling {
+    // a module silently back on the registry ceiling. A 1.3 stream carries it
+    // only for a module that sets one, so there the section is present iff
+    // bytes remain, and nothing may follow it (PR5b).
+    let read_ceiling = |r: &mut Reader<'_>| -> Result<u32, DeserialiseError> {
         let tag = r.u8()?;
         if tag != TAG_STR_CEILING {
             return Err(DeserialiseError(format!(
                 "expected string-ceiling tag 0x{TAG_STR_CEILING:02x}, got 0x{tag:02x}"
             )));
         }
-        Some(r.u32_le()?)
-    } else {
-        None
+        r.u32_le()
+    };
+    let str_max_bytes = match minor {
+        VERSION_MINOR_STR_CEILING => Some(read_ceiling(&mut r)?),
+        VERSION_MINOR_BYTES => {
+            let max = if r.at_end() { None } else { Some(read_ceiling(&mut r)?) };
+            if !r.at_end() {
+                return Err(DeserialiseError(format!(
+                    "{} trailing byte(s) after the end of a version 1.3 module",
+                    r.data.len() - r.pos
+                )));
+            }
+            max
+        }
+        _ => None,
     };
 
     Ok(IIRModule {
@@ -461,7 +548,8 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
     })
 }
 
-fn deserialise_function(r: &mut Reader<'_>) -> Result<IIRFunction, DeserialiseError> {
+/// `has_bytes`: the stream is version 1.3, so operand kind 5 is legal.
+fn deserialise_function(r: &mut Reader<'_>, has_bytes: bool) -> Result<IIRFunction, DeserialiseError> {
     let name = r.str_()?;
     let return_type = r.str_()?;
     // Read u32 for param_count (matches serialiser which writes u32).
@@ -485,7 +573,7 @@ fn deserialise_function(r: &mut Reader<'_>) -> Result<IIRFunction, DeserialiseEr
     // Same pre-allocation cap as for fn_count — each IIRInstr is a fat struct.
     let mut instructions = Vec::with_capacity(instr_count.min(MAX_SAFE_PREALLOC));
     for _ in 0..instr_count {
-        instructions.push(deserialise_instr(r)?);
+        instructions.push(deserialise_instr(r, has_bytes)?);
     }
 
     Ok(IIRFunction {
@@ -547,7 +635,7 @@ fn deserialise_imports(r: &mut Reader<'_>) -> Result<Vec<IIRImport>, Deserialise
     Ok(imports)
 }
 
-fn deserialise_instr(r: &mut Reader<'_>) -> Result<IIRInstr, DeserialiseError> {
+fn deserialise_instr(r: &mut Reader<'_>, has_bytes: bool) -> Result<IIRInstr, DeserialiseError> {
     let op = r.str_()?;
     let has_dest = r.u8()?;
     let dest = if has_dest != 0 { Some(r.str_()?) } else { None };
@@ -566,6 +654,9 @@ fn deserialise_instr(r: &mut Reader<'_>) -> Result<IIRInstr, DeserialiseError> {
             3 => Operand::Bool(r.u8()? != 0),
             // LANG32: compile-time string literal (kind 4).
             4 => Operand::Str(r.str_()?),
+            // LANG83 PR5b: a raw-byte literal (kind 5) — version 1.3 only, so
+            // an older stream that has one is corrupt, not silently upgraded.
+            KIND_BYTES if has_bytes => Operand::Bytes(r.bytes_()?),
             k => {
                 return Err(DeserialiseError(format!(
                     "unknown operand kind byte: {k}"
@@ -682,6 +773,81 @@ mod tests {
         let mut as_1_1 = cut.to_vec();
         as_1_1[5] = 1;
         assert_eq!(deserialise(&as_1_1).unwrap().str_max_bytes, None);
+    }
+
+    /// `make_module` plus a function whose `str_const` carries the raw bytes
+    /// `00 0A 80 FF`, which no `Str` (kind 4, read back as UTF-8) can hold.
+    fn module_with_raw_bytes() -> IIRModule {
+        let mut m = make_module();
+        m.add_or_replace(IIRFunction::new("bytes", vec![], "str", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Bytes(vec![0x00, 0x0A, 0x80, 0xFF])], "str"),
+            IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "str"),
+        ]));
+        m
+    }
+
+    /// LANG83 PR5b: a raw-byte literal round-trips as version 1.3, byte for
+    /// byte, with and without a ceiling. Before 1.3 there was no way to write
+    /// one: kind 4 is UTF-8 on the wire.
+    #[test]
+    fn a_raw_byte_literal_round_trips_as_version_1_3() {
+        for max in [None, Some(16), Some(u32::MAX)] {
+            let mut m = module_with_raw_bytes();
+            m.str_max_bytes = max;
+            let bytes = serialise(&m);
+            assert_eq!((bytes[4], bytes[5]), (1, 3), "a raw-byte literal is written as 1.3");
+            let back = deserialise(&bytes).unwrap();
+            assert_eq!(back.str_max_bytes, max);
+            let instr = &back.get_function("bytes").unwrap().instructions[0];
+            assert_eq!(instr.srcs, vec![Operand::Bytes(vec![0x00, 0x0A, 0x80, 0xFF])]);
+            assert_eq!(serialise(&back), bytes, "a second round trip is byte-identical");
+        }
+        // The empty byte string is a literal too.
+        let mut m = module_with_raw_bytes();
+        m.get_function_mut("bytes").unwrap().instructions[0].srcs[0] = Operand::Bytes(vec![]);
+        let back = deserialise(&serialise(&m)).unwrap();
+        assert_eq!(back.get_function("bytes").unwrap().instructions[0].srcs[0], Operand::Bytes(vec![]));
+    }
+
+    /// A module without a raw-byte literal is still written as 1.1 or 1.2
+    /// exactly as before, so no existing digest moves.
+    #[test]
+    fn version_1_3_is_written_only_for_a_raw_byte_literal() {
+        let mut m = make_module();
+        m.add_or_replace(IIRFunction::new("s", vec![], "void", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("é".into())], "str"),
+        ]));
+        assert_eq!(serialise(&m)[5], 1);
+        m.str_max_bytes = Some(16);
+        assert_eq!(serialise(&m)[5], 2);
+    }
+
+    /// Kind 5 is a 1.3 operand: in a 1.1 or 1.2 stream it is corruption, and a
+    /// 1.3 stream may not carry anything after its (optional) ceiling.
+    #[test]
+    fn a_raw_byte_operand_needs_version_1_3_and_nothing_trails_it() {
+        for max in [None, Some(16)] {
+            let mut m = module_with_raw_bytes();
+            m.str_max_bytes = max;
+            let bytes = serialise(&m);
+            for older in [0u8, 1, 2] {
+                let mut patched = bytes.clone();
+                patched[5] = older;
+                let err = deserialise(&patched).unwrap_err().0;
+                assert!(err.contains("unknown operand kind byte: 5"), "1.{older}: {err}");
+            }
+            let mut trailing = bytes.clone();
+            trailing.push(0);
+            assert!(deserialise(&trailing).is_err(), "a trailing byte after a 1.3 module");
+        }
+        // Where the optional ceiling would be, only its tag is accepted.
+        let mut wrong = serialise(&module_with_raw_bytes());
+        wrong.extend_from_slice(&[0x13, 16, 0, 0, 0]);
+        assert!(deserialise(&wrong).unwrap_err().0.contains("string-ceiling tag"));
+        // A cut-short raw-byte payload is an error, not a shorter literal.
+        let bytes = serialise(&module_with_raw_bytes());
+        let at = bytes.windows(4).position(|w| w == [0x00, 0x0A, 0x80, 0xFF]).unwrap();
+        assert!(deserialise(&bytes[..at + 2]).is_err());
     }
 
     #[test]
@@ -969,8 +1135,8 @@ mod tests {
         bytes[5] = 9;
         let err = deserialise(&bytes).unwrap_err();
         assert!(err.0.contains("unsupported version"));
-        // 1.3 is not known either.
-        bytes[5] = 3;
-        assert!(deserialise(&bytes).unwrap_err().0.contains("supported: 1.0, 1.1, 1.2"));
+        // 1.4 is not known either (1.3 is, since LANG83 PR5b).
+        bytes[5] = 4;
+        assert!(deserialise(&bytes).unwrap_err().0.contains("supported: 1.0, 1.1, 1.2, 1.3"));
     }
 }

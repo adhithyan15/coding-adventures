@@ -330,3 +330,88 @@ fn print_str_routes_through_builtin_sink_without_newline() {
     assert_eq!(vm.execute(&mut module, "main", &[]).unwrap(), Some(Value::Int(7)));
     assert_eq!(&*output.lock().unwrap(), "HELLO");
 }
+
+// ---------------------------------------------------------------------------
+// LANG83 PR5b — a string is bytes, not UTF-8 text
+// ---------------------------------------------------------------------------
+
+/// `str_slice "é", 1, 2` is the lone byte `A9`: a valid IIR string. vm-core
+/// used to refuse it ("range does not preserve UTF-8 boundaries") because a
+/// Rust `String` could not hold it.
+#[test]
+fn str_slice_may_split_a_utf8_character() {
+    let result = run(
+        vec![
+            ins("str_const", Some("s"), vec![Operand::Str("é".into())], "str"),
+            ins("str_slice", Some("t"), vec![Operand::Var("s".into()), Operand::Int(1), Operand::Int(2)], "str"),
+            ins("ret", None, vec![Operand::Var("t".into())], "str"),
+        ],
+        "str",
+    )
+    .unwrap();
+    assert_eq!(result, Some(Value::str([0xA9u8])));
+}
+
+/// A raw-byte literal (`Operand::Bytes`) is a string of exactly its bytes,
+/// and the same bytes spelled as a `Str` literal are the same string.
+#[test]
+fn a_raw_byte_literal_is_exactly_its_bytes() {
+    let result = run(
+        vec![
+            ins("str_const", Some("raw"), vec![Operand::Bytes(vec![0x00, 0xFF, 0x80])], "str"),
+            ins("str_len", Some("n"), vec![Operand::Var("raw".into())], "i64"),
+            ins("str_index", Some("b"), vec![Operand::Var("raw".into()), Operand::Int(1)], "i64"),
+            ins("str_const", Some("e1"), vec![Operand::Str("é".into())], "str"),
+            ins("str_const", Some("e2"), vec![Operand::Bytes(vec![0xC3, 0xA9])], "str"),
+            ins("str_eq", Some("same"), vec![Operand::Var("e1".into()), Operand::Var("e2".into())], "i64"),
+            // n * 1000 + b * 10 + same = 3 * 1000 + 255 * 10 + 1
+            ins("mul", Some("k"), vec![Operand::Var("n".into()), Operand::Int(1000)], "i64"),
+            ins("mul", Some("c"), vec![Operand::Var("b".into()), Operand::Int(10)], "i64"),
+            ins("add", Some("v"), vec![Operand::Var("k".into()), Operand::Var("c".into())], "i64"),
+            ins("add", Some("w"), vec![Operand::Var("v".into()), Operand::Var("same".into())], "i64"),
+            ins("ret", None, vec![Operand::Var("w".into())], "i64"),
+        ],
+        "i64",
+    )
+    .unwrap();
+    assert_eq!(result, Some(Value::Int(3000 + 2550 + 1)));
+}
+
+/// `str_cmp` is unsigned byte order: `"\x7f" < "é"` (0x7F < 0xC3), which a
+/// signed-byte compare would get backwards.
+#[test]
+fn str_cmp_orders_bytes_unsigned() {
+    let result = run(
+        vec![
+            ins("str_const", Some("a"), vec![Operand::Bytes(vec![0x7F])], "str"),
+            ins("str_const", Some("b"), vec![Operand::Str("é".into())], "str"),
+            ins("str_cmp", Some("r"), vec![Operand::Var("a".into()), Operand::Var("b".into())], "i64"),
+            ins("ret", None, vec![Operand::Var("r".into())], "i64"),
+        ],
+        "i64",
+    )
+    .unwrap();
+    assert_eq!(result, Some(Value::Int(-1)));
+}
+
+/// `print_str` hands the embedder's sink exactly the string's bytes, so a
+/// string that is not UTF-8 is written, not dropped.
+#[test]
+fn print_str_passes_the_bytes_unchanged() {
+    let printed: Arc<Mutex<Vec<u8>>> = Arc::default();
+    let sink = Arc::clone(&printed);
+    let f = IIRFunction::new("main", vec![], "void", vec![
+        ins("str_const", Some("s"), vec![Operand::Bytes(vec![b'A', 0xA9, 0x00, 0xFF])], "str"),
+        ins("print_str", None, vec![Operand::Var("s".into())], "void"),
+        ins("ret_void", None, vec![], "void"),
+    ]);
+    let mut module = IIRModule::new("e4", "e4");
+    module.add_or_replace(f);
+    let mut vm = VMCore::new();
+    vm.builtins_mut().register("print_str", move |args: &[Value]| {
+        sink.lock().unwrap().extend_from_slice(args[0].as_bytes().expect("a string"));
+        Ok(Value::Null)
+    });
+    vm.execute(&mut module, "main", &[]).unwrap();
+    assert_eq!(*printed.lock().unwrap(), vec![b'A', 0xA9, 0x00, 0xFF]);
+}

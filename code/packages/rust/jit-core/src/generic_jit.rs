@@ -2395,7 +2395,7 @@ mod tests {
         let params = [("n".to_string(), "i64".to_string())];
         let ctx = FunctionContext { name: "g", params: &params, return_type: "i64" };
         let bin = j.compile_function(&ctx, &ret).unwrap();
-        for bad in [Value::Float(1.5), Value::Null, Value::Str("x".into()), Value::Bool(false), Value::Symbol(0)] {
+        for bad in [Value::Float(1.5), Value::Null, Value::str("x"), Value::Bool(false), Value::Symbol(0)] {
             assert_eq!(j.run(&bin, std::slice::from_ref(&bad)), Value::Null, "{bad:?}");
             let err = j.take_error().unwrap_or_else(|| panic!("{bad:?} must fail closed"));
             assert!(format!("{err:?}").contains("integer parameter 0"), "{err:?}");
@@ -2404,7 +2404,7 @@ mod tests {
         assert!(j.take_error().is_none());
         // Arguments beyond the declared parameters are ignored, as the
         // interpreter ignores them; a missing one leaves the register 0.
-        assert_eq!(j.run(&bin, &[Value::Int(7), Value::Float(2.5), Value::Str("x".into())]), Value::Int(7));
+        assert_eq!(j.run(&bin, &[Value::Int(7), Value::Float(2.5), Value::str("x")]), Value::Int(7));
         assert_eq!(j.run(&bin, &[]), Value::Int(0));
         assert!(j.take_error().is_none());
         // A truncated PARAM_I64 in a hostile binary fails closed.
@@ -2473,7 +2473,7 @@ mod tests {
         assert_eq!(j.run(&bin, &[Value::Bool(true)]), Value::Bool(true));
         assert_eq!(j.run(&bin, &[Value::Int(1)]), Value::Bool(true));
         assert!(j.take_error().is_none());
-        for bad in [Value::Null, Value::Symbol(0), Value::Str("x".into())] {
+        for bad in [Value::Null, Value::Symbol(0), Value::str("x")] {
             assert_eq!(j.run(&bin, std::slice::from_ref(&bad)), Value::Null, "{bad:?}");
             let err = j.take_error().unwrap_or_else(|| panic!("{bad:?} must fail closed"));
             assert!(format!("{err:?}").contains("bool parameter 0"), "{err:?}");

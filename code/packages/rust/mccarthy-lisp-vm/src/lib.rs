@@ -450,6 +450,8 @@ fn eval_const(instr: &IIRInstr) -> Result<LispyValue, VmError> {
         Operand::Float(_) => Err(VmError::Malformed(
             "McCarthy Lisp 1.0 has no floats; unexpected Float operand in `const`".into(),
         )),
+        // LANG83 PR5b: a raw-byte string literal is `str_const`'s alone.
+        Operand::Bytes(_) => Err(VmError::Malformed("unexpected raw-byte literal operand".into())),
         Operand::Str(_) => Err(VmError::Malformed(
             "unexpected Str operand in `const` (symbols use Var, not Str)".into(),
         )),
@@ -607,6 +609,8 @@ fn read_operand(op: &Operand, frame: &Frame) -> Result<LispyValue, VmError> {
         Operand::Int(n) => dyn_int(*n),
         Operand::Bool(b) => Ok(LispyValue::bool(*b)),
         Operand::Float(_) => Err(VmError::Malformed("unexpected Float operand".into())),
+        // LANG83 PR5b: a raw-byte string literal is `str_const`'s alone.
+        Operand::Bytes(_) => Err(VmError::Malformed("unexpected raw-byte literal operand".into())),
         Operand::Str(_) => Err(VmError::Malformed("unexpected Str operand".into())),
     }
 }

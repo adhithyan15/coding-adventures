@@ -21,6 +21,7 @@
 //! assert!(module.validate().is_empty());
 //! ```
 
+use crate::instr::Operand;
 use crate::function::IIRFunction;
 use crate::module_exports::{IIRExport, IIRImport};
 
@@ -228,7 +229,8 @@ impl IIRModule {
         let ceiling = self.str_ceiling() as usize;
         for fn_ in &self.functions {
             for instr in fn_.instructions.iter().filter(|i| i.op == "str_const") {
-                if let Some(literal) = instr.srcs.first().and_then(|s| s.as_str_lit()) {
+                // A `Str` or a `Bytes` literal (LANG83 PR5b): both are bytes.
+                if let Some(literal) = instr.srcs.first().and_then(Operand::as_lit_bytes) {
                     if literal.len() > ceiling {
                         errors.push(format!(
                             "StrTooLong: function {:?}: a {}-byte str_const exceeds the module's \
@@ -333,6 +335,20 @@ impl IIRModule {
                 .collect();
 
             for instr in &fn_.instructions {
+                // LANG83 PR5b: a raw-byte literal is a `str_const` literal and
+                // nothing else. Anywhere else it would be a name or a value
+                // that no op defines (a `global_load` of a byte-string name,
+                // a `const` holding a string), so it is malformed here even
+                // though each backend would also refuse it on its own.
+                for (idx, src) in instr.srcs.iter().enumerate() {
+                    if matches!(src, Operand::Bytes(_)) && !(instr.op == "str_const" && idx == 0) {
+                        errors.push(format!(
+                            "BytesOperand: function {:?}: op {:?} operand {idx} is a raw-byte \
+                             literal, which only str_const's literal may be",
+                            fn_.name, instr.op
+                        ));
+                    }
+                }
                 if matches!(instr.op.as_str(), "jmp" | "jmp_if_true" | "jmp_if_false") {
                     if let Some(label) = instr.srcs.last().and_then(|s| s.as_var()) {
                         if !label_positions.contains_key(label) {
@@ -506,6 +522,46 @@ mod tests {
         assert!(errors[0].starts_with("StrTooLong"), "{errors:?}");
         let errors = module_with_literal("é", Some(1)).validate();
         assert!(errors[0].contains("2-byte"), "{errors:?}");
+    }
+
+    /// LANG83 PR5b: a raw-byte literal is measured like a `Str` one, so the
+    /// ceiling cannot be dodged by spelling a literal as bytes.
+    #[test]
+    fn a_raw_byte_literal_counts_against_the_ceiling() {
+        let mut module = module_with_literal("", Some(2));
+        module.functions[0].instructions[0].srcs[0] = Operand::Bytes(vec![0xFF, 0x00]);
+        assert!(module.str_ceiling_errors().is_empty());
+        module.functions[0].instructions[0].srcs[0] = Operand::Bytes(vec![0xFF, 0x00, 0x80]);
+        let errors = module.str_ceiling_errors();
+        assert_eq!(errors.len(), 1, "{errors:?}");
+        assert!(errors[0].starts_with("StrTooLong") && errors[0].contains("3-byte"), "{errors:?}");
+    }
+
+    /// LANG83 PR5b: `Operand::Bytes` is legal only as `str_const`'s literal.
+    #[test]
+    fn validate_refuses_a_raw_byte_operand_outside_str_const() {
+        let mut module = module_with_literal("", None);
+        module.functions[0].instructions[0].srcs[0] = Operand::Bytes(vec![0xFF]);
+        assert!(module.validate().is_empty(), "{:?}", module.validate());
+        module.functions[0].instructions.insert(
+            1,
+            IIRInstr::new("global_load", Some("g".into()), vec![Operand::Bytes(b"x".to_vec())], "i64"),
+        );
+        // A second operand of `str_const` is not its literal either.
+        module.functions[0].instructions.insert(
+            1,
+            IIRInstr::new(
+                "str_const",
+                Some("t".into()),
+                vec![Operand::Str("a".into()), Operand::Bytes(vec![1])],
+                "str",
+            ),
+        );
+        let errors = module.validate();
+        assert_eq!(errors.len(), 2, "{errors:?}");
+        assert!(errors.iter().all(|e| e.starts_with("BytesOperand")), "{errors:?}");
+        assert!(errors[0].contains("\"str_const\" operand 1"), "{errors:?}");
+        assert!(errors[1].contains("\"global_load\" operand 0"), "{errors:?}");
     }
 
     #[test]

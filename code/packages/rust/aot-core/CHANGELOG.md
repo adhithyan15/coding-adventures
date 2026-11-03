@@ -1,5 +1,9 @@
 # Changelog — aot-core
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- `Operand::Bytes` (LANG83 PR5b): inferred as `"str"`, no concrete numeric type in the specialiser, and written to the runtime JSON as `{"bytes": [...]}` (it need not be UTF-8, so it cannot be a JSON string).
+
 ## 0.3.0 - 2026-07-18 (`mov` keeps its `any` type — GC-root correctness)
 
 `translate()`'s `mov` arm retyped the CIR instruction to `"u64"` whenever the spec

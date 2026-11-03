@@ -400,6 +400,8 @@ pub fn literal_type(op: Option<&Operand>) -> String {
         Some(Operand::Float(_)) => "f64".into(),
         Some(Operand::Var(_)) => "str".into(),
         Some(Operand::Str(_)) => "str".into(),
+        // A raw-byte `str_const` literal (LANG83 PR5b) is a string too.
+        Some(Operand::Bytes(_)) => "str".into(),
     }
 }
 

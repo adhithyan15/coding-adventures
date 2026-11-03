@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- `py_name_error` reads its name from a byte-string `Value::Str` (vm-core now holds bytes).
+
 ## Unreleased — grammar-tools automatic insertion (E6 `@asi`)
 
 ### Changed

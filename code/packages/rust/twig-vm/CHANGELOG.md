@@ -1,5 +1,11 @@
 # Changelog — twig-vm
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- `str_const` (and an inline string operand of an E4 op) accepts a raw-byte `Operand::Bytes` literal: a heap string of exactly its bytes. As a general operand it is a `TypeError`; in `field_store` it is refused like a `Str`.
+- **`str_slice` no longer refuses a range that splits a UTF-8 character**, matching vm-core and the LANG83 byte contract: `str_slice "é", 1, 2` is the byte `A9`. The test that pinned the old refusal now pins the byte.
+- Test `a_raw_byte_str_const_holds_exactly_its_bytes`.
+
 ## Unreleased — LANG83 PR5a follow-up (#18800): the string builtins trap like the ops
 
 ### Fixed

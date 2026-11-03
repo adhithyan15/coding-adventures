@@ -2898,6 +2898,14 @@ fn lower_function(
                         i += 1;
                         continue;
                     }
+                    // LANG83 PR5b: a raw-byte literal is `str_const`'s alone
+                    // (`IIRModule::validate`: `BytesOperand`), never a `const`.
+                    Operand::Bytes(_) => {
+                        return Err(IIRJvmError::InvalidOperand {
+                            function: fname.clone(),
+                            detail: "const cannot hold a raw-byte string literal".to_string(),
+                        });
+                    }
                 }
                 emit_typed_store(&mut code, dest_slot, dest_type);
             }
@@ -3610,7 +3618,7 @@ fn lower_function(
                     }
                     // LANG32: Str is a compile-time string literal (global variable name).
                     // Returning a string from a function is not supported in V1.
-                    Operand::Str(_) => {
+                    Operand::Str(_) | Operand::Bytes(_) => {
                         return Err(IIRJvmError::UnsupportedOp {
                             function: fname.clone(),
                             op: "ret with Str operand — string return values not yet supported".into(),
@@ -4276,7 +4284,7 @@ fn lower_function(
                         Operand::Float(f) => emit_fconst(&mut code, *f as f32),
                         // LANG32: Str is a compile-time string literal — not
                         // a passable argument in V1; return an error.
-                        Operand::Str(_) => {
+                        Operand::Str(_) | Operand::Bytes(_) => {
                             return Err(IIRJvmError::UnsupportedOp {
                                 function: fname.clone(),
                                 op: "call with Str argument — string args not yet supported".into(),

@@ -241,6 +241,8 @@ fn eval_const(instr: &IIRInstr) -> Result<LispyValue, VmError> {
             "Macsyma v0 has no floats (macsyma-iir-vm.md §3); unexpected Float operand in `const`"
                 .into(),
         )),
+        // LANG83 PR5b: a raw-byte string literal is `str_const`'s alone.
+        Operand::Bytes(_) => Err(VmError::Malformed("unexpected raw-byte literal operand".into())),
         Operand::Str(_) => Err(VmError::Malformed(
             "Macsyma v0 has no string literals; unexpected Str operand in `const`".into(),
         )),
@@ -315,6 +317,8 @@ fn read_operand(op: &Operand, frame: &Frame) -> Result<LispyValue, VmError> {
         Operand::Int(n) => dyn_int(*n),
         Operand::Bool(_) => Err(VmError::Malformed("unexpected Bool operand".into())),
         Operand::Float(_) => Err(VmError::Malformed("unexpected Float operand".into())),
+        // LANG83 PR5b: a raw-byte string literal is `str_const`'s alone.
+        Operand::Bytes(_) => Err(VmError::Malformed("unexpected raw-byte literal operand".into())),
         Operand::Str(_) => Err(VmError::Malformed("unexpected Str operand".into())),
     }
 }

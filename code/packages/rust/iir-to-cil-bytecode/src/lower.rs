@@ -717,6 +717,14 @@ pub fn lower_iir_to_cil(
                         Some(Operand::Str(_)) => {
                             continue;
                         }
+                        // LANG83 PR5b: a raw-byte literal is `str_const`'s alone
+                        // (`IIRModule::validate`: `BytesOperand`), never a `const`.
+                        Some(Operand::Bytes(_)) => {
+                            return Err(IIRClrError::InvalidOperand {
+                                function: fn_name.clone(),
+                                detail: "const cannot hold a raw-byte string literal".into(),
+                            });
+                        }
                         None => {
                             return Err(IIRClrError::InvalidOperand {
                                 function: fn_name.clone(),
@@ -1226,7 +1234,7 @@ pub fn lower_iir_to_cil(
                             }
                             // LANG32: Str is a compile-time string literal — not a passable
                             // call argument in V1.
-                            Operand::Str(_) => {
+                            Operand::Str(_) | Operand::Bytes(_) => {
                                 return Err(IIRClrError::UnsupportedType {
                                     function: fn_name.clone(),
                                     type_hint: "str argument — string args not yet supported".into(),

@@ -1987,8 +1987,10 @@ fn register_vm_output(vm: &mut vm_core::VMCore, sink: &Sink) {
     // a float is printed by its compiler's layout helper, through `putchar`.
     let s = Arc::clone(sink);
     vm.builtins_mut().register("print_str", move |args: &[Value]| {
-        let text = args.first().and_then(Value::as_str).unwrap_or("");
-        s.lock().expect("sink").extend_from_slice(text.as_bytes());
+        // The bytes, unchanged (LANG83 PR5b): `as_str` would drop a string
+        // that is not UTF-8, so a lone `0xA9` printed nothing.
+        let bytes = args.first().and_then(Value::as_bytes).unwrap_or(b"");
+        s.lock().expect("sink").extend_from_slice(bytes);
         Ok(Value::Null)
     });
 }

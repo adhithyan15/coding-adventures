@@ -140,6 +140,7 @@ fn infer_single(instr: &IIRInstr, env: &HashMap<String, String>) -> Option<Strin
                 Operand::Bool(_) => Some("bool".into()),
                 Operand::Var(_) => None, // symbolic constant — can't infer
                 Operand::Str(_) => None, // LANG32 compile-time string name — not a typed value
+                Operand::Bytes(_) => None, // LANG83 PR5b raw-byte str_const literal
             };
         }
     }
@@ -201,6 +202,9 @@ fn resolve_operand_type<'a>(
         // Str is a compile-time string literal (LANG32 global names).
         // We don't infer a user-visible type from it.
         Operand::Str(_) => None,
+        // A raw-byte literal (LANG83 PR5b) is `str_const`'s alone, and
+        // `str_const`'s result type comes from the op, not the operand.
+        Operand::Bytes(_) => None,
     }
 }
 

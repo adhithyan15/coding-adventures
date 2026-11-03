@@ -3051,7 +3051,7 @@ fn sign_word_comparisons(func: &mut IIRFunction) {
         Operand::Var(name) => written
             .get(name.as_str())
             .is_some_and(|tys| tys.iter().all(|ty| is_signed_word(ty))),
-        Operand::Float(_) | Operand::Str(_) => false,
+        Operand::Float(_) | Operand::Str(_) | Operand::Bytes(_) => false,
     };
 
     // Decide first, rewrite second: `written` borrows the instruction list.

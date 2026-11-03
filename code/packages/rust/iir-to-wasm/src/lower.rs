@@ -2385,6 +2385,13 @@ fn emit_instr(
                         detail: format!("const: Operand::Str({:?}) is not a WASM value type", s),
                     });
                 }
+                // LANG83 PR5b: a raw-byte literal is `str_const`'s alone.
+                Operand::Bytes(_) => {
+                    return Err(IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "const: a raw-byte string literal is not a WASM value".to_string(),
+                    });
+                }
             }
             code.extend(encode_local_set(rd));
         }
@@ -2941,6 +2948,13 @@ fn emit_instr(
                             detail: format!("call: Operand::Str({:?}) cannot be a call argument", s),
                         });
                     }
+                    // LANG83 PR5b: a raw-byte literal is `str_const`'s alone.
+                    Operand::Bytes(_) => {
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: "call: a raw-byte string literal is not a WASM value".to_string(),
+                        });
+                    }
                 }
             }
 
@@ -2988,6 +3002,13 @@ fn emit_instr(
                         return Err(IIRWasmError::InvalidOperand {
                             function: fn_name.to_string(),
                             detail: format!("ret: Operand::Str({:?}) is not a WASM return value", s),
+                        });
+                    }
+                    // LANG83 PR5b: a raw-byte literal is `str_const`'s alone.
+                    Operand::Bytes(_) => {
+                        return Err(IIRWasmError::InvalidOperand {
+                            function: fn_name.to_string(),
+                            detail: "ret: a raw-byte string literal is not a WASM value".to_string(),
                         });
                     }
                 }

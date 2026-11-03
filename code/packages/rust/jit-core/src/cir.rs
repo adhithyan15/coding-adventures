@@ -112,6 +112,29 @@ impl fmt::Display for CIROperand {
     }
 }
 
+/// The register name a raw-byte literal that is not UTF-8 lifts to: it holds
+/// a NUL, which no IIR register, global or trap kind contains, so any CIR
+/// consumer that reads it as a name fails closed ("undefined") rather than
+/// using some other string's bytes.
+pub const RAW_BYTES_LITERAL_NAME: &str = "\0<raw-byte literal>";
+
+/// Lift an `Operand::Bytes` literal (LANG83 PR5b) into CIR.
+///
+/// CIR has no string operand: a `Str` literal travels as a `Var` naming its
+/// text (the convention every CIR consumer of a trap kind or a global relies
+/// on). A raw-byte literal whose bytes are valid UTF-8 is the same literal as
+/// that `Str`, so it lifts the same way. One that is not has no `Var`
+/// spelling that would keep its bytes, so it lifts to
+/// [`RAW_BYTES_LITERAL_NAME`]: never a lossy decode, which would silently
+/// change the string. (No CIR backend lowers `str_const` itself: the native
+/// columns expand it to byte stores first, and the JIT refuses string ops.)
+fn raw_bytes_to_cir(bytes: &[u8]) -> CIROperand {
+    match std::str::from_utf8(bytes) {
+        Ok(text) => CIROperand::Var(text.to_string()),
+        Err(_) => CIROperand::Var(RAW_BYTES_LITERAL_NAME.to_string()),
+    }
+}
+
 /// Convert from `interpreter_ir::instr::Operand` to `CIROperand`.
 ///
 /// Used by the specialiser to lift IIR operands into CIR without cloning
@@ -124,6 +147,7 @@ impl From<interpreter_ir::instr::Operand> for CIROperand {
             interpreter_ir::instr::Operand::Float(v) => CIROperand::Float(v),
             interpreter_ir::instr::Operand::Bool(b)  => CIROperand::Bool(b),
             interpreter_ir::instr::Operand::Str(s)   => CIROperand::Var(s),
+            interpreter_ir::instr::Operand::Bytes(b) => raw_bytes_to_cir(&b),
         }
     }
 }
@@ -136,6 +160,7 @@ impl From<&interpreter_ir::instr::Operand> for CIROperand {
             interpreter_ir::instr::Operand::Float(v) => CIROperand::Float(*v),
             interpreter_ir::instr::Operand::Bool(b)  => CIROperand::Bool(*b),
             interpreter_ir::instr::Operand::Str(s)   => CIROperand::Var(s.clone()),
+            interpreter_ir::instr::Operand::Bytes(b) => raw_bytes_to_cir(b),
         }
     }
 }

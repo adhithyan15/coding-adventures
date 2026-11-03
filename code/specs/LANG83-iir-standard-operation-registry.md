@@ -1345,14 +1345,17 @@ a Rust `String`:
   1.1 or 1.2 stream is an error (`unknown operand kind byte`). The reader
   accepts 1.0 to 1.3.
 
-**vm-core.** `Value::Str` holds `Rc<[u8]>` (owner decision Q9: in place, no
-parallel `Value::Bytes`). `Value::str(bytes)` builds one from anything that is
+**vm-core.** `Value::Str` holds `Arc<[u8]>` (owner decision Q9: in place, no
+parallel `Value::Bytes`). The plan above said `Rc<[u8]>`; `Rc` would make
+`Value` neither `Send` nor `Sync`, and embedders record values from inside
+builtins that must be both (`BuiltinRegistry::register`, the JIT's
+`register_builtin`, the matrix harness's sinks), so it is `Arc`. `Value::str(bytes)` builds one from anything that is
 `AsRef<[u8]>` (`&str`, `String`, `Vec<u8>`, `&[u8]`). `Value::as_bytes()` is
 the byte view. `Value::as_str()` stays for UTF-8 callers and answers `None`
 for a string that is not valid UTF-8, exactly as it does for a non-string.
 `str_slice` drops its UTF-8 check: `str_slice "é", 1, 2` is the one-byte
 string `A9`. The default `print_str` builtin writes the bytes unchanged.
-Reading a string no longer clones it (an `Rc` clone).
+Reading a string no longer copies its bytes (an `Arc` clone).
 
 **Backends.** Each printable-ASCII validator goes; each literal is encoded
 byte for byte:

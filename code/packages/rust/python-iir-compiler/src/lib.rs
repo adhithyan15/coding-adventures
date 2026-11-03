@@ -223,6 +223,8 @@ pub fn run_source(source: &str) -> Result<String, PythonRunError> {
         let [Value::Str(name)] = args else {
             return Err(VMError::Custom("py_name_error expects one name".into()));
         };
+        // A VM string is bytes (LANG83 PR5b); a Python name is UTF-8 text.
+        let name = String::from_utf8_lossy(name);
         Err(VMError::Custom(format!(
             "NameError: name '{name}' is not defined"
         )))

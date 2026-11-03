@@ -1,5 +1,13 @@
 # Changelog — vm-core
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- **`Value::Str` holds `Arc<[u8]>`** (was `String`; owner decision Q9: in place, no parallel variant). A VM string is bytes. New `Value::str(bytes)` builds one from `&str`, `String`, `&[u8]` or `Vec<u8>`; new `Value::as_bytes()` reads it; `Value::as_str()` stays for UTF-8 callers and answers `None` for bytes that are not UTF-8. Copying a register shares the bytes. `Arc` rather than the `Rc` LANG83 first named, because `Value` must stay `Send + Sync` (embedders record values from `Send + Sync` builtins).
+- **`str_slice` drops its UTF-8 check**: `str_slice "é", 1, 2` is the byte `A9` (it was `VMError::Custom("… UTF-8 boundaries")`).
+- `str_const` accepts `Operand::Bytes`; a `Bytes` operand resolves to a string of its bytes.
+- The default `print_str` builtin writes the bytes unchanged (`write_all`, not `print!`). `dyn_symbol` keys its table on the name's bytes. `Display` of a non-UTF-8 string escapes it as `\xNN`.
+- Tests: `a_string_holds_bytes_and_offers_text_only_when_it_is_utf8`, and in `tests/e4_strings.rs` `str_slice_may_split_a_utf8_character`, `a_raw_byte_literal_is_exactly_its_bytes`, `str_cmp_orders_bytes_unsigned`, `print_str_passes_the_bytes_unchanged`.
+
 ## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused at load
 
 - New `VMError::InvalidModule { errors }` and load-time check `core::check_str_ceiling`, run by `VMCore::execute` and `execute_traced` after the frame-register check and before any instruction. A `str_const` longer than the module's string ceiling, or a `str_max_bytes` above `STR_MAX_BYTES`, is refused with `interpreter-ir`'s `StrTooLong` / `StrMaxBytes` messages, as every compiled column refuses it. Before, the VM ran such a module, and `str_len` of the literal returned 17 under a ceiling of 16.

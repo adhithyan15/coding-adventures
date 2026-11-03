@@ -1,5 +1,9 @@
 # Changelog — mccarthy-lisp-vm
 
+## Unreleased — LANG83 PR5b — strings are bytes
+
+- An `Operand::Bytes` (LANG83 PR5b's raw-byte `str_const` literal) is a `Malformed` operand here, like `Str`.
+
 ## v0.5.3 — 2026-07-11 — DVAL01-2: dyn_* builtin dispatch names
 
 DVAL01-2: the VM's `call_builtin` dispatch on the tagged-value builtin names
