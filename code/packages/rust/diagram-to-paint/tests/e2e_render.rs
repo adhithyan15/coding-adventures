@@ -177,6 +177,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-directions-11.16.1-visual-corpus.json"
     ));
+    const C4_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-line-breaks-11.16.1-corpus.json"
+    ));
+    const C4_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-line-breaks-11.16.1-visual-corpus.json"
+    ));
     const C4_ELEMENT_TECHNOLOGY_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-element-technology-11.16.1-corpus.json"
@@ -5424,6 +5432,50 @@ line "Target" [35, 50, 68, 82]"##,
             write_png(&pixels, &path).unwrap();
             assert!(pixels.width > 0 && pixels.height > 0);
         }
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_line_breaks_to_png() {
+        let syntax: Value = serde_json::from_str(C4_LINE_BREAKS_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_LINE_BREAKS_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+        let diagram = parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.title.as_deref(), Some("Banking\nPlatform"));
+        assert_eq!(layout.groups[0].label, "Application\nHost");
+        let customer = layout.nodes.iter().find(|node| node.id == "customer").unwrap();
+        assert_eq!(customer.header, "Retail\nCustomer");
+        assert_eq!(customer.compartments[0].rows, ["Uses\nbanking"]);
+        let app = layout.nodes.iter().find(|node| node.id == "app").unwrap();
+        assert_eq!(app.header, "Banking\nApp");
+        assert_eq!(app.compartments[0].rows, ["[TypeScript\nNode]", "Handles\naccounts"]);
+        assert!(app.y - layout.groups[0].y >= 80.0);
+        assert_eq!(
+            layout.relationships[0].label.as_ref().map(|(_, label)| label.as_str()),
+            Some("Uses\ndaily\n[HTTPS\nJSON]")
+        );
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(&layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+            device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 12.0),
+            title_font: font_spec("Helvetica", 16.0),
+            shaper: &shaper,
+            metrics: &metrics,
+            resolver: &resolver,
+        });
+        assert!(!scene.instructions.is_empty());
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect)
+                if rect.fill.as_deref() == Some("#ffffff") && rect.height > 40.0
+        )));
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_line_breaks_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
     }
 
     #[test]
