@@ -15,9 +15,13 @@
 use core::fmt;
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate_path_construction::ConstructedX509CertificatePathAdjacentLink;
+use x509_certificate_path_length_policy::{
+    X509CertificatePathLengthError, X509CertificatePathLengthState,
+};
 use x509_certificate_policy::{
     ValidatedCertificateAlgorithmPolicy, ValidatedCertificateRolePolicy, X509CertificateRole,
 };
+use x509_intermediate_certificate_policy::ValidatedX509IntermediateCertificatePolicy;
 use x509_rsa_algorithm_policy::ValidatedX509RsaAlgorithmPolicy;
 use x509_rsa_signature_routing::{
     verify_x509_rsa_policy_signature, VerifiedX509RsaPolicySignature, X509RsaSignatureRoute,
@@ -68,6 +72,45 @@ impl fmt::Display for X509RsaConstructedPathSignatureRoutingError {
 }
 
 impl std::error::Error for X509RsaConstructedPathSignatureRoutingError {}
+
+/// Stable, payload-free routed intermediate-policy binding failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509RsaConstructedPathIntermediatePolicyErrorKind {
+    /// The authenticated adjacency terminates at the construction's root.
+    TerminalIssuer,
+    /// The routed issuer and intermediate policy retain different objects.
+    EvidenceMismatch,
+}
+
+/// A redacted routed intermediate-policy binding failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509RsaConstructedPathIntermediatePolicyError {
+    kind: X509RsaConstructedPathIntermediatePolicyErrorKind,
+}
+
+impl X509RsaConstructedPathIntermediatePolicyError {
+    const fn new(kind: X509RsaConstructedPathIntermediatePolicyErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    #[must_use]
+    pub const fn kind(self) -> X509RsaConstructedPathIntermediatePolicyErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509RsaConstructedPathIntermediatePolicyError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 RSA constructed-path intermediate policy error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509RsaConstructedPathIntermediatePolicyError {}
 
 /// Non-copyable evidence authenticating one exact constructed-path adjacency.
 ///
@@ -170,6 +213,195 @@ impl fmt::Debug
     }
 }
 
+/// Non-copyable routed authentication bound to complete intermediate policy.
+///
+/// The authenticated adjacency supplies construction order and data-driven RSA
+/// signature evidence. The complete policy supplies certificate-wide critical-
+/// extension recognition, issuing-CA role, algorithm policy, self-issued
+/// classification, and explicit-time validity for that exact non-terminal
+/// issuer. This evidence does not advance path length or validate a path.
+pub struct VerifiedX509RsaConstructedPathIntermediatePolicySignature<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    verified_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    intermediate_policy:
+        ValidatedX509IntermediateCertificatePolicy<'issuer_certificate, 'issuer_encoded>,
+}
+
+impl<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+    VerifiedX509RsaConstructedPathIntermediatePolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    /// Return the consumed construction-bound routed signature proof.
+    #[must_use]
+    pub const fn verified_signature(
+        &self,
+    ) -> &VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.verified_signature
+    }
+
+    /// Return complete policy for the exact authenticated intermediate.
+    #[must_use]
+    pub const fn intermediate_policy(
+        &self,
+    ) -> &ValidatedX509IntermediateCertificatePolicy<'issuer_certificate, 'issuer_encoded> {
+        &self.intermediate_policy
+    }
+}
+
+impl fmt::Debug
+    for VerifiedX509RsaConstructedPathIntermediatePolicySignature<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("VerifiedX509RsaConstructedPathIntermediatePolicySignature")
+    }
+}
+
+/// Non-copyable evidence for one routed constructed-path path-length step.
+///
+/// The retained authenticated intermediate preserves construction order,
+/// routed signature evidence, and complete policy. The retained state is the
+/// result of applying the repository-owned path-length transition to only that
+/// policy. The caller supplies the starting state, so this does not prove prior
+/// traversal or complete path validation.
+pub struct ValidatedX509RsaConstructedPathIntermediatePathLength<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+> {
+    authenticated_intermediate: VerifiedX509RsaConstructedPathIntermediatePolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    path_length_state: X509CertificatePathLengthState,
+}
+
+impl<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+    ValidatedX509RsaConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >
+{
+    /// Return the consumed routed authenticated-intermediate proof.
+    #[must_use]
+    pub const fn authenticated_intermediate(
+        &self,
+    ) -> &VerifiedX509RsaConstructedPathIntermediatePolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    > {
+        &self.authenticated_intermediate
+    }
+
+    /// Return the advanced path-length state.
+    #[must_use]
+    pub const fn path_length_state(&self) -> &X509CertificatePathLengthState {
+        &self.path_length_state
+    }
+}
+
+impl fmt::Debug
+    for ValidatedX509RsaConstructedPathIntermediatePathLength<'_, '_, '_, '_, '_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509RsaConstructedPathIntermediatePathLength")
+    }
+}
+
 /// Authenticate one exact adjacency projected from a constructed path.
 ///
 /// Object identity, not DER equality, binds every policy input to the
@@ -268,6 +500,126 @@ pub fn verify_x509_rsa_constructed_path_policy_signature<
         adjacent_link,
         issuer_role_policy,
         signature,
+    })
+}
+
+/// Bind routed constructed-path authentication to complete intermediate policy.
+///
+/// The routed proof must describe a non-terminal issuer, and the exact issuer
+/// retained by its construction projection must be the same decoded object
+/// retained by `intermediate_policy`. Byte-equal independent decodes are not
+/// interchangeable. Success consumes both proofs so later path-length work
+/// cannot detach policy from the authenticated construction order.
+pub fn bind_x509_rsa_constructed_path_intermediate_policy<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    verified_signature: VerifiedX509RsaConstructedPathPolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    intermediate_policy: ValidatedX509IntermediateCertificatePolicy<
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+) -> Result<
+    VerifiedX509RsaConstructedPathIntermediatePolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509RsaConstructedPathIntermediatePolicyError,
+> {
+    let adjacent_link = verified_signature.adjacent_link();
+    if adjacent_link.issuer_depth() + 1 == adjacent_link.constructed_path().issuer_count() {
+        return Err(X509RsaConstructedPathIntermediatePolicyError::new(
+            X509RsaConstructedPathIntermediatePolicyErrorKind::TerminalIssuer,
+        ));
+    }
+    if !same_exact_object(
+        adjacent_link.issuer_certificate(),
+        intermediate_policy.certificate(),
+    ) {
+        return Err(X509RsaConstructedPathIntermediatePolicyError::new(
+            X509RsaConstructedPathIntermediatePolicyErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    Ok(VerifiedX509RsaConstructedPathIntermediatePolicySignature {
+        verified_signature,
+        intermediate_policy,
+    })
+}
+
+/// Advance path length from one routed construction-bound intermediate proof.
+///
+/// Role, self-issued classification, and `pathLenConstraint` are derived only
+/// from the complete policy retained by `authenticated_intermediate`. Success
+/// consumes and retains that ordered proof with the advanced state. This does
+/// not bind the caller-owned starting state to a prior construction depth.
+pub fn advance_x509_rsa_constructed_path_intermediate_path_length<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'child_certificate,
+    'child_encoded,
+    'issuer_certificate,
+    'issuer_encoded,
+>(
+    path_length_state: X509CertificatePathLengthState,
+    authenticated_intermediate: VerifiedX509RsaConstructedPathIntermediatePolicySignature<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+) -> Result<
+    ValidatedX509RsaConstructedPathIntermediatePathLength<
+        'path,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+        'child_certificate,
+        'child_encoded,
+        'issuer_certificate,
+        'issuer_encoded,
+    >,
+    X509CertificatePathLengthError,
+> {
+    let path_length_state = path_length_state
+        .advance_validated_intermediate_ca(authenticated_intermediate.intermediate_policy())?;
+
+    Ok(ValidatedX509RsaConstructedPathIntermediatePathLength {
+        authenticated_intermediate,
+        path_length_state,
     })
 }
 

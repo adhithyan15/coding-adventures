@@ -1357,6 +1357,23 @@ RFC 5280 Name rule, and this one-link composition does not validate another
 adjacency, path length, constraints, a terminal trust anchor, target policy,
 revocation, TLS, HTTP, OAuth transport, or network authority. Concrete HTTPS
 remains unavailable.
+A bounded follow-up now consumes that routed construction-bound signature
+proof together with complete intermediate policy for its exact non-terminal
+issuer. It rejects the construction's terminal root and policy retained by any
+other decoded certificate object, including a byte-equal independent decode.
+Success retains the routed SHA-256, SHA-384, or SHA-512 authentication,
+construction order, certificate-wide critical-extension and issuing-CA role
+policy, data-driven algorithm policy, self-issued classification, and explicit-
+time validity result together. A second bounded follow-up advances caller-
+owned path-length state using only that retained complete policy and retains
+the authenticated adjacency, policy, and advanced state in one non-copyable
+result. This pure public-certificate composition performs no credential
+access, signing, storage, clock acquisition, audit event, trace emission, I/O,
+or external effect. It does not authenticate another adjacency, prove prior
+traversal, construct or validate a complete path, apply name constraints,
+establish reviewed trust, verify a hostname, check revocation, perform TLS or
+HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
+and live-provider readiness remain unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each
