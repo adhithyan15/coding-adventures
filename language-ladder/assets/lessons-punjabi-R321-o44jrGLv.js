@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: PA-R322-review-316-322
+spine_node: SPINE-CHECK-WELLBEING
+sequence: 19710
+chapter: 322
+type: review
+headword: (dialogue)
+gloss: a review of the words from Trouble in the Lane to A Cut and a Bruise
+concept_tag: REVIEW
+prerequisites: [PA-C316-larna, PA-C316-jhagra, PA-C316-maarna, PA-C316-galh, PA-C316-sulha, PA-C317-vela, PA-C317-bitna, PA-C317-zamana, PA-C317-pachhtauna, PA-C317-guzarna, PA-C318-uddna, PA-C318-phuttna, PA-C318-takkar, PA-C318-dubbna, PA-C318-malah, PA-C319-tabiat, PA-C319-hal, PA-C319-sihat, PA-C319-tandrusat, PA-C319-razi, PA-C320-daktar, PA-C320-mariz, PA-C320-ilaj, PA-C320-nabaz, PA-C320-tika, PA-C321-zukam, PA-C321-khangh, PA-C321-chhikk, PA-C321-sah, PA-C321-nigalna, PA-C322-satt, PA-C322-zakham, PA-C322-sujjna, PA-C322-patti, PA-C322-malham]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [PA-LEX-C316-QUARREL316-01, PA-LEX-C316-QUARREL316-02, PA-LEX-C316-QUARREL316-03, PA-LEX-C316-QUARREL316-04, PA-LEX-C316-QUARREL316-05, PA-LEX-C317-PAST317-01, PA-LEX-C317-PAST317-02, PA-LEX-C317-PAST317-03, PA-LEX-C317-PAST317-04, PA-LEX-C317-PAST317-05, PA-LEX-C318-MISHAP318-01, PA-LEX-C318-MISHAP318-02, PA-LEX-C318-MISHAP318-03, PA-LEX-C318-MISHAP318-04, PA-LEX-C318-MISHAP318-05, PA-LEX-C319-HEALTH319-01, PA-LEX-C319-HEALTH319-02, PA-LEX-C319-HEALTH319-03, PA-LEX-C319-HEALTH319-04, PA-LEX-C319-HEALTH319-05, PA-LEX-C320-CLINIC320-01, PA-LEX-C320-CLINIC320-02, PA-LEX-C320-CLINIC320-03, PA-LEX-C320-CLINIC320-04, PA-LEX-C320-CLINIC320-05, PA-LEX-C321-COLD321-01, PA-LEX-C321-COLD321-02, PA-LEX-C321-COLD321-03, PA-LEX-C321-COLD321-04, PA-LEX-C321-COLD321-05, PA-LEX-C322-HURT322-01, PA-LEX-C322-HURT322-02, PA-LEX-C322-HURT322-03, PA-LEX-C322-HURT322-04, PA-LEX-C322-HURT322-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [PA-LEX-C316-QUARREL316-01, PA-LEX-C316-QUARREL316-02, PA-LEX-C316-QUARREL316-03, PA-LEX-C316-QUARREL316-04, PA-LEX-C316-QUARREL316-05, PA-LEX-C317-PAST317-01, PA-LEX-C317-PAST317-02, PA-LEX-C317-PAST317-03, PA-LEX-C317-PAST317-04, PA-LEX-C317-PAST317-05, PA-LEX-C318-MISHAP318-01, PA-LEX-C318-MISHAP318-02, PA-LEX-C318-MISHAP318-03, PA-LEX-C318-MISHAP318-04, PA-LEX-C318-MISHAP318-05, PA-LEX-C319-HEALTH319-01, PA-LEX-C319-HEALTH319-02, PA-LEX-C319-HEALTH319-03, PA-LEX-C319-HEALTH319-04, PA-LEX-C319-HEALTH319-05, PA-LEX-C320-CLINIC320-01, PA-LEX-C320-CLINIC320-02, PA-LEX-C320-CLINIC320-03, PA-LEX-C320-CLINIC320-04, PA-LEX-C320-CLINIC320-05, PA-LEX-C321-COLD321-01, PA-LEX-C321-COLD321-02, PA-LEX-C321-COLD321-03, PA-LEX-C321-COLD321-04, PA-LEX-C321-COLD321-05, PA-LEX-C322-HURT322-01, PA-LEX-C322-HURT322-02, PA-LEX-C322-HURT322-03, PA-LEX-C322-HURT322-04, PA-LEX-C322-HURT322-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-punjabi
+reviews_of: [PA-C316-larna, PA-C316-jhagra, PA-C316-maarna, PA-C316-galh, PA-C316-sulha, PA-C317-vela, PA-C317-bitna, PA-C317-zamana, PA-C317-pachhtauna, PA-C317-guzarna, PA-C318-uddna, PA-C318-phuttna, PA-C318-takkar, PA-C318-dubbna, PA-C318-malah, PA-C319-tabiat, PA-C319-hal, PA-C319-sihat, PA-C319-tandrusat, PA-C319-razi, PA-C320-daktar, PA-C320-mariz, PA-C320-ilaj, PA-C320-nabaz, PA-C320-tika, PA-C321-zukam, PA-C321-khangh, PA-C321-chhikk, PA-C321-sah, PA-C321-nigalna, PA-C322-satt, PA-C322-zakham, PA-C322-sujjna, PA-C322-patti, PA-C322-malham]
+---
+
+# Looking back: from Trouble in the Lane to A Cut and a Bruise
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C316-QUARREL316-01, PA-LEX-C316-QUARREL316-02] -->
+
+[PAUSE 3s] Say the Punjabi for to fight and a quarrel.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C316-QUARREL316-01, PA-LEX-C316-QUARREL316-02, PA-LEX-C316-QUARREL316-03, PA-LEX-C316-QUARREL316-04, PA-LEX-C316-QUARREL316-05, PA-LEX-C317-PAST317-01, PA-LEX-C317-PAST317-02, PA-LEX-C317-PAST317-03, PA-LEX-C317-PAST317-04, PA-LEX-C317-PAST317-05, PA-LEX-C318-MISHAP318-01, PA-LEX-C318-MISHAP318-02, PA-LEX-C318-MISHAP318-03, PA-LEX-C318-MISHAP318-04, PA-LEX-C318-MISHAP318-05, PA-LEX-C319-HEALTH319-01, PA-LEX-C319-HEALTH319-02, PA-LEX-C319-HEALTH319-03, PA-LEX-C319-HEALTH319-04, PA-LEX-C319-HEALTH319-05, PA-LEX-C320-CLINIC320-01, PA-LEX-C320-CLINIC320-02, PA-LEX-C320-CLINIC320-03, PA-LEX-C320-CLINIC320-04, PA-LEX-C320-CLINIC320-05, PA-LEX-C321-COLD321-01, PA-LEX-C321-COLD321-02, PA-LEX-C321-COLD321-03, PA-LEX-C321-COLD321-04, PA-LEX-C321-COLD321-05, PA-LEX-C322-HURT322-01, PA-LEX-C322-HURT322-02, PA-LEX-C322-HURT322-03, PA-LEX-C322-HURT322-04, PA-LEX-C322-HURT322-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to fight, a quarrel, to hit, a swear word, a reconciliation]
+- [YOU SAY: a particular time, to go by (of time), an era, to regret, to spend time]
+- [YOU SAY: to fly, to burst, a collision, to sink, a boatman]
+- [YOU SAY: how someone is feeling, how things stand, health, healthy, well again after an illness]
+- [YOU SAY: a doctor, a patient, medical treatment, the pulse, an injection]
+- [YOU SAY: a head cold, a cough, a sneeze, breath, to swallow]
+- [YOU SAY: an injury, a wound, to swell up, a bandage, an ointment]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C316-QUARREL316-01, PA-LEX-C316-QUARREL316-02, PA-LEX-C316-QUARREL316-03, PA-LEX-C316-QUARREL316-04, PA-LEX-C316-QUARREL316-05, PA-LEX-C317-PAST317-01, PA-LEX-C317-PAST317-02, PA-LEX-C317-PAST317-03, PA-LEX-C317-PAST317-04, PA-LEX-C317-PAST317-05, PA-LEX-C318-MISHAP318-01, PA-LEX-C318-MISHAP318-02, PA-LEX-C318-MISHAP318-03, PA-LEX-C318-MISHAP318-04, PA-LEX-C318-MISHAP318-05, PA-LEX-C319-HEALTH319-01, PA-LEX-C319-HEALTH319-02, PA-LEX-C319-HEALTH319-03, PA-LEX-C319-HEALTH319-04, PA-LEX-C319-HEALTH319-05, PA-LEX-C320-CLINIC320-01, PA-LEX-C320-CLINIC320-02, PA-LEX-C320-CLINIC320-03, PA-LEX-C320-CLINIC320-04, PA-LEX-C320-CLINIC320-05, PA-LEX-C321-COLD321-01, PA-LEX-C321-COLD321-02, PA-LEX-C321-COLD321-03, PA-LEX-C321-COLD321-04, PA-LEX-C321-COLD321-05, PA-LEX-C322-HURT322-01, PA-LEX-C322-HURT322-02, PA-LEX-C322-HURT322-03, PA-LEX-C322-HURT322-04, PA-LEX-C322-HURT322-05] -->
+
+[PAUSE 3s] To fight? (**ਲੜਨਾ**, *laṛnā*.) A quarrel? (**ਝਗੜਾ**, *jhagṛā*.) To hit? (**ਮਾਰਨਾ**, *mārnā*.) A swear word? (**ਗਾਲ੍ਹ**, *gālh*.) A reconciliation? (**ਸੁਲ੍ਹਾ**, *sulhā*.) A particular time? (**ਵੇਲਾ**, *velā*.) To go by (of time)? (**ਬੀਤਣਾ**, *bītṇā*.) An era? (**ਜ਼ਮਾਨਾ**, *zamānā*.) To regret? (**ਪਛਤਾਉਣਾ**, *pachhtāuṇā*.) To spend time? (**ਗੁਜ਼ਾਰਨਾ**, *guzārnā*.) To fly? (**ਉੱਡਣਾ**, *uḍḍṇā*.) To burst? (**ਫੁੱਟਣਾ**, *phuṭṭṇā*.) A collision? (**ਟੱਕਰ**, *ṭakkar*.) To sink? (**ਡੁੱਬਣਾ**, *ḍubbṇā*.) A boatman? (**ਮਲਾਹ**, *malāh*.) How someone is feeling? (**ਤਬੀਅਤ**, *tabīat*.) How things stand? (**ਹਾਲ**, *hāl*.) Health? (**ਸਿਹਤ**, *sihat*.) Healthy? (**ਤੰਦਰੁਸਤ**, *tandrusat*.) Well again after an illness? (**ਰਾਜ਼ੀ**, *rāzī*.) A doctor? (**ਡਾਕਟਰ**, *ḍākṭar*.) A patient? (**ਮਰੀਜ਼**, *marīz*.) Medical treatment? (**ਇਲਾਜ**, *ilāj*.) The pulse? (**ਨਬਜ਼**, *nabaz*.) An injection? (**ਟੀਕਾ**, *ṭīkā*.) A head cold? (**ਜ਼ੁਕਾਮ**, *zukām*.) A cough? (**ਖੰਘ**, *khaṅgh*.) A sneeze? (**ਛਿੱਕ**, *chhikk*.) Breath? (**ਸਾਹ**, *sāh*.) To swallow? (**ਨਿਗਲਣਾ**, *nigalṇā*.) An injury? (**ਸੱਟ**, *saṭṭ*.) A wound? (**ਜ਼ਖ਼ਮ**, *zakham*.) To swell up? (**ਸੁੱਜਣਾ**, *sujjṇā*.) A bandage? (**ਪੱਟੀ**, *paṭṭī*.) An ointment? (**ਮਲ੍ਹਮ**, *malham*.)
+`;export{t};

@@ -1,0 +1,105 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: PA-R280-review-274-280
+spine_node: SPINE-SAY-WHAT-I-WANT
+sequence: 16430
+chapter: 280
+type: review
+headword: (dialogue)
+gloss: a review of the words from Yards and Metres to Small Change
+concept_tag: REVIEW
+prerequisites: [PA-C274-minna, PA-C274-gaz, PA-C274-mitar, PA-C274-nap, PA-C274-jora, PA-C275-dhilla, PA-C275-tang, PA-C275-phabbna, PA-C275-darjan, PA-C275-thaila, PA-C276-mull, PA-C276-bhaa, PA-C276-ghatauna, PA-C276-sauda, PA-C276-mufat, PA-C277-gahak, PA-C277-chunna, PA-C277-parakhna, PA-C277-chiz, PA-C277-saman, PA-C278-hisab, PA-C278-laddna, PA-C278-vikna, PA-C278-paikat, PA-C278-jorna, PA-C279-kharab, PA-C279-nakli, PA-C279-asli, PA-C279-vatauna, PA-C279-shikait, PA-C280-bhan, PA-C280-bhanauna, PA-C280-bachna, PA-C280-puggna, PA-C280-baki]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [PA-LEX-C274-SIZE274-01, PA-LEX-C274-SIZE274-02, PA-LEX-C274-SIZE274-03, PA-LEX-C274-SIZE274-04, PA-LEX-C274-SIZE274-05, PA-LEX-C275-FIT275-01, PA-LEX-C275-FIT275-02, PA-LEX-C275-FIT275-03, PA-LEX-C275-FIT275-04, PA-LEX-C275-FIT275-05, PA-LEX-C276-PRICE276-01, PA-LEX-C276-PRICE276-02, PA-LEX-C276-PRICE276-03, PA-LEX-C276-PRICE276-04, PA-LEX-C276-PRICE276-05, PA-LEX-C277-CHOOSE277-01, PA-LEX-C277-CHOOSE277-02, PA-LEX-C277-CHOOSE277-03, PA-LEX-C277-CHOOSE277-04, PA-LEX-C277-CHOOSE277-05, PA-LEX-C278-STOCK278-01, PA-LEX-C278-STOCK278-02, PA-LEX-C278-STOCK278-03, PA-LEX-C278-STOCK278-04, PA-LEX-C278-STOCK278-05, PA-LEX-C279-SWAP279-01, PA-LEX-C279-SWAP279-02, PA-LEX-C279-SWAP279-03, PA-LEX-C279-SWAP279-04, PA-LEX-C279-SWAP279-05, PA-LEX-C280-CHANGE280-01, PA-LEX-C280-CHANGE280-02, PA-LEX-C280-CHANGE280-03, PA-LEX-C280-CHANGE280-04, PA-LEX-C280-CHANGE280-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [PA-LEX-C274-SIZE274-01, PA-LEX-C274-SIZE274-02, PA-LEX-C274-SIZE274-03, PA-LEX-C274-SIZE274-04, PA-LEX-C274-SIZE274-05, PA-LEX-C275-FIT275-01, PA-LEX-C275-FIT275-02, PA-LEX-C275-FIT275-03, PA-LEX-C275-FIT275-04, PA-LEX-C275-FIT275-05, PA-LEX-C276-PRICE276-01, PA-LEX-C276-PRICE276-02, PA-LEX-C276-PRICE276-03, PA-LEX-C276-PRICE276-04, PA-LEX-C276-PRICE276-05, PA-LEX-C277-CHOOSE277-01, PA-LEX-C277-CHOOSE277-02, PA-LEX-C277-CHOOSE277-03, PA-LEX-C277-CHOOSE277-04, PA-LEX-C277-CHOOSE277-05, PA-LEX-C278-STOCK278-01, PA-LEX-C278-STOCK278-02, PA-LEX-C278-STOCK278-03, PA-LEX-C278-STOCK278-04, PA-LEX-C278-STOCK278-05, PA-LEX-C279-SWAP279-01, PA-LEX-C279-SWAP279-02, PA-LEX-C279-SWAP279-03, PA-LEX-C279-SWAP279-04, PA-LEX-C279-SWAP279-05, PA-LEX-C280-CHANGE280-01, PA-LEX-C280-CHANGE280-02, PA-LEX-C280-CHANGE280-03, PA-LEX-C280-CHANGE280-04, PA-LEX-C280-CHANGE280-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-punjabi
+reviews_of: [PA-C274-minna, PA-C274-gaz, PA-C274-mitar, PA-C274-nap, PA-C274-jora, PA-C275-dhilla, PA-C275-tang, PA-C275-phabbna, PA-C275-darjan, PA-C275-thaila, PA-C276-mull, PA-C276-bhaa, PA-C276-ghatauna, PA-C276-sauda, PA-C276-mufat, PA-C277-gahak, PA-C277-chunna, PA-C277-parakhna, PA-C277-chiz, PA-C277-saman, PA-C278-hisab, PA-C278-laddna, PA-C278-vikna, PA-C278-paikat, PA-C278-jorna, PA-C279-kharab, PA-C279-nakli, PA-C279-asli, PA-C279-vatauna, PA-C279-shikait, PA-C280-bhan, PA-C280-bhanauna, PA-C280-bachna, PA-C280-puggna, PA-C280-baki]
+---
+
+# Looking back: from Yards and Metres to Small Change
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C274-SIZE274-01, PA-LEX-C274-SIZE274-02] -->
+
+[PAUSE 3s] Say the Punjabi for to measure and a yard.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C274-SIZE274-01, PA-LEX-C274-SIZE274-02, PA-LEX-C274-SIZE274-03, PA-LEX-C274-SIZE274-04, PA-LEX-C274-SIZE274-05, PA-LEX-C275-FIT275-01, PA-LEX-C275-FIT275-02, PA-LEX-C275-FIT275-03, PA-LEX-C275-FIT275-04, PA-LEX-C275-FIT275-05, PA-LEX-C276-PRICE276-01, PA-LEX-C276-PRICE276-02, PA-LEX-C276-PRICE276-03, PA-LEX-C276-PRICE276-04, PA-LEX-C276-PRICE276-05, PA-LEX-C277-CHOOSE277-01, PA-LEX-C277-CHOOSE277-02, PA-LEX-C277-CHOOSE277-03, PA-LEX-C277-CHOOSE277-04, PA-LEX-C277-CHOOSE277-05, PA-LEX-C278-STOCK278-01, PA-LEX-C278-STOCK278-02, PA-LEX-C278-STOCK278-03, PA-LEX-C278-STOCK278-04, PA-LEX-C278-STOCK278-05, PA-LEX-C279-SWAP279-01, PA-LEX-C279-SWAP279-02, PA-LEX-C279-SWAP279-03, PA-LEX-C279-SWAP279-04, PA-LEX-C279-SWAP279-05, PA-LEX-C280-CHANGE280-01, PA-LEX-C280-CHANGE280-02, PA-LEX-C280-CHANGE280-03, PA-LEX-C280-CHANGE280-04, PA-LEX-C280-CHANGE280-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to measure, a yard, a metre, a size, a pair]
+- [YOU SAY: loose, tight, to suit, a dozen, a bag]
+- [YOU SAY: a price, a rate, to lower, a purchase, free of charge]
+- [YOU SAY: a customer, to choose, to test, a thing, goods]
+- [YOU SAY: a reckoning, to load, to be sold, a packet, to add up]
+- [YOU SAY: faulty, fake, genuine, to exchange, a complaint]
+- [YOU SAY: small change, to break a note into change, to be left over, to be affordable, the rest]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C274-SIZE274-01, PA-LEX-C274-SIZE274-02, PA-LEX-C274-SIZE274-03, PA-LEX-C274-SIZE274-04, PA-LEX-C274-SIZE274-05, PA-LEX-C275-FIT275-01, PA-LEX-C275-FIT275-02, PA-LEX-C275-FIT275-03, PA-LEX-C275-FIT275-04, PA-LEX-C275-FIT275-05, PA-LEX-C276-PRICE276-01, PA-LEX-C276-PRICE276-02, PA-LEX-C276-PRICE276-03, PA-LEX-C276-PRICE276-04, PA-LEX-C276-PRICE276-05, PA-LEX-C277-CHOOSE277-01, PA-LEX-C277-CHOOSE277-02, PA-LEX-C277-CHOOSE277-03, PA-LEX-C277-CHOOSE277-04, PA-LEX-C277-CHOOSE277-05, PA-LEX-C278-STOCK278-01, PA-LEX-C278-STOCK278-02, PA-LEX-C278-STOCK278-03, PA-LEX-C278-STOCK278-04, PA-LEX-C278-STOCK278-05, PA-LEX-C279-SWAP279-01, PA-LEX-C279-SWAP279-02, PA-LEX-C279-SWAP279-03, PA-LEX-C279-SWAP279-04, PA-LEX-C279-SWAP279-05, PA-LEX-C280-CHANGE280-01, PA-LEX-C280-CHANGE280-02, PA-LEX-C280-CHANGE280-03, PA-LEX-C280-CHANGE280-04, PA-LEX-C280-CHANGE280-05] -->
+
+[PAUSE 3s] To measure? (**ਮਿਣਨਾ**, *miṇnā*.) A yard? (**ਗਜ਼**, *gaz*.) A metre? (**ਮੀਟਰ**, *mīṭar*.) A size? (**ਨਾਪ**, *nāp*.) A pair? (**ਜੋੜਾ**, *joṛā*.) Loose? (**ਢਿੱਲਾ**, *ḍhillā*.) Tight? (**ਤੰਗ**, *taṅg*.) To suit? (**ਫੱਬਣਾ**, *phabbṇā*.) A dozen? (**ਦਰਜਨ**, *darjan*.) A bag? (**ਥੈਲਾ**, *thailā*.) A price? (**ਮੁੱਲ**, *mull*.) A rate? (**ਭਾਅ**, *bhāa*.) To lower? (**ਘਟਾਉਣਾ**, *ghaṭāuṇā*.) A purchase? (**ਸੌਦਾ**, *saudā*.) Free of charge? (**ਮੁਫ਼ਤ**, *mufat*.) A customer? (**ਗਾਹਕ**, *gāhak*.) To choose? (**ਚੁਣਨਾ**, *chuṇnā*.) To test? (**ਪਰਖਣਾ**, *parakhṇā*.) A thing? (**ਚੀਜ਼**, *chīz*.) Goods? (**ਸਾਮਾਨ**, *sāmān*.) A reckoning? (**ਹਿਸਾਬ**, *hisāb*.) To load? (**ਲੱਦਣਾ**, *laddṇā*.) To be sold? (**ਵਿਕਣਾ**, *vikṇā*.) A packet? (**ਪੈਕਟ**, *paikaṭ*.) To add up? (**ਜੋੜਨਾ**, *joṛnā*.) Faulty? (**ਖ਼ਰਾਬ**, *kharāb*.) Fake? (**ਨਕਲੀ**, *naklī*.) Genuine? (**ਅਸਲੀ**, *aslī*.) To exchange? (**ਵਟਾਉਣਾ**, *vaṭāuṇā*.) A complaint? (**ਸ਼ਿਕਾਇਤ**, *shikāit*.) Small change? (**ਭਾਨ**, *bhān*.) To break a note into change? (**ਭਨਾਉਣਾ**, *bhanāuṇā*.) To be left over? (**ਬਚਣਾ**, *bachṇā*.) To be affordable? (**ਪੁੱਗਣਾ**, *puggṇā*.) The rest? (**ਬਾਕੀ**, *bākī*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: PA-R280-review-final-280
+spine_node: SPINE-SAY-WHAT-I-WANT
+sequence: 16440
+chapter: 280
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [PA-C280-bhan, PA-C280-bhanauna, PA-C280-bachna, PA-C280-puggna, PA-C280-baki]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [PA-LEX-C280-CHANGE280-01, PA-LEX-C280-CHANGE280-02, PA-LEX-C280-CHANGE280-03, PA-LEX-C280-CHANGE280-04, PA-LEX-C280-CHANGE280-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [PA-LEX-C280-CHANGE280-01, PA-LEX-C280-CHANGE280-02, PA-LEX-C280-CHANGE280-03, PA-LEX-C280-CHANGE280-04, PA-LEX-C280-CHANGE280-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-punjabi
+reviews_of: [PA-C280-bhan, PA-C280-bhanauna, PA-C280-bachna, PA-C280-puggna, PA-C280-baki]
+---
+
+# Small Change — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C280-CHANGE280-01, PA-LEX-C280-CHANGE280-02] -->
+
+[PAUSE 3s] Say the Punjabi for small change and to break a note into change.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C280-CHANGE280-01, PA-LEX-C280-CHANGE280-02, PA-LEX-C280-CHANGE280-03, PA-LEX-C280-CHANGE280-04, PA-LEX-C280-CHANGE280-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: small change, to break a note into change, to be left over, to be affordable, the rest]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C280-CHANGE280-01, PA-LEX-C280-CHANGE280-02, PA-LEX-C280-CHANGE280-03, PA-LEX-C280-CHANGE280-04, PA-LEX-C280-CHANGE280-05] -->
+
+[PAUSE 3s] Small change? (**ਭਾਨ**, *bhān*.) To break a note into change? (**ਭਨਾਉਣਾ**, *bhanāuṇā*.) To be left over? (**ਬਚਣਾ**, *bachṇā*.) To be affordable? (**ਪੁੱਗਣਾ**, *puggṇā*.) The rest? (**ਬਾਕੀ**, *bākī*.)
+`;export{t as n,r as t};
