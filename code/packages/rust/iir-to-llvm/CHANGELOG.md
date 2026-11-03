@@ -2,6 +2,12 @@
 
 ## Unreleased — LANG83 PR5b — literals are bytes
 
+- Windows output modules initialize CRT stdout to `_O_BINARY` through a module
+  constructor before `print_str`, `print_i64`, `write_i64` or bare `putchar` can
+  run. LF remains byte `0A` on redirected stdout instead of becoming CRLF.
+  Both MSVC and MinGW target triples are covered; pure modules and other targets
+  need no constructor. The raw-byte conformance gate and a bare-`putchar`
+  execution regression compare unchanged bytes, without newline normalization.
 - The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.
 - **`validate_for_llvm` accepts any `str_const` literal**, a `Str` or a raw-byte `Operand::Bytes`; the printable-ASCII check is gone. The constant was already written as `c"\XX…"`, one hex escape per byte, so every byte is emitted exactly.
 - The literal pre-pass and the lowering key literals and fold facts on **bytes** (`Vec<u8>`), so a `Str` and a `Bytes` literal with the same bytes share one constant, and a literal `str_slice` that splits a UTF-8 character folds to its bytes. Before, the pre-pass skipped such a slice and the lowering then refused to compile it ("does not preserve UTF-8"). The ceiling checks of the concat fold are unchanged and measure bytes.

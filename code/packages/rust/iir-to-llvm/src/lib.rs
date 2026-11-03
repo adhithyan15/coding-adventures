@@ -1023,6 +1023,29 @@ pub fn lower_iir_to_llvm(
             });
         }
     }
+    // The Windows CRT starts stdout in text mode, even when redirected to a
+    // pipe: fwrite/putchar then turn byte 0A into 0D 0A. LANG83 output is one
+    // byte stream, so select _O_BINARY before *any* generated output, including
+    // bare putchar with no print-string or native runtime linked. LLVM lowers
+    // global_ctors to the target's startup mechanism on both MSVC and MinGW.
+    // Keep this target-driven (cross-compilation), and leave pure modules alone.
+    let windows_stdout = (cfg.target_triple.contains("windows")
+        || cfg.target_triple.contains("mingw32"))
+        && (used_print_i64 || used_print_str || used_write_i64 || used_putchar);
+    if windows_stdout {
+        if let Some(f) = module.functions.iter().find(|f| f.name == "__iir_windows_stdout_binary") {
+            return Err(IIRLlvmError::InvalidOperand {
+                function: f.name.clone(),
+                detail: "a module function may not use the reserved Windows stdout constructor name".into(),
+            });
+        }
+        out.push_str("\ndeclare i32 @_setmode(i32, i32)\n\
+@llvm.global_ctors = appending global [1 x { i32, ptr, ptr }] [{ i32, ptr, ptr } { i32 65535, ptr @__iir_windows_stdout_binary, ptr null }]\n\
+define internal void @__iir_windows_stdout_binary() {\n\
+  %mode = call i32 @_setmode(i32 1, i32 32768)\n\
+  ret void\n\
+}\n");
+    }
     if used_print_i64 {
         out.push('\n');
         out.push_str("declare void @__print_i64(i64)\n");

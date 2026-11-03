@@ -2969,6 +2969,27 @@ fn pr5b_strings_are_bytes_on_every_column() {
     }
 }
 
+/// Bare libc output must select byte mode too: no `print_str` or native runtime
+/// is linked here to initialize stdout on behalf of `putchar`.
+#[test]
+fn putchar_preserves_lf_cr_nul_and_high_bytes_without_a_string_runtime() {
+    let case = Case {
+        name: "bare putchar is a byte stream",
+        build: || program(vec![
+            int("lf", 10), builtin("putchar", "lf"),
+            int("cr", 13), builtin("putchar", "cr"),
+            int("nul", 0), builtin("putchar", "nul"),
+            int("high", 255), builtin("putchar", "high"),
+        ]),
+        expect: Expect::StdoutBytes(b"\n\r\x00\xff"),
+    };
+    let ran = execute_everywhere(&case);
+    assert!(ran.contains(&"Wasm") && ran.contains(&"Vm"), "ran on {ran:?}");
+    if clang_ok() {
+        assert!(ran.contains(&"Llvm"), "ran on {ran:?}");
+    }
+}
+
 #[test]
 fn pr4_ops_are_lowered_on_every_backend() {
     let pr4: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr4()).map(|s| s.name).collect();
