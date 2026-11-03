@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.170.0";
+pub const VERSION: &str = "0.171.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14220,7 +14220,7 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
                 }
                 let (start_arrow, end_arrow) = match macro_token.value.as_str() {
                     "BiRel" => (true, true),
-                    "Rel_B" | "Rel_Back" => (true, false),
+                    "Rel_Back" => (true, false),
                     _ => (false, true),
                 };
                 upsert_c4_relationship(&mut relationships, StructuralRelationship {
@@ -20200,7 +20200,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.170.0");
+        assert_eq!(crate::VERSION, "0.171.0");
     }
 
     #[test]

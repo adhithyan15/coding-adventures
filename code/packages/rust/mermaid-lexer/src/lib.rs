@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.83.0";
+pub const VERSION: &str = "0.84.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -762,7 +762,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.83.0");
+        assert_eq!(VERSION, "0.84.0");
     }
 
     #[test]
@@ -2143,6 +2143,14 @@ mod tests {
         assert!(values.contains(&"$sprite"));
         assert!(values.contains(&"Rel"));
         assert!(values.contains(&"RoundedBoxShape()"));
+    }
+
+    #[test]
+    fn does_not_tokenize_unsupported_c4_rel_b_as_a_macro() {
+        let tokens = tokenize_mermaid_c4("C4Context\nRel_B(a, b, \"Uses\")\n");
+        assert!(!tokens.iter().any(|token| {
+            token.type_name.as_deref() == Some("RELATION_MACRO") && token.value == "Rel_B"
+        }));
     }
 
     #[test]

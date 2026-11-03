@@ -10,9 +10,11 @@
     {
       "name": "backward-relationship",
       "source": "C4Component\nContainer(app, \"Application\")\nComponent(api, \"API\")\nRel_Back(app, api, \"Uses\")"
-    },
+    }
+  ],
+  "invalid": [
     {
-      "name": "short-backward-relationship",
+      "name": "unsupported-short-backward-relationship",
       "source": "C4Component\nContainer(app, \"Application\")\nComponent(api, \"API\")\nRel_B(app, api, \"Uses\")"
     }
   ]
