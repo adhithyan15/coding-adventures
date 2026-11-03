@@ -80,5 +80,9 @@ Show only this card: **तुम्हाला मदत केलेला ए
 Show and read only this Marathi card: **तुम्हाला मराठी पुस्तकं घेण्यासाठी
 शाळेच्या पुस्तक खोलीबद्दल माहिती हवी आहे. काय आणायचं, खोली कधी उघडी
 असते आणि पुस्तक किती दिवस ठेवता येतं हे विचारा. माहिती पूर्ण नसेल तर पुन्हा विचारा.**
-Reply **खोली सकाळी उघडी असते** without naming a time so the learner must
-clarify. Do not supply an answer model.
+If asked what to bring, reply **वही**. When asked when the room
+opens, first reply **खोली सकाळी उघडी असते** without naming a time so the
+learner must clarify; after the clarification, reply **ती नऊ वाजता उघडी असते**.
+If asked how long a book may be kept, reply **पुस्तक दोन आठवड्यांत परत द्या**.
+Answer those questions in the order the learner asks them. Do not
+supply an answer model.

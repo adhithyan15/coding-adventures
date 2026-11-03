@@ -2,7 +2,13 @@ import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { defaultCurriculumRoot } from "../../../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  loadCurriculumSpine,
+  loadTrackLanguageCurriculum,
+  loadTrackLessons,
+} from "../../../src/loader.js";
+import { lessonsUpToLevel } from "../../../src/levels.js";
 import { listMockAssessmentStatuses } from "../../../src/mock-assessment.js";
 
 const curriculumRoot = defaultCurriculumRoot();
@@ -21,6 +27,20 @@ const part = (text: string, partId: string) => between(
   `<!-- mock-part:${partId} -->`,
   `<!-- /mock-part:${partId} -->`,
 );
+
+interface BoundaryLesson {
+  id: string;
+  forms: string[];
+}
+
+interface A2Boundary {
+  language: string;
+  level: string;
+  maxRegularChapter: number;
+  firstExcludedChapter: number;
+  grammarLessons: BoundaryLesson[];
+  functionalLessons: BoundaryLesson[];
+}
 
 const partIds = [
   "a2-reading-notices-and-correspondence",
@@ -159,7 +179,11 @@ describe("Marathi A2 timed mock pair", () => {
     }
     expect(read("mock-1-answer-key.md")).toContain("ask both times and the fare");
     expect(read("mock-1-examiner-script.md")).toContain("पन्नास रुपये");
+    expect(read("mock-1-examiner-script.md")).not.toMatch(/पाचव्या\s+पाचव्या/u);
     expect(read("mock-2-answer-key.md")).toContain("ask what to\nbring");
+    expect(read("mock-2-examiner-script.md")).toContain("reply **वही**");
+    expect(read("mock-2-examiner-script.md")).toContain("ती नऊ वाजता उघडी असते");
+    expect(read("mock-2-examiner-script.md")).toContain("पुस्तक दोन आठवड्यांत परत द्या");
 
     const lessonDir = join(curriculumRoot, "marathi", "lessons");
     // Only numbered chapters already taught by the A2 gate may establish a
@@ -182,6 +206,73 @@ describe("Marathi A2 timed mock pair", () => {
       read(`mock-${form}.md`),
       read(`mock-${form}-examiner-script.md`),
     ]).join("\n");
+
+    // The language-owned boundary contract is the authority for the A2
+    // grammar and functional-language forms used by these papers. Bind every
+    // owner in that contract to at least one visible assessed form, and bind
+    // each selected form back to both the declaration and its pre-gate lesson.
+    const boundary = JSON.parse(readFileSync(
+      join(curriculumRoot, "marathi", "assessment-boundaries", "a2.json"),
+      "utf8",
+    )) as A2Boundary;
+    expect(boundary).toMatchObject({
+      language: "marathi",
+      level: "A2",
+      maxRegularChapter: 275,
+      firstExcludedChapter: 276,
+    });
+    const assessedBoundaryForms = new Map<string, string[]>([
+      ["MR-C159-gelo", ["गेलो", "गेला", "आलो", "आली"]],
+      ["MR-C159-tyane-kela", ["त्याने", "केलं", "खाल्ली", "पाहिला"]],
+      ["MR-C159-hota", ["होता", "होती", "होते"]],
+      ["MR-C160-jain", ["जाईल", "जाऊ", "जातील"]],
+      ["MR-C160-janar-ahe", ["जाणार आहे", "येणार नाही"]],
+      ["MR-C32-nako", ["नको"]],
+      ["MR-C34-kaaran", ["कारण"]],
+      ["MR-C111-adhi", ["आधी"]],
+      ["MR-C111-nantar", ["नंतर"]],
+      ["MR-C171-mag", ["मग"]],
+      ["MR-C171-sevti", ["शेवटी"]],
+    ]);
+    const boundaryOwners = [
+      ...boundary.grammarLessons,
+      ...boundary.functionalLessons,
+    ];
+    const lessons = loadTrackLessons("marathi");
+    const curriculum = loadTrackLanguageCurriculum("marathi");
+    expect(curriculum, "Marathi curriculum must load").toBeDefined();
+    const lessonById = new Map(lessons.map((lesson) => [
+      lesson.realization.lessonId,
+      lesson,
+    ]));
+    const a2LessonIds = new Set(lessonsUpToLevel(
+      lessons,
+      curriculum ? [curriculum] : [],
+      loadCurriculumSpine(),
+      "A2",
+    ).map((lesson) => lesson.realization.lessonId));
+    expect([...assessedBoundaryForms.keys()].sort())
+      .toEqual(boundaryOwners.map(({ id }) => id).sort());
+    for (const owner of boundaryOwners) {
+      const chapter = Number(owner.id.match(/^MR-C(\d+)-/u)?.[1]);
+      expect(chapter, `${owner.id} chapter`).toBeLessThanOrEqual(boundary.maxRegularChapter);
+      const ownedLesson = lessonById.get(owner.id);
+      expect(ownedLesson, `${owner.id} must resolve`).toBeDefined();
+      expect(Number(ownedLesson?.frontmatter.chapter), `${owner.id} authored chapter`)
+        .toBeLessThanOrEqual(boundary.maxRegularChapter);
+      expect(a2LessonIds, `${owner.id} must remain in the A2 lesson slice`)
+        .toContain(owner.id);
+      const authoredLesson = readFileSync(
+        join(curriculumRoot, "marathi", "lessons", `${owner.id}.md`),
+        "utf8",
+      );
+      for (const form of assessedBoundaryForms.get(owner.id) ?? []) {
+        expect(owner.forms, `${owner.id} declares ${form}`).toContain(form);
+        expect(authoredLesson, `${owner.id} teaches ${form}`).toContain(form);
+        expect(scoredArtifacts, `A2 mocks visibly assess ${form}`).toContain(form);
+      }
+    }
+
     const scoredTokens = new Set(scoredArtifacts.match(/[\u0900-\u097F]+/gu) ?? []);
     // Pin the complete learner-facing token inventory, not just a selected
     // vocabulary sample. Any new or substituted Devanagari surface form must
