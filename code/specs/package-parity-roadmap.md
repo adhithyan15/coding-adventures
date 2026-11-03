@@ -20493,12 +20493,17 @@ All 37 checks on exact independently reviewed head
 seven succeeded and 30 were expected skips. GitHub reported the PR clean and
 mergeable. The loop invoked guarded squash auto-merge with exact-head matching,
 and GitHub merged PR #18879 immediately at `2026-11-03T14:02:33Z` as
-`38dba577c2f234d1b0bd8f1f150517e773b7e746`. The receipt is current
-`origin/main`, and the clean completed worktree was queued for archival.
+`38dba577c2f234d1b0bd8f1f150517e773b7e746`. The receipt was current
+`origin/main` when observed and remains an ancestor of exact current main
+`978d4de8690dc86415b2d0502a39b7ac6bd095df`; the clean completed worktree was
+queued for archival.
 
 Reprioritization selects the already implemented duplicate-discovery fixture
-native CI selector. Its two prerequisites are merged, and its five product
-paths have zero exact overlap with every other live PR. The bounded repair maps
+native CI selector. Its two prerequisites are merged. Final overlap review
+found that older open PR #18844 shared the Go build-tool changelog insertion
+anchor, so this branch deliberately removed its redundant changelog section;
+the remaining four product paths have zero exact overlap with every live PR.
+The bounded repair maps
 only exact `discovery-duplicate-identity.json` changes to the six existing
 native readers in Elixir, Go, Ruby, Rust, Swift, and TypeScript while preserving
 explicit language filtering, ordinary selection union, prerequisite closure,
