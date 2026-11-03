@@ -305,3 +305,17 @@ Use `--output` to override the file path:
 ```bash
 mosaic-compile --backend paint -o thumb.png ProfileCard.mosaic
 ```
+
+### Deferred XAML compatibility experiment
+
+`mosaic-compile pkg <package> --backend xaml --experimental-deferred-conditionals`
+uses the ordinary package composition/token/runtime pipeline while opting into
+lazy conditional controls. It also works with `--emit-project` and
+`--profile native-complete --runtime-library <runtime.dll>`. Omit the flag for
+unchanged eager output. Other backends reject it before output is written.
+The experiment changes text source updates to PropertyChanged and still needs
+native focus, IME, accessibility and performance acceptance before promotion.
+
+Rust callers can use `build_package_with_experiments` with `BuildExperiments`;
+existing builder entry points retain default-off behavior. This option reaches
+all exported components, layout variants and the project root.

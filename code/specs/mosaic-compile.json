@@ -170,6 +170,13 @@
           "required": true
         },
         {
+          "id": "experimental-deferred-conditionals",
+          "long": "experimental-deferred-conditionals",
+          "description": "Opt in to experimental deferred XAML conditional controls. XAML only; default output stays eager. Native compatibility and performance acceptance remain required.",
+          "type": "boolean",
+          "required": false
+        },
+        {
           "id": "emit-project",
           "long": "emit-project",
           "description": "Also emit the selected backend's runnable project shell alongside the package artifacts",
