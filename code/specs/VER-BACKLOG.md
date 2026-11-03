@@ -39,6 +39,7 @@ Each selected group is split into bounded PRs if its implementation requires it.
 |---|---|---|
 | done / VER-P003 | TF01 Rust L0 bootstrap | #18807 merged as 6a09869c279; expected head 4e608afe3bc9 verified on fetched main; all checks acceptable |
 | P1 / VER-P004 | Rust CT01 corpus through L0 | #18849 retargeted to main after P003 merge; local checks pass; awaiting final-head hosted CI; every case, fixed-array API, fresh output, error mapping, logical work fields, regeneration/build selection |
+| P0 / VER-CI001 | Diagnose current macOS iPad UI-test failure before P004 can merge | job125811351687, run41602352046; Trestle first task row missing; one unchanged-head diagnostic retry waits for the run to finish; no assertions weakened |
 | P1 / VER-I004 | Enforce TF01's closed failure vocabulary at the Rust harness boundary | ready after P004; rejected invalid IDs must not escape as unregistered TAP diagnostics; spec, negative corpus and caller compatibility before code |
 | P1 / VER-P005 | Warrant v0 specification | waiting P004; VER04 syntax/types/bindings and negative examples |
 | P1 / VER-P006 | Warrant grammar/generated lexer/parser | waiting P005; positive/negative corpus and drift gate |
@@ -81,6 +82,18 @@ can progress independently once their prerequisites are available.
 | VER26 follow-on | Busicom-to-gates, a capability-bearing pilot, then other languages |
 
 ## Discoveries and current plan
+
+P004 CI triage: macOS SwiftUI step failed TrestleUiTests.swift:132 after typing
+and Add, with exit65 and one real failed test. The same UI test passed on
+bootstrap head4e608afe3bc9; its test/layout/SwiftUI emitter/bindings/task-core are
+unchanged, and task-mosaic-app's diff adds only cfg(test) cases. This supports
+one bounded diagnostic retry, not a claim that the root cause is fixed. GitHub
+rejects a job rerun while sibling jobs keep the run active; wait without
+cancelling them, refresh the expected head, then retry only the failed job.
+No SwiftUI UI state/xcresult artifacts were retained. If the failure repeats,
+capture the actual input values/view hierarchy and retained diagnostics before
+choosing a behavioral fix. The unresolved diagnostic gap stays recorded even
+if the retry passes; do not turn it into an unrelated TaskApp feature tranche.
 
 I004 is being prepared locally on its own branch while #18849 waits for CI;
 it has no PR and is not delivered. Its spec preserves the string-taking
