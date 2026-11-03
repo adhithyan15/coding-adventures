@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:82ab4005c8040816",
+  "lessonIds": [
+    "PA-C298-kanda",
+    "PA-C298-buta",
+    "PA-C298-kikkar",
+    "PA-C298-sanghna",
+    "PA-C298-kumlauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch298.txt",
+  "json": "punjabi/narration/ch298.json",
+  "textHash": "fnv1a64:ca863b92fceb6092",
+  "jsonHash": "fnv1a64:3f9da6a86951d73a",
+  "findings": []
+}

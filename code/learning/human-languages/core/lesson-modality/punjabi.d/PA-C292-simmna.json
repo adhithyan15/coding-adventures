@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C292-simmna",
+    "language": "punjabi",
+    "chapter": 292,
+    "sequence": 17600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82c595c322e72902"
+  },
+  "findings": []
+}

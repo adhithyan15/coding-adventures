@@ -1,0 +1,11 @@
+{
+  "id": "PA-C329-sass",
+  "pathSegment": "PA-PATH-329-INLAW329",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-329-INLAW329",
+      "order": 1
+    }
+  ]
+}

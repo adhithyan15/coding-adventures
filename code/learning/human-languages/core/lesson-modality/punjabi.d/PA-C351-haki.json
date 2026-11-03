@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C351-haki",
+    "language": "punjabi",
+    "chapter": 351,
+    "sequence": 21730,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5e88c327d5beabc5"
+  },
+  "findings": []
+}

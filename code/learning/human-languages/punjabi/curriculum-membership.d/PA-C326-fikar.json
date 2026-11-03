@@ -1,0 +1,11 @@
+{
+  "id": "PA-C326-fikar",
+  "pathSegment": "PA-PATH-326-FEAR326",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-326-FEAR326",
+      "order": 3
+    }
+  ]
+}

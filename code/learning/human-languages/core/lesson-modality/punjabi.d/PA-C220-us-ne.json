@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C220-us-ne",
+    "language": "punjabi",
+    "chapter": 220,
+    "sequence": 12060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66d90da5cfda6cf6"
+  },
+  "findings": []
+}

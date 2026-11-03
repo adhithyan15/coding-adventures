@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:896a8bf3947e14ec",
+  "lessonIds": [
+    "PA-C242-talna",
+    "PA-C242-bhunnna",
+    "PA-C242-karchhi",
+    "PA-C242-chhirakna",
+    "PA-C242-sarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch242.txt",
+  "json": "punjabi/narration/ch242.json",
+  "textHash": "fnv1a64:cdecd50575f8cf11",
+  "jsonHash": "fnv1a64:059e4ebdb0c6666e",
+  "findings": []
+}

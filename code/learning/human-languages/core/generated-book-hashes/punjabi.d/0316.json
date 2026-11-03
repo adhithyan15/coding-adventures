@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:aa4c9409d4d0fbee",
+  "lessonIds": [
+    "PA-C316-larna",
+    "PA-C316-jhagra",
+    "PA-C316-maarna",
+    "PA-C316-galh",
+    "PA-C316-sulha"
+  ],
+  "tex": "punjabi/book/chapters/ch316-trouble-in-the-lane.tex"
+}

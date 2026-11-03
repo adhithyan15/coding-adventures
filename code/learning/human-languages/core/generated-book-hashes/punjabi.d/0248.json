@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:2fb99f69bca31777",
+  "lessonIds": [
+    "PA-C248-diudhi",
+    "PA-C248-chaukhat",
+    "PA-C248-aral",
+    "PA-C248-sangal",
+    "PA-C248-khunti"
+  ],
+  "tex": "punjabi/book/chapters/ch248-at-the-door.tex"
+}

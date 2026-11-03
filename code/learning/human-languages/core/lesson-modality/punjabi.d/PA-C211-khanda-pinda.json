@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C211-khanda-pinda",
+    "language": "punjabi",
+    "chapter": 211,
+    "sequence": 11530,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ffe51abda32348a1"
+  },
+  "findings": []
+}

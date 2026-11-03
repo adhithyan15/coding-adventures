@@ -1,0 +1,19 @@
+{
+  "chapter": 360,
+  "title": "Exam Time",
+  "label": "ch:pa-a2-exam-time",
+  "canDo": "I can talk about my exams and my results.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C360-pas",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 360: I can talk about my exams and my results.",
+    "assesses": [
+      "PA-LEX-C360-EXAM360-03",
+      "PA-LEX-C360-EXAM360-04",
+      "PA-LEX-C360-EXAM360-05"
+    ]
+  }
+}

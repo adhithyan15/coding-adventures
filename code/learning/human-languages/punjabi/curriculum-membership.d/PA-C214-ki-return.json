@@ -1,0 +1,11 @@
+{
+  "id": "PA-C214-ki-return",
+  "pathSegment": "PA-PATH-214-A2-POLAR",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-214-A2-POLAR",
+      "order": 0
+    }
+  ]
+}

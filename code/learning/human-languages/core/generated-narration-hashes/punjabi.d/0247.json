@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 247,
+  "sourceHash": "fnv1a64:92169f4cdfa36f91",
+  "lessonIds": [
+    "PA-C247-ala",
+    "PA-C247-bari",
+    "PA-C247-khunja",
+    "PA-C247-pirha",
+    "PA-C247-sanduk"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch247.txt",
+  "json": "punjabi/narration/ch247.json",
+  "textHash": "fnv1a64:a0b310b0d522df40",
+  "jsonHash": "fnv1a64:98576b6d86b039ed",
+  "findings": []
+}

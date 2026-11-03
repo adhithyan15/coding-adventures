@@ -1,0 +1,11 @@
+{
+  "id": "PA-C315-gahina",
+  "pathSegment": "PA-PATH-315-BANDIT315",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-315-BANDIT315",
+      "order": 3
+    }
+  ]
+}

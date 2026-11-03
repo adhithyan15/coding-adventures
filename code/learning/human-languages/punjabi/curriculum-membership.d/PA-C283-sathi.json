@@ -1,0 +1,11 @@
+{
+  "id": "PA-C283-sathi",
+  "pathSegment": "PA-PATH-283-ROAD283",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-283-ROAD283",
+      "order": 1
+    }
+  ]
+}

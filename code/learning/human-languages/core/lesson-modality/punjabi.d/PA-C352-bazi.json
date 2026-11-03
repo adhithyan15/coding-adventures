@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C352-bazi",
+    "language": "punjabi",
+    "chapter": 352,
+    "sequence": 21780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b49148979a0c5f10"
+  },
+  "findings": []
+}

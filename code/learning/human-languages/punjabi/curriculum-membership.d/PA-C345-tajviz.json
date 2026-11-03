@@ -1,0 +1,11 @@
+{
+  "id": "PA-C345-tajviz",
+  "pathSegment": "PA-PATH-345-DECIDE345",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-345-DECIDE345",
+      "order": 4
+    }
+  ]
+}

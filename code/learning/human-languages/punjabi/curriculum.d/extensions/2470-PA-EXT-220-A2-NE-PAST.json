@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-220-A2-NE-PAST",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what Aman, or he or she, bought, gave or took, with ne after the doer.",
+  "prerequisites": [
+    "PA-EXT-219-A2-PITA"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 279,
+  "sourceHash": "fnv1a64:911e10cd9960bdf1",
+  "lessonIds": [
+    "PA-C279-kharab",
+    "PA-C279-nakli",
+    "PA-C279-asli",
+    "PA-C279-vatauna",
+    "PA-C279-shikait"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch279.txt",
+  "json": "punjabi/narration/ch279.json",
+  "textHash": "fnv1a64:d5a4afbe66f6957b",
+  "jsonHash": "fnv1a64:c1f05356023c63b3",
+  "findings": []
+}

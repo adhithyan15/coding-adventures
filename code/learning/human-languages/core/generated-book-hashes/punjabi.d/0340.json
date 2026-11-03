@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:06071dcb0e491ef3",
+  "lessonIds": [
+    "PA-C340-vaada",
+    "PA-C340-manauna",
+    "PA-C340-bilkul",
+    "PA-C340-kabulna",
+    "PA-C340-samjhauta"
+  ],
+  "tex": "punjabi/book/chapters/ch340-all-right-agreed.tex"
+}

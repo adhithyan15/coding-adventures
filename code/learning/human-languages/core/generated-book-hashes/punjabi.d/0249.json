@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 249,
+  "sourceHash": "fnv1a64:36eaf702c7d91cc1",
+  "lessonIds": [
+    "PA-C249-balna-kindle",
+    "PA-C249-phukna",
+    "PA-C249-dhumam",
+    "PA-C249-kola",
+    "PA-C249-angiar"
+  ],
+  "tex": "punjabi/book/chapters/ch249-fire-and-smoke.tex"
+}

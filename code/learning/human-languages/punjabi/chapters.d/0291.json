@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Warm and Cool",
+  "label": "ch:pa-a2-warm-and-cool",
+  "canDo": "I can say how warm or cool something feels.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C291-thaarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say how warm or cool something feels.",
+    "assesses": [
+      "PA-LEX-C291-WARM291-03",
+      "PA-LEX-C291-WARM291-04",
+      "PA-LEX-C291-WARM291-05"
+    ]
+  }
+}

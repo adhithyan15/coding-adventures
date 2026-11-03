@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:c51dd15733f3f8b0",
+  "lessonIds": [
+    "PA-C324-bamh",
+    "PA-C324-modha",
+    "PA-C324-haphna",
+    "PA-C324-pasina",
+    "PA-C324-chakkar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch324.txt",
+  "json": "punjabi/narration/ch324.json",
+  "textHash": "fnv1a64:c3e6297522389e8d",
+  "jsonHash": "fnv1a64:d05ac60673c8b9ef",
+  "findings": []
+}

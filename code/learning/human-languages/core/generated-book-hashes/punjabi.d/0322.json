@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:4dbf7668bd3397e1",
+  "lessonIds": [
+    "PA-C322-satt",
+    "PA-C322-zakham",
+    "PA-C322-sujjna",
+    "PA-C322-patti",
+    "PA-C322-malham",
+    "PA-R322-review-316-322"
+  ],
+  "tex": "punjabi/book/chapters/ch322-a-cut-and-a-bruise.tex"
+}

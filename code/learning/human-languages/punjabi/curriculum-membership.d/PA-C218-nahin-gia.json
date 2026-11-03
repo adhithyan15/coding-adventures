@@ -1,0 +1,11 @@
+{
+  "id": "PA-C218-nahin-gia",
+  "pathSegment": "PA-PATH-218-A2-UTTHIA",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-218-A2-UTTHIA",
+      "order": 3
+    }
+  ]
+}

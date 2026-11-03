@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Getting Better",
+  "label": "ch:pa-a2-getting-better",
+  "canDo": "I can say whether someone is getting better or worse.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C325-pir",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can say whether someone is getting better or worse.",
+    "assesses": [
+      "PA-LEX-C325-BETTER325-03",
+      "PA-LEX-C325-BETTER325-04",
+      "PA-LEX-C325-BETTER325-05"
+    ]
+  }
+}

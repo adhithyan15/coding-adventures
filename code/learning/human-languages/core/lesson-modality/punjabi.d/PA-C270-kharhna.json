@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C270-kharhna",
+    "language": "punjabi",
+    "chapter": 270,
+    "sequence": 15880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f0b58cc36de4c6ac"
+  },
+  "findings": []
+}

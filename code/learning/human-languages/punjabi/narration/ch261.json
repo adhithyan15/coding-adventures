@@ -1,0 +1,749 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 261,
+  "title": "The Train Timetable",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bc34007c254231a6",
+  "lessons": [
+    {
+      "id": "PA-C261-addha",
+      "sequence": 15410,
+      "title": "ਅੱਧਾ (addhā) — half",
+      "headword": "ਅੱਧਾ",
+      "romanization": "addhā",
+      "gloss": "half",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:133decdfefbb7807",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for one and a half, then the Punjabi for two and a half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਅੱਧਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅੱਧਾ — addhā — \"half\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਅੱਧਾ ਘੰਟਾ ਸਟੇਸ਼ਨ ਉੱਤੇ ਉਡੀਕਦਾ ਹਾਂ। maiṁ addhā ghaṇṭā saṭeshan utte uḍīkdā hāṁ. I wait half an hour at the station."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅੱਧਾ (addhā) is inherited from Sanskrit ardha, \"half\"; CDIAL lists Punjabi addhā, \"half\", under it (CDIAL 644)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "addhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *addhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "addhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *addhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ addhā ghaṇṭā saṭeshan utte uḍīkdā hāṁ. — I wait half an hour at the station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ addhā ghaṇṭā saṭeshan utte uḍīkdā hāṁ.* — I wait half an hour at the station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for one and a half, then the Punjabi for two and a half, then say addhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for one and a half, then the Punjabi for two and a half, then say *addhā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਅੱਧਾ (addhā) mean? (\"Half\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C261-paletfaram",
+      "sequence": 15420,
+      "title": "ਪਲੇਟਫ਼ਾਰਮ (paleṭfāram) — a railway platform",
+      "headword": "ਪਲੇਟਫ਼ਾਰਮ",
+      "romanization": "paleṭfāram",
+      "gloss": "a railway platform",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0badb5c2dbd5adc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for two and a half, then the Punjabi for half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਲੇਟਫ਼ਾਰਮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਲੇਟਫ਼ਾਰਮ — paleṭfāram — \"a railway platform\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਰੇਲ ਦੂਜੇ ਪਲੇਟਫ਼ਾਰਮ ਉੱਤੇ ਆਵੇਗੀ। rel dūje paleṭfāram utte āvegī. The train will come in at the second platform."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਲੇਟਫ਼ਾਰਮ (paleṭfāram) is borrowed from English platform."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paleṭfāram",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paleṭfāram*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paleṭfāram, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paleṭfāram*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel dūje paleṭfāram utte āvegī. — The train will come in at the second platform.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel dūje paleṭfāram utte āvegī.* — The train will come in at the second platform.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for two and a half, then the Punjabi for half, then say paleṭfāram again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for two and a half, then the Punjabi for half, then say *paleṭfāram* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਲੇਟਫ਼ਾਰਮ (paleṭfāram) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਲੇਟਫ਼ਾਰਮ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਲੇਟਫ਼ਾਰਮ (paleṭfāram) mean? (\"A railway platform\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C261-thahirna",
+      "sequence": 15430,
+      "title": "ਠਹਿਰਨਾ (ṭhahirnā) — to halt; to stop for a while",
+      "headword": "ਠਹਿਰਨਾ",
+      "romanization": "ṭhahirnā",
+      "gloss": "to halt; to stop for a while",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c653331d84f6b3a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for half, then the Punjabi for a railway platform."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਠਹਿਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਠਹਿਰਨਾ — ṭhahirnā — \"to halt; to stop for a while\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਰੇਲ ਹਰ ਸਟੇਸ਼ਨ ਉੱਤੇ ਦਸ ਮਿੰਟ ਠਹਿਰਦੀ ਹੈ। rel har saṭeshan utte das minṭ ṭhahirdī hai. The train halts for ten minutes at every station."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਰੇਲ ਸਟੇਸ਼ਨ ਉੱਤੇ ਠਹਿਰੀ, oh rel saṭeshan utte ṭhahirī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਠਹਿਰਨਾ (ṭhahirnā) is inherited from a reconstructed stabhira, \"fixed, firm\"; CDIAL lists Punjabi ṭhahirnā, \"to stop, be settled\", under it (CDIAL 13680)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhahirnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhahirnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhahirnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhahirnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel har saṭeshan utte das minṭ ṭhahirdī hai. — The train halts for ten minutes at every station.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel har saṭeshan utte das minṭ ṭhahirdī hai.* — The train halts for ten minutes at every station.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for half, then the Punjabi for a railway platform, then say ṭhahirnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for half, then the Punjabi for a railway platform, then say *ṭhahirnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਠਹਿਰਨਾ (ṭhahirnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਠਹਿਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਠਹਿਰਨਾ (ṭhahirnā) mean? (\"To halt; to stop for a while\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C261-challna",
+      "sequence": 15440,
+      "title": "ਚੱਲਣਾ (challṇā) — to set off; to go, of a bus or train",
+      "headword": "ਚੱਲਣਾ",
+      "romanization": "challṇā",
+      "gloss": "to set off; to go, of a bus or train",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6f7a2681d14d171",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a railway platform, then the Punjabi for to halt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚੱਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੱਲਣਾ — challṇā — \"to set off; to go, of a bus or train\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪਹਿਲੀ ਬੱਸ ਸਵੇਰੇ ਛੇ ਵਜੇ ਚੱਲਦੀ ਹੈ। pahilī bass savere chhe vaje challdī hai. The first bus sets off at six in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਬੱਸ ਅੱਠ ਵਜੇ ਚੱਲੀ, oh bass aṭṭh vaje challī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੱਲਣਾ (challṇā) is inherited from a reconstructed calyati, \"goes\"; CDIAL lists Punjabi callṇā, \"to go, move\", under it (CDIAL 4721)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "challṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *challṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "challṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *challṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahilī bass savere chhe vaje challdī hai. — The first bus sets off at six in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahilī bass savere chhe vaje challdī hai.* — The first bus sets off at six in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a railway platform, then the Punjabi for to halt, then say challṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a railway platform, then the Punjabi for to halt, then say *challṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚੱਲਣਾ (challṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚੱਲਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚੱਲਣਾ (challṇā) mean? (\"To set off; to go, of a bus or train\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C261-ravana",
+      "sequence": 15450,
+      "title": "ਰਵਾਨਾ (ravānā) — departing; leaving, with ਹੋਣਾ",
+      "headword": "ਰਵਾਨਾ",
+      "romanization": "ravānā",
+      "gloss": "departing; leaving, with ਹੋਣਾ",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3629fff56d93fe9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to halt, then the Punjabi for to set off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰਵਾਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਵਾਨਾ — ravānā — \"departing; leaving, with ਹੋਣਾ\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਰੇਲ ਸਾਢੇ ਦਸ ਵਜੇ ਰਵਾਨਾ ਹੁੰਦੀ ਹੈ। rel sāḍhe das vaje ravānā hundī hai. The train leaves at half past ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਵਾਨਾ (ravānā) is a loan, usually traced to Persian ravāna, \"going, setting out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ravānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ravānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ravānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ravānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rel sāḍhe das vaje ravānā hundī hai. — The train leaves at half past ten.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rel sāḍhe das vaje ravānā hundī hai.* — The train leaves at half past ten.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to halt, then the Punjabi for to set off, then say ravānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to halt, then the Punjabi for to set off, then say *ravānā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਰਵਾਨਾ (ravānā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਰਵਾਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰਵਾਨਾ (ravānā) mean? (\"Departing; leaving, with ਹੋਣਾ\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

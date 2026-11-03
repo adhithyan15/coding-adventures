@@ -1,0 +1,19 @@
+{
+  "chapter": 257,
+  "title": "At the Bank Counter",
+  "label": "ch:pa-a2-at-the-bank-counter",
+  "canDo": "I can ask for money from my bank account.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C257-vadhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 257: I can ask for money from my bank account.",
+    "assesses": [
+      "PA-LEX-C257-BANK257-03",
+      "PA-LEX-C257-BANK257-04",
+      "PA-LEX-C257-BANK257-05"
+    ]
+  }
+}

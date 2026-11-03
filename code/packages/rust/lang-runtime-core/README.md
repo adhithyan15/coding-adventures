@@ -18,7 +18,7 @@ The substrate every language frontend (Lisp, Ruby, JS, Smalltalk, Perl, Tetrad, 
 | [`ic`](src/ic.rs) | `InlineCache<E>`, `ICState`, `ICId`, `ClassId`, `ICInvalidator`, `MAX_PIC_ENTRIES` | Generic V8-style inline cache infrastructure |
 | [`deopt`](src/deopt.rs) | `FrameDescriptor`, `RegisterEntry`, `NativeLocation`, `DeoptAnchor`, `InlinedDeoptDescriptor` | Frame-descriptor format for JIT/AOT → interp deopt |
 | [`visitor`](src/visitor.rs) | `ValueVisitor`, `RootVisitor` | Non-generic visitor traits the GC and root scanner use |
-| [`error`](src/error.rs) | `RuntimeError` | Cross-language runtime error transport |
+| [`error`](src/error.rs) | `RuntimeError` | Cross-language runtime error transport (including `Trap { kind }`, a LANG83 trap a builtin raises, #18800) |
 
 ## Why a single `LangBinding` trait?
 

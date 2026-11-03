@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 246,
+  "sourceHash": "fnv1a64:475f5b7dcddde1b7",
+  "lessonIds": [
+    "PA-C246-lakkar",
+    "PA-C246-kari",
+    "PA-C246-chhappar",
+    "PA-C246-parnala",
+    "PA-C246-parchhatti"
+  ],
+  "tex": "punjabi/book/chapters/ch246-beams-and-roofs.tex"
+}

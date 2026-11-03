@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-237-KAM237",
+  "spine_node": "SPINE-NAME-EVERYDAY-ACTIONS",
+  "before": [],
+  "inline": [
+    "PA-EXT-237-KAM237"
+  ],
+  "after": []
+}

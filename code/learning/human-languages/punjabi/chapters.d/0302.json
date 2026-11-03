@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "Sowing Time",
+  "label": "ch:pa-a2-sowing-time",
+  "canDo": "I can talk about sowing and sprouting.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C302-sarhom",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can talk about sowing and sprouting.",
+    "assesses": [
+      "PA-LEX-C302-SOW302-03",
+      "PA-LEX-C302-SOW302-04",
+      "PA-LEX-C302-SOW302-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 256,
+  "title": "The Postman's Round",
+  "label": "ch:pa-a2-the-postman-s-round",
+  "canDo": "I can say how letters and parcels reach a house.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C256-parna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 256: I can say how letters and parcels reach a house.",
+    "assesses": [
+      "PA-LEX-C256-DAK256-03",
+      "PA-LEX-C256-DAK256-04",
+      "PA-LEX-C256-DAK256-05"
+    ]
+  }
+}

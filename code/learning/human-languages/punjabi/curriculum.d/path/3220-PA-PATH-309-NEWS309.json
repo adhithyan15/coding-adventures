@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-309-NEWS309",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "PA-EXT-309-NEWS309"
+  ],
+  "after": []
+}

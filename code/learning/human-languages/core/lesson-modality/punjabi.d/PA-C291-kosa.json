@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C291-kosa",
+    "language": "punjabi",
+    "chapter": 291,
+    "sequence": 17540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fbc42dc3dcd99b4"
+  },
+  "findings": []
+}

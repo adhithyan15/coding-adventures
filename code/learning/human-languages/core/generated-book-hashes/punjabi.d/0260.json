@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 260,
+  "sourceHash": "fnv1a64:06e5a6f1596f2764",
+  "lessonIds": [
+    "PA-C260-sava",
+    "PA-C260-sadhe",
+    "PA-C260-paune",
+    "PA-C260-dedh",
+    "PA-C260-dhai"
+  ],
+  "tex": "punjabi/book/chapters/ch260-quarter-past-and-half-past.tex"
+}

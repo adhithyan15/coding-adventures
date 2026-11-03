@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:cac510a072ba807e",
+  "lessonIds": [
+    "PA-C360-imtihan",
+    "PA-C360-pepar",
+    "PA-C360-ank",
+    "PA-C360-natija",
+    "PA-C360-pas"
+  ],
+  "tex": "punjabi/book/chapters/ch360-exam-time.tex"
+}

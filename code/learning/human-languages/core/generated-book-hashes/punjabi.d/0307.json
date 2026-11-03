@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:9f221e38fe8dea73",
+  "lessonIds": [
+    "PA-C307-majjh",
+    "PA-C307-katta",
+    "PA-C307-chona",
+    "PA-C307-than",
+    "PA-C307-charna"
+  ],
+  "tex": "punjabi/book/chapters/ch307-the-buffalo.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C276-sauda",
+    "language": "punjabi",
+    "chapter": 276,
+    "sequence": 16210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19130cc0e5990e43"
+  },
+  "findings": []
+}

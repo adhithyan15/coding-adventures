@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 336,
+  "sourceHash": "fnv1a64:ba622bb6228c37d6",
+  "lessonIds": [
+    "PA-C336-karigar",
+    "PA-C336-mazdur",
+    "PA-C336-kasai",
+    "PA-C336-daraivar",
+    "PA-C336-murammat",
+    "PA-R336-review-330-336",
+    "PA-R336-review-final-336"
+  ],
+  "tex": "punjabi/book/chapters/ch336-work-in-the-bazaar.tex"
+}

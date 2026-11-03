@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:f29eda526689e567",
+  "lessonIds": [
+    "PA-C359-sabak",
+    "PA-C359-abhias",
+    "PA-C359-mihnat",
+    "PA-C359-dhian",
+    "PA-C359-sudhaarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch359.txt",
+  "json": "punjabi/narration/ch359.json",
+  "textHash": "fnv1a64:7ffc905cf1fc3f04",
+  "jsonHash": "fnv1a64:be53da441875c113",
+  "findings": []
+}

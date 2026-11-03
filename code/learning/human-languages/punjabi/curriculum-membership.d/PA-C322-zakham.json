@@ -1,0 +1,11 @@
+{
+  "id": "PA-C322-zakham",
+  "pathSegment": "PA-PATH-322-HURT322",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-322-HURT322",
+      "order": 1
+    }
+  ]
+}

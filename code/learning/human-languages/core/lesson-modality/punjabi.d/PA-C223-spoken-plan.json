@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C223-spoken-plan",
+    "language": "punjabi",
+    "chapter": 223,
+    "sequence": 12260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2536c4328e123b14"
+  },
+  "findings": []
+}

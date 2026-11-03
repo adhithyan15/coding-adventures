@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:bc803cb57febe8b5",
+  "lessonIds": [
+    "PA-C339-inkar",
+    "PA-C339-talna-back-out",
+    "PA-C339-bahana",
+    "PA-C339-hargiz",
+    "PA-C339-arna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch339.txt",
+  "json": "punjabi/narration/ch339.json",
+  "textHash": "fnv1a64:d82ccd12f6070f7f",
+  "jsonHash": "fnv1a64:cc04254bd36fb5fe",
+  "findings": []
+}

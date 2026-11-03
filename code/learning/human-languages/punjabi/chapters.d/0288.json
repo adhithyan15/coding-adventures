@@ -1,0 +1,19 @@
+{
+  "chapter": 288,
+  "title": "The Hot Season Ahead",
+  "label": "ch:pa-a2-the-hot-season-ahead",
+  "canDo": "I can say what the hot months will be like.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C288-soka",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 288: I can say what the hot months will be like.",
+    "assesses": [
+      "PA-LEX-C288-HEAT288-03",
+      "PA-LEX-C288-HEAT288-04",
+      "PA-LEX-C288-HEAT288-05"
+    ]
+  }
+}

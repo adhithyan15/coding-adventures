@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:1d9a92b278a7e66f",
+  "lessonIds": [
+    "PA-C357-rabar",
+    "PA-C357-kapi",
+    "PA-C357-siahi",
+    "PA-C357-salet",
+    "PA-C357-panna",
+    "PA-R357-review-351-357"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch357.txt",
+  "json": "punjabi/narration/ch357.json",
+  "textHash": "fnv1a64:49fcd319de648ad9",
+  "jsonHash": "fnv1a64:b6a1c3ca5154a869",
+  "findings": []
+}

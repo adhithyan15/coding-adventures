@@ -1,0 +1,19 @@
+{
+  "chapter": 213,
+  "title": "Please Don't Get Up",
+  "label": "ch:pa-a2-na-request",
+  "canDo": "I can ask someone politely to sit or get up, and ask them not to, with na before the request.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C213-payoff",
+    "kind": "production",
+    "summary": "Make a polite request in -o, turn it into a don't with na, and say not yet with aje.",
+    "assesses": [
+      "PA-GRAMMAR-REQUEST-O-213",
+      "PA-GRAMMAR-NEG-REQUEST-NA-213",
+      "PA-LEX-AJE-213"
+    ]
+  }
+}

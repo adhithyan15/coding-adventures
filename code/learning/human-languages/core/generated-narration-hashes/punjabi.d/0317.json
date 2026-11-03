@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:784881e958b0aad1",
+  "lessonIds": [
+    "PA-C317-vela",
+    "PA-C317-bitna",
+    "PA-C317-zamana",
+    "PA-C317-pachhtauna",
+    "PA-C317-guzarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch317.txt",
+  "json": "punjabi/narration/ch317.json",
+  "textHash": "fnv1a64:d82f1472c5748ba0",
+  "jsonHash": "fnv1a64:9a177939d39023f5",
+  "findings": []
+}

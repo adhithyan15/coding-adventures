@@ -1,0 +1,21 @@
+{
+  "chapter": 357,
+  "title": "My School Things",
+  "label": "ch:pa-a2-my-school-things",
+  "canDo": "I can say what I have with me for school.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-R357-review-351-357",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say what I have with me for school.",
+    "assesses": [
+      "PA-LEX-C357-SCHOOL357-01",
+      "PA-LEX-C357-SCHOOL357-02",
+      "PA-LEX-C357-SCHOOL357-03",
+      "PA-LEX-C357-SCHOOL357-04",
+      "PA-LEX-C357-SCHOOL357-05"
+    ]
+  }
+}

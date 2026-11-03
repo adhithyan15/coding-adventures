@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:15e6ca25f6a5e770",
+  "lessonIds": [
+    "PA-C286-jhari",
+    "PA-C286-gajjna",
+    "PA-C286-varhna",
+    "PA-C286-jhakkhar",
+    "PA-C286-chamakna"
+  ],
+  "tex": "punjabi/book/chapters/ch286-rain-on-the-way.tex"
+}

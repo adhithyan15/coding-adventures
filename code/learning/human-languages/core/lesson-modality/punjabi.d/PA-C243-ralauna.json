@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C243-ralauna",
+    "language": "punjabi",
+    "chapter": 243,
+    "sequence": 13940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea1f0e175c1ae5ab"
+  },
+  "findings": []
+}

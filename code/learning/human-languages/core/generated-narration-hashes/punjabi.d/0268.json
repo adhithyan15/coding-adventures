@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:42d26a1fcb17584d",
+  "lessonIds": [
+    "PA-C268-adda",
+    "PA-C268-kandaktar",
+    "PA-C268-sit",
+    "PA-C268-bhir",
+    "PA-C268-tikna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch268.txt",
+  "json": "punjabi/narration/ch268.json",
+  "textHash": "fnv1a64:cfd80f3431ffd8bd",
+  "jsonHash": "fnv1a64:add403c0bf81729c",
+  "findings": []
+}

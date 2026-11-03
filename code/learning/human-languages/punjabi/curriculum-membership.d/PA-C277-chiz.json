@@ -1,0 +1,11 @@
+{
+  "id": "PA-C277-chiz",
+  "pathSegment": "PA-PATH-277-CHOOSE277",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-277-CHOOSE277",
+      "order": 3
+    }
+  ]
+}

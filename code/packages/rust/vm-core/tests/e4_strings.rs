@@ -119,6 +119,58 @@ fn str_concat_past_the_module_ceiling_is_trap_overflow() {
     assert_eq!(run_with_ceiling(concat_to_17(), "i64", None).unwrap(), Some(Value::Int(16)));
 }
 
+/// #18800 item 1: a `str_const` longer than the module's ceiling is refused
+/// when the module is loaded — no instruction runs, so nothing is printed —
+/// and so is a ceiling above `STR_MAX_BYTES`. Both are the errors every
+/// compiled column refuses the module with. Before, the VM ran the module and
+/// `str_len` returned 17 under a ceiling of 16.
+#[test]
+fn a_literal_past_the_module_ceiling_is_refused_at_load() {
+    let printed = Arc::new(Mutex::new(Vec::<String>::new()));
+    let literal = |len: usize| {
+        vec![
+            ins("const", Some("c"), vec![Operand::Int(65)], "i64"),
+            ins("call_builtin", Some("u"), vec![Operand::Var("putchar".into()), Operand::Var("c".into())], "void"),
+            ins("str_const", Some("s"), vec![Operand::Str("z".repeat(len))], "str"),
+            ins("str_len", Some("n"), vec![Operand::Var("s".into())], "i64"),
+            ins("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]
+    };
+    let run_printing = |instrs: Vec<IIRInstr>, ceiling: Option<u32>| {
+        let mut module = IIRModule::new("e4", "e4");
+        module.str_max_bytes = ceiling;
+        module.add_or_replace(IIRFunction::new("main", vec![], "i64", instrs));
+        let mut vm = VMCore::new();
+        let sink = Arc::clone(&printed);
+        vm.builtins_mut().register("putchar", move |args| {
+            sink.lock().unwrap().push(format!("{args:?}"));
+            Ok(Value::Null)
+        });
+        vm.execute(&mut module, "main", &[])
+    };
+    for (instrs, ceiling, kind) in [
+        (literal(17), Some(16), "StrTooLong"),
+        (literal(0), Some(interpreter_ir::STR_MAX_BYTES + 1), "StrMaxBytes"),
+    ] {
+        match run_printing(instrs, ceiling) {
+            Err(vm_core::errors::VMError::InvalidModule { errors }) => {
+                assert!(errors.iter().any(|e| e.starts_with(kind)), "{errors:?}");
+            }
+            other => panic!("expected InvalidModule ({kind}), got {other:?}"),
+        }
+        assert!(printed.lock().unwrap().is_empty(), "an instruction ran before the refusal");
+    }
+    // At the ceiling the module runs (and prints).
+    assert_eq!(run_printing(literal(16), Some(16)).unwrap(), Some(Value::Int(16)));
+    assert_eq!(printed.lock().unwrap().len(), 1);
+    // `execute_traced` runs the same load-time check.
+    let mut module = IIRModule::new("e4", "e4");
+    module.str_max_bytes = Some(16);
+    module.add_or_replace(IIRFunction::new("main", vec![], "i64", literal(17)));
+    let err = VMCore::new().execute_traced(&mut module, "main", &[]).unwrap_err();
+    assert!(matches!(err, vm_core::errors::VMError::InvalidModule { .. }), "{err:?}");
+}
+
 #[test]
 fn str_len_counts_bytes() {
     let result = run(

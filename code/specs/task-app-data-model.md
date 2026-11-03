@@ -406,6 +406,74 @@ formula cache) live in [`task-app-architecture.md`](task-app-architecture.md) al
   scheduled; setting a schedule input on a Summary is rejected.
 - Formula/rollup field graphs are acyclic; a formula referencing its own field (directly or
   transitively) is a validation error.
+- A task's `name` is at most `MAX_TASK_NAME_CHARS` (512) Unicode scalar values when it is
+  created or grown; see *Task names are bounded* below.
+
+## Task names are bounded
+
+Backlog item 6e4. Until this section, nothing anywhere in TaskApp limited a task's `name`. A pasted
+or restored multi-megabyte name was stored, re-rendered on every event, and lowercased again on
+every note Save that looks a task up by name (`task-app-notes-ui-v1.md`, addendum v1.4). This is
+the bound that makes that per-name work safe.
+
+**The limit.** `MAX_TASK_NAME_CHARS = 512`, counted in **Unicode scalar values**.
+
+| Why 512 | |
+| --- | --- |
+| it is already the number | A note's title (`MAX_NOTE_TITLE_CHARS`) and a Journal entry's title are 512 characters, and so is each Checklists composer. A checklist item *is* a task, and a checklist's root task is named after the checklist, so 512 was already the de facto cap on every task name those composers create. One number now covers every path. |
+| it never bites a real name | A real task name is a line, well under 100 characters; the Sheet's Name column is 240 px wide. |
+| it bounds the work | At most 4 UTF-8 bytes per scalar, so a name is at most 2 KiB, and lowercasing it is bounded per task. |
+
+**The unit is the Unicode scalar value**, the same unit as the note title, so both hosts count alike:
+
+| Host | Count with | Never with |
+| --- | --- | --- |
+| Rust (`task-core`, `task-mosaic-app`) | `str::chars().count()` | `str::len()` (bytes) |
+| JavaScript (web host) | code points: string iteration, `[...text].length` | `String.length` (UTF-16 units) |
+
+`String.length` counts an astral character such as 😀 (U+1F600) twice, so the web host would refuse a
+name of 512 emoji that the native host accepts. A lone surrogate, which only JavaScript can hold,
+counts as one code point there. It never reaches the engine as a scalar: the web bridge sends
+payloads through `JSON.stringify`, which escapes it as `\udXXX`, and the engine's JSON parser refuses
+that escape, so the operation fails with a parse error and stores nothing. The web count can therefore
+only be stricter than the engine's, never looser. These are scalars, not grapheme clusters: `e` + U+0301 is two.
+
+**What is measured.** The engine measures the name it stores. A composer measures its draft *as
+typed*, untrimmed, because the cap also bounds the draft: a draft is trimmed only when it becomes a
+name, and a draft of ten million spaces must not be accepted because it trims to nothing. A draft
+within the cap therefore always trims to a name within it.
+
+**Every path that creates or renames a task**, and what each does past the cap:
+
+| Path | Past the cap |
+| --- | --- |
+| task-core `create_task` (both `ProjectState`'s and `Workspace`'s) | `OpError::Invalid("task name too long")`; nothing written |
+| task-core `create_checklist_template` (its root task) | the same |
+| task-core `rename_task` | the same, **unless** the new name is no longer than the current one (below) |
+| task-core `instantiate_checklist` | copies stored names verbatim: a run is a copy of data already stored, never cut |
+| Add Task composer, edit-task field, Sheet Name cell, note *Attach to task* field | the edit is **refused as typed**, exactly as a note title's is (`task-app-notes-ui-v1.md`, v1.2): the event fails, the draft keeps its last value, and the field shows that value again |
+| *Add task* / *Save* with an over-cap draft | refused with the field's visible error, `Task names can be at most 512 characters.`; nothing written, draft kept |
+
+Refused, not truncated, for the reason the note caps give: truncating silently drops the end of a
+paste, while refusing it shows the person that the paste did not land. The last row is reachable
+only through a draft restored from a snapshot (the Add Task draft is persisted natively), since the
+row above it stops a draft growing past the cap.
+
+**Stored names are never cut down.** A task saved before this cap may have a longer name. Its
+snapshot still loads, whole, on both hosts; it still renders and still matches a note's *Attach to
+task* name. Like an over-cap note, it may be renamed *down* towards the cap — a rename to a name
+over the cap is refused only if it is longer than the current name — but never grown past it. A
+restored over-cap draft (the Add Task composer, the Sheet cell, the attach field) is kept whole too,
+and may only shrink. The Checklists composers are the exception they already were: a restored
+over-cap composer draft is cleared (`task-app-checklists-view-v1.md`, *Bounds*), because nothing in
+it was ever saved.
+
+**Shared vectors.** The boundary cases live once, in
+`code/programs/mosaic/task-app/fixtures/task-name-limit-v1.json`: the limit itself, and names exactly
+at it, one past it, and at it in two- and four-byte and astral characters. `task-mosaic-app`'s test
+and the web host's test both type every case into the Add Task composer and check that it was
+accepted and added, or refused with nothing written; both also assert their constant equals the
+fixture's `maxChars`, so a change to the number on one host alone fails CI.
 
 ## Snapshot & persistence
 

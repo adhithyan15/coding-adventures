@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C222-karanga-review",
+    "language": "punjabi",
+    "chapter": 222,
+    "sequence": 12200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9735c4d343a2796e"
+  },
+  "findings": []
+}

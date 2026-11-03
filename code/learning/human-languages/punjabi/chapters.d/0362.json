@@ -1,0 +1,19 @@
+{
+  "chapter": 362,
+  "title": "Skills I Have",
+  "label": "ch:pa-a2-skills-i-have",
+  "canDo": "I can say what I know how to make, polish and carve.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C362-azmauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 362: I can say what I know how to make, polish and carve.",
+    "assesses": [
+      "PA-LEX-C362-SKILL362-03",
+      "PA-LEX-C362-SKILL362-04",
+      "PA-LEX-C362-SKILL362-05"
+    ]
+  }
+}

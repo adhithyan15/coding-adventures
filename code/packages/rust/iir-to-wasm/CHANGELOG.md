@@ -1,5 +1,17 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused, a join past it is not folded
+
+- `validate_for_wasm` (and so `lower_iir_to_wasm` and the codegen registry) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.
+- Test `a_literal_past_the_module_ceiling_is_refused_at_compile_time` (fails without the check).
+- **No literal fold past the ceiling** (item 4). `collect_module_features` joined any two folded literals, so a chain of `d = d ++ d` doubled in the compiler: twenty doublings of 8 bytes put about 16 MiB into the data segment (forty would have asked for 8 TiB), for a program that traps at the second concat. A join longer than `str_ceiling()` is now not folded: its destination is a run-time string and the run-time path's inline length check raises `Trap.Overflow`, as twig-aot's and iir-to-llvm's folds stop at the ceiling. The fold-site trap that the lowering emitted for such a join is gone (a `debug_assert!` records the invariant). The program's output and trap are unchanged.
+- Test `a_literal_join_past_the_ceiling_is_left_to_the_runtime_check` (fails without the fix: the module was megabytes, and the 17-byte join was in its data).
+- **Security review: a rewritten variable never reads a stale literal.** The fold table is keyed by variable name. A concat that was not folded (past the ceiling) or a slice that was not folded left the literal an earlier write gave its destination, so `d = str_const "x" [bool]; d = a ++ a` (16 bytes, ceiling 8) made `str_len d` return 1 instead of trapping `Trap.Overflow`. The out-of-range literal-slice form, which should trap `Trap.Bounds`, had read the stale literal before #18800 too. Fixed three ways:
+  - `collect_runtime_valued_str_vars` treats a string variable that is written more than once as run-time valued whatever each write's type hint; before, only `"str"`-hinted writes were counted.
+  - Both not-folded branches remove the destination from the table.
+  - The lowering's fold site checks, in release builds too, that the folded literal is the operands' literals joined and within the ceiling, and refuses to compile otherwise. This replaces the `debug_assert!`.
+- Test `a_rewritten_string_variable_never_reads_its_stale_literal` (hints `bool`, `void`, `str`; concat past the ceiling, concat within it, and an out-of-range slice). It fails on the previous commit (the concat returns 1) and on `ce1a0f66878` (the slice returns 1).
+
 ## Unreleased — LANG83 PR5a — strings fail closed
 
 - An out-of-range `str_index` or `str_slice` raises `Trap.Bounds` through `i32.const 1; call $env.__trap; unreachable`, on both the literal and the runtime path, instead of a bare `unreachable` that named no kind.

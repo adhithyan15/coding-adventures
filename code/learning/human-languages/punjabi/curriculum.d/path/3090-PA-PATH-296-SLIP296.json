@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-296-SLIP296",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "PA-EXT-296-SLIP296"
+  ],
+  "after": []
+}

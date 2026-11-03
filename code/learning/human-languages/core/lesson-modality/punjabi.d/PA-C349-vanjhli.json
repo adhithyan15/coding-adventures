@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C349-vanjhli",
+    "language": "punjabi",
+    "chapter": 349,
+    "sequence": 21620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82d11c1a44dd7cb4"
+  },
+  "findings": []
+}

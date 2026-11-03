@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:1ca02e192ced6b8f",
+  "lessonIds": [
+    "PA-C356-kaimra",
+    "PA-C356-tasvir",
+    "PA-C356-foto",
+    "PA-C356-ailbam",
+    "PA-C356-farem"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch356.txt",
+  "json": "punjabi/narration/ch356.json",
+  "textHash": "fnv1a64:27a88553a2a94fc8",
+  "jsonHash": "fnv1a64:3264f0d86acdc130",
+  "findings": []
+}

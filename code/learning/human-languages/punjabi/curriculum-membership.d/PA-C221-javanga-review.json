@@ -1,0 +1,11 @@
+{
+  "id": "PA-C221-javanga-review",
+  "pathSegment": "PA-PATH-221-A2-JAVANGA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-221-A2-JAVANGA",
+      "order": 2
+    }
+  ]
+}

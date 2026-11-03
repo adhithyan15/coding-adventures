@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:34b32a10a946a482",
+  "lessonIds": [
+    "PA-C235-buharna",
+    "PA-C235-jharna",
+    "PA-C235-pocha",
+    "PA-C235-gara",
+    "PA-C235-lippna"
+  ],
+  "tex": "punjabi/book/chapters/ch235-sweeping-the-floor.tex"
+}

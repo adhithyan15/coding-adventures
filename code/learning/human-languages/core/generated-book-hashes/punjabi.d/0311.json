@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:913c38d13225c347",
+  "lessonIds": [
+    "PA-C311-bhalna",
+    "PA-C311-chor",
+    "PA-C311-nassna",
+    "PA-C311-khohna",
+    "PA-C311-nuksan"
+  ],
+  "tex": "punjabi/book/chapters/ch311-gone-missing.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C290-asman",
+    "language": "punjabi",
+    "chapter": 290,
+    "sequence": 17460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a2113b1171c0f44"
+  },
+  "findings": []
+}

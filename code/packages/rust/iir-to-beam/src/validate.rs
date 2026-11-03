@@ -275,6 +275,17 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
         return errors;
     }
 
+    // ── LANG83 PR5a: the module's string ceiling (#18800) ───────────────────
+    //
+    // A `str_const` longer than the module's ceiling (`StrTooLong`), or a
+    // ceiling above the registry's (`StrMaxBytes`), is malformed IR: no
+    // column could hold the literal, and `str_concat` is the only op allowed
+    // to find an over-long string at run time.  `IIRModule::validate` knew
+    // this, but nothing on the way to a backend called it, so every column
+    // compiled such a module.  The shared check lives in `interpreter-ir`, so
+    // every column refuses exactly the same modules.
+    errors.extend(module.str_ceiling_errors());
+
     // ── Check 1.5: Atom length (trust-boundary guard) ────────────────────────
     //
     // BEAM atoms are limited to 255 bytes (UTF-8).  The module name, all

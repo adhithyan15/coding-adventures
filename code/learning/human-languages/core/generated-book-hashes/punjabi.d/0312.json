@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:b90864b787def851",
+  "lessonIds": [
+    "PA-C312-mulakat",
+    "PA-C312-saddna",
+    "PA-C312-kharkauna",
+    "PA-C312-mezban",
+    "PA-C312-tohfa"
+  ],
+  "tex": "punjabi/book/chapters/ch312-visitors-at-the-door.tex"
+}

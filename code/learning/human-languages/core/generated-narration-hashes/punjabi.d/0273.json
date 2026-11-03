@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 273,
+  "sourceHash": "fnv1a64:76f2e88435d46108",
+  "lessonIds": [
+    "PA-C273-tolna",
+    "PA-C273-takkri",
+    "PA-C273-killo",
+    "PA-C273-bhar",
+    "PA-C273-dhona-carry",
+    "PA-R273-review-267-273"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch273.txt",
+  "json": "punjabi/narration/ch273.json",
+  "textHash": "fnv1a64:417b9c9e23f4b407",
+  "jsonHash": "fnv1a64:2b9d188c441e2569",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:0810e9237ebd4fd8",
+  "lessonIds": [
+    "PA-C345-sharat",
+    "PA-C345-faisla",
+    "PA-C345-rae",
+    "PA-C345-mukauna",
+    "PA-C345-tajviz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch345.txt",
+  "json": "punjabi/narration/ch345.json",
+  "textHash": "fnv1a64:a58c5b5519437efd",
+  "jsonHash": "fnv1a64:5ab27342e8f65708",
+  "findings": []
+}

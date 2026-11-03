@@ -1,0 +1,11 @@
+{
+  "id": "PA-C257-vadhna",
+  "pathSegment": "PA-PATH-257-BANK257",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-257-BANK257",
+      "order": 4
+    }
+  ]
+}

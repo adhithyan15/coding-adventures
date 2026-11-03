@@ -1,0 +1,11 @@
+{
+  "id": "PA-C336-daraivar",
+  "pathSegment": "PA-PATH-336-TRADE336",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-336-TRADE336",
+      "order": 3
+    }
+  ]
+}

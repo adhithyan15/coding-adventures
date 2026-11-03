@@ -1,0 +1,11 @@
+{
+  "id": "PA-C319-hal",
+  "pathSegment": "PA-PATH-319-HEALTH319",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-319-HEALTH319",
+      "order": 1
+    }
+  ]
+}

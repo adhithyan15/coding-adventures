@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-272-CROWD272",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for help when I lose my group in town.",
+  "prerequisites": []
+}

@@ -131,32 +131,13 @@ public final class Rng {
         }
 
         /**
-         * Return a uniform random long in [{@code min}, {@code max}] inclusive.
+         * Return a uniform random long in [{@code min}, {@code max}] inclusive,
+         * by the rejection sampling of {@link Rng#intInRange}.
          *
-         * <p>Uses rejection sampling to eliminate modulo bias.  Naïve
-         * {@code value % range} over-samples low values when 2^32 is not
-         * divisible by range.
-         *
-         * <pre>
-         *   threshold = (-range) mod range  (in unsigned 32-bit arithmetic)
-         *   discard draws below threshold; expected extra draws &lt; 2.
-         * </pre>
-         *
-         * @param min lower bound (inclusive)
-         * @param max upper bound (inclusive), must be &ge; min
+         * @throws IllegalArgumentException if {@code min > max}, before any draw
          */
         public long nextIntInRange(long min, long max) {
-            if (min > max) {
-                throw new IllegalArgumentException("nextIntInRange requires min <= max, got " + min + " > " + max);
-            }
-            long rangeSize = max - min + 1;
-            long threshold = Long.remainderUnsigned(-rangeSize, rangeSize);
-            while (true) {
-                long r = nextU32();
-                if (Long.compareUnsigned(r, threshold) >= 0) {
-                    return min + Long.remainderUnsigned(r, rangeSize);
-                }
-            }
+            return intInRange(this::nextU32, min, max);
         }
     }
 
@@ -241,25 +222,13 @@ public final class Rng {
         }
 
         /**
-         * Return a uniform random long in [{@code min}, {@code max}] inclusive.
+         * Return a uniform random long in [{@code min}, {@code max}] inclusive,
+         * by the rejection sampling of {@link Rng#intInRange}.
          *
-         * <p>Same rejection-sampling algorithm as {@link Lcg#nextIntInRange}.
-         *
-         * @param min lower bound (inclusive)
-         * @param max upper bound (inclusive), must be &ge; min
+         * @throws IllegalArgumentException if {@code min > max}, before any draw
          */
         public long nextIntInRange(long min, long max) {
-            if (min > max) {
-                throw new IllegalArgumentException("nextIntInRange requires min <= max, got " + min + " > " + max);
-            }
-            long rangeSize = max - min + 1;
-            long threshold = Long.remainderUnsigned(-rangeSize, rangeSize);
-            while (true) {
-                long r = nextU32();
-                if (Long.compareUnsigned(r, threshold) >= 0) {
-                    return min + Long.remainderUnsigned(r, rangeSize);
-                }
-            }
+            return intInRange(this::nextU32, min, max);
         }
     }
 
@@ -363,25 +332,67 @@ public final class Rng {
         }
 
         /**
-         * Return a uniform random long in [{@code min}, {@code max}] inclusive.
+         * Return a uniform random long in [{@code min}, {@code max}] inclusive,
+         * by the rejection sampling of {@link Rng#intInRange}.
          *
-         * <p>Same rejection-sampling algorithm as {@link Lcg#nextIntInRange}.
-         *
-         * @param min lower bound (inclusive)
-         * @param max upper bound (inclusive), must be &ge; min
+         * @throws IllegalArgumentException if {@code min > max}, before any draw
          */
         public long nextIntInRange(long min, long max) {
-            if (min > max) {
-                throw new IllegalArgumentException("nextIntInRange requires min <= max, got " + min + " > " + max);
-            }
-            long rangeSize = max - min + 1;
-            long threshold = Long.remainderUnsigned(-rangeSize, rangeSize);
-            while (true) {
-                long r = nextU32();
-                if (Long.compareUnsigned(r, threshold) >= 0) {
-                    return min + Long.remainderUnsigned(r, rangeSize);
-                }
-            }
+            return intInRange(this::nextU32, min, max);
         }
+    }
+
+    // ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ────────────────
+
+    /**
+     * A uniform long in [{@code min}, {@code max}], drawn from a stream of
+     * 32-bit outputs (held in the low half of a long), identically in every
+     * language of the repository.
+     *
+     * <p>{@code span = max - min + 1} lies between 1 and 2^64. Taking
+     * {@code r % span} of a raw draw over-samples small offsets whenever the
+     * number of possible draws is not a multiple of span; rejecting the
+     * {@code threshold} lowest draws removes exactly the excess. Three regimes,
+     * chosen by span alone:
+     *
+     * <pre>
+     *   span &lt;= 2^32    draw 32 bits,  threshold = (2^32 - span) mod span
+     *   span &lt;  2^64    draw 64 bits,  threshold = (2^64 - span) mod span
+     *   span == 2^64    the whole long domain: every 64-bit value is valid
+     * </pre>
+     *
+     * <p>Java has no unsigned long, but two's-complement arithmetic wraps
+     * exactly like unsigned arithmetic, so the values are held in longs and
+     * compared and divided with {@code Long.compareUnsigned} and
+     * {@code Long.remainderUnsigned}. The whole domain's span, 2^64, wraps to 0.
+     *
+     * <p>v1 took the threshold modulo 2^64 while drawing 32 bits. That was
+     * biased, never reached more than 2^32 - 1 above min, divided by zero for
+     * the whole domain, and for spans such as 2^63 + 1 rejected every possible
+     * draw, so it never returned.
+     */
+    static long intInRange(java.util.function.LongSupplier next32, long min, long max) {
+        if (min > max) {
+            throw new IllegalArgumentException("nextIntInRange requires min <= max, got " + min + " > " + max);
+        }
+        final long span = max - min + 1; // unsigned; 2^64 wraps to 0
+        final long twoTo32 = 1L << 32;
+        long r;
+        if (span == 0) {
+            r = (next32.getAsLong() << 32) | next32.getAsLong();
+        } else if (Long.compareUnsigned(span, twoTo32) <= 0) {
+            final long threshold = Long.remainderUnsigned(twoTo32 - span, span);
+            do {
+                r = next32.getAsLong();
+            } while (Long.compareUnsigned(r, threshold) < 0);
+            r = Long.remainderUnsigned(r, span);
+        } else {
+            final long threshold = Long.remainderUnsigned(-span, span); // (2^64 - span) mod span
+            do {
+                r = (next32.getAsLong() << 32) | next32.getAsLong();
+            } while (Long.compareUnsigned(r, threshold) < 0);
+            r = Long.remainderUnsigned(r, span);
+        }
+        return min + r; // wraps back into [min, max]
     }
 }

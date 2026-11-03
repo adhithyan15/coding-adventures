@@ -1,0 +1,11 @@
+{
+  "id": "PA-C290-vagna",
+  "pathSegment": "PA-PATH-290-WEEK290",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-290-WEEK290",
+      "order": 4
+    }
+  ]
+}

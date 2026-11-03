@@ -1,0 +1,11 @@
+{
+  "id": "PA-C332-pukarna",
+  "pathSegment": "PA-PATH-332-KIN332",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-332-KIN332",
+      "order": 4
+    }
+  ]
+}

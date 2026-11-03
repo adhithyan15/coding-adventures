@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:eb2a7e9f4b7f67dd",
+  "lessonIds": [
+    "PA-C295-tarer",
+    "PA-C295-phatna",
+    "PA-C295-khokhla",
+    "PA-C295-khadd",
+    "PA-C295-galna"
+  ],
+  "tex": "punjabi/book/chapters/ch295-cracks-and-hollows.tex"
+}

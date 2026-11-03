@@ -1,0 +1,11 @@
+{
+  "id": "PA-C334-kattna-spin",
+  "pathSegment": "PA-PATH-334-WOOL334",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-334-WOOL334",
+      "order": 1
+    }
+  ]
+}

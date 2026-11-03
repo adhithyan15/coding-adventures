@@ -891,6 +891,9 @@ fn store_var(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrErr
 /// lambda/label as `<name>(…)`), plus the `Run()` `.entrypoint` launcher that prints
 /// `MccarthyEntry()`'s result so a runner reads it by running.
 pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRClrError> {
+    // LANG83 PR5a: the module's string ceiling, before anything is emitted
+    // (#18800). This path skips `validate_iir_for_clr`, so it asks directly.
+    crate::validate::check_str_ceiling(module)?;
     let entry = entry_name(module);
     if !module.functions.iter().any(|f| f.name == entry) {
         return Err(IIRClrError::InvalidOperand {

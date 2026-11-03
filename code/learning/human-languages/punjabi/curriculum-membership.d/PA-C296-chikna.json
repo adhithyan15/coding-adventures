@@ -1,0 +1,11 @@
+{
+  "id": "PA-C296-chikna",
+  "pathSegment": "PA-PATH-296-SLIP296",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-296-SLIP296",
+      "order": 3
+    }
+  ]
+}

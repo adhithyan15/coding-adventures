@@ -1,0 +1,11 @@
+{
+  "id": "PA-C328-hausla",
+  "pathSegment": "PA-PATH-328-CARE328",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-328-CARE328",
+      "order": 0
+    }
+  ]
+}

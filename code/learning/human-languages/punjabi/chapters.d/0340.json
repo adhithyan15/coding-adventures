@@ -1,0 +1,19 @@
+{
+  "chapter": 340,
+  "title": "All Right, Agreed",
+  "label": "ch:pa-a2-all-right-agreed",
+  "canDo": "I can agree to something and make a promise.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C340-samjhauta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can agree to something and make a promise.",
+    "assesses": [
+      "PA-LEX-C340-AGREE340-03",
+      "PA-LEX-C340-AGREE340-04",
+      "PA-LEX-C340-AGREE340-05"
+    ]
+  }
+}

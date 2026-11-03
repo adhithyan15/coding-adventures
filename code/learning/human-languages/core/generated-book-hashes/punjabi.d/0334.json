@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:bde556f04fd7fdad",
+  "lessonIds": [
+    "PA-C334-unn",
+    "PA-C334-kattna-spin",
+    "PA-C334-bunna",
+    "PA-C334-julaha",
+    "PA-C334-rangna"
+  ],
+  "tex": "punjabi/book/chapters/ch334-wool-and-cloth.tex"
+}

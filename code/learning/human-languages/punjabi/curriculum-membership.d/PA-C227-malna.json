@@ -1,0 +1,11 @@
+{
+  "id": "PA-C227-malna",
+  "pathSegment": "PA-PATH-227-DIN227",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-227-DIN227",
+      "order": 1
+    }
+  ]
+}

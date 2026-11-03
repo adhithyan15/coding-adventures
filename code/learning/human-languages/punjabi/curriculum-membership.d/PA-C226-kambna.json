@@ -1,0 +1,11 @@
+{
+  "id": "PA-C226-kambna",
+  "pathSegment": "PA-PATH-226-DIN226",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-226-DIN226",
+      "order": 2
+    }
+  ]
+}

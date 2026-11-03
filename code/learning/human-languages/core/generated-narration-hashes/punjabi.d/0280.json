@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:1601a7b808c0023c",
+  "lessonIds": [
+    "PA-C280-bhan",
+    "PA-C280-bhanauna",
+    "PA-C280-bachna",
+    "PA-C280-puggna",
+    "PA-C280-baki",
+    "PA-R280-review-274-280",
+    "PA-R280-review-final-280"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch280.txt",
+  "json": "punjabi/narration/ch280.json",
+  "textHash": "fnv1a64:f65d2d9570c5ca4a",
+  "jsonHash": "fnv1a64:8331446d432031b8",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:5d2ff66fe329b623",
+  "lessonIds": [
+    "PA-C319-tabiat",
+    "PA-C319-hal",
+    "PA-C319-sihat",
+    "PA-C319-tandrusat",
+    "PA-C319-razi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch319.txt",
+  "json": "punjabi/narration/ch319.json",
+  "textHash": "fnv1a64:ad09fc8b04eff63f",
+  "jsonHash": "fnv1a64:c0eb8621432fa267",
+  "findings": []
+}

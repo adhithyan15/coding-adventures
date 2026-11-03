@@ -1,0 +1,19 @@
+{
+  "chapter": 330,
+  "title": "Brothers' and Sisters' Spouses",
+  "label": "ch:pa-a2-brothers-and-sisters-spouses",
+  "canDo": "I can name the husbands and wives of my brothers and sisters.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C330-jathani",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can name the husbands and wives of my brothers and sisters.",
+    "assesses": [
+      "PA-LEX-C330-SPOUSE330-03",
+      "PA-LEX-C330-SPOUSE330-04",
+      "PA-LEX-C330-SPOUSE330-05"
+    ]
+  }
+}

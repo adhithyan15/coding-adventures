@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 242,
+  "sourceHash": "fnv1a64:bde3d59a78cd00d2",
+  "lessonIds": [
+    "PA-C242-talna",
+    "PA-C242-bhunnna",
+    "PA-C242-karchhi",
+    "PA-C242-chhirakna",
+    "PA-C242-sarna"
+  ],
+  "tex": "punjabi/book/chapters/ch242-frying-and-roasting.tex"
+}

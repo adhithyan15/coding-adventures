@@ -1,0 +1,11 @@
+{
+  "id": "PA-C320-ilaj",
+  "pathSegment": "PA-PATH-320-CLINIC320",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-320-CLINIC320",
+      "order": 2
+    }
+  ]
+}

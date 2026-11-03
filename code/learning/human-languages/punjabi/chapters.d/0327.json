@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Hurt Feelings",
+  "label": "ch:pa-a2-hurt-feelings",
+  "canDo": "I can say when someone is upset or lonely.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C327-hanjhu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can say when someone is upset or lonely.",
+    "assesses": [
+      "PA-LEX-C327-UPSET327-03",
+      "PA-LEX-C327-UPSET327-04",
+      "PA-LEX-C327-UPSET327-05"
+    ]
+  }
+}

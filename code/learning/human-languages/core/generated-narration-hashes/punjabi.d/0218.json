@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 218,
+  "sourceHash": "fnv1a64:24184b43585a0da1",
+  "lessonIds": [
+    "PA-C218-body-return",
+    "PA-C218-uthia",
+    "PA-C218-uthia-review",
+    "PA-C218-nahin-gia",
+    "PA-C218-payoff"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch218.txt",
+  "json": "punjabi/narration/ch218.json",
+  "textHash": "fnv1a64:0f382b1de9dc021d",
+  "jsonHash": "fnv1a64:54ff4346b221b615",
+  "findings": []
+}

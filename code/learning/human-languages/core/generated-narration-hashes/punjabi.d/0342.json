@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:a3cc53255905bcba",
+  "lessonIds": [
+    "PA-C342-samjhauna",
+    "PA-C342-matlab",
+    "PA-C342-karan",
+    "PA-C342-sapshat",
+    "PA-C342-sujhauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch342.txt",
+  "json": "punjabi/narration/ch342.json",
+  "textHash": "fnv1a64:5d3bbf528d4538d6",
+  "jsonHash": "fnv1a64:e71151124c2f2dc0",
+  "findings": []
+}

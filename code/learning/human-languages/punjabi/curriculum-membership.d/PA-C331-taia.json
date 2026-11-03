@@ -1,0 +1,11 @@
+{
+  "id": "PA-C331-taia",
+  "pathSegment": "PA-PATH-331-UNCLE331",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-331-UNCLE331",
+      "order": 1
+    }
+  ]
+}

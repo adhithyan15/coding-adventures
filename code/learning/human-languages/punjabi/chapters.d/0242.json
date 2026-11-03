@@ -1,0 +1,19 @@
+{
+  "chapter": 242,
+  "title": "Frying and Roasting",
+  "label": "ch:pa-a2-frying-and-roasting",
+  "canDo": "I can talk about frying and roasting food.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C242-sarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 242: I can talk about frying and roasting food.",
+    "assesses": [
+      "PA-LEX-C242-KAM242-03",
+      "PA-LEX-C242-KAM242-04",
+      "PA-LEX-C242-KAM242-05"
+    ]
+  }
+}

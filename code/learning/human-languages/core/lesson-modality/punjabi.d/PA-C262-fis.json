@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C262-fis",
+    "language": "punjabi",
+    "chapter": 262,
+    "sequence": 15460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:610200d73efe858a"
+  },
+  "findings": []
+}

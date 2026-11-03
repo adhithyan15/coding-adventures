@@ -1,0 +1,11 @@
+{
+  "id": "PA-C338-manzur",
+  "pathSegment": "PA-PATH-338-PERM338",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-338-PERM338",
+      "order": 2
+    }
+  ]
+}

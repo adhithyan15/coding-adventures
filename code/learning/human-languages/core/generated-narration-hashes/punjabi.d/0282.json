@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:3cacf56b213718bc",
+  "lessonIds": [
+    "PA-C282-ataichi",
+    "PA-C282-bisatra",
+    "PA-C282-jhola",
+    "PA-C282-sambhna",
+    "PA-C282-nikalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch282.txt",
+  "json": "punjabi/narration/ch282.json",
+  "textHash": "fnv1a64:c685942909e70e59",
+  "jsonHash": "fnv1a64:8effda75117024f6",
+  "findings": []
+}

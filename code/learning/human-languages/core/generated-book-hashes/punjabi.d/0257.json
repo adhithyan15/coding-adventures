@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:d8f41f0ab05d782c",
+  "lessonIds": [
+    "PA-C257-khata",
+    "PA-C257-rakam",
+    "PA-C257-nakad",
+    "PA-C257-kadhvauna",
+    "PA-C257-vadhna"
+  ],
+  "tex": "punjabi/book/chapters/ch257-at-the-bank-counter.tex"
+}

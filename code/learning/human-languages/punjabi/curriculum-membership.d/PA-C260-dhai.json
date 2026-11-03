@@ -1,0 +1,11 @@
+{
+  "id": "PA-C260-dhai",
+  "pathSegment": "PA-PATH-260-TIME260",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-260-TIME260",
+      "order": 4
+    }
+  ]
+}

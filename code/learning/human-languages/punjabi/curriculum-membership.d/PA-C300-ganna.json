@@ -1,0 +1,11 @@
+{
+  "id": "PA-C300-ganna",
+  "pathSegment": "PA-PATH-300-CROP300",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-300-CROP300",
+      "order": 4
+    }
+  ]
+}

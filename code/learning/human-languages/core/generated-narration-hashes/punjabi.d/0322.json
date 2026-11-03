@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 322,
+  "sourceHash": "fnv1a64:492278cb0897e498",
+  "lessonIds": [
+    "PA-C322-satt",
+    "PA-C322-zakham",
+    "PA-C322-sujjna",
+    "PA-C322-patti",
+    "PA-C322-malham",
+    "PA-R322-review-316-322"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch322.txt",
+  "json": "punjabi/narration/ch322.json",
+  "textHash": "fnv1a64:1a0b0009bda45eed",
+  "jsonHash": "fnv1a64:b48937ea304c4c51",
+  "findings": []
+}

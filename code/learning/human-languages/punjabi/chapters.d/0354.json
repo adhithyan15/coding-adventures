@@ -1,0 +1,19 @@
+{
+  "chapter": 354,
+  "title": "Once Upon a Time",
+  "label": "ch:pa-a2-once-upon-a-time",
+  "canDo": "I can say which stories I like and who tells them.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-C354-jadu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 354: I can say which stories I like and who tells them.",
+    "assesses": [
+      "PA-LEX-C354-STORY354-03",
+      "PA-LEX-C354-STORY354-04",
+      "PA-LEX-C354-STORY354-05"
+    ]
+  }
+}

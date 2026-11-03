@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:7969ed7c0d686245",
+  "lessonIds": [
+    "PA-C277-gahak",
+    "PA-C277-chunna",
+    "PA-C277-parakhna",
+    "PA-C277-chiz",
+    "PA-C277-saman"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch277.txt",
+  "json": "punjabi/narration/ch277.json",
+  "textHash": "fnv1a64:500a4bc22c4f5c33",
+  "jsonHash": "fnv1a64:6d13908159bf49b3",
+  "findings": []
+}

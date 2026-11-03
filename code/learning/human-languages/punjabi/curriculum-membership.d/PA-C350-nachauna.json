@@ -1,0 +1,11 @@
+{
+  "id": "PA-C350-nachauna",
+  "pathSegment": "PA-PATH-350-SHOW350",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-350-SHOW350",
+      "order": 3
+    }
+  ]
+}

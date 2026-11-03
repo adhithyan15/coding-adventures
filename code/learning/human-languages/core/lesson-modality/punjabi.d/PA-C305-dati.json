@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C305-dati",
+    "language": "punjabi",
+    "chapter": 305,
+    "sequence": 18250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:668bd53e97355862"
+  },
+  "findings": []
+}

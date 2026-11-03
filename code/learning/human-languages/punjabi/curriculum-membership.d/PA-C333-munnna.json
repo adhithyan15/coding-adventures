@@ -1,0 +1,11 @@
+{
+  "id": "PA-C333-munnna",
+  "pathSegment": "PA-PATH-333-BARBER333",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-333-BARBER333",
+      "order": 1
+    }
+  ]
+}

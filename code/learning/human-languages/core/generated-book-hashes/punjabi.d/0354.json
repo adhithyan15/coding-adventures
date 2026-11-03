@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 354,
+  "sourceHash": "fnv1a64:cf4dec85aa98de03",
+  "lessonIds": [
+    "PA-C354-kahani",
+    "PA-C354-sunauna",
+    "PA-C354-kissa",
+    "PA-C354-rani",
+    "PA-C354-jadu"
+  ],
+  "tex": "punjabi/book/chapters/ch354-once-upon-a-time.tex"
+}

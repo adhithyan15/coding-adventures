@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C363-samvarna",
+    "language": "punjabi",
+    "chapter": 363,
+    "sequence": 22360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0db3bed50c33f978"
+  },
+  "findings": []
+}

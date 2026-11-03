@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C357-siahi",
+    "language": "punjabi",
+    "chapter": 357,
+    "sequence": 22040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9d1548b15b190ba5"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C342-sujhauna",
+  "pathSegment": "PA-PATH-342-MEAN342",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-342-MEAN342",
+      "order": 4
+    }
+  ]
+}

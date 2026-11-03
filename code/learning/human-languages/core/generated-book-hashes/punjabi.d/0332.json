@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:b56feb0dbe5cdd75",
+  "lessonIds": [
+    "PA-C332-bhatija",
+    "PA-C332-bhanja",
+    "PA-C332-guandhi",
+    "PA-C332-saheli",
+    "PA-C332-pukarna"
+  ],
+  "tex": "punjabi/book/chapters/ch332-nephews-friends-and-neighbours.tex"
+}

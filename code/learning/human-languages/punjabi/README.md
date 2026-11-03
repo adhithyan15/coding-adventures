@@ -43,6 +43,35 @@ attempt and do not count as either full mock or human validation.
 
 ## Progress
 
+- **Chapters 225–364 — the A2 vocabulary**
+  ([`lessons/PA-C225-*`](./lessons/) … [`lessons/PA-C364-*`](./lessons/)):
+  700 words in five reviewed tranches of 28 chapters, five words a chapter.
+  The tranches cover:
+  - the day's routine and housework;
+  - notices, the post and the bank, finding the way, and buying and weighing;
+  - plans and journeys, weather, land and the farming year;
+  - what happened, health and the clinic, and relatives and trades;
+  - asking, refusing and agreeing, music, games and stories, and school and work.
+
+  Every chapter opens by ear. Every word's origin is a CDIAL row or a named,
+  hedged donor; a word that CDIAL marks as taken from Hindi, or finds only in
+  Lahnda, is said to be so. With the core, **Punjabi attains A2** on the level
+  gate: 1,331 headwords and 297 verbs at or below A2. In the book.
+- **Chapters 211–224 — the A2 core**
+  ([`lessons/PA-C211-*`](./lessons/) … [`lessons/PA-C224-*`](./lessons/),
+  [`lessons/PA-R224-*`](./lessons/)): fourteen short chapters, each opening by
+  ear and closing on a four-skill payoff. The vowel-stem present (**ਜਾਂਦਾ**,
+  **ਖਾਂਦਾ**, **ਪੀਂਦਾ**); saying no with **ਨਹੀਂ** (helper kept) and asking someone
+  not to with **ਨਾ** before a polite -ੋ request; **ਕੀ** yes-or-no questions and
+  their answers; the past of going, coming, getting up and sitting, agreeing with
+  the one who did it, and of drinking, eating, buying, taking and giving,
+  agreeing with the thing after **ਮੈਂ / ਅਸੀਂ / ਤੁਸੀਂ** or a name or **ਉਸ ਨੇ**; the
+  -ਗਾ future; a spoken plan with **ਸ਼ਾਇਦ**; and a short message read for
+  yesterday and tomorrow, then a two-pass review. New words **ਅਜੇ**, **ਕੱਲ੍ਹ**,
+  **ਔਰਤ**, **ਕੱਢਣਾ**, **ਸ਼ਾਇਦ**; new copy-only letters **ਔ** and **ਢ**. The three A2
+  spine nodes `NEGATE-AND-ASK`, `TALK-ABOUT-PAST` and `TALK-ABOUT-FUTURE` are
+  realized here; the A2 vocabulary still has to come before the track attains
+  A2. In the book.
 - **Chapter 210 — Aman Did the Work**
   ([`lessons/PA-C210-*`](./lessons/)): a voice-first return to familiar
   **ਅਮਨ**, **ਕੰਮ**, and **ਕੀਤਾ**, followed by exact standalone agent marker

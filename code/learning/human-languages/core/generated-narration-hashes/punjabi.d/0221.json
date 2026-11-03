@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 221,
+  "sourceHash": "fnv1a64:54b801d9b9dfafc6",
+  "lessonIds": [
+    "PA-C221-future-return",
+    "PA-C221-javanga",
+    "PA-C221-javanga-review",
+    "PA-C221-javega",
+    "PA-C221-javange",
+    "PA-C221-payoff"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch221.txt",
+  "json": "punjabi/narration/ch221.json",
+  "textHash": "fnv1a64:843494d5fdfbd179",
+  "jsonHash": "fnv1a64:4d41297280456cbf",
+  "findings": []
+}

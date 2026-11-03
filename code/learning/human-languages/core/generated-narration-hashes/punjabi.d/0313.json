@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 313,
+  "sourceHash": "fnv1a64:188ab3d095ad3a10",
+  "lessonIds": [
+    "PA-C313-viah",
+    "PA-C313-barat",
+    "PA-C313-lara",
+    "PA-C313-vandna",
+    "PA-C313-vadhai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch313.txt",
+  "json": "punjabi/narration/ch313.json",
+  "textHash": "fnv1a64:8f89010731c733bc",
+  "jsonHash": "fnv1a64:a0112099de252a4e",
+  "findings": []
+}

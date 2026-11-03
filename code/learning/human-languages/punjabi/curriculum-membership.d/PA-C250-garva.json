@@ -1,0 +1,11 @@
+{
+  "id": "PA-C250-garva",
+  "pathSegment": "PA-PATH-250-GHR250",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-250-GHR250",
+      "order": 2
+    }
+  ]
+}

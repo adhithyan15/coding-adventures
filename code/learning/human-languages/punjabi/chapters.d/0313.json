@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "A Wedding in the Family",
+  "label": "ch:pa-a2-a-wedding-in-the-family",
+  "canDo": "I can say what happened at a family wedding.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C313-vadhai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can say what happened at a family wedding.",
+    "assesses": [
+      "PA-LEX-C313-WED313-03",
+      "PA-LEX-C313-WED313-04",
+      "PA-LEX-C313-WED313-05"
+    ]
+  }
+}

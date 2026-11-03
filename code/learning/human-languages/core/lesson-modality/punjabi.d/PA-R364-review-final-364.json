@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R364-review-final-364",
+    "language": "punjabi",
+    "chapter": 364,
+    "sequence": 22440,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:666036f9a65c662f"
+  },
+  "findings": []
+}

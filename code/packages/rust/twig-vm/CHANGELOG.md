@@ -58,6 +58,14 @@
   failed in the dispatcher. Both large tests are skipped under Miri (safe
   Rust only, 2¹⁶ parse and dispatch steps).
 
+## Unreleased — LANG83 PR5a follow-up (#18800): the string builtins trap like the ops
+
+### Fixed
+
+- Every path that runs a `dynval-runtime` builtin (`call_builtin`, and a builtin closure through `apply_closure`, `call_closure` or a higher-order list operation's `invoke_closure_value`) now goes through one helper, `call_lispy_builtin`. It turns the builtins' new `RuntimeError::Trap { kind }` into `RunError::Trap { kind }`, so `call_builtin "string-ref"` / `"substring"` out of range are `trap: Trap.Bounds` like the `str_index` / `str_slice` ops (they were `Runtime(TypeError(..))`), and it runs `"string-append"` under the module's `str_ceiling()` (`string_append_within`), so past it the builtin raises `Trap.Overflow` like `str_concat` (it had no ceiling).
+- Tests `builtin_string_ref_and_substring_out_of_range_are_trap_bounds`, `builtin_string_append_past_the_module_ceiling_is_trap_overflow` (also pins `dynval_runtime::builtins::STR_MAX_BYTES == interpreter_ir::STR_MAX_BYTES`) and `a_builtin_closure_gets_the_module_ceiling_and_the_trap_too` (`fold-left string-append`). All three fail without the change.
+- **Security review follow-ups.** `make-string` goes through `call_lispy_builtin` with the module's ceiling, like `string-append` (`make_string_within`). And twig-vm now refuses an over-long `str_const` (or a ceiling above `STR_MAX_BYTES`) when a run starts, as vm-core and every compiled column do: new `RunError::InvalidModule { errors }`, checked by `run_with_profile` (which `run`, `run_with_globals` and `run_with_state` call) and by `run_with_debug`, before any instruction. Tests `builtin_make_string_past_the_module_ceiling_is_trap_overflow` and `a_literal_past_the_module_ceiling_is_refused_at_load` (a debug hook checks that no instruction ran) fail without the change.
+
 ## Unreleased — LANG83 PR5a: string failures are registered traps
 
 ### Added

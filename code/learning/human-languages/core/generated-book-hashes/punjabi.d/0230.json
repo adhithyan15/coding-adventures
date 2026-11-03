@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:7c18831a53a97c98",
+  "lessonIds": [
+    "PA-C230-mokla",
+    "PA-C230-lahuna",
+    "PA-C230-lapetna",
+    "PA-C230-sutthan",
+    "PA-C230-jhumka"
+  ],
+  "tex": "punjabi/book/chapters/ch230-getting-dressed.tex"
+}

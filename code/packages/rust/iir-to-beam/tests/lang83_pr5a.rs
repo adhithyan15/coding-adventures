@@ -250,3 +250,29 @@ fn str_concat_second_length_declares_the_first_result_live() {
         "length(b)'s save area (x{second_live}..) must start above length(a)'s result x{first_dst}"
     );
 }
+
+/// #18800 item 1: a `str_const` longer than the module's ceiling, or a
+/// ceiling above `STR_MAX_BYTES`, is refused by `validate_for_beam` and so by
+/// `lower_iir_to_beam`, before any BEAM code is built. Before, both lowered.
+#[test]
+fn a_literal_past_the_module_ceiling_is_refused_at_compile_time() {
+    let module = |len: usize, ceiling: Option<u32>| {
+        let mut m = IIRModule::new("lang83", "test");
+        m.functions = vec![IIRFunction::new("f", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("z".repeat(len))], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![v("s")], "i64"),
+            IIRInstr::new("ret", None, vec![v("n")], "i64"),
+        ])];
+        m.entry_point = Some("f".into());
+        m.str_max_bytes = ceiling;
+        m
+    };
+    let refused = |m: &IIRModule| match lower_iir_to_beam(m, &IIRBeamConfig::new("lang83")) {
+        Err(iir_to_beam::IIRBeamError::ValidationFailed(errors)) => errors,
+        other => panic!("expected a validation failure, got {:?}", other.map(|_| "a BEAM module")),
+    };
+    assert!(refused(&module(17, Some(16))).iter().any(|e| e.starts_with("StrTooLong")));
+    assert!(refused(&module(0, Some(interpreter_ir::STR_MAX_BYTES + 1))).iter().any(|e| e.starts_with("StrMaxBytes")));
+    assert!(validate_for_beam(&module(16, Some(16))).is_empty());
+    lower_iir_to_beam(&module(16, Some(16)), &IIRBeamConfig::new("lang83")).expect("at the ceiling it lowers");
+}

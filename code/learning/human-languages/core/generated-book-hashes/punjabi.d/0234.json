@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 234,
+  "sourceHash": "fnv1a64:3fa536a348754fd7",
+  "lessonIds": [
+    "PA-C234-nind",
+    "PA-C234-diva",
+    "PA-C234-balna",
+    "PA-C234-bujhauna",
+    "PA-C234-palangh"
+  ],
+  "tex": "punjabi/book/chapters/ch234-lights-out.tex"
+}

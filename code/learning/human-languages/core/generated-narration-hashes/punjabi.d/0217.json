@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:01d8fe910a6029b9",
+  "lessonIds": [
+    "PA-C217-came-return",
+    "PA-C217-aaia",
+    "PA-C217-aaia-review",
+    "PA-C217-aurat",
+    "PA-C217-au",
+    "PA-C217-who-came",
+    "PA-C217-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "punjabi/narration/ch217.txt",
+  "json": "punjabi/narration/ch217.json",
+  "textHash": "fnv1a64:564db588b731e553",
+  "jsonHash": "fnv1a64:b9e450ca9386e437",
+  "findings": []
+}

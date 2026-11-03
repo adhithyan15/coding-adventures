@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:412dcf798699e208",
+  "lessonIds": [
+    "PA-C291-thandha",
+    "PA-C291-niggha",
+    "PA-C291-tatta",
+    "PA-C291-kosa",
+    "PA-C291-thaarna"
+  ],
+  "tex": "punjabi/book/chapters/ch291-warm-and-cool.tex"
+}

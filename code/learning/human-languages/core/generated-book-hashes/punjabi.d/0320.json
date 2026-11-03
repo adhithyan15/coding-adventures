@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:ee89642db18d3136",
+  "lessonIds": [
+    "PA-C320-daktar",
+    "PA-C320-mariz",
+    "PA-C320-ilaj",
+    "PA-C320-nabaz",
+    "PA-C320-tika"
+  ],
+  "tex": "punjabi/book/chapters/ch320-at-the-clinic.tex"
+}

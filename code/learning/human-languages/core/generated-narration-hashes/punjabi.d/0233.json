@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:ae379556c19ddb32",
+  "lessonIds": [
+    "PA-C233-aram",
+    "PA-C233-dari",
+    "PA-C233-vichhauna",
+    "PA-C233-khes",
+    "PA-C233-pakkha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch233.txt",
+  "json": "punjabi/narration/ch233.json",
+  "textHash": "fnv1a64:0e4e9e1d031bfdd0",
+  "jsonHash": "fnv1a64:f81243ab88660f98",
+  "findings": []
+}

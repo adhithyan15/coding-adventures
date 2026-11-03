@@ -1,0 +1,11 @@
+{
+  "id": "PA-C293-zamin",
+  "pathSegment": "PA-PATH-293-LAND293",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-293-LAND293",
+      "order": 1
+    }
+  ]
+}

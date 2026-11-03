@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "The Week's Weather",
+  "label": "ch:pa-a2-the-week-s-weather",
+  "canDo": "I can say how the weather will change this week.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C290-vagna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can say how the weather will change this week.",
+    "assesses": [
+      "PA-LEX-C290-WEEK290-03",
+      "PA-LEX-C290-WEEK290-04",
+      "PA-LEX-C290-WEEK290-05"
+    ]
+  }
+}

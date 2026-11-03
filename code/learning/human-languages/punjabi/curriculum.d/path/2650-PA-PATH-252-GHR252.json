@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-252-GHR252",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "PA-EXT-252-GHR252"
+  ],
+  "after": []
+}

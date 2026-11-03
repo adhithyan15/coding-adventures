@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C278-paikat",
+    "language": "punjabi",
+    "chapter": 278,
+    "sequence": 16310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1a1b007600533d01"
+  },
+  "findings": []
+}

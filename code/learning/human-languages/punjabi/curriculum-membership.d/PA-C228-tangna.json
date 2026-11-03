@@ -1,0 +1,11 @@
+{
+  "id": "PA-C228-tangna",
+  "pathSegment": "PA-PATH-228-DIN228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-228-DIN228",
+      "order": 2
+    }
+  ]
+}

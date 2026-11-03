@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 317,
+  "title": "Days Gone By",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:784881e958b0aad1",
+  "lessons": [
+    {
+      "id": "PA-C317-vela",
+      "sequence": 19410,
+      "title": "ਵੇਲਾ (velā) — a particular time",
+      "headword": "ਵੇਲਾ",
+      "romanization": "velā",
+      "gloss": "a particular time",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15bb90717c86d9c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a swear word, then the Punjabi for a reconciliation."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵੇਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੇਲਾ — velā — \"a particular time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਸ ਵੇਲੇ ਮੈਂ ਸਕੂਲ ਵਿੱਚ ਸੀ। us vele maiṁ sakūl vich sī. At that time I was at school."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੇਲਾ (velā) is inherited from Sanskrit velā, \"a limit, a time\"; CDIAL lists Punjabi velā, \"time\", under it (CDIAL 12115)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us vele maiṁ sakūl vich sī. — At that time I was at school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us vele maiṁ sakūl vich sī.* — At that time I was at school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a swear word, then the Punjabi for a reconciliation, then say velā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a swear word, then the Punjabi for a reconciliation, then say *velā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵੇਲਾ (velā) mean? (\"A particular time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C317-bitna",
+      "sequence": 19420,
+      "title": "ਬੀਤਣਾ (bītṇā) — to go by (of time)",
+      "headword": "ਬੀਤਣਾ",
+      "romanization": "bītṇā",
+      "gloss": "to go by (of time)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4e33bbd6a5aa2a94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a reconciliation, then the Punjabi for a particular time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬੀਤਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੀਤਣਾ — bītṇā — \"to go by (of time)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਛੁੱਟੀ ਦੇ ਦਿਨ ਬਹੁਤ ਜਲਦੀ ਬੀਤੇ। chhuṭṭī de din bahut jaldī bīte. The days of the holiday went by very quickly."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਸਾਲ ਬਹੁਤ ਔਖਾ ਬੀਤਿਆ, oh sāl bahut aukhā bītiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੀਤਣਾ (bītṇā) is inherited from Sanskrit vṛtta, \"turned; passed (of time)\"; CDIAL lists Punjabi batāuṇā, \"to pass (time)\", under it, and gives the intransitive bītnā, \"to pass (of time)\", only for Hindi (CDIAL 12069)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bītṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bītṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bītṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bītṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhuṭṭī de din bahut jaldī bīte. — The days of the holiday went by very quickly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhuṭṭī de din bahut jaldī bīte.* — The days of the holiday went by very quickly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a reconciliation, then the Punjabi for a particular time, then say bītṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a reconciliation, then the Punjabi for a particular time, then say *bītṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬੀਤਣਾ (bītṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬੀਤਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬੀਤਣਾ (bītṇā) mean? (\"To go by (of time)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C317-zamana",
+      "sequence": 19430,
+      "title": "ਜ਼ਮਾਨਾ (zamānā) — an era",
+      "headword": "ਜ਼ਮਾਨਾ",
+      "romanization": "zamānā",
+      "gloss": "an era",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12e80538e256db4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a particular time, then the Punjabi for to go by (of time)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਜ਼ਮਾਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜ਼ਮਾਨਾ — zamānā — \"an era\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਸ ਜ਼ਮਾਨੇ ਵਿੱਚ ਲੋਕ ਪੈਦਲ ਜਾਂਦੇ ਸਨ। us zamāne vich lok paidal jānde san. In those days people went on foot."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜ਼ਮਾਨਾ (zamānā) is a loan, usually traced through Persian to Arabic zamān, \"time, a period\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zamānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zamānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zamānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zamānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us zamāne vich lok paidal jānde san. — In those days people went on foot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us zamāne vich lok paidal jānde san.* — In those days people went on foot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a particular time, then the Punjabi for to go by (of time), then say zamānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a particular time, then the Punjabi for to go by (of time), then say *zamānā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਜ਼ਮਾਨਾ (zamānā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਜ਼ਮਾਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਜ਼ਮਾਨਾ (zamānā) mean? (\"An era\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C317-pachhtauna",
+      "sequence": 19440,
+      "title": "ਪਛਤਾਉਣਾ (pachhtāuṇā) — to regret",
+      "headword": "ਪਛਤਾਉਣਾ",
+      "romanization": "pachhtāuṇā",
+      "gloss": "to regret",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc87819ae98ebb80",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to go by (of time), then the Punjabi for an era."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਛਤਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਛਤਾਉਣਾ — pachhtāuṇā — \"to regret\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਝਗੜੇ ਤੋਂ ਬਾਅਦ ਮੈਂ ਬਹੁਤ ਪਛਤਾਇਆ। jhagṛe ton bāad maiṁ bahut pachhtāiā. After the quarrel I regretted it a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਬਾਅਦ ਵਿੱਚ ਪਛਤਾਇਆ, maiṁ bāad vich pachhtāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਛਤਾਉਣਾ (pachhtāuṇā) goes back to a reconstructed paścottāpa, \"repentance\"; CDIAL lists Punjabi pachotāvā, \"repentance\", under it, beside the -ṇā forms pachõtāṇā and pastāṇā (CDIAL 8010)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachhtāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachhtāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pachhtāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pachhtāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhagṛe ton bāad maiṁ bahut pachhtāiā. — After the quarrel I regretted it a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhagṛe ton bāad maiṁ bahut pachhtāiā.* — After the quarrel I regretted it a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to go by (of time), then the Punjabi for an era, then say pachhtāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to go by (of time), then the Punjabi for an era, then say *pachhtāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਛਤਾਉਣਾ (pachhtāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਛਤਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਛਤਾਉਣਾ (pachhtāuṇā) mean? (\"To regret\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C317-guzarna",
+      "sequence": 19450,
+      "title": "ਗੁਜ਼ਾਰਨਾ (guzārnā) — to spend time",
+      "headword": "ਗੁਜ਼ਾਰਨਾ",
+      "romanization": "guzārnā",
+      "gloss": "to spend time",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2323202c49ff1746",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an era, then the Punjabi for to regret."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗੁਜ਼ਾਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੁਜ਼ਾਰਨਾ — guzārnā — \"to spend time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਰਮੀ ਵਿੱਚ ਮੈਂ ਇੱਕ ਮਹੀਨਾ ਨਾਨੀ ਦੇ ਘਰ ਗੁਜ਼ਾਰਿਆ। garmī vich maiṁ ikk mahīnā nānī de ghar guzāriā. In the summer I spent a month at my grandmother's house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਛੁੱਟੀ ਘਰ ਵਿੱਚ ਗੁਜ਼ਾਰੀ, maiṁ chhuṭṭī ghar vich guzārī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੁਜ਼ਾਰਨਾ (guzārnā) is a loan, usually traced to Persian guzār, \"passing\", with a Punjabi verb ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guzārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guzārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guzārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guzārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garmī vich maiṁ ikk mahīnā nānī de ghar guzāriā. — In the summer I spent a month at my grandmother's house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garmī vich maiṁ ikk mahīnā nānī de ghar guzāriā.* — In the summer I spent a month at my grandmother's house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an era, then the Punjabi for to regret, then say guzārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an era, then the Punjabi for to regret, then say *guzārnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗੁਜ਼ਾਰਨਾ (guzārnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗੁਜ਼ਾਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗੁਜ਼ਾਰਨਾ (guzārnā) mean? (\"To spend time\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

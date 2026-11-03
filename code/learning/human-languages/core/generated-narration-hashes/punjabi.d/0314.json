@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:c708236b5e05ac97",
+  "lessonIds": [
+    "PA-C314-jammna",
+    "PA-C314-niana",
+    "PA-C314-palna",
+    "PA-C314-pota",
+    "PA-C314-dohta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch314.txt",
+  "json": "punjabi/narration/ch314.json",
+  "textHash": "fnv1a64:69958e12497de4d7",
+  "jsonHash": "fnv1a64:a7deba86fd5fffc4",
+  "findings": []
+}

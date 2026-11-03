@@ -1,0 +1,11 @@
+{
+  "id": "PA-C269-nishan",
+  "pathSegment": "PA-PATH-269-WAY269",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-269-WAY269",
+      "order": 2
+    }
+  ]
+}

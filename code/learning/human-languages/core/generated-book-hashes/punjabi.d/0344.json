@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:0107d9dc2ce0b8d1",
+  "lessonIds": [
+    "PA-C344-dalil",
+    "PA-C344-bahis",
+    "PA-C344-takrar",
+    "PA-C344-zidd",
+    "PA-C344-itraz"
+  ],
+  "tex": "punjabi/book/chapters/ch344-we-don-t-agree.tex"
+}

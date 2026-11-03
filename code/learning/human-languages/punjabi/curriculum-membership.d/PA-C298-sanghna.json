@@ -1,0 +1,11 @@
+{
+  "id": "PA-C298-sanghna",
+  "pathSegment": "PA-PATH-298-THORN298",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-298-THORN298",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C293-dhalan",
+    "language": "punjabi",
+    "chapter": 293,
+    "sequence": 17640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1ed62c0baabd4048"
+  },
+  "findings": []
+}

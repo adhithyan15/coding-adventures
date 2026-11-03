@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C354-kissa",
+    "language": "punjabi",
+    "chapter": 354,
+    "sequence": 21890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89e294d5d8a93b33"
+  },
+  "findings": []
+}

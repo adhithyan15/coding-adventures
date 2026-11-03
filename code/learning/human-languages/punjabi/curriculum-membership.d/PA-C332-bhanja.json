@@ -1,0 +1,11 @@
+{
+  "id": "PA-C332-bhanja",
+  "pathSegment": "PA-PATH-332-KIN332",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-332-KIN332",
+      "order": 1
+    }
+  ]
+}

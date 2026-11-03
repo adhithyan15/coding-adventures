@@ -1,0 +1,11 @@
+{
+  "id": "PA-C291-thaarna",
+  "pathSegment": "PA-PATH-291-WARM291",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-291-WARM291",
+      "order": 4
+    }
+  ]
+}

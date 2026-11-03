@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:1c10a85b440609b7",
+  "lessonIds": [
+    "PA-C294-kallar",
+    "PA-C294-rakkar",
+    "PA-C294-ujar",
+    "PA-C294-dhela",
+    "PA-C294-dhur",
+    "PA-R294-review-288-294"
+  ],
+  "tex": "punjabi/book/chapters/ch294-poor-ground.tex"
+}

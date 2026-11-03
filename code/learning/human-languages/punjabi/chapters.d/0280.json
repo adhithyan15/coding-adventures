@@ -1,0 +1,21 @@
+{
+  "chapter": 280,
+  "title": "Small Change",
+  "label": "ch:pa-a2-small-change",
+  "canDo": "I can ask for change and say what money is left.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PA-R280-review-final-280",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 280: I can ask for change and say what money is left.",
+    "assesses": [
+      "PA-LEX-C280-CHANGE280-01",
+      "PA-LEX-C280-CHANGE280-02",
+      "PA-LEX-C280-CHANGE280-03",
+      "PA-LEX-C280-CHANGE280-04",
+      "PA-LEX-C280-CHANGE280-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C273-takkri",
+  "pathSegment": "PA-PATH-273-WEIGH273",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-273-WEIGH273",
+      "order": 1
+    }
+  ]
+}

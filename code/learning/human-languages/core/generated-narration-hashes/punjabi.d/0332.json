@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:30d3113fa49f7ca1",
+  "lessonIds": [
+    "PA-C332-bhatija",
+    "PA-C332-bhanja",
+    "PA-C332-guandhi",
+    "PA-C332-saheli",
+    "PA-C332-pukarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch332.txt",
+  "json": "punjabi/narration/ch332.json",
+  "textHash": "fnv1a64:ec4417b5cbc40cd8",
+  "jsonHash": "fnv1a64:9ec4098ebca00d46",
+  "findings": []
+}

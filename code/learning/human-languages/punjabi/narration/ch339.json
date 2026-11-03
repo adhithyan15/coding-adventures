@@ -1,0 +1,753 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 339,
+  "title": "No, Thank You",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bc803cb57febe8b5",
+  "lessons": [
+    {
+      "id": "PA-C339-inkar",
+      "sequence": 21100,
+      "title": "ਇਨਕਾਰ (inkār) — a refusal; saying no",
+      "headword": "ਇਨਕਾਰ",
+      "romanization": "inkār",
+      "gloss": "a refusal; saying no",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db37d473a175730f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an order, then the Punjabi for to interrupt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਇਨਕਾਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਨਕਾਰ — inkār — \"a refusal; saying no\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਇਨਕਾਰ ਨਹੀਂ ਕਰਦਾ ਹਾਂ। maiṁ inkār nahīṁ kardā hāṁ. I am not refusing."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਨਕਾਰ (inkār) is a loan, usually traced through Persian to Arabic inkār, \"denial\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "inkār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *inkār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ inkār nahīṁ kardā hāṁ. — I am not refusing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ inkār nahīṁ kardā hāṁ.* — I am not refusing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an order, then the Punjabi for to interrupt, then say inkār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an order, then the Punjabi for to interrupt, then say *inkār* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਇਨਕਾਰ (inkār) mean? (\"A refusal; saying no\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C339-talna-back-out",
+      "sequence": 21110,
+      "title": "ਟਲਣਾ (ṭalṇā) — to back out; to go back on one's word",
+      "headword": "ਟਲਣਾ",
+      "romanization": "ṭalṇā",
+      "gloss": "to back out; to go back on one's word",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5220954d4e91bd4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to interrupt, then the Punjabi for a refusal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਟਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟਲਣਾ — ṭalṇā — \"to back out; to go back on one's word\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਦੋਸਤ ਆਪਣੀ ਗੱਲ ਤੋਂ ਨਹੀਂ ਟਲਦਾ ਹੈ। merā dost āpṇī gall ton nahīṁ ṭaldā hai. My friend does not go back on his word."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): ਉਹ ਆਪਣੀ ਗੱਲ ਤੋਂ ਟਲਿਆ, oh āpṇī gall ton ṭaliā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟਲਣਾ (ṭalṇā) is inherited from Sanskrit ṭalati, \"moves aside\" (a sense CDIAL infers); CDIAL lists Punjabi ṭalṇā, \"to slip away\", under it (CDIAL 5450). CDIAL does not give the sense \"to back out\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭalṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭalṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭalṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭalṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā dost āpṇī gall ton nahīṁ ṭaldā hai. — My friend does not go back on his word.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā dost āpṇī gall ton nahīṁ ṭaldā hai.* — My friend does not go back on his word.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to interrupt, then the Punjabi for a refusal, then say ṭalṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to interrupt, then the Punjabi for a refusal, then say *ṭalṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਟਲਣਾ (ṭalṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਟਲਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਟਲਣਾ (ṭalṇā) mean? (\"To back out; to go back on one's word\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C339-bahana",
+      "sequence": 21120,
+      "title": "ਬਹਾਨਾ (bahānā) — an excuse",
+      "headword": "ਬਹਾਨਾ",
+      "romanization": "bahānā",
+      "gloss": "an excuse",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08a94d7101db85ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a refusal, then the Punjabi for to back out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬਹਾਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਹਾਨਾ — bahānā — \"an excuse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬਹਾਨੇ ਨਾ ਕਰੋ। bahāne nā karo. Don't make excuses."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਹਾਨਾ (bahānā) is a loan, usually traced to Persian bahāna, \"pretext\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahānā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahānā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahānā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bahāne nā karo. — Don't make excuses.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bahāne nā karo.* — Don't make excuses.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a refusal, then the Punjabi for to back out, then say bahānā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a refusal, then the Punjabi for to back out, then say *bahānā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬਹਾਨਾ (bahānā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬਹਾਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬਹਾਨਾ (bahānā) mean? (\"An excuse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C339-hargiz",
+      "sequence": 21130,
+      "title": "ਹਰਗਿਜ਼ (hargiz) — ever; at all (with ਨਹੀਂ: by no means)",
+      "headword": "ਹਰਗਿਜ਼",
+      "romanization": "hargiz",
+      "gloss": "ever; at all (with ਨਹੀਂ: by no means)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e24d63230e63f4af",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to back out, then the Punjabi for an excuse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹਰਗਿਜ਼",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਰਗਿਜ਼ — hargiz — \"ever; at all (with ਨਹੀਂ: by no means)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਉੱਥੇ ਹਰਗਿਜ਼ ਨਹੀਂ ਜਾਵਾਂਗਾ। maiṁ utthe hargiz nahīṁ jāvāṅgā. I will by no means go there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਰਗਿਜ਼ (hargiz) is a loan, usually traced to Persian hargiz, \"ever\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hargiz",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hargiz*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hargiz, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hargiz*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ utthe hargiz nahīṁ jāvāṅgā. — I will by no means go there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ utthe hargiz nahīṁ jāvāṅgā.* — I will by no means go there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to back out, then the Punjabi for an excuse, then say hargiz again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to back out, then the Punjabi for an excuse, then say *hargiz* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹਰਗਿਜ਼ (hargiz) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹਰਗਿਜ਼** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹਰਗਿਜ਼ (hargiz) mean? (\"Ever; at all (with ਨਹੀਂ: by no means)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C339-arna",
+      "sequence": 21140,
+      "title": "ਅੜਨਾ (aṛnā) — to dig one's heels in; to refuse to budge",
+      "headword": "ਅੜਨਾ",
+      "romanization": "aṛnā",
+      "gloss": "to dig one's heels in; to refuse to budge",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe65be92a34a14f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an excuse, then the Punjabi for by no means."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਅੜਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅੜਨਾ — aṛnā — \"to dig one's heels in; to refuse to budge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੱਚਾ ਅੜਦਾ ਹੈ ਅਤੇ ਰੋਟੀ ਨਹੀਂ ਖਾਂਦਾ ਹੈ। bachchā aṛdā hai ate roṭī nahīṁ khāndā hai. The child digs his heels in and won't eat his food."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (he …): ਉਹ ਆਪਣੀ ਗੱਲ ਉੱਤੇ ਅੜਿਆ, oh āpṇī gall utte aṛiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅੜਨਾ (aṛnā) is inherited from a reconstructed aḍ, \"obstruct, stop\"; CDIAL lists Punjabi aṛnā, \"to stop, stick fast\", under it (CDIAL 187)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bachchā aṛdā hai ate roṭī nahīṁ khāndā hai. — The child digs his heels in and won't eat his food.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bachchā aṛdā hai ate roṭī nahīṁ khāndā hai.* — The child digs his heels in and won't eat his food.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an excuse, then the Punjabi for by no means, then say aṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an excuse, then the Punjabi for by no means, then say *aṛnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਅੜਨਾ (aṛnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਅੜਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਅੜਨਾ (aṛnā) mean? (\"To dig one's heels in; to refuse to budge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

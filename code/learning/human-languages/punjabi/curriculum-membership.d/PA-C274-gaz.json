@@ -1,0 +1,11 @@
+{
+  "id": "PA-C274-gaz",
+  "pathSegment": "PA-PATH-274-SIZE274",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-274-SIZE274",
+      "order": 1
+    }
+  ]
+}

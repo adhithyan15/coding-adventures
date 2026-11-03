@@ -1,0 +1,11 @@
+{
+  "id": "PA-C212-nahin-return",
+  "pathSegment": "PA-PATH-212-A2-NEGATE",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-212-A2-NEGATE",
+      "order": 0
+    }
+  ]
+}

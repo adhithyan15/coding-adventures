@@ -1,0 +1,11 @@
+{
+  "id": "PA-C305-gahuna",
+  "pathSegment": "PA-PATH-305-HARVEST305",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-305-HARVEST305",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C246-lakkar",
+    "language": "punjabi",
+    "chapter": 246,
+    "sequence": 14080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a06308d960f3d8c9"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C301-vahuna",
+    "language": "punjabi",
+    "chapter": 301,
+    "sequence": 18050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b760b903fe0694c4"
+  },
+  "findings": []
+}

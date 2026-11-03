@@ -6,7 +6,9 @@
 // letter-anchoring ceiling holds unread inventory letters at zero). 27 letters
 // carry a cited order from the Apache-2.0 Alphabet Tracing lesson of GNPS's
 // Gurmukhi Sikho app, pinned to one commit and one line per letter; every other
-// row, and every sign, is recognition-only.
+// row, and every sign, is recognition-only. The A2 core (chapters 217 and 219)
+// added ਔ (from ਔਰਤ) and ਢ (from ਕੱਢਣਾ) as copy-only rows, 36 -> 38 letters:
+// no verified stroke-order source covers them yet.
 
 import { expect } from "vitest";
 import type { ScriptEvidenceContext } from "./helpers.js";
@@ -50,7 +52,7 @@ export const scriptInventoryEvidence = {
     const gurmukhi = scripts.gurmukhi!;
     expect(gurmukhi.font).toBe("_fonts/NotoSansGurmukhi-Static.ttf");
     expect(gurmukhi.complete).toBe(false);
-    expect(gurmukhi.letters).toHaveLength(36);
+    expect(gurmukhi.letters).toHaveLength(38);
     expect(gurmukhi.marks).toHaveLength(14);
     expect(gurmukhi.digits?.map((digit) => digit.glyph).join("")).toBe("੦੧੨੫");
 
@@ -88,6 +90,8 @@ export const scriptInventoryEvidence = {
     for (const mark of gurmukhi.marks ?? []) {
       expect(mark.strokeOrderSource, mark.mark).toBeUndefined();
     }
+    expect(Object.keys(CITED)).not.toContain("ਔ");
+    expect(Object.keys(CITED)).not.toContain("ਢ");
     for (const letter of gurmukhi.letters.filter((entry) => !(entry.glyph in CITED))) {
       expect(letter.strokeOrder, letter.glyph).toEqual([]);
       expect(letter.penLifts, letter.glyph).toBeUndefined();

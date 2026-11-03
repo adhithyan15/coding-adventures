@@ -1,0 +1,11 @@
+{
+  "id": "PA-C265-koh",
+  "pathSegment": "PA-PATH-265-SIDE265",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-265-SIDE265",
+      "order": 4
+    }
+  ]
+}

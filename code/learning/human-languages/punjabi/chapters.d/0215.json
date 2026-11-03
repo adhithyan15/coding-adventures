@@ -1,0 +1,18 @@
+{
+  "chapter": 215,
+  "title": "Do You Drink Tea?",
+  "label": "ch:pa-a2-polar-habitual",
+  "canDo": "I can ask whether someone does something every day and answer yes or no in a short exchange.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C215-payoff",
+    "kind": "production",
+    "summary": "Ask whether someone drinks, eats or goes somewhere, and answer with a whole yes or no sentence.",
+    "assesses": [
+      "PA-GRAMMAR-POLAR-HABITUAL-215",
+      "PA-GRAMMAR-ASK-AND-ANSWER-215"
+    ]
+  }
+}

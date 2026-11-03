@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-261-TRAIN261",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-261-TRAIN261"
+  ],
+  "after": []
+}

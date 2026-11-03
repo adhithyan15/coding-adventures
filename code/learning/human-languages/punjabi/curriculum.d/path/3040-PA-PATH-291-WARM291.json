@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-291-WARM291",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "PA-EXT-291-WARM291"
+  ],
+  "after": []
+}

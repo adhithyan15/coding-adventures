@@ -353,7 +353,11 @@ cargo test -p vm-core
 `0 ≤ a ≤ b ≤ len` are evaluated on the full `i64`), and `str_concat` returns
 `VMError::Trap { kind: "Trap.Overflow" }` when the result would exceed the
 module's string ceiling (`IIRModule::str_ceiling`, carried in
-`DispatchCtx::str_max_bytes`), before allocating.
+`DispatchCtx::str_max_bytes`), before allocating. A module whose `str_const`
+is longer than the ceiling, or whose ceiling is above `STR_MAX_BYTES`, is
+refused at load time with `VMError::InvalidModule { errors }` before any
+instruction runs (`check_str_ceiling`, #18800), as every compiled column
+refuses it.
 
 `vm_core::op_support::op_support(name)` (and `op_support_table()`) is this backend's answer,
 `Lowered` or `Refused(reason)`, for every operation in the

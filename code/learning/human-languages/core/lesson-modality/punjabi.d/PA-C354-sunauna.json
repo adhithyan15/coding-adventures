@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C354-sunauna",
+    "language": "punjabi",
+    "chapter": 354,
+    "sequence": 21880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:604bf5097479099a"
+  },
+  "findings": []
+}

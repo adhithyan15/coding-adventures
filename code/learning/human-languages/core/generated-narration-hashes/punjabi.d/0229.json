@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 229,
+  "sourceHash": "fnv1a64:0684331a81e2f8bb",
+  "lessonIds": [
+    "PA-C229-gandh",
+    "PA-C229-bannhna",
+    "PA-C229-kassna",
+    "PA-C229-dori",
+    "PA-C229-ghundi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch229.txt",
+  "json": "punjabi/narration/ch229.json",
+  "textHash": "fnv1a64:503d8fae769204cf",
+  "jsonHash": "fnv1a64:26ed8e2650ff0d5a",
+  "findings": []
+}

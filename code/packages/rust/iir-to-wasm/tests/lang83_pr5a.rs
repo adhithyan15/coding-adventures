@@ -196,3 +196,119 @@ fn str_concat_past_the_ceiling_traps_overflow_in_both_forms() {
         assert_eq!(run(&concat_literal(ceiling)), Ok(16), "{ceiling:?}");
     }
 }
+
+// ── #18800 item 1: the ceiling is checked at compile time ───────────────────
+
+/// `main` binds one literal of `len` bytes and returns its length.
+fn literal_of(len: usize, ceiling: Option<u32>) -> IIRModule {
+    module(
+        vec![IIRFunction::new("main", vec![], "i64", vec![
+            text("s", &"z".repeat(len)),
+            IIRInstr::new("str_len", Some("n".into()), vec![v("s")], "i64"),
+            IIRInstr::new("ret", None, vec![v("n")], "i64"),
+        ])],
+        ceiling,
+    )
+}
+
+/// A `str_const` longer than the module's ceiling is malformed IR, and so is
+/// a ceiling above `STR_MAX_BYTES`. `lower_iir_to_wasm` refuses both before
+/// it emits anything (#18800); before, it compiled the 17-byte literal and
+/// the program returned 17 under a ceiling of 16.
+#[test]
+fn a_literal_past_the_module_ceiling_is_refused_at_compile_time() {
+    let refusal = |m: &IIRModule| match lower_iir_to_wasm(m, &IIRWasmConfig::default()) {
+        Err(iir_to_wasm::IIRWasmError::ValidationFailed(errors)) => errors,
+        other => panic!("expected a validation failure, got {other:?}"),
+    };
+    let errors = refusal(&literal_of(17, Some(16)));
+    assert!(errors.iter().any(|e| e.starts_with("StrTooLong")), "{errors:?}");
+    let errors = refusal(&literal_of(0, Some(interpreter_ir::STR_MAX_BYTES + 1)));
+    assert!(errors.iter().any(|e| e.starts_with("StrMaxBytes")), "{errors:?}");
+    // The boundary: a literal exactly at the ceiling compiles and runs.
+    assert_eq!(run(&literal_of(16, Some(16))), Ok(16));
+    assert!(iir_to_wasm::validate_for_wasm(&literal_of(17, Some(16)))
+        .iter()
+        .any(|e| e.starts_with("StrTooLong")));
+}
+
+// ── #18800 item 4: no literal fold past the ceiling ─────────────────────────
+
+/// `s` is an 8-byte literal; `d1 = s ++ s` (16 bytes), then `d{k+1} = dk ++
+/// dk`, `doublings` times in all, and `main` returns `str_len` of the last.
+fn doubling_chain(doublings: usize, ceiling: Option<u32>) -> IIRModule {
+    let mut body = vec![text("d0", "01234567")];
+    for k in 0..doublings {
+        let (src, dst) = (format!("d{k}"), format!("d{}", k + 1));
+        body.push(IIRInstr::new("str_concat", Some(dst), vec![v(&src), v(&src)], "str"));
+    }
+    body.push(IIRInstr::new("str_len", Some("n".into()), vec![v(&format!("d{doublings}"))], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![v("n")], "i64"));
+    module(vec![IIRFunction::new("main", vec![], "i64", body)], ceiling)
+}
+
+/// The fold pre-pass used to join any two literals, with no ceiling: a chain
+/// of `d = d ++ d` doubled in the *compiler*. Twenty doublings of 8 bytes put
+/// about 16 MiB of joined literals into the data segment (forty would have
+/// asked for 8 TiB), although the program traps `Trap.Overflow` at the second
+/// concat. The pre-pass now stops at the ceiling, like twig-aot's fold: the
+/// join past it is a run-time concat, and the run-time check traps.
+#[test]
+fn a_literal_join_past_the_ceiling_is_left_to_the_runtime_check() {
+    let m = doubling_chain(20, Some(16));
+    let bytes = encode_module(&lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering"))
+        .expect("encoding");
+    assert!(bytes.len() < 64 * 1024, "the module is {} bytes", bytes.len());
+    assert_eq!(run(&m), Err(Some(OVERFLOW)));
+
+    // The 17-byte join of the ceiling-16 case is not in the data segment:
+    // it is built at run time, if at all (here it is not: the trap comes first).
+    let bytes = encode_module(&lower_iir_to_wasm(&concat_literal(Some(16)), &IIRWasmConfig::default()).unwrap())
+        .unwrap();
+    let joined = b"0123456701234567x";
+    assert!(!bytes.windows(joined.len()).any(|w| w == joined), "the 17-byte join was folded");
+    // Under the registry ceiling the same join still folds into the data.
+    let bytes = encode_module(&lower_iir_to_wasm(&concat_literal(None), &IIRWasmConfig::default()).unwrap())
+        .unwrap();
+    assert!(bytes.windows(joined.len()).any(|w| w == joined), "the fold fast path is gone");
+    // And a chain within the ceiling still folds all the way (8 → 16 → 32).
+    assert_eq!(run(&doubling_chain(2, None)), Ok(32));
+}
+
+// ── #18800 security review: a stale literal must not stand in for a write ──
+
+/// `d = str_const "x"` with a non-`str` hint (validation accepts it), then
+/// `d = <op>`, then `str_len d`. The fold table is keyed by name, so `d`'s
+/// first literal must not answer for the second write.
+fn rewritten(first_hint: &str, second: IIRInstr, ceiling: Option<u32>) -> IIRModule {
+    module(
+        vec![IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("d".into()), vec![Operand::Str("x".into())], first_hint),
+            text("a", "abcdefgh"),
+            int("lo", 2),
+            int("hi", 99),
+            second,
+            IIRInstr::new("str_len", Some("n".into()), vec![v("d")], "i64"),
+            IIRInstr::new("ret", None, vec![v("n")], "i64"),
+        ])],
+        ceiling,
+    )
+}
+
+/// The reviewer's reproducer: under a ceiling of 8, `d = a ++ a` (16 bytes) is
+/// not folded, but the not-folded branch left `d`'s earlier literal "x" in the
+/// table, so `str_len d` returned 1 and the concat's `Trap.Overflow` never
+/// ran (before PR5a's follow-up the fold-site trap caught it). Now `d` is
+/// run-time valued (it is written twice, whatever the hints) and the run-time
+/// check traps. Same for a literal `str_slice` whose constant range is out of
+/// bounds: it must trap `Trap.Bounds`, not read the stale literal.
+#[test]
+fn a_rewritten_string_variable_never_reads_its_stale_literal() {
+    let concat = || IIRInstr::new("str_concat", Some("d".into()), vec![v("a"), v("a")], "str");
+    let slice = || IIRInstr::new("str_slice", Some("d".into()), vec![v("a"), v("lo"), v("hi")], "str");
+    for hint in ["bool", "void", "str"] {
+        assert_eq!(run(&rewritten(hint, concat(), Some(8))), Err(Some(OVERFLOW)), "concat, first hint {hint}");
+        assert_eq!(run(&rewritten(hint, concat(), None)), Ok(16), "concat fits, first hint {hint}");
+        assert_eq!(run(&rewritten(hint, slice(), None)), Err(Some(BOUNDS)), "slice, first hint {hint}");
+    }
+}

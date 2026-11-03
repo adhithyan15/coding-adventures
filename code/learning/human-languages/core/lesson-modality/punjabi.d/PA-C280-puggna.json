@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C280-puggna",
+    "language": "punjabi",
+    "chapter": 280,
+    "sequence": 16410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:408a371313e1f867"
+  },
+  "findings": []
+}

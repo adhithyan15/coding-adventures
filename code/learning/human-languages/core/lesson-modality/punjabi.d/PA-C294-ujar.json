@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C294-ujar",
+    "language": "punjabi",
+    "chapter": 294,
+    "sequence": 17680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a1e69b2c555bda3f"
+  },
+  "findings": []
+}

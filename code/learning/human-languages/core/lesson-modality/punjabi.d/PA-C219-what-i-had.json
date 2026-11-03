@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C219-what-i-had",
+    "language": "punjabi",
+    "chapter": 219,
+    "sequence": 12020,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7210800b8f77f253"
+  },
+  "findings": []
+}

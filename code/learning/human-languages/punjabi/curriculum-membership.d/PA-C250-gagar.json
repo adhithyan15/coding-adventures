@@ -1,0 +1,11 @@
+{
+  "id": "PA-C250-gagar",
+  "pathSegment": "PA-PATH-250-GHR250",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-250-GHR250",
+      "order": 3
+    }
+  ]
+}

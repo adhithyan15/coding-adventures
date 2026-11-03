@@ -1,0 +1,753 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 328,
+  "title": "Caring for the Sick",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3c03897ce74de100",
+  "lessons": [
+    {
+      "id": "PA-C328-hausla",
+      "sequence": 19970,
+      "title": "ਹੌਸਲਾ (hauslā) — courage",
+      "headword": "ਹੌਸਲਾ",
+      "romanization": "hauslā",
+      "gloss": "courage",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:146b6013996620a4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for sorrow, then the Punjabi for a teardrop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹੌਸਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੌਸਲਾ — hauslā — \"courage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮਾਤਾ ਜੀ ਮਰੀਜ਼ ਨੂੰ ਹੌਸਲਾ ਦਿੰਦੇ ਹਨ। mātā jī marīz nū̃ hauslā dinde han. Mother keeps the patient's spirits up."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੌਸਲਾ (hauslā) is a loan, usually traced through Persian to Arabic ḥawṣala, \"capacity\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hauslā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hauslā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hauslā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hauslā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātā jī marīz nū̃ hauslā dinde han. — Mother keeps the patient's spirits up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātā jī marīz nū̃ hauslā dinde han.* — Mother keeps the patient's spirits up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for sorrow, then the Punjabi for a teardrop, then say hauslā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for sorrow, then the Punjabi for a teardrop, then say *hauslā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹੌਸਲਾ (hauslā) mean? (\"Courage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C328-pareshan",
+      "sequence": 19980,
+      "title": "ਪਰੇਸ਼ਾਨ (pareshān) — upset",
+      "headword": "ਪਰੇਸ਼ਾਨ",
+      "romanization": "pareshān",
+      "gloss": "upset",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbc25dba1e34f35b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a teardrop, then the Punjabi for courage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਰੇਸ਼ਾਨ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰੇਸ਼ਾਨ — pareshān — \"upset\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪੁੱਤਰ ਦੇ ਬੁਖ਼ਾਰ ਤੋਂ ਪਿਤਾ ਜੀ ਪਰੇਸ਼ਾਨ ਸਨ। puttar de bukhār ton pitā jī pareshān san. Father was upset about his son's fever."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰੇਸ਼ਾਨ (pareshān) is a loan, usually traced to Persian parēshān, \"scattered, distressed\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pareshān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pareshān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pareshān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pareshān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puttar de bukhār ton pitā jī pareshān san. — Father was upset about his son's fever.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puttar de bukhār ton pitā jī pareshān san.* — Father was upset about his son's fever.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a teardrop, then the Punjabi for courage, then say pareshān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a teardrop, then the Punjabi for courage, then say *pareshān* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਰੇਸ਼ਾਨ (pareshān) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਰੇਸ਼ਾਨ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਰੇਸ਼ਾਨ (pareshān) mean? (\"Upset\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C328-tasalli",
+      "sequence": 19990,
+      "title": "ਤਸੱਲੀ (tasallī) — reassurance",
+      "headword": "ਤਸੱਲੀ",
+      "romanization": "tasallī",
+      "gloss": "reassurance",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b7635313a29e2d8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for courage, then the Punjabi for upset."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਸੱਲੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਸੱਲੀ — tasallī — \"reassurance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਡਾਕਟਰ ਦੇ ਜਵਾਬ ਤੋਂ ਮੈਨੂੰ ਤਸੱਲੀ ਹੋਈ। ḍākṭar de javāb ton mainū̃ tasallī hoī. The doctor's answer reassured me."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਸੱਲੀ (tasallī) is a loan, usually traced through Persian to Arabic tasallī, \"consolation\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasallī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasallī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tasallī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tasallī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākṭar de javāb ton mainū̃ tasallī hoī. — The doctor's answer reassured me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākṭar de javāb ton mainū̃ tasallī hoī.* — The doctor's answer reassured me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for courage, then the Punjabi for upset, then say tasallī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for courage, then the Punjabi for upset, then say *tasallī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤਸੱਲੀ (tasallī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤਸੱਲੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਸੱਲੀ (tasallī) mean? (\"Reassurance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C328-dabauna",
+      "sequence": 20000,
+      "title": "ਦਬਾਉਣਾ (dabāuṇā) — to press gently",
+      "headword": "ਦਬਾਉਣਾ",
+      "romanization": "dabāuṇā",
+      "gloss": "to press gently",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8902e691cdc5fcc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for upset, then the Punjabi for reassurance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਦਬਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਬਾਉਣਾ — dabāuṇā — \"to press gently\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਰਾਤ ਨੂੰ ਮੈਂ ਦਾਦੀ ਦੇ ਪੈਰ ਦਬਾਉਂਦਾ ਹਾਂ। rāt nū̃ maiṁ dādī de pair dabāundā hāṁ. At night I press my grandmother's feet to ease them."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਦਾਦਾ ਜੀ ਦਾ ਸਿਰ ਦਬਾਇਆ, maiṁ dādā jī dā sir dabāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਬਾਉਣਾ (dabāuṇā) is inherited from a reconstructed dabb, \"press\"; CDIAL lists Punjabi dabāuṇā, \"to press down\", under it (CDIAL 6173)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dabāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dabāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dabāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dabāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt nū̃ maiṁ dādī de pair dabāundā hāṁ. — At night I press my grandmother's feet to ease them.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt nū̃ maiṁ dādī de pair dabāundā hāṁ.* — At night I press my grandmother's feet to ease them.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for upset, then the Punjabi for reassurance, then say dabāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for upset, then the Punjabi for reassurance, then say *dabāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਦਬਾਉਣਾ (dabāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਦਬਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਦਬਾਉਣਾ (dabāuṇā) mean? (\"To press gently\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C328-sahina",
+      "sequence": 20010,
+      "title": "ਸਹਿਣਾ (sahiṇā) — to put up with",
+      "headword": "ਸਹਿਣਾ",
+      "romanization": "sahiṇā",
+      "gloss": "to put up with",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:805f07d3250d98ce",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for reassurance, then the Punjabi for to press gently."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸਹਿਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਹਿਣਾ — sahiṇā — \"to put up with\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦਾਦੀ ਬਹੁਤ ਦਰਦ ਸਹਿੰਦੀ ਹੈ ਪਰ ਨਹੀਂ ਰੋਂਦੀ ਹੈ। dādī bahut darad sahindī hai par nahīṁ rondī hai. Grandmother puts up with a lot of pain, but she does not cry."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਬਹੁਤ ਦਰਦ ਸਹਿਆ, maiṁ bahut darad sahiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸਹਿਣਾ (sahiṇā) is inherited from Sanskrit sahate, \"conquers; bears, suffers\"; CDIAL lists Punjabi sahiṇā, \"to bear, put up with\", under it (CDIAL 13304)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahiṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahiṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sahiṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sahiṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī bahut darad sahindī hai par nahīṁ rondī hai. — Grandmother puts up with a lot of pain, but she does not cry.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī bahut darad sahindī hai par nahīṁ rondī hai.* — Grandmother puts up with a lot of pain, but she does not cry.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for reassurance, then the Punjabi for to press gently, then say sahiṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for reassurance, then the Punjabi for to press gently, then say *sahiṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸਹਿਣਾ (sahiṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸਹਿਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸਹਿਣਾ (sahiṇā) mean? (\"To put up with\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

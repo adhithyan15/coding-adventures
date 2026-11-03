@@ -1,0 +1,11 @@
+{
+  "id": "PA-C279-shikait",
+  "pathSegment": "PA-PATH-279-SWAP279",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-279-SWAP279",
+      "order": 4
+    }
+  ]
+}

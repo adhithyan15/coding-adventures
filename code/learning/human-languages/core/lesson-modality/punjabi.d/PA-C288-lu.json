@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C288-lu",
+    "language": "punjabi",
+    "chapter": 288,
+    "sequence": 17370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:15fb7d7ea2ff3112"
+  },
+  "findings": []
+}

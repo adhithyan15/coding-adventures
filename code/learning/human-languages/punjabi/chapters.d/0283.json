@@ -1,0 +1,19 @@
+{
+  "chapter": 283,
+  "title": "On the Road",
+  "label": "ch:pa-a2-on-the-road",
+  "canDo": "I can say when we will arrive.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C283-hillna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 283: I can say when we will arrive.",
+    "assesses": [
+      "PA-LEX-C283-ROAD283-03",
+      "PA-LEX-C283-ROAD283-04",
+      "PA-LEX-C283-ROAD283-05"
+    ]
+  }
+}

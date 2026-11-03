@@ -1,0 +1,18 @@
+{
+  "chapter": 223,
+  "title": "Perhaps Next Week",
+  "label": "ch:pa-a2-plan",
+  "canDo": "I can tell a short plan for tomorrow or next week, and say perhaps with shaid.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C223-payoff",
+    "kind": "production",
+    "summary": "Tell a four-line plan with a time word first and the future last, hedged with shaid.",
+    "assesses": [
+      "PA-GRAMMAR-FUT-PLAN-223",
+      "PA-LEX-SHAID-223"
+    ]
+  }
+}

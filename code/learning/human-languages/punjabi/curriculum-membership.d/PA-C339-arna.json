@@ -1,0 +1,11 @@
+{
+  "id": "PA-C339-arna",
+  "pathSegment": "PA-PATH-339-REFUSE339",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-339-REFUSE339",
+      "order": 4
+    }
+  ]
+}

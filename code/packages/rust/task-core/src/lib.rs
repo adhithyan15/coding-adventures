@@ -52,6 +52,7 @@ pub mod view;
 
 pub use ids::*;
 pub use model::*;
+pub use ops::{task_name_fits, MAX_TASK_NAME_CHARS};
 pub use primitives::*;
 
 #[cfg(test)]

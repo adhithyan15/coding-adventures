@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C342-sujhauna",
+    "language": "punjabi",
+    "chapter": 342,
+    "sequence": 21290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0d43884c79c9458"
+  },
+  "findings": []
+}

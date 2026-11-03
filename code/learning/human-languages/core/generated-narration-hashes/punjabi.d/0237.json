@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:c5e0f45d25fb681e",
+  "lessonIds": [
+    "PA-C237-ubalna",
+    "PA-C237-autna",
+    "PA-C237-dahim",
+    "PA-C237-chati",
+    "PA-C237-madhani"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch237.txt",
+  "json": "punjabi/narration/ch237.json",
+  "textHash": "fnv1a64:d153b4e14d6e1aea",
+  "jsonHash": "fnv1a64:0c3235299f3fce97",
+  "findings": []
+}

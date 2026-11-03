@@ -230,6 +230,24 @@ pub fn merge_modules<'a>(
     let name = modules.first().map(|m| m.name.clone()).unwrap_or_else(|| "merged".to_string());
     let language = modules.first().map(|m| m.language.clone()).unwrap_or_else(|| "unknown".to_string());
 
+    // Step 6: The string ceiling (LANG83 PR5a, #18800).
+    //
+    // Each module was compiled to run under its own `str_max_bytes`, and
+    // the linked program is all of them at once, so it gets the tightest:
+    //
+    //   inputs                    merged
+    //   None, None             →  None      (the registry ceiling)
+    //   None, Some(16)         →  Some(16)  (None means STR_MAX_BYTES, the loosest)
+    //   Some(64), Some(16)     →  Some(16)
+    //
+    // Before, the merged module always had `None`, so linking a module that
+    // lowered its ceiling silently raised it back to 2³⁰ − 64 bytes. The raw
+    // values are compared, not `str_ceiling()`: a malformed value above
+    // `STR_MAX_BYTES` survives only when no input is tighter, and then it is
+    // still clamped by `str_ceiling()` and refused by every column's
+    // `str_ceiling_errors`.
+    let str_max_bytes = merged_str_max_bytes(modules);
+
     IIRModule {
         name,
         functions: merged_functions,
@@ -238,8 +256,20 @@ pub fn merge_modules<'a>(
         exports: Vec::new(), // Merged module is self-contained.
         imports: Vec::new(),
         release: None,
-        str_max_bytes: None,
+        str_max_bytes,
     }
+}
+
+/// The smallest `str_max_bytes` among `modules`, or `None` when none of them
+/// sets one (see Step 6 of [`merge_modules`]).
+///
+/// ```text
+///   [None, Some(64), None, Some(16)]  →  Some(16)
+///   [None, None]                      →  None
+///   []                                →  None
+/// ```
+fn merged_str_max_bytes(modules: &[IIRModule]) -> Option<u32> {
+    modules.iter().filter_map(|m| m.str_max_bytes).min()
 }
 
 // ---------------------------------------------------------------------------

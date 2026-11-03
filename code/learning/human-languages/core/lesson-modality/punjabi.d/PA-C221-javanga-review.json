@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C221-javanga-review",
+    "language": "punjabi",
+    "chapter": 221,
+    "sequence": 12130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2ee23d144b40c7a7"
+  },
+  "findings": []
+}

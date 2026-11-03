@@ -193,3 +193,45 @@ fn str_concat_checks_the_module_ceiling() {
         assert!(limit < first(&code, "call string [System.Runtime]System.String::Concat"), "{code:#?}");
     }
 }
+
+/// #18800 item 1: every path to the CLR refuses a `str_const` longer than the
+/// module's ceiling, and a ceiling above `STR_MAX_BYTES`, before it emits
+/// anything: the binary path (`lower_iir_to_cil`, through
+/// `validate_iir_for_clr`), the real-CoreCLR text path (`emit_il`) and the
+/// typed-scalar path (`lower_typed_scalars_to_cil`). Before, the text path
+/// (the one the CoreCLR column runs) compiled the 17-byte literal, and the
+/// other two, which have no `str_const` lowering, refused it only as an
+/// unsupported operation.
+#[test]
+fn a_literal_past_the_module_ceiling_is_refused_on_every_clr_path() {
+    use iir_to_cil_bytecode::{lower_iir_to_cil, lower_typed_scalars_to_cil, validate_iir_for_clr, IIRClrError};
+    let module = |len: usize, ceiling: Option<u32>| {
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("z".repeat(len))], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![v("s")], "i64"),
+            IIRInstr::new("ret", None, vec![v("n")], "i64"),
+        ]));
+        m.str_max_bytes = ceiling;
+        m
+    };
+    let config = IIRClrConfig::default();
+    for (m, kind) in [(module(17, Some(16)), "StrTooLong"), (module(0, Some(interpreter_ir::STR_MAX_BYTES + 1)), "StrMaxBytes")] {
+        let refusals = [
+            ("lower_iir_to_cil", lower_iir_to_cil(&m, &config).err()),
+            ("emit_il", emit_il(&m, &config).err()),
+            ("lower_typed_scalars_to_cil", lower_typed_scalars_to_cil(&m, &config).err()),
+        ];
+        for (path, refusal) in refusals {
+            match refusal {
+                Some(IIRClrError::ValidationFailed(errors)) => {
+                    assert!(errors.iter().any(|e| e.starts_with(kind)), "{path}: {errors:?}");
+                }
+                other => panic!("{path}: expected a {kind} validation failure, got {other:?}"),
+            }
+        }
+        assert!(validate_iir_for_clr(&m).iter().any(|e| e.starts_with(kind)));
+    }
+    // At the ceiling the string-capable path still compiles.
+    emit_il(&module(16, Some(16)), &config).expect("text path");
+}

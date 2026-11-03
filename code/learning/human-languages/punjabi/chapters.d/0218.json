@@ -1,0 +1,18 @@
+{
+  "chapter": 218,
+  "title": "I Got Up Early",
+  "label": "ch:pa-a2-uthia",
+  "canDo": "I can say that I got up or sat down, and that I did not go, with past forms that agree with me.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C218-payoff",
+    "kind": "production",
+    "summary": "Say you got up and sat down with -ia or -i, and say what you did not do with nahin before a past form.",
+    "assesses": [
+      "PA-GRAMMAR-PAST-IA-218",
+      "PA-GRAMMAR-PAST-NEG-218"
+    ]
+  }
+}

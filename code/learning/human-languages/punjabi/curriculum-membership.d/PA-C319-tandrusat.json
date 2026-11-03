@@ -1,0 +1,11 @@
+{
+  "id": "PA-C319-tandrusat",
+  "pathSegment": "PA-PATH-319-HEALTH319",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-319-HEALTH319",
+      "order": 3
+    }
+  ]
+}

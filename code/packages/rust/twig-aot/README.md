@@ -110,7 +110,10 @@ kind on stderr), and `__twig_str_concat(a, b, max)` raises `Trap.Overflow`
 when the result would exceed `max`, the module's string ceiling, which the
 lowering passes as an immediate. A folded out-of-range `str_index` /
 `str_slice` compiles to `trap "Trap.Bounds"`, and a literal concat fold stops
-at the ceiling. A literal string's `alloc_bytes` handle is typed `str`, so it
+at the ceiling. Every native entry point first refuses a module whose
+`str_const` is longer than the ceiling, or whose ceiling is above
+`STR_MAX_BYTES` (`AotError::Compile`, through
+`IIRModule::str_ceiling_errors`, #18800). A literal string's `alloc_bytes` handle is typed `str`, so it
 (and its `mov` alias) is a root in the precise stack map, like every run-time
 string.
 

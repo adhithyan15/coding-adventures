@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C241-chirna",
+    "language": "punjabi",
+    "chapter": 241,
+    "sequence": 13840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4342fb6d23dce302"
+  },
+  "findings": []
+}

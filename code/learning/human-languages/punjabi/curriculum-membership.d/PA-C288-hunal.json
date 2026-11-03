@@ -1,0 +1,11 @@
+{
+  "id": "PA-C288-hunal",
+  "pathSegment": "PA-PATH-288-HEAT288",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-288-HEAT288",
+      "order": 3
+    }
+  ]
+}

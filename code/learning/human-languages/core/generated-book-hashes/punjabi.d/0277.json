@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 277,
+  "sourceHash": "fnv1a64:2347b0df32dacff6",
+  "lessonIds": [
+    "PA-C277-gahak",
+    "PA-C277-chunna",
+    "PA-C277-parakhna",
+    "PA-C277-chiz",
+    "PA-C277-saman"
+  ],
+  "tex": "punjabi/book/chapters/ch277-choosing-the-best.tex"
+}

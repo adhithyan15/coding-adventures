@@ -194,7 +194,10 @@ As of 0.29.0 the textual `.il` path emits the **E4 literal string** foothold:
 the full `int64` before the narrowing to `int32` (`str_index`: one `blt.un`
 against `get_Length`; `str_slice`: `end >u len`, then `start >u end`), a
 failure raises `Trap.Bounds` through the flush-then-throw trap sequence, and
-`str_concat` raises `Trap.Overflow` past the module's string ceiling. This proves Dartmouth BASIC `PRINT "HELLO"` plus
+`str_concat` raises `Trap.Overflow` past the module's string ceiling. A
+`str_const` longer than the ceiling (or a ceiling above `STR_MAX_BYTES`) is
+refused as `ValidationFailed` on all three entry points — `lower_iir_to_cil`,
+`emit_il` and `lower_typed_scalars_to_cil` (#18800). This proves Dartmouth BASIC `PRINT "HELLO"` plus
 Twig `(string-length "HELLO")`, `(string-ref "ABC" 1)`,
 `(string=? "HELLO" "HELLO")`, `(string<? "ALPHA" "BETA")`, and
 `(string-length (string-append "AB" "CDE"))`

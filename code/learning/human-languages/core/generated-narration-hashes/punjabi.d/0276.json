@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 276,
+  "sourceHash": "fnv1a64:90059e6232bda32e",
+  "lessonIds": [
+    "PA-C276-mull",
+    "PA-C276-bhaa",
+    "PA-C276-ghatauna",
+    "PA-C276-sauda",
+    "PA-C276-mufat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch276.txt",
+  "json": "punjabi/narration/ch276.json",
+  "textHash": "fnv1a64:c67cb8ff0d0a81c2",
+  "jsonHash": "fnv1a64:4b340ece9fa9ae6f",
+  "findings": []
+}

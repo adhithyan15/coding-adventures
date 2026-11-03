@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:f670b20eab5a9660",
+  "lessonIds": [
+    "PA-C274-minna",
+    "PA-C274-gaz",
+    "PA-C274-mitar",
+    "PA-C274-nap",
+    "PA-C274-jora"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch274.txt",
+  "json": "punjabi/narration/ch274.json",
+  "textHash": "fnv1a64:b0af8abe8a535144",
+  "jsonHash": "fnv1a64:6e16c77e1534c9b5",
+  "findings": []
+}

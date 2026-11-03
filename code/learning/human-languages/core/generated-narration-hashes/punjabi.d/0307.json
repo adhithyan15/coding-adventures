@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:9619270f4b12a155",
+  "lessonIds": [
+    "PA-C307-majjh",
+    "PA-C307-katta",
+    "PA-C307-chona",
+    "PA-C307-than",
+    "PA-C307-charna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch307.txt",
+  "json": "punjabi/narration/ch307.json",
+  "textHash": "fnv1a64:38a12dde4729dcb4",
+  "jsonHash": "fnv1a64:fe3b6ce8664c0f3f",
+  "findings": []
+}
