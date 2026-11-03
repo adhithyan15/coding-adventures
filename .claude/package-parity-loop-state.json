@@ -2925,6 +2925,15 @@
       "branch": null,
       "pr_number": null,
       "registered_at": "2026-10-30T12:39:41Z",
+      "preparation_branch": "codex/build-tool-rust-cargo-test-trigger",
+      "prepared_at": "2026-11-03T07:36:31Z",
+      "preparation_base_revision": "462710b53fc4340de8360b286c407b7dcec4e54b",
+      "implementation_revision": "8bf87dfe00153dc5d952bff5c242837fd9ae04cd",
+      "corpus_repair_revision": "e471100cc9256c7f59596ac4cc8dc47ad516bd98",
+      "preparation_head_revision": "9cded3754af849517f9b1f0e889bcb488b015498",
+      "reconciled_main_revision": "462710b53fc4340de8360b286c407b7dcec4e54b",
+      "preparation_notes": "Complete local-only preparation at exact clean head 9cded3754af849517f9b1f0e889bcb488b015498 after a normal path-disjoint merge of current origin/main. Keep this owner pending and unpublished while Lua CLI validation PR #18842 occupies the publication slot. The pure evaluator, six neutral fixtures, Go witness, closed schema variant, canonical semantic validator, documentation, five strict-reader/integration follow-ups, and separate native fixture-routing owner are recorded without claiming Cargo parsing or native authority.",
+      "preparation_validation_notes": "Independent exact-head review issued SHIP. Pinned canonical corpus validation reports 185 cases and 328 files; Python schema 27/27 and runner 93/93 pass; Rust test-trigger 4/4 plus all-targets 259/259 and Clippy with warnings denied pass; the focused Go neutral witness passes; rustfmt, gofmt, diff hygiene, the 1,572-owner dependency-complete acyclic state graph, current-main ancestry, path-disjoint merge receipt, and ignored-inclusive cleanliness pass. Full Go package validation exposed a separately logged clean-checkout hermeticity baseline and did not implicate this production-free Go witness.",
       "notes": "Discovered during exact-head review of the prepared Rust graph/diff adoption and narrowed by the 2026-11-02 Rust/Go contract audit. Implement only the authority-free selection evaluator over already validated package names, graph edges, resolved trigger pairs, and changed packages: dependent closure, exactly one trigger hop, then prerequisite closure. Return deterministic sorted results; reuse the Rust graph/diff ceilings of 4096 packages and 16384 graph edges, add a 16384 trigger-pair ceiling, and consume a small neutral fixture family shared with Go. Keep Cargo parsing, filesystem identity, orphan/config policy, discovery, command execution, and CLI integration in the separately recorded follow-up owners."
     },
     {
@@ -2998,6 +3007,16 @@
       "pr_number": null,
       "registered_at": "2026-11-03T06:22:44Z",
       "notes": "Recorded separately by the 2026-11-03 Rust/Go contract audit because Go repository-input consumers are not Cargo test triggers and Rust currently has no counterpart. Define and adopt a bounded authority-free consumer-selection relation for repository-wide inputs without conflating it with build-graph edges or Cargo dev-dependencies; preserve one-hop consumer semantics and keep unrelated command authority outside this owner."
+    },
+    {
+      "id": "build-tool-go-test-trigger-clean-checkout-hermeticity",
+      "title": "Make Go Cargo test-trigger repository witnesses hermetic in a clean checkout",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "registered_at": "2026-11-03T07:36:31Z",
+      "notes": "Recorded during exact-head validation of the Rust test-trigger core. In an ignored-inclusive clean archive, Go build-tool tests TestRealRepositoryEmitterChangeSelectsMosaicSuites and TestRealRepositoryOrphanCrateDependenciesAreFollowed fail because tracked code/programs/mosaic/engram-app/Cargo.toml references absent code/packages/rust/engram-core-wasm. Make these real-repository witnesses hermetic with neutral captured inputs, or register and validate the generated dependency through the repository's existing exemption contract. Preserve the strict Cargo resolver behavior and do not weaken orphan, path-identity, symlink, config, source, patch, workspace, or resource-ceiling checks."
     },
     {
       "id": "build-tool-swift-diff-selection-match-work-ceiling-adoption",

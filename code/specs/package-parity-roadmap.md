@@ -20294,3 +20294,21 @@ added, modified, deleted, and renamed paths; preserve ordinary package-root
 union and prerequisite closure; and prove Linux, macOS, Windows, and explicit
 language-plan behavior. This operational routing remains separate from the
 authority-free selection core and receives no merge credit here.
+
+The completed local preparation is recorded at clean exact head
+`9cded3754af849517f9b1f0e889bcb488b015498`, normally reconciled with current
+main `462710b53fc4340de8360b286c407b7dcec4e54b`. Independent review passed the
+185-case canonical corpus, 27 schema tests, 93 runner tests, all 259 Rust
+all-target tests, Clippy with warnings denied, the focused Go witness, format
+and diff checks, state-graph integrity, authority boundary, and ignored-file
+hygiene. Keep it unpublished while Lua CLI validation PR #18842 occupies the
+publication slot.
+
+That exact clean-checkout review also found a distinct Go baseline: full
+Go build-tool tests expect `code/packages/rust/engram-core-wasm`, but that path
+is absent while tracked `code/programs/mosaic/engram-app/Cargo.toml` references
+it. Pending owner `build-tool-go-test-trigger-clean-checkout-hermeticity` must
+make the two real-repository witnesses hermetic with neutral captured inputs,
+or register and validate the generated dependency through the existing orphan
+exemption contract. It must not weaken the strict Cargo resolver's orphan,
+identity, symlink, config, source, patch, workspace, or ceiling checks.
