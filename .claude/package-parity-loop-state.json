@@ -16,16 +16,14 @@
       "external-approval"
     ]
   },
-  "active_pr": 18879,
-  "active_prs": [
-    18879
-  ],
+  "active_pr": null,
+  "active_prs": [],
   "last_ci_action": {
-    "observed_at": "2026-11-03T11:42:23Z",
-    "pr_number": 18853,
-    "head_revision": "b97d8a07fb70de23932ed71242d37e51ba2ea794",
-    "action": "All 42 checks on exact independently reviewed head b97d8a07fb70de23932ed71242d37e51ba2ea794 completed terminal acceptable: 18 succeeded, 23 were expected skips, and the CodeQL aggregate was neutral. PR #18853 was manually squash-merged by adhithyan15 at 2026-11-03T11:27:40Z as 0490c52415e26f1f4f6f0b10be4dd0e4da37bbb9; no guarded auto-merge claim is made. The receipt is an ancestor of current origin/main and the clean completed worktree is archived. Reprioritize from current main c36b5728fb75e283b90fa4dcc3aa093939a2a119.",
-    "manual_merge": true
+    "observed_at": "2026-11-03T14:03:43Z",
+    "pr_number": 18879,
+    "head_revision": "2345376b08aae7354adf8ea28bf05aed69c7d8cf",
+    "action": "All 37 checks on exact independently reviewed head 2345376b08aae7354adf8ea28bf05aed69c7d8cf completed terminal acceptable: seven succeeded and 30 were expected skips. GitHub reported the PR clean and mergeable. The loop invoked guarded squash auto-merge with exact-head matching, and GitHub merged PR #18879 immediately at 2026-11-03T14:02:33Z as 38dba577c2f234d1b0bd8f1f150517e773b7e746. The receipt is the current origin/main and the clean completed worktree was queued for archival. Reprioritize to the already implemented duplicate-discovery fixture selector.",
+    "manual_merge": false
   },
   "last_inventory": {
     "revision": "4f7cc78855a816ee944b22b0b73fd425bab596c2",
@@ -2993,7 +2991,7 @@
     {
       "id": "build-tool-neutral-cargo-manifest-trigger-snapshot-contract",
       "title": "Define the neutral strict Cargo manifest trigger snapshot contract",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [
         "build-tool-rust-cargo-test-trigger-selection-parity"
       ],
@@ -3008,6 +3006,12 @@
       "lifecycle_review_notes": "Independent correctness and security publication reviews verified exact local/remote/GitHub head parity, the exact base, mergeability, clean ignored-inclusive status, zero overlap with every other live PR, stable implementation patch identity, a unique dependency-complete acyclic 1,572-item state graph, and correct active-PR lifecycle metadata. Both issued SHIP for marking PR #18879 ready.",
       "ready_at": "2026-11-03T12:59:40Z",
       "publication_notes": "Draft PR #18879 was opened from independently reviewed head 3a85e71c4277bb166d878208002cd38e05e0f82d over exact base 6d1eada894ed5b6b9acadc65a3761e3c249fc6dc after a normal first push. The PR-number and active-lifecycle receipts were committed and pushed normally; independent exact-head publication review then issued SHIP for 53d812c05de5aac8bb5d46c37c27b9e46f175036 and the PR was marked ready. Auto-merge remains disabled pending this ready receipt, final exact-head review, and terminal acceptable hosted qualification.",
+      "final_review_revision": "2345376b08aae7354adf8ea28bf05aed69c7d8cf",
+      "final_review_notes": "Independent correctness and security review issued SHIP for exact hosted head 2345376b08aae7354adf8ea28bf05aed69c7d8cf. Local, remote, and GitHub heads matched; no code or security drift remained; worktree and diff hygiene were clean; and guarded squash auto-merge was authorized only after all exact-head checks completed terminal acceptable while GitHub reported the PR mergeable.",
+      "merged_head_revision": "2345376b08aae7354adf8ea28bf05aed69c7d8cf",
+      "merge_revision": "38dba577c2f234d1b0bd8f1f150517e773b7e746",
+      "merged_at": "2026-11-03T14:02:33Z",
+      "merge_notes": "All 37 exact-head checks completed terminal acceptable: seven successes and 30 expected skips. GitHub reported the reviewed head clean and mergeable. The loop invoked guarded squash auto-merge with exact-head matching, and GitHub merged PR #18879 immediately. The squash receipt is current origin/main; the clean completed worktree was queued for archival.",
       "registered_at": "2026-11-03T06:22:44Z",
       "selected_at": "2026-11-03T11:42:23Z",
       "selection_revision": "c36b5728fb75e283b90fa4dcc3aa093939a2a119",
@@ -22790,12 +22794,12 @@
     {
       "id": "build-tool-duplicate-discovery-fixture-native-ci-selection",
       "title": "Select existing native duplicate-discovery readers for fixture-only CI changes",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [
         "build-tool-shared-discovery-fixture-native-ci-selection",
         "build-tool-elixir-discovery-duplicate-identity-conformance"
       ],
-      "branch": null,
+      "branch": "codex/build-tool-duplicate-discovery-selector",
       "pr_number": null,
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T14:47:18.946915-07:00",
@@ -22803,6 +22807,12 @@
       "notes": "Source-backed read-only audit found the exact discovery-duplicate-identity.json path has six current direct native readers in Go, Elixir, Ruby, Rust, Swift and TypeScript, but Go fixture-specific discovery selection matches only discovery-language-registry.json. For the duplicate-only available diff, source analysis predicts zero direct seeds on all three platforms while the independent neutral contract gate remains selected; this is not an execution receipt or a claim that every other CI step runs zero native tests. Add only an exact duplicate-fixture-to-six-reader selection relation and drift/negative/language/union/rename/missing-root/three-platform plan tests; preserve the separate twelve-reader registry rule and four-reader CI-gate rule. No new workflow job or engine duplicate algorithm. Future Haskell reader extends this exact mapping in its separately owned semantic delivery. Complete actual detector-plan and genuine selected native BUILD/test receipts before claiming routing qualification.",
       "classification_notes": "build-tool-remaining-fixture-ci-preparation.md checked all 1,338 existing IDs: zero exact/canonical collisions and no owner for this exact six-reader routing scope. Merged generic discovery fixture routing is explicitly language-registry-only; pending Haskell duplicate semantics, production coverage and Go empty-plan work are separate. Both selector foundation and latest Elixir duplicate adoption prerequisites are merged. No implementation selection or live open-PR overlap clearance performed.",
       "validation_plan": "build-tool-remaining-fixture-ci-preparation.md: explicit six-reader independent expected roster; expected current RED zero seeds for exact path; near-path and nonreader negatives, ordinary-selection union, language filters, nil/empty path input, old rename/deletion path, missing selected-root atomic failure, three-platform toolchain/closure plans, existing registry/CI-gate regression and native reader drift. Follow with actual Go tests/vet/build/coverage, neutral validators, final-head security/diff review and real detector/native front receipts.",
+      "selected_at": "2026-11-03T14:03:43Z",
+      "selection_revision": "38dba577c2f234d1b0bd8f1f150517e773b7e746",
+      "selection_notes": "Selected after PR #18879 completed all 37 exact-head checks acceptably and merged through guarded squash auto-merge, opening the publication slot. Both prerequisites are merged. This already implemented five-path selector repair has zero product-path overlap with every other live PR and restores exact fixture-only CI routing for six existing native readers, ranking ahead of a single-lane adopter or a new unimplemented contract. Shared lifecycle files were intentionally deferred until the active Cargo snapshot PR merged.",
+      "implementation_revision": "c9ab6ea34b6710046e8cfdff06bda9bd582c2d26",
+      "validation_revision": "c9ab6ea34b6710046e8cfdff06bda9bd582c2d26",
+      "validation_notes": "Exact product-only head changes five paths: the Go selector, a 315-line focused suite, Go README and changelog, and the CI-gate registry. Focused eight-test selection, Go vet/build, full relevant Go tests, neutral corpus validation at 185 cases and 328 files, 27 schema tests, 93 runner tests, gofmt, diff hygiene, and ignored-inclusive cleanliness pass. The only unskipped full-Go failure is a pre-existing generator round-trip requiring unavailable pwsh; the package passes when that exact environment-only test is skipped. Independent security/correctness review issued SHIP for exact routing, the six-reader roster, language filtering, old rename/deletion sources, union and prerequisite closure, missing-root atomic failure, three-platform plans, and the absence of authority, state, fixture, schema, workflow, or native-reader drift.",
       "reference_refresh_e3731d": "Read-only routing plan refreshed at unchanged complete Go tree c1536e7676628151402619ff191018969516bbb4: direct duplicate readers remain Go/Elixir/Ruby/Rust/Swift/TypeScript, separate from registry12 and CIgate4. Exact duplicate relation absent in main.go selector. Prediction only, no fresh detector/native execution; detailed independent RED/negative/union/platform/drift plan saved in build-tool-duplicate-routing-e373-plan-refresh.md."
     },
     {

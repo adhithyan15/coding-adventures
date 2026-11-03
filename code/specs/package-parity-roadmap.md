@@ -20485,3 +20485,26 @@ active-PR lifecycle fields. Mark PR #18879 ready at
 `2026-11-03T12:59:40Z`. Commit and push this ready receipt normally, then
 require fresh independent review and terminal acceptable hosted qualification
 on the resulting exact head before guarded squash auto-merge.
+
+#### Neutral Cargo manifest snapshot PR #18879 merge and duplicate-selector selection
+
+All 37 checks on exact independently reviewed head
+`2345376b08aae7354adf8ea28bf05aed69c7d8cf` completed terminal acceptable:
+seven succeeded and 30 were expected skips. GitHub reported the PR clean and
+mergeable. The loop invoked guarded squash auto-merge with exact-head matching,
+and GitHub merged PR #18879 immediately at `2026-11-03T14:02:33Z` as
+`38dba577c2f234d1b0bd8f1f150517e773b7e746`. The receipt is current
+`origin/main`, and the clean completed worktree was queued for archival.
+
+Reprioritization selects the already implemented duplicate-discovery fixture
+native CI selector. Its two prerequisites are merged, and its five product
+paths have zero exact overlap with every other live PR. The bounded repair maps
+only exact `discovery-duplicate-identity.json` changes to the six existing
+native readers in Elixir, Go, Ruby, Rust, Swift, and TypeScript while preserving
+explicit language filtering, ordinary selection union, prerequisite closure,
+old rename/deletion source handling, missing-root atomic failure, and all three
+platform plans. Independent review issued SHIP on the rebased product
+implementation. Keep the separate 12-reader registry, four-reader CI-gate,
+two-reader test-trigger, and future Haskell scopes unchanged. Commit this merge
+receipt and selection normally, reconcile current live PRs once more, and
+require fresh exact-head review before first publication.
