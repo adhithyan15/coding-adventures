@@ -34,14 +34,19 @@ algorithm/key policy, fixed-verifier result, and reviewed Mozilla root
 selection together. A byte-equal certificate from another decode does not
 match.
 
-This package authenticates one projected link and can retain one intermediate
-path-length transition or one reviewed terminal handoff. Reviewed-root
-selection is snapshot membership, not complete trust. The package does not
-define full Name comparison, authenticate another link, prove prior traversal,
-apply trust-anchor or name constraints, validate target identity or time,
-check revocation, perform TLS or HTTP, authorize OAuth transport, or open a
-network connection. It does not make concrete HTTPS or live-provider use
-ready.
+A fixed-shape traversal follow-up consumes both results for an exact
+target -> intermediate -> reviewed-root construction. It requires depth zero
+and depth one from the same constructed-path object, retains both routed
+signature proofs, and keeps the intermediate's complete policy and advanced
+path-length state with the reviewed-root handoff. Proofs from a separately
+constructed path fail even when they select the same decoded certificates.
+
+Reviewed-root selection is snapshot membership, not complete trust. The
+fixed-shape result does not generalize to additional intermediates, derive the
+initial path-length cap from anchor policy, define full Name comparison, apply
+trust-anchor or name constraints, validate target identity or time, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
+connection. It does not make concrete HTTPS or live-provider use ready.
 
 ## Validation
 

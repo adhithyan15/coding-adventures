@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0 - 2026-11-03
+
+### Added
+
+- Added an exact-object composition for one routed
+  target -> intermediate -> reviewed-root construction.
+- Added coverage for complete two-link evidence retention and rejection of
+  proofs projected from distinct constructed-path objects.
+
+### Security
+
+- The composition requires exactly two issuer depths from the same retained
+  construction and preserves both routed signatures, complete intermediate
+  policy, advanced path-length state, and reviewed-root selection.
+- The fixed shape does not validate longer paths, derive anchor constraints,
+  or authorize TLS, HTTP, OAuth, or network use.
+
 ## 0.3.0 - 2026-11-03
 
 ### Added
