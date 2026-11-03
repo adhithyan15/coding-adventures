@@ -7278,6 +7278,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // A left-to-right exact integer division may reduce the static coefficient
+    // of one square root without introducing a fractional real intermediate.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 * sqrt(entier(9223372030926249000)) / 2)) * sign(pick())) mod 5); output(result) end",
+        expect: Expect::Stdout("2"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -18520,6 +18531,33 @@ fn algol_scaled_floor_root_nested_wide_static_integer_normalizers_run_on_every_a
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but scaled floor-root nested wide static integer normalizers did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_exact_divided_scaled_floor_root_normalizers_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("entier(6 * sqrt(entier(9223372030926249000)) / 2)")
+        })
+        .expect(
+            "the exact-divided scaled floor-root ALGOL program must remain in the matrix",
+        );
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but exact-divided scaled floor-root normalizers did not complete"
             );
             continue;
         };

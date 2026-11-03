@@ -3731,6 +3731,7 @@ impl Compiler {
                 let mut coefficient = if negative { -1_i64 } else { 1_i64 };
                 let mut radicand = None;
                 let mut is_product = true;
+                let mut operator = "*";
                 for (index, piece) in sequence.iter().enumerate() {
                     if index.is_multiple_of(2) {
                         let Piece::Node(operand) = piece else {
@@ -3738,17 +3739,33 @@ impl Compiler {
                             break;
                         };
                         if let Some(value) = self.exact_static_sqrt_radicand(operand) {
+                            if operator != "*" {
+                                return None;
+                            }
                             if radicand.replace(value).is_some() {
                                 return None;
                             }
                         } else {
                             let value = self
                                 .exact_static_integer_normalizer_operand_value(operand)?;
-                            coefficient = coefficient.checked_mul(value)?;
+                            coefficient = match operator {
+                                "*" => coefficient.checked_mul(value)?,
+                                "/" if value != 0 && coefficient.checked_rem(value)? == 0 => {
+                                    coefficient.checked_div(value)?
+                                }
+                                _ => return None,
+                            };
                         }
-                    } else if !matches!(piece, Piece::Op(operator) if operator == "*") {
-                        is_product = false;
-                        break;
+                    } else {
+                        let Piece::Op(next_operator) = piece else {
+                            is_product = false;
+                            break;
+                        };
+                        if !matches!(next_operator.as_str(), "*" | "/") {
+                            is_product = false;
+                            break;
+                        }
+                        operator = next_operator;
                     }
                 }
                 if is_product {
@@ -17454,6 +17471,31 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "negative radicands, overridden or dynamic roots, multiple roots, division, and overflow must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_exact_divided_scaled_floor_root_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 * sqrt(entier(9223372030926249000)) / 2)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier((-6) * sqrt(entier(15)) / 2)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "exact integer coefficient divisions may preserve scaled floor roots for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / 2)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 * sqrt(entier(80)) / 4)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 / sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 * sqrt(entier(80)) / 0)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "fractional coefficients, rooted divisors, and zero divisors must fail closed",
             );
         }
     }
