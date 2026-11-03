@@ -111,6 +111,60 @@ syntax, and equivalent dependency-resolution hardening. Each BUILD line runs
 in a separate shell process, so no prerequisite may rely on a previous line's
 working-directory change.
 
+#### `BUILD_windows` lines are `cmd` syntax
+
+Every non-comment line of a `BUILD_windows` file runs as its own `cmd /C
+<line>` process, started in the package directory (the Go reference tool's
+`executor.shellCommandForOS`; the only translation it applies first is a
+leading POSIX `VAR=value cmd` prefix, rewritten to `set "VAR=value"&& cmd`).
+It is not `sh -c`, not a batch file and not PowerShell. A `BUILD_windows` line
+must therefore use `cmd` syntax:
+
+| Need                     | POSIX (`BUILD`)                     | `cmd` (`BUILD_windows`)                    |
+|--------------------------|-------------------------------------|--------------------------------------------|
+| discard output           | `>/dev/null 2>&1`                   | `>nul 2>nul` (or `>nul 2>&1`)              |
+| is a tool on PATH?       | `command -v swift >/dev/null`       | `where swift >nul 2>nul`                   |
+| does a file exist?       | `[ -f x ]`                          | `if exist x (...)`                         |
+| is a variable set?       | `[ -n "$X" ]`, `${X:-}`             | `if defined X (...)`, `%X%`                |
+| expand a variable        | `$X`, `${X}`                        | `%X%`                                      |
+| conditional / loop       | `if ...; then ...; fi`, `for ...; do ...; done` | `if ... (...) else (...)`, `for %i in (...) do ...` |
+
+POSIX constructs are allowed only inside an explicit POSIX-shell hand-off on
+that line, `bash -c "..."` or `sh -c "..."` (GitHub's Windows runners provide
+Git Bash), where the double-quoted payload belongs to that shell. Text inside
+any double-quoted argument is the receiving program's business, so
+`python -c "import os; print(os.devnull)"` or `perl -e "print $x"` is fine.
+The parts of a hand-off line outside its quoted payload are still `cmd`'s:
+`bash -c "..." >/dev/null` fails, because `cmd` opens the redirect target.
+
+The failure mode is quiet, which is why this is validated rather than left to
+CI. `where swift >/dev/null 2>/dev/null && swift test || echo skipping` never
+fails: `cmd` cannot open `/dev/null`, so the guarded command never runs and the
+line always falls through to the `echo`, silently turning a test run into a
+skip. Constructs such as `command -v` or `if [ ... ]; then` fail loudly ("-v
+was unexpected at this time"), but only when a pull request happens to rebuild
+that package on Windows, which for a leaf package can be months after the line
+was written.
+
+**Validator rule `windows-posix-syntax`.** `--validate-build-files` reads every
+package's `BUILD_windows` directly, on every host, and rejects a line that
+uses, outside double quotes and outside a `bash`/`sh`/`powershell`/`pwsh`
+hand-off's quoted payload, any of these POSIX-only constructs:
+
+- `/dev/null`;
+- `command -v`;
+- `$(...)` command substitution (including `$((...))` arithmetic);
+- `${...}` parameter expansion;
+- a `[` or `[[` test, as a word of its own;
+- the shell keywords `then`, `fi`, `do`, `done` or `esac` directly after a
+  `;` (POSIX requires a separator there; `cmd`'s own `for ... do` has none).
+
+The diagnostic names the file, the 1-based line number, the construct and its
+`cmd` alternative. Blank lines, `#` comment lines and `rem` lines (a `cmd`
+no-op) are not checked. Shared `BUILD` files are not checked by this rule.
+The Go reference tool implements it (`internal/validator/windows_posix_syntax.go`);
+it has no neutral conformance fixture yet.
+
 ### Language Inference
 
 The package's language is inferred from its directory path. The build system scans path components for known language names:
