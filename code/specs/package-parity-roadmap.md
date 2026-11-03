@@ -20518,7 +20518,7 @@ require fresh exact-head review before first publication.
 
 #### Duplicate-discovery fixture selector PR #18885 draft receipt
 
-Open draft PR #18885 at `2026-11-03T14:13:38Z` from exact independently
+Open draft PR #18885 at `2026-11-03T14:13:26Z` from exact independently
 reviewed head `a119e9b6f8ac4fe3a38f1495db775fb93bc0f6e4` over exact base
 `14fb4342823b6ea37768f1ad7becb01fdc29d1dd`. The branch did not previously
 exist remotely, the first push was normal, and all six live PRs at publication
