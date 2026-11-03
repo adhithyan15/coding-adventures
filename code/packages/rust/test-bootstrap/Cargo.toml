@@ -1,0 +1,15 @@
+[package]
+name = "coding_adventures_test_bootstrap"
+version = "0.1.0"
+edition = "2021"
+description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure verdict core, seeded shuffled runs, TAP v14 output"
+
+[dependencies]
+
+# The self-corpus runs on this crate's own runner rather than libtest, so it
+# is a plain `fn main()` test binary. Arguments after `--` reach it unchanged:
+#   cargo test -p coding_adventures_test_bootstrap --test self_corpus -- --seed 7
+[[test]]
+name = "self_corpus"
+path = "tests/self_corpus.rs"
+harness = false
