@@ -62,6 +62,8 @@ consumers: Conduit, IRC Server Native and Conduit Hello. Editing one of those
 inputs must select the consumers even when no Perl package file changed.
 Missing consumers fail closed, and single-language runs retain their language
 filter. Crate-root documentation and lookalike helper filenames are not build inputs.
+Both Unix and Windows native Perl recipes declare the Rust toolchain explicitly,
+so a helper-only edit installs Cargo as well as Perl in a fresh CI environment.
 
 ## Architecture
 
