@@ -20412,3 +20412,76 @@ their unchanged exact rosters. The canonical schema and semantic oracle still
 validate every trigger fixture independently. Keep auto-merge disabled; require
 all three consumer suites, the canonical corpus, independent exact-head review,
 and fresh terminal acceptable hosted qualification after a normal push.
+
+#### Rust Cargo test-trigger PR #18853 merge and snapshot-contract selection
+
+All 42 checks on exact independently reviewed head
+`b97d8a07fb70de23932ed71242d37e51ba2ea794` completed terminal acceptable:
+18 succeeded, 23 were expected skips, and the CodeQL aggregate was neutral.
+GitHub reported no merge conflict. `adhithyan15` manually squash-merged PR
+#18853 at `2026-11-03T11:27:40Z` as
+`0490c52415e26f1f4f6f0b10be4dd0e4da37bbb9`; no guarded auto-merge claim is
+made. The receipt is an ancestor of current main and the clean completed
+worktree is archived.
+
+Reprioritization from current main
+`c36b5728fb75e283b90fa4dcc3aa093939a2a119` selects the neutral strict Cargo
+manifest trigger snapshot contract. It is the first dependency for the Rust
+snapshot resolver, native adapter, CLI integration, and repository consumer
+selection descendants. Keep this owner authority-free: inert manifest bytes
+plus an explicit parsing profile produce one immutable snapshot or one bounded
+stable error. Filesystem identity, path resolution, Cargo configuration,
+closure traversal, discovery, environment, processes, and CLI integration
+remain in later owners. Before implementation, pin valid UTF-8 and newline
+rules, portable absolute-path rejection, duplicate behavior, deterministic
+ordering/provenance, and exact 1 MiB, 64 KiB, and 256-line boundary semantics.
+
+#### Neutral Cargo manifest snapshot local completion
+
+The authority-free implementation is locally complete and independently
+reviewed. The closed `cargo_manifest_snapshot` domain now accepts only an
+explicit `rust_root`, `mosaic_root`, or `crate_closure` profile plus inert UTF-8
+manifest bytes and produces source-ordered immutable dependency records or one
+stable bounded error. Twelve shared fixtures cover emitted trigger tables,
+screen-only Rust link tables, Mosaic patch emission, unsafe paths and Git
+schemes, workspace/replace redirection, unsupported fields and tables, global
+syntax failure, and continued-entry limits. Raw Git URLs, registry names,
+versions, and refs are reduced to scheme or presence while local paths, package
+renames, options, and features remain available to later pure consumers.
+
+The reader validates the complete TOML document before extraction and enforces
+the inclusive 1 MiB manifest, 64 KiB continued-entry, 256-line continuation,
+4,096-entry, and 128-level structural-depth ceilings. Adversarial regressions
+also pin oversized individual features, deep inline tables, dependency-named
+keys under unrelated metadata, true root dotted writes, both root target-inline
+shapes, and Mosaic patch source ordering. The 197-case corpus, focused Cargo
+oracle tests, 28 schema tests, Python compilation, strict JSON parsing, and diff
+hygiene pass; independent correctness and security reviews issued SHIP. No
+filesystem, path-resolution, Cargo-config, closure, environment, process,
+network, CLI, BUILD, workflow, or dependency authority was added. Reconcile
+current main and live PR overlap before a normal first publication.
+
+#### Neutral Cargo manifest snapshot PR #18879 draft receipt
+
+Open draft PR #18879 at `2026-11-03T12:57:05Z` from exact independently
+reviewed head `3a85e71c4277bb166d878208002cd38e05e0f82d` over exact base
+`6d1eada894ed5b6b9acadc65a3761e3c249fc6dc`. GitHub reports the draft
+mergeable. The branch did not previously exist remotely, the first push was
+normal, and every live open PR at the final review snapshot was path-disjoint
+from all 23 changed paths. Keep the PR draft while this PR-number receipt is
+committed and pushed normally. Require fresh independent review of the
+resulting exact head before marking it ready; keep auto-merge disabled until
+every check on that exact reviewed head is terminal acceptable and GitHub still
+reports the PR mergeable.
+
+#### Neutral Cargo manifest snapshot PR #18879 ready receipt
+
+Independent publication reviews issued SHIP for exact lifecycle head
+`53d812c05de5aac8bb5d46c37c27b9e46f175036`. They verified exact
+local/remote/GitHub head and base parity, mergeability, the 23-path scope and
+live-PR non-overlap, stable implementation patch identity, ignored-inclusive
+cleanliness, the dependency-complete acyclic state graph, and the corrected
+active-PR lifecycle fields. Mark PR #18879 ready at
+`2026-11-03T12:59:40Z`. Commit and push this ready receipt normally, then
+require fresh independent review and terminal acceptable hosted qualification
+on the resulting exact head before guarded squash auto-merge.

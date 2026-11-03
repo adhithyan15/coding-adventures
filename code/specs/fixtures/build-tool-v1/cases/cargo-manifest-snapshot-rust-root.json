@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "id": "cargo-manifest-snapshot/rust-root",
+  "domain": "cargo_manifest_snapshot",
+  "summary": "The Rust-root profile screens link tables while emitting only development and patch trigger provenance.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["resolution"],
+  "workspace": {"files": []},
+  "input": {
+    "operation": "cargo_manifest_snapshot",
+    "options": {
+      "profile": "rust_root",
+      "manifest_utf8": "﻿[dependencies]\ncore = \"1.2\"\n[\"dev-dependencies\"]\ncompiler = { path = \"../compiler\", package = \"compiler-core\", features = [\n  \"emit\",\n  \"emit\"\n] }\n[target.'cfg(unix)'.dev_dependencies]\nharness = { path = \"../harness\", optional = false }\n[patch.crates-io]\npatched = { git = \"https://example.invalid/patched.git\", rev = \"abc123\" }\n"
+    }
+  },
+  "expected": {
+    "schema_version": 1,
+    "case_id": "cargo-manifest-snapshot/rust-root",
+    "domain": "cargo_manifest_snapshot",
+    "outcome": "ok",
+    "result": {
+      "entries": [
+        {"alias": "compiler", "table": "dev-dependencies", "target": null, "source_order": 0, "fields": {"path": "../compiler", "package": "compiler-core", "features": ["emit", "emit"]}},
+        {"alias": "harness", "table": "target-dev-dependencies", "target": "cfg(unix)", "source_order": 1, "fields": {"path": "../harness", "optional": false}},
+        {"alias": "patched", "table": "patch", "target": "crates-io", "source_order": 2, "fields": {"git_scheme": "https", "rev_present": true}}
+      ]
+    },
+    "diagnostics": []
+  },
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

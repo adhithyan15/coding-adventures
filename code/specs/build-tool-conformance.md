@@ -1747,6 +1747,7 @@ structured command fields use the shared definitions in the corpus schema.
 
 | Domain | `input.options` | Successful `result` |
 |---|---|---|
+| `cargo_manifest_snapshot` | an explicit `rust_root`, `mosaic_root`, or `crate_closure` profile and inert `manifest_utf8` text | immutable dependency records in source order, retaining alias, table role, optional target/patch source, and every modeled source field |
 | `ci_gate_selection` | a validated closed registry, nullable affected-package and changed-file snapshots, and `force` | every gate sorted by id with its required verdict and deterministic `run_` output name |
 | `graph` | up to 4,096 unique package names and 16,384 unique `[prerequisite, dependent]` edges | edges sorted by prerequisite then dependent and prerequisite-first deterministic levels containing every package exactly once |
 | `diff_selection` | packages with repository-relative roots and an explicit `package_prefix` or `strict_globs` source mode, dependency edges, forced changed-set seeds, an `all` or `error` unknown-path policy, and an optional pinned repository source-input boundary digest | sorted `changed_packages`, dependent-closed `affected_packages`, and prerequisite-only `prerequisite_packages` |
@@ -1763,6 +1764,40 @@ The Cargo test-trigger variant also uses `diff_selection`, but its closed
 `changed_packages`; its result has the same three sorted selection lists. Its
 fixtures use the distinct `test-trigger-selection-*.json` filename prefix so
 the existing package-root `diff-selection-*.json` roster remains unchanged.
+
+`cargo_manifest_snapshot` is the authority-free boundary before Cargo path
+resolution. It MUST NOT read files, resolve paths or symlinks, inspect Cargo
+configuration, traverse crate closure, consult environment variables, run a
+process, or use the network. The `rust_root` profile emits development,
+target-development, and root patch triggers while strictly screening normal and
+build link tables without emitting them; `mosaic_root` emits all of those roles
+because its smoke crate's Cargo tables are test inputs; and
+`crate_closure` snapshots only normal, build, and target forms. Legacy
+underscore spellings normalize to their hyphenated table role. Output remains
+in manifest source order and retains local paths, package renames, options, and
+features. Registry/version/reference presence and the Git scheme are retained
+without copying raw registry names, versions, refs, or URLs into results.
+Workspace inheritance and deprecated replacement are refused because their
+sources are outside this snapshot. This tranche deliberately does not decide
+whether a retained path resolves to a repository package.
+
+The strict reader accepts at most 1 MiB of UTF-8 manifest bytes, strips exactly
+one leading BOM, accepts LF or CRLF but no bare CR or NUL, and rejects multiline
+strings. TOML array/inline-table structural nesting is capped at 128 levels.
+Headers are exact plain or unescaped quoted TOML segments. Dependency
+aliases are bare keys; values are a version string or an inline table whose
+lowercase fields contain only strings, booleans, or a string array. Only that
+array may continue. A continued entry is limited to 256 normalized
+nonblank/comment-stripped logical lines and 64 KiB for the complete normalized
+`alias = value`, inclusive; single-line entries instead remain bounded by the
+manifest and closed result-field ceilings. Rust screen-only link tables also
+accept the established one-level dependency subtable with one-line plain or
+quoted fields, but never emit it. Duplicate modeled tables or aliases, deeper
+relevant subtables or array tables, dotted/root-inline writes, nested inline
+tables, malformed keys, empty or portable-absolute/backslash paths,
+workspace/replace redirection, and non-HTTPS/non-SSH Git sources fail atomically
+with an empty result and one stable bounded error. Diagnostics and successful
+results MUST NOT echo raw Git URLs, registry names, versions, or refs.
 
 `ci_gate_selection` applies one fixed operation-wide ceiling of 50,000,000
 path-selection work units whenever `force` is false, both snapshots are

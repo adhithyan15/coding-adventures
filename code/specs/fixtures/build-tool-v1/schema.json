@@ -107,6 +107,7 @@
     },
     "domain": {
       "enum": [
+        "cargo_manifest_snapshot",
         "ci_gate_selection",
         "discovery",
         "resolution",
@@ -727,7 +728,7 @@
       "oneOf": [
         {
           "type": "string",
-          "maxLength": 1048576
+          "maxLength": 1048577
         },
         {
           "type": "integer",

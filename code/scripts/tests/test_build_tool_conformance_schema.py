@@ -24,6 +24,7 @@ EXAMPLE_ROOT = FIXTURE_ROOT / "cases"
 MAX_SAFE_INTEGER = 9_007_199_254_740_991
 RESERVED_ADAPTER_FLAGS = ("--conformance", "--workspace-root", "--output")
 DOMAIN_CAPABILITIES = {
+    "cargo_manifest_snapshot": {"resolution"},
     "ci_gate_selection": {"ci_gate_selection"},
     "discovery": {"discovery"},
     "resolution": {"resolution"},
@@ -406,6 +407,45 @@ class BuildToolConformanceSchemaTests(unittest.TestCase):
         self.assertEqual(
             trigger_options["properties"]["trigger_relations"]["maxItems"],
             16384,
+        )
+
+    def test_cargo_manifest_snapshot_schema_is_closed_and_bounded(self) -> None:
+        import jsonschema
+
+        validator = jsonschema.Draft202012Validator(self.pure_schema)
+        fixtures = [
+            example
+            for example in self.examples
+            if example["domain"] == "cargo_manifest_snapshot"
+        ]
+        self.assertEqual(len(fixtures), 12)
+        for example in fixtures:
+            with self.subTest(case=example["id"]):
+                record = {
+                    "domain": example["domain"],
+                    "outcome": example["expected"]["outcome"],
+                    "input": copy.deepcopy(example["input"]),
+                    "result": copy.deepcopy(example["expected"]["result"]),
+                }
+                self.assertEqual(list(validator.iter_errors(record)), [])
+                record["input"]["options"]["workspace_root"] = "/tmp/repo"
+                self.assertTrue(list(validator.iter_errors(record)))
+
+        options = self.pure_schema["$defs"]["cargo_manifest_snapshot_input"][
+            "properties"
+        ]["options"]
+        self.assertFalse(options["additionalProperties"])
+        self.assertEqual(set(options["required"]), {"profile", "manifest_utf8"})
+        self.assertEqual(
+            options["properties"]["manifest_utf8"]["maxLength"], 1048577
+        )
+        entry = self.pure_schema["$defs"]["cargo_manifest_entry"]
+        self.assertFalse(entry["additionalProperties"])
+        self.assertEqual(
+            self.pure_schema["$defs"]["cargo_manifest_snapshot_result"][
+                "properties"
+            ]["entries"]["maxItems"],
+            4096,
         )
 
     def test_every_pure_domain_rejects_unknown_input_fields(self) -> None:

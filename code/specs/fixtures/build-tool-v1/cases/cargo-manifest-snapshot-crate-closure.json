@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "cargo-manifest-snapshot/crate-closure",
+  "domain": "cargo_manifest_snapshot",
+  "summary": "The crate-closure profile excludes development and patch tables while retaining normal and build links.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["resolution"],
+  "workspace": {"files": []},
+  "input": {"operation": "cargo_manifest_snapshot", "options": {"profile": "crate_closure", "manifest_utf8": "[dependencies]\ncore = { path = \"../core\" }\n[dev-dependencies]\nignored = { path = \"../ignored\" }\n[patch.crates-io]\nalso-ignored = { path = \"../patch\" }\n[target.'cfg(unix)'.build_dependencies]\ngen = { path = \"../gen\" }\n"}},
+  "expected": {"schema_version": 1, "case_id": "cargo-manifest-snapshot/crate-closure", "domain": "cargo_manifest_snapshot", "outcome": "ok", "result": {"entries": [
+    {"alias": "core", "table": "dependencies", "target": null, "source_order": 0, "fields": {"path": "../core"}},
+    {"alias": "gen", "table": "target-build-dependencies", "target": "cfg(unix)", "source_order": 1, "fields": {"path": "../gen"}}
+  ]}, "diagnostics": []},
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

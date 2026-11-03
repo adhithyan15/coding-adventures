@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "cargo-manifest-snapshot/unsafe-git",
+  "domain": "cargo_manifest_snapshot",
+  "summary": "Local and implicit Git sources fail closed and never expose their raw URL in diagnostics.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["resolution"],
+  "workspace": {"files": []},
+  "input": {"operation": "cargo_manifest_snapshot", "options": {"profile": "rust_root", "manifest_utf8": "[dev-dependencies]\ncompiler = { git = \"file:///tmp/compiler\" }\n"}},
+  "expected": {"schema_version": 1, "case_id": "cargo-manifest-snapshot/unsafe-git", "domain": "cargo_manifest_snapshot", "outcome": "error", "result": {}, "diagnostics": [{"code": "CARGO_MANIFEST_GIT_UNSAFE", "severity": "error"}]},
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}
