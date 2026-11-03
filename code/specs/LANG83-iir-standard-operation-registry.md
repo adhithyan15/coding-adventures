@@ -142,7 +142,7 @@ does not gate it).
 | | `write_f64_py` | Builtin | PR6a | **Removed in PR7e** (language-specific). Python `repr(float)` (= `str` = what `print` writes), **no** newline: shortest round-trip digits; fixed notation when the decimal exponent `e` satisfies `-4 <= e < 16`, else `d.ddde±XX` (at least two exponent digits); integral values keep `.0`; `-0.0`, `inf`, `-inf`, `nan`. |
 | | `write_f64_js` | Builtin | PR6a | **Removed in PR7e** (language-specific). JavaScript `Number.prototype.toString()` (what `console.log` writes for a number), **no** newline: the same digits; fixed when `-7 < e < 21`, else `d.ddde±X` (no padding); integral values print bare (`1`, not `1.0`); `-0` → `0`, `Infinity`, `-Infinity`, `NaN`. |
 | | `write_f64_rb` | Builtin | Later | **Withdrawn by PR7**: the Ruby compiler emits a helper. Ruby `Float#to_s` (fixed when `-4 <= e < 16`, `1.0e+16` style otherwise). |
-| Strings | `str_const` `str_len` `str_index` `str_slice` `str_concat` `str_eq` `str_cmp` | Op | Exists | LANG-FULL E4 byte strings; `str_index`/`str_slice` out of range → `Trap.Bounds`. Declared `Lowered` on eight columns. Since PR5a every column reports `Trap.Bounds` (and `str_concat` `Trap.Overflow` past the string ceiling); three are not yet byte-exact (PR5b), and PR5d lowers them on the JIT (see "PR5 — runtime strings"). |
+| Strings | `str_const` `str_len` `str_index` `str_slice` `str_concat` `str_eq` `str_cmp` | Op | Exists | LANG-FULL E4 byte strings; `str_index`/`str_slice` out of range → `Trap.Bounds`. Declared `Lowered` on eight columns. Since PR5a every column reports `Trap.Bounds` (and `str_concat` `Trap.Overflow` past the string ceiling); since PR5b every column is byte-exact and a literal may be `Operand::Bytes`, and PR5d lowers them on the JIT (see "PR5 — runtime strings"). |
 | | `str_from_byte`, `str_builder_*`, `str_to_i64` | Op | Later | Defined in "PR5 — runtime strings" ("Not in the family, and why"); each enters with the first frontend that needs it. |
 | Errors | `trap` | Op | PR1b | Terminator; no dest; `srcs = [Str(kind)]` with `kind` from the closed table below. |
 | | `trap_msg` | Op | Later | `trap` plus a `str` message. |
@@ -439,7 +439,7 @@ fail. This was checked by mutation.
   `i64_neg_ovf`), registered and lowered on all nine backends in one slice;
   see "PR4 — the overflow family". `i64_div_trunc` / `i64_mod_trunc` stay
   `Later`.
-- **PR5 — runtime strings** (PR5a landed; PR5b–PR5e planned): the E4 byte-string family
+- **PR5 — runtime strings** (PR5a and PR5b landed; PR5c–PR5e planned): the E4 byte-string family
   fails closed with registered traps and a size ceiling (5a), is byte-exact on
   every column (5b), gains `i64_to_str` (5c), compiles on the JIT (5d), and is
   a binary on BEAM (5e). It unblocks LANG84 Perl 4d, Python 7d, JavaScript 6f
@@ -657,8 +657,8 @@ all of them. CLR and BEAM run in CI.
 
 ## PR5 — runtime strings
 
-**Status:** PR5a landed (2026-11-02; see "What PR5a landed"); PR5b–PR5e
-planned. PR5 makes LANG-FULL E4's byte
+**Status:** PR5a landed (2026-11-02; see "What PR5a landed"); PR5b
+implemented (2026-11-03; see "What PR5b landed"); PR5c–PR5e planned. PR5 makes LANG-FULL E4's byte
 strings a registry family that means the same thing on all nine columns, and
 adds one op, `i64_to_str`. It unblocks the first string subsets of four
 frontends: Perl 4d, Python 7d, JavaScript 6f and Ruby `rb-str-puts` (LANG84).
@@ -1404,6 +1404,66 @@ byte string, the builtins should count bytes (and `make-string`'s
 `n × len_utf8(ch)` stays the byte count); if it is a character string, Twig's
 compiler should emit the code-point walk ("What a compiler writes itself")
 instead of a bare `str_index`. It is open question 10.
+
+### What PR5b landed
+
+PR5b ("bytes, not text") is complete on the eight columns that lower strings;
+the JIT still refuses them until PR5d. Locally the PR5b cases ran on WASM, VM,
+LLVM, native x86-64 and JVM; CLR and BEAM are compiled and pinned structurally
+(IL with a stack-depth model of the new writer, BEAM instruction streams), and
+CI executes them.
+
+| Part | What changed |
+| --- | --- |
+| `interpreter-ir` | `Operand::Bytes(Vec<u8>)`, `Operand::as_lit_bytes()`, `b"…"` display, `BytesOperand` in `validate()`, `StrTooLong` for a `Bytes` literal, wire format 1.3 (operand kind 5) as designed above |
+| vm-core | `Value::Str(Arc<[u8]>)` with `Value::str` / `as_bytes` / `as_str`; `str_slice` without the UTF-8 check; `str_const` of either literal; byte-exact default `print_str`; `dyn_symbol` keyed on bytes |
+| native (`twig-aot`) | every literal byte through `store_byte`; the fold table holds bytes |
+| LLVM | any literal; literal table and fold facts keyed on bytes |
+| WASM | any literal into the data segment; runtime blocks keyed on bytes |
+| JVM | one char per byte; chunked constants; modified UTF-8 in the pool; `__iir_print_str` |
+| CLR | `ldstr bytearray` for a literal that is not printable ASCII; `__iir_write_bytes` behind `print_str` and `putchar`; Latin-1 `input_str` |
+| BEAM | any literal byte as a list element |
+| `lang-aot` | 14 `(PR5b)` cases and the gate `pr5b_strings_are_bytes_on_every_column`; byte-exact VM/JIT sinks and `input_str` line drain |
+
+**Bugs found on the way, and fixed.**
+
+- WASM keyed its promoted literal blocks by `String::from_utf8_lossy` of the
+  bytes. Harmless while every literal was UTF-8; with byte literals the
+  strings `A9` and `FF` (both U+FFFD) shared one block, and a branch returned
+  the other branch's byte. Keyed by bytes now.
+- LLVM: a literal `str_slice` that split a UTF-8 character was skipped by the
+  literal pre-pass and then refused by the lowering ("does not preserve
+  UTF-8"), so `"é"[1..2]` did not compile. It folds to `A9`.
+- `twig-vm`'s `str_slice` had the same UTF-8 check as vm-core; it is dropped
+  too, so the two interpreters agree with the contract.
+
+**Divergences from the plan, and why.**
+
+- `Value::Str` is `Arc<[u8]>`, not `Rc<[u8]>` (see "PR5b — bytes, not text:
+  the design"): `Value` must stay `Send + Sync`.
+- The CLR keeps the quoted `ldstr "…"` for a printable-ASCII literal and uses
+  `bytearray` only otherwise. Both denote the same chars; keeping the quoted
+  form leaves every earlier IL text unchanged.
+- The byte table (every byte 0x80–0xFF) is a raw-byte literal, not slices of
+  UTF-8 literals as the case table planned: no UTF-8 string contains the bytes
+  C0, C1 or F5–FF on their own, so slicing cannot build them. The lone-byte
+  case still slices a UTF-8 literal.
+- The `print_i64` newline is left out of the ordered-stream case: the JVM's
+  `println` writes the platform line separator, which differs on Windows.
+
+**What remains.**
+
+- The LLVM GC-stress case and its base-handle fact, which PR5a moved here, are
+  not in PR5b. Native rooting is unchanged and still covered by PR5a's tests.
+- CLR and BEAM run the PR5b cases in CI only. The CLR's `Encoding.Latin1` and
+  `Console.set_InputEncoding` are resolved against the reference assemblies by
+  `ilasm` there.
+- The CLR's binary `lower.rs` path (the clr-simulator column) still lowers only
+  the literals it did; it refuses a `Bytes` operand in `const` and as a call
+  argument.
+- Open question 10 (`dynval-runtime`'s code-point builtins).
+- PR5b touches `interpreter-ir`, vm-core and `twig-vm`, so the twig-vm Miri
+  script applies.
 
 ### Owner decisions (2026-11-02)
 

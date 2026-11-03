@@ -669,6 +669,193 @@ fn pr5a_cases() -> Vec<Case> {
     ]
 }
 
+// ---------------------------------------------------------------------------
+// LANG83 PR5b — strings are bytes, not text
+// ---------------------------------------------------------------------------
+//
+// Every case below writes bytes outside printable ASCII and compares them
+// exactly (`Expect::StdoutBytes`). Each runs in two forms:
+//
+// | form    | where the strings are                       | what it proves                  |
+// |---------|---------------------------------------------|---------------------------------|
+// | literal | `str_const`s in `main`, foldable            | the literal encoding and folds  |
+// | opaque  | parameters of a call-free `f` (`main` calls it) | the run-time representation |
+//
+// Before PR5b every non-literal-ASCII case here was a compile-time refusal on
+// native, LLVM, WASM, JVM, CLR and BEAM; the VM refused the lone-byte slice;
+// and the JVM and CLR wrote a char ≥ 0x80 as two UTF-8 bytes.
+
+/// The UTF-8 literal of the conformance table: 14 bytes, 1 + 2 + 3 + 4-byte
+/// characters (`é` = C3 A9, `€` = E2 82 AC, `𝄞` = F0 9D 84 9E).
+const PR5B_UTF8: &str = "h\u{e9}llo \u{20ac}\u{1d11e}";
+
+fn sep() -> IIRInstr {
+    text("pr5b.sep", ",")
+}
+fn print_sep() -> IIRInstr {
+    print_str("pr5b.sep")
+}
+fn bytes_lit(d: &str, b: &[u8]) -> IIRInstr {
+    IIRInstr::new("str_const", Some(d.into()), vec![Operand::Bytes(b.to_vec())], "str")
+}
+fn putchar_const(d: &str, c: i64) -> Vec<IIRInstr> {
+    vec![int(d, c), builtin("putchar", d)]
+}
+
+/// One PR5b program. `strings` are `(register, literal)`; `body` reads them.
+/// Literal form: everything in `main`. Opaque form: `body` is `f(strings…)`,
+/// and `main` sets up the literals and calls `f`.
+fn pr5b_program(strings: Vec<(&str, Operand)>, body: Vec<IIRInstr>, opaque: bool) -> IIRModule {
+    let lit = |d: &str, o: &Operand| IIRInstr::new("str_const", Some(d.into()), vec![o.clone()], "str");
+    if !opaque {
+        let mut main: Vec<IIRInstr> = strings.iter().map(|(d, o)| lit(d, o)).collect();
+        main.extend(body);
+        return program(main);
+    }
+    let mut f_body = body;
+    f_body.push(int("pr5b.zero", 0));
+    f_body.push(IIRInstr::new("ret", None, vec![var("pr5b.zero")], "i64"));
+    let mut main: Vec<IIRInstr> = strings.iter().map(|(d, o)| lit(&format!("arg.{d}"), o)).collect();
+    let mut call = vec![var("f")];
+    call.extend(strings.iter().map(|(d, _)| var(&format!("arg.{d}"))));
+    main.push(IIRInstr::new("call", Some("pr5b.r".into()), call, "i64"));
+    let mut module = program(main);
+    module.add_or_replace(IIRFunction::new(
+        "f",
+        strings.iter().map(|(d, _)| (d.to_string(), "str".to_string())).collect(),
+        "i64",
+        f_body,
+    ));
+    module
+}
+
+/// `str_len s`, then `str_index s` at 0, 1, 2 and 13, each written and
+/// followed by `,`; then `print_str s`.
+fn pr5b_stats_of_s() -> Vec<IIRInstr> {
+    let mut body = vec![sep(), op("str_len", "n", &["s"], "i64"), builtin("write_i64", "n"), print_sep()];
+    for i in [0, 1, 2, 13] {
+        let (iv, bv) = (format!("i{i}"), format!("b{i}"));
+        body.push(int(&iv, i));
+        body.push(op("str_index", &bv, &["s", &iv], "i64"));
+        body.push(builtin("write_i64", &bv));
+        body.push(print_sep());
+    }
+    body.push(print_str("s"));
+    body
+}
+
+/// The UTF-8 literal: its byte count, four of its bytes, then itself.
+fn pr5b_utf8<const OPAQUE: bool>() -> IIRModule {
+    pr5b_program(vec![("s", Operand::Str(PR5B_UTF8.into()))], pr5b_stats_of_s(), OPAQUE)
+}
+
+/// The same bytes as a raw-byte literal: `str_eq` with the `Str` spelling is
+/// 1, and the stats are identical.
+fn pr5b_raw_utf8<const OPAQUE: bool>() -> IIRModule {
+    let mut body = vec![op("str_eq", "same", &["s", "t"], "i64"), builtin("write_i64", "same")];
+    body.extend(pr5b_stats_of_s());
+    pr5b_program(
+        vec![("s", Operand::Bytes(PR5B_UTF8.as_bytes().to_vec())), ("t", Operand::Str(PR5B_UTF8.into()))],
+        body,
+        OPAQUE,
+    )
+}
+
+/// A raw-byte literal no `Str` can carry: NUL, LF, CR, DEL and three bytes
+/// that are not UTF-8 on their own; printed, then its length.
+fn pr5b_raw_bytes<const OPAQUE: bool>() -> IIRModule {
+    pr5b_program(
+        vec![("s", Operand::Bytes(vec![0x00, 0x0A, 0x0D, 0x7F, 0x80, 0xA9, 0xFF]))],
+        vec![print_str("s"), op("str_len", "n", &["s"], "i64"), builtin("write_i64", "n")],
+        OPAQUE,
+    )
+}
+
+/// `str_slice "é", 1, 2`: the lone byte A9, printed.
+fn pr5b_lone_byte<const OPAQUE: bool>() -> IIRModule {
+    pr5b_program(
+        vec![("s", Operand::Str("\u{e9}".into()))],
+        vec![int("a", 1), int("b", 2), op("str_slice", "t", &["s", "a", "b"], "str"), print_str("t")],
+        OPAQUE,
+    )
+}
+
+/// Every byte 0x80–0xFF in a raw-byte literal through `print_str`, then
+/// `putchar 0xFF` (the CLR wrote it as C3 BF).
+fn pr5b_byte_table<const OPAQUE: bool>() -> IIRModule {
+    let mut body = vec![print_str("s")];
+    body.extend(putchar_const("ff", 0xFF));
+    pr5b_program(vec![("s", Operand::Bytes((0x80..=0xFF).collect()))], body, OPAQUE)
+}
+
+/// Bytes 0x80..=0xFF, then 0xFF again.
+const PR5B_BYTE_TABLE_OUT: [u8; 129] = {
+    let mut out = [0xFFu8; 129];
+    let mut i = 0;
+    while i < 128 {
+        out[i] = 0x80 + i as u8;
+        i += 1;
+    }
+    out
+};
+
+/// Edges on a two-byte string `s = "é"` and `e = ""`: `str_len ""`; `s ++ ""`
+/// equals `s`; slices `[0,0)`, `[len,len)` and `[0,len)`; and `str_cmp` of
+/// the byte 7F with `s` is -1 (unsigned: 0x7F < 0xC3).
+fn pr5b_edges<const OPAQUE: bool>() -> IIRModule {
+    let w = |d: &str| vec![builtin("write_i64", d), print_sep()];
+    let mut body = vec![sep(), op("str_len", "le", &["e"], "i64")];
+    body.extend(w("le"));
+    body.extend([op("str_concat", "se", &["s", "e"], "str"), op("str_eq", "q1", &["se", "s"], "i64")]);
+    body.extend(w("q1"));
+    body.extend([int("z", 0), int("two", 2)]);
+    body.extend([op("str_slice", "s00", &["s", "z", "z"], "str"), op("str_len", "l00", &["s00"], "i64")]);
+    body.extend(w("l00"));
+    body.extend([op("str_slice", "s22", &["s", "two", "two"], "str"), op("str_len", "l22", &["s22"], "i64")]);
+    body.extend(w("l22"));
+    body.extend([op("str_slice", "s02", &["s", "z", "two"], "str"), op("str_eq", "q2", &["s02", "s"], "i64")]);
+    body.extend(w("q2"));
+    body.extend([op("str_cmp", "c", &["d", "s"], "i64"), builtin("write_i64", "c")]);
+    pr5b_program(
+        vec![("s", Operand::Str("\u{e9}".into())), ("e", Operand::Str(String::new())), ("d", Operand::Bytes(vec![0x7F]))],
+        body,
+        OPAQUE,
+    )
+}
+
+/// The ordered stream with bytes ≥ 0x80 on every writer: `print_str`,
+/// `write_i64`, `putchar`, `print_str`, with no flush between them.
+fn pr5b_ordered<const OPAQUE: bool>() -> IIRModule {
+    let mut body = vec![print_str("s"), int("one", 1), builtin("write_i64", "one")];
+    body.extend(putchar_const("ff", 0xFF));
+    body.push(print_str("t"));
+    pr5b_program(vec![("s", Operand::Str("\u{e9}".into())), ("t", Operand::Bytes(vec![0xA9]))], body, OPAQUE)
+}
+
+/// What [`pr5b_utf8`] writes after its stats prefix.
+const PR5B_UTF8_OUT: &[u8] = b"14,104,195,169,158,h\xc3\xa9llo \xe2\x82\xac\xf0\x9d\x84\x9e";
+const PR5B_RAW_UTF8_OUT: &[u8] = b"114,104,195,169,158,h\xc3\xa9llo \xe2\x82\xac\xf0\x9d\x84\x9e";
+
+/// The PR5b cases. Each name ends in `(PR5b)`, which is how the gate finds them.
+fn pr5b_cases() -> Vec<Case> {
+    vec![
+        Case { name: "a UTF-8 literal is its bytes, literal (PR5b)", build: pr5b_utf8::<false>, expect: Expect::StdoutBytes(PR5B_UTF8_OUT) },
+        Case { name: "a UTF-8 literal is its bytes, opaque (PR5b)", build: pr5b_utf8::<true>, expect: Expect::StdoutBytes(PR5B_UTF8_OUT) },
+        Case { name: "a raw-byte literal of the same bytes is the same string, literal (PR5b)", build: pr5b_raw_utf8::<false>, expect: Expect::StdoutBytes(PR5B_RAW_UTF8_OUT) },
+        Case { name: "a raw-byte literal of the same bytes is the same string, opaque (PR5b)", build: pr5b_raw_utf8::<true>, expect: Expect::StdoutBytes(PR5B_RAW_UTF8_OUT) },
+        Case { name: "a raw-byte literal holds any byte, literal (PR5b)", build: pr5b_raw_bytes::<false>, expect: Expect::StdoutBytes(b"\x00\n\r\x7f\x80\xa9\xff7") },
+        Case { name: "a raw-byte literal holds any byte, opaque (PR5b)", build: pr5b_raw_bytes::<true>, expect: Expect::StdoutBytes(b"\x00\n\r\x7f\x80\xa9\xff7") },
+        Case { name: "str_slice may split a UTF-8 character, literal (PR5b)", build: pr5b_lone_byte::<false>, expect: Expect::StdoutBytes(b"\xa9") },
+        Case { name: "str_slice may split a UTF-8 character, opaque (PR5b)", build: pr5b_lone_byte::<true>, expect: Expect::StdoutBytes(b"\xa9") },
+        Case { name: "every byte 0x80-0xFF prints as itself, and so does putchar 0xFF, literal (PR5b)", build: pr5b_byte_table::<false>, expect: Expect::StdoutBytes(&PR5B_BYTE_TABLE_OUT) },
+        Case { name: "every byte 0x80-0xFF prints as itself, and so does putchar 0xFF, opaque (PR5b)", build: pr5b_byte_table::<true>, expect: Expect::StdoutBytes(&PR5B_BYTE_TABLE_OUT) },
+        Case { name: "string edges and unsigned byte order, literal (PR5b)", build: pr5b_edges::<false>, expect: Expect::StdoutBytes(b"0,1,0,0,1,-1") },
+        Case { name: "string edges and unsigned byte order, opaque (PR5b)", build: pr5b_edges::<true>, expect: Expect::StdoutBytes(b"0,1,0,0,1,-1") },
+        Case { name: "print_str, write_i64 and putchar share one ordered byte stream, literal (PR5b)", build: pr5b_ordered::<false>, expect: Expect::StdoutBytes(b"\xc3\xa91\xff\xa9") },
+        Case { name: "print_str, write_i64 and putchar share one ordered byte stream, opaque (PR5b)", build: pr5b_ordered::<true>, expect: Expect::StdoutBytes(b"\xc3\xa91\xff\xa9") },
+    ]
+}
+
 const MAX: i64 = i64::MAX;
 const MIN: i64 = i64::MIN;
 
@@ -1916,6 +2103,7 @@ fn cases() -> Vec<Case> {
     ];
     // LANG83 PR5a: the string-failure, ceiling, DCE, aliasing and opaque cases.
     all.extend(pr5a_cases());
+    all.extend(pr5b_cases());
     all
 }
 
@@ -2738,6 +2926,49 @@ fn pr5a_string_failures_are_registered_traps_on_every_column() {
             compile_on(backend, case.module()).unwrap_or_else(|e| panic!("{}: {backend}: {e}", case.name));
         }
         eprintln!("LANG83 PR5a `{}` proven on {ran:?}", case.name);
+    }
+}
+
+/// LANG83 PR5b gate: strings are bytes on every column. Pins that every
+/// string op stays lowered (the JIT refuses them until PR5d), then runs the
+/// PR5b cases on every executable column whose toolchain is present (WASM,
+/// VM always; LLVM with `clang`; native x86-64 on Linux; JVM with `java`)
+/// and compiles them for CLR and BEAM, whose execution is CI's.
+#[test]
+fn pr5b_strings_are_bytes_on_every_column() {
+    for op in ["str_const", "str_len", "str_index", "str_slice", "str_concat", "str_eq", "str_cmp", "print_str"] {
+        for backend in Backend::ALL {
+            let support = backend.op_support(op);
+            if backend == Backend::Jit {
+                assert!(matches!(support, OpSupport::Refused(_)), "the JIT refuses {op} until PR5d: {support:?}");
+            } else {
+                assert!(support.is_lowered(), "{backend} must lower {op}: {support:?}");
+            }
+        }
+    }
+    let mut required = vec!["Wasm", "Vm"];
+    if clang_ok() {
+        required.push("Llvm");
+    }
+    if cfg!(target_os = "linux") {
+        required.push("NativeAot");
+    }
+    if java_ok() {
+        required.push("Jvm");
+    }
+    let corpus = cases();
+    let pr5b: Vec<&Case> = corpus.iter().filter(|c| c.name.ends_with("(PR5b)")).collect();
+    assert_eq!(pr5b.len(), 14, "the PR5b case table");
+    for case in pr5b {
+        assert!(!case.lowered_on(Backend::Jit), "{}: the JIT refuses strings", case.name);
+        let ran = execute_everywhere(case);
+        for column in &required {
+            assert!(ran.contains(column), "{}: did not run on {column} (ran {ran:?})", case.name);
+        }
+        for backend in [Backend::Clr, Backend::Beam] {
+            compile_on(backend, case.module()).unwrap_or_else(|e| panic!("{}: {backend}: {e}", case.name));
+        }
+        eprintln!("LANG83 PR5b `{}` proven on {ran:?}", case.name);
     }
 }
 

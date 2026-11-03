@@ -91,6 +91,12 @@ compiles or runs a module (#18800), so an over-long literal is refused
 everywhere, never run. Unlike `release`, the field is part of the binary
 wire format (format 1.2, written only when it is `Some`, #18800).
 
+A string is bytes with no encoding (LANG83 PR5b). A `str_const` literal is an
+`Operand::Str` (its UTF-8) or an `Operand::Bytes(Vec<u8>)` (any bytes, such as
+Perl's `"\xff"`); `Operand::as_lit_bytes()` reads either, and the ceiling
+measures either. `validate()` reports a `Bytes` operand anywhere but
+`str_const`'s literal (`BytesOperand`).
+
 ## The standard operation registry (LANG83)
 
 `op_registry::STANDARD_OPS` names every operation a frontend may emit and every
@@ -202,9 +208,11 @@ let module2 = deserialise(&bytes).unwrap();
 Format: `b"IIR\0"` magic, then a major and a minor version byte, little-endian.
 The writer uses the oldest version that can hold the module: **1.1** (functions,
 exports, imports) unless the module lowers its string ceiling, and **1.2** (1.1
-plus a `0x12` section holding `str_max_bytes`) when it does (#18800). So a module
-without a ceiling serialises byte for byte as before. The reader accepts 1.0,
-1.1 and 1.2. Profiling fields and `release` are **not** serialised (they are
+plus a `0x12` section holding `str_max_bytes`) when it does (#18800), and **1.3**
+when some `str_const` carries a raw-byte `Operand::Bytes` literal (operand kind
+`5`: a `u32` length and the raw bytes; the ceiling section is then optional and
+ends the stream; LANG83 PR5b). So a module without a ceiling or a raw-byte
+literal serialises byte for byte as before. The reader accepts 1.0 to 1.3. Profiling fields and `release` are **not** serialised (they are
 runtime-only state and provenance).
 
 ---
