@@ -104,6 +104,9 @@ rebuild the final source before final tests/coverage. Run package tests, strict
 Clippy/fmt and unchanged exact grammar regeneration. Measure the new source
 module's executable-line coverage and identify unexercised allocation refusals.
 README/changelog/capability declarations describe the additive source API.
+Repository input selection must route changes to this source contract to the
+Warrant crate, with the same missing-consumer and lookalike refusal as its
+existing grammar/parent-spec inputs.
 
 No tests here establish indentation-token origin capture, complete hostile
 parser safety, semantic depth/type checking or VER04 conformance. The existing
