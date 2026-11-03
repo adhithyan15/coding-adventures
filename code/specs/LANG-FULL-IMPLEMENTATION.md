@@ -82,6 +82,10 @@ division, overrides, and dynamic roots remain outside the proof.
 Left-to-right integer divisions may reduce that coefficient when every division
 is exact. Fractional coefficients, rooted divisors, zero divisors, overflow,
 multiple roots, overrides, and dynamic roots remain outside the proof.
+Checked integer divisors may also leave a reduced rational coefficient. Exact
+integer arithmetic supplies the mathematical floor or negative ceiling while
+rooted divisors, zero divisors, overflow, multiple roots, overrides, and
+dynamic roots remain outside the proof.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.

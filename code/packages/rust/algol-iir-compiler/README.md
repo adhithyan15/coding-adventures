@@ -358,6 +358,10 @@ division, overrides, and dynamic roots remain conservative.
 Left-to-right integer divisions may reduce that coefficient when every division
 is exact. Fractional coefficients, rooted divisors, zero divisors, overflow,
 multiple roots, overrides, and dynamic roots remain conservative.
+Checked integer divisors may also leave a reduced rational coefficient. The
+compiler floors or ceilings the resulting scaled root with exact integer
+arithmetic; rooted divisors, zero divisors, overflow, multiple roots,
+overrides, and dynamic roots remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
