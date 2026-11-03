@@ -1271,6 +1271,24 @@ apply intermediate or non-DNS constraints, construct or search a path, verify
 a hostname, check revocation, perform TLS or HTTP, authorize OAuth transport,
 or grant network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A bounded intermediate-policy follow-up now consumes that complete SHA-512
+selected-anchor proof and applies the exact retained intermediate's
+NameConstraints extension to the exact retained target Subject Alternative
+Name. An absent extension preserves the complete prior proof without new DNS
+evidence. A present extension must be critical and must decode under a separate
+caller-owned ASN.1 budget as the supported permitted-and-excluded-dNSName
+subset; every target dNSName must satisfy the permitted policy, exclusions take
+precedence, and malformed or unsupported forms fail closed with payload-free
+categories. Both certificates and the SAN are derived only through the
+consumed proof, preventing detached certificate or policy substitution. The
+non-copyable result retains target and intermediate policy, both authenticated
+links, advanced path-length state, exact reviewed-root selection, anchor DNS
+policy, and optional intermediate constrained-name evidence together. This pure
+public-data policy performs no credential access, signing, storage, clock
+acquisition, audit event, trace emission, or external effect. It does not apply
+non-DNS constraints, construct or search a path, verify a hostname, check
+revocation, perform TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded `x509-rsa-signature-routing` prerequisite now separates
 caller-owned certificate algorithm selection from fixed repository-owned RSA
 verification. It consumes exact child-certificate algorithm-profile evidence

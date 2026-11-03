@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.6.0 - 2026-11-03
+
+### Added
+
+- Applied the exact retained intermediate's supported critical permitted and
+  excluded DNS constraints to the exact target retained by the complete
+  selected-anchor SHA-512 proof.
+- Added non-copyable result evidence retaining the entire prior proof beside
+  optional payload-free constrained-name evidence.
+
+### Security
+
+- Present intermediate NameConstraints must be critical, both decoders use
+  separate caller-owned limits, excluded names take precedence, and failures
+  expose only stable payload-free categories.
+- This fixed two-link policy does not process non-DNS constraints, construct or
+  search paths, verify hostnames, check revocation, or grant TLS, HTTP, OAuth,
+  or network authority.
+
 ## 0.5.0 - 2026-11-02
 
 ### Added
