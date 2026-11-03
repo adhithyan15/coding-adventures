@@ -285,6 +285,12 @@ forEachTrackLessons(defaultCurriculumRoot(), (_language, lessons) => {
 });
 ```
 
+Task-shape reading-reach assertions that inspect one language load that
+language's lessons with `loadTrackLessons(language)` (spec HL113). They still
+load the committed inventories and assert the same row. The separate
+`reading-reach.test.ts` exercises the whole corpus and all inventory rows;
+track-local tests do not replace that gate.
+
 `summarizeLessonModalities(entries)` is the matching piece for modality: it
 summarizes entries that were derived one track at a time exactly as
 `summarizeModality(lessons)` summarizes the parsed lessons.

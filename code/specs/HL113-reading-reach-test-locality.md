@@ -8,8 +8,9 @@ coverage threshold changes.
 
 ## Problem
 
-Twelve task-shape tests assert one reading-reach row for one language and level,
-but each calls `loadLessons()` for the entire human-languages corpus. In a full
+Thirteen assertions in twelve task-shape test files inspect one reading-reach
+row for one language and level, but each calls `loadLessons()` for the entire
+human-languages corpus. In a full
 parallel Windows suite, several of those cases exceed their existing budgets
 while the same cases pass alone. Each call also holds parsed lessons from all
 other tracks even though the asserted row reads none of them.
@@ -21,8 +22,8 @@ language. Each inventory row then reads only the entry for its own language.
 Therefore, for a test asserting the row for track `T`, passing
 `loadTrackLessons(T)` instead of `loadLessons()` must produce the same row.
 
-The twelve tests continue to load the committed task-shape inventories and to
-assert their existing status, measurable-part counts, and reach values. They
+The thirteen assertions continue to load the committed task-shape inventories
+and to assert their existing status, measurable-part counts, and reach values. They
 read every committed lesson of the asserted track through the same guarded
 loader and content-addressed test cache. A focused two-track regression test
 pins that an unrelated track cannot affect another track's row.

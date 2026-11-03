@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
+import { listTaskShapeInventories, loadTrackLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
 it("aims below CAPLE's ACESSO, which is A1 and not pre-A1", () => {
@@ -45,7 +45,7 @@ it("scores the two things Portuguese spelling asks for that its neighbours do no
 it("declares a published stimulus length, so reading reach can measure it rather than skip it", () => {
   const inventories = listTaskShapeInventories().map(({ language, level }) =>
     loadTaskShapeInventory(language, level));
-  const report = measureReadingReach(loadLessons(), inventories);
+  const report = measureReadingReach(loadTrackLessons("portuguese"), inventories);
   const row = report.rows.find((r) => r.language === "portuguese" && r.level === "pre-A1");
   expect(row?.status).toBe("measurable");
 });

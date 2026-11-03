@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
+import { listTaskShapeInventories, loadTrackLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
 it("states its own rule rather than borrowing an authority that publishes none", () => {
@@ -46,7 +46,7 @@ it("scores the headline stroke, which is what groups a Bengali word at all", () 
 it("declares a published stimulus length, so reading reach can measure it rather than skip it", () => {
   const inventories = listTaskShapeInventories().map(({ language, level }) =>
     loadTaskShapeInventory(language, level));
-  const report = measureReadingReach(loadLessons(), inventories);
+  const report = measureReadingReach(loadTrackLessons("bengali"), inventories);
   const row = report.rows.find((r) => r.language === "bengali" && r.level === "pre-A1");
   expect(row?.status).toBe("measurable");
   expect(row?.partsMeasurable).toBe(3);

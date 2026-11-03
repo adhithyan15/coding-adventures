@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { listTaskShapeInventories, loadLessons, loadTaskShapeInventory } from "../../src/loader.js";
+import { listTaskShapeInventories, loadTrackLessons, loadTaskShapeInventory } from "../../src/loader.js";
 import { measureReadingReach } from "../../src/reading-reach.js";
 
 describe("Spanish task-shape inventories", () => {
@@ -84,7 +84,7 @@ describe("Spanish task-shape inventories", () => {
   it("measures how far Spanish's own reading is from the A2 inputs it now declares", () => {
     const inventories = listTaskShapeInventories().map(({ language, level }) =>
       loadTaskShapeInventory(language, level));
-    const report = measureReadingReach(loadLessons(), inventories);
+    const report = measureReadingReach(loadTrackLessons("spanish"), inventories);
     const row = report.rows.find((r) => r.language === "spanish" && r.level === "A2");
 
     // Declaring the inventory is what makes this measurable at all, and the
