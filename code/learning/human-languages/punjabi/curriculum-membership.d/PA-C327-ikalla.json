@@ -1,0 +1,11 @@
+{
+  "id": "PA-C327-ikalla",
+  "pathSegment": "PA-PATH-327-UPSET327",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-327-UPSET327",
+      "order": 2
+    }
+  ]
+}

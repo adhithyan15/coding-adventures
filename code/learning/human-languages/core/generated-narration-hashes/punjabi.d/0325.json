@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:07f36f99e58921b3",
+  "lessonIds": [
+    "PA-C325-sudharna",
+    "PA-C325-vigarna",
+    "PA-C325-parhez",
+    "PA-C325-chabauna",
+    "PA-C325-pir"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch325.txt",
+  "json": "punjabi/narration/ch325.json",
+  "textHash": "fnv1a64:7bd173963d0211de",
+  "jsonHash": "fnv1a64:02d5473444d75c2f",
+  "findings": []
+}

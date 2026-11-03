@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C285-varna",
+    "language": "punjabi",
+    "chapter": 285,
+    "sequence": 17210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04a995d1b90be1ea"
+  },
+  "findings": []
+}

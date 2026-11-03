@@ -1,0 +1,11 @@
+{
+  "id": "PA-C267-adalat",
+  "pathSegment": "PA-PATH-267-OFFICE267",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-267-OFFICE267",
+      "order": 3
+    }
+  ]
+}

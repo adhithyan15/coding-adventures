@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 282,
+  "sourceHash": "fnv1a64:027b9bd8a4d7d3a0",
+  "lessonIds": [
+    "PA-C282-ataichi",
+    "PA-C282-bisatra",
+    "PA-C282-jhola",
+    "PA-C282-sambhna",
+    "PA-C282-nikalna"
+  ],
+  "tex": "punjabi/book/chapters/ch282-bags-for-the-road.tex"
+}

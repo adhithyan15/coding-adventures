@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "The Barber and the Washerman",
+  "label": "ch:pa-a2-the-barber-and-the-washerman",
+  "canDo": "I can name the people who cut hair and wash clothes.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C333-mali",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can name the people who cut hair and wash clothes.",
+    "assesses": [
+      "PA-LEX-C333-BARBER333-03",
+      "PA-LEX-C333-BARBER333-04",
+      "PA-LEX-C333-BARBER333-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 252,
+  "title": "Bundles and Curtains",
+  "label": "ch:pa-a2-bundles-and-curtains",
+  "canDo": "I can name more things around the house.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-R252-review-final-252",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 252: I can name more things around the house.",
+    "assesses": [
+      "PA-LEX-C252-GHR252-01",
+      "PA-LEX-C252-GHR252-02",
+      "PA-LEX-C252-GHR252-03",
+      "PA-LEX-C252-GHR252-04",
+      "PA-LEX-C252-GHR252-05"
+    ]
+  }
+}

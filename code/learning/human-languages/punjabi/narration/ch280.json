@@ -1,0 +1,955 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 280,
+  "title": "Small Change",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:1601a7b808c0023c",
+  "lessons": [
+    {
+      "id": "PA-C280-bhan",
+      "sequence": 16380,
+      "title": "ਭਾਨ (bhān) — small change; coins",
+      "headword": "ਭਾਨ",
+      "romanization": "bhān",
+      "gloss": "small change; coins",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16c50f0f71fb1a85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to exchange, then the Punjabi for a complaint."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਭਾਨ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਾਨ — bhān — \"small change; coins\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੀ ਤੁਹਾਡੇ ਕੋਲ ਭਾਨ ਹੈ? kī tuhāḍe kol bhān hai? Do you have small change?"
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਾਨ (bhān) is inherited from Sanskrit bhājana, \"dividing\"; CDIAL lists Punjabi bhāṇ, \"small change for a rupee\", under it (CDIAL 9437)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kī tuhāḍe kol bhān hai? — Do you have small change?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kī tuhāḍe kol bhān hai?* — Do you have small change?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to exchange, then the Punjabi for a complaint, then say bhān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to exchange, then the Punjabi for a complaint, then say *bhān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਭਾਨ (bhān) mean? (\"Small change; coins\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C280-bhanauna",
+      "sequence": 16390,
+      "title": "ਭਨਾਉਣਾ (bhanāuṇā) — to break a note into change",
+      "headword": "ਭਨਾਉਣਾ",
+      "romanization": "bhanāuṇā",
+      "gloss": "to break a note into change",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72b5937ec228663d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a complaint, then the Punjabi for small change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਭਨਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਨਾਉਣਾ — bhanāuṇā — \"to break a note into change\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਬੈਂਕ ਵਿੱਚ ਸੌ ਦਾ ਨੋਟ ਭਨਾਉਂਦਾ ਹਾਂ। maiṁ baiṅk vich sau dā noṭ bhanāundā hāṁ. I break a hundred note into change at the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਨੋਟ ਭਨਾਇਆ, maiṁ noṭ bhanāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਨਾਉਣਾ (bhanāuṇā) is inherited from Sanskrit bhajyate, \"is broken\"; CDIAL lists Punjabi bhanāuṇā, \"to change (money)\", under it (CDIAL 9361)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhanāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhanāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhanāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhanāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ baiṅk vich sau dā noṭ bhanāundā hāṁ. — I break a hundred note into change at the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ baiṅk vich sau dā noṭ bhanāundā hāṁ.* — I break a hundred note into change at the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a complaint, then the Punjabi for small change, then say bhanāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a complaint, then the Punjabi for small change, then say *bhanāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਭਨਾਉਣਾ (bhanāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਭਨਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਭਨਾਉਣਾ (bhanāuṇā) mean? (\"To break a note into change\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C280-bachna",
+      "sequence": 16400,
+      "title": "ਬਚਣਾ (bachṇā) — to be left over; to remain",
+      "headword": "ਬਚਣਾ",
+      "romanization": "bachṇā",
+      "gloss": "to be left over; to remain",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e01b20bdcabadbc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for small change, then the Punjabi for to break a note into change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬਚਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਚਣਾ — bachṇā — \"to be left over; to remain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸੌਦੇ ਤੋਂ ਬਾਅਦ ਮੇਰੇ ਕੋਲ ਕੁਝ ਪੈਸੇ ਬਚਦੇ ਹਨ। saude ton bāad mere kol kujh paise bachde han. After the shopping I have some money left."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਰੋਟੀ ਬਚੀ, oh roṭī bachī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਚਣਾ (bachṇā) goes back to Sanskrit vañcati, \"moves; escapes from\"; CDIAL lists Punjabi bacṇā, \"to escape\", under it, as a word taken from Hindi bacnā (CDIAL 11208)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bachṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bachṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bachṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bachṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saude ton bāad mere kol kujh paise bachde han. — After the shopping I have some money left.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saude ton bāad mere kol kujh paise bachde han.* — After the shopping I have some money left.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for small change, then the Punjabi for to break a note into change, then say bachṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for small change, then the Punjabi for to break a note into change, then say *bachṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬਚਣਾ (bachṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬਚਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬਚਣਾ (bachṇā) mean? (\"To be left over; to remain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C280-puggna",
+      "sequence": 16410,
+      "title": "ਪੁੱਗਣਾ (puggṇā) — to be affordable; to be worth it",
+      "headword": "ਪੁੱਗਣਾ",
+      "romanization": "puggṇā",
+      "gloss": "to be affordable; to be worth it",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:408a371313e1f867",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to break a note into change, then the Punjabi for to be left over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੁੱਗਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੁੱਗਣਾ — puggṇā — \"to be affordable; to be worth it\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮਹਿੰਗਾ ਕਿਰਾਇਆ ਮੈਨੂੰ ਨਹੀਂ ਪੁੱਗਦਾ ਹੈ। mahiṅgā kirāiā mainū̃ nahīṁ puggdā hai. I cannot afford an expensive fare."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਸੌਦਾ ਮੈਨੂੰ ਪੁੱਗਿਆ, oh saudā mainū̃ puggiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੁੱਗਣਾ (puggṇā) is inherited from Sanskrit pūryate, \"is filled\"; CDIAL lists Punjabi puggṇā, \"to be completed, reach\", under it (CDIAL 8342). The sense \"to be affordable\" is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puggṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puggṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "puggṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *puggṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahiṅgā kirāiā mainū̃ nahīṁ puggdā hai. — I cannot afford an expensive fare.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahiṅgā kirāiā mainū̃ nahīṁ puggdā hai.* — I cannot afford an expensive fare.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to break a note into change, then the Punjabi for to be left over, then say puggṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to break a note into change, then the Punjabi for to be left over, then say *puggṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪੁੱਗਣਾ (puggṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪੁੱਗਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੁੱਗਣਾ (puggṇā) mean? (\"To be affordable; to be worth it\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C280-baki",
+      "sequence": 16420,
+      "title": "ਬਾਕੀ (bākī) — the rest; remaining",
+      "headword": "ਬਾਕੀ",
+      "romanization": "bākī",
+      "gloss": "the rest; remaining",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3d89a627bbfe162",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to be left over, then the Punjabi for to be affordable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬਾਕੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਾਕੀ — bākī — \"the rest; remaining\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬਾਕੀ ਪੈਸੇ ਮੇਰੀ ਜੇਬ ਵਿੱਚ ਹਨ। bākī paise merī jeb vich han. The rest of the money is in my pocket."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬਾਕੀ (bākī) is a loan, usually traced through Persian to Arabic bāqī, \"remaining\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bākī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bākī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bākī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bākī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bākī paise merī jeb vich han. — The rest of the money is in my pocket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bākī paise merī jeb vich han.* — The rest of the money is in my pocket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to be left over, then the Punjabi for to be affordable, then say bākī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to be left over, then the Punjabi for to be affordable, then say *bākī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬਾਕੀ (bākī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬਾਕੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬਾਕੀ (bākī) mean? (\"The rest; remaining\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R280-review-274-280",
+      "sequence": 16430,
+      "title": "Looking back: from Yards and Metres to Small Change",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Yards and Metres to Small Change",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:50386c922c65e6ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for to measure and a yard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to measure, a yard, a metre, a size, a pair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to measure, a yard, a metre, a size, a pair]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loose, tight, to suit, a dozen, a bag",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: loose, tight, to suit, a dozen, a bag]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a price, a rate, to lower, a purchase, free of charge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a price, a rate, to lower, a purchase, free of charge]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a customer, to choose, to test, a thing, goods",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a customer, to choose, to test, a thing, goods]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a reckoning, to load, to be sold, a packet, to add up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a reckoning, to load, to be sold, a packet, to add up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "faulty, fake, genuine, to exchange, a complaint",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: faulty, fake, genuine, to exchange, a complaint]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "small change, to break a note into change, to be left over, to be affordable, the rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: small change, to break a note into change, to be left over, to be affordable, the rest]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To measure? (ਮਿਣਨਾ, miṇnā.) A yard? (ਗਜ਼, gaz.) A metre? (ਮੀਟਰ, mīṭar.) A size? (ਨਾਪ, nāp.) A pair? (ਜੋੜਾ, joṛā.) Loose? (ਢਿੱਲਾ, ḍhillā.) Tight? (ਤੰਗ, taṅg.) To suit? (ਫੱਬਣਾ, phabbṇā.) A dozen? (ਦਰਜਨ, darjan.) A bag? (ਥੈਲਾ, thailā.) A price? (ਮੁੱਲ, mull.) A rate? (ਭਾਅ, bhāa.) To lower? (ਘਟਾਉਣਾ, ghaṭāuṇā.) A purchase? (ਸੌਦਾ, saudā.) Free of charge? (ਮੁਫ਼ਤ, mufat.) A customer? (ਗਾਹਕ, gāhak.) To choose? (ਚੁਣਨਾ, chuṇnā.) To test? (ਪਰਖਣਾ, parakhṇā.) A thing? (ਚੀਜ਼, chīz.) Goods? (ਸਾਮਾਨ, sāmān.) A reckoning? (ਹਿਸਾਬ, hisāb.) To load? (ਲੱਦਣਾ, laddṇā.) To be sold? (ਵਿਕਣਾ, vikṇā.) A packet? (ਪੈਕਟ, paikaṭ.) To add up? (ਜੋੜਨਾ, joṛnā.) Faulty? (ਖ਼ਰਾਬ, kharāb.) Fake? (ਨਕਲੀ, naklī.) Genuine? (ਅਸਲੀ, aslī.) To exchange? (ਵਟਾਉਣਾ, vaṭāuṇā.) A complaint? (ਸ਼ਿਕਾਇਤ, shikāit.) Small change? (ਭਾਨ, bhān.) To break a note into change? (ਭਨਾਉਣਾ, bhanāuṇā.) To be left over? (ਬਚਣਾ, bachṇā.) To be affordable? (ਪੁੱਗਣਾ, puggṇā.) The rest? (ਬਾਕੀ, bākī.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R280-review-final-280",
+      "sequence": 16440,
+      "title": "Small Change — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:824e5d5b4c4f6826",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for small change and to break a note into change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "small change, to break a note into change, to be left over, to be affordable, the rest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: small change, to break a note into change, to be left over, to be affordable, the rest]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Small change? (ਭਾਨ, bhān.) To break a note into change? (ਭਨਾਉਣਾ, bhanāuṇā.) To be left over? (ਬਚਣਾ, bachṇā.) To be affordable? (ਪੁੱਗਣਾ, puggṇā.) The rest? (ਬਾਕੀ, bākī.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:cd52a922adf605b1",
+  "lessonIds": [
+    "PA-C338-ijazat",
+    "PA-C338-manha",
+    "PA-C338-manzur",
+    "PA-C338-hukam",
+    "PA-C338-tokna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch338.txt",
+  "json": "punjabi/narration/ch338.json",
+  "textHash": "fnv1a64:5423d612d410a515",
+  "jsonHash": "fnv1a64:e0f9d803a9980707",
+  "findings": []
+}

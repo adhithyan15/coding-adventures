@@ -1,0 +1,11 @@
+{
+  "id": "PA-C236-lota",
+  "pathSegment": "PA-PATH-236-KAM236",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-236-KAM236",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 251,
+  "title": "Spoons and Baskets",
+  "label": "ch:pa-a2-spoons-and-baskets",
+  "canDo": "I can name kitchen spoons and baskets.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C251-tamba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 251: I can name kitchen spoons and baskets.",
+    "assesses": [
+      "PA-LEX-C251-GHR251-03",
+      "PA-LEX-C251-GHR251-04",
+      "PA-LEX-C251-GHR251-05"
+    ]
+  }
+}

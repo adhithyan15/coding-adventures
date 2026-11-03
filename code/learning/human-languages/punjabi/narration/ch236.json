@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 236,
+  "title": "Scrubbing the Pots",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5d7f19623ca4da25",
+  "lessons": [
+    {
+      "id": "PA-C236-manjna",
+      "sequence": 13560,
+      "title": "ਮਾਂਜਣਾ (mānjṇā) — to scrub (pots)",
+      "headword": "ਮਾਂਜਣਾ",
+      "romanization": "mānjṇā",
+      "gloss": "to scrub (pots)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5751c1d501edfa48",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for mud plaster, then the Punjabi for to plaster."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਾਂਜਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਂਜਣਾ — mānjṇā — \"to scrub (pots)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਰਾਤ ਨੂੰ ਭਾਂਡੇ ਮਾਂਜਦੀ ਹਾਂ। maiṁ rāt nū̃ bhāṇḍe mānjdī hāṁ. At night I scrub the pots."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਭਾਂਡੇ ਮਾਂਜੇ, maiṁ bhāṇḍe mānje."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਾਂਜਣਾ (mānjṇā) is inherited from Sanskrit mārjati, \"wipes off, rubs clean\"; CDIAL lists Punjabi mā̃jṇā, \"to rub\" (CDIAL 10080). The pot-scouring sense is CDIAL's Lahnda gloss: mā̃jhaṇ, \"to clean out a vessel with sand or ashes\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānjṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānjṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mānjṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mānjṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ rāt nū̃ bhāṇḍe mānjdī hāṁ. — At night I scrub the pots.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ rāt nū̃ bhāṇḍe mānjdī hāṁ.* — At night I scrub the pots.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for mud plaster, then the Punjabi for to plaster, then say mānjṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for mud plaster, then the Punjabi for to plaster, then say *mānjṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਾਂਜਣਾ (mānjṇā) mean? (\"To scrub (pots)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C236-hanghalna",
+      "sequence": 13570,
+      "title": "ਹੰਘਾਲਣਾ (haṅghālṇā) — to rinse",
+      "headword": "ਹੰਘਾਲਣਾ",
+      "romanization": "haṅghālṇā",
+      "gloss": "to rinse",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aacf3bf06d1f3ee4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to plaster, then the Punjabi for to scrub."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹੰਘਾਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੰਘਾਲਣਾ — haṅghālṇā — \"to rinse\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਗਲਾਸ ਪਾਣੀ ਨਾਲ ਹੰਘਾਲਦਾ ਹਾਂ। maiṁ galās pāṇī nāl haṅghāldā hāṁ. I rinse the glass with water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਗਲਾਸ ਹੰਘਾਲਿਆ, maiṁ galās haṅghāliā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੰਘਾਲਣਾ (haṅghālṇā) is inherited from a reconstructed āghālayati, \"rinses\"; CDIAL lists Punjabi hãghālṇā, \"to rinse\" (CDIAL 1058)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṅghālṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṅghālṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṅghālṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṅghālṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ galās pāṇī nāl haṅghāldā hāṁ. — I rinse the glass with water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ galās pāṇī nāl haṅghāldā hāṁ.* — I rinse the glass with water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to plaster, then the Punjabi for to scrub, then say haṅghālṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to plaster, then the Punjabi for to scrub, then say *haṅghālṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹੰਘਾਲਣਾ (haṅghālṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹੰਘਾਲਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹੰਘਾਲਣਾ (haṅghālṇā) mean? (\"To rinse\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C236-uladdna",
+      "sequence": 13580,
+      "title": "ਉਲੱਦਣਾ (uladdṇā) — to tip out; to empty",
+      "headword": "ਉਲੱਦਣਾ",
+      "romanization": "uladdṇā",
+      "gloss": "to tip out; to empty",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2d492732b2ac8d98",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to scrub, then the Punjabi for to rinse."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਉਲੱਦਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਲੱਦਣਾ — uladdṇā — \"to tip out; to empty\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਬਾਲਟੀ ਦਾ ਗੰਦਾ ਪਾਣੀ ਬਾਹਰ ਉਲੱਦਦੀ ਹਾਂ। maiṁ bālṭī dā gandā pāṇī bāhar uladddī hāṁ. I tip the dirty water from the bucket outside."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਪਾਣੀ ਉਲੱਦਿਆ, maiṁ pāṇī uladdiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਲੱਦਣਾ (uladdṇā) is inherited from a reconstructed ullardayati, \"overloads\"; CDIAL lists Punjabi uladdṇā, \"to overturn, upset\" (CDIAL 2372)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uladdṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uladdṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uladdṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uladdṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ bālṭī dā gandā pāṇī bāhar uladddī hāṁ. — I tip the dirty water from the bucket outside.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ bālṭī dā gandā pāṇī bāhar uladddī hāṁ.* — I tip the dirty water from the bucket outside.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to scrub, then the Punjabi for to rinse, then say uladdṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to scrub, then the Punjabi for to rinse, then say *uladdṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਉਲੱਦਣਾ (uladdṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਉਲੱਦਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਉਲੱਦਣਾ (uladdṇā) mean? (\"To tip out; to empty\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C236-lota",
+      "sequence": 13590,
+      "title": "ਲੋਟਾ (loṭā) — a small water pot",
+      "headword": "ਲੋਟਾ",
+      "romanization": "loṭā",
+      "gloss": "a small water pot",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b908e691c56a9280",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to rinse, then the Punjabi for to tip out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਲੋਟਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੋਟਾ — loṭā — \"a small water pot\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਲੋਟੇ ਵਿੱਚ ਪਾਣੀ ਹੈ। loṭe vich pāṇī hai. There is water in the pot."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਲੋਟਾ (loṭā) is inherited from a reconstructed lōṭṭa, \"waterpot\"; CDIAL lists Punjabi loṭṭā, \"waterpot\" (CDIAL 11133)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loṭe vich pāṇī hai. — There is water in the pot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loṭe vich pāṇī hai.* — There is water in the pot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to rinse, then the Punjabi for to tip out, then say loṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to rinse, then the Punjabi for to tip out, then say *loṭā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਲੋਟਾ (loṭā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਲੋਟਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਲੋਟਾ (loṭā) mean? (\"A small water pot\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C236-katora",
+      "sequence": 13600,
+      "title": "ਕਟੋਰਾ (kaṭorā) — a deep bowl",
+      "headword": "ਕਟੋਰਾ",
+      "romanization": "kaṭorā",
+      "gloss": "a deep bowl",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6db663e6e6dd29ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to tip out, then the Punjabi for a small water pot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਟੋਰਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਟੋਰਾ — kaṭorā — \"a deep bowl\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕਟੋਰੇ ਵਿੱਚ ਦਾਲ ਹੈ। kaṭore vich dāl hai. There is dal in the deep bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਟੋਰਾ (kaṭorā) is inherited from a reconstructed kaṭṭōra, \"cup\"; CDIAL lists Punjabi kaṭorā, \"small open-mouthed cup\" (CDIAL 2648)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭorā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭorā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭorā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭorā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaṭore vich dāl hai. — There is dal in the deep bowl.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaṭore vich dāl hai.* — There is dal in the deep bowl.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to tip out, then the Punjabi for a small water pot, then say kaṭorā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to tip out, then the Punjabi for a small water pot, then say *kaṭorā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਟੋਰਾ (kaṭorā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਟੋਰਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਟੋਰਾ (kaṭorā) mean? (\"A deep bowl\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

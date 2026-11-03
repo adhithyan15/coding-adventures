@@ -1,0 +1,18 @@
+{
+  "chapter": 214,
+  "title": "Are You a Traveller?",
+  "label": "ch:pa-a2-polar",
+  "canDo": "I can ask a yes-or-no question with ki at the front and answer it with han ji or nahin ji.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C214-payoff",
+    "kind": "production",
+    "summary": "Ask a yes-or-no question with ki, tell it from ki 'what', and answer yes or no politely.",
+    "assesses": [
+      "PA-GRAMMAR-POLAR-KI-214",
+      "PA-GRAMMAR-POLAR-ANSWER-214"
+    ]
+  }
+}

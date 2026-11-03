@@ -1,0 +1,11 @@
+{
+  "id": "PA-C303-halat",
+  "pathSegment": "PA-PATH-303-WATER303",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-303-WATER303",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-256-DAK256",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how letters and parcels reach a house.",
+  "prerequisites": []
+}

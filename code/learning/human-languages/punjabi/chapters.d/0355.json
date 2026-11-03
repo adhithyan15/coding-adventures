@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Riddles and Jokes",
+  "label": "ch:pa-a2-riddles-and-jokes",
+  "canDo": "I can say that I like riddles and jokes.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-C355-chherna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can say that I like riddles and jokes.",
+    "assesses": [
+      "PA-LEX-C355-RIDDLE355-03",
+      "PA-LEX-C355-RIDDLE355-04",
+      "PA-LEX-C355-RIDDLE355-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C239-tava",
+    "language": "punjabi",
+    "chapter": 239,
+    "sequence": 13720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6655c10597da02f6"
+  },
+  "findings": []
+}

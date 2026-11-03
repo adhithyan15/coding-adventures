@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:dadf1fdd6a06d6d3",
+  "lessonIds": [
+    "PA-C318-uddna",
+    "PA-C318-phuttna",
+    "PA-C318-takkar",
+    "PA-C318-dubbna",
+    "PA-C318-malah"
+  ],
+  "tex": "punjabi/book/chapters/ch318-a-day-of-mishaps.tex"
+}

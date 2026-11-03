@@ -1,0 +1,11 @@
+{
+  "id": "PA-C297-barik",
+  "pathSegment": "PA-PATH-297-TOUCH297",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-297-TOUCH297",
+      "order": 1
+    }
+  ]
+}

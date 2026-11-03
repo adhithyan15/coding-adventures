@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C249-angiar",
+    "language": "punjabi",
+    "chapter": 249,
+    "sequence": 14270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b9f28f0311252196"
+  },
+  "findings": []
+}

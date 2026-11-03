@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:3656d1575a4a6207",
+  "lessonIds": [
+    "PA-C293-mitti",
+    "PA-C293-zamin",
+    "PA-C293-paddhra",
+    "PA-C293-dhalan",
+    "PA-C293-tilla"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch293.txt",
+  "json": "punjabi/narration/ch293.json",
+  "textHash": "fnv1a64:6e651996e35a9b7c",
+  "jsonHash": "fnv1a64:041101ef0f013e3c",
+  "findings": []
+}

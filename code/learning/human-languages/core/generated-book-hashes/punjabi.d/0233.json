@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 233,
+  "sourceHash": "fnv1a64:96c1ba599b764ecc",
+  "lessonIds": [
+    "PA-C233-aram",
+    "PA-C233-dari",
+    "PA-C233-vichhauna",
+    "PA-C233-khes",
+    "PA-C233-pakkha"
+  ],
+  "tex": "punjabi/book/chapters/ch233-an-afternoon-rest.tex"
+}

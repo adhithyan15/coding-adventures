@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:6c7dec41ef40cff3",
+  "lessonIds": [
+    "PA-C296-khisakna",
+    "PA-C296-chipakna",
+    "PA-C296-garha",
+    "PA-C296-chikna",
+    "PA-C296-pighalna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch296.txt",
+  "json": "punjabi/narration/ch296.json",
+  "textHash": "fnv1a64:2f22a3c1b428eea9",
+  "jsonHash": "fnv1a64:8bf5e1ce1ffbff62",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C333-mali",
+  "pathSegment": "PA-PATH-333-BARBER333",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-333-BARBER333",
+      "order": 4
+    }
+  ]
+}

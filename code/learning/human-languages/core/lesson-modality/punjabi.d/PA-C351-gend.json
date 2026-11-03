@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C351-gend",
+    "language": "punjabi",
+    "chapter": 351,
+    "sequence": 21720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8530feab189f655d"
+  },
+  "findings": []
+}

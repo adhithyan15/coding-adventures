@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:ba64e1de7a431aa2",
+  "lessonIds": [
+    "PA-C264-par",
+    "PA-C264-langhna",
+    "PA-C264-phatak",
+    "PA-C264-khambha",
+    "PA-C264-kona"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch264.txt",
+  "json": "punjabi/narration/ch264.json",
+  "textHash": "fnv1a64:f74af8a62c9a6296",
+  "jsonHash": "fnv1a64:56c6b497fc55386c",
+  "findings": []
+}

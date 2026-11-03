@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C243-pauna",
+    "language": "punjabi",
+    "chapter": 243,
+    "sequence": 13920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7dfef4c7f5495035"
+  },
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-211-A2-VOWEL-STEM",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I go to, eat and drink every day, with the present forms of jana, khana and pina.",
+  "prerequisites": [
+    "PA-EXT-210-A2-NE"
+  ]
+}

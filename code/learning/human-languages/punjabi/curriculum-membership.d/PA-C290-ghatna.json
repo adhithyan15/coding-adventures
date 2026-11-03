@@ -1,0 +1,11 @@
+{
+  "id": "PA-C290-ghatna",
+  "pathSegment": "PA-PATH-290-WEEK290",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-290-WEEK290",
+      "order": 3
+    }
+  ]
+}

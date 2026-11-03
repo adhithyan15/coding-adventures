@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-271-COMPASS271",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "PA-EXT-271-COMPASS271"
+  ],
+  "after": []
+}

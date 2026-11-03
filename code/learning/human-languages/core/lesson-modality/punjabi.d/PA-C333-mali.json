@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C333-mali",
+    "language": "punjabi",
+    "chapter": 333,
+    "sequence": 20270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d06b334b25d43c2b"
+  },
+  "findings": []
+}

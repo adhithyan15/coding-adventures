@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C337-zara",
+    "language": "punjabi",
+    "chapter": 337,
+    "sequence": 21030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a25c878f3cf1782"
+  },
+  "findings": []
+}

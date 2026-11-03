@@ -1,0 +1,11 @@
+{
+  "id": "PA-C308-sing",
+  "pathSegment": "PA-PATH-308-FEED308",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-308-FEED308",
+      "order": 3
+    }
+  ]
+}

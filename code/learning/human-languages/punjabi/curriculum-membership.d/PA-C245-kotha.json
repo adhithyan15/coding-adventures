@@ -1,0 +1,11 @@
+{
+  "id": "PA-C245-kotha",
+  "pathSegment": "PA-PATH-245-GHR245",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-245-GHR245",
+      "order": 1
+    }
+  ]
+}

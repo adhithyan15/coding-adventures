@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-255-POST255",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "PA-EXT-255-POST255"
+  ],
+  "after": []
+}

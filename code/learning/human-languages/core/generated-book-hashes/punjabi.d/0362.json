@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:d14f43d8e02325f1",
+  "lessonIds": [
+    "PA-C362-kabal",
+    "PA-C362-nipunn",
+    "PA-C362-chamkauna",
+    "PA-C362-tarashna",
+    "PA-C362-azmauna"
+  ],
+  "tex": "punjabi/book/chapters/ch362-skills-i-have.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:a0df70fa4e2cc80e",
+  "lessonIds": [
+    "PA-C268-adda",
+    "PA-C268-kandaktar",
+    "PA-C268-sit",
+    "PA-C268-bhir",
+    "PA-C268-tikna"
+  ],
+  "tex": "punjabi/book/chapters/ch268-at-the-bus-stand.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 337,
+  "title": "Asking Nicely",
+  "label": "ch:pa-a2-asking-nicely",
+  "canDo": "I can ask politely for something I need.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C337-mangvauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 337: I can ask politely for something I need.",
+    "assesses": [
+      "PA-LEX-C337-ASK337-03",
+      "PA-LEX-C337-ASK337-04",
+      "PA-LEX-C337-ASK337-05"
+    ]
+  }
+}

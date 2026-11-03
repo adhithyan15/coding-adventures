@@ -1,0 +1,11 @@
+{
+  "id": "PA-C290-gare",
+  "pathSegment": "PA-PATH-290-WEEK290",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-290-WEEK290",
+      "order": 1
+    }
+  ]
+}

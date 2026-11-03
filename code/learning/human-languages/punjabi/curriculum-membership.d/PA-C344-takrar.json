@@ -1,0 +1,11 @@
+{
+  "id": "PA-C344-takrar",
+  "pathSegment": "PA-PATH-344-ARGUE344",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-344-ARGUE344",
+      "order": 2
+    }
+  ]
+}

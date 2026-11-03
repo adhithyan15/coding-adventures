@@ -1,0 +1,11 @@
+{
+  "id": "PA-C320-tika",
+  "pathSegment": "PA-PATH-320-CLINIC320",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-320-CLINIC320",
+      "order": 4
+    }
+  ]
+}

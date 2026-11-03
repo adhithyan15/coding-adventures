@@ -1,0 +1,19 @@
+{
+  "chapter": 243,
+  "title": "Mixing and Tasting",
+  "label": "ch:pa-a2-mixing-and-tasting",
+  "canDo": "I can say how I mix and taste food.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C243-chakkhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 243: I can say how I mix and taste food.",
+    "assesses": [
+      "PA-LEX-C243-KAM243-03",
+      "PA-LEX-C243-KAM243-04",
+      "PA-LEX-C243-KAM243-05"
+    ]
+  }
+}

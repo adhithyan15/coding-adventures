@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:38061fa266b232e1",
+  "lessonIds": [
+    "PA-C222-fut-return",
+    "PA-C222-karanga",
+    "PA-C222-karoge",
+    "PA-C222-karanga-review",
+    "PA-C222-ki-nahin-future",
+    "PA-C222-payoff"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch222.txt",
+  "json": "punjabi/narration/ch222.json",
+  "textHash": "fnv1a64:97d37bcf2138360b",
+  "jsonHash": "fnv1a64:867c9590d3e3d056",
+  "findings": []
+}

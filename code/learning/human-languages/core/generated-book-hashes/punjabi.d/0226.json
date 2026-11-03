@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 226,
+  "sourceHash": "fnv1a64:dafba08cd8748f75",
+  "lessonIds": [
+    "PA-C226-tiar",
+    "PA-C226-burash",
+    "PA-C226-kambna",
+    "PA-C226-bherna",
+    "PA-C226-sair"
+  ],
+  "tex": "punjabi/book/chapters/ch226-ready-for-the-day.tex"
+}

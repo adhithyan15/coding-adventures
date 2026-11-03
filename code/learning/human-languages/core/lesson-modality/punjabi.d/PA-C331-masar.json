@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C331-masar",
+    "language": "punjabi",
+    "chapter": 331,
+    "sequence": 20170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:afead0ef496e04a4"
+  },
+  "findings": []
+}

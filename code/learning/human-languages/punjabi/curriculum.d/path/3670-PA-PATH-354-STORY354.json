@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-354-STORY354",
+  "spine_node": "SPINE-SAY-WHAT-I-LIKE",
+  "before": [],
+  "inline": [
+    "PA-EXT-354-STORY354"
+  ],
+  "after": []
+}

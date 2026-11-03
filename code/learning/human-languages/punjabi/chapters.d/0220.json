@@ -1,0 +1,19 @@
+{
+  "chapter": 220,
+  "title": "Aman Bought a Book",
+  "label": "ch:pa-a2-ne-past",
+  "canDo": "I can say what Aman, or he or she, bought, gave or took, with ne after the doer.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C220-payoff",
+    "kind": "production",
+    "summary": "Say what a named person or us did to something with ne, use lia and ditta, and ask a ki question in the past.",
+    "assesses": [
+      "PA-GRAMMAR-NE-NAME-220",
+      "PA-GRAMMAR-US-NE-220",
+      "PA-GRAMMAR-PAST-LIA-DITTA-220"
+    ]
+  }
+}

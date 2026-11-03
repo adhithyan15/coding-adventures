@@ -1,0 +1,11 @@
+{
+  "id": "PA-C292-nami",
+  "pathSegment": "PA-PATH-292-DAMP292",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-292-DAMP292",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 309,
+  "title": "News from Home",
+  "label": "ch:pa-a2-news-from-home",
+  "canDo": "I can pass on a piece of news about something that happened.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C309-marna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 309: I can pass on a piece of news about something that happened.",
+    "assesses": [
+      "PA-LEX-C309-NEWS309-03",
+      "PA-LEX-C309-NEWS309-04",
+      "PA-LEX-C309-NEWS309-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:4d2ce8f81d308c91",
+  "lessonIds": [
+    "PA-C318-uddna",
+    "PA-C318-phuttna",
+    "PA-C318-takkar",
+    "PA-C318-dubbna",
+    "PA-C318-malah"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch318.txt",
+  "json": "punjabi/narration/ch318.json",
+  "textHash": "fnv1a64:55d76b1dcb20964e",
+  "jsonHash": "fnv1a64:6f4903e1ce546b45",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C362-chamkauna",
+  "pathSegment": "PA-PATH-362-SKILL362",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-362-SKILL362",
+      "order": 2
+    }
+  ]
+}

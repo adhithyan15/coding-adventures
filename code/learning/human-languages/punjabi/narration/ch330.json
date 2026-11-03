@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 330,
+  "title": "Brothers' and Sisters' Spouses",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:85c16394495bbf0e",
+  "lessons": [
+    {
+      "id": "PA-C330-bharjai",
+      "sequence": 20080,
+      "title": "ਭਰਜਾਈ (bharjāī) — a brother's wife",
+      "headword": "ਭਰਜਾਈ",
+      "romanization": "bharjāī",
+      "gloss": "a brother's wife",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32fc2cdaf909cb8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a son-in-law, then the Punjabi for a child's father-in-law."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਭਰਜਾਈ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਰਜਾਈ — bharjāī — \"a brother's wife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੀ ਭਰਜਾਈ ਸਕੂਲ ਵਿੱਚ ਬੱਚਿਆਂ ਨੂੰ ਪੰਜਾਬੀ ਸਿਖਾਉਂਦੀ ਹੈ। merī bharjāī sakūl vich bachchiāṁ nū̃ panjābī sikhāundī hai. My brother's wife teaches Punjabi to children at school."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਰਜਾਈ (bharjāī) is inherited from Sanskrit bhrāturjāyā, \"a brother's wife\"; CDIAL lists Punjabi bharjāī, \"brother's wife\", under it (CDIAL 9660)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharjāī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharjāī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bharjāī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bharjāī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī bharjāī sakūl vich bachchiāṁ nū̃ panjābī sikhāundī hai. — My brother's wife teaches Punjabi to children at school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī bharjāī sakūl vich bachchiāṁ nū̃ panjābī sikhāundī hai.* — My brother's wife teaches Punjabi to children at school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a son-in-law, then the Punjabi for a child's father-in-law, then say bharjāī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a son-in-law, then the Punjabi for a child's father-in-law, then say *bharjāī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਭਰਜਾਈ (bharjāī) mean? (\"A brother's wife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C330-jija",
+      "sequence": 20090,
+      "title": "ਜੀਜਾ (jījā) — a sister's husband",
+      "headword": "ਜੀਜਾ",
+      "romanization": "jījā",
+      "gloss": "a sister's husband",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6b0099c5e2d204ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a child's father-in-law, then the Punjabi for a brother's wife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਜੀਜਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੀਜਾ — jījā — \"a sister's husband\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਜੀਜਾ ਬਹੁਤ ਹੱਸਦਾ ਹੈ। merā jījā bahut hassdā hai. My sister's husband laughs a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜੀਜਾ (jījā) is inherited from a reconstructed jījja, \"a nursery word for breast, mother, sister, relative\"; CDIAL lists Punjabi jījā, \"sister's husband\", under it (CDIAL 5232)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jījā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jījā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jījā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jījā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā jījā bahut hassdā hai. — My sister's husband laughs a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā jījā bahut hassdā hai.* — My sister's husband laughs a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a child's father-in-law, then the Punjabi for a brother's wife, then say jījā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a child's father-in-law, then the Punjabi for a brother's wife, then say *jījā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਜੀਜਾ (jījā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਜੀਜਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਜੀਜਾ (jījā) mean? (\"A sister's husband\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C330-nanan",
+      "sequence": 20100,
+      "title": "ਨਣਾਨ (naṇān) — a husband's sister",
+      "headword": "ਨਣਾਨ",
+      "romanization": "naṇān",
+      "gloss": "a husband's sister",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:447fe109aae18ba0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a brother's wife, then the Punjabi for a sister's husband."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਨਣਾਨ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਣਾਨ — naṇān — \"a husband's sister\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੀ ਨਣਾਨ ਹਰ ਐਤਵਾਰ ਸਾਡੇ ਘਰ ਆਉਂਦੀ ਹੈ। merī naṇān har aitvār sāḍe ghar āundī hai. My husband's sister comes to our house every Sunday."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਣਾਨ (naṇān) is inherited from Sanskrit nanāndṛ, \"a husband's sister\"; CDIAL lists Punjabi nanāṇ, \"husband's sister\", under it (CDIAL 6946)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṇān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṇān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "naṇān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *naṇān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī naṇān har aitvār sāḍe ghar āundī hai. — My husband's sister comes to our house every Sunday.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī naṇān har aitvār sāḍe ghar āundī hai.* — My husband's sister comes to our house every Sunday.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a brother's wife, then the Punjabi for a sister's husband, then say naṇān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a brother's wife, then the Punjabi for a sister's husband, then say *naṇān* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਨਣਾਨ (naṇān) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਨਣਾਨ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਨਣਾਨ (naṇān) mean? (\"A husband's sister\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C330-darani",
+      "sequence": 20110,
+      "title": "ਦਰਾਣੀ (darāṇī) — a husband's younger brother's wife",
+      "headword": "ਦਰਾਣੀ",
+      "romanization": "darāṇī",
+      "gloss": "a husband's younger brother's wife",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e83ca464ae14a31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a sister's husband, then the Punjabi for a husband's sister."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਦਰਾਣੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਰਾਣੀ — darāṇī — \"a husband's younger brother's wife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੀ ਦਰਾਣੀ ਮੇਰੇ ਨਾਲ ਰਸੋਈ ਵਿੱਚ ਕੰਮ ਕਰਦੀ ਹੈ। merī darāṇī mere nāl rasoī vich kamm kardī hai. My husband's younger brother's wife works with me in the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਦਰਾਣੀ (darāṇī) is inherited from a reconstructed devarajāni, \"a husband's younger brother's wife\"; CDIAL lists Punjabi darāṇī, \"husband's younger brother's wife\", under it (CDIAL 6534)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darāṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darāṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "darāṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *darāṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī darāṇī mere nāl rasoī vich kamm kardī hai. — My husband's younger brother's wife works with me in the kitchen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī darāṇī mere nāl rasoī vich kamm kardī hai.* — My husband's younger brother's wife works with me in the kitchen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a sister's husband, then the Punjabi for a husband's sister, then say darāṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a sister's husband, then the Punjabi for a husband's sister, then say *darāṇī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਦਰਾਣੀ (darāṇī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਦਰਾਣੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਦਰਾਣੀ (darāṇī) mean? (\"A husband's younger brother's wife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C330-jathani",
+      "sequence": 20120,
+      "title": "ਜਠਾਣੀ (jaṭhāṇī) — a husband's elder brother's wife",
+      "headword": "ਜਠਾਣੀ",
+      "romanization": "jaṭhāṇī",
+      "gloss": "a husband's elder brother's wife",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ba15ac5f6c5e21e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a husband's sister, then the Punjabi for a husband's younger brother's wife."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਜਠਾਣੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜਠਾਣੀ — jaṭhāṇī — \"a husband's elder brother's wife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੀ ਜਠਾਣੀ ਬਹੁਤ ਸਿਆਣੀ ਹੈ। merī jaṭhāṇī bahut siāṇī hai. My husband's elder brother's wife is very wise."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜਠਾਣੀ (jaṭhāṇī) is inherited from a reconstructed jyeṣṭhajāni, \"a senior wife; an elder brother's wife\"; CDIAL lists Punjabi jaṭhāṇī, \"husband's elder brother's wife\", under it (CDIAL 5287)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṭhāṇī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṭhāṇī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jaṭhāṇī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jaṭhāṇī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī jaṭhāṇī bahut siāṇī hai. — My husband's elder brother's wife is very wise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī jaṭhāṇī bahut siāṇī hai.* — My husband's elder brother's wife is very wise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a husband's sister, then the Punjabi for a husband's younger brother's wife, then say jaṭhāṇī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a husband's sister, then the Punjabi for a husband's younger brother's wife, then say *jaṭhāṇī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਜਠਾਣੀ (jaṭhāṇī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਜਠਾਣੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਜਠਾਣੀ (jaṭhāṇī) mean? (\"A husband's elder brother's wife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

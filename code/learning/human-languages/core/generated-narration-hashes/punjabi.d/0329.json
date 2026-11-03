@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:a6fdad483258ede5",
+  "lessonIds": [
+    "PA-C329-sahura",
+    "PA-C329-sass",
+    "PA-C329-numh",
+    "PA-C329-javai",
+    "PA-C329-kuram",
+    "PA-R329-review-323-329"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch329.txt",
+  "json": "punjabi/narration/ch329.json",
+  "textHash": "fnv1a64:e0868c489c8a46b8",
+  "jsonHash": "fnv1a64:56de3eb628600e2d",
+  "findings": []
+}

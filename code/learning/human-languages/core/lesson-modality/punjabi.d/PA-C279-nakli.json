@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C279-nakli",
+    "language": "punjabi",
+    "chapter": 279,
+    "sequence": 16340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd581c407f5a1e0f"
+  },
+  "findings": []
+}

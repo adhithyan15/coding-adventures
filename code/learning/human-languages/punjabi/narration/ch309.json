@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 309,
+  "title": "News from Home",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:dd048a43fdd020b2",
+  "lessons": [
+    {
+      "id": "PA-C309-khabar",
+      "sequence": 19000,
+      "title": "ਖ਼ਬਰ (khabar) — a piece of news",
+      "headword": "ਖ਼ਬਰ",
+      "romanization": "khabar",
+      "gloss": "a piece of news",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dc4062bbf067b0d1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to take out, then the Punjabi for perhaps."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਖ਼ਬਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖ਼ਬਰ — khabar — \"a piece of news\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੇ ਮੈਨੂੰ ਇੱਕ ਚੰਗੀ ਖ਼ਬਰ ਦਿੱਤੀ। Aman ne mainū̃ ikk chaṅgī khabar dittī. Aman gave me a piece of good news."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖ਼ਬਰ (khabar) is a loan, usually traced through Persian to Arabic khabar, \"news, a report\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khabar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khabar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khabar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khabar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aman ne mainū̃ ikk chaṅgī khabar dittī. — Aman gave me a piece of good news.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aman ne mainū̃ ikk chaṅgī khabar dittī.* — Aman gave me a piece of good news.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to take out, then the Punjabi for perhaps, then say khabar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to take out, then the Punjabi for perhaps, then say *khabar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਖ਼ਬਰ (khabar) mean? (\"A piece of news\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C309-hadsa",
+      "sequence": 19010,
+      "title": "ਹਾਦਸਾ (hādsā) — an accident",
+      "headword": "ਹਾਦਸਾ",
+      "romanization": "hādsā",
+      "gloss": "an accident",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c9617ed9ce512020",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for perhaps, then the Punjabi for a piece of news."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹਾਦਸਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਾਦਸਾ — hādsā — \"an accident\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੱਲ੍ਹ ਸ਼ਾਮ ਨੂੰ ਸੜਕ ਉੱਤੇ ਇੱਕ ਹਾਦਸਾ ਹੋਇਆ। kall shām nū̃ saṛak utte ikk hādsā hoiā. There was an accident on the road yesterday evening."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹਾਦਸਾ (hādsā) is a loan, usually traced through Persian to Arabic ḥāditha, \"an event\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hādsā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hādsā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hādsā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hādsā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kall shām nū̃ saṛak utte ikk hādsā hoiā. — There was an accident on the road yesterday evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kall shām nū̃ saṛak utte ikk hādsā hoiā.* — There was an accident on the road yesterday evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for perhaps, then the Punjabi for a piece of news, then say hādsā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for perhaps, then the Punjabi for a piece of news, then say *hādsā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹਾਦਸਾ (hādsā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹਾਦਸਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹਾਦਸਾ (hādsā) mean? (\"An accident\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C309-afvah",
+      "sequence": 19020,
+      "title": "ਅਫ਼ਵਾਹ (afvāh) — a rumour",
+      "headword": "ਅਫ਼ਵਾਹ",
+      "romanization": "afvāh",
+      "gloss": "a rumour",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02bc9147b692a335",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a piece of news, then the Punjabi for an accident."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਅਫ਼ਵਾਹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਫ਼ਵਾਹ — afvāh — \"a rumour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬਾਜ਼ਾਰ ਵਿੱਚ ਹਾਦਸੇ ਬਾਰੇ ਇੱਕ ਅਫ਼ਵਾਹ ਸੀ। bāzār vich hādse bāre ikk afvāh sī. There was a rumour in the market about an accident."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਅਫ਼ਵਾਹ (afvāh) is a loan, usually traced through Persian to Arabic afwāh, \"mouths\", the plural of the word for a mouth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afvāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afvāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "afvāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *afvāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāzār vich hādse bāre ikk afvāh sī. — There was a rumour in the market about an accident.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāzār vich hādse bāre ikk afvāh sī.* — There was a rumour in the market about an accident.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a piece of news, then the Punjabi for an accident, then say afvāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a piece of news, then the Punjabi for an accident, then say *afvāh* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਅਫ਼ਵਾਹ (afvāh) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਅਫ਼ਵਾਹ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਅਫ਼ਵਾਹ (afvāh) mean? (\"A rumour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C309-raula",
+      "sequence": 19030,
+      "title": "ਰੌਲਾ (raulā) — a din; a lot of noise",
+      "headword": "ਰੌਲਾ",
+      "romanization": "raulā",
+      "gloss": "a din; a lot of noise",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0289f692fc32a88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an accident, then the Punjabi for a rumour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰੌਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੌਲਾ — raulā — \"a din; a lot of noise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਹਾਦਸੇ ਤੋਂ ਬਾਅਦ ਸੜਕ ਉੱਤੇ ਬਹੁਤ ਰੌਲਾ ਸੀ। hādse ton bāad saṛak utte bahut raulā sī. After the accident there was a lot of noise on the road."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੌਲਾ (raulā) is inherited from Sanskrit rava, \"a roar, a cry\"; CDIAL lists Punjabi raulā, \"noise\", under it (CDIAL 10641)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raulā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raulā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "raulā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *raulā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hādse ton bāad saṛak utte bahut raulā sī. — After the accident there was a lot of noise on the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hādse ton bāad saṛak utte bahut raulā sī.* — After the accident there was a lot of noise on the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an accident, then the Punjabi for a rumour, then say raulā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an accident, then the Punjabi for a rumour, then say *raulā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਰੌਲਾ (raulā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਰੌਲਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰੌਲਾ (raulā) mean? (\"A din; a lot of noise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C309-marna",
+      "sequence": 19040,
+      "title": "ਮਰਨਾ (marnā) — to die",
+      "headword": "ਮਰਨਾ",
+      "romanization": "marnā",
+      "gloss": "to die",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1b29d1e830606205",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a rumour, then the Punjabi for a din."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਰਨਾ — marnā — \"to die\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪਿਛਲੇ ਹਫ਼ਤੇ ਸਾਡਾ ਕੁੱਤਾ ਮਰਿਆ ਅਤੇ ਬੱਚੇ ਬਹੁਤ ਰੋਏ। pichhle hafte sāḍā kuttā mariā ate bachche bahut roe. Our dog died last week, and the children cried a lot."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਬਿੱਲੀ ਸਰਦੀ ਵਿੱਚ ਮਰੀ, oh billī sardī vich marī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਰਨਾ (marnā) is inherited from Sanskrit marate, \"will die\"; CDIAL lists Punjabi marnā, \"dies\", under it (CDIAL 9871)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pichhle hafte sāḍā kuttā mariā ate bachche bahut roe. — Our dog died last week, and the children cried a lot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pichhle hafte sāḍā kuttā mariā ate bachche bahut roe.* — Our dog died last week, and the children cried a lot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a rumour, then the Punjabi for a din, then say marnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a rumour, then the Punjabi for a din, then say *marnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਰਨਾ (marnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਰਨਾ (marnā) mean? (\"To die\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C345-mukauna",
+  "pathSegment": "PA-PATH-345-DECIDE345",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-345-DECIDE345",
+      "order": 3
+    }
+  ]
+}

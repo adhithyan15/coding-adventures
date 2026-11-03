@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 310,
+  "title": "A Slip in the Rain",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:704e51d78b39e46f",
+  "lessons": [
+    {
+      "id": "PA-C310-phisalna",
+      "sequence": 19050,
+      "title": "ਫਿਸਲਣਾ (phisalṇā) — to slip",
+      "headword": "ਫਿਸਲਣਾ",
+      "romanization": "phisalṇā",
+      "gloss": "to slip",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b521f79c138c69ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a din, then the Punjabi for to die."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਫਿਸਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫਿਸਲਣਾ — phisalṇā — \"to slip\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੱਲ੍ਹ ਮੀਂਹ ਵਿੱਚ ਅਮਨ ਸੜਕ ਉੱਤੇ ਫਿਸਲਿਆ। kall mīṁh vich Aman saṛak utte phisliā. Yesterday Aman slipped on the road in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਪੌੜੀ ਉੱਤੇ ਫਿਸਲਿਆ, maiṁ pauṛī utte phisliā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫਿਸਲਣਾ (phisalṇā) is inherited from a reconstructed phiss, \"slip\"; CDIAL lists Punjabi phisalṇā, \"to slip\", under it (CDIAL 9080)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phisalṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phisalṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phisalṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phisalṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kall mīṁh vich Aman saṛak utte phisliā. — Yesterday Aman slipped on the road in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kall mīṁh vich Aman saṛak utte phisliā.* — Yesterday Aman slipped on the road in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a din, then the Punjabi for to die, then say phisalṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a din, then the Punjabi for to die, then say *phisalṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਫਿਸਲਣਾ (phisalṇā) mean? (\"To slip\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C310-thokar",
+      "sequence": 19060,
+      "title": "ਠੋਕਰ (ṭhokar) — a stumble",
+      "headword": "ਠੋਕਰ",
+      "romanization": "ṭhokar",
+      "gloss": "a stumble",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3d309c4dbf20a838",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to die, then the Punjabi for to slip."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਠੋਕਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਠੋਕਰ — ṭhokar — \"a stumble\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਹਨੇਰੇ ਵਿੱਚ ਮੈਂ ਇੱਕ ਪੱਥਰ ਨਾਲ ਠੋਕਰ ਖਾਧੀ। hanere vich maiṁ ikk patthar nāl ṭhokar khādhī. In the dark I stumbled over a stone."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਠੋਕਰ (ṭhokar) is inherited from a reconstructed ṭhokk, \"knock\"; CDIAL lists Punjabi ṭhokar, \"blow\", under it (CDIAL 5513). Its use for a stumble is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhokar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhokar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭhokar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭhokar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hanere vich maiṁ ikk patthar nāl ṭhokar khādhī. — In the dark I stumbled over a stone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hanere vich maiṁ ikk patthar nāl ṭhokar khādhī.* — In the dark I stumbled over a stone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to die, then the Punjabi for to slip, then say ṭhokar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to die, then the Punjabi for to slip, then say *ṭhokar* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਠੋਕਰ (ṭhokar) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਠੋਕਰ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਠੋਕਰ (ṭhokar) mean? (\"A stumble\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C310-tuttna",
+      "sequence": 19070,
+      "title": "ਟੁੱਟਣਾ (ṭuṭṭṇā) — to get broken",
+      "headword": "ਟੁੱਟਣਾ",
+      "romanization": "ṭuṭṭṇā",
+      "gloss": "to get broken",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cb1ce573922b2f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to slip, then the Punjabi for a stumble."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਟੁੱਟਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟੁੱਟਣਾ — ṭuṭṭṇā — \"to get broken\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਗਲਾਸ ਫ਼ਰਸ਼ ਉੱਤੇ ਡਿੱਗਿਆ ਅਤੇ ਟੁੱਟਿਆ। merā galās farsh utte ḍiggiā ate ṭuṭṭiā. My glass fell on the floor and broke."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਸ਼ੀਸ਼ਾ ਟੁੱਟਿਆ, oh shīshā ṭuṭṭiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟੁੱਟਣਾ (ṭuṭṭṇā) is inherited from Sanskrit truṭyati, \"is broken, falls asunder\"; CDIAL lists Punjabi ṭuṭṭṇā, \"is broken\", under it (CDIAL 6065)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭuṭṭṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭuṭṭṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭuṭṭṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭuṭṭṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā galās farsh utte ḍiggiā ate ṭuṭṭiā. — My glass fell on the floor and broke.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā galās farsh utte ḍiggiā ate ṭuṭṭiā.* — My glass fell on the floor and broke.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to slip, then the Punjabi for a stumble, then say ṭuṭṭṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to slip, then the Punjabi for a stumble, then say *ṭuṭṭṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਟੁੱਟਣਾ (ṭuṭṭṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਟੁੱਟਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਟੁੱਟਣਾ (ṭuṭṭṇā) mean? (\"To get broken\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C310-torna",
+      "sequence": 19080,
+      "title": "ਤੋੜਨਾ (toṛnā) — to break something",
+      "headword": "ਤੋੜਨਾ",
+      "romanization": "toṛnā",
+      "gloss": "to break something",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a06778a4a644a17b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a stumble, then the Punjabi for to get broken."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤੋੜਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੋੜਨਾ — toṛnā — \"to break something\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੱਲ੍ਹ ਮੈਂ ਰਸੋਈ ਵਿੱਚ ਇੱਕ ਥਾਲੀ ਤੋੜੀ। kall maiṁ rasoī vich ikk thālī toṛī. Yesterday I broke a plate in the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਸ਼ੀਸ਼ਾ ਤੋੜਿਆ, maiṁ shīshā toṛiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੋੜਨਾ (toṛnā) is inherited from Sanskrit troṭayati, \"breaks, tears\"; CDIAL lists Punjabi toṛṇā, \"to break, pluck\", under it (CDIAL 6079)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "toṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *toṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kall maiṁ rasoī vich ikk thālī toṛī. — Yesterday I broke a plate in the kitchen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kall maiṁ rasoī vich ikk thālī toṛī.* — Yesterday I broke a plate in the kitchen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a stumble, then the Punjabi for to get broken, then say toṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a stumble, then the Punjabi for to get broken, then say *toṛnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤੋੜਨਾ (toṛnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤੋੜਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤੋੜਨਾ (toṛnā) mean? (\"To break something\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C310-dullhna",
+      "sequence": 19090,
+      "title": "ਡੁੱਲ੍ਹਣਾ (ḍullhṇā) — to get spilt",
+      "headword": "ਡੁੱਲ੍ਹਣਾ",
+      "romanization": "ḍullhṇā",
+      "gloss": "to get spilt",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b17d40dcde6a3f9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to get broken, then the Punjabi for to break something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਡੁੱਲ੍ਹਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡੁੱਲ੍ਹਣਾ — ḍullhṇā — \"to get spilt\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਫ਼ਰਸ਼ ਉੱਤੇ ਮੇਰਾ ਦੁੱਧ ਡੁੱਲ੍ਹਿਆ। farsh utte merā dudh ḍullhiā. My milk spilt on the floor."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਪਾਣੀ ਕਮਰੇ ਵਿੱਚ ਡੁੱਲ੍ਹਿਆ, oh pāṇī kamre vich ḍullhiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡੁੱਲ੍ਹਣਾ (ḍullhṇā) is inherited from a reconstructed ḍhulati, \"bends, falls, flows\"; CDIAL lists Punjabi ḍullhaṇā, \"to be poured out\", under it (CDIAL 5593)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍullhṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍullhṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍullhṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍullhṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "farsh utte merā dudh ḍullhiā. — My milk spilt on the floor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *farsh utte merā dudh ḍullhiā.* — My milk spilt on the floor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to get broken, then the Punjabi for to break something, then say ḍullhṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to get broken, then the Punjabi for to break something, then say *ḍullhṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਡੁੱਲ੍ਹਣਾ (ḍullhṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਡੁੱਲ੍ਹਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਡੁੱਲ੍ਹਣਾ (ḍullhṇā) mean? (\"To get spilt\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

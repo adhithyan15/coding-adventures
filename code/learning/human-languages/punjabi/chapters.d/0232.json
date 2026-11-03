@@ -1,0 +1,19 @@
+{
+  "chapter": 232,
+  "title": "Putting Things Away",
+  "label": "ch:pa-a2-putting-things-away",
+  "canDo": "I can say how I keep my things in order.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C232-tunnna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 232: I can say how I keep my things in order.",
+    "assesses": [
+      "PA-LEX-C232-DIN232-03",
+      "PA-LEX-C232-DIN232-04",
+      "PA-LEX-C232-DIN232-05"
+    ]
+  }
+}

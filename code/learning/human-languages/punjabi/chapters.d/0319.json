@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "How Are You Feeling?",
+  "label": "ch:pa-a2-how-are-you-feeling",
+  "canDo": "I can ask how someone is feeling and answer.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C319-razi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can ask how someone is feeling and answer.",
+    "assesses": [
+      "PA-LEX-C319-HEALTH319-03",
+      "PA-LEX-C319-HEALTH319-04",
+      "PA-LEX-C319-HEALTH319-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 251,
+  "sourceHash": "fnv1a64:4ea9768c8a232262",
+  "lessonIds": [
+    "PA-C251-doi",
+    "PA-C251-chhikka",
+    "PA-C251-chhaba",
+    "PA-C251-changer",
+    "PA-C251-tamba"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch251.txt",
+  "json": "punjabi/narration/ch251.json",
+  "textHash": "fnv1a64:be5427a17ad80523",
+  "jsonHash": "fnv1a64:274fe3750877c048",
+  "findings": []
+}

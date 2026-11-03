@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "A Slip in the Rain",
+  "label": "ch:pa-a2-a-slip-in-the-rain",
+  "canDo": "I can say how someone slipped and what broke.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C310-dullhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can say how someone slipped and what broke.",
+    "assesses": [
+      "PA-LEX-C310-SLIP310-03",
+      "PA-LEX-C310-SLIP310-04",
+      "PA-LEX-C310-SLIP310-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C306-turi",
+    "language": "punjabi",
+    "chapter": 306,
+    "sequence": 18300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b55e6fe5b006ada"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C299-lahir",
+    "language": "punjabi",
+    "chapter": 299,
+    "sequence": 17940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32bab586144b6483"
+  },
+  "findings": []
+}

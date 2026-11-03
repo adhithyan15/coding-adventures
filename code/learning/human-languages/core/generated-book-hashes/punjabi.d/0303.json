@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:c770b967873a8446",
+  "lessonIds": [
+    "PA-C303-nahir",
+    "PA-C303-khuh",
+    "PA-C303-sinjna",
+    "PA-C303-kisan",
+    "PA-C303-halat"
+  ],
+  "tex": "punjabi/book/chapters/ch303-water-for-the-fields.tex"
+}

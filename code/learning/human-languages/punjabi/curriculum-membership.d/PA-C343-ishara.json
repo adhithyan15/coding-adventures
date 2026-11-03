@@ -1,0 +1,11 @@
+{
+  "id": "PA-C343-ishara",
+  "pathSegment": "PA-PATH-343-MIXUP343",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-343-MIXUP343",
+      "order": 2
+    }
+  ]
+}

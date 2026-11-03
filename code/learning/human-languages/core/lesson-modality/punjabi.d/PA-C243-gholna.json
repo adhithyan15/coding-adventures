@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C243-gholna",
+    "language": "punjabi",
+    "chapter": 243,
+    "sequence": 13930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8979f1f96bdb7e3d"
+  },
+  "findings": []
+}

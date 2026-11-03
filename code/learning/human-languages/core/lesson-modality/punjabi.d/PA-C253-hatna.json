@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C253-hatna",
+    "language": "punjabi",
+    "chapter": 253,
+    "sequence": 15030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:da6adf81d9f47845"
+  },
+  "findings": []
+}

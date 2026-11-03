@@ -1,0 +1,11 @@
+{
+  "id": "PA-C293-paddhra",
+  "pathSegment": "PA-PATH-293-LAND293",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-293-LAND293",
+      "order": 2
+    }
+  ]
+}

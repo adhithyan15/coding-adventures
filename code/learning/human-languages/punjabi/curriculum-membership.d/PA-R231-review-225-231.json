@@ -1,0 +1,11 @@
+{
+  "id": "PA-R231-review-225-231",
+  "pathSegment": "PA-PATH-231-DIN231",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-231-DIN231",
+      "order": 5
+    }
+  ]
+}

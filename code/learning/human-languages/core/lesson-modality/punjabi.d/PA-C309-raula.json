@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C309-raula",
+    "language": "punjabi",
+    "chapter": 309,
+    "sequence": 19030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0289f692fc32a88"
+  },
+  "findings": []
+}

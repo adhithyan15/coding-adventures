@@ -1,0 +1,11 @@
+{
+  "id": "PA-C335-gharna",
+  "pathSegment": "PA-PATH-335-METAL335",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-335-METAL335",
+      "order": 3
+    }
+  ]
+}

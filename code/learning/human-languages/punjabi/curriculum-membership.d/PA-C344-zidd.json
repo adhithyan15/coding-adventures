@@ -1,0 +1,11 @@
+{
+  "id": "PA-C344-zidd",
+  "pathSegment": "PA-PATH-344-ARGUE344",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-344-ARGUE344",
+      "order": 3
+    }
+  ]
+}

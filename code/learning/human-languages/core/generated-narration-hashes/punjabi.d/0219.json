@@ -1,0 +1,22 @@
+{
+  "language": "punjabi",
+  "chapter": 219,
+  "sourceHash": "fnv1a64:db7b45a2345569f3",
+  "lessonIds": [
+    "PA-C219-did-return",
+    "PA-C219-pita",
+    "PA-C219-pita-review",
+    "PA-C219-khadha",
+    "PA-C219-kaddhna",
+    "PA-C219-ddha",
+    "PA-C219-what-i-had",
+    "PA-C219-payoff"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch219.txt",
+  "json": "punjabi/narration/ch219.json",
+  "textHash": "fnv1a64:c3928f58d31e7a1e",
+  "jsonHash": "fnv1a64:2d329cf98e4853a3",
+  "findings": []
+}

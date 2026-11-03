@@ -1,0 +1,21 @@
+{
+  "chapter": 231,
+  "title": "Combing and Plaiting",
+  "label": "ch:pa-a2-combing-and-plaiting",
+  "canDo": "I can talk about doing my hair.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-R231-review-225-231",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 231: I can talk about doing my hair.",
+    "assesses": [
+      "PA-LEX-C231-DIN231-01",
+      "PA-LEX-C231-DIN231-02",
+      "PA-LEX-C231-DIN231-03",
+      "PA-LEX-C231-DIN231-04",
+      "PA-LEX-C231-DIN231-05"
+    ]
+  }
+}

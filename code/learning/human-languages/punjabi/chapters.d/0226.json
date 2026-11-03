@@ -1,0 +1,19 @@
+{
+  "chapter": 226,
+  "title": "Ready for the Day",
+  "label": "ch:pa-a2-ready-for-the-day",
+  "canDo": "I can say how I get ready in the morning.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C226-sair",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 226: I can say how I get ready in the morning.",
+    "assesses": [
+      "PA-LEX-C226-DIN226-03",
+      "PA-LEX-C226-DIN226-04",
+      "PA-LEX-C226-DIN226-05"
+    ]
+  }
+}

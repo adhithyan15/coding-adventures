@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 244,
+  "sourceHash": "fnv1a64:4f694b1aa2623ea4",
+  "lessonIds": [
+    "PA-C244-pona",
+    "PA-C244-punna",
+    "PA-C244-nitarna",
+    "PA-C244-parosna",
+    "PA-C244-ghotna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch244.txt",
+  "json": "punjabi/narration/ch244.json",
+  "textHash": "fnv1a64:c4452fa8840978a1",
+  "jsonHash": "fnv1a64:52aba4e5008e98d5",
+  "findings": []
+}

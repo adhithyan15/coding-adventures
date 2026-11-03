@@ -1,0 +1,11 @@
+{
+  "id": "PA-C258-sikka",
+  "pathSegment": "PA-PATH-258-LOAN258",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-258-LOAN258",
+      "order": 2
+    }
+  ]
+}

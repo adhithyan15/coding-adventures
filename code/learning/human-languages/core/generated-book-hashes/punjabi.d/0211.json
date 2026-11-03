@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 211,
+  "sourceHash": "fnv1a64:6f8e52650ddd2583",
+  "lessonIds": [
+    "PA-C211-verbs-return",
+    "PA-C211-janda",
+    "PA-C211-janda-review",
+    "PA-C211-khanda-pinda",
+    "PA-C211-khanda-review",
+    "PA-C211-tea-every-day",
+    "PA-C211-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch211-going-and-drinking-every-day.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 287,
+  "title": "When the Rain Comes",
+  "label": "ch:pa-a2-when-the-rain-comes",
+  "canDo": "I can say what the rain will bring.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-R287-review-281-287",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 287: I can say what the rain will bring.",
+    "assesses": [
+      "PA-LEX-C287-WET287-01",
+      "PA-LEX-C287-WET287-02",
+      "PA-LEX-C287-WET287-03",
+      "PA-LEX-C287-WET287-04",
+      "PA-LEX-C287-WET287-05"
+    ]
+  }
+}

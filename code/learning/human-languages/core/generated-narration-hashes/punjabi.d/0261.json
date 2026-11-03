@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 261,
+  "sourceHash": "fnv1a64:bc34007c254231a6",
+  "lessonIds": [
+    "PA-C261-addha",
+    "PA-C261-paletfaram",
+    "PA-C261-thahirna",
+    "PA-C261-challna",
+    "PA-C261-ravana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch261.txt",
+  "json": "punjabi/narration/ch261.json",
+  "textHash": "fnv1a64:09e6e356e9b1e19c",
+  "jsonHash": "fnv1a64:1b14d0cce6c98400",
+  "findings": []
+}

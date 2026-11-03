@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:bf1dbfc63e413886",
+  "lessonIds": [
+    "PA-C306-chhajj",
+    "PA-C306-chhattna",
+    "PA-C306-turi",
+    "PA-C306-parali",
+    "PA-C306-bori"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch306.txt",
+  "json": "punjabi/narration/ch306.json",
+  "textHash": "fnv1a64:ef56739a5765d61f",
+  "jsonHash": "fnv1a64:4e5086348129b825",
+  "findings": []
+}

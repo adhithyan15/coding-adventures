@@ -1,0 +1,19 @@
+{
+  "chapter": 289,
+  "title": "The Cold Season Ahead",
+  "label": "ch:pa-a2-the-cold-season-ahead",
+  "canDo": "I can say what the cold months will be like.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C289-sial",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 289: I can say what the cold months will be like.",
+    "assesses": [
+      "PA-LEX-C289-COLD289-03",
+      "PA-LEX-C289-COLD289-04",
+      "PA-LEX-C289-COLD289-05"
+    ]
+  }
+}

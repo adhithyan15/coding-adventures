@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:1eeaae2ddd52a4c3",
+  "lessonIds": [
+    "PA-C349-gaik",
+    "PA-C349-vanjhli",
+    "PA-C349-vaja",
+    "PA-C349-kavita",
+    "PA-C349-sarahuna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch349.txt",
+  "json": "punjabi/narration/ch349.json",
+  "textHash": "fnv1a64:37fd1ce0a23c1c0b",
+  "jsonHash": "fnv1a64:e521876a8a7e6c86",
+  "findings": []
+}

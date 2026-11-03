@@ -1,0 +1,11 @@
+{
+  "id": "PA-C253-notis",
+  "pathSegment": "PA-PATH-253-RULE253",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-253-RULE253",
+      "order": 1
+    }
+  ]
+}

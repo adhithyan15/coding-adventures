@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:e28cfa7d19629170",
+  "lessonIds": [
+    "PA-C293-mitti",
+    "PA-C293-zamin",
+    "PA-C293-paddhra",
+    "PA-C293-dhalan",
+    "PA-C293-tilla"
+  ],
+  "tex": "punjabi/book/chapters/ch293-the-lie-of-the-land.tex"
+}

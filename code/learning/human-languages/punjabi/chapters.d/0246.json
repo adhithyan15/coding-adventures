@@ -1,0 +1,19 @@
+{
+  "chapter": 246,
+  "title": "Beams and Roofs",
+  "label": "ch:pa-a2-beams-and-roofs",
+  "canDo": "I can name what holds up a roof.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C246-parchhatti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 246: I can name what holds up a roof.",
+    "assesses": [
+      "PA-LEX-C246-GHR246-03",
+      "PA-LEX-C246-GHR246-04",
+      "PA-LEX-C246-GHR246-05"
+    ]
+  }
+}

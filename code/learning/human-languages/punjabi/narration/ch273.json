@@ -1,0 +1,885 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 273,
+  "title": "Two Kilos, Please",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:76f2e88435d46108",
+  "lessons": [
+    {
+      "id": "PA-C273-tolna",
+      "sequence": 16020,
+      "title": "ਤੋਲਣਾ (tolṇā) — to weigh",
+      "headword": "ਤੋਲਣਾ",
+      "romanization": "tolṇā",
+      "gloss": "to weigh",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19cc30d1e2b33362",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a rickshaw, then the Punjabi for a park."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤੋਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੋਲਣਾ — tolṇā — \"to weigh\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦੁਕਾਨ ਵਿੱਚ ਮੁੰਡਾ ਆਲੂ ਤੋਲਦਾ ਹੈ। dukān vich muṇḍā ālū toldā hai. In the shop the boy weighs the potatoes."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਆਲੂ ਤੋਲੇ, maiṁ ālū tole."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੋਲਣਾ (tolṇā) is inherited from Sanskrit tolayati, \"lifts, weighs\"; CDIAL lists Punjabi toḷnā, \"to weigh\", under it (CDIAL 5979)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tolṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tolṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukān vich muṇḍā ālū toldā hai. — In the shop the boy weighs the potatoes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukān vich muṇḍā ālū toldā hai.* — In the shop the boy weighs the potatoes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a rickshaw, then the Punjabi for a park, then say tolṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a rickshaw, then the Punjabi for a park, then say *tolṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤੋਲਣਾ (tolṇā) mean? (\"To weigh\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C273-takkri",
+      "sequence": 16030,
+      "title": "ਤੱਕੜੀ (takkṛī) — a pair of scales",
+      "headword": "ਤੱਕੜੀ",
+      "romanization": "takkṛī",
+      "gloss": "a pair of scales",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3767db467ea1eee1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a park, then the Punjabi for to weigh."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤੱਕੜੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੱਕੜੀ — takkṛī — \"a pair of scales\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਦੁਕਾਨ ਦੀ ਤੱਕੜੀ ਪੁਰਾਣੀ ਹੈ। dukān dī takkṛī purāṇī hai. The shop's scales are old."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੱਕੜੀ (takkṛī) is filed by CDIAL under Sanskrit tarka, \"inquiry, conjecture\"; CDIAL lists Punjabi takkaṛī, \"pair of scales\", there (CDIAL 5714)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takkṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takkṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "takkṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *takkṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dukān dī takkṛī purāṇī hai. — The shop's scales are old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dukān dī takkṛī purāṇī hai.* — The shop's scales are old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a park, then the Punjabi for to weigh, then say takkṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a park, then the Punjabi for to weigh, then say *takkṛī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤੱਕੜੀ (takkṛī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤੱਕੜੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤੱਕੜੀ (takkṛī) mean? (\"A pair of scales\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C273-killo",
+      "sequence": 16040,
+      "title": "ਕਿੱਲੋ (killo) — a kilo",
+      "headword": "ਕਿੱਲੋ",
+      "romanization": "killo",
+      "gloss": "a kilo",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a846cba00c3f716d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to weigh, then the Punjabi for a pair of scales."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਿੱਲੋ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿੱਲੋ — killo — \"a kilo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਦੋ ਕਿੱਲੋ ਸੇਬ ਖ਼ਰੀਦਾਂਗਾ। maiṁ do killo seb kharīdāṅgā. I will buy two kilos of apples."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿੱਲੋ (killo) is borrowed from English kilo."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "killo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *killo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "killo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *killo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ do killo seb kharīdāṅgā. — I will buy two kilos of apples.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ do killo seb kharīdāṅgā.* — I will buy two kilos of apples.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to weigh, then the Punjabi for a pair of scales, then say killo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to weigh, then the Punjabi for a pair of scales, then say *killo* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਿੱਲੋ (killo) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਿੱਲੋ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਿੱਲੋ (killo) mean? (\"A kilo\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C273-bhar",
+      "sequence": 16050,
+      "title": "ਭਾਰ (bhār) — weight; a load",
+      "headword": "ਭਾਰ",
+      "romanization": "bhār",
+      "gloss": "weight; a load",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:911b5a010f96882e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a pair of scales, then the Punjabi for a kilo."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਭਾਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਾਰ — bhār — \"weight; a load\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਆਲੂਆਂ ਦਾ ਭਾਰ ਪੰਜ ਕਿੱਲੋ ਹੈ। ālūāṁ dā bhār panj killo hai. The potatoes weigh five kilos."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਭਾਰ (bhār) is inherited from Sanskrit bhāra, \"burden, weight\"; CDIAL lists Punjabi bhār, \"load\", under it (CDIAL 9459)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhār, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhār*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ālūāṁ dā bhār panj killo hai. — The potatoes weigh five kilos.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ālūāṁ dā bhār panj killo hai.* — The potatoes weigh five kilos.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a pair of scales, then the Punjabi for a kilo, then say bhār again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a pair of scales, then the Punjabi for a kilo, then say *bhār* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਭਾਰ (bhār) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਭਾਰ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਭਾਰ (bhār) mean? (\"Weight; a load\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C273-dhona-carry",
+      "sequence": 16060,
+      "title": "ਢੋਣਾ (ḍhoṇā) — to carry a load",
+      "headword": "ਢੋਣਾ",
+      "romanization": "ḍhoṇā",
+      "gloss": "to carry a load",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:781d7e031298e33c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a kilo, then the Punjabi for weight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਢੋਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢੋਣਾ — ḍhoṇā — \"to carry a load\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਬਾਜ਼ਾਰ ਤੋਂ ਸਬਜ਼ੀ ਘਰ ਢੋਂਦਾ ਹਾਂ। maiṁ bāzār ton sabzī ghar ḍhondā hāṁ. I carry the vegetables home from the market."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਆਲੂ ਢੋਏ, maiṁ ālū ḍhoe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢੋਣਾ (ḍhoṇā) is inherited from Sanskrit ḍhaukayati, \"brings near\"; CDIAL lists Punjabi ḍhoṇā, \"to carry, convey\", under it (CDIAL 5610)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhoṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhoṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhoṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhoṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ bāzār ton sabzī ghar ḍhondā hāṁ. — I carry the vegetables home from the market.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ bāzār ton sabzī ghar ḍhondā hāṁ.* — I carry the vegetables home from the market.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a kilo, then the Punjabi for weight, then say ḍhoṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a kilo, then the Punjabi for weight, then say *ḍhoṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਢੋਣਾ (ḍhoṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਢੋਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਢੋਣਾ (ḍhoṇā) mean? (\"To carry a load\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R273-review-267-273",
+      "sequence": 16070,
+      "title": "Looking back: from Which Floor, Which Office? to Two Kilos, Please",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Which Floor, Which Office? to Two Kilos, Please",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76ed6481a51247a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for a police station and a storey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a police station, a storey, a post office, a court of law, whereabouts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a police station, a storey, a post office, a court of law, whereabouts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bus stand, a bus conductor, a seat, a crowd, to stay put",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bus stand, a bus conductor, a seat, a crowd, to stay put]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to recognize, a map, a mark, to draw near, a pothole",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to recognize, a map, a mark, to draw near, a pothole]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to search for, to stand, to see someone across, a mile, open ground",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to search for, to stand, to see someone across, a mile, open ground]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "north, south, east, west, to show someone around",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: north, south, east, west, to show someone around]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get separated, a police constable, a police post, a rickshaw, a park",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get separated, a police constable, a police post, a rickshaw, a park]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to weigh, a pair of scales, a kilo, weight, to carry a load",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to weigh, a pair of scales, a kilo, weight, to carry a load]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A police station? (ਥਾਣਾ, thāṇā.) A storey? (ਮੰਜ਼ਿਲ, manzil.) A post office? (ਡਾਕਖ਼ਾਨਾ, ḍākkhānā.) A court of law? (ਅਦਾਲਤ, adālat.) Whereabouts? (ਠਿਕਾਣਾ, ṭhikāṇā.) A bus stand? (ਅੱਡਾ, aḍḍā.) A bus conductor? (ਕੰਡਕਟਰ, kaṇḍakṭar.) A seat? (ਸੀਟ, sīṭ.) A crowd? (ਭੀੜ, bhīṛ.) To stay put? (ਟਿਕਣਾ, ṭikṇā.) To recognize? (ਪਛਾਣਨਾ, pachhāṇnā.) A map? (ਨਕਸ਼ਾ, nakshā.) A mark? (ਨਿਸ਼ਾਨ, nishān.) To draw near? (ਢੁੱਕਣਾ, ḍhukkṇā.) A pothole? (ਟੋਆ, ṭoā.) To search for? (ਢੂੰਢਣਾ, ḍhūṇḍhṇā.) To stand? (ਖੜ੍ਹਨਾ, khaṛhnā.) To see someone across? (ਲੰਘਾਉਣਾ, laṅghāuṇā.) A mile? (ਮੀਲ, mīl.) Open ground? (ਮੈਦਾਨ, maidān.) North? (ਉੱਤਰ, uttar.) South? (ਦੱਖਣ, dakkhaṇ.) East? (ਪੂਰਬ, pūrab.) West? (ਪੱਛਮ, pachchham.) To show someone around? (ਘੁਮਾਉਣਾ, ghumāuṇā.) To get separated? (ਵਿਛੜਨਾ, vichhaṛnā.) A police constable? (ਸਿਪਾਹੀ, sipāhī.) A police post? (ਚੌਕੀ, chaukī.) A rickshaw? (ਰਿਕਸ਼ਾ, rikshā.) A park? (ਪਾਰਕ, pārak.) To weigh? (ਤੋਲਣਾ, tolṇā.) A pair of scales? (ਤੱਕੜੀ, takkṛī.) A kilo? (ਕਿੱਲੋ, killo.) Weight? (ਭਾਰ, bhār.) To carry a load? (ਢੋਣਾ, ḍhoṇā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

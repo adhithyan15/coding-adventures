@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 258,
+  "sourceHash": "fnv1a64:71880d2c53c8eafb",
+  "lessonIds": [
+    "PA-C258-udhar",
+    "PA-C258-karza",
+    "PA-C258-sikka",
+    "PA-C258-not",
+    "PA-C258-kamauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch258.txt",
+  "json": "punjabi/narration/ch258.json",
+  "textHash": "fnv1a64:8761e67728c413d1",
+  "jsonHash": "fnv1a64:a905ef0ab9db3d9a",
+  "findings": []
+}

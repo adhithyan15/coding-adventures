@@ -1,0 +1,19 @@
+{
+  "chapter": 295,
+  "title": "Cracks and Hollows",
+  "label": "ch:pa-a2-cracks-and-hollows",
+  "canDo": "I can describe cracked or hollow things.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C295-galna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can describe cracked or hollow things.",
+    "assesses": [
+      "PA-LEX-C295-CRACK295-03",
+      "PA-LEX-C295-CRACK295-04",
+      "PA-LEX-C295-CRACK295-05"
+    ]
+  }
+}

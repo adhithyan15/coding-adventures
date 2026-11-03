@@ -1,0 +1,11 @@
+{
+  "id": "PA-C354-kissa",
+  "pathSegment": "PA-PATH-354-STORY354",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-354-STORY354",
+      "order": 2
+    }
+  ]
+}

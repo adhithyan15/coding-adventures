@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-269-WAY269",
+  "spine_node": "SPINE-ASK-LOCATION",
+  "before": [],
+  "inline": [
+    "PA-EXT-269-WAY269"
+  ],
+  "after": []
+}

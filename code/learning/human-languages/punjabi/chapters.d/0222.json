@@ -1,0 +1,19 @@
+{
+  "chapter": 222,
+  "title": "What Will You Do Tomorrow?",
+  "label": "ch:pa-a2-karanga",
+  "canDo": "I can say and ask what people will do tomorrow, and say what I will not do.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C222-payoff",
+    "kind": "production",
+    "summary": "Say what you, others and a group will do with karanga, karega, karoge and karange, and ask or deny it.",
+    "assesses": [
+      "PA-GRAMMAR-FUT-CONSONANT-222",
+      "PA-GRAMMAR-FUT-YOU-THEY-222",
+      "PA-GRAMMAR-FUT-NEG-QUESTION-222"
+    ]
+  }
+}

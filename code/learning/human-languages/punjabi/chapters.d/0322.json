@@ -1,0 +1,21 @@
+{
+  "chapter": 322,
+  "title": "A Cut and a Bruise",
+  "label": "ch:pa-a2-a-cut-and-a-bruise",
+  "canDo": "I can say where I got hurt and what I put on it.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-R322-review-316-322",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 322: I can say where I got hurt and what I put on it.",
+    "assesses": [
+      "PA-LEX-C322-HURT322-01",
+      "PA-LEX-C322-HURT322-02",
+      "PA-LEX-C322-HURT322-03",
+      "PA-LEX-C322-HURT322-04",
+      "PA-LEX-C322-HURT322-05"
+    ]
+  }
+}

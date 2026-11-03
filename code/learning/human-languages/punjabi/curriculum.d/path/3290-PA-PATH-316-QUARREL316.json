@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-316-QUARREL316",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "PA-EXT-316-QUARREL316"
+  ],
+  "after": []
+}

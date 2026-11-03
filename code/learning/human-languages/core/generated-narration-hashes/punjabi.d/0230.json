@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 230,
+  "sourceHash": "fnv1a64:1fc27ad7f266abb1",
+  "lessonIds": [
+    "PA-C230-mokla",
+    "PA-C230-lahuna",
+    "PA-C230-lapetna",
+    "PA-C230-sutthan",
+    "PA-C230-jhumka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch230.txt",
+  "json": "punjabi/narration/ch230.json",
+  "textHash": "fnv1a64:db89a4d7da4f767a",
+  "jsonHash": "fnv1a64:237b4f6095340db0",
+  "findings": []
+}

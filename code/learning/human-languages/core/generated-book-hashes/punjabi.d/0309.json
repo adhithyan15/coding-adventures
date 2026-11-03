@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 309,
+  "sourceHash": "fnv1a64:6cc6a381f603bb35",
+  "lessonIds": [
+    "PA-C309-khabar",
+    "PA-C309-hadsa",
+    "PA-C309-afvah",
+    "PA-C309-raula",
+    "PA-C309-marna"
+  ],
+  "tex": "punjabi/book/chapters/ch309-news-from-home.tex"
+}

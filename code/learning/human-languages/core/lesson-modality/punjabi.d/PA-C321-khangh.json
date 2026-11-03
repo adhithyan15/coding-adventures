@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C321-khangh",
+    "language": "punjabi",
+    "chapter": 321,
+    "sequence": 19620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80feb914029155cc"
+  },
+  "findings": []
+}

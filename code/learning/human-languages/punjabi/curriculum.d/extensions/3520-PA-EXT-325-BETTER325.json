@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-325-BETTER325",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say whether someone is getting better or worse.",
+  "prerequisites": []
+}

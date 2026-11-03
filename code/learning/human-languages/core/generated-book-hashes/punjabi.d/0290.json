@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:d0d67bb05bd42fbe",
+  "lessonIds": [
+    "PA-C290-asman",
+    "PA-C290-gare",
+    "PA-C290-khullhna",
+    "PA-C290-ghatna",
+    "PA-C290-vagna"
+  ],
+  "tex": "punjabi/book/chapters/ch290-the-week-s-weather.tex"
+}

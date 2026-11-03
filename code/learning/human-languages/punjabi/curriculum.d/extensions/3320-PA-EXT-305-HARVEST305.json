@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-305-HARVEST305",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about the harvest.",
+  "prerequisites": []
+}

@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 256,
+  "title": "The Postman's Round",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:1193d85c41db5e83",
+  "lessons": [
+    {
+      "id": "PA-C256-dakia",
+      "sequence": 15150,
+      "title": "ਡਾਕੀਆ (ḍākīā) — a postman",
+      "headword": "ਡਾਕੀਆ",
+      "romanization": "ḍākīā",
+      "gloss": "a postman",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c90d214d41e6da8f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for paper, then the Punjabi for to print."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਡਾਕੀਆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡਾਕੀਆ — ḍākīā — \"a postman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਡਾਕੀਆ ਰੋਜ਼ ਸਾਡੀ ਗਲੀ ਵਿੱਚ ਆਉਂਦਾ ਹੈ। ḍākīā roz sāḍī galī vich āundā hai. The postman comes to our lane every day."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡਾਕੀਆ (ḍākīā) is built on ḍāk, \"the post\", with the ending -īā for the person who does a job; for ḍāk, CDIAL gives no Punjabi form (CDIAL 5519)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākīā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākīā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākīā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākīā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākīā roz sāḍī galī vich āundā hai. — The postman comes to our lane every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākīā roz sāḍī galī vich āundā hai.* — The postman comes to our lane every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for paper, then the Punjabi for to print, then say ḍākīā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for paper, then the Punjabi for to print, then say *ḍākīā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਡਾਕੀਆ (ḍākīā) mean? (\"A postman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C256-parsal",
+      "sequence": 15160,
+      "title": "ਪਾਰਸਲ (pārsal) — a parcel",
+      "headword": "ਪਾਰਸਲ",
+      "romanization": "pārsal",
+      "gloss": "a parcel",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1ba3bf38604bc2bb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to print, then the Punjabi for a postman."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਾਰਸਲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਾਰਸਲ — pārsal — \"a parcel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਨੇ ਮੈਨੂੰ ਇੱਕ ਪਾਰਸਲ ਭੇਜਿਆ। Aman ne mainū̃ ikk pārsal bhejiā. Aman sent me a parcel."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਾਰਸਲ (pārsal) is borrowed from English parcel."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārsal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārsal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pārsal, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pārsal*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Aman ne mainū̃ ikk pārsal bhejiā. — Aman sent me a parcel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Aman ne mainū̃ ikk pārsal bhejiā.* — Aman sent me a parcel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to print, then the Punjabi for a postman, then say pārsal again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to print, then the Punjabi for a postman, then say *pārsal* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਾਰਸਲ (pārsal) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਾਰਸਲ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਾਰਸਲ (pārsal) mean? (\"A parcel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C256-pahunchauna",
+      "sequence": 15170,
+      "title": "ਪਹੁੰਚਾਉਣਾ (pahunchāuṇā) — to deliver; to take something to a place",
+      "headword": "ਪਹੁੰਚਾਉਣਾ",
+      "romanization": "pahunchāuṇā",
+      "gloss": "to deliver; to take something to a place",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:043505f93e13522d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a postman, then the Punjabi for a parcel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਹੁੰਚਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਹੁੰਚਾਉਣਾ — pahunchāuṇā — \"to deliver; to take something to a place\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਡਾਕੀਆ ਚਿੱਠੀਆਂ ਸਾਡੇ ਘਰ ਪਹੁੰਚਾਉਂਦਾ ਹੈ। ḍākīā chiṭṭhīāṁ sāḍe ghar pahunchāundā hai. The postman delivers the letters to our house."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਪਾਰਸਲ ਪਹੁੰਚਾਇਆ, maiṁ pārsal pahunchāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਹੁੰਚਾਉਣਾ (pahunchāuṇā) is the causative partner of pahũcṇā, \"to arrive\"; CDIAL lists Punjabi pahũcṇā under Sanskrit prabhūta, \"much, great\" (CDIAL 8716)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahunchāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahunchāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pahunchāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pahunchāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍākīā chiṭṭhīāṁ sāḍe ghar pahunchāundā hai. — The postman delivers the letters to our house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍākīā chiṭṭhīāṁ sāḍe ghar pahunchāundā hai.* — The postman delivers the letters to our house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a postman, then the Punjabi for a parcel, then say pahunchāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a postman, then the Punjabi for a parcel, then say *pahunchāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਹੁੰਚਾਉਣਾ (pahunchāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਹੁੰਚਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਹੁੰਚਾਉਣਾ (pahunchāuṇā) mean? (\"To deliver; to take something to a place\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C256-ghallna",
+      "sequence": 15180,
+      "title": "ਘੱਲਣਾ (ghallṇā) — to send off; to send",
+      "headword": "ਘੱਲਣਾ",
+      "romanization": "ghallṇā",
+      "gloss": "to send off; to send",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71b74999e790b920",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a parcel, then the Punjabi for to deliver."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਘੱਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਘੱਲਣਾ — ghallṇā — \"to send off; to send\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਹਰ ਮਹੀਨੇ ਪਿੰਡ ਚਿੱਠੀ ਘੱਲਦਾ ਹਾਂ। maiṁ har mahīne piṇḍ chiṭṭhī ghalldā hāṁ. Every month I send a letter to the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਅਮਨ ਨੂੰ ਪਾਰਸਲ ਘੱਲਿਆ, maiṁ Aman nū̃ pārsal ghalliā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਘੱਲਣਾ (ghallṇā) is inherited from a reconstructed ghalyati, \"pours\"; CDIAL lists Punjabi ghallṇā, \"to send\", under it (CDIAL 4457)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghallṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghallṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghallṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghallṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ har mahīne piṇḍ chiṭṭhī ghalldā hāṁ. — Every month I send a letter to the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ har mahīne piṇḍ chiṭṭhī ghalldā hāṁ.* — Every month I send a letter to the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a parcel, then the Punjabi for to deliver, then say ghallṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a parcel, then the Punjabi for to deliver, then say *ghallṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਘੱਲਣਾ (ghallṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਘੱਲਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਘੱਲਣਾ (ghallṇā) mean? (\"To send off; to send\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C256-parna",
+      "sequence": 15190,
+      "title": "ਪਾੜਨਾ (pāṛnā) — to tear",
+      "headword": "ਪਾੜਨਾ",
+      "romanization": "pāṛnā",
+      "gloss": "to tear",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e9ba96baa60156f0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to deliver, then the Punjabi for to send off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਾੜਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਾੜਨਾ — pāṛnā — \"to tear\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਲਿਫ਼ਾਫ਼ਾ ਖੋਲ੍ਹੋ ਪਰ ਚਿੱਠੀ ਨਾ ਪਾੜੋ। lifāfā kholho par chiṭṭhī nā pāṛo. Open the envelope, but do not tear the letter."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਪੁਰਾਣਾ ਕਾਗ਼ਜ਼ ਪਾੜਿਆ, maiṁ purāṇā kāghaz pāṛiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਾੜਨਾ (pāṛnā) is inherited from Sanskrit pāṭayati, \"splits\"; CDIAL lists Punjabi pāṛnā, \"to split, tear\", under it (CDIAL 8032)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṛnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṛnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāṛnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāṛnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lifāfā kholho par chiṭṭhī nā pāṛo. — Open the envelope, but do not tear the letter.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lifāfā kholho par chiṭṭhī nā pāṛo.* — Open the envelope, but do not tear the letter.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to deliver, then the Punjabi for to send off, then say pāṛnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to deliver, then the Punjabi for to send off, then say *pāṛnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਾੜਨਾ (pāṛnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਾੜਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਾੜਨਾ (pāṛnā) mean? (\"To tear\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

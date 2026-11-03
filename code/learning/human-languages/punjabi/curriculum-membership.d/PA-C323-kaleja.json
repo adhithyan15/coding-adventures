@@ -1,0 +1,11 @@
+{
+  "id": "PA-C323-kaleja",
+  "pathSegment": "PA-PATH-323-BODY323",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-323-BODY323",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:31254d3ae0467c1e",
+  "lessonIds": [
+    "PA-C283-rah",
+    "PA-C283-sathi",
+    "PA-C283-pahunchna",
+    "PA-C283-phasna",
+    "PA-C283-hillna"
+  ],
+  "tex": "punjabi/book/chapters/ch283-on-the-road.tex"
+}

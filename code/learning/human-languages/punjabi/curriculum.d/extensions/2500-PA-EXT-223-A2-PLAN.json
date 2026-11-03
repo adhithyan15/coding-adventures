@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-223-A2-PLAN",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can tell a short plan for tomorrow or next week, and say perhaps with shaid.",
+  "prerequisites": [
+    "PA-EXT-222-A2-KARANGA"
+  ]
+}

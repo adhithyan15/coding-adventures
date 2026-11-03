@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C218-nahin-gia",
+    "language": "punjabi",
+    "chapter": 218,
+    "sequence": 11940,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:df5d16af2acf5685"
+  },
+  "findings": []
+}

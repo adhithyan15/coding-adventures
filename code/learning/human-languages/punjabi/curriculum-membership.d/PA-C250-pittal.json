@@ -1,0 +1,11 @@
+{
+  "id": "PA-C250-pittal",
+  "pathSegment": "PA-PATH-250-GHR250",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-250-GHR250",
+      "order": 4
+    }
+  ]
+}

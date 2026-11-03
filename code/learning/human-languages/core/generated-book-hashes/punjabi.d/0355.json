@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:0bc228c8c5a645c0",
+  "lessonIds": [
+    "PA-C355-paheli",
+    "PA-C355-bujjhna",
+    "PA-C355-mazak",
+    "PA-C355-hasauna",
+    "PA-C355-chherna"
+  ],
+  "tex": "punjabi/book/chapters/ch355-riddles-and-jokes.tex"
+}

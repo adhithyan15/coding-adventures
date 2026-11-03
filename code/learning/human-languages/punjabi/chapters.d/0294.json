@@ -1,0 +1,21 @@
+{
+  "chapter": 294,
+  "title": "Poor Ground",
+  "label": "ch:pa-a2-poor-ground",
+  "canDo": "I can say what kind of ground a place has.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-R294-review-288-294",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 294: I can say what kind of ground a place has.",
+    "assesses": [
+      "PA-LEX-C294-POOR294-01",
+      "PA-LEX-C294-POOR294-02",
+      "PA-LEX-C294-POOR294-03",
+      "PA-LEX-C294-POOR294-04",
+      "PA-LEX-C294-POOR294-05"
+    ]
+  }
+}

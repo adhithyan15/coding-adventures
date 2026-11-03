@@ -1,0 +1,11 @@
+{
+  "id": "PA-C294-ujar",
+  "pathSegment": "PA-PATH-294-POOR294",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-294-POOR294",
+      "order": 2
+    }
+  ]
+}

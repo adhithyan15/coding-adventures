@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C242-chhirakna",
+    "language": "punjabi",
+    "chapter": 242,
+    "sequence": 13900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a91c19381a1254b"
+  },
+  "findings": []
+}

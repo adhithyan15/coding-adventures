@@ -1,0 +1,11 @@
+{
+  "id": "PA-C362-kabal",
+  "pathSegment": "PA-PATH-362-SKILL362",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-362-SKILL362",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:704e51d78b39e46f",
+  "lessonIds": [
+    "PA-C310-phisalna",
+    "PA-C310-thokar",
+    "PA-C310-tuttna",
+    "PA-C310-torna",
+    "PA-C310-dullhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch310.txt",
+  "json": "punjabi/narration/ch310.json",
+  "textHash": "fnv1a64:9af4ea4cdab9641e",
+  "jsonHash": "fnv1a64:81046481a8301030",
+  "findings": []
+}

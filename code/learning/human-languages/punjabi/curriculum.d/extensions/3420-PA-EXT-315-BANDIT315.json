@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-315-BANDIT315",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say what happened when someone was robbed.",
+  "prerequisites": []
+}

@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-303-WATER303",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "PA-EXT-303-WATER303"
+  ],
+  "after": []
+}

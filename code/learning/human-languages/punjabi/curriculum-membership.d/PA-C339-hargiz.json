@@ -1,0 +1,11 @@
+{
+  "id": "PA-C339-hargiz",
+  "pathSegment": "PA-PATH-339-REFUSE339",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-339-REFUSE339",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 277,
+  "title": "Choosing the Best",
+  "label": "ch:pa-a2-choosing-the-best",
+  "canDo": "I can choose and check goods in a shop.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PA-C277-saman",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 277: I can choose and check goods in a shop.",
+    "assesses": [
+      "PA-LEX-C277-CHOOSE277-03",
+      "PA-LEX-C277-CHOOSE277-04",
+      "PA-LEX-C277-CHOOSE277-05"
+    ]
+  }
+}

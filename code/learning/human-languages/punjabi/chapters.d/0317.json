@@ -1,0 +1,19 @@
+{
+  "chapter": 317,
+  "title": "Days Gone By",
+  "label": "ch:pa-a2-days-gone-by",
+  "canDo": "I can say how time went by and how I felt about it.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C317-guzarna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can say how time went by and how I felt about it.",
+    "assesses": [
+      "PA-LEX-C317-PAST317-03",
+      "PA-LEX-C317-PAST317-04",
+      "PA-LEX-C317-PAST317-05"
+    ]
+  }
+}

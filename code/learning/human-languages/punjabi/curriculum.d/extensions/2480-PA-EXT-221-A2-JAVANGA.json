@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-221-A2-JAVANGA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say that I, someone else or we will go somewhere tomorrow, with the -ga future.",
+  "prerequisites": [
+    "PA-EXT-220-A2-NE-PAST"
+  ]
+}

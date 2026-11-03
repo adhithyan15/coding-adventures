@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:97601b3a649232a4",
+  "lessonIds": [
+    "PA-C222-fut-return",
+    "PA-C222-karanga",
+    "PA-C222-karoge",
+    "PA-C222-karanga-review",
+    "PA-C222-ki-nahin-future",
+    "PA-C222-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch222-what-will-you-do-tomorrow.tex"
+}

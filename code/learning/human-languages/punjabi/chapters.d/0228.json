@@ -1,0 +1,19 @@
+{
+  "chapter": 228,
+  "title": "Drying the Clothes",
+  "label": "ch:pa-a2-drying-the-clothes",
+  "canDo": "I can say how I wring and dry the washing.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C228-punjhna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 228: I can say how I wring and dry the washing.",
+    "assesses": [
+      "PA-LEX-C228-DIN228-03",
+      "PA-LEX-C228-DIN228-04",
+      "PA-LEX-C228-DIN228-05"
+    ]
+  }
+}

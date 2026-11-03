@@ -1,0 +1,11 @@
+{
+  "id": "PA-C355-hasauna",
+  "pathSegment": "PA-PATH-355-RIDDLE355",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-355-RIDDLE355",
+      "order": 3
+    }
+  ]
+}

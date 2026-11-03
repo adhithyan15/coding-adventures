@@ -1,0 +1,19 @@
+{
+  "chapter": 247,
+  "title": "Inside the Room",
+  "label": "ch:pa-a2-inside-the-room",
+  "canDo": "I can name places to keep things in a room.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C247-sanduk",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 247: I can name places to keep things in a room.",
+    "assesses": [
+      "PA-LEX-C247-GHR247-03",
+      "PA-LEX-C247-GHR247-04",
+      "PA-LEX-C247-GHR247-05"
+    ]
+  }
+}

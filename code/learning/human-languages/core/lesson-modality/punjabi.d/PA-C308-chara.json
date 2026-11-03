@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C308-chara",
+    "language": "punjabi",
+    "chapter": 308,
+    "sequence": 18380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c82659327bd08b14"
+  },
+  "findings": []
+}

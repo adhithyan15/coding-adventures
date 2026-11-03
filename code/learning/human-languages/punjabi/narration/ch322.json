@@ -1,0 +1,885 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 322,
+  "title": "A Cut and a Bruise",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:492278cb0897e498",
+  "lessons": [
+    {
+      "id": "PA-C322-satt",
+      "sequence": 19660,
+      "title": "ਸੱਟ (saṭṭ) — an injury",
+      "headword": "ਸੱਟ",
+      "romanization": "saṭṭ",
+      "gloss": "an injury",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:23d368781febe866",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for breath, then the Punjabi for to swallow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸੱਟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੱਟ — saṭṭ — \"an injury\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੀ ਲੱਤ ਉੱਤੇ ਇੱਕ ਵੱਡੀ ਸੱਟ ਹੈ। merī latt utte ikk vaḍḍī saṭṭ hai. I have a big injury on my leg."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੱਟ (saṭṭ) is inherited from Sanskrit sṛṣṭi, \"emission, creation\"; CDIAL lists Punjabi saṭṭ, \"a blow, a wound\", under it (CDIAL 13579). How the sense moved is not explained there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṭṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṭṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṭṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṭṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merī latt utte ikk vaḍḍī saṭṭ hai. — I have a big injury on my leg.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merī latt utte ikk vaḍḍī saṭṭ hai.* — I have a big injury on my leg.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for breath, then the Punjabi for to swallow, then say saṭṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for breath, then the Punjabi for to swallow, then say *saṭṭ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸੱਟ (saṭṭ) mean? (\"An injury\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C322-zakham",
+      "sequence": 19670,
+      "title": "ਜ਼ਖ਼ਮ (zakham) — a wound",
+      "headword": "ਜ਼ਖ਼ਮ",
+      "romanization": "zakham",
+      "gloss": "a wound",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e48b6329f127d215",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to swallow, then the Punjabi for an injury."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਜ਼ਖ਼ਮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜ਼ਖ਼ਮ — zakham — \"a wound\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਚਾਕੂ ਨਾਲ ਮੇਰੀ ਉਂਗਲ ਉੱਤੇ ਜ਼ਖ਼ਮ ਹੋਇਆ। chākū nāl merī uṅgal utte zakham hoiā. I got a cut on my finger from the knife."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਜ਼ਖ਼ਮ (zakham) is a loan, usually traced to Persian zakhm, \"a wound\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zakham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zakham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zakham, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zakham*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chākū nāl merī uṅgal utte zakham hoiā. — I got a cut on my finger from the knife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chākū nāl merī uṅgal utte zakham hoiā.* — I got a cut on my finger from the knife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to swallow, then the Punjabi for an injury, then say zakham again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to swallow, then the Punjabi for an injury, then say *zakham* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਜ਼ਖ਼ਮ (zakham) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਜ਼ਖ਼ਮ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਜ਼ਖ਼ਮ (zakham) mean? (\"A wound\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C322-sujjna",
+      "sequence": 19680,
+      "title": "ਸੁੱਜਣਾ (sujjṇā) — to swell up",
+      "headword": "ਸੁੱਜਣਾ",
+      "romanization": "sujjṇā",
+      "gloss": "to swell up",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f10a2d7cefe00e03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an injury, then the Punjabi for a wound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸੁੱਜਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੁੱਜਣਾ — sujjṇā — \"to swell up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸੱਟ ਤੋਂ ਬਾਅਦ ਮੇਰਾ ਗਿੱਟਾ ਸੁੱਜਿਆ। saṭṭ ton bāad merā giṭṭā sujjiā. After the injury my ankle swelled up."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਗੋਡਾ ਬਹੁਤ ਸੁੱਜਿਆ, oh goḍā bahut sujjiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੁੱਜਣਾ (sujjṇā) is inherited from Sanskrit śūyate, \"is swollen\"; CDIAL lists Punjabi sujjṇā, \"to swell\", under it (CDIAL 12568)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sujjṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sujjṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sujjṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sujjṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṭṭ ton bāad merā giṭṭā sujjiā. — After the injury my ankle swelled up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṭṭ ton bāad merā giṭṭā sujjiā.* — After the injury my ankle swelled up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an injury, then the Punjabi for a wound, then say sujjṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an injury, then the Punjabi for a wound, then say *sujjṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸੁੱਜਣਾ (sujjṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸੁੱਜਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸੁੱਜਣਾ (sujjṇā) mean? (\"To swell up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C322-patti",
+      "sequence": 19690,
+      "title": "ਪੱਟੀ (paṭṭī) — a bandage",
+      "headword": "ਪੱਟੀ",
+      "romanization": "paṭṭī",
+      "gloss": "a bandage",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:12984af5e9b29c86",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a wound, then the Punjabi for to swell up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੱਟੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੱਟੀ — paṭṭī — \"a bandage\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਜ਼ਖ਼ਮ ਉੱਤੇ ਸਾਫ਼ ਪੱਟੀ ਬੰਨ੍ਹੀ। maiṁ zakham utte sāf paṭṭī bannhī. I tied a clean bandage over the wound."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੱਟੀ (paṭṭī) is inherited from Sanskrit paṭṭa, \"cloth; a bandage\"; CDIAL lists Punjabi paṭṭī, \"coarse woollen cloth, bandage\", under it (CDIAL 7700)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṭṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṭṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ zakham utte sāf paṭṭī bannhī. — I tied a clean bandage over the wound.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ zakham utte sāf paṭṭī bannhī.* — I tied a clean bandage over the wound.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a wound, then the Punjabi for to swell up, then say paṭṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a wound, then the Punjabi for to swell up, then say *paṭṭī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪੱਟੀ (paṭṭī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪੱਟੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੱਟੀ (paṭṭī) mean? (\"A bandage\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C322-malham",
+      "sequence": 19700,
+      "title": "ਮਲ੍ਹਮ (malham) — an ointment",
+      "headword": "ਮਲ੍ਹਮ",
+      "romanization": "malham",
+      "gloss": "an ointment",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d87e226e0cc24b51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to swell up, then the Punjabi for a bandage."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਲ੍ਹਮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਲ੍ਹਮ — malham — \"an ointment\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਰਾਤ ਨੂੰ ਮੈਂ ਸੱਟ ਉੱਤੇ ਮਲ੍ਹਮ ਮਲੀ। rāt nū̃ maiṁ saṭṭ utte malham malī. At night I rubbed ointment on the injury."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਲ੍ਹਮ (malham) is a loan, usually traced through Persian to Arabic marham, \"an ointment\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malham",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malham*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malham, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malham*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rāt nū̃ maiṁ saṭṭ utte malham malī. — At night I rubbed ointment on the injury.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rāt nū̃ maiṁ saṭṭ utte malham malī.* — At night I rubbed ointment on the injury.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to swell up, then the Punjabi for a bandage, then say malham again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to swell up, then the Punjabi for a bandage, then say *malham* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਲ੍ਹਮ (malham) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਲ੍ਹਮ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਲ੍ਹਮ (malham) mean? (\"An ointment\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R322-review-316-322",
+      "sequence": 19710,
+      "title": "Looking back: from Trouble in the Lane to A Cut and a Bruise",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Trouble in the Lane to A Cut and a Bruise",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a76d65d45cfac6e5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for to fight and a quarrel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fight, a quarrel, to hit, a swear word, a reconciliation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fight, a quarrel, to hit, a swear word, a reconciliation]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a particular time, to go by (of time), an era, to regret, to spend time",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a particular time, to go by (of time), an era, to regret, to spend time]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fly, to burst, a collision, to sink, a boatman",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fly, to burst, a collision, to sink, a boatman]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how someone is feeling, how things stand, health, healthy, well again after an illness",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how someone is feeling, how things stand, health, healthy, well again after an illness]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a doctor, a patient, medical treatment, the pulse, an injection",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a doctor, a patient, medical treatment, the pulse, an injection]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a head cold, a cough, a sneeze, breath, to swallow",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a head cold, a cough, a sneeze, breath, to swallow]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an injury, a wound, to swell up, a bandage, an ointment",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an injury, a wound, to swell up, a bandage, an ointment]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To fight? (ਲੜਨਾ, laṛnā.) A quarrel? (ਝਗੜਾ, jhagṛā.) To hit? (ਮਾਰਨਾ, mārnā.) A swear word? (ਗਾਲ੍ਹ, gālh.) A reconciliation? (ਸੁਲ੍ਹਾ, sulhā.) A particular time? (ਵੇਲਾ, velā.) To go by (of time)? (ਬੀਤਣਾ, bītṇā.) An era? (ਜ਼ਮਾਨਾ, zamānā.) To regret? (ਪਛਤਾਉਣਾ, pachhtāuṇā.) To spend time? (ਗੁਜ਼ਾਰਨਾ, guzārnā.) To fly? (ਉੱਡਣਾ, uḍḍṇā.) To burst? (ਫੁੱਟਣਾ, phuṭṭṇā.) A collision? (ਟੱਕਰ, ṭakkar.) To sink? (ਡੁੱਬਣਾ, ḍubbṇā.) A boatman? (ਮਲਾਹ, malāh.) How someone is feeling? (ਤਬੀਅਤ, tabīat.) How things stand? (ਹਾਲ, hāl.) Health? (ਸਿਹਤ, sihat.) Healthy? (ਤੰਦਰੁਸਤ, tandrusat.) Well again after an illness? (ਰਾਜ਼ੀ, rāzī.) A doctor? (ਡਾਕਟਰ, ḍākṭar.) A patient? (ਮਰੀਜ਼, marīz.) Medical treatment? (ਇਲਾਜ, ilāj.) The pulse? (ਨਬਜ਼, nabaz.) An injection? (ਟੀਕਾ, ṭīkā.) A head cold? (ਜ਼ੁਕਾਮ, zukām.) A cough? (ਖੰਘ, khaṅgh.) A sneeze? (ਛਿੱਕ, chhikk.) Breath? (ਸਾਹ, sāh.) To swallow? (ਨਿਗਲਣਾ, nigalṇā.) An injury? (ਸੱਟ, saṭṭ.) A wound? (ਜ਼ਖ਼ਮ, zakham.) To swell up? (ਸੁੱਜਣਾ, sujjṇā.) A bandage? (ਪੱਟੀ, paṭṭī.) An ointment? (ਮਲ੍ਹਮ, malham.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

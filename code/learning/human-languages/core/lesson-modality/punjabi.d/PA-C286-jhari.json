@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C286-jhari",
+    "language": "punjabi",
+    "chapter": 286,
+    "sequence": 17250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feaf5e33c53d7f1b"
+  },
+  "findings": []
+}

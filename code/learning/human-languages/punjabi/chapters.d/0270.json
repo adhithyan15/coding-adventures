@@ -1,0 +1,19 @@
+{
+  "chapter": 270,
+  "title": "Searching for an Address",
+  "label": "ch:pa-a2-searching-for-an-address",
+  "canDo": "I can ask how far a place is and where to wait.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C270-maidan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 270: I can ask how far a place is and where to wait.",
+    "assesses": [
+      "PA-LEX-C270-SEARCH270-03",
+      "PA-LEX-C270-SEARCH270-04",
+      "PA-LEX-C270-SEARCH270-05"
+    ]
+  }
+}

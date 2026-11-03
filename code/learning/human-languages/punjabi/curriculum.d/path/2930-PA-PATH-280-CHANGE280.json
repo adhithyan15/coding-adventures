@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-280-CHANGE280",
+  "spine_node": "SPINE-SAY-WHAT-I-WANT",
+  "before": [],
+  "inline": [
+    "PA-EXT-280-CHANGE280"
+  ],
+  "after": []
+}

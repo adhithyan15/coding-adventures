@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:43831bfa253a05c9",
+  "lessonIds": [
+    "PA-C338-ijazat",
+    "PA-C338-manha",
+    "PA-C338-manzur",
+    "PA-C338-hukam",
+    "PA-C338-tokna"
+  ],
+  "tex": "punjabi/book/chapters/ch338-is-it-allowed.tex"
+}

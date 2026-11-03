@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C323-dhidd",
+    "language": "punjabi",
+    "chapter": 323,
+    "sequence": 19720,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c33bfb68d9234c71"
+  },
+  "findings": []
+}

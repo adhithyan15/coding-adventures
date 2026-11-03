@@ -1,0 +1,11 @@
+{
+  "id": "PA-C320-mariz",
+  "pathSegment": "PA-PATH-320-CLINIC320",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-320-CLINIC320",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C282-bisatra",
+  "pathSegment": "PA-PATH-282-BAGS282",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-282-BAGS282",
+      "order": 1
+    }
+  ]
+}

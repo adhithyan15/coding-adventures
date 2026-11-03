@@ -1,0 +1,11 @@
+{
+  "id": "PA-C314-pota",
+  "pathSegment": "PA-PATH-314-BABY314",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-314-BABY314",
+      "order": 3
+    }
+  ]
+}

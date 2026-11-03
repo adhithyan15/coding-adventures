@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:7ad0fc9a38579274",
+  "lessonIds": [
+    "PA-C341-shakk",
+    "PA-C341-yakin",
+    "PA-C341-bharosa",
+    "PA-C341-andaza",
+    "PA-C341-jachna"
+  ],
+  "tex": "punjabi/book/chapters/ch341-i-m-not-so-sure.tex"
+}

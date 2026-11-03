@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "By the Water",
+  "label": "ch:pa-a2-by-the-water",
+  "canDo": "I can describe a lake and a riverbank.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C299-sohna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can describe a lake and a riverbank.",
+    "assesses": [
+      "PA-LEX-C299-WATER299-03",
+      "PA-LEX-C299-WATER299-04",
+      "PA-LEX-C299-WATER299-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "chapter": 308,
+  "title": "Feeding the Animals",
+  "label": "ch:pa-a2-feeding-the-animals",
+  "canDo": "I can talk about feeding and herding the animals.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-R308-review-final-308",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 308: I can talk about feeding and herding the animals.",
+    "assesses": [
+      "PA-LEX-C308-FEED308-01",
+      "PA-LEX-C308-FEED308-02",
+      "PA-LEX-C308-FEED308-03",
+      "PA-LEX-C308-FEED308-04",
+      "PA-LEX-C308-FEED308-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 283,
+  "sourceHash": "fnv1a64:1db44c6fc68b6ad6",
+  "lessonIds": [
+    "PA-C283-rah",
+    "PA-C283-sathi",
+    "PA-C283-pahunchna",
+    "PA-C283-phasna",
+    "PA-C283-hillna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch283.txt",
+  "json": "punjabi/narration/ch283.json",
+  "textHash": "fnv1a64:7646213a53984c84",
+  "jsonHash": "fnv1a64:69ea98eea32b286c",
+  "findings": []
+}

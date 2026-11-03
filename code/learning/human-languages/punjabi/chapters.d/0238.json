@@ -1,0 +1,21 @@
+{
+  "chapter": 238,
+  "title": "Kneading the Dough",
+  "label": "ch:pa-a2-kneading-the-dough",
+  "canDo": "I can say how dough is made ready.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-R238-review-232-238",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 238: I can say how dough is made ready.",
+    "assesses": [
+      "PA-LEX-C238-KAM238-01",
+      "PA-LEX-C238-KAM238-02",
+      "PA-LEX-C238-KAM238-03",
+      "PA-LEX-C238-KAM238-04",
+      "PA-LEX-C238-KAM238-05"
+    ]
+  }
+}

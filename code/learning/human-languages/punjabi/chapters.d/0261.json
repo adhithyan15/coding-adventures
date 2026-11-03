@@ -1,0 +1,19 @@
+{
+  "chapter": 261,
+  "title": "The Train Timetable",
+  "label": "ch:pa-a2-the-train-timetable",
+  "canDo": "I can understand when a train leaves and where it stops.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C261-ravana",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 261: I can understand when a train leaves and where it stops.",
+    "assesses": [
+      "PA-LEX-C261-TRAIN261-03",
+      "PA-LEX-C261-TRAIN261-04",
+      "PA-LEX-C261-TRAIN261-05"
+    ]
+  }
+}

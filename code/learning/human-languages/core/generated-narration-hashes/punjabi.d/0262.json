@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 262,
+  "sourceHash": "fnv1a64:23e5dd1a4e9a81e1",
+  "lessonIds": [
+    "PA-C262-fis",
+    "PA-C262-kiraia",
+    "PA-C262-jurmana",
+    "PA-C262-rasid",
+    "PA-C262-chukauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch262.txt",
+  "json": "punjabi/narration/ch262.json",
+  "textHash": "fnv1a64:8715728045bb445b",
+  "jsonHash": "fnv1a64:5b31d48120014970",
+  "findings": []
+}

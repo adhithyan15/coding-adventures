@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-333-BARBER333",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "PA-EXT-333-BARBER333"
+  ],
+  "after": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C225-letna",
+    "language": "punjabi",
+    "chapter": 225,
+    "sequence": 13030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b070c86a13b8c11"
+  },
+  "findings": []
+}

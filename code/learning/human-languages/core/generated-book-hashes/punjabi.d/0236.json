@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 236,
+  "sourceHash": "fnv1a64:bb9b407fb4a07641",
+  "lessonIds": [
+    "PA-C236-manjna",
+    "PA-C236-hanghalna",
+    "PA-C236-uladdna",
+    "PA-C236-lota",
+    "PA-C236-katora"
+  ],
+  "tex": "punjabi/book/chapters/ch236-scrubbing-the-pots.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C220-ki-past",
+  "pathSegment": "PA-PATH-220-A2-NE-PAST",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-220-A2-NE-PAST",
+      "order": 5
+    }
+  ]
+}

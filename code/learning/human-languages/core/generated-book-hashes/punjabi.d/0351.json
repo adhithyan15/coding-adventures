@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:1e340ae1fc87165b",
+  "lessonIds": [
+    "PA-C351-gend",
+    "PA-C351-haki",
+    "PA-C351-tim",
+    "PA-C351-maich",
+    "PA-C351-harauna"
+  ],
+  "tex": "punjabi/book/chapters/ch351-ball-games.tex"
+}

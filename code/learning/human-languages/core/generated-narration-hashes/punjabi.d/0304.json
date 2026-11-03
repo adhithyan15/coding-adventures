@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:fd5ac1520422472b",
+  "lessonIds": [
+    "PA-C304-khurpa",
+    "PA-C304-godna",
+    "PA-C304-pakkna",
+    "PA-C304-sitta",
+    "PA-C304-dana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch304.txt",
+  "json": "punjabi/narration/ch304.json",
+  "textHash": "fnv1a64:ca7dd9f9548c5742",
+  "jsonHash": "fnv1a64:733715bcba5b4c12",
+  "findings": []
+}

@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:ff4fd0f4f9a683d4",
+  "lessonIds": [
+    "PA-C308-chara",
+    "PA-C308-goha",
+    "PA-C308-vachchha",
+    "PA-C308-sing",
+    "PA-C308-hakkna",
+    "PA-R308-review-302-308",
+    "PA-R308-review-final-308"
+  ],
+  "tex": "punjabi/book/chapters/ch308-feeding-the-animals.tex"
+}

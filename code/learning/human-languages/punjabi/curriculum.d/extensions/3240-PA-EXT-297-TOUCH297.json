@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-297-TOUCH297",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say how something feels in the hand.",
+  "prerequisites": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 334,
+  "title": "Wool and Cloth",
+  "label": "ch:pa-a2-wool-and-cloth",
+  "canDo": "I can say who spins, weaves and dyes.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C334-rangna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can say who spins, weaves and dyes.",
+    "assesses": [
+      "PA-LEX-C334-WOOL334-03",
+      "PA-LEX-C334-WOOL334-04",
+      "PA-LEX-C334-WOOL334-05"
+    ]
+  }
+}

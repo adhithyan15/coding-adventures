@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:bfacac41e149f323",
+  "lessonIds": [
+    "PA-C359-sabak",
+    "PA-C359-abhias",
+    "PA-C359-mihnat",
+    "PA-C359-dhian",
+    "PA-C359-sudhaarna"
+  ],
+  "tex": "punjabi/book/chapters/ch359-studying-hard.tex"
+}

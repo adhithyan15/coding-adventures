@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:7895cb301917b8d8",
+  "lessonIds": [
+    "PA-C344-dalil",
+    "PA-C344-bahis",
+    "PA-C344-takrar",
+    "PA-C344-zidd",
+    "PA-C344-itraz"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch344.txt",
+  "json": "punjabi/narration/ch344.json",
+  "textHash": "fnv1a64:e957f2140665eb8d",
+  "jsonHash": "fnv1a64:17dcaf09a8c954a9",
+  "findings": []
+}

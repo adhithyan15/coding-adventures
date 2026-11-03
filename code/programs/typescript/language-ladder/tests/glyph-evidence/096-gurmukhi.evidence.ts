@@ -1,9 +1,10 @@
 import { expect } from "vitest";
 import type { GlyphEvidence } from "./types";
 
-// Gurmukhi reaches the app as a script tab of its own: the Punjabi track's 36
+// Gurmukhi reaches the app as a script tab of its own: the Punjabi track's 38
 // letters, recognition-only except where GNPS's Gurmukhi Sikho tracing lesson
-// cites an order.
+// cites an order. The Punjabi A2 core added ਔ (after ਐ, from ਔਰਤ) and ਢ (after
+// ਡ, from ਕੱਢਣਾ), 36 -> 38, both copy-only: no cited order covers them yet.
 export default [
   {
     suite: "independent (word-initial) vowels",
@@ -14,12 +15,14 @@ export default [
       // Gurmukhi was the last tab until Latin joined after it.
       expect(SCRIPTS.at(-2)!.script).toBe("gurmukhi");
       const gurmukhi = SCRIPTS.find((script) => script.script === "gurmukhi")!;
-      expect(gurmukhi.letters).toHaveLength(36);
-      expect(gurmukhi.letters.slice(0, 7).map((letter) => letter.glyph)).toEqual(["ਅ", "ਆ", "ਇ", "ਈ", "ਉ", "ਏ", "ਐ"]);
+      expect(gurmukhi.letters).toHaveLength(38);
+      expect(gurmukhi.letters.slice(0, 8).map((letter) => letter.glyph)).toEqual(["ਅ", "ਆ", "ਇ", "ਈ", "ਉ", "ਏ", "ਐ", "ਔ"]);
       const cited = gurmukhi.letters.filter((letter) => letter.strokeOrderSource !== undefined);
       expect(cited).toHaveLength(27);
       expect(cited.map((letter) => letter.glyph)).not.toContain("ਝ");
       expect(cited.map((letter) => letter.glyph)).not.toContain("ਧ");
+      expect(cited.map((letter) => letter.glyph)).not.toContain("ਔ");
+      expect(cited.map((letter) => letter.glyph)).not.toContain("ਢ");
       for (const letter of cited) {
         expect(letter.penLifts, letter.glyph).toBeGreaterThanOrEqual(1);
         expect(letter.strokeOrderSource!.url).toMatch(

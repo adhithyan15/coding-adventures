@@ -1,0 +1,19 @@
+{
+  "chapter": 326,
+  "title": "Fear and Anger",
+  "label": "ch:pa-a2-fear-and-anger",
+  "canDo": "I can say what frightened or angered someone.",
+  "spineNodes": [
+    "SPINE-CHECK-WELLBEING"
+  ],
+  "payoff": {
+    "lesson": "PA-C326-sharam",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 326: I can say what frightened or angered someone.",
+    "assesses": [
+      "PA-LEX-C326-FEAR326-03",
+      "PA-LEX-C326-FEAR326-04",
+      "PA-LEX-C326-FEAR326-05"
+    ]
+  }
+}

@@ -1,0 +1,885 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 245,
+  "title": "Our Courtyard House",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:b56a7d9239393547",
+  "lessons": [
+    {
+      "id": "PA-C245-vihra",
+      "sequence": 14020,
+      "title": "ਵਿਹੜਾ (vihṛā) — a courtyard",
+      "headword": "ਵਿਹੜਾ",
+      "romanization": "vihṛā",
+      "gloss": "a courtyard",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:823b3568e586c7ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to serve food, then the Punjabi for to mash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵਿਹੜਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਿਹੜਾ — vihṛā — \"a courtyard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਾਡੇ ਘਰ ਦਾ ਵਿਹੜਾ ਵੱਡਾ ਹੈ। sāḍe ghar dā vihṛā vaḍḍā hai. Our house has a big courtyard."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਿਹੜਾ (vihṛā) is inherited from Sanskrit vēṣṭa, \"band, enclosure\"; CDIAL lists Punjabi veṛhā, \"enclosure, courtyard\" (CDIAL 12130)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vihṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vihṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vihṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vihṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḍe ghar dā vihṛā vaḍḍā hai. — Our house has a big courtyard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḍe ghar dā vihṛā vaḍḍā hai.* — Our house has a big courtyard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to serve food, then the Punjabi for to mash, then say vihṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to serve food, then the Punjabi for to mash, then say *vihṛā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵਿਹੜਾ (vihṛā) mean? (\"A courtyard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C245-kotha",
+      "sequence": 14030,
+      "title": "ਕੋਠਾ (koṭhā) — a flat-roofed house; a room",
+      "headword": "ਕੋਠਾ",
+      "romanization": "koṭhā",
+      "gloss": "a flat-roofed house; a room",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1c31162c7177606d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to mash, then the Punjabi for a courtyard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕੋਠਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੋਠਾ — koṭhā — \"a flat-roofed house; a room\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪਿੰਡ ਵਿੱਚ ਦਾਦਾ ਜੀ ਦਾ ਕੋਠਾ ਪੁਰਾਣਾ ਹੈ। piṇḍ vich dādā jī dā koṭhā purāṇā hai. Grandfather's house in the village is old."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੋਠਾ (koṭhā) is inherited from Sanskrit kōṣṭha, \"granary, storeroom, inner apartment\"; CDIAL lists Punjabi koṭhā, \"house with mud roof and walls\" (CDIAL 3546)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭhā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koṭhā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koṭhā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "piṇḍ vich dādā jī dā koṭhā purāṇā hai. — Grandfather's house in the village is old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *piṇḍ vich dādā jī dā koṭhā purāṇā hai.* — Grandfather's house in the village is old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to mash, then the Punjabi for a courtyard, then say koṭhā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to mash, then the Punjabi for a courtyard, then say *koṭhā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕੋਠਾ (koṭhā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕੋਠਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕੋਠਾ (koṭhā) mean? (\"A flat-roofed house; a room\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C245-chubara",
+      "sequence": 14040,
+      "title": "ਚੁਬਾਰਾ (chubārā) — an upper room",
+      "headword": "ਚੁਬਾਰਾ",
+      "romanization": "chubārā",
+      "gloss": "an upper room",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f633ca60bddcf800",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a courtyard, then the Punjabi for a flat-roofed house."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚੁਬਾਰਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੁਬਾਰਾ — chubārā — \"an upper room\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਚੁਬਾਰੇ ਵਿੱਚ ਚਾਰ ਖਿੜਕੀਆਂ ਹਨ। chubāre vich chār khiṛkīāṁ han. The upper room has four windows."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੁਬਾਰਾ (chubārā) is inherited from Sanskrit caturdvāra, \"having four doors\"; CDIAL lists Punjabi cubārā, \"upper room with four windows\" (CDIAL 4611)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chubārā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chubārā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chubārā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chubārā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chubāre vich chār khiṛkīāṁ han. — The upper room has four windows.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chubāre vich chār khiṛkīāṁ han.* — The upper room has four windows.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a courtyard, then the Punjabi for a flat-roofed house, then say chubārā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a courtyard, then the Punjabi for a flat-roofed house, then say *chubārā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚੁਬਾਰਾ (chubārā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚੁਬਾਰਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚੁਬਾਰਾ (chubārā) mean? (\"An upper room\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C245-thammh",
+      "sequence": 14050,
+      "title": "ਥੰਮ੍ਹ (thammh) — a pillar",
+      "headword": "ਥੰਮ੍ਹ",
+      "romanization": "thammh",
+      "gloss": "a pillar",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8677fe5e246d4f06",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a flat-roofed house, then the Punjabi for an upper room."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਥੰਮ੍ਹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥੰਮ੍ਹ — thammh — \"a pillar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਵਿਹੜੇ ਵਿੱਚ ਦੋ ਥੰਮ੍ਹ ਹਨ। vihṛe vich do thammh han. There are two pillars in the courtyard."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਥੰਮ੍ਹ (thammh) is inherited from Sanskrit stambha, \"pillar, post\"; CDIAL lists Punjabi thammh, \"pillar, post\" (CDIAL 13682)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thammh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thammh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thammh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thammh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vihṛe vich do thammh han. — There are two pillars in the courtyard.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vihṛe vich do thammh han.* — There are two pillars in the courtyard.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a flat-roofed house, then the Punjabi for an upper room, then say thammh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a flat-roofed house, then the Punjabi for an upper room, then say *thammh* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਥੰਮ੍ਹ (thammh) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਥੰਮ੍ਹ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਥੰਮ੍ਹ (thammh) mean? (\"A pillar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C245-itt",
+      "sequence": 14060,
+      "title": "ਇੱਟ (iṭṭ) — a brick",
+      "headword": "ਇੱਟ",
+      "romanization": "iṭṭ",
+      "gloss": "a brick",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e1442baaf635c7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an upper room, then the Punjabi for a pillar."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਇੱਟ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇੱਟ — iṭṭ — \"a brick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੰਧ ਲਾਲ ਇੱਟਾਂ ਦੀ ਹੈ। kandh lāl iṭṭāṁ dī hai. The wall is made of red bricks."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇੱਟ (iṭṭ) is inherited from Sanskrit iṣṭakā, \"brick\"; CDIAL lists Punjabi iṭṭ, \"brick\" (CDIAL 1600)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭṭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭṭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "iṭṭ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *iṭṭ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kandh lāl iṭṭāṁ dī hai. — The wall is made of red bricks.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kandh lāl iṭṭāṁ dī hai.* — The wall is made of red bricks.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an upper room, then the Punjabi for a pillar, then say iṭṭ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an upper room, then the Punjabi for a pillar, then say *iṭṭ* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਇੱਟ (iṭṭ) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਇੱਟ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਇੱਟ (iṭṭ) mean? (\"A brick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R245-review-239-245",
+      "sequence": 14070,
+      "title": "Looking back: from Bread on the Griddle to Our Courtyard House",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Bread on the Griddle to Our Courtyard House",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b42a66cb8cd74508",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for a griddle and to bake on a griddle."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a griddle, to bake on a griddle, tongs, to cover, ghee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a griddle, to bake on a griddle, tongs, to cover, ghee]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a grinding stone, to grind, a wooden mortar, a pestle, to pound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a grinding stone, to grind, a wooden mortar, a pestle, to pound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to peel, to chop finely, to split, a chilli, gram flour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to peel, to chop finely, to split, a chilli, gram flour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to fry, to roast, a ladle, to sprinkle, to get burnt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to fry, to roast, a ladle, to sprinkle, to get burnt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to pour in, to dissolve, to mix, to sift, to taste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to pour in, to dissolve, to mix, to sift, to taste]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a straining cloth, to strain, to pour off, to serve food, to mash",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a straining cloth, to strain, to pour off, to serve food, to mash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a courtyard, a flat-roofed house, an upper room, a pillar, a brick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a courtyard, a flat-roofed house, an upper room, a pillar, a brick]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A griddle? (ਤਵਾ, tavā.) To bake on a griddle? (ਸੇਕਣਾ, sekṇā.) Tongs? (ਚਿਮਟਾ, chimṭā.) To cover? (ਢੱਕਣਾ, ḍhakkṇā.) Ghee? (ਘਿਉ, ghiu.) A grinding stone? (ਸਿਲ, sil.) To grind? (ਪੀਹਣਾ, pīhṇā.) A wooden mortar? (ਉੱਖਲੀ, ukkhlī.) A pestle? (ਮੋਹਲਾ, mohlā.) To pound? (ਕੁੱਟਣਾ, kuṭṭṇā.) To peel? (ਛਿੱਲਣਾ, chhillṇā.) To chop finely? (ਕਤਰਨਾ, katarnā.) To split? (ਚੀਰਨਾ, chīrnā.) A chilli? (ਮਿਰਚ, mirach.) Gram flour? (ਵੇਸਣ, vesaṇ.) To fry? (ਤਲਣਾ, talṇā.) To roast? (ਭੁੰਨਣਾ, bhunnṇā.) A ladle? (ਕੜਛੀ, kaṛchhī.) To sprinkle? (ਛਿੜਕਣਾ, chhiṛakṇā.) To get burnt? (ਸੜਨਾ, saṛnā.) To pour in? (ਪਾਉਣਾ, pāuṇā.) To dissolve? (ਘੋਲਣਾ, gholṇā.) To mix? (ਰਲਾਉਣਾ, ralāuṇā.) To sift? (ਛਾਣਨਾ, chhāṇnā.) To taste? (ਚੱਖਣਾ, chakkhṇā.) A straining cloth? (ਪੋਣਾ, poṇā.) To strain? (ਪੁਣਨਾ, puṇnā.) To pour off? (ਨਿਤਾਰਨਾ, nitārnā.) To serve food? (ਪਰੋਸਣਾ, parosṇā.) To mash? (ਘੋਟਣਾ, ghoṭṇā.) A courtyard? (ਵਿਹੜਾ, vihṛā.) A flat-roofed house? (ਕੋਠਾ, koṭhā.) An upper room? (ਚੁਬਾਰਾ, chubārā.) A pillar? (ਥੰਮ੍ਹ, thammh.) A brick? (ਇੱਟ, iṭṭ.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

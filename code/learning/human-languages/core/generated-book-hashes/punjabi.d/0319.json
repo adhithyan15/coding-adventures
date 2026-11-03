@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:2b0bf26670c1cc3d",
+  "lessonIds": [
+    "PA-C319-tabiat",
+    "PA-C319-hal",
+    "PA-C319-sihat",
+    "PA-C319-tandrusat",
+    "PA-C319-razi"
+  ],
+  "tex": "punjabi/book/chapters/ch319-how-are-you-feeling.tex"
+}

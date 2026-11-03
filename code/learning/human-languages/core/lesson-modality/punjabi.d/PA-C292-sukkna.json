@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C292-sukkna",
+    "language": "punjabi",
+    "chapter": 292,
+    "sequence": 17590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3614400b88346e17"
+  },
+  "findings": []
+}

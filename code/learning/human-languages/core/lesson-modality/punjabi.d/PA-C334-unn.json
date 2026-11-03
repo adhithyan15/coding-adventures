@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C334-unn",
+    "language": "punjabi",
+    "chapter": 334,
+    "sequence": 20280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:be268618a46e34c2"
+  },
+  "findings": []
+}

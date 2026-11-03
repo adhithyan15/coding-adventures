@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "Damp and Dry",
+  "label": "ch:pa-a2-damp-and-dry",
+  "canDo": "I can say whether the air and the walls are damp or dry.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-C292-simmna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can say whether the air and the walls are damp or dry.",
+    "assesses": [
+      "PA-LEX-C292-DAMP292-03",
+      "PA-LEX-C292-DAMP292-04",
+      "PA-LEX-C292-DAMP292-05"
+    ]
+  }
+}
