@@ -49,6 +49,13 @@ Windows E2E tests must track the server's real OS process, using asynchronous
 `system` rather than Perl's emulated `fork`, and terminate that owned process
 during cleanup so waiting for it cannot leave the test suite hanging.
 
+Windows build recipes use a common PowerShell helper to select native Perl
+before invoking Cargo, staging the DLL and running prove. Git Bash prepends its
+MSYS Perl even when Windows PATH contains Strawberry; selecting the interpreter
+only inside Rust would leave the tests loading the DLL into a different Perl.
+An explicit PERL_BIN must identify native Perl; otherwise the helper searches
+the available Perl executables for Config{osname} equal to MSWin32.
+
 ## Architecture
 
 ```
