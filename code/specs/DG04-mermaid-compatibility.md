@@ -184,6 +184,9 @@ technology overrides replace the rendered technology without losing the
 description. Repeated C4 elements with the same alias update the existing
 semantic node's label, type, details, and enclosing boundary while retaining
 prior `UpdateElementStyle` paint and semantic style overrides. Repeated C4
+boundaries with the same alias likewise update the existing structural group,
+including its label, type metadata, and enclosing boundary, while retaining
+authored boundary styling. Repeated C4
 relationships with the same endpoint pair update the
 existing semantic relationship, including its arrow and detail metadata, while
 retaining prior `UpdateRelStyle` paint and label offsets. C4 relationship
