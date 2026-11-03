@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 185)
+        self.assertEqual(summary["case_count"], 197)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -166,6 +166,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(
             summary["domains"],
             [
+                "cargo_manifest_snapshot",
                 "ci_gate_selection",
                 "cli",
                 "diff_selection",
@@ -3976,6 +3977,197 @@ class PureDomainValidationTests(unittest.TestCase):
             "EXPECTED_TEST_TRIGGER_RESULT_INVALID",
         )
 
+    def test_cargo_manifest_snapshot_oracle_is_strict_and_bounded(self) -> None:
+        fixtures = sorted(CASES_ROOT.glob("cargo-manifest-snapshot-*.json"))
+        self.assertEqual(len(fixtures), 12)
+        for path in fixtures:
+            with self.subTest(path=path.name):
+                case = load_case(path.name)
+                runner.validate_case_document(case, **self._schema_args())
+                runner.assert_result_matches(
+                    case,
+                    case["expected"],
+                    **self._result_schema_args(),
+                )
+
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {
+                    "profile": "rust_root",
+                    "manifest_utf8": "#" * runner.CARGO_MANIFEST_MAX_BYTES,
+                }
+            ),
+            [],
+        )
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {
+                    "profile": "rust_root",
+                    "manifest_utf8": "#" * (runner.CARGO_MANIFEST_MAX_BYTES + 1),
+                }
+            ),
+            "CARGO_MANIFEST_TOO_LARGE",
+        )
+        at_line_limit = (
+            "[dev-dependencies]\ncompiler = { path = \"../compiler\", features = [\n"
+            + "\n".join(
+                f'"x{index}",'
+                for index in range(runner.CARGO_ENTRY_MAX_LINES - 2)
+            )
+            + "\n\"z\"] }\n"
+        )
+        self.assertIsInstance(
+            runner._expected_cargo_manifest_snapshot(
+                {"profile": "rust_root", "manifest_utf8": at_line_limit}
+            ),
+            list,
+        )
+        over_line_limit = at_line_limit.replace(
+            '\n"z"] }\n', '\n"y",\n"z"] }\n'
+        )
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {"profile": "rust_root", "manifest_utf8": over_line_limit}
+            ),
+            "CARGO_ENTRY_LIMIT_EXCEEDED",
+        )
+        entry_prefix = 'compiler = { features = [\n"'
+        entry_suffix = '"\n] }'
+        entry_payload_bytes = runner.CARGO_ENTRY_MAX_BYTES - len(
+            (entry_prefix + entry_suffix).encode("utf-8")
+        )
+        at_byte_limit = (
+            "[dev-dependencies]\n"
+            + entry_prefix
+            + "a" * entry_payload_bytes
+            + entry_suffix
+            + "\n"
+        )
+        self.assertIsInstance(
+            runner._expected_cargo_manifest_snapshot(
+                {"profile": "rust_root", "manifest_utf8": at_byte_limit}
+            ),
+            list,
+        )
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {
+                    "profile": "rust_root",
+                    "manifest_utf8": at_byte_limit.replace(
+                        'a"\n] }\n', 'aa"\n] }\n'
+                    ),
+                }
+            ),
+            "CARGO_ENTRY_LIMIT_EXCEEDED",
+        )
+        for manifest, error in (
+            (
+                "[dev-dependencies]\ncompiler\u00a0= { path = \"../compiler\" }\n",
+                "CARGO_MANIFEST_SYNTAX_INVALID",
+            ),
+            (
+                "target = { 'cfg(unix)' = { dependencies = { compiler = \"1\" } } }\n",
+                "CARGO_MANIFEST_TABLE_UNSUPPORTED",
+            ),
+            (
+                "target.'cfg(unix)' = { dev-dependencies = { "
+                "compiler = { path = '../compiler' } } }\n",
+                "CARGO_MANIFEST_TABLE_UNSUPPORTED",
+            ),
+            (
+                "[[dev-dependencies]\ncompiler = \"1\"\n",
+                "CARGO_MANIFEST_SYNTAX_INVALID",
+            ),
+        ):
+            with self.subTest(manifest=manifest):
+                self.assertEqual(
+                    runner._expected_cargo_manifest_snapshot(
+                        {"profile": "rust_root", "manifest_utf8": manifest}
+                    ),
+                    error,
+                )
+
+        too_many_entries = "[dev-dependencies]\n" + "\n".join(
+            f"dep{index} = \"1\"" for index in range(4097)
+        )
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {"profile": "rust_root", "manifest_utf8": too_many_entries}
+            ),
+            "CARGO_SNAPSHOT_LIMIT_EXCEEDED",
+        )
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {
+                    "profile": "rust_root",
+                    "manifest_utf8": "[dev-dependencies]\n"
+                    + "a" * 257
+                    + " = \"1\"\n",
+                }
+            ),
+            "CARGO_MANIFEST_ENTRY_UNSUPPORTED",
+        )
+        oversized_target = "t" * 513
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {
+                    "profile": "rust_root",
+                    "manifest_utf8": f"[patch.{oversized_target}]\ndep = \"1\"\n",
+                }
+            ),
+            "CARGO_SNAPSHOT_LIMIT_EXCEEDED",
+        )
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {
+                    "profile": "rust_root",
+                    "manifest_utf8": "[dev-dependencies]\ncompiler = { features = [\""
+                    + "f" * (runner.CARGO_ENTRY_MAX_BYTES + 1)
+                    + "\"] }\n",
+                }
+            ),
+            "CARGO_MANIFEST_FIELD_UNSUPPORTED",
+        )
+        deep_manifest = (
+            "x = "
+            + "{ a = " * (runner.CARGO_STRUCTURE_MAX_DEPTH + 1)
+            + "1"
+            + " }" * (runner.CARGO_STRUCTURE_MAX_DEPTH + 1)
+            + "\n"
+        )
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {"profile": "rust_root", "manifest_utf8": deep_manifest}
+            ),
+            "CARGO_MANIFEST_TABLE_UNSUPPORTED",
+        )
+        self.assertEqual(
+            runner._expected_cargo_manifest_snapshot(
+                {
+                    "profile": "rust_root",
+                    "manifest_utf8": "[package.metadata]\ndependencies.note = \"x\"\n",
+                }
+            ),
+            [],
+        )
+
+        dishonest = load_case("cargo-manifest-snapshot-rust-root.json")
+        dishonest["expected"]["result"]["entries"].reverse()
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(dishonest, **self._schema_args())
+        self.assertEqual(
+            raised.exception.code,
+            "EXPECTED_CARGO_MANIFEST_SNAPSHOT_INVALID",
+        )
+
+        authority = load_case("cargo-manifest-snapshot-rust-root.json")
+        authority["workspace"]["files"] = [
+            {"path": "Cargo.toml", "content_utf8": "[dev-dependencies]\n"}
+        ]
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(authority, **self._schema_args())
+        self.assertEqual(raised.exception.code, "CASE_CARGO_MANIFEST_AUTHORITY")
+
     def test_diff_unknown_path_error_is_checked_by_the_independent_oracle(self) -> None:
         case = load_case("diff-selection-unknown-error.json")
         runner.validate_case_document(case, **self._schema_args())
@@ -4686,7 +4878,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 185)
+        self.assertEqual(summary["case_count"], 197)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

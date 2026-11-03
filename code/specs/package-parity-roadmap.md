@@ -20435,3 +20435,28 @@ closure traversal, discovery, environment, processes, and CLI integration
 remain in later owners. Before implementation, pin valid UTF-8 and newline
 rules, portable absolute-path rejection, duplicate behavior, deterministic
 ordering/provenance, and exact 1 MiB, 64 KiB, and 256-line boundary semantics.
+
+#### Neutral Cargo manifest snapshot local completion
+
+The authority-free implementation is locally complete and independently
+reviewed. The closed `cargo_manifest_snapshot` domain now accepts only an
+explicit `rust_root`, `mosaic_root`, or `crate_closure` profile plus inert UTF-8
+manifest bytes and produces source-ordered immutable dependency records or one
+stable bounded error. Twelve shared fixtures cover emitted trigger tables,
+screen-only Rust link tables, Mosaic patch emission, unsafe paths and Git
+schemes, workspace/replace redirection, unsupported fields and tables, global
+syntax failure, and continued-entry limits. Raw Git URLs, registry names,
+versions, and refs are reduced to scheme or presence while local paths, package
+renames, options, and features remain available to later pure consumers.
+
+The reader validates the complete TOML document before extraction and enforces
+the inclusive 1 MiB manifest, 64 KiB continued-entry, 256-line continuation,
+4,096-entry, and 128-level structural-depth ceilings. Adversarial regressions
+also pin oversized individual features, deep inline tables, dependency-named
+keys under unrelated metadata, true root dotted writes, both root target-inline
+shapes, and Mosaic patch source ordering. The 197-case corpus, focused Cargo
+oracle tests, 28 schema tests, Python compilation, strict JSON parsing, and diff
+hygiene pass; independent correctness and security reviews issued SHIP. No
+filesystem, path-resolution, Cargo-config, closure, environment, process,
+network, CLI, BUILD, workflow, or dependency authority was added. Reconcile
+current main and live PR overlap before a normal first publication.

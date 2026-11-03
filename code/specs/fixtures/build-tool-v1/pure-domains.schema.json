@@ -31,6 +31,9 @@
   },
   "oneOf": [
     {
+      "$ref": "#/$defs/cargo_manifest_snapshot_record"
+    },
+    {
       "$ref": "#/$defs/ci_gate_selection_record"
     },
     {
@@ -64,6 +67,7 @@
   "$defs": {
     "pure_domain": {
       "enum": [
+        "cargo_manifest_snapshot",
         "ci_gate_selection",
         "graph",
         "diff_selection",
@@ -360,6 +364,142 @@
       "type": "object",
       "additionalProperties": false,
       "maxProperties": 0
+    },
+    "cargo_manifest_snapshot_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation",
+        "options"
+      ],
+      "properties": {
+        "operation": {
+          "const": "cargo_manifest_snapshot"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "profile",
+            "manifest_utf8"
+          ],
+          "properties": {
+            "profile": {
+              "enum": [
+                "rust_root",
+                "mosaic_root",
+                "crate_closure"
+              ]
+            },
+            "manifest_utf8": {
+              "type": "string",
+              "maxLength": 1048577
+            }
+          }
+        }
+      }
+    },
+    "cargo_manifest_fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version_present": {"type": "boolean"},
+        "path": {"type": "string", "minLength": 1, "maxLength": 65536},
+        "git_scheme": {"enum": ["https", "ssh"]},
+        "branch_present": {"type": "boolean"},
+        "tag_present": {"type": "boolean"},
+        "rev_present": {"type": "boolean"},
+        "registry_present": {"type": "boolean"},
+        "package": {"type": "string", "maxLength": 65536},
+        "optional": {"type": "boolean"},
+        "default-features": {"type": "boolean"},
+        "features": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {"type": "string", "maxLength": 65536}
+        }
+      }
+    },
+    "cargo_manifest_entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alias",
+        "table",
+        "target",
+        "source_order",
+        "fields"
+      ],
+      "properties": {
+        "alias": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "maxLength": 256
+        },
+        "table": {
+          "enum": [
+            "dependencies",
+            "build-dependencies",
+            "dev-dependencies",
+            "target-dependencies",
+            "target-build-dependencies",
+            "target-dev-dependencies",
+            "patch"
+          ]
+        },
+        "target": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "string", "minLength": 1, "maxLength": 512}
+          ]
+        },
+        "source_order": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4095
+        },
+        "fields": {
+          "$ref": "#/$defs/cargo_manifest_fields"
+        }
+      }
+    },
+    "cargo_manifest_snapshot_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entries"],
+      "properties": {
+        "entries": {
+          "type": "array",
+          "maxItems": 4096,
+          "items": {"$ref": "#/$defs/cargo_manifest_entry"}
+        }
+      }
+    },
+    "cargo_manifest_snapshot_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "outcome", "input", "result"],
+      "properties": {
+        "domain": {"const": "cargo_manifest_snapshot"},
+        "outcome": {
+          "enum": ["ok", "error", "unsupported", "skipped"]
+        },
+        "input": {"$ref": "#/$defs/cargo_manifest_snapshot_input"},
+        "result": {"type": "object"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"outcome": {"const": "ok"}}},
+          "then": {
+            "properties": {
+              "result": {"$ref": "#/$defs/cargo_manifest_snapshot_result"}
+            }
+          },
+          "else": {
+            "properties": {"result": {"$ref": "#/$defs/empty_result"}}
+          }
+        }
+      ]
     },
     "graph_input": {
       "type": "object",

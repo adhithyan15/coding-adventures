@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "cargo-manifest-snapshot/unsafe-path",
+  "domain": "cargo_manifest_snapshot",
+  "summary": "Portable absolute and backslash Cargo paths fail closed before any authority is consulted.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["resolution"],
+  "workspace": {"files": []},
+  "input": {"operation": "cargo_manifest_snapshot", "options": {"profile": "rust_root", "manifest_utf8": "[dev-dependencies]\ncompiler = { path = \"C:/compiler\" }\n"}},
+  "expected": {"schema_version": 1, "case_id": "cargo-manifest-snapshot/unsafe-path", "domain": "cargo_manifest_snapshot", "outcome": "error", "result": {}, "diagnostics": [{"code": "CARGO_MANIFEST_PATH_UNSAFE", "severity": "error"}]},
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

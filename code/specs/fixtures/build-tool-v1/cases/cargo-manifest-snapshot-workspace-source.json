@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "id": "cargo-manifest-snapshot/workspace-source",
+  "domain": "cargo_manifest_snapshot",
+  "summary": "Workspace-inherited sources fail closed because the snapshot has no workspace manifest authority.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["resolution"],
+  "workspace": {"files": []},
+  "input": {"operation": "cargo_manifest_snapshot", "options": {"profile": "rust_root", "manifest_utf8": "[dev-dependencies]\ncompiler = { workspace = true }\n"}},
+  "expected": {"schema_version": 1, "case_id": "cargo-manifest-snapshot/workspace-source", "domain": "cargo_manifest_snapshot", "outcome": "error", "result": {}, "diagnostics": [{"code": "CARGO_MANIFEST_WORKSPACE_UNSUPPORTED", "severity": "error"}]},
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

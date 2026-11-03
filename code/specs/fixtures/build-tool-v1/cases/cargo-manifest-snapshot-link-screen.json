@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "id": "cargo-manifest-snapshot/link-screen",
+  "domain": "cargo_manifest_snapshot",
+  "summary": "Rust graph-link tables are strictly screened but never emitted as trigger entries.",
+  "platforms": ["darwin", "linux", "windows"],
+  "capabilities": ["resolution"],
+  "workspace": {"files": []},
+  "input": {"operation": "cargo_manifest_snapshot", "options": {"profile": "rust_root", "manifest_utf8": "[dependencies]\ncore = { path = \"../core\", features = [\n  \"one\",\n  \"one\"\n] }\n[build-dependencies.helper]\n\"path\" = \"../helper\"\n\"package\" = \"helper-core\"\n[dev-dependencies]\ntestkit = {}\n"}},
+  "expected": {"schema_version": 1, "case_id": "cargo-manifest-snapshot/link-screen", "domain": "cargo_manifest_snapshot", "outcome": "ok", "result": {"entries": [
+    {"alias": "testkit", "table": "dev-dependencies", "target": null, "source_order": 0, "fields": {}}
+  ]}, "diagnostics": []},
+  "limits": {"wall_time_ms": 1000, "output_bytes": 1048576, "workspace_bytes": 1048576, "process_count": 1, "memory_mib": 128, "cpu_time_ms": 1000}
+}

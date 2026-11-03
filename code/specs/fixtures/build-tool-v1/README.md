@@ -39,7 +39,7 @@ emerging OCaml lane. It records front-door and shared-engine state but contains
 no executable commands. Every adapter is currently marked missing, so a valid
 inventory is not reported as conformance success.
 
-The 185-case bootstrap corpus covers every process-free v1 domain:
+The 197-case bootstrap corpus covers every process-free v1 domain:
 
 - validated CI gate selection with exact package intersection, path and
   globstar matching, explicit false verdicts, deterministic output names,
@@ -59,6 +59,11 @@ The 185-case bootstrap corpus covers every process-free v1 domain:
 - the shared Python dependency diamond, distinct package/program identities,
   legacy BUILD dependency comments, fail-closed dependency self-edges, and
   positive UTF-8 plus fail-closed invalid-UTF-8 Lua rockspec resolution;
+- authority-free Cargo manifest snapshots for Rust roots, Mosaic smoke roots,
+  and nested crate closure. The closed input is only an explicit profile and
+  inert UTF-8 manifest text; source-order output retains table, target, alias,
+  and dependency-source fields while unsafe paths, unmodeled tables, and
+  unsupported source shapes fail atomically;
 - ecosystem-scoped same-name aliases across Lua, Perl, Python, and Haskell,
   with only exact qualified BUILD comments admitting cross-language edges;
 - field-aware Cabal, Gradle, .NET, Dart, and OCaml resolution, including plain and declared
