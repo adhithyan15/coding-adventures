@@ -24,6 +24,22 @@ my $server = $app->bind('127.0.0.1', 3000);
 $server->serve;   # blocks until stopped
 ```
 
+## Native Windows build contract
+
+Windows XS extensions build and run against the same native Strawberry Perl
+installation. `perl-bridge` compiles its C shim using that interpreter's
+`ExtUtils::CBuilder`, archives the resulting COFF object, and supplies the Perl
+import library named by `Config{libperl}` in `Config{archlibexp}/CORE` to its
+Rust dependents. The dependency owns these linker settings; extension crates
+must not guess library names or search a different interpreter's installation.
+
+The bridge selects `PERL_BIN` when explicitly set, otherwise native Perl on
+PATH on Windows. It rejects MSYS Perl and mismatched pointer, integer or floating
+point layouts before compiling. The build retains zero external Rust
+dependencies. Unix compilation and macOS dynamic lookup keep their existing
+behavior. Verification must load each staged DLL with Perl and run the Conduit,
+IRC native-extension and Conduit Hello tests; linking alone is insufficient.
+
 ## Architecture
 
 ```
