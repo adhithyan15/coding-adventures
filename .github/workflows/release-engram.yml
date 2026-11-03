@@ -32,12 +32,19 @@ on:
       - code/scripts/tests/test_mosaic_release_state_gate.py
       - code/scripts/verify_relocatable_bundle.py
       - code/scripts/tests/test_verify_relocatable_bundle.py
-      # The Compose Linux leg launches its payload through this helper, and
-      # the generated Compose host is what decides where state lives and how
-      # an unreadable file is quarantined -- the two things that leg's gate
-      # checks.
+      # Every gated payload is launched through one of these (Linux, macOS,
+      # Windows), and each generated host template is what decides where its
+      # state lives and how an unreadable file is quarantined -- the two
+      # things the gate checks. XAML's host is Engram's own, under
+      # engram-app/** below.
       - code/scripts/run-under-xvfb.sh
+      - code/scripts/mosaic-release-launch.sh
+      - code/scripts/mosaic-release-launch.ps1
+      - code/scripts/tests/test_mosaic_release_launch.py
       - code/packages/rust/mosaic-app-bindings/templates/compose/**
+      - code/packages/rust/mosaic-app-bindings/templates/flutter/**
+      - code/packages/rust/mosaic-app-bindings/templates/qt/**
+      - code/packages/rust/mosaic-app-bindings/templates/swiftui/**
       - code/programs/mosaic/engram-app/**
       - code/packages/rust/engram-core/**
       - code/packages/rust/engram-core-wasm/**
@@ -107,6 +114,8 @@ jobs:
             -p 'test_verify_relocatable_bundle.py'
           python -m unittest discover -s code/scripts/tests \
             -p 'test_mosaic_release_state_gate.py'
+          python -m unittest discover -s code/scripts/tests \
+            -p 'test_mosaic_release_launch.py'
 
       - name: Validate version and tag
         id: release
@@ -500,11 +509,15 @@ jobs:
             status=$?
             set -e
             echo "::group::$name launch log (exit $status)"
+            # The app's output must not be read as workflow commands; see
+            # code/scripts/mosaic-release-launch.sh show_log.
+            local token="mosaic-log-$$-$RANDOM$RANDOM"
+            echo "::stop-commands::$token"
             cat "$log"
+            echo "::$token::"
             echo "::endgroup::"
             if [[ "$status" -ne 124 ]]; then
               echo "::error::the $name launch exited with $status before the timeout"
-              cat "$log" >&2
               exit 1
             fi
             if grep -F "Mosaic Rust runtime unavailable" "$log"; then
@@ -523,6 +536,125 @@ jobs:
           cp "$state" "$probe"
           launch recovery
           python "$gate" verify-quarantine --app engram --state "$state" --probe "$probe"
+
+      # The same gate on the macOS payload. macOS runners have no GNU
+      # `timeout`, so the launch goes through the shared macOS launcher
+      # (mosaic-release-state-gate-v1.md, "Launching a payload"): alive for the
+      # whole window, then stopped; exit 2 if it quit early. It resolves the
+      # `.app` through its Info.plist, from `/`.
+      #
+      # The host's `apple` branch resolves
+      # `<user.home>/Library/Application Support/engram-app/`, and the JVM's
+      # `user.home` is the account's home, not a variable the step can move --
+      # so the gate uses the runner's real directory and clears the state and
+      # every quarantine name before and after.
+      - name: Verify upgrade and corrupt-state recovery on the macOS payload
+        if: matrix.platform == 'macos'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          set -euo pipefail
+          fixture="code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json"
+          gate="code/scripts/mosaic_release_state_gate.py"
+          launcher="$GITHUB_WORKSPACE/code/scripts/mosaic-release-launch.sh"
+          work="$RUNNER_TEMP/engram-compose-gate"
+          rm -rf "$work"
+          mkdir -p "$work/unpacked"
+          archive="release-assets/$(python code/scripts/engram_release.py payload-name \
+            --backend compose --version "$RELEASE_VERSION" --platform "$PLATFORM")"
+          unzip -q "$archive" -d "$work/unpacked"
+          apps="$(find "$work/unpacked" -mindepth 2 -maxdepth 2 -type d -name '*.app' -print)"
+          if [[ -z "$apps" || "$(printf '%s\n' "$apps" | wc -l)" -ne 1 ]]; then
+            echo "::error::the extracted Compose payload must hold exactly one .app, found: ${apps:-none}"
+            find "$work/unpacked" -maxdepth 3 >&2
+            exit 1
+          fi
+          app="$apps"
+
+          state="$HOME/Library/Application Support/engram-app/mosaic-state.v1.json"
+          probe="$work/corrupt-probe.bin"
+          clear_state() { rm -f "$state" "$state.tmp" "$state".corrupt*; }
+
+          launch() {
+            local name="$1"
+            env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+              JAVA_TOOL_OPTIONS="-Dmosaic.app.debug=true" \
+              bash "$launcher" 15 "$work/launch-$name.log" "$app"
+            echo "after the $name launch:"
+            ls -la "$(dirname "$state")"
+          }
+
+          clear_state
+          python "$gate" materialize --fixture "$fixture" --output "$state"
+          launch upgrade
+          python "$gate" verify --fixture "$fixture" --state "$state"
+
+          printf 'invalid Engram state\n' > "$state"
+          cp "$state" "$probe"
+          launch recovery
+          python "$gate" verify-quarantine --app engram --state "$state" --probe "$probe"
+          clear_state
+
+      # And on the Windows payload, through the shared Windows launcher: a
+      # hidden-window Start-Process that must still be running after 15 s.
+      # The host's `windows` branch resolves `%LOCALAPPDATA%\engram-app\`.
+      # Main.kt exits when the bundled runtime does not load, which is what
+      # the liveness check catches here -- a GUI exe's output is not readable.
+      - name: Verify upgrade and corrupt-state recovery on the Windows payload
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $fixture = 'code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json'
+          $gate = 'code/scripts/mosaic_release_state_gate.py'
+          $launcher = 'code/scripts/mosaic-release-launch.ps1'
+          $work = Join-Path $env:RUNNER_TEMP 'engram-compose-gate'
+          Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue
+          $unpacked = Join-Path $work 'unpacked'
+          $name = python code/scripts/engram_release.py payload-name `
+            --backend compose --version $env:RELEASE_VERSION --platform $env:PLATFORM
+          if ($LASTEXITCODE -ne 0) { throw 'Could not name the Compose Windows payload' }
+          Expand-Archive (Join-Path 'release-assets' $name) $unpacked
+          $executables = @(Get-ChildItem $unpacked -Recurse -File -Filter 'engram_app.exe')
+          if ($executables.Count -ne 1) {
+            throw "The extracted Compose payload must hold exactly one engram_app.exe, found $($executables.Count)"
+          }
+          $executable = $executables[0].FullName
+
+          Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
+          Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
+          $env:JAVA_TOOL_OPTIONS = '-Dmosaic.app.debug=true'
+          $state = Join-Path $env:LOCALAPPDATA 'engram-app/mosaic-state.v1.json'
+          $probe = Join-Path $work 'corrupt-probe.bin'
+          function Clear-State {
+            Remove-Item $state, "$state.tmp", "$state.corrupt*" -Force -ErrorAction SilentlyContinue
+          }
+          function Invoke-Launch([string]$Name) {
+            pwsh -NoProfile -ExecutionPolicy Bypass -File $launcher `
+              -ExePath $executable -Seconds 15 -Label $Name
+            if ($LASTEXITCODE -ne 0) { throw "The $Name launch did not stay running" }
+            Write-Host "after the $Name launch:"
+            Get-ChildItem (Split-Path $state) | Format-Table -AutoSize | Out-String | Write-Host
+          }
+
+          Clear-State
+          python $gate materialize --fixture $fixture --output $state
+          if ($LASTEXITCODE -ne 0) { throw 'Could not materialize the v0.4.0 state' }
+          Invoke-Launch 'upgrade'
+          python $gate verify --fixture $fixture --state $state
+          if ($LASTEXITCODE -ne 0) { throw 'The Windows payload did not keep the v0.4.0 state' }
+
+          [System.IO.File]::WriteAllBytes($state, [System.Text.Encoding]::ASCII.GetBytes("invalid Engram state`n"))
+          Copy-Item $state $probe
+          Invoke-Launch 'recovery'
+          python $gate verify-quarantine --app engram --state $state --probe $probe
+          if ($LASTEXITCODE -ne 0) { throw 'The Windows payload did not quarantine invalid state byte for byte' }
+          Clear-State
 
       - name: Upload the Compose payload
         uses: actions/upload-artifact@v7
@@ -590,6 +722,57 @@ jobs:
             --source "$bundle" --output-dir release-assets \
             --commit "$RELEASE_COMMIT"
           ls -la release-assets
+
+      # The upgrade and corrupt-recovery gate (mosaic-release-state-gate-v1.md,
+      # "Engram's release lane") on the zip just archived, launched through
+      # the shared macOS launcher. The generated SwiftUI host resolves
+      # `FileManager`'s user Application Support directory -- the app is not
+      # sandboxed -- plus the package name, `engram-app`.
+      - name: Verify upgrade and corrupt-state recovery on the SwiftUI payload
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          set -euo pipefail
+          fixture="code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json"
+          gate="code/scripts/mosaic_release_state_gate.py"
+          launcher="$GITHUB_WORKSPACE/code/scripts/mosaic-release-launch.sh"
+          work="$RUNNER_TEMP/engram-swiftui-gate"
+          rm -rf "$work"
+          mkdir -p "$work/unpacked"
+          archive="release-assets/$(python code/scripts/engram_release.py payload-name \
+            --backend swiftui --version "$RELEASE_VERSION" --platform macos)"
+          unzip -q "$archive" -d "$work/unpacked"
+          apps="$(find "$work/unpacked" -mindepth 2 -maxdepth 2 -type d -name '*.app' -print)"
+          if [[ -z "$apps" || "$(printf '%s\n' "$apps" | wc -l)" -ne 1 ]]; then
+            echo "::error::the extracted SwiftUI payload must hold exactly one .app, found: ${apps:-none}"
+            find "$work/unpacked" -maxdepth 3 >&2
+            exit 1
+          fi
+          app="$apps"
+
+          state="$HOME/Library/Application Support/engram-app/mosaic-state.v1.json"
+          probe="$work/corrupt-probe.bin"
+          clear_state() { rm -f "$state" "$state.tmp" "$state".corrupt*; }
+
+          launch() {
+            local name="$1"
+            env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+              bash "$launcher" 10 "$work/launch-$name.log" "$app"
+            echo "after the $name launch:"
+            ls -la "$(dirname "$state")"
+          }
+
+          clear_state
+          python "$gate" materialize --fixture "$fixture" --output "$state"
+          launch upgrade
+          python "$gate" verify --fixture "$fixture" --state "$state"
+
+          printf 'invalid Engram state\n' > "$state"
+          cp "$state" "$probe"
+          launch recovery
+          python "$gate" verify-quarantine --app engram --state "$state" --probe "$probe"
+          clear_state
 
       - name: Upload the SwiftUI payload
         uses: actions/upload-artifact@v7
@@ -671,7 +854,9 @@ jobs:
           python-version: "3.13"
 
       # `mosaic-compile` links `cairo-sys-rs` through the paint backend; the
-      # Linux desktop shell additionally needs GTK.
+      # Linux desktop shell additionally needs GTK. `xvfb` and `unzip` are for
+      # the upgrade/corrupt-recovery gate below, which launches the extracted
+      # Linux payload on a virtual display.
       - name: Install Linux build dependencies
         if: runner.os == 'Linux'
         shell: bash
@@ -679,7 +864,7 @@ jobs:
         run: |
           set -euo pipefail
           bash code/scripts/ci/apt-install.sh libcairo2-dev libgtk-3-dev ninja-build \
-            libglu1-mesa pkg-config
+            libglu1-mesa pkg-config xvfb unzip
 
       - name: Build the Flutter desktop app
         shell: bash
@@ -712,6 +897,223 @@ jobs:
             --source "$bundle" --output-dir release-assets \
             --commit "$RELEASE_COMMIT"
           ls -la release-assets
+
+      # The upgrade and corrupt-recovery gate (mosaic-release-state-gate-v1.md,
+      # "Engram's release lane") on each platform's zip, extracted fresh.
+      # The Linux archive holds `<root>/bundle/`, and the app is the one
+      # executable in that bundle's root -- located rather than named, as the
+      # matrix locates the macOS bundle, because its name comes from the
+      # emitted pubspec.
+      #
+      # On Linux the generated Flutter host resolves
+      # `${XDG_DATA_HOME:-$HOME/.local/share}/engram-app/`, so XDG_DATA_HOME
+      # moves only the root, and the launch is the Compose Linux one: a
+      # virtual display, `timeout`, and exit 124 meaning "still running".
+      - name: Verify upgrade and corrupt-state recovery on the Linux payload
+        if: matrix.platform == 'linux'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          set -euo pipefail
+          fixture="code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json"
+          gate="code/scripts/mosaic_release_state_gate.py"
+          work="$RUNNER_TEMP/engram-flutter-gate"
+          rm -rf "$work"
+          mkdir -p "$work/unpacked"
+          archive="release-assets/$(python code/scripts/engram_release.py payload-name \
+            --backend flutter --version "$RELEASE_VERSION" --platform "$PLATFORM")"
+          unzip -q "$archive" -d "$work/unpacked"
+          launchers="$(find "$work/unpacked" -mindepth 3 -maxdepth 3 -type f -perm -111 -print)"
+          if [[ -z "$launchers" || "$(printf '%s\n' "$launchers" | wc -l)" -ne 1 ]]; then
+            echo "::error::the extracted Flutter bundle must hold exactly one executable at its root, found: ${launchers:-none}"
+            find "$work/unpacked" -maxdepth 4 >&2
+            exit 1
+          fi
+          launcher="$launchers"
+
+          state_root="$work/xdg-data"
+          state="$state_root/engram-app/mosaic-state.v1.json"
+          probe="$work/corrupt-probe.bin"
+
+          launch() {
+            local name="$1"
+            local log="$work/launch-$name.log"
+            local status
+            set +e
+            (cd / && env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+              XDG_DATA_HOME="$state_root" \
+              bash "$GITHUB_WORKSPACE/code/scripts/run-under-xvfb.sh" timeout 15s "$launcher") \
+              >"$log" 2>&1
+            status=$?
+            set -e
+            echo "::group::$name launch log (exit $status)"
+            # The app's output must not be read as workflow commands; see
+            # code/scripts/mosaic-release-launch.sh show_log.
+            local token="mosaic-log-$$-$RANDOM$RANDOM"
+            echo "::stop-commands::$token"
+            cat "$log"
+            echo "::$token::"
+            echo "::endgroup::"
+            if [[ "$status" -ne 124 ]]; then
+              echo "::error::the $name launch exited with $status before the timeout"
+              exit 1
+            fi
+            if grep -F "Mosaic Rust runtime unavailable" "$log"; then
+              echo "::error::the $name launch could not load the bundled runtime"
+              exit 1
+            fi
+            echo "after the $name launch:"
+            ls -la "$(dirname "$state")"
+          }
+
+          python "$gate" materialize --fixture "$fixture" --output "$state"
+          launch upgrade
+          python "$gate" verify --fixture "$fixture" --state "$state"
+
+          printf 'invalid Engram state\n' > "$state"
+          cp "$state" "$probe"
+          launch recovery
+          python "$gate" verify-quarantine --app engram --state "$state" --probe "$probe"
+
+      # On macOS the Flutter app is SANDBOXED: `flutter create` writes
+      # `com.apple.security.app-sandbox` into Release.entitlements and
+      # build-native.sh keeps it. A sandboxed process is given its container
+      # as HOME, and the generated host roots its state at HOME, so a user's
+      # state lives at
+      #
+      #   ~/Library/Containers/<CFBundleIdentifier>/Data/Library/Application Support/engram-app/
+      #
+      # The bundle id comes from the extracted Info.plist and the entitlement
+      # from the signature, so the gate follows the app if either changes.
+      # When sandboxed, one launch with no state comes first: macOS creates the
+      # container (with the metadata a hand-made directory would lack), and
+      # whatever that launch saved is cleared before the fixture goes in.
+      - name: Verify upgrade and corrupt-state recovery on the macOS payload
+        if: matrix.platform == 'macos'
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          set -euo pipefail
+          fixture="code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json"
+          gate="code/scripts/mosaic_release_state_gate.py"
+          launcher="$GITHUB_WORKSPACE/code/scripts/mosaic-release-launch.sh"
+          work="$RUNNER_TEMP/engram-flutter-gate"
+          rm -rf "$work"
+          mkdir -p "$work/unpacked"
+          archive="release-assets/$(python code/scripts/engram_release.py payload-name \
+            --backend flutter --version "$RELEASE_VERSION" --platform "$PLATFORM")"
+          unzip -q "$archive" -d "$work/unpacked"
+          apps="$(find "$work/unpacked" -mindepth 2 -maxdepth 2 -type d -name '*.app' -print)"
+          if [[ -z "$apps" || "$(printf '%s\n' "$apps" | wc -l)" -ne 1 ]]; then
+            echo "::error::the extracted Flutter payload must hold exactly one .app, found: ${apps:-none}"
+            find "$work/unpacked" -maxdepth 3 >&2
+            exit 1
+          fi
+          app="$apps"
+
+          launch() {
+            local name="$1"
+            env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+              bash "$launcher" 15 "$work/launch-$name.log" "$app"
+          }
+
+          bundle_id="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Contents/Info.plist")"
+          if [[ ! "$bundle_id" =~ ^[A-Za-z0-9][A-Za-z0-9.-]*$ ]]; then
+            echo "::error::unexpected CFBundleIdentifier '$bundle_id'"
+            exit 1
+          fi
+          entitlements="$(codesign -d --entitlements - "$app" 2>/dev/null || true)"
+          if [[ "$entitlements" == *com.apple.security.app-sandbox* ]]; then
+            echo "$bundle_id is sandboxed; its state lives in its container"
+            state_home="$HOME/Library/Containers/$bundle_id/Data"
+            launch container
+            if [[ ! -d "$state_home" ]]; then
+              echo "::error::launching the sandboxed app did not create its container at $state_home"
+              exit 1
+            fi
+          else
+            echo "$bundle_id is not sandboxed; its state lives in the home directory"
+            state_home="$HOME"
+          fi
+
+          state="$state_home/Library/Application Support/engram-app/mosaic-state.v1.json"
+          probe="$work/corrupt-probe.bin"
+          clear_state() { rm -f "$state" "$state.tmp" "$state".corrupt*; }
+
+          clear_state
+          python "$gate" materialize --fixture "$fixture" --output "$state"
+          launch upgrade
+          ls -la "$(dirname "$state")"
+          python "$gate" verify --fixture "$fixture" --state "$state"
+
+          printf 'invalid Engram state\n' > "$state"
+          cp "$state" "$probe"
+          launch recovery
+          ls -la "$(dirname "$state")"
+          python "$gate" verify-quarantine --app engram --state "$state" --probe "$probe"
+          clear_state
+
+      # On Windows the generated Flutter host resolves
+      # `%LOCALAPPDATA%\engram-app\`, and the app is the one `.exe` in the
+      # bundle root, launched through the shared Windows launcher.
+      - name: Verify upgrade and corrupt-state recovery on the Windows payload
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+          PLATFORM: ${{ matrix.platform }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $fixture = 'code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json'
+          $gate = 'code/scripts/mosaic_release_state_gate.py'
+          $launcher = 'code/scripts/mosaic-release-launch.ps1'
+          $work = Join-Path $env:RUNNER_TEMP 'engram-flutter-gate'
+          Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue
+          $unpacked = Join-Path $work 'unpacked'
+          $name = python code/scripts/engram_release.py payload-name `
+            --backend flutter --version $env:RELEASE_VERSION --platform $env:PLATFORM
+          if ($LASTEXITCODE -ne 0) { throw 'Could not name the Flutter Windows payload' }
+          Expand-Archive (Join-Path 'release-assets' $name) $unpacked
+          # <unpacked>/<root>/Release/<app>.exe: two directories down.
+          $executables = @(Get-ChildItem $unpacked -Directory | Get-ChildItem -Directory |
+            Get-ChildItem -File -Filter '*.exe')
+          if ($executables.Count -ne 1) {
+            throw "The extracted Flutter bundle must hold exactly one .exe at its root, found $($executables.Count)"
+          }
+          $executable = $executables[0].FullName
+
+          Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
+          Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
+          $state = Join-Path $env:LOCALAPPDATA 'engram-app/mosaic-state.v1.json'
+          $probe = Join-Path $work 'corrupt-probe.bin'
+          function Clear-State {
+            Remove-Item $state, "$state.tmp", "$state.corrupt*" -Force -ErrorAction SilentlyContinue
+          }
+          function Invoke-Launch([string]$Name) {
+            pwsh -NoProfile -ExecutionPolicy Bypass -File $launcher `
+              -ExePath $executable -Seconds 15 -Label $Name
+            if ($LASTEXITCODE -ne 0) { throw "The $Name launch did not stay running" }
+            Write-Host "after the $Name launch:"
+            Get-ChildItem (Split-Path $state) | Format-Table -AutoSize | Out-String | Write-Host
+          }
+
+          Clear-State
+          python $gate materialize --fixture $fixture --output $state
+          if ($LASTEXITCODE -ne 0) { throw 'Could not materialize the v0.4.0 state' }
+          Invoke-Launch 'upgrade'
+          python $gate verify --fixture $fixture --state $state
+          if ($LASTEXITCODE -ne 0) { throw 'The Windows payload did not keep the v0.4.0 state' }
+
+          [System.IO.File]::WriteAllBytes($state, [System.Text.Encoding]::ASCII.GetBytes("invalid Engram state`n"))
+          Copy-Item $state $probe
+          Invoke-Launch 'recovery'
+          python $gate verify-quarantine --app engram --state $state --probe $probe
+          if ($LASTEXITCODE -ne 0) { throw 'The Windows payload did not quarantine invalid state byte for byte' }
+          Clear-State
 
       - name: Upload the Flutter payload
         uses: actions/upload-artifact@v7
@@ -784,6 +1186,60 @@ jobs:
             --source "$bundle" --output-dir release-assets \
             --commit "$RELEASE_COMMIT"
           ls -la release-assets
+
+      # The upgrade and corrupt-recovery gate (mosaic-release-state-gate-v1.md,
+      # "Engram's release lane") on the zip just archived, through the shared
+      # macOS launcher. The generated Qt host roots its state at
+      # `QStandardPaths::AppDataLocation`, which on macOS APPENDS the
+      # organization and application names to Application Support. Nothing
+      # sets an organization, and the application name is the bundle's
+      # CFBundleName, `Engram` -- hence the extra directory below. A wrong
+      # guess here fails the recovery half, which finds nothing quarantined.
+      - name: Verify upgrade and corrupt-state recovery on the Qt payload
+        shell: bash
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          set -euo pipefail
+          fixture="code/programs/mosaic/engram-app/fixtures/release-upgrade-v0.4.0.json"
+          gate="code/scripts/mosaic_release_state_gate.py"
+          launcher="$GITHUB_WORKSPACE/code/scripts/mosaic-release-launch.sh"
+          work="$RUNNER_TEMP/engram-qt-gate"
+          rm -rf "$work"
+          mkdir -p "$work/unpacked"
+          archive="release-assets/$(python code/scripts/engram_release.py payload-name \
+            --backend qt --version "$RELEASE_VERSION" --platform macos)"
+          unzip -q "$archive" -d "$work/unpacked"
+          apps="$(find "$work/unpacked" -mindepth 2 -maxdepth 2 -type d -name '*.app' -print)"
+          if [[ -z "$apps" || "$(printf '%s\n' "$apps" | wc -l)" -ne 1 ]]; then
+            echo "::error::the extracted Qt payload must hold exactly one .app, found: ${apps:-none}"
+            find "$work/unpacked" -maxdepth 3 >&2
+            exit 1
+          fi
+          app="$apps"
+
+          state="$HOME/Library/Application Support/Engram/engram-app/mosaic-state.v1.json"
+          probe="$work/corrupt-probe.bin"
+          clear_state() { rm -f "$state" "$state.tmp" "$state".corrupt*; }
+
+          launch() {
+            local name="$1"
+            env -u MOSAIC_APP_LIBRARY -u MOSAIC_APP_STATE_PATH \
+              bash "$launcher" 10 "$work/launch-$name.log" "$app"
+            echo "after the $name launch:"
+            ls -la "$(dirname "$state")"
+          }
+
+          clear_state
+          python "$gate" materialize --fixture "$fixture" --output "$state"
+          launch upgrade
+          python "$gate" verify --fixture "$fixture" --state "$state"
+
+          printf 'invalid Engram state\n' > "$state"
+          cp "$state" "$probe"
+          launch recovery
+          python "$gate" verify-quarantine --app engram --state "$state" --probe "$probe"
+          clear_state
 
       - name: Upload the Qt payload
         uses: actions/upload-artifact@v7
@@ -860,6 +1316,71 @@ jobs:
             --source "$publish" --output-dir release-assets \
             --commit "$RELEASE_COMMIT"
           ls -la release-assets
+
+      # The RECOVERY half of the gate only (mosaic-release-state-gate-v1.md,
+      # "Gaps"). Engram's XAML build still ships its own host
+      # (host/xaml/MosaicHost.cs), which persists engram-capi's snapshot JSON
+      # at `%USERPROFILE%\.engram\mosaic-snapshot.v1.json` -- not the envelope
+      # the v0.4.0 fixture describes, and no XAML payload has been published
+      # to upgrade from. What any host must still do is keep unreadable bytes:
+      # this one copies them to `.corrupt` and saves the demo deck over the
+      # live file, which `verify-quarantine` accepts (the live file no longer
+      # equals the probe).
+      #
+      # The app is the apphost the publish output's `*.runtimeconfig.json`
+      # names, as the archiver identifies it, launched through the shared
+      # Windows launcher. Non-blocking with the rest of this job.
+      #
+      # `archive-xaml` stages the publish output as `Engram/` inside the zip's
+      # `engram-xaml-<platform>-v<version>/` root, so the runtimeconfig sits two
+      # directories down -- the same depth as the Flutter Windows bundle's exe.
+      - name: Verify corrupt-state recovery on the XAML payload
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ needs.validate.outputs.version }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $gate = 'code/scripts/mosaic_release_state_gate.py'
+          $launcher = 'code/scripts/mosaic-release-launch.ps1'
+          $work = Join-Path $env:RUNNER_TEMP 'engram-xaml-gate'
+          Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue
+          $unpacked = Join-Path $work 'unpacked'
+          $name = python code/scripts/engram_release.py payload-name `
+            --backend xaml --version $env:RELEASE_VERSION --platform windows
+          if ($LASTEXITCODE -ne 0) { throw 'Could not name the XAML payload' }
+          Expand-Archive (Join-Path 'release-assets' $name) $unpacked
+          $configs = @(Get-ChildItem $unpacked -Directory | Get-ChildItem -Directory |
+            Get-ChildItem -File -Filter '*.runtimeconfig.json')
+          if ($configs.Count -ne 1) {
+            Get-ChildItem $unpacked -Recurse -Depth 2 | Select-Object -ExpandProperty FullName | Write-Host
+            throw "The extracted XAML payload must hold exactly one runtimeconfig in its <root>/Engram directory, found $($configs.Count)"
+          }
+          $stem = $configs[0].Name.Substring(0, $configs[0].Name.Length - '.runtimeconfig.json'.Length)
+          $executable = Join-Path $configs[0].DirectoryName "$stem.exe"
+          if (!(Test-Path -LiteralPath $executable -PathType Leaf)) {
+            throw "The extracted XAML payload has no $stem.exe apphost"
+          }
+
+          Remove-Item Env:ENGRAM_SNAPSHOT_PATH -ErrorAction SilentlyContinue
+          Remove-Item Env:MOSAIC_APP_LIBRARY -ErrorAction SilentlyContinue
+          Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
+          $state = Join-Path ([Environment]::GetFolderPath('UserProfile')) '.engram/mosaic-snapshot.v1.json'
+          $probe = Join-Path $work 'corrupt-probe.bin'
+          function Clear-State {
+            Remove-Item $state, "$state.corrupt*" -Force -ErrorAction SilentlyContinue
+          }
+
+          Clear-State
+          New-Item -ItemType Directory -Path (Split-Path $state) -Force | Out-Null
+          [System.IO.File]::WriteAllBytes($state, [System.Text.Encoding]::ASCII.GetBytes("invalid Engram state`n"))
+          Copy-Item $state $probe
+          pwsh -NoProfile -ExecutionPolicy Bypass -File $launcher `
+            -ExePath $executable -Seconds 15 -Label 'recovery'
+          if ($LASTEXITCODE -ne 0) { throw 'The recovery launch did not stay running' }
+          Get-ChildItem (Split-Path $state) | Format-Table -AutoSize | Out-String | Write-Host
+          python $gate verify-quarantine --app engram --state $state --probe $probe
+          if ($LASTEXITCODE -ne 0) { throw 'The XAML payload did not quarantine invalid state byte for byte' }
+          Clear-State
 
   publish:
     name: Publish one Engram release
