@@ -24,8 +24,8 @@ use x509_certificate_policy::{
 };
 use x509_intermediate_certificate_policy::ValidatedX509IntermediateCertificatePolicy;
 use x509_name_constraints::{
-    decode_name_constraints_contents, evaluate_dns_names, ConstrainedDnsNames,
-    DnsConstraintErrorKind, NameConstraintsErrorKind,
+    decode_name_constraints, decode_name_constraints_contents, evaluate_dns_names,
+    ConstrainedDnsNames, DnsConstraintErrorKind, NameConstraintsErrorKind, NAME_CONSTRAINTS_OID,
 };
 use x509_rsa_algorithm_policy::ValidatedX509RsaAlgorithmPolicy;
 use x509_rsa_signature_routing::{
@@ -211,6 +211,12 @@ pub enum X509RsaConstructedPathReviewedServerPolicyErrorKind {
     InvalidTargetSubjectAlternativeName(SubjectAltNameErrorKind),
     /// At least one target dNSName was invalid or outside the permitted subtrees.
     TargetDnsNameConstraints(DnsConstraintErrorKind),
+    /// The exact intermediate's NameConstraints extension was not critical.
+    NonCriticalIntermediateNameConstraints,
+    /// The exact intermediate's NameConstraints value was malformed or unsupported.
+    InvalidIntermediateNameConstraints(NameConstraintsErrorKind),
+    /// A target dNSName violated the exact intermediate's DNS constraints.
+    TargetIntermediateDnsNameConstraints(DnsConstraintErrorKind),
 }
 
 /// A redacted reviewed server-path binding failure.
@@ -569,6 +575,82 @@ impl fmt::Debug
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy")
+    }
+}
+
+/// Non-copyable routed server path after exact intermediate DNS policy.
+///
+/// Success retains the complete construction-bound anchor-policy proof and
+/// proves either that its exact intermediate has no NameConstraints extension
+/// or that its supported critical permitted-and-excluded-DNS subset was
+/// applied to every dNSName in the exact retained target. It is not generalized
+/// path validation, hostname verification, revocation, TLS, HTTP, OAuth
+/// transport, or network authority.
+pub struct ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    anchor_policy: ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+}
+
+impl<'path, 'server_certificate, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the consumed complete construction-bound anchor-policy proof.
+    #[must_use]
+    pub const fn anchor_policy(
+        &self,
+    ) -> &ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.anchor_policy
+    }
+
+    /// Return DNS evidence when the exact intermediate carried supported
+    /// critical NameConstraints.
+    #[must_use]
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+}
+
+impl fmt::Debug
+    for ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter
+            .write_str("ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy")
     }
 }
 
@@ -1368,6 +1450,75 @@ pub fn validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy<
     )
 }
 
+/// Apply the exact routed intermediate's supported critical DNS policy.
+///
+/// This consumes the complete construction-bound anchor-policy proof. The
+/// target, its already-validated SAN extension index, and intermediate are
+/// derived only through that retained proof. An absent extension succeeds
+/// without new evidence; a present extension must be critical and must decode
+/// as the supported permitted-and-excluded-DNS subset under caller-owned
+/// limits.
+pub fn validate_x509_rsa_constructed_reviewed_intermediate_server_name_constraints_policy<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    anchor_policy: ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaConstructedPathReviewedServerPolicyError,
+> {
+    let target_certificate = anchor_policy
+        .reviewed_server_path()
+        .server_policy()
+        .certificate();
+    let subject_alt_name_extension_index = anchor_policy
+        .reviewed_server_path()
+        .server_policy()
+        .identity()
+        .extension_index();
+    let intermediate_certificate = anchor_policy
+        .reviewed_server_path()
+        .reviewed_path()
+        .authenticated_intermediate()
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    let constrained_dns_names = evaluate_intermediate_dns_policy(
+        target_certificate,
+        subject_alt_name_extension_index,
+        intermediate_certificate,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy {
+            anchor_policy,
+            constrained_dns_names,
+        },
+    )
+}
+
 fn evaluate_selected_anchor_dns_policy(
     certificate: &x509_certificate::X509Certificate<'_>,
     subject_alt_name_extension_index: usize,
@@ -1420,6 +1571,70 @@ fn evaluate_selected_anchor_dns_policy(
     Ok(Some(constrained_dns_names))
 }
 
+fn evaluate_intermediate_dns_policy(
+    target_certificate: &x509_certificate::X509Certificate<'_>,
+    subject_alt_name_extension_index: usize,
+    intermediate_certificate: &x509_certificate::X509Certificate<'_>,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<Option<ConstrainedDnsNames>, X509RsaConstructedPathReviewedServerPolicyError> {
+    let Some(extension) = intermediate_certificate
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| {
+            extensions
+                .iter()
+                .find(|extension| extension.extension_id().equals(NAME_CONSTRAINTS_OID))
+        })
+    else {
+        return Ok(None);
+    };
+    if !extension.critical() {
+        return Err(X509RsaConstructedPathReviewedServerPolicyError::new(
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::NonCriticalIntermediateNameConstraints,
+        ));
+    }
+
+    let mut constraint_decoder = Asn1Decoder::new(constraint_limits);
+    let constraints = decode_name_constraints(&mut constraint_decoder, extension.extension_value())
+        .map_err(|error| {
+            X509RsaConstructedPathReviewedServerPolicyError::new(
+                X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidIntermediateNameConstraints(
+                    error.kind(),
+                ),
+            )
+        })?;
+    let subject_alt_name_extension = target_certificate
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| extensions.get(subject_alt_name_extension_index))
+        .ok_or_else(|| {
+            X509RsaConstructedPathReviewedServerPolicyError::new(
+                X509RsaConstructedPathReviewedServerPolicyErrorKind::MissingTargetSubjectAlternativeName,
+            )
+        })?;
+    let mut subject_alt_name_decoder = Asn1Decoder::new(subject_alt_name_limits);
+    let subject_alt_name =
+        decode_subject_alt_name(&mut subject_alt_name_decoder, subject_alt_name_extension)
+            .map_err(|error| {
+                X509RsaConstructedPathReviewedServerPolicyError::new(
+                    X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidTargetSubjectAlternativeName(
+                        error.kind(),
+                    ),
+                )
+            })?;
+    let constrained_dns_names = evaluate_dns_names(&constraints, subject_alt_name.dns_names())
+        .map_err(|error| {
+            X509RsaConstructedPathReviewedServerPolicyError::new(
+                X509RsaConstructedPathReviewedServerPolicyErrorKind::TargetIntermediateDnsNameConstraints(
+                    error.kind(),
+                ),
+            )
+        })?;
+
+    Ok(Some(constrained_dns_names))
+}
+
 fn same_exact_object<T>(left: &T, right: &T) -> bool {
     core::ptr::eq(left, right)
 }
@@ -1433,6 +1648,7 @@ mod tests {
     const SIGNATURE_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
     const KEY_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
     const SUBJECT_ALT_NAME_OID_DER: &[u8] = &[0x55, 0x1d, 0x11];
+    const NAME_CONSTRAINTS_OID_DER: &[u8] = &[0x55, 0x1d, 0x1e];
     const NULL_DER: &[u8] = &[0x05, 0x00];
 
     fn der(tag: u8, value: &[u8]) -> Vec<u8> {
@@ -1468,6 +1684,13 @@ mod tests {
         der(0x30, &fields)
     }
 
+    fn critical_extension(oid: &[u8], value: &[u8]) -> Vec<u8> {
+        let mut fields = der(0x06, oid);
+        fields.extend([0x01, 0x01, 0xff]);
+        fields.extend(der(0x04, value));
+        der(0x30, &fields)
+    }
+
     fn subject_alt_name(names: &[Vec<u8>]) -> Vec<u8> {
         extension(SUBJECT_ALT_NAME_OID_DER, &der(0x30, &names.concat()))
     }
@@ -1482,6 +1705,30 @@ mod tests {
             contents.extend(der(0x30, &der(0x82, subtree)));
         }
         der(0xa0, &contents)
+    }
+
+    fn excluded_dns_subtrees(subtrees: &[&[u8]]) -> Vec<u8> {
+        let mut contents = Vec::new();
+        for subtree in subtrees {
+            contents.extend(der(0x30, &der(0x82, subtree)));
+        }
+        der(0xa1, &contents)
+    }
+
+    fn name_constraints(permitted: &[&[u8]], excluded: &[&[u8]], critical: bool) -> Vec<u8> {
+        let mut contents = Vec::new();
+        if !permitted.is_empty() {
+            contents.extend(permitted_dns_subtrees(permitted));
+        }
+        if !excluded.is_empty() {
+            contents.extend(excluded_dns_subtrees(excluded));
+        }
+        let encoded = der(0x30, &contents);
+        if critical {
+            critical_extension(NAME_CONSTRAINTS_OID_DER, &encoded)
+        } else {
+            extension(NAME_CONSTRAINTS_OID_DER, &encoded)
+        }
     }
 
     fn certificate(extensions: &[Vec<u8>]) -> Vec<u8> {
@@ -1522,6 +1769,31 @@ mod tests {
                 })
                 .unwrap_or(usize::MAX),
             constraints,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+    }
+
+    fn evaluate_intermediate(
+        target_encoded: &[u8],
+        intermediate_encoded: &[u8],
+    ) -> Result<Option<ConstrainedDnsNames>, X509RsaConstructedPathReviewedServerPolicyError> {
+        let target = decode_x509_certificate(target_encoded, Asn1Limits::default()).unwrap();
+        let intermediate =
+            decode_x509_certificate(intermediate_encoded, Asn1Limits::default()).unwrap();
+        let subject_alt_name_extension_index = target
+            .tbs_certificate()
+            .extensions()
+            .and_then(|extensions| {
+                extensions
+                    .iter()
+                    .position(|extension| extension.extension_id().equals(SUBJECT_ALT_NAME_OID))
+            })
+            .unwrap_or(usize::MAX);
+        evaluate_intermediate_dns_policy(
+            &target,
+            subject_alt_name_extension_index,
+            &intermediate,
             Asn1Limits::default(),
             Asn1Limits::default(),
         )
@@ -1596,6 +1868,67 @@ mod tests {
         assert_eq!(
             error.kind(),
             X509RsaConstructedPathReviewedServerPolicyErrorKind::MissingTargetSubjectAlternativeName
+        );
+    }
+
+    #[test]
+    fn critical_intermediate_constraints_apply_to_every_target_dns_name() {
+        let target = certificate(&[subject_alt_name(&[
+            dns_name("api.example.test"),
+            dns_name("*.service.example.test"),
+        ])]);
+        let intermediate = certificate(&[name_constraints(&[b".example.test"], &[], true)]);
+
+        let constrained = evaluate_intermediate(&target, &intermediate)
+            .unwrap()
+            .unwrap();
+
+        assert_eq!(constrained.count(), 2);
+    }
+
+    #[test]
+    fn absent_intermediate_constraints_retain_no_dns_evidence() {
+        let target = certificate(&[subject_alt_name(&[dns_name("api.example.test")])]);
+        let intermediate = certificate(&[]);
+
+        assert_eq!(evaluate_intermediate(&target, &intermediate).unwrap(), None);
+    }
+
+    #[test]
+    fn intermediate_excluded_subtree_violation_is_redacted_and_stable() {
+        let target = certificate(&[subject_alt_name(&[
+            dns_name("api.example.test"),
+            dns_name("secret.internal.example.test"),
+        ])]);
+        let intermediate = certificate(&[name_constraints(
+            &[b".example.test"],
+            &[b".internal.example.test"],
+            true,
+        )]);
+
+        let error = evaluate_intermediate(&target, &intermediate).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::TargetIntermediateDnsNameConstraints(
+                DnsConstraintErrorKind::PresentedDnsNameExcluded,
+            )
+        );
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("api.example.test"));
+        assert!(!diagnostic.contains("secret.internal.example.test"));
+    }
+
+    #[test]
+    fn present_intermediate_name_constraints_must_be_critical() {
+        let target = certificate(&[subject_alt_name(&[dns_name("api.example.test")])]);
+        let intermediate = certificate(&[name_constraints(&[b".example.test"], &[], false)]);
+
+        let error = evaluate_intermediate(&target, &intermediate).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::NonCriticalIntermediateNameConstraints
         );
     }
 }

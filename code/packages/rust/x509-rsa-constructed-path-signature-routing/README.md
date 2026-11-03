@@ -56,14 +56,22 @@ the complete proof without DNS evidence; constrained entries require every
 target dNSName to satisfy the supported permitted subtree set and retain only
 a payload-free count.
 
+An additive intermediate DNS-policy follow-up consumes that complete anchor-
+policy proof. It derives the exact intermediate, target, and target SAN index
+only through retained evidence. An absent NameConstraints extension succeeds
+without new DNS evidence; a present extension must be critical and every
+target dNSName must satisfy the supported permitted-and-excluded-DNS subset
+under separate caller-owned decoder limits. Success retains the entire prior
+proof plus only a payload-free constrained-name count.
+
 Reviewed-root selection is snapshot membership, not complete trust. The
 fixed-shape result does not generalize to additional intermediates, derive the
 initial path-length cap from anchor policy, define full Name comparison, apply
-intermediate, excluded, or non-DNS anchor constraints, check revocation,
-perform TLS or HTTP, authorize OAuth transport, or open a network connection.
-Target identity, time, purpose, and supported reviewed-anchor permitted DNS
-policy do not make the whole path valid. This does not make concrete HTTPS or
-live-provider use ready.
+IP or other name-form constraints, excluded or non-DNS anchor constraints,
+check revocation, perform hostname verification, TLS, or HTTP, authorize OAuth
+transport, or open a network connection. Target identity, time, purpose, and
+the supported reviewed-anchor and intermediate DNS subsets do not make the
+whole path valid. This does not make concrete HTTPS or live-provider use ready.
 
 ## Validation
 
