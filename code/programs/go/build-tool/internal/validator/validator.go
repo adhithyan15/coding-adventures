@@ -168,6 +168,7 @@ func ValidateBuildFilesAgainst(packages, known []discovery.Package, graph *direc
 	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
 	problems = append(problems, validatePerlBuildFiles(packages)...)
 	problems = append(problems, validateRustWorkspaceMembers(packages)...)
+	problems = append(problems, validateHaskellDarwinLinker(packages)...)
 
 	if len(problems) == 0 {
 		return nil
