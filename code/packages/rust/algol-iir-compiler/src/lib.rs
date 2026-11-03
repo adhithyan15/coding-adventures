@@ -3729,6 +3729,7 @@ impl Compiler {
             let sequence = pieces(node);
             if sequence.len() >= 3 && !sequence.len().is_multiple_of(2) {
                 let mut coefficient = if negative { -1_i64 } else { 1_i64 };
+                let mut denominator = 1_u64;
                 let mut radicand = None;
                 let mut is_product = true;
                 let mut operator = "*";
@@ -3748,13 +3749,34 @@ impl Compiler {
                         } else {
                             let value = self
                                 .exact_static_integer_normalizer_operand_value(operand)?;
-                            coefficient = match operator {
-                                "*" => coefficient.checked_mul(value)?,
-                                "/" if value != 0 && coefficient.checked_rem(value)? == 0 => {
-                                    coefficient.checked_div(value)?
+                            match operator {
+                                "*" => {
+                                    let magnitude = value.unsigned_abs();
+                                    let cancelled = integer_gcd(denominator, magnitude);
+                                    denominator /= cancelled;
+                                    let reduced = (magnitude / cancelled) as i128;
+                                    let signed = if value < 0 { -reduced } else { reduced };
+                                    coefficient = i64::try_from(
+                                        (coefficient as i128).checked_mul(signed)?,
+                                    )
+                                    .ok()?;
+                                }
+                                "/" if value != 0 => {
+                                    let magnitude = value.unsigned_abs();
+                                    let cancelled =
+                                        integer_gcd(coefficient.unsigned_abs(), magnitude);
+                                    coefficient = i64::try_from(
+                                        (coefficient as i128) / (cancelled as i128),
+                                    )
+                                    .ok()?;
+                                    if value < 0 {
+                                        coefficient = coefficient.checked_neg()?;
+                                    }
+                                    denominator = denominator
+                                        .checked_mul(magnitude / cancelled)?;
                                 }
                                 _ => return None,
-                            };
+                            }
                         }
                     } else {
                         let Piece::Op(next_operator) = piece else {
@@ -3769,7 +3791,11 @@ impl Compiler {
                     }
                 }
                 if is_product {
-                    return self.exact_scaled_floor_root_value(coefficient, radicand?);
+                    return self.exact_scaled_floor_root_value(
+                        coefficient,
+                        denominator,
+                        radicand?,
+                    );
                 }
             }
             let has_leading_sign = matches!(
@@ -3892,15 +3918,25 @@ impl Compiler {
         u64::try_from(value).ok()
     }
 
-    fn exact_scaled_floor_root_value(&self, coefficient: i64, radicand: u64) -> Option<i64> {
+    fn exact_scaled_floor_root_value(
+        &self,
+        coefficient: i64,
+        denominator: u64,
+        radicand: u64,
+    ) -> Option<i64> {
         let magnitude = coefficient.unsigned_abs() as u128;
         let squared = magnitude.checked_mul(magnitude)?;
         let value = squared.checked_mul(radicand as u128)?;
         let root = value.isqrt();
+        let denominator = denominator as u128;
+        let quotient = root / denominator;
         if coefficient >= 0 {
-            return i64::try_from(root).ok();
+            return i64::try_from(quotient).ok();
         }
-        let ceiling = root.checked_add(u128::from(root * root != value))?;
+        let truncated = quotient.checked_mul(denominator)?;
+        let ceiling = quotient.checked_add(u128::from(
+            truncated.checked_mul(truncated)? != value,
+        ))?;
         i64::try_from(ceiling).ok()?.checked_neg()
     }
 
@@ -17465,12 +17501,11 @@ mod tests {
             "begin real procedure sqrt(x); value x; real x; sqrt := 8; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
             "begin integer procedure dynamic; dynamic := 80; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) * sqrt(entier(3)))) * sign(pick())) mod 5); output(result) end",
-            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / 2)) * sign(pick())) mod 5); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(9223372036854775807 * 2 * sqrt(entier(2)))) * sign(pick())) mod 5); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(9223372036854775807 * sqrt(entier(9223372036854775807)))) * sign(pick())) mod 5); output(result) end",
         ] {
             compile_source(source, "test").expect_err(
-                "negative radicands, overridden or dynamic roots, multiple roots, division, and overflow must fail closed",
+                "negative radicands, overridden or dynamic roots, multiple roots, and overflow must fail closed",
             );
         }
     }
@@ -17489,14 +17524,36 @@ mod tests {
         }
 
         for source in [
-            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / 2)) * sign(pick())) mod 5); output(result) end",
-            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 * sqrt(entier(80)) / 4)) * sign(pick())) mod 5); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 / sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 * sqrt(entier(80)) / 0)) * sign(pick())) mod 5); output(result) end",
         ] {
             compile_source(source, "test").expect_err(
-                "fractional coefficients, rooted divisors, and zero divisors must fail closed",
+                "rooted divisors and zero divisors must fail closed",
             );
+        }
+    }
+
+    #[test]
+    fn al4_rational_scaled_floor_root_normalizers_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / 2)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 * sqrt(entier(80)) / 4)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-(sqrt(entier(15)) / 2))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / 2 * 2)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "checked rational coefficients may preserve scaled floor roots for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / sqrt(entier(4)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / 3037000500 / 3037000500 / 3037000500)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test")
+                .expect_err("dynamic divisors and checked denominator overflow must fail closed");
         }
     }
 
