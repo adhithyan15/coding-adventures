@@ -141,6 +141,14 @@ const C4_DIRECTIONS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-directions-11.16.1-visual-corpus.json"
 ));
+const C4_LINE_BREAKS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-line-breaks-11.16.1-corpus.json"
+));
+const C4_LINE_BREAKS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-line-breaks-11.16.1-visual-corpus.json"
+));
 const C4_ELEMENT_TECHNOLOGY_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-element-technology-11.16.1-corpus.json"
@@ -2947,6 +2955,39 @@ fn pinned_c4_directions_reach_semantic_ir() {
         assert_eq!(diagram.nodes.len(), 2);
         assert_eq!(diagram.relationships.len(), 1);
     }
+}
+
+#[test]
+fn pinned_c4_line_breaks_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_LINE_BREAKS_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_LINE_BREAKS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+    let diagram = parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.title.as_deref(), Some("Banking\nPlatform"));
+    let customer = diagram.nodes.iter().find(|node| node.id == "customer").unwrap();
+    assert_eq!(customer.label, "Retail\nCustomer");
+    assert_eq!(customer.compartments[0].entries, ["Uses\nbanking"]);
+    let app = diagram.nodes.iter().find(|node| node.id == "app").unwrap();
+    assert_eq!(app.label, "Banking\nApp");
+    assert_eq!(app.compartments[0].entries, ["[TypeScript\nNode]", "Handles\naccounts"]);
+    let host = diagram.groups.iter().find(|group| group.id == "host").unwrap();
+    assert_eq!(host.label, "Application\nHost");
+    let diagram_ir::StructuralGroupMetadata::C4DeploymentNode {
+        technology,
+        description,
+        ..
+    } = host.metadata.as_ref().unwrap() else {
+        panic!("expected C4 deployment metadata");
+    };
+    assert_eq!(technology.as_deref(), Some("Linux\nVM"));
+    assert_eq!(description.as_deref(), Some("Primary\nruntime"));
+    let relationship = &diagram.relationships[0];
+    assert_eq!(relationship.label.as_deref(), Some("Uses\ndaily"));
+    let diagram_ir::StructuralRelationshipMetadata::C4(metadata) =
+        relationship.metadata.as_ref().unwrap();
+    assert_eq!(metadata.technology.as_deref(), Some("HTTPS\nJSON"));
+    assert_eq!(metadata.description.as_deref(), Some("Browser\nrequest"));
 }
 
 #[test]

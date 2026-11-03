@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.39.0";
+pub const VERSION: &str = "0.40.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -221,9 +221,10 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         canvas_w = canvas_w.max(point.x + COMP_PAD);
         canvas_h = canvas_h.max(point.y + COMP_PAD);
     }
-    for (position, _) in rels.iter().filter_map(|relationship| relationship.label.as_ref()) {
+    for (position, label) in rels.iter().filter_map(|relationship| relationship.label.as_ref()) {
+        let label_height = label.split('\n').count() as f64 * ROW_H;
         canvas_w = canvas_w.max(position.x + RELATIONSHIP_LABEL_HALF_WIDTH + COMP_PAD);
-        canvas_h = canvas_h.max(position.y + ROW_H + COMP_PAD);
+        canvas_h = canvas_h.max(position.y + label_height / 2.0 + COMP_PAD);
     }
     LayoutedStructuralDiagram {
         kind: diagram.kind.clone(),
@@ -242,6 +243,32 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
 
 fn structural_title_height(title: &str) -> f64 {
     TITLE_H + title.split('\n').count().saturating_sub(1) as f64 * TITLE_LINE_H
+}
+
+fn structural_group_header_height(group: &diagram_ir::StructuralGroup) -> f64 {
+    let style = structural_group_style(group);
+    let label_height = group.label.split('\n').count() as f64 * style.font_size * 1.3;
+    let detail_lines = match group.metadata.as_ref() {
+        Some(StructuralGroupMetadata::C4Boundary { boundary_type, .. }) => {
+            (!boundary_type.is_empty()).then(|| boundary_type.split('\n').count())
+        }
+        Some(StructuralGroupMetadata::C4DeploymentNode {
+            technology,
+            description,
+            ..
+        }) => {
+            let details = technology
+                .iter()
+                .map(|technology| format!("[{technology}]"))
+                .chain(description.iter().cloned())
+                .collect::<Vec<_>>()
+                .join(" - ");
+            (!details.is_empty()).then(|| details.split('\n').count())
+        }
+        Some(StructuralGroupMetadata::Architecture { .. }) | None => None,
+    };
+    let detail_height = detail_lines.map_or(0.0, |lines| lines as f64 * 12.0 * 1.4);
+    (6.0 + label_height + detail_height + 6.0).max(GROUP_HEADER_H)
 }
 
 fn apply_alignments(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDiagram) {
@@ -744,9 +771,14 @@ fn group_bounds(
         .map(|bounds| bounds.3)
         .fold(f64::NEG_INFINITY, f64::max);
     let padding = group_padding(diagram);
+    let header_height = diagram
+        .groups
+        .iter()
+        .find(|group| group.id == group_id)
+        .map_or(GROUP_HEADER_H, structural_group_header_height);
     let bounds = (
         (min_x - padding).max(0.0),
-        (min_y - padding.max(GROUP_HEADER_H)).max(0.0),
+        (min_y - padding.max(header_height)).max(0.0),
         max_x + padding,
         max_y + padding,
     );
@@ -1616,7 +1648,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.39.0");
+        assert_eq!(crate::VERSION, "0.40.0");
     }
 
     #[test]

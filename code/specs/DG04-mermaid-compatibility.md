@@ -176,6 +176,8 @@ are removed before C4 grammar parsing while preserving source line positions; th
 resolved title then survives semantic IR, structural layout, and backend-neutral
 text paint. C4 `direction` statements preserve all four Mermaid axes in semantic
 IR and drive structural node placement plus backend-neutral relationship paint. C4
+visible titles, element and deployment text, and relationship details normalize
+Mermaid HTML break variants into line-aware semantic and paint geometry. C4
 bidirectional and backward relationships also preserve their authored endpoint
 arrows through structural layout and backend-neutral PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same
