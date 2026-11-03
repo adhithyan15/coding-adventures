@@ -1,5 +1,11 @@
 # Changelog — iir-to-llvm
 
+## Unreleased — LANG83 PR5b — literals are bytes
+
+- **`validate_for_llvm` accepts any `str_const` literal**, a `Str` or a raw-byte `Operand::Bytes`; the printable-ASCII check is gone. The constant was already written as `c"\XX…"`, one hex escape per byte, so every byte is emitted exactly.
+- The literal pre-pass and the lowering key literals and fold facts on **bytes** (`Vec<u8>`), so a `Str` and a `Bytes` literal with the same bytes share one constant, and a literal `str_slice` that splits a UTF-8 character folds to its bytes. Before, the pre-pass skipped such a slice and the lowering then refused to compile it ("does not preserve UTF-8"). The ceiling checks of the concat fold are unchanged and measure bytes.
+- Test `e4_str_const_rejects_non_ascii_literal`, which pinned the old refusal, is replaced by `e4_str_const_emits_any_literal_byte_exactly`; new `e4_literal_str_slice_may_split_a_utf8_character`. Both fail on the previous lowering.
+
 ## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused, a join past it is not interned
 
 - `validate_for_llvm` (and so `lower_iir_to_llvm`) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.
