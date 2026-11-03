@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.0 - 2026-11-02
+
+### Added
+
+- Added a non-copyable exact-target binding for the reviewed RSA SHA-512
+  two-link proof that already retains advanced path-length state.
+- Retained target policy, complete intermediate policy, both authenticated
+  links, advanced path-length state, and exact reviewed-root selection through
+  one distinct result.
+
+### Security
+
+- The target authenticated by the path-length proof must be the same decoded
+  object retained by server policy; byte-equal independently decoded targets
+  fail closed.
+- This evidence join does not derive path-length state or grant path search,
+  constraint, hostname, revocation, TLS, HTTP, OAuth, or network authority.
+
 ## 0.3.0 - 2026-10-30
 
 ### Added
