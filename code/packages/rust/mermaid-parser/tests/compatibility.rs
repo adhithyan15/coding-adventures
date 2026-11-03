@@ -2941,6 +2941,9 @@ fn pinned_c4_layout_config_reaches_semantic_ir() {
     let defaults = parse_c4_diagram(fixtures[2]["source"].as_str().unwrap()).unwrap();
     assert_eq!(defaults.render_config.c4_shape_in_row, Some(4));
     assert_eq!(defaults.render_config.c4_boundary_in_row, Some(2));
+    let boundaries = parse_c4_diagram(fixtures[3]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(boundaries.groups.len(), 3);
+    assert_eq!(boundaries.render_config.c4_boundary_in_row, Some(2));
 }
 
 #[test]
