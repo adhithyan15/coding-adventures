@@ -16,8 +16,10 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18879,
+  "active_prs": [
+    18879
+  ],
   "last_ci_action": {
     "observed_at": "2026-11-03T11:42:23Z",
     "pr_number": 18853,
@@ -2991,15 +2993,17 @@
     {
       "id": "build-tool-neutral-cargo-manifest-trigger-snapshot-contract",
       "title": "Define the neutral strict Cargo manifest trigger snapshot contract",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-rust-cargo-test-trigger-selection-parity"
       ],
       "branch": "codex/build-tool-neutral-cargo-trigger-snapshot",
       "pr_number": 18879,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18879",
-      "opened_at": "2026-11-03T12:57:11Z",
-      "opened_revision": "3a85e71c4277bb166d878208002cd38e05e0f82d",
+      "pr_opened_at": "2026-11-03T12:57:05Z",
+      "draft_creation_head": "3a85e71c4277bb166d878208002cd38e05e0f82d",
+      "publication_head": "3a85e71c4277bb166d878208002cd38e05e0f82d",
+      "publication_base": "6d1eada894ed5b6b9acadc65a3761e3c249fc6dc",
       "registered_at": "2026-11-03T06:22:44Z",
       "selected_at": "2026-11-03T11:42:23Z",
       "selection_revision": "c36b5728fb75e283b90fa4dcc3aa093939a2a119",

@@ -20463,7 +20463,7 @@ current main and live PR overlap before a normal first publication.
 
 #### Neutral Cargo manifest snapshot PR #18879 draft receipt
 
-Open draft PR #18879 at `2026-11-03T12:57:11Z` from exact independently
+Open draft PR #18879 at `2026-11-03T12:57:05Z` from exact independently
 reviewed head `3a85e71c4277bb166d878208002cd38e05e0f82d` over exact base
 `6d1eada894ed5b6b9acadc65a3761e3c249fc6dc`. GitHub reports the draft
 mergeable. The branch did not previously exist remotely, the first push was
