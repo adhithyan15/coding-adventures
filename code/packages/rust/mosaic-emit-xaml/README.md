@@ -353,3 +353,7 @@ No visual-tree traversal or element retention is added. Projection counts remain
 separate; absent/malformed/throwing diagnostic contracts omit their own object.
 Overlapping intervals are not exclusive attribution. See
 `code/specs/mosaic-xaml-realization-counters-20261026.md` for acceptance limits.
+
+Experimental deferred emission updates slot-backed input text on property changes,
+rather than focus loss, to avoid stale WinUI callbacks during subtree teardown
+(#18515). Eager emission keeps its existing binding timing.
