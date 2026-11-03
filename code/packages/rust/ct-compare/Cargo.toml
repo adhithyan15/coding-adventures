@@ -5,3 +5,11 @@ edition = "2021"
 description = "Constant-time byte-slice equality — no early exit on first differing byte, no data-dependent branches"
 
 [dependencies]
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+[[test]]
+name = "conformance"
+path = "tests/conformance.rs"
+harness = false
