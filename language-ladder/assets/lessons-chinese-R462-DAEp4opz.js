@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R463-review-458-463
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 35300
+chapter: 463
+type: review
+headword: (dialogue)
+gloss: a review of the words from How I Feel to Scared
+concept_tag: REVIEW
+prerequisites: [ZH-C458-qingxu, ZH-C458-xinteng, ZH-C458-xingfen, ZH-C458-qingsong, ZH-C458-fan, ZH-C459-gudan, ZH-C459-shiqing, ZH-C459-ganqing, ZH-C459-xinlihua, ZH-C459-weiqu, ZH-C460-yumen, ZH-C460-tanqi, ZH-C460-nanweiqing, ZH-C460-tongqing, ZH-C460-xianmu, ZH-C461-peifu, ZH-C461-aixin, ZH-C461-aiqing, ZH-C461-xinai, ZH-C461-panwang, ZH-C462-jingxi, ZH-C462-yixiangbudao, ZH-C462-hen, ZH-C462-sixin, ZH-C462-bianxin, ZH-C463-danxiao, ZH-C463-kepa, ZH-C463-xiaren, ZH-C463-fadou, ZH-C463-emeng, ZH-W459-qing-feeling, ZH-W461-ai-love, ZH-W463-pa-fear]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C458-MOOD458-01, ZH-LEX-C458-MOOD458-02, ZH-LEX-C458-MOOD458-03, ZH-LEX-C458-MOOD458-04, ZH-LEX-C458-MOOD458-05, ZH-LEX-C459-MIND459-01, ZH-LEX-C459-MIND459-02, ZH-LEX-C459-MIND459-03, ZH-LEX-C459-MIND459-04, ZH-LEX-C459-MIND459-05, ZH-LEX-C460-LOW460-01, ZH-LEX-C460-LOW460-02, ZH-LEX-C460-LOW460-03, ZH-LEX-C460-LOW460-04, ZH-LEX-C460-LOW460-05, ZH-LEX-C461-KIND461-01, ZH-LEX-C461-KIND461-02, ZH-LEX-C461-KIND461-03, ZH-LEX-C461-KIND461-04, ZH-LEX-C461-KIND461-05, ZH-LEX-C462-SURPRISE462-01, ZH-LEX-C462-SURPRISE462-02, ZH-LEX-C462-SURPRISE462-03, ZH-LEX-C462-SURPRISE462-04, ZH-LEX-C462-SURPRISE462-05, ZH-LEX-C463-FEAR463-01, ZH-LEX-C463-FEAR463-02, ZH-LEX-C463-FEAR463-03, ZH-LEX-C463-FEAR463-04, ZH-LEX-C463-FEAR463-05, ZH-SCRIPT-QING-FEELING-01, ZH-SCRIPT-AI-LOVE-01, ZH-SCRIPT-PA-FEAR-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C458-MOOD458-01, ZH-LEX-C458-MOOD458-02, ZH-LEX-C458-MOOD458-03, ZH-LEX-C458-MOOD458-04, ZH-LEX-C458-MOOD458-05, ZH-LEX-C459-MIND459-01, ZH-LEX-C459-MIND459-02, ZH-LEX-C459-MIND459-03, ZH-LEX-C459-MIND459-04, ZH-LEX-C459-MIND459-05, ZH-LEX-C460-LOW460-01, ZH-LEX-C460-LOW460-02, ZH-LEX-C460-LOW460-03, ZH-LEX-C460-LOW460-04, ZH-LEX-C460-LOW460-05, ZH-LEX-C461-KIND461-01, ZH-LEX-C461-KIND461-02, ZH-LEX-C461-KIND461-03, ZH-LEX-C461-KIND461-04, ZH-LEX-C461-KIND461-05, ZH-LEX-C462-SURPRISE462-01, ZH-LEX-C462-SURPRISE462-02, ZH-LEX-C462-SURPRISE462-03, ZH-LEX-C462-SURPRISE462-04, ZH-LEX-C462-SURPRISE462-05, ZH-LEX-C463-FEAR463-01, ZH-LEX-C463-FEAR463-02, ZH-LEX-C463-FEAR463-03, ZH-LEX-C463-FEAR463-04, ZH-LEX-C463-FEAR463-05, ZH-SCRIPT-QING-FEELING-01, ZH-SCRIPT-AI-LOVE-01, ZH-SCRIPT-PA-FEAR-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C458-qingxu, ZH-C458-xinteng, ZH-C458-xingfen, ZH-C458-qingsong, ZH-C458-fan, ZH-C459-gudan, ZH-C459-shiqing, ZH-C459-ganqing, ZH-C459-xinlihua, ZH-C459-weiqu, ZH-C460-yumen, ZH-C460-tanqi, ZH-C460-nanweiqing, ZH-C460-tongqing, ZH-C460-xianmu, ZH-C461-peifu, ZH-C461-aixin, ZH-C461-aiqing, ZH-C461-xinai, ZH-C461-panwang, ZH-C462-jingxi, ZH-C462-yixiangbudao, ZH-C462-hen, ZH-C462-sixin, ZH-C462-bianxin, ZH-C463-danxiao, ZH-C463-kepa, ZH-C463-xiaren, ZH-C463-fadou, ZH-C463-emeng, ZH-W459-qing-feeling, ZH-W461-ai-love, ZH-W463-pa-fear]
+---
+
+# Looking back: from How I Feel to Scared
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C458-MOOD458-01, ZH-LEX-C458-MOOD458-02] -->
+
+[PAUSE 3s] Say the Mandarin for one's spirits and to feel for someone.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C458-MOOD458-01, ZH-LEX-C458-MOOD458-02, ZH-LEX-C458-MOOD458-03, ZH-LEX-C458-MOOD458-04, ZH-LEX-C458-MOOD458-05, ZH-LEX-C459-MIND459-01, ZH-LEX-C459-MIND459-02, ZH-LEX-C459-MIND459-03, ZH-LEX-C459-MIND459-04, ZH-LEX-C459-MIND459-05, ZH-LEX-C460-LOW460-01, ZH-LEX-C460-LOW460-02, ZH-LEX-C460-LOW460-03, ZH-LEX-C460-LOW460-04, ZH-LEX-C460-LOW460-05, ZH-LEX-C461-KIND461-01, ZH-LEX-C461-KIND461-02, ZH-LEX-C461-KIND461-03, ZH-LEX-C461-KIND461-04, ZH-LEX-C461-KIND461-05, ZH-LEX-C462-SURPRISE462-01, ZH-LEX-C462-SURPRISE462-02, ZH-LEX-C462-SURPRISE462-03, ZH-LEX-C462-SURPRISE462-04, ZH-LEX-C462-SURPRISE462-05, ZH-LEX-C463-FEAR463-01, ZH-LEX-C463-FEAR463-02, ZH-LEX-C463-FEAR463-03, ZH-LEX-C463-FEAR463-04, ZH-LEX-C463-FEAR463-05, ZH-SCRIPT-QING-FEELING-01, ZH-SCRIPT-AI-LOVE-01, ZH-SCRIPT-PA-FEAR-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: one's spirits, to feel for someone, thrilled, relaxed and at ease, fed up]
+- [YOU SAY: lonely, a matter to deal with, affection between people, what is really on one's mind, hurt by unfair blame]
+- [YOU SAY: down in the dumps, to sigh, embarrassed, to sympathize with, to envy]
+- [YOU SAY: to hold in high regard, love and care for others, love between a couple, treasured, to look forward to]
+- [YOU SAY: a pleasant surprise, beyond what anyone imagined, to hate deeply, to give up hope, to fall out of love]
+- [YOU SAY: easily scared, frightening, giving people a fright, to tremble, a nightmare]
+- [YOU READ: 情 爱 怕 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C458-MOOD458-01, ZH-LEX-C458-MOOD458-02, ZH-LEX-C458-MOOD458-03, ZH-LEX-C458-MOOD458-04, ZH-LEX-C458-MOOD458-05, ZH-LEX-C459-MIND459-01, ZH-LEX-C459-MIND459-02, ZH-LEX-C459-MIND459-03, ZH-LEX-C459-MIND459-04, ZH-LEX-C459-MIND459-05, ZH-LEX-C460-LOW460-01, ZH-LEX-C460-LOW460-02, ZH-LEX-C460-LOW460-03, ZH-LEX-C460-LOW460-04, ZH-LEX-C460-LOW460-05, ZH-LEX-C461-KIND461-01, ZH-LEX-C461-KIND461-02, ZH-LEX-C461-KIND461-03, ZH-LEX-C461-KIND461-04, ZH-LEX-C461-KIND461-05, ZH-LEX-C462-SURPRISE462-01, ZH-LEX-C462-SURPRISE462-02, ZH-LEX-C462-SURPRISE462-03, ZH-LEX-C462-SURPRISE462-04, ZH-LEX-C462-SURPRISE462-05, ZH-LEX-C463-FEAR463-01, ZH-LEX-C463-FEAR463-02, ZH-LEX-C463-FEAR463-03, ZH-LEX-C463-FEAR463-04, ZH-LEX-C463-FEAR463-05, ZH-SCRIPT-QING-FEELING-01, ZH-SCRIPT-AI-LOVE-01, ZH-SCRIPT-PA-FEAR-01] -->
+
+[PAUSE 3s] One's spirits? (*qíngxù*.) To feel for someone? (**心疼**, *xīnténg*.) Thrilled? (*xīngfèn*.) Relaxed and at ease? (*qīngsōng*.) Fed up? (*fán*.) Lonely? (*gūdān*.) A matter to deal with? (**事情**, *shìqing*.) Affection between people? (**感情**, *gǎnqíng*.) What is really on one's mind? (**心里话**, *xīnlihuà*.) Hurt by unfair blame? (*wěiqu*.) Down in the dumps? (*yùmèn*.) To sigh? (*tànqì*.) Embarrassed? (**难为情**, *nánwéiqíng*.) To sympathize with? (**同情**, *tóngqíng*.) To envy? (*xiànmù*.) To hold in high regard? (*pèifú*.) Love and care for others? (**爱心**, *àixīn*.) Love between a couple? (**爱情**, *àiqíng*.) Treasured? (**心爱**, *xīn'ài*.) To look forward to? (*pànwàng*.) A pleasant surprise? (*jīngxǐ*.) Beyond what anyone imagined? (**意想不到**, *yìxiǎngbúdào*.) To hate deeply? (*hèn*.) To give up hope? (**死心**, *sǐxīn*.) To fall out of love? (**变心**, *biànxīn*.) Easily scared? (*dǎnxiǎo*.) Frightening? (**可怕**, *kěpà*.) Giving people a fright? (*xiàrén*.) To tremble? (*fādǒu*.) A nightmare? (*èmèng*.)
+`;export{t};

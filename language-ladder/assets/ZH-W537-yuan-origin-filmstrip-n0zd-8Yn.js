@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W537-yuan-origin-filmstrip-BSQ1ujFG.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W504-ge-song-filmstrip-0_qX-CEO.svg`,import.meta.url).href;export{e as default};

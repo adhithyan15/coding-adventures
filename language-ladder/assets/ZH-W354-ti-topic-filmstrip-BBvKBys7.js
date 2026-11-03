@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W354-ti-topic-filmstrip-GArcllCG.svg`,import.meta.url).href;export{e as default};

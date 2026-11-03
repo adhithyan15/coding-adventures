@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R413-review-408-413
+spine_node: SPINE-HANDLE-TRAVEL
+sequence: 31610
+chapter: 413
+type: review
+headword: (dialogue)
+gloss: a review of the words from By Bus to Up in the Air
+concept_tag: REVIEW
+prerequisites: [ZH-C408-zhanpai, ZH-C408-gongjiao, ZH-C408-toubi, ZH-C408-keche, ZH-C408-qidian, ZH-C409-gaofeng, ZH-C409-jiaotong, ZH-C409-tongche, ZH-C409-shoupiaoyuan, ZH-C409-dache, ZH-C410-changtu, ZH-C410-chefei, ZH-C410-tongguo, ZH-C410-kaitong, ZH-C410-shanglu, ZH-C411-matou, ZH-C411-chuanzhang, ZH-C411-kaichuan, ZH-C411-duchuan, ZH-C411-jiushengyi, ZH-C412-gangkou, ZH-C412-jiaban, ZH-C412-chuancang, ZH-C412-kaoan, ZH-C412-kechuan, ZH-C413-dengji-board, ZH-C413-fei, ZH-C413-jizhang, ZH-C413-jiangluo, ZH-C413-feikuai, ZH-W408-jiao-cross, ZH-W409-tong-through, ZH-W411-chuan-boat, ZH-W413-fei-fly]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C408-BUS408-01, ZH-LEX-C408-BUS408-02, ZH-LEX-C408-BUS408-03, ZH-LEX-C408-BUS408-04, ZH-LEX-C408-BUS408-05, ZH-LEX-C409-TRAFFIC409-01, ZH-LEX-C409-TRAFFIC409-02, ZH-LEX-C409-TRAFFIC409-03, ZH-LEX-C409-TRAFFIC409-04, ZH-LEX-C409-TRAFFIC409-05, ZH-LEX-C410-COACH410-01, ZH-LEX-C410-COACH410-02, ZH-LEX-C410-COACH410-03, ZH-LEX-C410-COACH410-04, ZH-LEX-C410-COACH410-05, ZH-LEX-C411-FERRY411-01, ZH-LEX-C411-FERRY411-02, ZH-LEX-C411-FERRY411-03, ZH-LEX-C411-FERRY411-04, ZH-LEX-C411-FERRY411-05, ZH-LEX-C412-HARBOUR412-01, ZH-LEX-C412-HARBOUR412-02, ZH-LEX-C412-HARBOUR412-03, ZH-LEX-C412-HARBOUR412-04, ZH-LEX-C412-HARBOUR412-05, ZH-LEX-C413-FLY413-01, ZH-LEX-C413-FLY413-02, ZH-LEX-C413-FLY413-03, ZH-LEX-C413-FLY413-04, ZH-LEX-C413-FLY413-05, ZH-SCRIPT-JIAO-CROSS-01, ZH-SCRIPT-TONG-THROUGH-01, ZH-SCRIPT-CHUAN-BOAT-01, ZH-SCRIPT-FEI-FLY-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C408-BUS408-01, ZH-LEX-C408-BUS408-02, ZH-LEX-C408-BUS408-03, ZH-LEX-C408-BUS408-04, ZH-LEX-C408-BUS408-05, ZH-LEX-C409-TRAFFIC409-01, ZH-LEX-C409-TRAFFIC409-02, ZH-LEX-C409-TRAFFIC409-03, ZH-LEX-C409-TRAFFIC409-04, ZH-LEX-C409-TRAFFIC409-05, ZH-LEX-C410-COACH410-01, ZH-LEX-C410-COACH410-02, ZH-LEX-C410-COACH410-03, ZH-LEX-C410-COACH410-04, ZH-LEX-C410-COACH410-05, ZH-LEX-C411-FERRY411-01, ZH-LEX-C411-FERRY411-02, ZH-LEX-C411-FERRY411-03, ZH-LEX-C411-FERRY411-04, ZH-LEX-C411-FERRY411-05, ZH-LEX-C412-HARBOUR412-01, ZH-LEX-C412-HARBOUR412-02, ZH-LEX-C412-HARBOUR412-03, ZH-LEX-C412-HARBOUR412-04, ZH-LEX-C412-HARBOUR412-05, ZH-LEX-C413-FLY413-01, ZH-LEX-C413-FLY413-02, ZH-LEX-C413-FLY413-03, ZH-LEX-C413-FLY413-04, ZH-LEX-C413-FLY413-05, ZH-SCRIPT-JIAO-CROSS-01, ZH-SCRIPT-TONG-THROUGH-01, ZH-SCRIPT-CHUAN-BOAT-01, ZH-SCRIPT-FEI-FLY-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C408-zhanpai, ZH-C408-gongjiao, ZH-C408-toubi, ZH-C408-keche, ZH-C408-qidian, ZH-C409-gaofeng, ZH-C409-jiaotong, ZH-C409-tongche, ZH-C409-shoupiaoyuan, ZH-C409-dache, ZH-C410-changtu, ZH-C410-chefei, ZH-C410-tongguo, ZH-C410-kaitong, ZH-C410-shanglu, ZH-C411-matou, ZH-C411-chuanzhang, ZH-C411-kaichuan, ZH-C411-duchuan, ZH-C411-jiushengyi, ZH-C412-gangkou, ZH-C412-jiaban, ZH-C412-chuancang, ZH-C412-kaoan, ZH-C412-kechuan, ZH-C413-dengji-board, ZH-C413-fei, ZH-C413-jizhang, ZH-C413-jiangluo, ZH-C413-feikuai, ZH-W408-jiao-cross, ZH-W409-tong-through, ZH-W411-chuan-boat, ZH-W413-fei-fly]
+---
+
+# Looking back: from By Bus to Up in the Air
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C408-BUS408-01, ZH-LEX-C408-BUS408-02] -->
+
+[PAUSE 3s] Say the Mandarin for a bus stop sign and public transport.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C408-BUS408-01, ZH-LEX-C408-BUS408-02, ZH-LEX-C408-BUS408-03, ZH-LEX-C408-BUS408-04, ZH-LEX-C408-BUS408-05, ZH-LEX-C409-TRAFFIC409-01, ZH-LEX-C409-TRAFFIC409-02, ZH-LEX-C409-TRAFFIC409-03, ZH-LEX-C409-TRAFFIC409-04, ZH-LEX-C409-TRAFFIC409-05, ZH-LEX-C410-COACH410-01, ZH-LEX-C410-COACH410-02, ZH-LEX-C410-COACH410-03, ZH-LEX-C410-COACH410-04, ZH-LEX-C410-COACH410-05, ZH-LEX-C411-FERRY411-01, ZH-LEX-C411-FERRY411-02, ZH-LEX-C411-FERRY411-03, ZH-LEX-C411-FERRY411-04, ZH-LEX-C411-FERRY411-05, ZH-LEX-C412-HARBOUR412-01, ZH-LEX-C412-HARBOUR412-02, ZH-LEX-C412-HARBOUR412-03, ZH-LEX-C412-HARBOUR412-04, ZH-LEX-C412-HARBOUR412-05, ZH-LEX-C413-FLY413-01, ZH-LEX-C413-FLY413-02, ZH-LEX-C413-FLY413-03, ZH-LEX-C413-FLY413-04, ZH-LEX-C413-FLY413-05, ZH-SCRIPT-JIAO-CROSS-01, ZH-SCRIPT-TONG-THROUGH-01, ZH-SCRIPT-CHUAN-BOAT-01, ZH-SCRIPT-FEI-FLY-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: a bus stop sign, public transport, to drop coins in the box, a long-distance coach, a starting point]
+- [YOU SAY: the rush hour, the traffic on the roads, to open to traffic, a ticket seller, to take a taxi]
+- [YOU SAY: long-distance, the fare for a ride, to pass through, to launch a new transport line, to hit the road]
+- [YOU SAY: a pier for boats, a ship's captain, to set sail, a ferry across the water, a life jacket]
+- [YOU SAY: a harbour for ships, the ship's deck, a ship's cabin, to come in to shore, a passenger ship]
+- [YOU SAY: to board a plane, to fly, the pilot in command, to come down onto the runway, as fast as flying]
+- [YOU READ: 交 通 船 飞 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C408-BUS408-01, ZH-LEX-C408-BUS408-02, ZH-LEX-C408-BUS408-03, ZH-LEX-C408-BUS408-04, ZH-LEX-C408-BUS408-05, ZH-LEX-C409-TRAFFIC409-01, ZH-LEX-C409-TRAFFIC409-02, ZH-LEX-C409-TRAFFIC409-03, ZH-LEX-C409-TRAFFIC409-04, ZH-LEX-C409-TRAFFIC409-05, ZH-LEX-C410-COACH410-01, ZH-LEX-C410-COACH410-02, ZH-LEX-C410-COACH410-03, ZH-LEX-C410-COACH410-04, ZH-LEX-C410-COACH410-05, ZH-LEX-C411-FERRY411-01, ZH-LEX-C411-FERRY411-02, ZH-LEX-C411-FERRY411-03, ZH-LEX-C411-FERRY411-04, ZH-LEX-C411-FERRY411-05, ZH-LEX-C412-HARBOUR412-01, ZH-LEX-C412-HARBOUR412-02, ZH-LEX-C412-HARBOUR412-03, ZH-LEX-C412-HARBOUR412-04, ZH-LEX-C412-HARBOUR412-05, ZH-LEX-C413-FLY413-01, ZH-LEX-C413-FLY413-02, ZH-LEX-C413-FLY413-03, ZH-LEX-C413-FLY413-04, ZH-LEX-C413-FLY413-05, ZH-SCRIPT-JIAO-CROSS-01, ZH-SCRIPT-TONG-THROUGH-01, ZH-SCRIPT-CHUAN-BOAT-01, ZH-SCRIPT-FEI-FLY-01] -->
+
+[PAUSE 3s] A bus stop sign? (*zhànpái*.) Public transport? (**公交**, *gōngjiāo*.) To drop coins in the box? (*tóubì*.) A long-distance coach? (**客车**, *kèchē*.) A starting point? (**起点**, *qǐdiǎn*.) The rush hour? (*gāofēng*.) The traffic on the roads? (**交通**, *jiāotōng*.) To open to traffic? (**通车**, *tōngchē*.) A ticket seller? (*shòupiàoyuán*.) To take a taxi? (**打车**, *dǎchē*.) Long-distance? (*chángtú*.) The fare for a ride? (*chēfèi*.) To pass through? (**通过**, *tōngguò*.) To launch a new transport line? (**开通**, *kāitōng*.) To hit the road? (**上路**, *shànglù*.) A pier for boats? (*mǎtou*.) A ship's captain? (**船长**, *chuánzhǎng*.) To set sail? (**开船**, *kāichuán*.) A ferry across the water? (*dùchuán*.) A life jacket? (**救生衣**, *jiùshēngyī*.) A harbour for ships? (*gǎngkǒu*.) The ship's deck? (*jiǎbǎn*.) A ship's cabin? (*chuáncāng*.) To come in to shore? (*kào'àn*.) A passenger ship? (**客船**, *kèchuán*.) To board a plane? (*dēngjī*.) To fly? (**飞**, *fēi*.) The pilot in command? (**机长**, *jīzhǎng*.) To come down onto the runway? (*jiàngluò*.) As fast as flying? (**飞快**, *fēikuài*.)
+`;export{t};

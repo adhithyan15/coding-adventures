@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W473-ya-tooth-filmstrip-CYmJnoQ6.svg`,import.meta.url).href;export{e as default};

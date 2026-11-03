@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W449-wei-taste-filmstrip-6phG5_Qv.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W330-wang-king-filmstrip-Bi94MNGB.svg`,import.meta.url).href;export{e as default};

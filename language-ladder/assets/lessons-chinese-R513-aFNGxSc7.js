@@ -1,0 +1,104 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R513-review-509-513
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 38440
+chapter: 513
+type: review
+headword: (dialogue)
+gloss: a review of the words from Parents to Ambitions
+concept_tag: REVIEW
+prerequisites: [ZH-C509-dangjia, ZH-C509-fumu, ZH-C509-munu, ZH-C509-muyu, ZH-C509-houma, ZH-C510-waipo, ZH-C510-sunzi, ZH-C510-sunnu, ZH-C510-tengai, ZH-C510-hong, ZH-C511-qinren, ZH-C511-fuqin, ZH-C511-muqin, ZH-C511-qinsheng, ZH-C511-qinzi, ZH-C512-zhixiang, ZH-C512-zhuiqiu, ZH-C512-chengcai, ZH-C512-chengming, ZH-C512-mingxiao, ZH-C513-chuangye, ZH-C513-dadao, ZH-C513-zhengqu, ZH-C513-fendou, ZH-C513-qinshou, ZH-W509-mu-mother, ZH-W511-qin-kin]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C509-PARENTS509-01, ZH-LEX-C509-PARENTS509-02, ZH-LEX-C509-PARENTS509-03, ZH-LEX-C509-PARENTS509-04, ZH-LEX-C509-PARENTS509-05, ZH-LEX-C510-GRAND510-01, ZH-LEX-C510-GRAND510-02, ZH-LEX-C510-GRAND510-03, ZH-LEX-C510-GRAND510-04, ZH-LEX-C510-GRAND510-05, ZH-LEX-C511-KIN511-01, ZH-LEX-C511-KIN511-02, ZH-LEX-C511-KIN511-03, ZH-LEX-C511-KIN511-04, ZH-LEX-C511-KIN511-05, ZH-LEX-C512-DREAMS512-01, ZH-LEX-C512-DREAMS512-02, ZH-LEX-C512-DREAMS512-03, ZH-LEX-C512-DREAMS512-04, ZH-LEX-C512-DREAMS512-05, ZH-LEX-C513-AMBITION513-01, ZH-LEX-C513-AMBITION513-02, ZH-LEX-C513-AMBITION513-03, ZH-LEX-C513-AMBITION513-04, ZH-LEX-C513-AMBITION513-05, ZH-SCRIPT-MU-MOTHER-01, ZH-SCRIPT-QIN-KIN-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C509-PARENTS509-01, ZH-LEX-C509-PARENTS509-02, ZH-LEX-C509-PARENTS509-03, ZH-LEX-C509-PARENTS509-04, ZH-LEX-C509-PARENTS509-05, ZH-LEX-C510-GRAND510-01, ZH-LEX-C510-GRAND510-02, ZH-LEX-C510-GRAND510-03, ZH-LEX-C510-GRAND510-04, ZH-LEX-C510-GRAND510-05, ZH-LEX-C511-KIN511-01, ZH-LEX-C511-KIN511-02, ZH-LEX-C511-KIN511-03, ZH-LEX-C511-KIN511-04, ZH-LEX-C511-KIN511-05, ZH-LEX-C512-DREAMS512-01, ZH-LEX-C512-DREAMS512-02, ZH-LEX-C512-DREAMS512-03, ZH-LEX-C512-DREAMS512-04, ZH-LEX-C512-DREAMS512-05, ZH-LEX-C513-AMBITION513-01, ZH-LEX-C513-AMBITION513-02, ZH-LEX-C513-AMBITION513-03, ZH-LEX-C513-AMBITION513-04, ZH-LEX-C513-AMBITION513-05, ZH-SCRIPT-MU-MOTHER-01, ZH-SCRIPT-QIN-KIN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C509-dangjia, ZH-C509-fumu, ZH-C509-munu, ZH-C509-muyu, ZH-C509-houma, ZH-C510-waipo, ZH-C510-sunzi, ZH-C510-sunnu, ZH-C510-tengai, ZH-C510-hong, ZH-C511-qinren, ZH-C511-fuqin, ZH-C511-muqin, ZH-C511-qinsheng, ZH-C511-qinzi, ZH-C512-zhixiang, ZH-C512-zhuiqiu, ZH-C512-chengcai, ZH-C512-chengming, ZH-C512-mingxiao, ZH-C513-chuangye, ZH-C513-dadao, ZH-C513-zhengqu, ZH-C513-fendou, ZH-C513-qinshou, ZH-W509-mu-mother, ZH-W511-qin-kin]
+---
+
+# Looking back: from Parents to Ambitions
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C509-PARENTS509-01, ZH-LEX-C509-PARENTS509-02] -->
+
+[PAUSE 3s] Say the Mandarin for to run the household and one's mother and father.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C509-PARENTS509-01, ZH-LEX-C509-PARENTS509-02, ZH-LEX-C509-PARENTS509-03, ZH-LEX-C509-PARENTS509-04, ZH-LEX-C509-PARENTS509-05, ZH-LEX-C510-GRAND510-01, ZH-LEX-C510-GRAND510-02, ZH-LEX-C510-GRAND510-03, ZH-LEX-C510-GRAND510-04, ZH-LEX-C510-GRAND510-05, ZH-LEX-C511-KIN511-01, ZH-LEX-C511-KIN511-02, ZH-LEX-C511-KIN511-03, ZH-LEX-C511-KIN511-04, ZH-LEX-C511-KIN511-05, ZH-LEX-C512-DREAMS512-01, ZH-LEX-C512-DREAMS512-02, ZH-LEX-C512-DREAMS512-03, ZH-LEX-C512-DREAMS512-04, ZH-LEX-C512-DREAMS512-05, ZH-LEX-C513-AMBITION513-01, ZH-LEX-C513-AMBITION513-02, ZH-LEX-C513-AMBITION513-03, ZH-LEX-C513-AMBITION513-04, ZH-LEX-C513-AMBITION513-05, ZH-SCRIPT-MU-MOTHER-01, ZH-SCRIPT-QIN-KIN-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to run the household, one's mother and father, a mother and daughter, one's mother tongue, a stepmother]
+- [YOU SAY: grandma on the mother's side, a grandson, a granddaughter, to dote on, to soothe a child]
+- [YOU SAY: one's nearest and dearest, father (the formal word), mother (the formal word), one's own (by birth), personally (doing it oneself)]
+- [YOU SAY: one's ambition in life, to pursue (a goal), to make something of oneself, to become famous, a top school]
+- [YOU SAY: to start a business, to attain (a goal), to strive for, to struggle (towards a goal), with one's own hands]
+- [YOU READ: 母 亲 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C509-PARENTS509-01, ZH-LEX-C509-PARENTS509-02, ZH-LEX-C509-PARENTS509-03, ZH-LEX-C509-PARENTS509-04, ZH-LEX-C509-PARENTS509-05, ZH-LEX-C510-GRAND510-01, ZH-LEX-C510-GRAND510-02, ZH-LEX-C510-GRAND510-03, ZH-LEX-C510-GRAND510-04, ZH-LEX-C510-GRAND510-05, ZH-LEX-C511-KIN511-01, ZH-LEX-C511-KIN511-02, ZH-LEX-C511-KIN511-03, ZH-LEX-C511-KIN511-04, ZH-LEX-C511-KIN511-05, ZH-LEX-C512-DREAMS512-01, ZH-LEX-C512-DREAMS512-02, ZH-LEX-C512-DREAMS512-03, ZH-LEX-C512-DREAMS512-04, ZH-LEX-C512-DREAMS512-05, ZH-LEX-C513-AMBITION513-01, ZH-LEX-C513-AMBITION513-02, ZH-LEX-C513-AMBITION513-03, ZH-LEX-C513-AMBITION513-04, ZH-LEX-C513-AMBITION513-05, ZH-SCRIPT-MU-MOTHER-01, ZH-SCRIPT-QIN-KIN-01] -->
+
+[PAUSE 3s] To run the household? (**当家**, *dāngjiā*.) One's mother and father? (**父母**, *fùmǔ*.) A mother and daughter? (**母女**, *mǔnǚ*.) One's mother tongue? (**母语**, *mǔyǔ*.) A stepmother? (**后妈**, *hòumā*.) Grandma on the mother's side? (*wàipó*.) A grandson? (*sūnzi*.) A granddaughter? (*sūnnǚ*.) To dote on? (**疼爱**, *téng'ài*.) To soothe a child? (*hǒng*.) One's nearest and dearest? (**亲人**, *qīnrén*.) Father (the formal word)? (**父亲**, *fùqīn*.) Mother (the formal word)? (**母亲**, *mǔqīn*.) One's own (by birth)? (**亲生**, *qīnshēng*.) Personally (doing it oneself)? (**亲自**, *qīnzì*.) One's ambition in life? (*zhìxiàng*.) To pursue (a goal)? (*zhuīqiú*.) To make something of oneself? (**成才**, *chéngcái*.) To become famous? (**成名**, *chéngmíng*.) A top school? (**名校**, *míngxiào*.) To start a business? (*chuàngyè*.) To attain (a goal)? (*dádào*.) To strive for? (*zhēngqǔ*.) To struggle (towards a goal)? (*fèndòu*.) With one's own hands? (**亲手**, *qīnshǒu*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R513-review-final-513
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 38450
+chapter: 513
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [ZH-C513-chuangye, ZH-C513-dadao, ZH-C513-zhengqu, ZH-C513-fendou, ZH-C513-qinshou]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C513-AMBITION513-01, ZH-LEX-C513-AMBITION513-02, ZH-LEX-C513-AMBITION513-03, ZH-LEX-C513-AMBITION513-04, ZH-LEX-C513-AMBITION513-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C513-AMBITION513-01, ZH-LEX-C513-AMBITION513-02, ZH-LEX-C513-AMBITION513-03, ZH-LEX-C513-AMBITION513-04, ZH-LEX-C513-AMBITION513-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C513-chuangye, ZH-C513-dadao, ZH-C513-zhengqu, ZH-C513-fendou, ZH-C513-qinshou]
+---
+
+# Ambitions — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C513-AMBITION513-01, ZH-LEX-C513-AMBITION513-02] -->
+
+[PAUSE 3s] Say the Mandarin for to start a business and to attain (a goal).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C513-AMBITION513-01, ZH-LEX-C513-AMBITION513-02, ZH-LEX-C513-AMBITION513-03, ZH-LEX-C513-AMBITION513-04, ZH-LEX-C513-AMBITION513-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to start a business, to attain (a goal), to strive for, to struggle (towards a goal), with one's own hands]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C513-AMBITION513-01, ZH-LEX-C513-AMBITION513-02, ZH-LEX-C513-AMBITION513-03, ZH-LEX-C513-AMBITION513-04, ZH-LEX-C513-AMBITION513-05] -->
+
+[PAUSE 3s] To start a business? (*chuàngyè*.) To attain (a goal)? (*dádào*.) To strive for? (*zhēngqǔ*.) To struggle (towards a goal)? (*fèndòu*.) With one's own hands? (**亲手**, *qīnshǒu*.)
+`;export{t as n,r as t};

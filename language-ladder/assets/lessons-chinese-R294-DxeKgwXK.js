@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R295-review-290-295
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 23300
+chapter: 295
+type: review
+headword: (dialogue)
+gloss: a review of the words from In the News to Starting Over
+concept_tag: REVIEW
+prerequisites: [ZH-C290-xinwen, ZH-C290-baodao, ZH-C290-diantai, ZH-C290-zhuchiren, ZH-C290-redian, ZH-C291-caifang, ZH-C291-faming, ZH-C291-shijian, ZH-C291-tufa, ZH-C291-xuanbu, ZH-C292-guangbo, ZH-C292-guanzhong, ZH-C292-zhibo, ZH-C292-tingzhong, ZH-C292-fabiao, ZH-C293-zazhi, ZH-C293-bao, ZH-C293-jianbao, ZH-C293-toutiao, ZH-C293-guanzhu, ZH-C294-qingkuang, ZH-C294-yinqi, ZH-C294-yingxiang, ZH-C294-zhongyu, ZH-C294-yushi, ZH-C295-zuichu, ZH-C295-chongxin, ZH-C295-dangtian, ZH-C295-shihou, ZH-C295-dangchang, ZH-W291-fa-send, ZH-W293-bao-report, ZH-W295-xin-new]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C290-NEWS290-01, ZH-LEX-C290-NEWS290-02, ZH-LEX-C290-NEWS290-03, ZH-LEX-C290-NEWS290-04, ZH-LEX-C290-NEWS290-05, ZH-LEX-C291-INVENT291-01, ZH-LEX-C291-INVENT291-02, ZH-LEX-C291-INVENT291-03, ZH-LEX-C291-INVENT291-04, ZH-LEX-C291-INVENT291-05, ZH-LEX-C292-RADIO292-01, ZH-LEX-C292-RADIO292-02, ZH-LEX-C292-RADIO292-03, ZH-LEX-C292-RADIO292-04, ZH-LEX-C292-RADIO292-05, ZH-LEX-C293-PAPER293-01, ZH-LEX-C293-PAPER293-02, ZH-LEX-C293-PAPER293-03, ZH-LEX-C293-PAPER293-04, ZH-LEX-C293-PAPER293-05, ZH-LEX-C294-RESULT294-01, ZH-LEX-C294-RESULT294-02, ZH-LEX-C294-RESULT294-03, ZH-LEX-C294-RESULT294-04, ZH-LEX-C294-RESULT294-05, ZH-LEX-C295-AGAIN295-01, ZH-LEX-C295-AGAIN295-02, ZH-LEX-C295-AGAIN295-03, ZH-LEX-C295-AGAIN295-04, ZH-LEX-C295-AGAIN295-05, ZH-SCRIPT-FA-SEND-01, ZH-SCRIPT-BAO-REPORT-01, ZH-SCRIPT-XIN-NEW-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C290-NEWS290-01, ZH-LEX-C290-NEWS290-02, ZH-LEX-C290-NEWS290-03, ZH-LEX-C290-NEWS290-04, ZH-LEX-C290-NEWS290-05, ZH-LEX-C291-INVENT291-01, ZH-LEX-C291-INVENT291-02, ZH-LEX-C291-INVENT291-03, ZH-LEX-C291-INVENT291-04, ZH-LEX-C291-INVENT291-05, ZH-LEX-C292-RADIO292-01, ZH-LEX-C292-RADIO292-02, ZH-LEX-C292-RADIO292-03, ZH-LEX-C292-RADIO292-04, ZH-LEX-C292-RADIO292-05, ZH-LEX-C293-PAPER293-01, ZH-LEX-C293-PAPER293-02, ZH-LEX-C293-PAPER293-03, ZH-LEX-C293-PAPER293-04, ZH-LEX-C293-PAPER293-05, ZH-LEX-C294-RESULT294-01, ZH-LEX-C294-RESULT294-02, ZH-LEX-C294-RESULT294-03, ZH-LEX-C294-RESULT294-04, ZH-LEX-C294-RESULT294-05, ZH-LEX-C295-AGAIN295-01, ZH-LEX-C295-AGAIN295-02, ZH-LEX-C295-AGAIN295-03, ZH-LEX-C295-AGAIN295-04, ZH-LEX-C295-AGAIN295-05, ZH-SCRIPT-FA-SEND-01, ZH-SCRIPT-BAO-REPORT-01, ZH-SCRIPT-XIN-NEW-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C290-xinwen, ZH-C290-baodao, ZH-C290-diantai, ZH-C290-zhuchiren, ZH-C290-redian, ZH-C291-caifang, ZH-C291-faming, ZH-C291-shijian, ZH-C291-tufa, ZH-C291-xuanbu, ZH-C292-guangbo, ZH-C292-guanzhong, ZH-C292-zhibo, ZH-C292-tingzhong, ZH-C292-fabiao, ZH-C293-zazhi, ZH-C293-bao, ZH-C293-jianbao, ZH-C293-toutiao, ZH-C293-guanzhu, ZH-C294-qingkuang, ZH-C294-yinqi, ZH-C294-yingxiang, ZH-C294-zhongyu, ZH-C294-yushi, ZH-C295-zuichu, ZH-C295-chongxin, ZH-C295-dangtian, ZH-C295-shihou, ZH-C295-dangchang, ZH-W291-fa-send, ZH-W293-bao-report, ZH-W295-xin-new]
+---
+
+# Looking back: from In the News to Starting Over
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C290-NEWS290-01, ZH-LEX-C290-NEWS290-02] -->
+
+[PAUSE 3s] Say the Mandarin for the news on TV and to report on the news.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C290-NEWS290-01, ZH-LEX-C290-NEWS290-02, ZH-LEX-C290-NEWS290-03, ZH-LEX-C290-NEWS290-04, ZH-LEX-C290-NEWS290-05, ZH-LEX-C291-INVENT291-01, ZH-LEX-C291-INVENT291-02, ZH-LEX-C291-INVENT291-03, ZH-LEX-C291-INVENT291-04, ZH-LEX-C291-INVENT291-05, ZH-LEX-C292-RADIO292-01, ZH-LEX-C292-RADIO292-02, ZH-LEX-C292-RADIO292-03, ZH-LEX-C292-RADIO292-04, ZH-LEX-C292-RADIO292-05, ZH-LEX-C293-PAPER293-01, ZH-LEX-C293-PAPER293-02, ZH-LEX-C293-PAPER293-03, ZH-LEX-C293-PAPER293-04, ZH-LEX-C293-PAPER293-05, ZH-LEX-C294-RESULT294-01, ZH-LEX-C294-RESULT294-02, ZH-LEX-C294-RESULT294-03, ZH-LEX-C294-RESULT294-04, ZH-LEX-C294-RESULT294-05, ZH-LEX-C295-AGAIN295-01, ZH-LEX-C295-AGAIN295-02, ZH-LEX-C295-AGAIN295-03, ZH-LEX-C295-AGAIN295-04, ZH-LEX-C295-AGAIN295-05, ZH-SCRIPT-FA-SEND-01, ZH-SCRIPT-BAO-REPORT-01, ZH-SCRIPT-XIN-NEW-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the news on TV, to report on the news, a radio station, the presenter of a show, what everyone is talking about]
+- [YOU SAY: to interview someone for the news, to invent something, an incident in the news, to break out suddenly, to announce officially]
+- [YOU SAY: to broadcast on the radio, the people watching a show, to broadcast live, the people listening to the radio, to publish an article]
+- [YOU SAY: a magazine, the daily paper, to make the papers, the front-page story, to follow a story closely]
+- [YOU SAY: how things stand, to give rise to something, to have an effect on, at long last, and so it followed]
+- [YOU SAY: at the very start, over again from the start, on that very day, after the event, right there on the spot]
+- [YOU READ: 发 报 新 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C290-NEWS290-01, ZH-LEX-C290-NEWS290-02, ZH-LEX-C290-NEWS290-03, ZH-LEX-C290-NEWS290-04, ZH-LEX-C290-NEWS290-05, ZH-LEX-C291-INVENT291-01, ZH-LEX-C291-INVENT291-02, ZH-LEX-C291-INVENT291-03, ZH-LEX-C291-INVENT291-04, ZH-LEX-C291-INVENT291-05, ZH-LEX-C292-RADIO292-01, ZH-LEX-C292-RADIO292-02, ZH-LEX-C292-RADIO292-03, ZH-LEX-C292-RADIO292-04, ZH-LEX-C292-RADIO292-05, ZH-LEX-C293-PAPER293-01, ZH-LEX-C293-PAPER293-02, ZH-LEX-C293-PAPER293-03, ZH-LEX-C293-PAPER293-04, ZH-LEX-C293-PAPER293-05, ZH-LEX-C294-RESULT294-01, ZH-LEX-C294-RESULT294-02, ZH-LEX-C294-RESULT294-03, ZH-LEX-C294-RESULT294-04, ZH-LEX-C294-RESULT294-05, ZH-LEX-C295-AGAIN295-01, ZH-LEX-C295-AGAIN295-02, ZH-LEX-C295-AGAIN295-03, ZH-LEX-C295-AGAIN295-04, ZH-LEX-C295-AGAIN295-05, ZH-SCRIPT-FA-SEND-01, ZH-SCRIPT-BAO-REPORT-01, ZH-SCRIPT-XIN-NEW-01] -->
+
+[PAUSE 3s] The news on TV? (*xīnwén*.) To report on the news? (*bàodào*.) A radio station? (*diàntái*.) The presenter of a show? (*zhǔchírén*.) What everyone is talking about? (**热点**, *rèdiǎn*.) To interview someone for the news? (*cǎifǎng*.) To invent something? (**发明**, *fāmíng*.) An incident in the news? (*shìjiàn*.) To break out suddenly? (**突发**, *tūfā*.) To announce officially? (*xuānbù*.) To broadcast on the radio? (*guǎngbō*.) The people watching a show? (*guānzhòng*.) To broadcast live? (*zhíbō*.) The people listening to the radio? (*tīngzhòng*.) To publish an article? (*fābiǎo*.) A magazine? (*zázhì*.) The daily paper? (**报**, *bào*.) To make the papers? (**见报**, *jiànbào*.) The front-page story? (*tóutiáo*.) To follow a story closely? (*guānzhù*.) How things stand? (*qíngkuàng*.) To give rise to something? (*yǐnqǐ*.) To have an effect on? (*yǐngxiǎng*.) At long last? (*zhōngyú*.) And so it followed? (*yúshì*.) At the very start? (*zuìchū*.) Over again from the start? (**重新**, *chóngxīn*.) On that very day? (**当天**, *dàngtiān*.) After the event? (**事后**, *shìhòu*.) Right there on the spot? (*dāngchǎng*.)
+`;export{t};

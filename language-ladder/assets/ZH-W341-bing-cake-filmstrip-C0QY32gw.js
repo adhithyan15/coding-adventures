@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W341-bing-cake-filmstrip-BLJLXl0y.svg`,import.meta.url).href;export{e as default};

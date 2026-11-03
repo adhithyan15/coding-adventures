@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W353-dao-way-filmstrip-CG3mHh4d.svg`,import.meta.url).href;export{e as default};

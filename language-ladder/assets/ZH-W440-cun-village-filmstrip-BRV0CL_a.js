@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W440-cun-village-filmstrip-DCWpcCCc.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R503-review-498-503
+spine_node: SPINE-DESCRIBE-EXPERIENCE
+sequence: 37920
+chapter: 503
+type: review
+headword: (dialogue)
+gloss: a review of the words from On the Pitch to Art
+concept_tag: REVIEW
+prerequisites: [ZH-C498-tiyu, ZH-C498-qiuchang, ZH-C498-qiumen, ZH-C498-shemen, ZH-C498-jinqiu, ZH-C499-qiudui, ZH-C499-qiuyuan, ZH-C499-duizhang, ZH-C499-xunlian, ZH-C499-chuanqiu, ZH-C500-huosheng, ZH-C500-qiusai, ZH-C500-juesai, ZH-C500-bifen, ZH-C500-shangchang, ZH-C501-yundongyuan, ZH-C501-guanjun, ZH-C501-jinpai, ZH-C501-huode, ZH-C501-qiuxing, ZH-C502-youhua, ZH-C502-guohua, ZH-C502-huajia, ZH-C502-minghua, ZH-C502-huazhan, ZH-C503-shufa, ZH-C503-yishu, ZH-C503-zuopin, ZH-C503-chuangzuo, ZH-C503-nianhua, ZH-W498-qiu-ball, ZH-W500-sai-match, ZH-W502-hua-paint]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C498-PITCH498-01, ZH-LEX-C498-PITCH498-02, ZH-LEX-C498-PITCH498-03, ZH-LEX-C498-PITCH498-04, ZH-LEX-C498-PITCH498-05, ZH-LEX-C499-TEAM499-01, ZH-LEX-C499-TEAM499-02, ZH-LEX-C499-TEAM499-03, ZH-LEX-C499-TEAM499-04, ZH-LEX-C499-TEAM499-05, ZH-LEX-C500-MATCH500-01, ZH-LEX-C500-MATCH500-02, ZH-LEX-C500-MATCH500-03, ZH-LEX-C500-MATCH500-04, ZH-LEX-C500-MATCH500-05, ZH-LEX-C501-WINNERS501-01, ZH-LEX-C501-WINNERS501-02, ZH-LEX-C501-WINNERS501-03, ZH-LEX-C501-WINNERS501-04, ZH-LEX-C501-WINNERS501-05, ZH-LEX-C502-PAINT502-01, ZH-LEX-C502-PAINT502-02, ZH-LEX-C502-PAINT502-03, ZH-LEX-C502-PAINT502-04, ZH-LEX-C502-PAINT502-05, ZH-LEX-C503-ART503-01, ZH-LEX-C503-ART503-02, ZH-LEX-C503-ART503-03, ZH-LEX-C503-ART503-04, ZH-LEX-C503-ART503-05, ZH-SCRIPT-QIU-BALL-01, ZH-SCRIPT-SAI-MATCH-01, ZH-SCRIPT-HUA-PAINT-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C498-PITCH498-01, ZH-LEX-C498-PITCH498-02, ZH-LEX-C498-PITCH498-03, ZH-LEX-C498-PITCH498-04, ZH-LEX-C498-PITCH498-05, ZH-LEX-C499-TEAM499-01, ZH-LEX-C499-TEAM499-02, ZH-LEX-C499-TEAM499-03, ZH-LEX-C499-TEAM499-04, ZH-LEX-C499-TEAM499-05, ZH-LEX-C500-MATCH500-01, ZH-LEX-C500-MATCH500-02, ZH-LEX-C500-MATCH500-03, ZH-LEX-C500-MATCH500-04, ZH-LEX-C500-MATCH500-05, ZH-LEX-C501-WINNERS501-01, ZH-LEX-C501-WINNERS501-02, ZH-LEX-C501-WINNERS501-03, ZH-LEX-C501-WINNERS501-04, ZH-LEX-C501-WINNERS501-05, ZH-LEX-C502-PAINT502-01, ZH-LEX-C502-PAINT502-02, ZH-LEX-C502-PAINT502-03, ZH-LEX-C502-PAINT502-04, ZH-LEX-C502-PAINT502-05, ZH-LEX-C503-ART503-01, ZH-LEX-C503-ART503-02, ZH-LEX-C503-ART503-03, ZH-LEX-C503-ART503-04, ZH-LEX-C503-ART503-05, ZH-SCRIPT-QIU-BALL-01, ZH-SCRIPT-SAI-MATCH-01, ZH-SCRIPT-HUA-PAINT-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C498-tiyu, ZH-C498-qiuchang, ZH-C498-qiumen, ZH-C498-shemen, ZH-C498-jinqiu, ZH-C499-qiudui, ZH-C499-qiuyuan, ZH-C499-duizhang, ZH-C499-xunlian, ZH-C499-chuanqiu, ZH-C500-huosheng, ZH-C500-qiusai, ZH-C500-juesai, ZH-C500-bifen, ZH-C500-shangchang, ZH-C501-yundongyuan, ZH-C501-guanjun, ZH-C501-jinpai, ZH-C501-huode, ZH-C501-qiuxing, ZH-C502-youhua, ZH-C502-guohua, ZH-C502-huajia, ZH-C502-minghua, ZH-C502-huazhan, ZH-C503-shufa, ZH-C503-yishu, ZH-C503-zuopin, ZH-C503-chuangzuo, ZH-C503-nianhua, ZH-W498-qiu-ball, ZH-W500-sai-match, ZH-W502-hua-paint]
+---
+
+# Looking back: from On the Pitch to Art
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C498-PITCH498-01, ZH-LEX-C498-PITCH498-02] -->
+
+[PAUSE 3s] Say the Mandarin for physical education and a sports pitch.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C498-PITCH498-01, ZH-LEX-C498-PITCH498-02, ZH-LEX-C498-PITCH498-03, ZH-LEX-C498-PITCH498-04, ZH-LEX-C498-PITCH498-05, ZH-LEX-C499-TEAM499-01, ZH-LEX-C499-TEAM499-02, ZH-LEX-C499-TEAM499-03, ZH-LEX-C499-TEAM499-04, ZH-LEX-C499-TEAM499-05, ZH-LEX-C500-MATCH500-01, ZH-LEX-C500-MATCH500-02, ZH-LEX-C500-MATCH500-03, ZH-LEX-C500-MATCH500-04, ZH-LEX-C500-MATCH500-05, ZH-LEX-C501-WINNERS501-01, ZH-LEX-C501-WINNERS501-02, ZH-LEX-C501-WINNERS501-03, ZH-LEX-C501-WINNERS501-04, ZH-LEX-C501-WINNERS501-05, ZH-LEX-C502-PAINT502-01, ZH-LEX-C502-PAINT502-02, ZH-LEX-C502-PAINT502-03, ZH-LEX-C502-PAINT502-04, ZH-LEX-C502-PAINT502-05, ZH-LEX-C503-ART503-01, ZH-LEX-C503-ART503-02, ZH-LEX-C503-ART503-03, ZH-LEX-C503-ART503-04, ZH-LEX-C503-ART503-05, ZH-SCRIPT-QIU-BALL-01, ZH-SCRIPT-SAI-MATCH-01, ZH-SCRIPT-HUA-PAINT-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: physical education, a sports pitch, the goalmouth, to shoot at goal, to score a goal]
+- [YOU SAY: a sports team, a player in a ball game, a team captain, to do training (for a sport), to pass the ball]
+- [YOU SAY: to win a contest, a ball game, final (of a competition), the score of a game, to take the field]
+- [YOU SAY: an athlete, the champion, a gold medal, to win (a prize), a star player]
+- [YOU SAY: an oil painting, a traditional Chinese painting, a painter (an artist), a famous painting, an art exhibition]
+- [YOU SAY: calligraphy, the arts, a work of art, to create (art or writing), a new year print]
+- [YOU READ: 球 赛 画 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C498-PITCH498-01, ZH-LEX-C498-PITCH498-02, ZH-LEX-C498-PITCH498-03, ZH-LEX-C498-PITCH498-04, ZH-LEX-C498-PITCH498-05, ZH-LEX-C499-TEAM499-01, ZH-LEX-C499-TEAM499-02, ZH-LEX-C499-TEAM499-03, ZH-LEX-C499-TEAM499-04, ZH-LEX-C499-TEAM499-05, ZH-LEX-C500-MATCH500-01, ZH-LEX-C500-MATCH500-02, ZH-LEX-C500-MATCH500-03, ZH-LEX-C500-MATCH500-04, ZH-LEX-C500-MATCH500-05, ZH-LEX-C501-WINNERS501-01, ZH-LEX-C501-WINNERS501-02, ZH-LEX-C501-WINNERS501-03, ZH-LEX-C501-WINNERS501-04, ZH-LEX-C501-WINNERS501-05, ZH-LEX-C502-PAINT502-01, ZH-LEX-C502-PAINT502-02, ZH-LEX-C502-PAINT502-03, ZH-LEX-C502-PAINT502-04, ZH-LEX-C502-PAINT502-05, ZH-LEX-C503-ART503-01, ZH-LEX-C503-ART503-02, ZH-LEX-C503-ART503-03, ZH-LEX-C503-ART503-04, ZH-LEX-C503-ART503-05, ZH-SCRIPT-QIU-BALL-01, ZH-SCRIPT-SAI-MATCH-01, ZH-SCRIPT-HUA-PAINT-01] -->
+
+[PAUSE 3s] Physical education? (*tǐyù*.) A sports pitch? (**球场**, *qiúchǎng*.) The goalmouth? (**球门**, *qiúmén*.) To shoot at goal? (*shèmén*.) To score a goal? (**进球**, *jìnqiú*.) A sports team? (*qiúduì*.) A player in a ball game? (*qiúyuán*.) A team captain? (*duìzhǎng*.) To do training (for a sport)? (*xùnliàn*.) To pass the ball? (**传球**, *chuánqiú*.) To win a contest? (*huòshèng*.) A ball game? (**球赛**, *qiúsài*.) Final (of a competition)? (*juésài*.) The score of a game? (*bǐfēn*.) To take the field? (**上场**, *shàngchǎng*.) An athlete? (*yùndòngyuán*.) The champion? (*guànjūn*.) A gold medal? (*jīnpái*.) To win (a prize)? (*huòdé*.) A star player? (**球星**, *qiúxīng*.) An oil painting? (*yóuhuà*.) A traditional Chinese painting? (**国画**, *guóhuà*.) A painter (an artist)? (**画家**, *huàjiā*.) A famous painting? (**名画**, *mínghuà*.) An art exhibition? (*huàzhǎn*.) Calligraphy? (**书法**, *shūfǎ*.) The arts? (*yìshù*.) A work of art? (*zuòpǐn*.) To create (art or writing)? (*chuàngzuò*.) A new year print? (**年画**, *niánhuà*.)
+`;export{t};

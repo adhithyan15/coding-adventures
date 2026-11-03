@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W365-ke-can-filmstrip-CMB4hIuR.svg`,import.meta.url).href;export{e as default};

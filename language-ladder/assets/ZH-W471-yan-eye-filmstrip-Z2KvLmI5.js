@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W471-yan-eye-filmstrip-DV5aeh2O.svg`,import.meta.url).href;export{e as default};

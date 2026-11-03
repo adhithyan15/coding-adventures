@@ -1,0 +1,104 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R345-review-341-345
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 26440
+chapter: 345
+type: review
+headword: (dialogue)
+gloss: a review of the words from Mooncakes to Looking Back
+concept_tag: REVIEW
+prerequisites: [ZH-C341-dousha, ZH-C341-yuebing, ZH-C341-xianr, ZH-C341-pinchang, ZH-C341-shengyi, ZH-C342-shangyue, ZH-C342-zhongqiu, ZH-C342-qijian, ZH-C342-guihua, ZH-C342-jiaxiang, ZH-C343-yueguang, ZH-C343-duonian, ZH-C343-xinzhong, ZH-C343-zhufu, ZH-C343-fenxiang, ZH-C344-baocun, ZH-C344-jiyi, ZH-C344-wangshi, ZH-C344-xiangce, ZH-C344-yongyuan, ZH-C345-jushuo, ZH-C345-congci, ZH-C345-qiyuan, ZH-C345-wangyou, ZH-C345-youbian, ZH-W341-bing-cake, ZH-W342-qiu-autumn]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C341-MOONCAKE341-01, ZH-LEX-C341-MOONCAKE341-02, ZH-LEX-C341-MOONCAKE341-03, ZH-LEX-C341-MOONCAKE341-04, ZH-LEX-C341-MOONCAKE341-05, ZH-LEX-C342-AUTUMN342-01, ZH-LEX-C342-AUTUMN342-02, ZH-LEX-C342-AUTUMN342-03, ZH-LEX-C342-AUTUMN342-04, ZH-LEX-C342-AUTUMN342-05, ZH-LEX-C343-FARAWAY343-01, ZH-LEX-C343-FARAWAY343-02, ZH-LEX-C343-FARAWAY343-03, ZH-LEX-C343-FARAWAY343-04, ZH-LEX-C343-FARAWAY343-05, ZH-LEX-C344-MEMORY344-01, ZH-LEX-C344-MEMORY344-02, ZH-LEX-C344-MEMORY344-03, ZH-LEX-C344-MEMORY344-04, ZH-LEX-C344-MEMORY344-05, ZH-LEX-C345-LOOKBACK345-01, ZH-LEX-C345-LOOKBACK345-02, ZH-LEX-C345-LOOKBACK345-03, ZH-LEX-C345-LOOKBACK345-04, ZH-LEX-C345-LOOKBACK345-05, ZH-SCRIPT-BING-CAKE-01, ZH-SCRIPT-QIU-AUTUMN-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C341-MOONCAKE341-01, ZH-LEX-C341-MOONCAKE341-02, ZH-LEX-C341-MOONCAKE341-03, ZH-LEX-C341-MOONCAKE341-04, ZH-LEX-C341-MOONCAKE341-05, ZH-LEX-C342-AUTUMN342-01, ZH-LEX-C342-AUTUMN342-02, ZH-LEX-C342-AUTUMN342-03, ZH-LEX-C342-AUTUMN342-04, ZH-LEX-C342-AUTUMN342-05, ZH-LEX-C343-FARAWAY343-01, ZH-LEX-C343-FARAWAY343-02, ZH-LEX-C343-FARAWAY343-03, ZH-LEX-C343-FARAWAY343-04, ZH-LEX-C343-FARAWAY343-05, ZH-LEX-C344-MEMORY344-01, ZH-LEX-C344-MEMORY344-02, ZH-LEX-C344-MEMORY344-03, ZH-LEX-C344-MEMORY344-04, ZH-LEX-C344-MEMORY344-05, ZH-LEX-C345-LOOKBACK345-01, ZH-LEX-C345-LOOKBACK345-02, ZH-LEX-C345-LOOKBACK345-03, ZH-LEX-C345-LOOKBACK345-04, ZH-LEX-C345-LOOKBACK345-05, ZH-SCRIPT-BING-CAKE-01, ZH-SCRIPT-QIU-AUTUMN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C341-dousha, ZH-C341-yuebing, ZH-C341-xianr, ZH-C341-pinchang, ZH-C341-shengyi, ZH-C342-shangyue, ZH-C342-zhongqiu, ZH-C342-qijian, ZH-C342-guihua, ZH-C342-jiaxiang, ZH-C343-yueguang, ZH-C343-duonian, ZH-C343-xinzhong, ZH-C343-zhufu, ZH-C343-fenxiang, ZH-C344-baocun, ZH-C344-jiyi, ZH-C344-wangshi, ZH-C344-xiangce, ZH-C344-yongyuan, ZH-C345-jushuo, ZH-C345-congci, ZH-C345-qiyuan, ZH-C345-wangyou, ZH-C345-youbian, ZH-W341-bing-cake, ZH-W342-qiu-autumn]
+---
+
+# Looking back: from Mooncakes to Looking Back
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C341-MOONCAKE341-01, ZH-LEX-C341-MOONCAKE341-02] -->
+
+[PAUSE 3s] Say the Mandarin for sweet bean paste and a mooncake.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C341-MOONCAKE341-01, ZH-LEX-C341-MOONCAKE341-02, ZH-LEX-C341-MOONCAKE341-03, ZH-LEX-C341-MOONCAKE341-04, ZH-LEX-C341-MOONCAKE341-05, ZH-LEX-C342-AUTUMN342-01, ZH-LEX-C342-AUTUMN342-02, ZH-LEX-C342-AUTUMN342-03, ZH-LEX-C342-AUTUMN342-04, ZH-LEX-C342-AUTUMN342-05, ZH-LEX-C343-FARAWAY343-01, ZH-LEX-C343-FARAWAY343-02, ZH-LEX-C343-FARAWAY343-03, ZH-LEX-C343-FARAWAY343-04, ZH-LEX-C343-FARAWAY343-05, ZH-LEX-C344-MEMORY344-01, ZH-LEX-C344-MEMORY344-02, ZH-LEX-C344-MEMORY344-03, ZH-LEX-C344-MEMORY344-04, ZH-LEX-C344-MEMORY344-05, ZH-LEX-C345-LOOKBACK345-01, ZH-LEX-C345-LOOKBACK345-02, ZH-LEX-C345-LOOKBACK345-03, ZH-LEX-C345-LOOKBACK345-04, ZH-LEX-C345-LOOKBACK345-05, ZH-SCRIPT-BING-CAKE-01, ZH-SCRIPT-QIU-AUTUMN-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: sweet bean paste, a mooncake, the filling of a dumpling, to taste food with care, trade in a shop]
+- [YOU SAY: to enjoy the moon, the Mid-Autumn Festival, the time during an event, sweet osmanthus flowers, one's native place]
+- [YOU SAY: bright moonlight, for many years now, deep in one's heart, good wishes sent to someone, to share good things]
+- [YOU SAY: to keep something safe, a memory of the past, past events, a photo album, forever and ever]
+- [YOU SAY: reportedly, from then on, the origin of a custom, an online friend, a postcode]
+- [YOU READ: 饼 秋 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C341-MOONCAKE341-01, ZH-LEX-C341-MOONCAKE341-02, ZH-LEX-C341-MOONCAKE341-03, ZH-LEX-C341-MOONCAKE341-04, ZH-LEX-C341-MOONCAKE341-05, ZH-LEX-C342-AUTUMN342-01, ZH-LEX-C342-AUTUMN342-02, ZH-LEX-C342-AUTUMN342-03, ZH-LEX-C342-AUTUMN342-04, ZH-LEX-C342-AUTUMN342-05, ZH-LEX-C343-FARAWAY343-01, ZH-LEX-C343-FARAWAY343-02, ZH-LEX-C343-FARAWAY343-03, ZH-LEX-C343-FARAWAY343-04, ZH-LEX-C343-FARAWAY343-05, ZH-LEX-C344-MEMORY344-01, ZH-LEX-C344-MEMORY344-02, ZH-LEX-C344-MEMORY344-03, ZH-LEX-C344-MEMORY344-04, ZH-LEX-C344-MEMORY344-05, ZH-LEX-C345-LOOKBACK345-01, ZH-LEX-C345-LOOKBACK345-02, ZH-LEX-C345-LOOKBACK345-03, ZH-LEX-C345-LOOKBACK345-04, ZH-LEX-C345-LOOKBACK345-05, ZH-SCRIPT-BING-CAKE-01, ZH-SCRIPT-QIU-AUTUMN-01] -->
+
+[PAUSE 3s] Sweet bean paste? (*dòushā*.) A mooncake? (**月饼**, *yuèbǐng*.) The filling of a dumpling? (*xiànr*.) To taste food with care? (*pǐncháng*.) Trade in a shop? (**生意**, *shēngyi*.) To enjoy the moon? (*shǎngyuè*.) The Mid-Autumn Festival? (**中秋**, *Zhōngqiū*.) The time during an event? (**期间**, *qījiān*.) Sweet osmanthus flowers? (*guìhuā*.) One's native place? (*jiāxiāng*.) Bright moonlight? (*yuèguāng*.) For many years now? (**多年**, *duōnián*.) Deep in one's heart? (**心中**, *xīnzhōng*.) Good wishes sent to someone? (*zhùfú*.) To share good things? (*fēnxiǎng*.) To keep something safe? (*bǎocún*.) A memory of the past? (*jìyì*.) Past events? (*wǎngshì*.) A photo album? (*xiàngcè*.) Forever and ever? (*yǒngyuǎn*.) Reportedly? (*jùshuō*.) From then on? (*cóngcǐ*.) The origin of a custom? (*qǐyuán*.) An online friend? (*wǎngyǒu*.) A postcode? (*yóubiān*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R345-review-final-345
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 26450
+chapter: 345
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [ZH-C345-jushuo, ZH-C345-congci, ZH-C345-qiyuan, ZH-C345-wangyou, ZH-C345-youbian]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C345-LOOKBACK345-01, ZH-LEX-C345-LOOKBACK345-02, ZH-LEX-C345-LOOKBACK345-03, ZH-LEX-C345-LOOKBACK345-04, ZH-LEX-C345-LOOKBACK345-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C345-LOOKBACK345-01, ZH-LEX-C345-LOOKBACK345-02, ZH-LEX-C345-LOOKBACK345-03, ZH-LEX-C345-LOOKBACK345-04, ZH-LEX-C345-LOOKBACK345-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C345-jushuo, ZH-C345-congci, ZH-C345-qiyuan, ZH-C345-wangyou, ZH-C345-youbian]
+---
+
+# Looking Back — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C345-LOOKBACK345-01, ZH-LEX-C345-LOOKBACK345-02] -->
+
+[PAUSE 3s] Say the Mandarin for reportedly and from then on.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C345-LOOKBACK345-01, ZH-LEX-C345-LOOKBACK345-02, ZH-LEX-C345-LOOKBACK345-03, ZH-LEX-C345-LOOKBACK345-04, ZH-LEX-C345-LOOKBACK345-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: reportedly, from then on, the origin of a custom, an online friend, a postcode]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C345-LOOKBACK345-01, ZH-LEX-C345-LOOKBACK345-02, ZH-LEX-C345-LOOKBACK345-03, ZH-LEX-C345-LOOKBACK345-04, ZH-LEX-C345-LOOKBACK345-05] -->
+
+[PAUSE 3s] Reportedly? (*jùshuō*.) From then on? (*cóngcǐ*.) The origin of a custom? (*qǐyuán*.) An online friend? (*wǎngyǒu*.) A postcode? (*yóubiān*.)
+`;export{t as n,r as t};

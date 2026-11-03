@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W507-fu-father-filmstrip-Dg3fI_Ow.svg`,import.meta.url).href;export{e as default};

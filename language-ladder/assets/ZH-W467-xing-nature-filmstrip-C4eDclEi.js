@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W467-xing-nature-filmstrip-Dq-zZ8O4.svg`,import.meta.url).href;export{e as default};

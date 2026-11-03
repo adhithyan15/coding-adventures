@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W408-jiao-cross-filmstrip-DQ0Gh8Cs.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W422-bei-north-filmstrip-Bbmwa9w_.svg`,import.meta.url).href;export{e as default};

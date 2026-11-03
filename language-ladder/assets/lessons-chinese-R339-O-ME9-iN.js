@@ -1,0 +1,55 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R340-review-336-340
+spine_node: SPINE-NARRATE-EVENTS
+sequence: 26180
+chapter: 340
+type: review
+headword: (dialogue)
+gloss: a review of the words from Seeing Friends Off to Old Ways
+concept_tag: REVIEW
+prerequisites: [ZH-C336-gaobie, ZH-C336-huansong, ZH-C336-songke, ZH-C336-songli, ZH-C336-woshou, ZH-C337-gongxi, ZH-C337-zhu-wish, ZH-C337-xinyi, ZH-C337-haoyun, ZH-C337-xuyuan, ZH-C338-guojie, ZH-C338-baifang, ZH-C338-tuanyuan, ZH-C338-jiari, ZH-C338-fengsu, ZH-C339-changjia, ZH-C339-guoqing, ZH-C339-qingzhu, ZH-C339-xiqing, ZH-C339-yanhua, ZH-C340-chuantong, ZH-C340-jiangjiu, ZH-C340-guiju, ZH-C340-jieqi, ZH-C340-saomu, ZH-W336-song-send, ZH-W337-zhu-wish, ZH-W339-qing-celebrate]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C336-SEEOFF336-01, ZH-LEX-C336-SEEOFF336-02, ZH-LEX-C336-SEEOFF336-03, ZH-LEX-C336-SEEOFF336-04, ZH-LEX-C336-SEEOFF336-05, ZH-LEX-C337-WISH337-01, ZH-LEX-C337-WISH337-02, ZH-LEX-C337-WISH337-03, ZH-LEX-C337-WISH337-04, ZH-LEX-C337-WISH337-05, ZH-LEX-C338-VISIT338-01, ZH-LEX-C338-VISIT338-02, ZH-LEX-C338-VISIT338-03, ZH-LEX-C338-VISIT338-04, ZH-LEX-C338-VISIT338-05, ZH-LEX-C339-NATION339-01, ZH-LEX-C339-NATION339-02, ZH-LEX-C339-NATION339-03, ZH-LEX-C339-NATION339-04, ZH-LEX-C339-NATION339-05, ZH-LEX-C340-CUSTOM340-01, ZH-LEX-C340-CUSTOM340-02, ZH-LEX-C340-CUSTOM340-03, ZH-LEX-C340-CUSTOM340-04, ZH-LEX-C340-CUSTOM340-05, ZH-SCRIPT-SONG-SEND-01, ZH-SCRIPT-ZHU-WISH-01, ZH-SCRIPT-QING-CELEBRATE-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C336-SEEOFF336-01, ZH-LEX-C336-SEEOFF336-02, ZH-LEX-C336-SEEOFF336-03, ZH-LEX-C336-SEEOFF336-04, ZH-LEX-C336-SEEOFF336-05, ZH-LEX-C337-WISH337-01, ZH-LEX-C337-WISH337-02, ZH-LEX-C337-WISH337-03, ZH-LEX-C337-WISH337-04, ZH-LEX-C337-WISH337-05, ZH-LEX-C338-VISIT338-01, ZH-LEX-C338-VISIT338-02, ZH-LEX-C338-VISIT338-03, ZH-LEX-C338-VISIT338-04, ZH-LEX-C338-VISIT338-05, ZH-LEX-C339-NATION339-01, ZH-LEX-C339-NATION339-02, ZH-LEX-C339-NATION339-03, ZH-LEX-C339-NATION339-04, ZH-LEX-C339-NATION339-05, ZH-LEX-C340-CUSTOM340-01, ZH-LEX-C340-CUSTOM340-02, ZH-LEX-C340-CUSTOM340-03, ZH-LEX-C340-CUSTOM340-04, ZH-LEX-C340-CUSTOM340-05, ZH-SCRIPT-SONG-SEND-01, ZH-SCRIPT-ZHU-WISH-01, ZH-SCRIPT-QING-CELEBRATE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C336-gaobie, ZH-C336-huansong, ZH-C336-songke, ZH-C336-songli, ZH-C336-woshou, ZH-C337-gongxi, ZH-C337-zhu-wish, ZH-C337-xinyi, ZH-C337-haoyun, ZH-C337-xuyuan, ZH-C338-guojie, ZH-C338-baifang, ZH-C338-tuanyuan, ZH-C338-jiari, ZH-C338-fengsu, ZH-C339-changjia, ZH-C339-guoqing, ZH-C339-qingzhu, ZH-C339-xiqing, ZH-C339-yanhua, ZH-C340-chuantong, ZH-C340-jiangjiu, ZH-C340-guiju, ZH-C340-jieqi, ZH-C340-saomu, ZH-W336-song-send, ZH-W337-zhu-wish, ZH-W339-qing-celebrate]
+---
+
+# Looking back: from Seeing Friends Off to Old Ways
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C336-SEEOFF336-01, ZH-LEX-C336-SEEOFF336-02] -->
+
+[PAUSE 3s] Say the Mandarin for to take leave of someone and to give a send-off.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C336-SEEOFF336-01, ZH-LEX-C336-SEEOFF336-02, ZH-LEX-C336-SEEOFF336-03, ZH-LEX-C336-SEEOFF336-04, ZH-LEX-C336-SEEOFF336-05, ZH-LEX-C337-WISH337-01, ZH-LEX-C337-WISH337-02, ZH-LEX-C337-WISH337-03, ZH-LEX-C337-WISH337-04, ZH-LEX-C337-WISH337-05, ZH-LEX-C338-VISIT338-01, ZH-LEX-C338-VISIT338-02, ZH-LEX-C338-VISIT338-03, ZH-LEX-C338-VISIT338-04, ZH-LEX-C338-VISIT338-05, ZH-LEX-C339-NATION339-01, ZH-LEX-C339-NATION339-02, ZH-LEX-C339-NATION339-03, ZH-LEX-C339-NATION339-04, ZH-LEX-C339-NATION339-05, ZH-LEX-C340-CUSTOM340-01, ZH-LEX-C340-CUSTOM340-02, ZH-LEX-C340-CUSTOM340-03, ZH-LEX-C340-CUSTOM340-04, ZH-LEX-C340-CUSTOM340-05, ZH-SCRIPT-SONG-SEND-01, ZH-SCRIPT-ZHU-WISH-01, ZH-SCRIPT-QING-CELEBRATE-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to take leave of someone, to give a send-off, to see a guest out, to give a present, to shake hands with someone]
+- [YOU SAY: to congratulate someone, to wish someone well, a token of regard, good luck, to make a wish]
+- [YOU SAY: to celebrate a festival, to pay a visit to someone, to be reunited as a family, a day off work, a local custom]
+- [YOU SAY: a long holiday, the National Day holiday, to celebrate a happy event, full of festive joy, fireworks lighting up the sky]
+- [YOU SAY: an old tradition, to be particular about details, the rules of conduct, a solar term of the year, to tend the family graves]
+- [YOU READ: 送 祝 庆 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C336-SEEOFF336-01, ZH-LEX-C336-SEEOFF336-02, ZH-LEX-C336-SEEOFF336-03, ZH-LEX-C336-SEEOFF336-04, ZH-LEX-C336-SEEOFF336-05, ZH-LEX-C337-WISH337-01, ZH-LEX-C337-WISH337-02, ZH-LEX-C337-WISH337-03, ZH-LEX-C337-WISH337-04, ZH-LEX-C337-WISH337-05, ZH-LEX-C338-VISIT338-01, ZH-LEX-C338-VISIT338-02, ZH-LEX-C338-VISIT338-03, ZH-LEX-C338-VISIT338-04, ZH-LEX-C338-VISIT338-05, ZH-LEX-C339-NATION339-01, ZH-LEX-C339-NATION339-02, ZH-LEX-C339-NATION339-03, ZH-LEX-C339-NATION339-04, ZH-LEX-C339-NATION339-05, ZH-LEX-C340-CUSTOM340-01, ZH-LEX-C340-CUSTOM340-02, ZH-LEX-C340-CUSTOM340-03, ZH-LEX-C340-CUSTOM340-04, ZH-LEX-C340-CUSTOM340-05, ZH-SCRIPT-SONG-SEND-01, ZH-SCRIPT-ZHU-WISH-01, ZH-SCRIPT-QING-CELEBRATE-01] -->
+
+[PAUSE 3s] To take leave of someone? (*gàobié*.) To give a send-off? (**欢送**, *huānsòng*.) To see a guest out? (**送客**, *sòngkè*.) To give a present? (*sònglǐ*.) To shake hands with someone? (*wòshǒu*.) To congratulate someone? (*gōngxǐ*.) To wish someone well? (**祝**, *zhù*.) A token of regard? (**心意**, *xīnyì*.) Good luck? (*hǎoyùn*.) To make a wish? (*xǔyuàn*.) To celebrate a festival? (**过节**, *guòjié*.) To pay a visit to someone? (*bàifǎng*.) To be reunited as a family? (*tuányuán*.) A day off work? (**假日**, *jiàrì*.) A local custom? (*fēngsú*.) A long holiday? (**长假**, *chángjià*.) The National Day holiday? (**国庆**, *Guóqìng*.) To celebrate a happy event? (**庆祝**, *qìngzhù*.) Full of festive joy? (**喜庆**, *xǐqìng*.) Fireworks lighting up the sky? (*yānhuā*.) An old tradition? (*chuántǒng*.) To be particular about details? (*jiǎngjiu*.) The rules of conduct? (*guīju*.) A solar term of the year? (**节气**, *jiéqì*.) To tend the family graves? (*sǎomù*.)
+`;export{t};

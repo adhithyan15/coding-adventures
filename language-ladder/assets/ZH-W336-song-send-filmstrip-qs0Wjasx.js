@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W336-song-send-filmstrip-WD4JXSrJ.svg`,import.meta.url).href;export{e as default};

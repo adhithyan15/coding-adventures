@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W342-qiu-autumn-filmstrip-D0B4fwrO.svg`,import.meta.url).href;export{e as default};

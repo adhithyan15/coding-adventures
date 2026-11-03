@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R379-review-374-379
+spine_node: SPINE-GIVE-REASONS
+sequence: 29300
+chapter: 379
+type: review
+headword: (dialogue)
+gloss: a review of the words from People and Government to Feeling Safe
+concept_tag: REVIEW
+prerequisites: [ZH-C374-renkou, ZH-C374-zhengfu, ZH-C374-wenhua, ZH-C374-minzu, ZH-C374-fazhan, ZH-C375-qiong, ZH-C375-shehui, ZH-C375-juan, ZH-C375-zhiyuanzhe, ZH-C375-huxiang, ZH-C376-huodong, ZH-C376-shegong, ZH-C376-aihu, ZH-C376-rangzuo, ZH-C376-guangchangwu, ZH-C377-jumin, ZH-C377-shequ, ZH-C377-xiaoqu, ZH-C377-zhouwei, ZH-C377-xuequfang, ZH-C378-zaoyin, ZH-C378-baoyuan, ZH-C378-geyin, ZH-C378-shengren, ZH-C378-wuye, ZH-C379-loudao, ZH-C379-anxin, ZH-C379-buan, ZH-C379-menjin, ZH-C379-zhian, ZH-W375-she-society, ZH-W377-qu-area, ZH-W379-an-calm]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C374-SOCIETY374-01, ZH-LEX-C374-SOCIETY374-02, ZH-LEX-C374-SOCIETY374-03, ZH-LEX-C374-SOCIETY374-04, ZH-LEX-C374-SOCIETY374-05, ZH-LEX-C375-HELP375-01, ZH-LEX-C375-HELP375-02, ZH-LEX-C375-HELP375-03, ZH-LEX-C375-HELP375-04, ZH-LEX-C375-HELP375-05, ZH-LEX-C376-PUBLIC376-01, ZH-LEX-C376-PUBLIC376-02, ZH-LEX-C376-PUBLIC376-03, ZH-LEX-C376-PUBLIC376-04, ZH-LEX-C376-PUBLIC376-05, ZH-LEX-C377-AREA377-01, ZH-LEX-C377-AREA377-02, ZH-LEX-C377-AREA377-03, ZH-LEX-C377-AREA377-04, ZH-LEX-C377-AREA377-05, ZH-LEX-C378-NOISE378-01, ZH-LEX-C378-NOISE378-02, ZH-LEX-C378-NOISE378-03, ZH-LEX-C378-NOISE378-04, ZH-LEX-C378-NOISE378-05, ZH-LEX-C379-SAFE379-01, ZH-LEX-C379-SAFE379-02, ZH-LEX-C379-SAFE379-03, ZH-LEX-C379-SAFE379-04, ZH-LEX-C379-SAFE379-05, ZH-SCRIPT-SHE-SOCIETY-01, ZH-SCRIPT-QU-AREA-01, ZH-SCRIPT-AN-CALM-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C374-SOCIETY374-01, ZH-LEX-C374-SOCIETY374-02, ZH-LEX-C374-SOCIETY374-03, ZH-LEX-C374-SOCIETY374-04, ZH-LEX-C374-SOCIETY374-05, ZH-LEX-C375-HELP375-01, ZH-LEX-C375-HELP375-02, ZH-LEX-C375-HELP375-03, ZH-LEX-C375-HELP375-04, ZH-LEX-C375-HELP375-05, ZH-LEX-C376-PUBLIC376-01, ZH-LEX-C376-PUBLIC376-02, ZH-LEX-C376-PUBLIC376-03, ZH-LEX-C376-PUBLIC376-04, ZH-LEX-C376-PUBLIC376-05, ZH-LEX-C377-AREA377-01, ZH-LEX-C377-AREA377-02, ZH-LEX-C377-AREA377-03, ZH-LEX-C377-AREA377-04, ZH-LEX-C377-AREA377-05, ZH-LEX-C378-NOISE378-01, ZH-LEX-C378-NOISE378-02, ZH-LEX-C378-NOISE378-03, ZH-LEX-C378-NOISE378-04, ZH-LEX-C378-NOISE378-05, ZH-LEX-C379-SAFE379-01, ZH-LEX-C379-SAFE379-02, ZH-LEX-C379-SAFE379-03, ZH-LEX-C379-SAFE379-04, ZH-LEX-C379-SAFE379-05, ZH-SCRIPT-SHE-SOCIETY-01, ZH-SCRIPT-QU-AREA-01, ZH-SCRIPT-AN-CALM-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C374-renkou, ZH-C374-zhengfu, ZH-C374-wenhua, ZH-C374-minzu, ZH-C374-fazhan, ZH-C375-qiong, ZH-C375-shehui, ZH-C375-juan, ZH-C375-zhiyuanzhe, ZH-C375-huxiang, ZH-C376-huodong, ZH-C376-shegong, ZH-C376-aihu, ZH-C376-rangzuo, ZH-C376-guangchangwu, ZH-C377-jumin, ZH-C377-shequ, ZH-C377-xiaoqu, ZH-C377-zhouwei, ZH-C377-xuequfang, ZH-C378-zaoyin, ZH-C378-baoyuan, ZH-C378-geyin, ZH-C378-shengren, ZH-C378-wuye, ZH-C379-loudao, ZH-C379-anxin, ZH-C379-buan, ZH-C379-menjin, ZH-C379-zhian, ZH-W375-she-society, ZH-W377-qu-area, ZH-W379-an-calm]
+---
+
+# Looking back: from People and Government to Feeling Safe
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C374-SOCIETY374-01, ZH-LEX-C374-SOCIETY374-02] -->
+
+[PAUSE 3s] Say the Mandarin for the population (of a place) and the government.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C374-SOCIETY374-01, ZH-LEX-C374-SOCIETY374-02, ZH-LEX-C374-SOCIETY374-03, ZH-LEX-C374-SOCIETY374-04, ZH-LEX-C374-SOCIETY374-05, ZH-LEX-C375-HELP375-01, ZH-LEX-C375-HELP375-02, ZH-LEX-C375-HELP375-03, ZH-LEX-C375-HELP375-04, ZH-LEX-C375-HELP375-05, ZH-LEX-C376-PUBLIC376-01, ZH-LEX-C376-PUBLIC376-02, ZH-LEX-C376-PUBLIC376-03, ZH-LEX-C376-PUBLIC376-04, ZH-LEX-C376-PUBLIC376-05, ZH-LEX-C377-AREA377-01, ZH-LEX-C377-AREA377-02, ZH-LEX-C377-AREA377-03, ZH-LEX-C377-AREA377-04, ZH-LEX-C377-AREA377-05, ZH-LEX-C378-NOISE378-01, ZH-LEX-C378-NOISE378-02, ZH-LEX-C378-NOISE378-03, ZH-LEX-C378-NOISE378-04, ZH-LEX-C378-NOISE378-05, ZH-LEX-C379-SAFE379-01, ZH-LEX-C379-SAFE379-02, ZH-LEX-C379-SAFE379-03, ZH-LEX-C379-SAFE379-04, ZH-LEX-C379-SAFE379-05, ZH-SCRIPT-SHE-SOCIETY-01, ZH-SCRIPT-QU-AREA-01, ZH-SCRIPT-AN-CALM-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the population (of a place), the government, a people's culture, an ethnic group, to develop and grow]
+- [YOU SAY: poor (having little money), society, to donate (money), a volunteer, each other]
+- [YOU SAY: an organised event, a social worker, to treat with care, to give up one's seat, square dancing (in a public square)]
+- [YOU SAY: a resident (of a place), a local community, a housing estate, the area around (a place), a home near a good school]
+- [YOU SAY: unwanted noise, to grumble about, soundproofing (keeping sound out), a stranger, the property management office]
+- [YOU SAY: the stairwell of a block, with a mind at rest, uneasy (ill at ease), a card-entry door, law and order]
+- [YOU READ: 社 区 安 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C374-SOCIETY374-01, ZH-LEX-C374-SOCIETY374-02, ZH-LEX-C374-SOCIETY374-03, ZH-LEX-C374-SOCIETY374-04, ZH-LEX-C374-SOCIETY374-05, ZH-LEX-C375-HELP375-01, ZH-LEX-C375-HELP375-02, ZH-LEX-C375-HELP375-03, ZH-LEX-C375-HELP375-04, ZH-LEX-C375-HELP375-05, ZH-LEX-C376-PUBLIC376-01, ZH-LEX-C376-PUBLIC376-02, ZH-LEX-C376-PUBLIC376-03, ZH-LEX-C376-PUBLIC376-04, ZH-LEX-C376-PUBLIC376-05, ZH-LEX-C377-AREA377-01, ZH-LEX-C377-AREA377-02, ZH-LEX-C377-AREA377-03, ZH-LEX-C377-AREA377-04, ZH-LEX-C377-AREA377-05, ZH-LEX-C378-NOISE378-01, ZH-LEX-C378-NOISE378-02, ZH-LEX-C378-NOISE378-03, ZH-LEX-C378-NOISE378-04, ZH-LEX-C378-NOISE378-05, ZH-LEX-C379-SAFE379-01, ZH-LEX-C379-SAFE379-02, ZH-LEX-C379-SAFE379-03, ZH-LEX-C379-SAFE379-04, ZH-LEX-C379-SAFE379-05, ZH-SCRIPT-SHE-SOCIETY-01, ZH-SCRIPT-QU-AREA-01, ZH-SCRIPT-AN-CALM-01] -->
+
+[PAUSE 3s] The population (of a place)? (**人口**, *rénkǒu*.) The government? (*zhèngfǔ*.) A people's culture? (*wénhuà*.) An ethnic group? (*mínzú*.) To develop and grow? (*fāzhǎn*.) Poor (having little money)? (*qióng*.) Society? (**社会**, *shèhuì*.) To donate (money)? (*juān*.) A volunteer? (*zhìyuànzhě*.) Each other? (*hùxiāng*.) An organised event? (*huódòng*.) A social worker? (**社工**, *shègōng*.) To treat with care? (*àihù*.) To give up one's seat? (*ràngzuò*.) Square dancing (in a public square)? (*guǎngchǎngwǔ*.) A resident (of a place)? (*jūmín*.) A local community? (**社区**, *shèqū*.) A housing estate? (**小区**, *xiǎoqū*.) The area around (a place)? (*zhōuwéi*.) A home near a good school? (**学区房**, *xuéqūfáng*.) Unwanted noise? (*zàoyīn*.) To grumble about? (*bàoyuàn*.) Soundproofing (keeping sound out)? (*géyīn*.) A stranger? (**生人**, *shēngrén*.) The property management office? (*wùyè*.) The stairwell of a block? (*lóudào*.) With a mind at rest? (**安心**, *ānxīn*.) Uneasy (ill at ease)? (**不安**, *bù'ān*.) A card-entry door? (*ménjìn*.) Law and order? (*zhì'ān*.)
+`;export{t};

@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W454-tu-chart-filmstrip-Y831LehW.svg`,import.meta.url).href;export{e as default};

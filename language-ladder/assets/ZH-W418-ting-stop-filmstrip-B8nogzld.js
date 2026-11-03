@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W418-ting-stop-filmstrip-CA5Fl-7K.svg`,import.meta.url).href;export{e as default};

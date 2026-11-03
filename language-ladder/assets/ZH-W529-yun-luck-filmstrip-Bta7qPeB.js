@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W529-yun-luck-filmstrip-D2jWcXXM.svg`,import.meta.url).href;export{e as default};

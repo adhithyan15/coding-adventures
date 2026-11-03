@@ -1,0 +1,104 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R401-review-397-401
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 30440
+chapter: 401
+type: review
+headword: (dialogue)
+gloss: a review of the words from Surely Not to Plans for the Future
+concept_tag: REVIEW
+prerequisites: [ZH-C397-fanggezi, ZH-C397-nandao, ZH-C397-nande, ZH-C397-weinan, ZH-C397-jiekou, ZH-C398-taidu, ZH-C398-qubie, ZH-C398-diqu, ZH-C398-xiancheng, ZH-C398-qujueyu, ZH-C399-yaoqiu, ZH-C399-zhiyou, ZH-C399-zhiyao, ZH-C399-manzu, ZH-C399-chengjia, ZH-C400-tiaozheng, ZH-C400-yanchang, ZH-C400-suoduan, ZH-C400-yuanding, ZH-C400-anding, ZH-C401-qiantu, ZH-C401-gaihang, ZH-C401-chengzhang, ZH-C401-bianlao, ZH-C401-yiqie, ZH-W397-nan-hard, ZH-W399-zhi-only]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C397-SURELY397-01, ZH-LEX-C397-SURELY397-02, ZH-LEX-C397-SURELY397-03, ZH-LEX-C397-SURELY397-04, ZH-LEX-C397-SURELY397-05, ZH-LEX-C398-DEPEND398-01, ZH-LEX-C398-DEPEND398-02, ZH-LEX-C398-DEPEND398-03, ZH-LEX-C398-DEPEND398-04, ZH-LEX-C398-DEPEND398-05, ZH-LEX-C399-ONLYIF399-01, ZH-LEX-C399-ONLYIF399-02, ZH-LEX-C399-ONLYIF399-03, ZH-LEX-C399-ONLYIF399-04, ZH-LEX-C399-ONLYIF399-05, ZH-LEX-C400-ADJUST400-01, ZH-LEX-C400-ADJUST400-02, ZH-LEX-C400-ADJUST400-03, ZH-LEX-C400-ADJUST400-04, ZH-LEX-C400-ADJUST400-05, ZH-LEX-C401-FUTURE401-01, ZH-LEX-C401-FUTURE401-02, ZH-LEX-C401-FUTURE401-03, ZH-LEX-C401-FUTURE401-04, ZH-LEX-C401-FUTURE401-05, ZH-SCRIPT-NAN-HARD-01, ZH-SCRIPT-ZHI-ONLY-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C397-SURELY397-01, ZH-LEX-C397-SURELY397-02, ZH-LEX-C397-SURELY397-03, ZH-LEX-C397-SURELY397-04, ZH-LEX-C397-SURELY397-05, ZH-LEX-C398-DEPEND398-01, ZH-LEX-C398-DEPEND398-02, ZH-LEX-C398-DEPEND398-03, ZH-LEX-C398-DEPEND398-04, ZH-LEX-C398-DEPEND398-05, ZH-LEX-C399-ONLYIF399-01, ZH-LEX-C399-ONLYIF399-02, ZH-LEX-C399-ONLYIF399-03, ZH-LEX-C399-ONLYIF399-04, ZH-LEX-C399-ONLYIF399-05, ZH-LEX-C400-ADJUST400-01, ZH-LEX-C400-ADJUST400-02, ZH-LEX-C400-ADJUST400-03, ZH-LEX-C400-ADJUST400-04, ZH-LEX-C400-ADJUST400-05, ZH-LEX-C401-FUTURE401-01, ZH-LEX-C401-FUTURE401-02, ZH-LEX-C401-FUTURE401-03, ZH-LEX-C401-FUTURE401-04, ZH-LEX-C401-FUTURE401-05, ZH-SCRIPT-NAN-HARD-01, ZH-SCRIPT-ZHI-ONLY-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C397-fanggezi, ZH-C397-nandao, ZH-C397-nande, ZH-C397-weinan, ZH-C397-jiekou, ZH-C398-taidu, ZH-C398-qubie, ZH-C398-diqu, ZH-C398-xiancheng, ZH-C398-qujueyu, ZH-C399-yaoqiu, ZH-C399-zhiyou, ZH-C399-zhiyao, ZH-C399-manzu, ZH-C399-chengjia, ZH-C400-tiaozheng, ZH-C400-yanchang, ZH-C400-suoduan, ZH-C400-yuanding, ZH-C400-anding, ZH-C401-qiantu, ZH-C401-gaihang, ZH-C401-chengzhang, ZH-C401-bianlao, ZH-C401-yiqie, ZH-W397-nan-hard, ZH-W399-zhi-only]
+---
+
+# Looking back: from Surely Not to Plans for the Future
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C397-SURELY397-01, ZH-LEX-C397-SURELY397-02] -->
+
+[PAUSE 3s] Say the Mandarin for to stand someone up and surely not (in a question).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C397-SURELY397-01, ZH-LEX-C397-SURELY397-02, ZH-LEX-C397-SURELY397-03, ZH-LEX-C397-SURELY397-04, ZH-LEX-C397-SURELY397-05, ZH-LEX-C398-DEPEND398-01, ZH-LEX-C398-DEPEND398-02, ZH-LEX-C398-DEPEND398-03, ZH-LEX-C398-DEPEND398-04, ZH-LEX-C398-DEPEND398-05, ZH-LEX-C399-ONLYIF399-01, ZH-LEX-C399-ONLYIF399-02, ZH-LEX-C399-ONLYIF399-03, ZH-LEX-C399-ONLYIF399-04, ZH-LEX-C399-ONLYIF399-05, ZH-LEX-C400-ADJUST400-01, ZH-LEX-C400-ADJUST400-02, ZH-LEX-C400-ADJUST400-03, ZH-LEX-C400-ADJUST400-04, ZH-LEX-C400-ADJUST400-05, ZH-LEX-C401-FUTURE401-01, ZH-LEX-C401-FUTURE401-02, ZH-LEX-C401-FUTURE401-03, ZH-LEX-C401-FUTURE401-04, ZH-LEX-C401-FUTURE401-05, ZH-SCRIPT-NAN-HARD-01, ZH-SCRIPT-ZHI-ONLY-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to stand someone up, surely not (in a question), hard to come by, in an awkward spot, an excuse (a poor reason)]
+- [YOU SAY: your attitude, the difference, a region of a country, ready-made, to hinge on]
+- [YOU SAY: to demand (of someone), only if, as long as, to meet (a requirement), to marry and settle down]
+- [YOU SAY: to adjust, to extend (in time), to shorten, originally planned, settled and secure]
+- [YOU SAY: future prospects, to change careers, to mature (as a person), to get older, everything]
+- [YOU READ: 难 只 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C397-SURELY397-01, ZH-LEX-C397-SURELY397-02, ZH-LEX-C397-SURELY397-03, ZH-LEX-C397-SURELY397-04, ZH-LEX-C397-SURELY397-05, ZH-LEX-C398-DEPEND398-01, ZH-LEX-C398-DEPEND398-02, ZH-LEX-C398-DEPEND398-03, ZH-LEX-C398-DEPEND398-04, ZH-LEX-C398-DEPEND398-05, ZH-LEX-C399-ONLYIF399-01, ZH-LEX-C399-ONLYIF399-02, ZH-LEX-C399-ONLYIF399-03, ZH-LEX-C399-ONLYIF399-04, ZH-LEX-C399-ONLYIF399-05, ZH-LEX-C400-ADJUST400-01, ZH-LEX-C400-ADJUST400-02, ZH-LEX-C400-ADJUST400-03, ZH-LEX-C400-ADJUST400-04, ZH-LEX-C400-ADJUST400-05, ZH-LEX-C401-FUTURE401-01, ZH-LEX-C401-FUTURE401-02, ZH-LEX-C401-FUTURE401-03, ZH-LEX-C401-FUTURE401-04, ZH-LEX-C401-FUTURE401-05, ZH-SCRIPT-NAN-HARD-01, ZH-SCRIPT-ZHI-ONLY-01] -->
+
+[PAUSE 3s] To stand someone up? (*fàng gēzi*.) Surely not (in a question)? (**难道**, *nándào*.) Hard to come by? (**难得**, *nándé*.) In an awkward spot? (**为难**, *wéinán*.) An excuse (a poor reason)? (*jièkǒu*.) Your attitude? (*tàidu*.) The difference? (*qūbié*.) A region of a country? (**地区**, *dìqū*.) Ready-made? (**现成**, *xiànchéng*.) To hinge on? (*qǔjuéyú*.) To demand (of someone)? (*yāoqiú*.) Only if? (**只有**, *zhǐyǒu*.) As long as? (**只要**, *zhǐyào*.) To meet (a requirement)? (*mǎnzú*.) To marry and settle down? (**成家**, *chéngjiā*.) To adjust? (*tiáozhěng*.) To extend (in time)? (*yáncháng*.) To shorten? (*suōduǎn*.) Originally planned? (*yuándìng*.) Settled and secure? (**安定**, *āndìng*.) Future prospects? (*qiántú*.) To change careers? (*gǎiháng*.) To mature (as a person)? (**成长**, *chéngzhǎng*.) To get older? (**变老**, *biànlǎo*.) Everything? (*yíqiè*.)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R401-review-final-401
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 30450
+chapter: 401
+type: review
+headword: (dialogue)
+gloss: one more pass over the last chapter's words
+concept_tag: REVIEW
+prerequisites: [ZH-C401-qiantu, ZH-C401-gaihang, ZH-C401-chengzhang, ZH-C401-bianlao, ZH-C401-yiqie]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C401-FUTURE401-01, ZH-LEX-C401-FUTURE401-02, ZH-LEX-C401-FUTURE401-03, ZH-LEX-C401-FUTURE401-04, ZH-LEX-C401-FUTURE401-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C401-FUTURE401-01, ZH-LEX-C401-FUTURE401-02, ZH-LEX-C401-FUTURE401-03, ZH-LEX-C401-FUTURE401-04, ZH-LEX-C401-FUTURE401-05]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C401-qiantu, ZH-C401-gaihang, ZH-C401-chengzhang, ZH-C401-bianlao, ZH-C401-yiqie]
+---
+
+# Plans for the Future — once more
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C401-FUTURE401-01, ZH-LEX-C401-FUTURE401-02] -->
+
+[PAUSE 3s] Say the Mandarin for future prospects and to change careers.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C401-FUTURE401-01, ZH-LEX-C401-FUTURE401-02, ZH-LEX-C401-FUTURE401-03, ZH-LEX-C401-FUTURE401-04, ZH-LEX-C401-FUTURE401-05] -->
+
+[PAUSE 2s each]
+- [YOU SAY: future prospects, to change careers, to mature (as a person), to get older, everything]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C401-FUTURE401-01, ZH-LEX-C401-FUTURE401-02, ZH-LEX-C401-FUTURE401-03, ZH-LEX-C401-FUTURE401-04, ZH-LEX-C401-FUTURE401-05] -->
+
+[PAUSE 3s] Future prospects? (*qiántú*.) To change careers? (*gǎiháng*.) To mature (as a person)? (**成长**, *chéngzhǎng*.) To get older? (**变老**, *biànlǎo*.) Everything? (*yíqiè*.)
+`;export{t as n,r as t};

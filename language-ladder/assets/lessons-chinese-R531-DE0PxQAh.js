@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R531-review-526-531
+spine_node: SPINE-EXPRESS-CONDITION
+sequence: 39920
+chapter: 531
+type: review
+headword: (dialogue)
+gloss: a review of the words from How Heavy? to A Lucky Escape
+concept_tag: REVIEW
+prerequisites: [ZH-C526-cheng-weigh, ZH-C526-gongjin, ZH-C526-zhongliang, ZH-C526-daliang, ZH-C526-shaoliang, ZH-C527-xiadan, ZH-C527-baozhuang, ZH-C527-huiyuan, ZH-C527-youhui, ZH-C527-gezi, ZH-C528-pengqiao, ZH-C528-budebu, ZH-C528-chouqian, ZH-C528-dadu, ZH-C528-ouran, ZH-C529-daomei, ZH-C529-yunqi, ZH-C529-zouyun, ZH-C529-xingyun, ZH-C529-mingyun, ZH-C530-caipiao, ZH-C530-choujiang, ZH-C530-zhongjiang, ZH-C530-jiangpin, ZH-C530-toujiang, ZH-C531-tuoxian, ZH-C531-jihu, ZH-C531-jiaoxing, ZH-C531-buxing, ZH-C531-shishou, ZH-W526-liang-amount, ZH-W529-yun-luck]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C526-WEIGHT526-01, ZH-LEX-C526-WEIGHT526-02, ZH-LEX-C526-WEIGHT526-03, ZH-LEX-C526-WEIGHT526-04, ZH-LEX-C526-WEIGHT526-05, ZH-LEX-C527-ORDER527-01, ZH-LEX-C527-ORDER527-02, ZH-LEX-C527-ORDER527-03, ZH-LEX-C527-ORDER527-04, ZH-LEX-C527-ORDER527-05, ZH-LEX-C528-CHANCE528-01, ZH-LEX-C528-CHANCE528-02, ZH-LEX-C528-CHANCE528-03, ZH-LEX-C528-CHANCE528-04, ZH-LEX-C528-CHANCE528-05, ZH-LEX-C529-LUCK529-01, ZH-LEX-C529-LUCK529-02, ZH-LEX-C529-LUCK529-03, ZH-LEX-C529-LUCK529-04, ZH-LEX-C529-LUCK529-05, ZH-LEX-C530-PRIZE530-01, ZH-LEX-C530-PRIZE530-02, ZH-LEX-C530-PRIZE530-03, ZH-LEX-C530-PRIZE530-04, ZH-LEX-C530-PRIZE530-05, ZH-LEX-C531-ESCAPE531-01, ZH-LEX-C531-ESCAPE531-02, ZH-LEX-C531-ESCAPE531-03, ZH-LEX-C531-ESCAPE531-04, ZH-LEX-C531-ESCAPE531-05, ZH-SCRIPT-LIANG-AMOUNT-01, ZH-SCRIPT-YUN-LUCK-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C526-WEIGHT526-01, ZH-LEX-C526-WEIGHT526-02, ZH-LEX-C526-WEIGHT526-03, ZH-LEX-C526-WEIGHT526-04, ZH-LEX-C526-WEIGHT526-05, ZH-LEX-C527-ORDER527-01, ZH-LEX-C527-ORDER527-02, ZH-LEX-C527-ORDER527-03, ZH-LEX-C527-ORDER527-04, ZH-LEX-C527-ORDER527-05, ZH-LEX-C528-CHANCE528-01, ZH-LEX-C528-CHANCE528-02, ZH-LEX-C528-CHANCE528-03, ZH-LEX-C528-CHANCE528-04, ZH-LEX-C528-CHANCE528-05, ZH-LEX-C529-LUCK529-01, ZH-LEX-C529-LUCK529-02, ZH-LEX-C529-LUCK529-03, ZH-LEX-C529-LUCK529-04, ZH-LEX-C529-LUCK529-05, ZH-LEX-C530-PRIZE530-01, ZH-LEX-C530-PRIZE530-02, ZH-LEX-C530-PRIZE530-03, ZH-LEX-C530-PRIZE530-04, ZH-LEX-C530-PRIZE530-05, ZH-LEX-C531-ESCAPE531-01, ZH-LEX-C531-ESCAPE531-02, ZH-LEX-C531-ESCAPE531-03, ZH-LEX-C531-ESCAPE531-04, ZH-LEX-C531-ESCAPE531-05, ZH-SCRIPT-LIANG-AMOUNT-01, ZH-SCRIPT-YUN-LUCK-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C526-cheng-weigh, ZH-C526-gongjin, ZH-C526-zhongliang, ZH-C526-daliang, ZH-C526-shaoliang, ZH-C527-xiadan, ZH-C527-baozhuang, ZH-C527-huiyuan, ZH-C527-youhui, ZH-C527-gezi, ZH-C528-pengqiao, ZH-C528-budebu, ZH-C528-chouqian, ZH-C528-dadu, ZH-C528-ouran, ZH-C529-daomei, ZH-C529-yunqi, ZH-C529-zouyun, ZH-C529-xingyun, ZH-C529-mingyun, ZH-C530-caipiao, ZH-C530-choujiang, ZH-C530-zhongjiang, ZH-C530-jiangpin, ZH-C530-toujiang, ZH-C531-tuoxian, ZH-C531-jihu, ZH-C531-jiaoxing, ZH-C531-buxing, ZH-C531-shishou, ZH-W526-liang-amount, ZH-W529-yun-luck]
+---
+
+# Looking back: from How Heavy? to A Lucky Escape
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C526-WEIGHT526-01, ZH-LEX-C526-WEIGHT526-02] -->
+
+[PAUSE 3s] Say the Mandarin for to weigh on a scale and a kilogram.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C526-WEIGHT526-01, ZH-LEX-C526-WEIGHT526-02, ZH-LEX-C526-WEIGHT526-03, ZH-LEX-C526-WEIGHT526-04, ZH-LEX-C526-WEIGHT526-05, ZH-LEX-C527-ORDER527-01, ZH-LEX-C527-ORDER527-02, ZH-LEX-C527-ORDER527-03, ZH-LEX-C527-ORDER527-04, ZH-LEX-C527-ORDER527-05, ZH-LEX-C528-CHANCE528-01, ZH-LEX-C528-CHANCE528-02, ZH-LEX-C528-CHANCE528-03, ZH-LEX-C528-CHANCE528-04, ZH-LEX-C528-CHANCE528-05, ZH-LEX-C529-LUCK529-01, ZH-LEX-C529-LUCK529-02, ZH-LEX-C529-LUCK529-03, ZH-LEX-C529-LUCK529-04, ZH-LEX-C529-LUCK529-05, ZH-LEX-C530-PRIZE530-01, ZH-LEX-C530-PRIZE530-02, ZH-LEX-C530-PRIZE530-03, ZH-LEX-C530-PRIZE530-04, ZH-LEX-C530-PRIZE530-05, ZH-LEX-C531-ESCAPE531-01, ZH-LEX-C531-ESCAPE531-02, ZH-LEX-C531-ESCAPE531-03, ZH-LEX-C531-ESCAPE531-04, ZH-LEX-C531-ESCAPE531-05, ZH-SCRIPT-LIANG-AMOUNT-01, ZH-SCRIPT-YUN-LUCK-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: to weigh on a scale, a kilogram, how heavy something is, in large amounts, a small amount of]
+- [YOU SAY: to place an order, to wrap goods for sale, a member of a club, a favourable deal, a checked pattern]
+- [YOU SAY: as luck would have it, to be obliged to, to draw lots, to make a bet, happening by chance]
+- [YOU SAY: to be out of luck, a person's luck, to be in luck, fortunate, fate]
+- [YOU SAY: a lottery ticket, to draw for prizes, to win in a draw, a prize you win, the jackpot]
+- [YOU SAY: to get out of danger, all but, lucky by a fluke, a misfortune, to lose one's grip]
+- [YOU READ: 量 运 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C526-WEIGHT526-01, ZH-LEX-C526-WEIGHT526-02, ZH-LEX-C526-WEIGHT526-03, ZH-LEX-C526-WEIGHT526-04, ZH-LEX-C526-WEIGHT526-05, ZH-LEX-C527-ORDER527-01, ZH-LEX-C527-ORDER527-02, ZH-LEX-C527-ORDER527-03, ZH-LEX-C527-ORDER527-04, ZH-LEX-C527-ORDER527-05, ZH-LEX-C528-CHANCE528-01, ZH-LEX-C528-CHANCE528-02, ZH-LEX-C528-CHANCE528-03, ZH-LEX-C528-CHANCE528-04, ZH-LEX-C528-CHANCE528-05, ZH-LEX-C529-LUCK529-01, ZH-LEX-C529-LUCK529-02, ZH-LEX-C529-LUCK529-03, ZH-LEX-C529-LUCK529-04, ZH-LEX-C529-LUCK529-05, ZH-LEX-C530-PRIZE530-01, ZH-LEX-C530-PRIZE530-02, ZH-LEX-C530-PRIZE530-03, ZH-LEX-C530-PRIZE530-04, ZH-LEX-C530-PRIZE530-05, ZH-LEX-C531-ESCAPE531-01, ZH-LEX-C531-ESCAPE531-02, ZH-LEX-C531-ESCAPE531-03, ZH-LEX-C531-ESCAPE531-04, ZH-LEX-C531-ESCAPE531-05, ZH-SCRIPT-LIANG-AMOUNT-01, ZH-SCRIPT-YUN-LUCK-01] -->
+
+[PAUSE 3s] To weigh on a scale? (*chēng*.) A kilogram? (*gōngjīn*.) How heavy something is? (**重量**, *zhòngliàng*.) In large amounts? (**大量**, *dàliàng*.) A small amount of? (**少量**, *shǎoliàng*.) To place an order? (*xiàdān*.) To wrap goods for sale? (*bāozhuāng*.) A member of a club? (*huìyuán*.) A favourable deal? (*yōuhuì*.) A checked pattern? (**格子**, *gézi*.) As luck would have it? (*pèngqiǎo*.) To be obliged to? (**不得不**, *bùdébù*.) To draw lots? (*chōuqiān*.) To make a bet? (*dǎdǔ*.) Happening by chance? (*ǒurán*.) To be out of luck? (*dǎoméi*.) A person's luck? (**运气**, *yùnqi*.) To be in luck? (**走运**, *zǒuyùn*.) Fortunate? (*xìngyùn*.) Fate? (*mìngyùn*.) A lottery ticket? (*cǎipiào*.) To draw for prizes? (*chōujiǎng*.) To win in a draw? (*zhòngjiǎng*.) A prize you win? (*jiǎngpǐn*.) The jackpot? (*tóujiǎng*.) To get out of danger? (*tuōxiǎn*.) All but? (*jīhū*.) Lucky by a fluke? (*jiǎoxìng*.) A misfortune? (*búxìng*.) To lose one's grip? (*shīshǒu*.)
+`;export{t};

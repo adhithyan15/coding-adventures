@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W323-dai-era-filmstrip-8VXirOF_.svg`,import.meta.url).href;export{e as default};

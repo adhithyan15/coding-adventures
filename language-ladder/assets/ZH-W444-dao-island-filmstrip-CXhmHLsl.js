@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W444-dao-island-filmstrip-BPj7qNFc.svg`,import.meta.url).href;export{e as default};

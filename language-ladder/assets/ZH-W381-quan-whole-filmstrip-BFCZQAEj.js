@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W381-quan-whole-filmstrip-DjyNCiW_.svg`,import.meta.url).href;export{e as default};

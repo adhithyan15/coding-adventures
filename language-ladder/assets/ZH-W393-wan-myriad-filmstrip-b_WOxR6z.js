@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W393-wan-myriad-filmstrip-C0pxtT0N.svg`,import.meta.url).href;export{e as default};

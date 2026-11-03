@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W300-si-die-filmstrip-FmhP9tTz.svg`,import.meta.url).href;export{e as default};

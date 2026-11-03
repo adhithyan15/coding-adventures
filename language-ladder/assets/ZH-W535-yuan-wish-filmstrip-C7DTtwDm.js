@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W535-yuan-wish-filmstrip-DPHi3KF2.svg`,import.meta.url).href;export{e as default};

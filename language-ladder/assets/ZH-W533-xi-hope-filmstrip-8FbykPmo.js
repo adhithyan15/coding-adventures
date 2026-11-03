@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W533-xi-hope-filmstrip-CTtf05kA.svg`,import.meta.url).href;export{e as default};

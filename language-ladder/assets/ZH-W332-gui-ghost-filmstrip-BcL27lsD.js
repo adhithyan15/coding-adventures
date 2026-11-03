@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W332-gui-ghost-filmstrip-B7thsRG4.svg`,import.meta.url).href;export{e as default};

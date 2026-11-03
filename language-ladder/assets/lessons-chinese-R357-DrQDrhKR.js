@@ -1,0 +1,56 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: ZH-R357-review-352-357
+spine_node: SPINE-GIVE-REASONS
+sequence: 27610
+chapter: 357
+type: review
+headword: (dialogue)
+gloss: a review of the words from Same Here to Owning Up
+concept_tag: REVIEW
+prerequisites: [ZH-C352-tonggan, ZH-C352-kending, ZH-C352-renke, ZH-C352-benyi, ZH-C352-biaoshi, ZH-C353-shuofu, ZH-C353-daoli, ZH-C353-bujiande, ZH-C353-fanbo, ZH-C353-rentong, ZH-C354-tiwen, ZH-C354-huati, ZH-C354-timu, ZH-C354-neirong, ZH-C354-tanhua, ZH-C355-xiejue, ZH-C355-haoyi, ZH-C355-ken, ZH-C355-fouren, ZH-C355-dangmian, ZH-C356-jiaoxun, ZH-C356-cuoguo, ZH-C356-chucuo, ZH-C356-cuowu, ZH-C356-gaizheng, ZH-C357-rencuo, ZH-C357-qihua, ZH-C357-kouqi, ZH-C357-piping, ZH-C357-biaoyang, ZH-W353-dao-way, ZH-W354-ti-topic, ZH-W356-cuo-wrong]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [ZH-LEX-C352-AGREE352-01, ZH-LEX-C352-AGREE352-02, ZH-LEX-C352-AGREE352-03, ZH-LEX-C352-AGREE352-04, ZH-LEX-C352-AGREE352-05, ZH-LEX-C353-POINT353-01, ZH-LEX-C353-POINT353-02, ZH-LEX-C353-POINT353-03, ZH-LEX-C353-POINT353-04, ZH-LEX-C353-POINT353-05, ZH-LEX-C354-TOPIC354-01, ZH-LEX-C354-TOPIC354-02, ZH-LEX-C354-TOPIC354-03, ZH-LEX-C354-TOPIC354-04, ZH-LEX-C354-TOPIC354-05, ZH-LEX-C355-REFUSE355-01, ZH-LEX-C355-REFUSE355-02, ZH-LEX-C355-REFUSE355-03, ZH-LEX-C355-REFUSE355-04, ZH-LEX-C355-REFUSE355-05, ZH-LEX-C356-MISS356-01, ZH-LEX-C356-MISS356-02, ZH-LEX-C356-MISS356-03, ZH-LEX-C356-MISS356-04, ZH-LEX-C356-MISS356-05, ZH-LEX-C357-SORRY357-01, ZH-LEX-C357-SORRY357-02, ZH-LEX-C357-SORRY357-03, ZH-LEX-C357-SORRY357-04, ZH-LEX-C357-SORRY357-05, ZH-SCRIPT-DAO-WAY-01, ZH-SCRIPT-TI-TOPIC-01, ZH-SCRIPT-CUO-WRONG-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ZH-LEX-C352-AGREE352-01, ZH-LEX-C352-AGREE352-02, ZH-LEX-C352-AGREE352-03, ZH-LEX-C352-AGREE352-04, ZH-LEX-C352-AGREE352-05, ZH-LEX-C353-POINT353-01, ZH-LEX-C353-POINT353-02, ZH-LEX-C353-POINT353-03, ZH-LEX-C353-POINT353-04, ZH-LEX-C353-POINT353-05, ZH-LEX-C354-TOPIC354-01, ZH-LEX-C354-TOPIC354-02, ZH-LEX-C354-TOPIC354-03, ZH-LEX-C354-TOPIC354-04, ZH-LEX-C354-TOPIC354-05, ZH-LEX-C355-REFUSE355-01, ZH-LEX-C355-REFUSE355-02, ZH-LEX-C355-REFUSE355-03, ZH-LEX-C355-REFUSE355-04, ZH-LEX-C355-REFUSE355-05, ZH-LEX-C356-MISS356-01, ZH-LEX-C356-MISS356-02, ZH-LEX-C356-MISS356-03, ZH-LEX-C356-MISS356-04, ZH-LEX-C356-MISS356-05, ZH-LEX-C357-SORRY357-01, ZH-LEX-C357-SORRY357-02, ZH-LEX-C357-SORRY357-03, ZH-LEX-C357-SORRY357-04, ZH-LEX-C357-SORRY357-05, ZH-SCRIPT-DAO-WAY-01, ZH-SCRIPT-TI-TOPIC-01, ZH-SCRIPT-CUO-WRONG-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-mandarin-simplified
+reviews_of: [ZH-C352-tonggan, ZH-C352-kending, ZH-C352-renke, ZH-C352-benyi, ZH-C352-biaoshi, ZH-C353-shuofu, ZH-C353-daoli, ZH-C353-bujiande, ZH-C353-fanbo, ZH-C353-rentong, ZH-C354-tiwen, ZH-C354-huati, ZH-C354-timu, ZH-C354-neirong, ZH-C354-tanhua, ZH-C355-xiejue, ZH-C355-haoyi, ZH-C355-ken, ZH-C355-fouren, ZH-C355-dangmian, ZH-C356-jiaoxun, ZH-C356-cuoguo, ZH-C356-chucuo, ZH-C356-cuowu, ZH-C356-gaizheng, ZH-C357-rencuo, ZH-C357-qihua, ZH-C357-kouqi, ZH-C357-piping, ZH-C357-biaoyang, ZH-W353-dao-way, ZH-W354-ti-topic, ZH-W356-cuo-wrong]
+---
+
+# Looking back: from Same Here to Owning Up
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C352-AGREE352-01, ZH-LEX-C352-AGREE352-02] -->
+
+[PAUSE 3s] Say the Mandarin for the same feeling and for sure.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C352-AGREE352-01, ZH-LEX-C352-AGREE352-02, ZH-LEX-C352-AGREE352-03, ZH-LEX-C352-AGREE352-04, ZH-LEX-C352-AGREE352-05, ZH-LEX-C353-POINT353-01, ZH-LEX-C353-POINT353-02, ZH-LEX-C353-POINT353-03, ZH-LEX-C353-POINT353-04, ZH-LEX-C353-POINT353-05, ZH-LEX-C354-TOPIC354-01, ZH-LEX-C354-TOPIC354-02, ZH-LEX-C354-TOPIC354-03, ZH-LEX-C354-TOPIC354-04, ZH-LEX-C354-TOPIC354-05, ZH-LEX-C355-REFUSE355-01, ZH-LEX-C355-REFUSE355-02, ZH-LEX-C355-REFUSE355-03, ZH-LEX-C355-REFUSE355-04, ZH-LEX-C355-REFUSE355-05, ZH-LEX-C356-MISS356-01, ZH-LEX-C356-MISS356-02, ZH-LEX-C356-MISS356-03, ZH-LEX-C356-MISS356-04, ZH-LEX-C356-MISS356-05, ZH-LEX-C357-SORRY357-01, ZH-LEX-C357-SORRY357-02, ZH-LEX-C357-SORRY357-03, ZH-LEX-C357-SORRY357-04, ZH-LEX-C357-SORRY357-05, ZH-SCRIPT-DAO-WAY-01, ZH-SCRIPT-TI-TOPIC-01, ZH-SCRIPT-CUO-WRONG-01] -->
+
+[PAUSE 2s each]
+- [YOU SAY: the same feeling, for sure, to give your approval, what one really meant, to make your view known]
+- [YOU SAY: to talk someone round, the sense something makes, not necessarily, to argue back, to share someone's view]
+- [YOU SAY: to put a question, a topic of conversation, a question on a test, what something is about, to have a serious talk]
+- [YOU SAY: to decline politely, a kind thought, to be willing, to deny, to someone's face]
+- [YOU SAY: a hard lesson learned, to miss a chance, to slip up, an error, to put a mistake right]
+- [YOU SAY: to admit you were wrong, something said in anger, a tone of voice, to criticize, to praise]
+- [YOU READ: 道 题 错 — each one aloud, then a word that holds it]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-C352-AGREE352-01, ZH-LEX-C352-AGREE352-02, ZH-LEX-C352-AGREE352-03, ZH-LEX-C352-AGREE352-04, ZH-LEX-C352-AGREE352-05, ZH-LEX-C353-POINT353-01, ZH-LEX-C353-POINT353-02, ZH-LEX-C353-POINT353-03, ZH-LEX-C353-POINT353-04, ZH-LEX-C353-POINT353-05, ZH-LEX-C354-TOPIC354-01, ZH-LEX-C354-TOPIC354-02, ZH-LEX-C354-TOPIC354-03, ZH-LEX-C354-TOPIC354-04, ZH-LEX-C354-TOPIC354-05, ZH-LEX-C355-REFUSE355-01, ZH-LEX-C355-REFUSE355-02, ZH-LEX-C355-REFUSE355-03, ZH-LEX-C355-REFUSE355-04, ZH-LEX-C355-REFUSE355-05, ZH-LEX-C356-MISS356-01, ZH-LEX-C356-MISS356-02, ZH-LEX-C356-MISS356-03, ZH-LEX-C356-MISS356-04, ZH-LEX-C356-MISS356-05, ZH-LEX-C357-SORRY357-01, ZH-LEX-C357-SORRY357-02, ZH-LEX-C357-SORRY357-03, ZH-LEX-C357-SORRY357-04, ZH-LEX-C357-SORRY357-05, ZH-SCRIPT-DAO-WAY-01, ZH-SCRIPT-TI-TOPIC-01, ZH-SCRIPT-CUO-WRONG-01] -->
+
+[PAUSE 3s] The same feeling? (**同感**, *tónggǎn*.) For sure? (*kěndìng*.) To give your approval? (*rènkě*.) What one really meant? (**本意**, *běnyì*.) To make your view known? (*biǎoshì*.) To talk someone round? (*shuōfú*.) The sense something makes? (**道理**, *dàoli*.) Not necessarily? (**不见得**, *bújiànde*.) To argue back? (*fǎnbó*.) To share someone's view? (*rèntóng*.) To put a question? (*tíwèn*.) A topic of conversation? (**话题**, *huàtí*.) A question on a test? (*tímù*.) What something is about? (*nèiróng*.) To have a serious talk? (*tánhuà*.) To decline politely? (*xièjué*.) A kind thought? (**好意**, *hǎoyì*.) To be willing? (*kěn*.) To deny? (*fǒurèn*.) To someone's face? (**当面**, *dāngmiàn*.) A hard lesson learned? (*jiàoxun*.) To miss a chance? (**错过**, *cuòguò*.) To slip up? (**出错**, *chūcuò*.) An error? (*cuòwù*.) To put a mistake right? (*gǎizhèng*.) To admit you were wrong? (*rèncuò*.) Something said in anger? (**气话**, *qìhuà*.) A tone of voice? (**口气**, *kǒuqì*.) To criticize? (*pīpíng*.) To praise? (*biǎoyáng*.)
+`;export{t};

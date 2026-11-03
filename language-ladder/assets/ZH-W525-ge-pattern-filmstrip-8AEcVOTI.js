@@ -1,0 +1,1 @@
+var e=new URL(`ZH-W525-ge-pattern-filmstrip-DDoFiPt5.svg`,import.meta.url).href;export{e as default};
