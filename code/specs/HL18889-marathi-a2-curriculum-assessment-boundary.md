@@ -27,6 +27,18 @@ Chapter 160 gains two lessons: person-marked future forms and **-णार आ�
 for plans and refusals.  Chapters 276–277 remain later spiral reinforcement;
 they are not source evidence for A2.
 
+The repository evidence behind that decision is explicit and bounded:
+
+- `core/spine.d/0210-SPINE-TALK-ABOUT-PAST.json` and
+  `0220-SPINE-TALK-ABOUT-FUTURE.json` assign both capabilities to A2;
+- `marathi/chapters.d/0159.json` and `0160.json` already claim those two spine
+  nodes inside the regular A2 run;
+- the pre-repair chapter 159–160 lessons own time vocabulary and examples but
+  no productive past/future grammar atoms; and
+- `marathi/CHANGELOG.d/00780-*.md`, chapters 276–277, and their lessons describe
+  those later chapters as the bridge into the B1 core.  They are useful spiral
+  evidence, but they are downstream of the declared A2 gate.
+
 ## 2. Machine-readable boundary
 
 `marathi/assessment-boundaries/a2.json` is the track-owned source contract.  It

@@ -1,13 +1,16 @@
 {
   "language": "marathi",
   "chapter": 159,
-  "sourceHash": "fnv1a64:dbc310e6cea550b1",
+  "sourceHash": "fnv1a64:1c8a933a35095d9b",
   "lessonIds": [
     "MR-C159-alikade",
     "MR-C159-purvi",
     "MR-C159-adhic",
     "MR-C159-bhutkal",
-    "MR-C159-ghadne"
+    "MR-C159-ghadne",
+    "MR-C159-gelo",
+    "MR-C159-tyane-kela",
+    "MR-C159-hota"
   ],
   "tex": "marathi/book/chapters/ch159-recently-formerly-already-the-past-to-happen.tex"
 }

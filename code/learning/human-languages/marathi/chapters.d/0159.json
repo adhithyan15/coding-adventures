@@ -7,13 +7,16 @@
     "SPINE-TALK-ABOUT-PAST"
   ],
   "payoff": {
-    "lesson": "MR-C159-ghadne",
+    "lesson": "MR-C159-hota",
     "kind": "production",
     "summary": "Complete the last lesson of chapter 159: I can say what happened, and when: recently, already, in the old days.",
     "assesses": [
-      "MR-LEX-C159-PAS159-03",
-      "MR-LEX-C159-PAS159-04",
-      "MR-LEX-C159-PAS159-05"
+      "MR-GRAMMAR-C159-PAST-PERSON-01",
+      "MR-GRAMMAR-C159-PAST-STEMS-01",
+      "MR-GRAMMAR-C159-ERGATIVE-NE-01",
+      "MR-GRAMMAR-C159-OBJECT-AGREEMENT-01",
+      "MR-GRAMMAR-C159-WAS-01",
+      "MR-GRAMMAR-C159-WAS-NOT-01"
     ]
   }
 }

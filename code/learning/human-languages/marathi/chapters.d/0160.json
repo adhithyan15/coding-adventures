@@ -7,13 +7,15 @@
     "SPINE-TALK-ABOUT-FUTURE"
   ],
   "payoff": {
-    "lesson": "MR-C160-akhne",
+    "lesson": "MR-C160-janar-ahe",
     "kind": "production",
     "summary": "Complete the last lesson of chapter 160: I can say what will happen, and when: soon, next week, from now on.",
     "assesses": [
-      "MR-LEX-C160-BHAV160-03",
-      "MR-LEX-C160-BHAV160-04",
-      "MR-LEX-C160-BHAV160-05"
+      "MR-GRAMMAR-C160-FUTURE-PERSON-01",
+      "MR-GRAMMAR-C160-FUTURE-STEMS-01",
+      "MR-GRAMMAR-C160-NAR-PLAN-01",
+      "MR-GRAMMAR-C160-NAR-NAHI-01",
+      "MR-LEX-C160-BHAV160-03"
     ]
   }
 }

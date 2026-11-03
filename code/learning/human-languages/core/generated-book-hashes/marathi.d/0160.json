@@ -1,13 +1,15 @@
 {
   "language": "marathi",
   "chapter": 160,
-  "sourceHash": "fnv1a64:c8a8660bbce5bb38",
+  "sourceHash": "fnv1a64:cc9e50f52d3c77a5",
   "lessonIds": [
     "MR-C160-bhavishya",
     "MR-C160-lavkarac",
     "MR-C160-pudhca",
     "MR-C160-yanantar",
-    "MR-C160-akhne"
+    "MR-C160-akhne",
+    "MR-C160-jain",
+    "MR-C160-janar-ahe"
   ],
   "tex": "marathi/book/chapters/ch160-the-future-soon-next-from-now-on-to-plan.tex"
 }

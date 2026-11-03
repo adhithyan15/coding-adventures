@@ -34,8 +34,11 @@ examiner scripts, shared rung-owned rubrics, and fail-closed manifests covering
 all twelve published pre-A1 parts and all eleven published A1 parts. They are
 structural project evidence only: recording provenance, qualified review,
 standard setting, calibration, and book-only human validation remain explicit
-backlog. The project-defined A2 four-skill task shape is also published, but its
-two timed mock bundles and every later-rung mock bundle remain backlog.
+backlog. The project-defined A2 four-skill task shape is also published.
+Chapters 159 and 160 now own its bounded past/future grammar path before the
+chapter-275 A2 source gate; chapters 276–277 revisit that grammar at the B1 seam
+and cannot be used to bless A2 evidence. Its two timed mock bundles and every
+later-rung mock bundle remain backlog.
 
 ## Progress
 
@@ -371,10 +374,16 @@ first-person can-do sentence and the lesson that pays it off.
   carries all four inherited ordinals as headwords and none of the built ones.
   A1 exam coverage 161/301 → **162/301**.
 
+- **Chapters 159–160 — the owned A2 past and future path**
+  ([`lessons/MR-C159-*`](./lessons/), [`lessons/MR-C160-*`](./lessons/)):
+  three short past lessons make **मी गेलो**, the ergative **त्याने काम केलं**
+  with object agreement, and **होता / नव्हता** independently retrievable;
+  two future lessons do the same for **मी जाईन** and **-णार आहे / नाही**.
+  [`assessment-boundaries/a2.json`](./assessment-boundaries/a2.json) keeps the
+  source gate at chapter 275 and excludes the later B1 seam.
 - **Chapters 276–287 — the B1 core** ([`lessons/`](./lessons/), `MR-C276-*`
-  to `MR-W287-six-lines`): 276–277 bridge the A2 past and future the track
-  had left empty (मी गेलो, the ergative त्याने काम केलं with the verb agreeing
-  with the object, होता; मी जाईन and -णार आहे), then two chapters for each of
+  to `MR-W287-six-lines`): 276–277 spiral the A2 past and future once more at
+  the seam, then two chapters for each of
   the five B1 spine nodes. Narrating (-त होतो, असताना, the habitual -ायचो, आधी
   / मग / त्यानंतर / शेवटी, the -ऊन form, an eighty-six-word reading), giving
   reasons (मला वाटतं की, म्हणून / त्यामुळे, -ायला पाहिजे / हवं, -ऊ नये, -मुळे

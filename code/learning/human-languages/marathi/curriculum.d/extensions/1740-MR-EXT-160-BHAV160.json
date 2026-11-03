@@ -2,7 +2,7 @@
   "id": "MR-EXT-160-BHAV160",
   "stage": "A2",
   "kind": "required",
-  "category": "vocabulary",
+  "category": "grammar",
   "canDo": "I can say what will happen, and when: soon, next week, from now on.",
   "prerequisites": []
 }

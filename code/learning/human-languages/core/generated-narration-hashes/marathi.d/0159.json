@@ -1,19 +1,22 @@
 {
   "language": "marathi",
   "chapter": 159,
-  "sourceHash": "fnv1a64:3c85ef083fd83c0d",
+  "sourceHash": "fnv1a64:a461c67f8edb8446",
   "lessonIds": [
     "MR-C159-alikade",
     "MR-C159-purvi",
     "MR-C159-adhic",
     "MR-C159-bhutkal",
-    "MR-C159-ghadne"
+    "MR-C159-ghadne",
+    "MR-C159-gelo",
+    "MR-C159-tyane-kela",
+    "MR-C159-hota"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 8,
+  "drivablePrefix": 8,
   "text": "marathi/narration/ch159.txt",
   "json": "marathi/narration/ch159.json",
-  "textHash": "fnv1a64:a66cda1d9b820385",
-  "jsonHash": "fnv1a64:cff3d8c8cf6aa829",
+  "textHash": "fnv1a64:4f8b766216a669a8",
+  "jsonHash": "fnv1a64:72740adc8ae748fa",
   "findings": []
 }

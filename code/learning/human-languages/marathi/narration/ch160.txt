@@ -1,8 +1,8 @@
 Marathi, chapter 160: The Future, Soon, Next, From Now On, To Plan.
-5 lessons. All 5 can be done entirely by ear.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 5.
+Lesson 1 of 7.
 भविष्य (bhaviṣya) — the future.
 
 Warm-up.
@@ -34,7 +34,7 @@ Wrap-up Recall.
 What does भविष्य (bhaviṣya) mean? ("The future".) Say it once more.
 
 
-Lesson 2 of 5.
+Lesson 2 of 7.
 लवकरच (lavkarac) — soon.
 
 Warm-up.
@@ -66,7 +66,7 @@ Wrap-up Recall.
 What does लवकरच (lavkarac) mean? ("Soon".) Say it once more.
 
 
-Lesson 3 of 5.
+Lesson 3 of 7.
 पुढचा / पुढची / पुढचे (puḍhcā / puḍhcī / puḍhce) — next.
 
 Warm-up.
@@ -98,7 +98,7 @@ Wrap-up Recall.
 What does पुढचा / पुढची / पुढचे (puḍhcā / puḍhcī / puḍhce) mean? ("Next".) Say it once more.
 
 
-Lesson 4 of 5.
+Lesson 4 of 7.
 यानंतर (yānantar) — from now on, after this.
 
 Warm-up.
@@ -130,7 +130,7 @@ Wrap-up Recall.
 What does यानंतर (yānantar) mean? ("From now on, after this".) Say it once more.
 
 
-Lesson 5 of 5.
+Lesson 5 of 7.
 आखणे (ākhṇe) — to plan, to draw up.
 
 Warm-up.
@@ -160,3 +160,63 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does आखणे (ākhṇe) mean? ("To plan, to draw up".) Say it once more.
+
+
+Lesson 6 of 7.
+मी जाईन (mī jāīn) — the future, person by person.
+
+Warm-up.
+[pause 2 seconds]
+Say "to plan", then "tomorrow", then उद्या भेटू.
+
+You'll want to know: who will do it?
+उद्या मी पुण्याला जाईन. udyā mī puṇyālā jāīn. — "Tomorrow I will go to Pune."
+Use मी जाईन (mī jāīn), तू जाशील, तो / ती जाईल, आम्ही जाऊ, तुम्ही जाल, ते जातील. The future changes with the person, but not gender: a man and a woman both say मी जाईन (mī jāīn).
+
+You'll want to know: a few future stems.
+The endings stay while the stem changes: येणे becomes येईन / येईल, करणे becomes करीन / करेल, वाचणे becomes वाचीन / वाचेल, पडणे becomes पडेल. Ask काय होईल?, "What will happen?"
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Tomorrow I will go to Pune" — udyā mī puṇyālā jāīn]
+[pause 8 seconds for the answer]
+[your turn — say: "It will rain in the evening" — sandhyākāḷī pāūs paḍel]
+[pause 8 seconds for the answer]
+[your turn — say: "We will meet tomorrow" — āmhī udyā bheṭū]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 24 seconds]
+Say that you will go to Pune tomorrow, then that it will rain in the evening.
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I will go"? (जाईन.) "We will go"? (जाऊ.) "You will go" with respect? (जाल.) "They will go"? (जातील.) "It will rain"? (पडेल.)
+
+
+Lesson 7 of 7.
+मी जाणार आहे (mī jāṇār āhe) — a plan, and what will not happen.
+
+Warm-up.
+[pause 2 seconds]
+Say "I will go", then जाणे, then आहे.
+
+You'll want to know: -णार आहे for a plan.
+पुढच्या आठवड्यात मी गावाला जाणार आहे. puḍhcyā āṭhavḍyāt mī gāvālā jāṇār āhe. — "Next week I am going to go to the village."
+Take -णे off the verb and add -णार: जाणे becomes जाणार, करणे becomes करणार, येणे becomes येणार. Add आहे for a present plan. -णार stays the same with every person in this bounded A2 pattern.
+
+You'll want to know: -णार नाही for won't.
+Replace आहे with नाही for a future refusal or firm negative: मी उद्या येणार नाही, "I won't come tomorrow."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "I am going to go to the village" — mī gāvālā jāṇār āhe]
+[pause 8 seconds for the answer]
+[your turn — say: "I am going to work tomorrow" — mī udyā kām karṇār āhe]
+[pause 8 seconds for the answer]
+[your turn — say: "I won't come tomorrow" — mī udyā yeṇār nāhī]
+[pause 8 seconds for the answer]
+[question — say your answer, then pause 24 seconds]
+Say that you are going to go to the village next week, then that you will not come tomorrow.
+
+Wrap-up Recall.
+[pause 3 seconds]
+"I will go"? (मी जाईन (mī jāīn).) "I am going to go"? (मी जाणार आहे (mī jāṇār āhe).) "I won't come"? (मी येणार नाही.) "Next week"? (पुढच्या आठवड्यात.)

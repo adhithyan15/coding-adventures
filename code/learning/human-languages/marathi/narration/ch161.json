@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:071996647a8a8ac6",
+  "sourceHash": "fnv1a64:9b771e98e3e8fee1",
   "lessons": [
     {
       "id": "MR-C161-velapatrak",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9531359299890978",
+      "sourceHash": "fnv1a64:ad7ab3641fafd3ee",
       "notice": null,
       "blocks": [
         {
@@ -125,6 +125,24 @@
             },
             {
               "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I am going to go tomorrow\" — mī udyā jāṇār āhe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I am going to go tomorrow\" — *mī udyā jāṇār āhe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I won't come tomorrow\" — mī udyā yeṇār nāhī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I won't come tomorrow\" — *mī udyā yeṇār nāhī*]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
               "instruction": "say the Marathi for from now on, then the Marathi for to plan, then say veḷāpatrak again",
               "spoken": true,
@@ -166,7 +184,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc49f9be72271274",
+      "sourceHash": "fnv1a64:a7ee5183846ad6a8",
       "notice": null,
       "blocks": [
         {
@@ -269,6 +287,24 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: say *sūcanā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The shop was closed\" — dukān band hotaṃ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The shop was closed\" — *dukān band hotaṃ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"The shop was not closed\" — dukān band navhtaṃ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"The shop was not closed\" — *dukān band navhtaṃ*]"
             },
             {
               "kind": "prompt",
