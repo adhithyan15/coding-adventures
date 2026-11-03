@@ -866,7 +866,7 @@ jobs:
           pwsh -NoProfile -ExecutionPolicy Bypass `
             -File code/scripts/taskapp-xaml-smoke.ps1 `
             -ExePath $firstExecutable `
-            -RestartExePath $replacementExecutable
+            -RestartExePath $replacementExecutable 2>&1 | Tee-Object -FilePath release-work/xaml-smoke.log
           if ($LASTEXITCODE -ne 0) { throw 'Packaged Windows UI lifecycle failed' }
           if (!(Test-Path $state)) { throw 'Packaged app did not persist under stable LocalApplicationData identity' }
 
@@ -901,6 +901,23 @@ jobs:
           Remove-Item Env:MOSAIC_EXPECT_RESTORED -ErrorAction SilentlyContinue
           Remove-Item Env:MOSAIC_APP_STATE_PATH -ErrorAction SilentlyContinue
 
+      # Failure evidence stays separate from artifacts eligible for publication.
+      - name: Collect XAML failure diagnostics
+        if: failure() && matrix.backend == 'xaml'
+        shell: pwsh
+        env:
+          RELEASE_COMMIT: ${{ needs.validate.outputs.commit }}
+        run: ./code/scripts/taskapp-xaml-diagnostics.ps1 -Commit $env:RELEASE_COMMIT
+
+      - name: Upload XAML failure diagnostics
+        if: failure() && matrix.backend == 'xaml'
+        uses: actions/upload-artifact@v7
+        with:
+          name: task-app-xaml-failure-diagnostics
+          path: xaml-failure-diagnostics/
+          if-no-files-found: warn
+          retention-days: 7
+
       - name: Upload the verified native payload
         uses: actions/upload-artifact@v7
         with:
@@ -932,6 +949,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           path: release-assets
+          pattern: task-app-*-release
           merge-multiple: true
 
       - name: Build provenance, checksums, and product-scoped release notes

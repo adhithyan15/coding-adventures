@@ -2057,3 +2057,7 @@ Without them nothing in this layout would have been vertically centred, and the 
 - End-to-end in a browser: adding tasks auto-schedules them (e.g. three tasks land on
   consecutive working days Mon→Tue→Wed), completion toggles work, and the projected
   finish updates — all driven by the Rust engine over WASM, with no console errors.
+
+## Unreleased - XAML diagnostics (#18845)
+
+Retain failed XAML build payloads and bounded native smoke evidence separately from verified release artifacts. Restrict publication downloads to verified release artifact names.
