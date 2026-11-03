@@ -56,6 +56,13 @@ only inside Rust would leave the tests loading the DLL into a different Perl.
 An explicit PERL_BIN must identify native Perl; otherwise the helper searches
 the available Perl executables for Config{osname} equal to MSWin32.
 
+Incremental builds treat the shared helper and perl-bridge's Cargo manifest,
+build script and source directory as external inputs of all three Perl
+consumers: Conduit, IRC Server Native and Conduit Hello. Editing one of those
+inputs must select the consumers even when no Perl package file changed.
+Missing consumers fail closed, and single-language runs retain their language
+filter. Documentation and lookalike helper filenames are not build inputs.
+
 ## Architecture
 
 ```
