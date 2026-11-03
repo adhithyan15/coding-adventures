@@ -9,6 +9,10 @@ cut.
 
 ### Added
 
+- Retain failed XAML build payloads and bounded native smoke evidence separately
+  from verified release artifacts; restrict publication downloads to verified
+  release artifact names (#18845).
+
 - Task names are capped at 512 characters on every host (backlog 6e4).
   Nothing limited a task's name before, so a pasted or restored
   multi-megabyte one was stored, re-rendered and lowercased on every note
