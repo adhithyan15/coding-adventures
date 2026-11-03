@@ -42,6 +42,10 @@
 
 ### Fixed
 
+- CLI parsing now rejects unknown options, unexpected positional arguments,
+  and missing `--root` or `--language` values with status 2 before discovery.
+  Stable argument diagnostics do not repeat raw, potentially path-bearing
+  input.
 - Diff selection now charges the exact UTF-8 bytes of first-seen unique glob
   declarations against a 4 MiB ceiling before normalization, even when no
   paths changed. Package-root classification uses one reusable changed-path

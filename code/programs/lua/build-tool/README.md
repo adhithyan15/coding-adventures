@@ -123,6 +123,11 @@ lua build.lua --language python        # Only build Python packages
 lua build.lua --force                  # Rebuild everything
 ```
 
+Argument parsing is fail-closed. Unknown options, unexpected positional
+arguments, and missing values for `--root` or `--language` exit with status 2
+before package discovery. Their stable diagnostics do not echo untrusted
+argument text or checkout paths.
+
 ## Lua-Specific Design Notes
 
 - **Tables as everything**: The directed graph uses tables for adjacency
