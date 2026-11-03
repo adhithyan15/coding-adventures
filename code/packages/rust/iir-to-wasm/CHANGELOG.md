@@ -1,5 +1,12 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG83 PR5b — literals are bytes
+
+- **`validate_for_wasm` accepts any `str_const` literal**, a `Str` (it accepted ASCII only) or a raw-byte `Operand::Bytes`. The data segment holds the bytes verbatim.
+- **Runtime string blocks are keyed by bytes.** The per-function table of promoted literal blocks was keyed by a lossy UTF-8 decode, so the distinct one-byte strings `A9` and `FF` (both U+FFFD) shared one block and one branch returned the other's byte. It is now `HashMap<Vec<u8>, u32>`.
+- `const`, `call` and `ret` refuse a `Bytes` operand like a `Str` one.
+- New `tests/lang83_pr5b.rs`: `any_literal_validates_and_its_bytes_are_the_data_segment` and `runtime_blocks_are_keyed_by_bytes_not_by_lossy_text`. Both fail on the previous lowering; the second also fails with only the lossy key restored (169 instead of 255).
+
 ## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused, a join past it is not folded
 
 - `validate_for_wasm` (and so `lower_iir_to_wasm` and the codegen registry) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.
