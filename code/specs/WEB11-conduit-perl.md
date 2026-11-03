@@ -64,6 +64,8 @@ Missing consumers fail closed, and single-language runs retain their language
 filter. Crate-root documentation and lookalike helper filenames are not build inputs.
 Both Unix and Windows native Perl recipes declare the Rust toolchain explicitly,
 so a helper-only edit installs Cargo as well as Perl in a fresh CI environment.
+The Windows native-suite gate includes all three consumers and the shared helper
+path, so a Perl-only helper edit actually executes the Windows build step.
 
 ## Architecture
 
