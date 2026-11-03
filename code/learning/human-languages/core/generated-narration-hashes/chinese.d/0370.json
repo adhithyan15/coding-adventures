@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 370,
+  "sourceHash": "fnv1a64:9994717e696c2920",
+  "lessonIds": [
+    "ZH-C370-yinsu",
+    "ZH-C370-bijing",
+    "ZH-C370-guanjian",
+    "ZH-C370-zuoyong",
+    "ZH-C370-zongzhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch370.txt",
+  "json": "chinese/narration/ch370.json",
+  "textHash": "fnv1a64:fbd8e45ce31c2b26",
+  "jsonHash": "fnv1a64:1d04a73ba4d8ecce",
+  "findings": []
+}

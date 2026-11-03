@@ -1,0 +1,19 @@
+{
+  "chapter": 346,
+  "title": "Thinking It Over",
+  "label": "ch:zh-thinking-it-over",
+  "canDo": "I can say I am thinking something over, give a point of view and say I reckon so.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C346-guji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 346: I can say I am thinking something over, give a point of view and say I reckon so.",
+    "assesses": [
+      "ZH-LEX-C346-THINK346-03",
+      "ZH-LEX-C346-THINK346-04",
+      "ZH-LEX-C346-THINK346-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:300a1602b1d88de5",
+  "lessonIds": [
+    "ZH-C514-shandian",
+    "ZH-C514-linyu",
+    "ZH-C514-leiyu",
+    "ZH-C514-dongjiang",
+    "ZH-C514-ronghua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch514.txt",
+  "json": "chinese/narration/ch514.json",
+  "textHash": "fnv1a64:c28593e51f7f4ccc",
+  "jsonHash": "fnv1a64:7f764ffd9c06b6ee",
+  "findings": []
+}

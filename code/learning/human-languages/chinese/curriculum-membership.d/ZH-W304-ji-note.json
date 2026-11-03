@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W304-ji-note",
+  "pathSegment": "ZH-PATH-304-SCHOOL304",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-304-SCHOOL304",
+      "order": 2
+    }
+  ]
+}

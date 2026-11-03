@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:7351fee2e5dd6a41",
+  "lessonIds": [
+    "ZH-C459-gudan",
+    "ZH-C459-shiqing",
+    "ZH-W459-qing-feeling",
+    "ZH-C459-ganqing",
+    "ZH-C459-xinlihua",
+    "ZH-C459-weiqu"
+  ],
+  "tex": "chinese/book/chapters/ch459-on-my-mind.tex"
+}

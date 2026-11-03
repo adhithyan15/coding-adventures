@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W423-nan-south",
+  "pathSegment": "ZH-PATH-423-SOUTH423",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-423-SOUTH423",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 404,
+  "title": "Tickets, Please",
+  "label": "ch:zh-tickets-please",
+  "canDo": "I can find the ticket office, have my ticket checked, pay on board and choose a berth or a seat.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C404-yingzuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 404: I can find the ticket office, have my ticket checked, pay on board and choose a berth or a seat.",
+    "assesses": [
+      "ZH-LEX-C404-TICKET404-03",
+      "ZH-LEX-C404-TICKET404-04",
+      "ZH-LEX-C404-TICKET404-05"
+    ]
+  }
+}

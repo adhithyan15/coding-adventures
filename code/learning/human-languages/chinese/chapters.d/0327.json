@@ -1,0 +1,19 @@
+{
+  "chapter": 327,
+  "title": "Heroes and Emperors",
+  "label": "ch:zh-heroes-and-emperors",
+  "canDo": "I can talk about famous people, heroes and emperors, and say two countries went to war.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C327-zhanzheng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 327: I can talk about famous people, heroes and emperors, and say two countries went to war.",
+    "assesses": [
+      "ZH-LEX-C327-HERO327-03",
+      "ZH-LEX-C327-HERO327-04",
+      "ZH-LEX-C327-HERO327-05"
+    ]
+  }
+}

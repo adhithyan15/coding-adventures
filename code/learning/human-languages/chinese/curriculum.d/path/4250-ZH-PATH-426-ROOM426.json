@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-426-ROOM426",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ZH-EXT-426-ROOM426"
+  ],
+  "after": []
+}

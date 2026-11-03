@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C507-fuqi",
+    "language": "chinese",
+    "chapter": 507,
+    "sequence": 38110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:89de37fc36ad0403"
+  },
+  "findings": []
+}

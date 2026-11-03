@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C448-zaoshi",
+    "language": "chinese",
+    "chapter": 448,
+    "sequence": 33960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:08711c8ba23de50e"
+  },
+  "findings": []
+}

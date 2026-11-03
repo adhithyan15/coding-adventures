@@ -1,0 +1,19 @@
+{
+  "chapter": 376,
+  "title": "Out in Public",
+  "label": "ch:zh-out-in-public",
+  "canDo": "I can talk about events, social workers, looking after the park, giving up a seat and square dancing.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C376-guangchangwu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 376: I can talk about events, social workers, looking after the park, giving up a seat and square dancing.",
+    "assesses": [
+      "ZH-LEX-C376-PUBLIC376-03",
+      "ZH-LEX-C376-PUBLIC376-04",
+      "ZH-LEX-C376-PUBLIC376-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C531-buxing",
+  "pathSegment": "ZH-PATH-531-ESCAPE531",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-531-ESCAPE531",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W354-ti-topic",
+    "language": "chinese",
+    "chapter": 354,
+    "sequence": 27425,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8c2aa82efcaba7dc",
+    "detachableSegments": [
+      "Script — shì, then the page piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

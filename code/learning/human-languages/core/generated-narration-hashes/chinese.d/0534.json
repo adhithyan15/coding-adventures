@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 534,
+  "sourceHash": "fnv1a64:c4c5346177f70bee",
+  "lessonIds": [
+    "ZH-C534-ningke",
+    "ZH-C534-jinliang",
+    "ZH-C534-jiaru",
+    "ZH-C534-xunuo",
+    "ZH-C534-wanshiruyi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch534.txt",
+  "json": "chinese/narration/ch534.json",
+  "textHash": "fnv1a64:63abfcc1ff7fedd5",
+  "jsonHash": "fnv1a64:2a1081888e4179a4",
+  "findings": []
+}

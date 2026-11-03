@@ -1,0 +1,19 @@
+{
+  "chapter": 299,
+  "title": "Help Arrives",
+  "label": "ch:zh-help-arrives",
+  "canDo": "I can say people were rescued in time, talk about first aid, and say the doctors fought to save a life.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C299-qiangjiu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 299: I can say people were rescued in time, talk about first aid, and say the doctors fought to save a life.",
+    "assesses": [
+      "ZH-LEX-C299-RESCUE299-03",
+      "ZH-LEX-C299-RESCUE299-04",
+      "ZH-LEX-C299-RESCUE299-05"
+    ]
+  }
+}

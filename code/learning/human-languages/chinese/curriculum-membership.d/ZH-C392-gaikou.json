@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C392-gaikou",
+  "pathSegment": "ZH-PATH-392-NEWPLAN392",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-392-NEWPLAN392",
+      "order": 5
+    }
+  ]
+}

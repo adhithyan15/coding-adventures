@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C461-peifu",
+    "language": "chinese",
+    "chapter": 461,
+    "sequence": 35150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8699c9a341734633"
+  },
+  "findings": []
+}

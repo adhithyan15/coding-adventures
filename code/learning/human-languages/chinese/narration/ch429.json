@@ -1,0 +1,914 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 429,
+  "title": "Home Again",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:caf7da07c370ad83",
+  "lessons": [
+    {
+      "id": "ZH-C429-lutu",
+      "sequence": 32390,
+      "title": "lǚtú — journey",
+      "headword": "lǚtú",
+      "romanization": "lǚtú",
+      "gloss": "journey",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a628f326338ce3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the plan for a trip, then the Mandarin for an official receipt."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lǚtú",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǚtú — \"journey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "lǚtú hěn cháng wǒmen dōu hěn lèi — It was a long journey, and we're all tired."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lǚtú is built from 旅 'to travel' and tú 'a road', both inherited from Middle Chinese, ljoX and du (Guangyun, in Baxter's transcription); the dictionary glosses the first as a body of troops and the second 'a road'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǚtú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǚtú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǚtú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǚtú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǚtú hěn cháng wǒmen dōu hěn lèi — It was a long journey, and we're all tired.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǚtú hěn cháng wǒmen dōu hěn lèi* — It was a long journey, and we're all tired.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the plan for a trip, then the Mandarin for an official receipt, then say lǚtú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the plan for a trip, then the Mandarin for an official receipt, then say *lǚtú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lǚtú mean? (\"Journey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C429-shunlu",
+      "sequence": 32400,
+      "title": "shùnlù — on one's way",
+      "headword": "shùnlù",
+      "romanization": "shùnlù",
+      "gloss": "on one's way",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de506b1da608cf3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an official receipt, then the Mandarin for the journey as a whole."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shùnlù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shùnlù — \"on one's way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zhù zài nǐ jiā fùjìn shùnlù sòng nǐ qù jīchǎng — I live near you, so I'll drop you at the airport on my way."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shùnlù is built from shùn 'to follow' and 路 'a road', both inherited from Middle Chinese, zywinH and luH (Guangyun, in Baxter's transcription), which glosses the first 'to follow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shùnlù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shùnlù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shùnlù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shùnlù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zhù zài nǐ jiā fùjìn shùnlù sòng nǐ qù jīchǎng — I live near you, so I'll drop you at the airport on my way.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zhù zài nǐ jiā fùjìn shùnlù sòng nǐ qù jīchǎng* — I live near you, so I'll drop you at the airport on my way.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an official receipt, then the Mandarin for the journey as a whole, then say shùnlù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an official receipt, then the Mandarin for the journey as a whole, then say *shùnlù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shùnlù mean? (\"On one's way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C429-dache-lift",
+      "sequence": 32410,
+      "title": "dāchē — to get a lift",
+      "headword": "dāchē",
+      "romanization": "dāchē",
+      "gloss": "to get a lift",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:85ac29e755579446",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the journey as a whole, then the Mandarin for on one's way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dāchē",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dāchē — \"to get a lift\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen dāchē huí jiā — We got a lift home."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dāchē is built from dā 'to join on' and 车 'vehicle', both inherited from Middle Chinese, thap and tsyhae (Guangyun, in Baxter's transcription); the dictionary glosses the first only as a word for touching, so the sense 'to ride along' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāchē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāchē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāchē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāchē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen dāchē huí jiā — We got a lift home.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen dāchē huí jiā* — We got a lift home.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the journey as a whole, then the Mandarin for on one's way, then say dāchē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the journey as a whole, then the Mandarin for on one's way, then say *dāchē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dāchē mean? (\"To get a lift\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C429-chuxing",
+      "sequence": 32420,
+      "title": "chūxíng — to get about; to go out on a journey",
+      "headword": "chūxíng",
+      "romanization": "chūxíng",
+      "gloss": "to get about; to go out on a journey",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cf59cee8ffbb7731",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for on one's way, then the Mandarin for to get a lift."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chūxíng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chūxíng — \"to get about; to go out on a journey\"."
+            },
+            {
+              "kind": "speech",
+              "text": "xiàyǔ de shíhou chūxíng hěn bù fāngbiàn — When it rains, getting about is a real nuisance."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chūxíng is built from 出 'to go out' and xíng 'to go', both inherited from Middle Chinese, tsyhwit and haeng (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūxíng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūxíng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūxíng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūxíng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàyǔ de shíhou chūxíng hěn bù fāngbiàn — When it rains, getting about is a real nuisance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàyǔ de shíhou chūxíng hěn bù fāngbiàn* — When it rains, getting about is a real nuisance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for on one's way, then the Mandarin for to get a lift, then say chūxíng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for on one's way, then the Mandarin for to get a lift, then say *chūxíng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chūxíng mean? (\"To get about; to go out on a journey\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C429-lufei",
+      "sequence": 32430,
+      "title": "lùfèi — travel costs; the cost of getting there",
+      "headword": "lùfèi",
+      "romanization": "lùfèi",
+      "gloss": "travel costs; the cost of getting there",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75a94b5cb6b79d21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to get a lift, then the Mandarin for to go out on a journey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lùfèi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lùfèi — \"travel costs; the cost of getting there\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zuò huǒchē qù Běijīng lùfèi shì duōshao — How much does it cost to get to Beijing by train?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lùfèi is built from 路 'a road' and fèi 'a cost', both inherited from Middle Chinese, luH and phj+jH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lùfèi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lùfèi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lùfèi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lùfèi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuò huǒchē qù Běijīng lùfèi shì duōshao — How much does it cost to get to Beijing by train?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuò huǒchē qù Běijīng lùfèi shì duōshao* — How much does it cost to get to Beijing by train?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to get a lift, then the Mandarin for to go out on a journey, then say lùfèi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to get a lift, then the Mandarin for to go out on a journey, then say *lùfèi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lùfèi mean? (\"Travel costs; the cost of getting there\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R429-review-425-429",
+      "sequence": 32440,
+      "title": "Looking back: from The Hotel to Home Again",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from The Hotel to Home Again",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad4725fcd93ad984",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a place to stay and a big hotel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a place to stay, a big hotel, a hotel guest room, a room key card, the hotel lobby",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a place to stay, a big hotel, a hotel guest room, a room key card, the hotel lobby]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a room with a double bed, fully booked, a small inn, the hotel star rating, a power socket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a room with a double bed, fully booked, a small inn, the hotel star rating, a power socket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "right next door, to come and go, a buffet, a bed sheet, to be bound for a place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: right next door, to come and go, a buffet, a bed sheet, to be bound for a place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to lead to a place, to set out for a place, the journey back, the plan for a trip, an official receipt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to lead to a place, to set out for a place, the journey back, the plan for a trip, an official receipt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the journey as a whole, on one's way, to get a lift, to go out on a journey, the cost of getting there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the journey as a whole, on one's way, to get a lift, to go out on a journey, the cost of getting there]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "酒 往 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 酒 往 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A place to stay? (zhùsù.) A big hotel? (酒店, jiǔdiàn.) A hotel guest room? (客房, kèfáng.) A room key card? (fángkǎ.) The hotel lobby? (dàtáng.) A room with a double bed? (dàchuángfáng.) Fully booked? (kèmǎn.) A small inn? (旅店, lǚdiàn.) The hotel star rating? (xīngjí.) A power socket? (chāzuò.) Right next door? (gébì.) To come and go? (来往, láiwǎng.) A buffet? (zìzhùcān.) A bed sheet? (chuángdān.) To be bound for a place? (开往, kāiwǎng.) To lead to a place? (通往, tōngwǎng.) To set out for a place? (前往, qiánwǎng.) The journey back? (huíchéng.) The plan for a trip? (xíngchéng.) An official receipt? (发票, fāpiào.) The journey as a whole? (lǚtú.) On one's way? (shùnlù.) To get a lift? (dāchē.) To go out on a journey? (chūxíng.) The cost of getting there? (lùfèi.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R429-review-final-429",
+      "sequence": 32450,
+      "title": "Home Again — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a9051a0e51aca8c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for the journey as a whole and on one's way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the journey as a whole, on one's way, to get a lift, to go out on a journey, the cost of getting there",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the journey as a whole, on one's way, to get a lift, to go out on a journey, the cost of getting there]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The journey as a whole? (lǚtú.) On one's way? (shùnlù.) To get a lift? (dāchē.) To go out on a journey? (chūxíng.) The cost of getting there? (lùfèi.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

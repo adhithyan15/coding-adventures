@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:ab14e760818d3e13",
+  "lessonIds": [
+    "ZH-C468-shanliang",
+    "ZH-C468-heqi",
+    "ZH-C468-jianqiang",
+    "ZH-C468-qinkuai",
+    "ZH-C468-titie"
+  ],
+  "tex": "chinese/book/chapters/ch468-good-points.tex"
+}

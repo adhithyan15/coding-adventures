@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 323,
+  "sourceHash": "fnv1a64:6b4a9f3a423d3795",
+  "lessonIds": [
+    "ZH-C323-shaonian",
+    "ZH-C323-shiqi",
+    "ZH-C323-niandai",
+    "ZH-W323-dai-era",
+    "ZH-C323-gudai",
+    "ZH-C323-xiandai",
+    "ZH-R323-review-318-323"
+  ],
+  "tex": "chinese/book/chapters/ch323-decades-and-eras.tex"
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:140d6e26b2246da4",
+  "lessonIds": [
+    "ZH-C524-jiezhang",
+    "ZH-C524-banjia",
+    "ZH-W524-jia-price",
+    "ZH-C524-yaojia",
+    "ZH-C524-huanjia",
+    "ZH-C524-wujia"
+  ],
+  "tex": "chinese/book/chapters/ch524-half-price.tex"
+}

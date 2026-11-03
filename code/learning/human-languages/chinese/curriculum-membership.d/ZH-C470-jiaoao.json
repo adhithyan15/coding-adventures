@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C470-jiaoao",
+  "pathSegment": "ZH-PATH-470-FAULTS470",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-470-FAULTS470",
+      "order": 2
+    }
+  ]
+}

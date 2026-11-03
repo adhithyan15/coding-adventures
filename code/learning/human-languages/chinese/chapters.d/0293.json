@@ -1,0 +1,19 @@
+{
+  "chapter": 293,
+  "title": "Headlines",
+  "label": "ch:zh-headlines",
+  "canDo": "I can talk about newspapers and magazines, the lead story and the news I follow.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C293-guanzhu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 293: I can talk about newspapers and magazines, the lead story and the news I follow.",
+    "assesses": [
+      "ZH-LEX-C293-PAPER293-03",
+      "ZH-LEX-C293-PAPER293-04",
+      "ZH-LEX-C293-PAPER293-05"
+    ]
+  }
+}

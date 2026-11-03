@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:270e4ddb71dad57f",
+  "lessonIds": [
+    "ZH-C449-yeshi",
+    "ZH-C449-kouwei",
+    "ZH-W449-wei-taste",
+    "ZH-C449-fengwei",
+    "ZH-C449-qingdan",
+    "ZH-C449-youni"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch449.txt",
+  "json": "chinese/narration/ch449.json",
+  "textHash": "fnv1a64:53fcfbe3bb41f58d",
+  "jsonHash": "fnv1a64:e1260a772556b6e4",
+  "findings": []
+}

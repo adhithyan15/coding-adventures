@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:b94a01d66de98f22",
+  "lessonIds": [
+    "ZH-C348-taolun",
+    "ZH-C348-shangliang",
+    "ZH-C348-zhenglun",
+    "ZH-C348-duifang",
+    "ZH-C348-yizhi"
+  ],
+  "tex": "chinese/book/chapters/ch348-talking-it-over.tex"
+}

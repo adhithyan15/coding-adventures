@@ -1,0 +1,19 @@
+{
+  "chapter": 426,
+  "title": "Booking a Room",
+  "label": "ch:zh-booking-a-room",
+  "canDo": "I can ask for a standard room, hear that a hotel is full, find an inn, ask about stars and pay the bill.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C426-chazuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 426: I can ask for a standard room, hear that a hotel is full, find an inn, ask about stars and pay the bill.",
+    "assesses": [
+      "ZH-LEX-C426-ROOM426-03",
+      "ZH-LEX-C426-ROOM426-04",
+      "ZH-LEX-C426-ROOM426-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C508-dushengzinu",
+    "language": "chinese",
+    "chapter": 508,
+    "sequence": 38150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a631a8bef1d8163a"
+  },
+  "findings": []
+}

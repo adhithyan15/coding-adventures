@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C514-dongjiang",
+  "pathSegment": "ZH-PATH-514-WEATHER514",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-514-WEATHER514",
+      "order": 3
+    }
+  ]
+}

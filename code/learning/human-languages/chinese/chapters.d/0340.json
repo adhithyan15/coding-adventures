@@ -1,0 +1,21 @@
+{
+  "chapter": 340,
+  "title": "Old Ways",
+  "label": "ch:zh-old-ways",
+  "canDo": "I can talk about traditions, being particular about them, proper rules, the solar terms and tending graves.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R340-review-336-340",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 340: I can talk about traditions, being particular about them, proper rules, the solar terms and tending graves.",
+    "assesses": [
+      "ZH-LEX-C340-CUSTOM340-01",
+      "ZH-LEX-C340-CUSTOM340-02",
+      "ZH-LEX-C340-CUSTOM340-03",
+      "ZH-LEX-C340-CUSTOM340-04",
+      "ZH-LEX-C340-CUSTOM340-05"
+    ]
+  }
+}

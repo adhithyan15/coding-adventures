@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W449-wei-taste",
+    "language": "chinese",
+    "chapter": 449,
+    "sequence": 33995,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:25d21e79d1f2d73c",
+    "detachableSegments": [
+      "Script — a small 口, then two bars and a vertical"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

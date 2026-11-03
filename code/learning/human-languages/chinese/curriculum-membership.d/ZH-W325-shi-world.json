@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W325-shi-world",
+  "pathSegment": "ZH-PATH-325-PASSED325",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-325-PASSED325",
+      "order": 2
+    }
+  ]
+}

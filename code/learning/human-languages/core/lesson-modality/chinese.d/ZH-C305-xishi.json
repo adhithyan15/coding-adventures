@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C305-xishi",
+    "language": "chinese",
+    "chapter": 305,
+    "sequence": 23800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bf57fb5b7fe8898d"
+  },
+  "findings": []
+}

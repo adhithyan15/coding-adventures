@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C458-qingsong",
+    "language": "chinese",
+    "chapter": 458,
+    "sequence": 35030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:839b9cb0a40e7ea1"
+  },
+  "findings": []
+}

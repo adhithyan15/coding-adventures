@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C435-shanding",
+  "pathSegment": "ZH-PATH-435-SUMMIT435",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-435-SUMMIT435",
+      "order": 1
+    }
+  ]
+}

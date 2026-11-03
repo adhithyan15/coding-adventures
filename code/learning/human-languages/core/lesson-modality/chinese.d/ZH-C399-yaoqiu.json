@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C399-yaoqiu",
+    "language": "chinese",
+    "chapter": 399,
+    "sequence": 30290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:367a8be7464f7322"
+  },
+  "findings": []
+}

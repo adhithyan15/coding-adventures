@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C361-jugong",
+    "language": "chinese",
+    "chapter": 361,
+    "sequence": 27790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40a9342e755a752f"
+  },
+  "findings": []
+}

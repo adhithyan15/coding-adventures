@@ -1,0 +1,22 @@
+{
+  "chapter": 525,
+  "title": "At Your Service",
+  "label": "ch:zh-at-your-service",
+  "canDo": "I can talk about attentive service and shop assistants, complain and get a refund, and say something is especially good.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R525-review-520-525",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 525: I can talk about attentive service and shop assistants, complain and get a refund, and say something is especially good.",
+    "assesses": [
+      "ZH-LEX-C525-SERVICE525-01",
+      "ZH-LEX-C525-SERVICE525-02",
+      "ZH-LEX-C525-SERVICE525-03",
+      "ZH-LEX-C525-SERVICE525-04",
+      "ZH-LEX-C525-SERVICE525-05",
+      "ZH-SCRIPT-GE-PATTERN-01"
+    ]
+  }
+}

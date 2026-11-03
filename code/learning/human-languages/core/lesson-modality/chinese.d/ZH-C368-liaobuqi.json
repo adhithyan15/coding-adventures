@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C368-liaobuqi",
+    "language": "chinese",
+    "chapter": 368,
+    "sequence": 28150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5dd7d87c07475cb0"
+  },
+  "findings": []
+}

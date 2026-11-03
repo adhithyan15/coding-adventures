@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C459-gudan",
+    "language": "chinese",
+    "chapter": 459,
+    "sequence": 35050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47596ea2f0fd2812"
+  },
+  "findings": []
+}

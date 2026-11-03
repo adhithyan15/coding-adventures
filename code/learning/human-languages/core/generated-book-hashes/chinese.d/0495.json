@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:46be862cd092f590",
+  "lessonIds": [
+    "ZH-C495-qizhong",
+    "ZH-C495-kaochang",
+    "ZH-C495-manfen",
+    "ZH-C495-zuobi",
+    "ZH-C495-nanti"
+  ],
+  "tex": "chinese/book/chapters/ch495-marks.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 493,
+  "title": "Extra Lessons",
+  "label": "ch:zh-extra-lessons",
+  "canDo": "I can talk about extra lessons, a private tutor, education, tutoring and asking for advice.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C493-qingjiao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 493: I can talk about extra lessons, a private tutor, education, tutoring and asking for advice.",
+    "assesses": [
+      "ZH-LEX-C493-TUTOR493-03",
+      "ZH-LEX-C493-TUTOR493-04",
+      "ZH-LEX-C493-TUTOR493-05",
+      "ZH-SCRIPT-JIAO-INSTRUCT-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C302-huaiyun",
+  "pathSegment": "ZH-PATH-302-BIRTH302",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-302-BIRTH302",
+      "order": 0
+    }
+  ]
+}

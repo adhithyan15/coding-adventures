@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C328-shenhua",
+    "language": "chinese",
+    "chapter": 328,
+    "sequence": 25510,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a83d8a1ad70b04a"
+  },
+  "findings": []
+}

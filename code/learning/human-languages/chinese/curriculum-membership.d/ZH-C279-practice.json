@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C279-practice",
+  "pathSegment": "ZH-PATH-279-NEXTDAY",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ZH-EXT-279-NEXTDAY",
+      "order": 7
+    }
+  ]
+}

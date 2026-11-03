@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 336,
+  "title": "Seeing Friends Off",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:87520918849b755c",
+  "lessons": [
+    {
+      "id": "ZH-C336-gaobie",
+      "sequence": 25930,
+      "title": "gàobié — to say goodbye; to take leave",
+      "headword": "gàobié",
+      "romanization": "gàobié",
+      "gloss": "to say goodbye; to take leave",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f596054b9d2a1383",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a riddle, then the Mandarin for a string of firecrackers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gàobié",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gàobié — \"to say goodbye; to take leave\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā hé dàjiā gàobié yǐhòu jiù shàng chē le — After saying goodbye to everyone he got on board."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gàobié is built from gào 'to tell' and bié 'to part', both inherited from Middle Chinese, kawH and bjet (Guangyun, in Baxter's transcription), which glosses the first 'to report' and the second 'to differ' and 'to part'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gàobié",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gàobié*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gàobié, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gàobié*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā hé dàjiā gàobié yǐhòu jiù shàng chē le — After saying goodbye to everyone he got on board.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā hé dàjiā gàobié yǐhòu jiù shàng chē le* — After saying goodbye to everyone he got on board.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a riddle, then the Mandarin for a string of firecrackers, then say gàobié again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a riddle, then the Mandarin for a string of firecrackers, then say *gàobié* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gàobié mean? (\"To say goodbye; to take leave\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C336-huansong",
+      "sequence": 25940,
+      "title": "欢送 (huānsòng) — to give a send-off",
+      "headword": "欢送",
+      "romanization": "huānsòng",
+      "gloss": "to give a send-off",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54833369ee5d5f7e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a string of firecrackers, then the Mandarin for to take leave of someone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 欢送",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "欢送 — huānsòng — \"to give a send-off\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们开了一个晚会欢送他 wǒmen kāi le yí ge wǎnhuì huānsòng tā — We held a party to see him off."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 送 (sòng) — nine strokes: 关 with its last stroke shrunk to a dot, inside the walking piece of 这, which wraps it from the left and runs along the foot. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "欢送 (huānsòng) is built from 欢 'glad' and sòng 'to send', both inherited from Middle Chinese, xwan and suwngH (Guangyun, in Baxter's transcription), which glosses the first 'joy' and the second 'to send away'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huānsòng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huānsòng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huānsòng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huānsòng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen kāi le yí ge wǎnhuì huānsòng tā — We held a party to see him off.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen kāi le yí ge wǎnhuì huānsòng tā* — We held a party to see him off.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a string of firecrackers, then the Mandarin for to take leave of someone, then say huānsòng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a string of firecrackers, then the Mandarin for to take leave of someone, then say *huānsòng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 欢送 (huānsòng) mean? (\"To give a send-off\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W336-song-send",
+      "sequence": 25945,
+      "title": "送 (sòng) — 关 in the walking piece",
+      "headword": "送",
+      "romanization": "sòng",
+      "gloss": "送 — 关, then the walking piece of 这 under it",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b2efeaf9c95a36a4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 关 in the walking piece",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 关 in the walking piece and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say huānsòng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *huānsòng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "关 这."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — guān, zhè",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *guān*, *zhè*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 关 in the walking piece",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "送 (sòng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces: the inside first, then the piece that wraps it."
+            },
+            {
+              "kind": "speech",
+              "text": "The inside piece, 关, six strokes, as you wrote it: two short strokes on top, two bars, a long stroke falling to the left, and last the stroke falling to the right, which here shrinks to a dot."
+            },
+            {
+              "kind": "speech",
+              "text": "The walking piece, three strokes, as in 这: a dot, a small stroke that zigzags down, then a long sweep along the foot to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "6 + 3 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "送 (sòng), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 送, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 送 (sòng)? (Nine.) What sits inside? (关.) What is written last? (The long sweep along the foot.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 送 (sòng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C336-songke",
+      "sequence": 25950,
+      "title": "送客 (sòngkè) — to see a guest out",
+      "headword": "送客",
+      "romanization": "sòngkè",
+      "gloss": "to see a guest out",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac8d736e3fdf9cb6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to take leave of someone, then the Mandarin for to give a send-off."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 送客",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "送客 — sòngkè — \"to see a guest out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "客人走的时候他去门口送客 kèrén zǒu de shíhou tā qù ménkǒu sòngkè — When the guests left, he saw them to the door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "送客 (sòngkè) is built from 送 (sòng) 'to send' and 客 'a guest', both inherited from Middle Chinese, suwngH and khaek (Guangyun, in Baxter's transcription), which glosses the second 'a guest'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sòngkè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sòngkè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sòngkè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sòngkè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kèrén zǒu de shíhou tā qù ménkǒu sòngkè — When the guests left, he saw them to the door.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kèrén zǒu de shíhou tā qù ménkǒu sòngkè* — When the guests left, he saw them to the door.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to take leave of someone, then the Mandarin for to give a send-off, then say sòngkè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to take leave of someone, then the Mandarin for to give a send-off, then say *sòngkè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 送客 (sòngkè) mean? (\"To see a guest out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C336-songli",
+      "sequence": 25960,
+      "title": "sònglǐ — to give a present",
+      "headword": "sònglǐ",
+      "romanization": "sònglǐ",
+      "gloss": "to give a present",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3e5d63dc1b9a0734",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to give a send-off, then the Mandarin for to see a guest out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: sònglǐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sònglǐ — \"to give a present\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Chūnjié de shíhou Zhōngguó rén chángcháng sònglǐ — At the lunar new year Chinese people often give presents."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sònglǐ is built from 送 (sòng) 'to send' and lǐ 'a courtesy', both inherited from Middle Chinese, suwngH and lejX (Guangyun, in Baxter's transcription), which says of the second, quoting an older dictionary, that it is how one serves the spirits and brings blessing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sònglǐ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sònglǐ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sònglǐ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sònglǐ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Chūnjié de shíhou Zhōngguó rén chángcháng sònglǐ — At the lunar new year Chinese people often give presents.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Chūnjié de shíhou Zhōngguó rén chángcháng sònglǐ* — At the lunar new year Chinese people often give presents.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to give a send-off, then the Mandarin for to see a guest out, then say sònglǐ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to give a send-off, then the Mandarin for to see a guest out, then say *sònglǐ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does sònglǐ mean? (\"To give a present\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C336-woshou",
+      "sequence": 25970,
+      "title": "wòshǒu — to shake hands",
+      "headword": "wòshǒu",
+      "romanization": "wòshǒu",
+      "gloss": "to shake hands",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ce3d00456f7a185",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to see a guest out, then the Mandarin for to give a present."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wòshǒu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wòshǒu — \"to shake hands\"."
+            },
+            {
+              "kind": "speech",
+              "text": "gàobié de shíhou wǒmen wòshǒu le — When we said goodbye, we shook hands."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wòshǒu is built from wò 'to grasp' and 手 'a hand', both inherited from Middle Chinese, 'aewk and syuwX (Guangyun, in Baxter's transcription), which glosses the first 'to hold'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wòshǒu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wòshǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wòshǒu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wòshǒu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gàobié de shíhou wǒmen wòshǒu le — When we said goodbye, we shook hands.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gàobié de shíhou wǒmen wòshǒu le* — When we said goodbye, we shook hands.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to see a guest out, then the Mandarin for to give a present, then say wòshǒu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to see a guest out, then the Mandarin for to give a present, then say *wòshǒu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wòshǒu mean? (\"To shake hands\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C516-guoshu",
+    "language": "chinese",
+    "chapter": 516,
+    "sequence": 39120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b9294f4f4409422"
+  },
+  "findings": []
+}

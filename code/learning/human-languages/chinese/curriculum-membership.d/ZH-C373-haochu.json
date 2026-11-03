@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C373-haochu",
+  "pathSegment": "ZH-PATH-373-PROSCONS373",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-373-PROSCONS373",
+      "order": 1
+    }
+  ]
+}

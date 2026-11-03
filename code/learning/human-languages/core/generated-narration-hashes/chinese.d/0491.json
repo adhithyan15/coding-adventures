@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 491,
+  "sourceHash": "fnv1a64:39794dddb1b5067d",
+  "lessonIds": [
+    "ZH-C491-jiaxin",
+    "ZH-C491-shangsi",
+    "ZH-W491-si-charge",
+    "ZH-C491-mishu",
+    "ZH-C491-zhichang",
+    "ZH-C491-xiashu",
+    "ZH-R491-review-486-491"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch491.txt",
+  "json": "chinese/narration/ch491.json",
+  "textHash": "fnv1a64:43c0948f591b13c1",
+  "jsonHash": "fnv1a64:42e6c2159700e1b3",
+  "findings": []
+}

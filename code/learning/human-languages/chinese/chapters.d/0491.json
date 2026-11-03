@@ -1,0 +1,22 @@
+{
+  "chapter": 491,
+  "title": "The Boss",
+  "label": "ch:zh-the-boss",
+  "canDo": "I can talk about a pay rise, my superior, a secretary, the world of work and the people under me.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R491-review-486-491",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 491: I can talk about a pay rise, my superior, a secretary, the world of work and the people under me.",
+    "assesses": [
+      "ZH-LEX-C491-BOSS491-01",
+      "ZH-LEX-C491-BOSS491-02",
+      "ZH-LEX-C491-BOSS491-03",
+      "ZH-LEX-C491-BOSS491-04",
+      "ZH-LEX-C491-BOSS491-05",
+      "ZH-SCRIPT-SI-CHARGE-01"
+    ]
+  }
+}

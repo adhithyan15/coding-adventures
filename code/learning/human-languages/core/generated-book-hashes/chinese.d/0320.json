@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:229280255709b754",
+  "lessonIds": [
+    "ZH-C320-guaduan",
+    "ZH-C320-boda",
+    "ZH-C320-datong",
+    "ZH-C320-shuoqi",
+    "ZH-C320-yuyin"
+  ],
+  "tex": "chinese/book/chapters/ch320-on-the-phone.tex"
+}

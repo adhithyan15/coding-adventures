@@ -1,0 +1,19 @@
+{
+  "chapter": 358,
+  "title": "Real Manners",
+  "label": "ch:zh-real-manners",
+  "canDo": "I can talk about good manners, being sincere and modest, and saving face.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C358-mianzi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 358: I can talk about good manners, being sincere and modest, and saving face.",
+    "assesses": [
+      "ZH-LEX-C358-MANNERS358-03",
+      "ZH-LEX-C358-MANNERS358-04",
+      "ZH-LEX-C358-MANNERS358-05"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:98399bf2700e3989",
+  "lessonIds": [
+    "ZH-C371-shenzhi",
+    "ZH-C371-suiran",
+    "ZH-W371-sui-though",
+    "ZH-C371-jielun",
+    "ZH-C371-zongjie",
+    "ZH-C371-yuanze"
+  ],
+  "tex": "chinese/book/chapters/ch371-although.tex"
+}

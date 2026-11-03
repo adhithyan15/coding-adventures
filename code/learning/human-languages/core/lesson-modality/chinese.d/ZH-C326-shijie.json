@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C326-shijie",
+    "language": "chinese",
+    "chapter": 326,
+    "sequence": 25420,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7c4c1e36246b0d9b"
+  },
+  "findings": []
+}

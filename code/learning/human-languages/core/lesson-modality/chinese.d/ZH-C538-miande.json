@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C538-miande",
+    "language": "chinese",
+    "chapter": 538,
+    "sequence": 40240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb14e661d353286a"
+  },
+  "findings": []
+}

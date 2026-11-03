@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:2fe246990c3caf7d",
+  "lessonIds": [
+    "ZH-C360-gonggong",
+    "ZH-C360-biyao",
+    "ZH-W360-bi-must",
+    "ZH-C360-bubi",
+    "ZH-C360-changhe",
+    "ZH-C360-chadui"
+  ],
+  "tex": "chinese/book/chapters/ch360-no-need.tex"
+}

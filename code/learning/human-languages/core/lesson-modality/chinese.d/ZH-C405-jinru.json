@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C405-jinru",
+    "language": "chinese",
+    "chapter": 405,
+    "sequence": 31160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:702c50076df35ab5"
+  },
+  "findings": []
+}

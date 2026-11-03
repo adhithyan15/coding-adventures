@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 512,
+  "sourceHash": "fnv1a64:57c526d64e3eff01",
+  "lessonIds": [
+    "ZH-C512-zhixiang",
+    "ZH-C512-zhuiqiu",
+    "ZH-C512-chengcai",
+    "ZH-C512-chengming",
+    "ZH-C512-mingxiao"
+  ],
+  "tex": "chinese/book/chapters/ch512-dreams.tex"
+}

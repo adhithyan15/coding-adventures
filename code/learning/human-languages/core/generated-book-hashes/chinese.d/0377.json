@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:56dd5134a07a1e12",
+  "lessonIds": [
+    "ZH-C377-jumin",
+    "ZH-C377-shequ",
+    "ZH-W377-qu-area",
+    "ZH-C377-xiaoqu",
+    "ZH-C377-zhouwei",
+    "ZH-C377-xuequfang"
+  ],
+  "tex": "chinese/book/chapters/ch377-our-neighbourhood.tex"
+}

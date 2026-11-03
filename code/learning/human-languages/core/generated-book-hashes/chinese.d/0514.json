@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 514,
+  "sourceHash": "fnv1a64:4e7cbdd8c142c577",
+  "lessonIds": [
+    "ZH-C514-shandian",
+    "ZH-C514-linyu",
+    "ZH-C514-leiyu",
+    "ZH-C514-dongjiang",
+    "ZH-C514-ronghua"
+  ],
+  "tex": "chinese/book/chapters/ch514-when-the-weather-turns.tex"
+}

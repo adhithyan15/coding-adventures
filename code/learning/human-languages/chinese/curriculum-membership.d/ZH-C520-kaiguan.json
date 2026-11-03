@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C520-kaiguan",
+  "pathSegment": "ZH-PATH-520-APPLIANCE520",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-520-APPLIANCE520",
+      "order": 1
+    }
+  ]
+}

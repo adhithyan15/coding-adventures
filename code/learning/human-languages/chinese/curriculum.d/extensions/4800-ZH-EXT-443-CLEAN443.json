@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-443-CLEAN443",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say the water is clear, protect a river, visit a nature reserve, escort someone and talk about fishing.",
+  "prerequisites": []
+}

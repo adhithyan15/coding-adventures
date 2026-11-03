@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:9036eb7e89cd3918",
+  "lessonIds": [
+    "ZH-C402-chengke",
+    "ZH-C402-houche",
+    "ZH-C402-gaotie",
+    "ZH-C402-huancheng",
+    "ZH-C402-chexiang"
+  ],
+  "tex": "chinese/book/chapters/ch402-at-the-station.tex"
+}

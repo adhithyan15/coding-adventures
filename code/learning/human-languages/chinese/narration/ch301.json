@@ -1,0 +1,845 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 301,
+  "title": "Getting Out",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:6e34c26cc5672e11",
+  "lessons": [
+    {
+      "id": "ZH-C301-tao",
+      "sequence": 23560,
+      "title": "táo — to run away; to flee",
+      "headword": "táo",
+      "romanization": "táo",
+      "gloss": "to run away; to flee",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:851c2dc9deed2b90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the cause of death, then the Mandarin for to blow up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: táo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "táo — \"to run away; to flee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "fángzi zháohuǒ le, dàjiā kuài táo — The house is on fire, everyone run!"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "táo is inherited from Middle Chinese daw (Guangyun, in Baxter's transcription), which glosses it 'to go away', 'to avoid' and 'to flee'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "táo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *táo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "táo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *táo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fángzi zháohuǒ le, dàjiā kuài táo — The house is on fire, everyone run!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fángzi zháohuǒ le, dàjiā kuài táo* — The house is on fire, everyone run!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the cause of death, then the Mandarin for to blow up, then say táo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the cause of death, then the Mandarin for to blow up, then say *táo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does táo mean? (\"To run away; to flee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C301-huang",
+      "sequence": 23570,
+      "title": "huāng — flustered; in a panic",
+      "headword": "huāng",
+      "romanization": "huāng",
+      "gloss": "flustered; in a panic",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd277425c6455c3b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to blow up, then the Mandarin for to flee from danger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: huāng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huāng — \"flustered; in a panic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "bié huāng, wǒmen xiān bàojǐng — Don't panic, let's call the police first."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "huāng is inherited from Middle Chinese xwangX (Guangyun, in Baxter's transcription), which lists it in a two-syllable word meaning 'dazed'. The level tone of huāng is irregular for xwangX."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "huāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *huāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bié huāng, wǒmen xiān bàojǐng — Don't panic, let's call the police first.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bié huāng, wǒmen xiān bàojǐng* — Don't panic, let's call the police first.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to blow up, then the Mandarin for to flee from danger, then say huāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to blow up, then the Mandarin for to flee from danger, then say *huāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does huāng mean? (\"Flustered; in a panic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C301-fu-help",
+      "sequence": 23580,
+      "title": "fú — to help up; to hold up with a hand",
+      "headword": "fú",
+      "romanization": "fú",
+      "gloss": "to help up; to hold up with a hand",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0f2bfd3c62bc3017",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to flee from danger, then the Mandarin for in a panic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fú",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fú — \"to help up; to hold up with a hand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ fú tā qǐlai — I helped him up."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fú is inherited from Middle Chinese bju (Guangyun, in Baxter's transcription), which glosses it 'to hold up' and 'to help'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ fú tā qǐlai — I helped him up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ fú tā qǐlai* — I helped him up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to flee from danger, then the Mandarin for in a panic, then say fú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to flee from danger, then the Mandarin for in a panic, then say *fú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fú mean? (\"To help up; to hold up with a hand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C301-guzhe",
+      "sequence": 23590,
+      "title": "gǔzhé — to break a bone",
+      "headword": "gǔzhé",
+      "romanization": "gǔzhé",
+      "gloss": "to break a bone",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1fbec58d4ec42db2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for in a panic, then the Mandarin for to help up someone who fell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gǔzhé",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gǔzhé — \"to break a bone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā de tuǐ gǔzhé le — He broke his leg."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gǔzhé is built from gǔ 'a bone' and zhé 'to snap', both inherited from Middle Chinese, kwot and tsyet (Guangyun, in Baxter's transcription), which glosses the first, quoting an older dictionary, 'the core of the flesh' and the second 'to bend and break'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǔzhé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǔzhé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǔzhé, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǔzhé*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā de tuǐ gǔzhé le — He broke his leg.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā de tuǐ gǔzhé le* — He broke his leg.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for in a panic, then the Mandarin for to help up someone who fell, then say gǔzhé again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for in a panic, then the Mandarin for to help up someone who fell, then say *gǔzhé* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gǔzhé mean? (\"To break a bone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C301-guoran",
+      "sequence": 23600,
+      "title": "果然 (guǒrán) — sure enough; as expected",
+      "headword": "果然",
+      "romanization": "guǒrán",
+      "gloss": "sure enough; as expected",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e469041aeb13a350",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to help up someone who fell, then the Mandarin for to break a bone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 果然",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "果然 — guǒrán — \"sure enough; as expected\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他说会下雨果然下雨了 tā shuō huì xiàyǔ, guǒrán xiàyǔ le — He said it would rain, and sure enough it did."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "果然 (guǒrán) is built from 果 'resolute' and 然 'so', both inherited from Middle Chinese, kwaX and nyen (Guangyun, in Baxter's transcription), which glosses the first 'resolute' and 'certain' and the second 'so, like this': so, for certain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǒrán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǒrán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guǒrán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guǒrán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shuō huì xiàyǔ, guǒrán xiàyǔ le — He said it would rain, and sure enough it did.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shuō huì xiàyǔ, guǒrán xiàyǔ le* — He said it would rain, and sure enough it did.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to help up someone who fell, then the Mandarin for to break a bone, then say guǒrán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to help up someone who fell, then the Mandarin for to break a bone, then say *guǒrán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 果然 (guǒrán) mean? (\"Sure enough; as expected\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R301-review-296-301",
+      "sequence": 23610,
+      "title": "Looking back: from A Crash to Getting Out",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from A Crash to Getting Out",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e8d3c0c27dff36c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for something unexpected and a car crash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "something unexpected, a car crash, to put on the brakes, a beginner at the wheel, to pay for damage",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: something unexpected, a car crash, to put on the brakes, a beginner at the wheel, to pay for damage]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "insurance for the car, a serious accident, who is to blame, what comes of it, to deal with a problem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: insurance for the car, a serious accident, who is to blame, what comes of it, to deal with a problem]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fire that destroys buildings, to put out a fire, a firefighter, to shout loudly, the cry for help",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fire that destroys buildings, to put out a fire, a firefighter, to shout loudly, the cry for help]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be saved from danger, before it was too late, first aid, to pass out, to fight to save a patient",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be saved from danger, before it was too late, first aid, to pass out, to fight to save a patient]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an earthquake, to die, the life of a living thing, the cause of death, to blow up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an earthquake, to die, the life of a living thing, the cause of death, to blow up]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to flee from danger, in a panic, to help up someone who fell, to break a bone, sure enough",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to flee from danger, in a panic, to help up someone who fell, to break a bone, sure enough]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "故 救 死 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 故 救 死 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Something unexpected? (意外, yìwài.) A car crash? (chēhuò.) To put on the brakes? (shāchē.) A beginner at the wheel? (新手, xīnshǒu.) To pay for damage? (péiqián.) Insurance for the car? (bǎoxiǎn.) A serious accident? (事故, shìgù.) Who is to blame? (zérèn.) What comes of it? (后果, hòuguǒ.) To deal with a problem? (chǔlǐ.) A fire that destroys buildings? (huǒzāi.) To put out a fire? (救火, jiùhuǒ.) A firefighter? (xiāofángyuán.) To shout loudly? (hǎn.) The cry for help? (jiùmìng.) To be saved from danger? (得救, déjiù.) Before it was too late? (jíshí.) First aid? (jíjiù.) To pass out? (yūndǎo.) To fight to save a patient? (qiǎngjiù.) An earthquake? (dìzhèn.) To die? (死, sǐ.) The life of a living thing? (shēngmìng.) The cause of death? (死因, sǐyīn.) To blow up? (bàozhà.) To flee from danger? (táo.) In a panic? (huāng.) To help up someone who fell? (fú.) To break a bone? (gǔzhé.) Sure enough? (果然, guǒrán.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

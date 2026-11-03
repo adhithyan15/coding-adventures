@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:3f4f72cd512b563f",
+  "lessonIds": [
+    "ZH-C380-huanjing",
+    "ZH-C380-kongqi",
+    "ZH-C380-wuran",
+    "ZH-C380-diqiu",
+    "ZH-C380-huanbao"
+  ],
+  "tex": "chinese/book/chapters/ch380-clean-air.tex"
+}

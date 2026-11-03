@@ -1,0 +1,20 @@
+{
+  "chapter": 377,
+  "title": "Our Neighbourhood",
+  "label": "ch:zh-our-neighbourhood",
+  "canDo": "I can talk about the people who live here, our neighbourhood, a housing estate, what is around it and homes near good schools.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C377-xuequfang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 377: I can talk about the people who live here, our neighbourhood, a housing estate, what is around it and homes near good schools.",
+    "assesses": [
+      "ZH-LEX-C377-AREA377-03",
+      "ZH-LEX-C377-AREA377-04",
+      "ZH-LEX-C377-AREA377-05",
+      "ZH-SCRIPT-QU-AREA-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C296-xinshou",
+  "pathSegment": "ZH-PATH-296-CRASH296",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-296-CRASH296",
+      "order": 3
+    }
+  ]
+}

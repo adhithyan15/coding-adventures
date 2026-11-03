@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C533-xinxiangshicheng",
+  "pathSegment": "ZH-PATH-533-WISH533",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-533-WISH533",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C472-bianlian",
+  "pathSegment": "ZH-PATH-472-FACE472",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-472-FACE472",
+      "order": 3
+    }
+  ]
+}

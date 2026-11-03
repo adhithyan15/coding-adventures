@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C476-tengtong",
+  "pathSegment": "ZH-PATH-476-NECK476",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-476-NECK476",
+      "order": 4
+    }
+  ]
+}

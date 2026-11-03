@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 310,
+  "sourceHash": "fnv1a64:4c54929bd4701e59",
+  "lessonIds": [
+    "ZH-C310-huaiyi",
+    "ZH-C310-zhengren",
+    "ZH-C310-zhengju",
+    "ZH-C310-shuohuang",
+    "ZH-C310-chengren"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch310.txt",
+  "json": "chinese/narration/ch310.json",
+  "textHash": "fnv1a64:951be520c90d8267",
+  "jsonHash": "fnv1a64:4371b294658061ff",
+  "findings": []
+}

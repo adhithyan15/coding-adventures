@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C506-yuedui",
+    "language": "chinese",
+    "chapter": 506,
+    "sequence": 38030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:224dcbdef70873ab"
+  },
+  "findings": []
+}

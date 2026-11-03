@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W337-zhu-wish",
+  "pathSegment": "ZH-PATH-337-WISH337",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-337-WISH337",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W395-qu-take",
+  "pathSegment": "ZH-PATH-395-RESULT395",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-395-RESULT395",
+      "order": 2
+    }
+  ]
+}

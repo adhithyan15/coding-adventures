@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:50b06deb81826df3",
+  "lessonIds": [
+    "ZH-C352-tonggan",
+    "ZH-C352-kending",
+    "ZH-C352-renke",
+    "ZH-C352-benyi",
+    "ZH-C352-biaoshi"
+  ],
+  "tex": "chinese/book/chapters/ch352-same-here.tex"
+}

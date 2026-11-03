@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W449-wei-taste",
+  "pathSegment": "ZH-PATH-449-TASTE449",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-449-TASTE449",
+      "order": 2
+    }
+  ]
+}

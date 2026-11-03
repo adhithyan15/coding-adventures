@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C511-muqin",
+  "pathSegment": "ZH-PATH-511-KIN511",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-511-KIN511",
+      "order": 3
+    }
+  ]
+}

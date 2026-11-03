@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C519-xuejing",
+  "pathSegment": "ZH-PATH-519-OUTDOORS519",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-519-OUTDOORS519",
+      "order": 3
+    }
+  ]
+}

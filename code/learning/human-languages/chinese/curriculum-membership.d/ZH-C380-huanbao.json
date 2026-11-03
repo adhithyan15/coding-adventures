@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C380-huanbao",
+  "pathSegment": "ZH-PATH-380-AIR380",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-380-AIR380",
+      "order": 4
+    }
+  ]
+}

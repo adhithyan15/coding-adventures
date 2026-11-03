@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:4c6910635fece56a",
+  "lessonIds": [
+    "ZH-C337-gongxi",
+    "ZH-C337-zhu-wish",
+    "ZH-W337-zhu-wish",
+    "ZH-C337-xinyi",
+    "ZH-C337-haoyun",
+    "ZH-C337-xuyuan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch337.txt",
+  "json": "chinese/narration/ch337.json",
+  "textHash": "fnv1a64:bb79b7f26009bdf3",
+  "jsonHash": "fnv1a64:e91c2ae9762140bf",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 428,
+  "sourceHash": "fnv1a64:199d87e956721a71",
+  "lessonIds": [
+    "ZH-C428-tongwang",
+    "ZH-C428-qianwang",
+    "ZH-C428-huicheng",
+    "ZH-C428-xingcheng",
+    "ZH-C428-fapiao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch428.txt",
+  "json": "chinese/narration/ch428.json",
+  "textHash": "fnv1a64:5d2026f9c79bba34",
+  "jsonHash": "fnv1a64:61c0892fbdadcdcd",
+  "findings": []
+}

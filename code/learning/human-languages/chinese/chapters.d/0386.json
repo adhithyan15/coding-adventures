@@ -1,0 +1,20 @@
+{
+  "chapter": 386,
+  "title": "Second-Hand",
+  "label": "ch:zh-second-hand",
+  "canDo": "I can talk about second-hand things, how something turned into something else, unused things, good value and the weather turning.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C386-biantian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 386: I can talk about second-hand things, how something turned into something else, unused things, good value and the weather turning.",
+    "assesses": [
+      "ZH-LEX-C386-CHANGE386-03",
+      "ZH-LEX-C386-CHANGE386-04",
+      "ZH-LEX-C386-CHANGE386-05",
+      "ZH-SCRIPT-BIAN-CHANGE-01"
+    ]
+  }
+}

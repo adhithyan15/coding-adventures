@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:c923520a76b2463c",
+  "lessonIds": [
+    "ZH-C365-jianyi",
+    "ZH-C365-keshi",
+    "ZH-W365-ke-can",
+    "ZH-C365-kejian",
+    "ZH-C365-buru",
+    "ZH-C365-zhonggao"
+  ],
+  "tex": "chinese/book/chapters/ch365-yes-but.tex"
+}

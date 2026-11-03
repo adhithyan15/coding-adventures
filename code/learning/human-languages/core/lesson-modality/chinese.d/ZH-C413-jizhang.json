@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C413-jizhang",
+    "language": "chinese",
+    "chapter": 413,
+    "sequence": 31580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a3a6dd5d93e25c1"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:e4f9716641cadd95",
+  "lessonIds": [
+    "ZH-C385-tigao",
+    "ZH-C385-bacheng",
+    "ZH-C385-jieneng",
+    "ZH-C385-zhongshi",
+    "ZH-C385-fangshi",
+    "ZH-R385-review-380-385"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch385.txt",
+  "json": "chinese/narration/ch385.json",
+  "textHash": "fnv1a64:ef23696456844ae5",
+  "jsonHash": "fnv1a64:d8fad10a452986bb",
+  "findings": []
+}

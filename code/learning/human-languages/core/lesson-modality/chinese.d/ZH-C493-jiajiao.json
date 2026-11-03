@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C493-jiajiao",
+    "language": "chinese",
+    "chapter": 493,
+    "sequence": 37370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ef3cf2a9e446a52a"
+  },
+  "findings": []
+}

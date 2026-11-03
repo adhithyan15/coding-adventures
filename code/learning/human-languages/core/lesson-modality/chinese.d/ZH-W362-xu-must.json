@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W362-xu-must",
+    "language": "chinese",
+    "chapter": 362,
+    "sequence": 27835,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:79831cd4909bbd30",
+    "detachableSegments": [
+      "Script — three sweeps, then the page piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

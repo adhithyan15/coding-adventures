@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:40333f7feb8fc7d4",
+  "lessonIds": [
+    "ZH-C462-jingxi",
+    "ZH-C462-yixiangbudao",
+    "ZH-C462-hen",
+    "ZH-C462-sixin",
+    "ZH-C462-bianxin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch462.txt",
+  "json": "chinese/narration/ch462.json",
+  "textHash": "fnv1a64:0d7ff42eb42a7627",
+  "jsonHash": "fnv1a64:0d327b44ec0cbc96",
+  "findings": []
+}

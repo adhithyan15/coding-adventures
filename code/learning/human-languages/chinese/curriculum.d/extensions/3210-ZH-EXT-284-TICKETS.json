@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-284-TICKETS",
+  "stage": "B1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can buy a ticket and say how I am travelling.",
+  "prerequisites": []
+}

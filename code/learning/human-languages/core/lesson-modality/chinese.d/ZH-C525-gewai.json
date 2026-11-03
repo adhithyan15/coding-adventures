@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C525-gewai",
+    "language": "chinese",
+    "chapter": 525,
+    "sequence": 39570,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7c3375122a449f9d"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 517,
+  "title": "Light in the Dark",
+  "label": "ch:zh-light-in-the-dark",
+  "canDo": "I can talk about light, things that shine, starlight, dusk and the time it gets light.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C517-huanghun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 517: I can talk about light, things that shine, starlight, dusk and the time it gets light.",
+    "assesses": [
+      "ZH-LEX-C517-LIGHT517-03",
+      "ZH-LEX-C517-LIGHT517-04",
+      "ZH-LEX-C517-LIGHT517-05"
+    ]
+  }
+}

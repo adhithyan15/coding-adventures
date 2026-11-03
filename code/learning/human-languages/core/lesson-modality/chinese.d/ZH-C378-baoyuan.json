@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C378-baoyuan",
+    "language": "chinese",
+    "chapter": 378,
+    "sequence": 29210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b3a0fd60d7556d8"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C307-lihun",
+    "language": "chinese",
+    "chapter": 307,
+    "sequence": 23880,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:139c93c761d4af54"
+  },
+  "findings": []
+}

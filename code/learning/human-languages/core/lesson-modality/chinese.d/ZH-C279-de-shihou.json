@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C279-de-shihou",
+    "language": "chinese",
+    "chapter": 279,
+    "sequence": 21100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c54af1d434dea102"
+  },
+  "findings": []
+}

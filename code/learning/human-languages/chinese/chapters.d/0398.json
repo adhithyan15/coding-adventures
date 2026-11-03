@@ -1,0 +1,19 @@
+{
+  "chapter": 398,
+  "title": "It Depends",
+  "label": "ch:zh-it-depends",
+  "canDo": "I can talk about attitude, the difference between two things, a region, ready-made food and what a plan depends on.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C398-qujueyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 398: I can talk about attitude, the difference between two things, a region, ready-made food and what a plan depends on.",
+    "assesses": [
+      "ZH-LEX-C398-DEPEND398-03",
+      "ZH-LEX-C398-DEPEND398-04",
+      "ZH-LEX-C398-DEPEND398-05"
+    ]
+  }
+}

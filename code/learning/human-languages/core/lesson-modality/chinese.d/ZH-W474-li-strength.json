@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W474-li-strength",
+    "language": "chinese",
+    "chapter": 474,
+    "sequence": 35835,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:54b7e76df110bcd4",
+    "detachableSegments": [
+      "Script — a turn with a hook, then a falling stroke"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

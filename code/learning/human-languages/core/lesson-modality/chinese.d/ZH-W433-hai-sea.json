@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W433-hai-sea",
+    "language": "chinese",
+    "chapter": 433,
+    "sequence": 33165,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8e4c57ef89316915",
+    "detachableSegments": [
+      "Script — the water piece, then 每"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

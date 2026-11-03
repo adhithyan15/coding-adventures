@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:4eb5c451c306ca33",
+  "lessonIds": [
+    "ZH-C341-dousha",
+    "ZH-C341-yuebing",
+    "ZH-W341-bing-cake",
+    "ZH-C341-xianr",
+    "ZH-C341-pinchang",
+    "ZH-C341-shengyi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch341.txt",
+  "json": "chinese/narration/ch341.json",
+  "textHash": "fnv1a64:1a49865a4fc40bf6",
+  "jsonHash": "fnv1a64:ab8e802a44f09bee",
+  "findings": []
+}

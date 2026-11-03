@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C424-suidao",
+    "language": "chinese",
+    "chapter": 424,
+    "sequence": 32130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1e1163b7b439426c"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C477-xinzang",
+    "language": "chinese",
+    "chapter": 477,
+    "sequence": 35980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48c770971839a0b7"
+  },
+  "findings": []
+}

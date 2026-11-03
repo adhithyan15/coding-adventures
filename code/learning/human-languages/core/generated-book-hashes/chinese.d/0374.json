@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:6829eb68d3171468",
+  "lessonIds": [
+    "ZH-C374-renkou",
+    "ZH-C374-zhengfu",
+    "ZH-C374-wenhua",
+    "ZH-C374-minzu",
+    "ZH-C374-fazhan"
+  ],
+  "tex": "chinese/book/chapters/ch374-people-and-government.tex"
+}

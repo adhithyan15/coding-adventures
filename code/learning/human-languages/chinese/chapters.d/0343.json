@@ -1,0 +1,19 @@
+{
+  "chapter": 343,
+  "title": "Far from Home",
+  "label": "ch:zh-far-from-home",
+  "canDo": "I can talk about moonlight, years apart, what is in my heart, good wishes and sharing.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C343-fenxiang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 343: I can talk about moonlight, years apart, what is in my heart, good wishes and sharing.",
+    "assesses": [
+      "ZH-LEX-C343-FARAWAY343-03",
+      "ZH-LEX-C343-FARAWAY343-04",
+      "ZH-LEX-C343-FARAWAY343-05"
+    ]
+  }
+}

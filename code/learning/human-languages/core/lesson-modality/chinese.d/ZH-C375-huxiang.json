@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C375-huxiang",
+    "language": "chinese",
+    "chapter": 375,
+    "sequence": 29090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cd9340cbf3ced9b9"
+  },
+  "findings": []
+}

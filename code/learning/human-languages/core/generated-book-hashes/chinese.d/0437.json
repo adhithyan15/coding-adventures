@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:be38944b61041b41",
+  "lessonIds": [
+    "ZH-C437-shanqu",
+    "ZH-C437-pingyuan",
+    "ZH-C437-shamo",
+    "ZH-C437-gaoyuan",
+    "ZH-C437-yimin"
+  ],
+  "tex": "chinese/book/chapters/ch437-mountains-and-plains.tex"
+}

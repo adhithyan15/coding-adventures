@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C297-houguo",
+    "language": "chinese",
+    "chapter": 297,
+    "sequence": 23390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6f5aa5275a0de3c"
+  },
+  "findings": []
+}

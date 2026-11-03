@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 435,
+  "sourceHash": "fnv1a64:55e77e48b0337028",
+  "lessonIds": [
+    "ZH-C435-dengshan",
+    "ZH-C435-shanding",
+    "ZH-C435-richu",
+    "ZH-C435-zhuangguan",
+    "ZH-C435-xiashan",
+    "ZH-R435-review-430-435"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch435.txt",
+  "json": "chinese/narration/ch435.json",
+  "textHash": "fnv1a64:26b359b4779bf024",
+  "jsonHash": "fnv1a64:1c7b1e2a64e4f2e3",
+  "findings": []
+}

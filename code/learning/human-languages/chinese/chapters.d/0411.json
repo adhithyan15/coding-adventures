@@ -1,0 +1,19 @@
+{
+  "chapter": 411,
+  "title": "On the Water",
+  "label": "ch:zh-on-the-water",
+  "canDo": "I can talk about the pier, the captain, a boat setting sail, the ferry and life jackets.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C411-jiushengyi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 411: I can talk about the pier, the captain, a boat setting sail, the ferry and life jackets.",
+    "assesses": [
+      "ZH-LEX-C411-FERRY411-03",
+      "ZH-LEX-C411-FERRY411-04",
+      "ZH-LEX-C411-FERRY411-05"
+    ]
+  }
+}

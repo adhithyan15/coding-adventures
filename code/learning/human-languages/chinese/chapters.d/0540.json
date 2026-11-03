@@ -1,0 +1,19 @@
+{
+  "chapter": 540,
+  "title": "So That's Why",
+  "label": "ch:zh-so-that-s-why",
+  "canDo": "I can say someone is odd, that something drags others in, that something is bound to happen, tell the whole story and ask what is going on.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C540-zenmehuishi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 540: I can say someone is odd, that something drags others in, that something is bound to happen, tell the whole story and ask what is going on.",
+    "assesses": [
+      "ZH-LEX-C540-NOWONDER540-03",
+      "ZH-LEX-C540-NOWONDER540-04",
+      "ZH-LEX-C540-NOWONDER540-05"
+    ]
+  }
+}

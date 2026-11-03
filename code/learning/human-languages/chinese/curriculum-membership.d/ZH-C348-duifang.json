@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C348-duifang",
+  "pathSegment": "ZH-PATH-348-TALK348",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-348-TALK348",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W395-qu-take",
+    "language": "chinese",
+    "chapter": 395,
+    "sequence": 30095,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c69f4624a283b631",
+    "detachableSegments": [
+      "Script — the ear piece, then 又"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

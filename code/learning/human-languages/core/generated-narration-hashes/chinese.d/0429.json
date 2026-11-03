@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:caf7da07c370ad83",
+  "lessonIds": [
+    "ZH-C429-lutu",
+    "ZH-C429-shunlu",
+    "ZH-C429-dache-lift",
+    "ZH-C429-chuxing",
+    "ZH-C429-lufei",
+    "ZH-R429-review-425-429",
+    "ZH-R429-review-final-429"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch429.txt",
+  "json": "chinese/narration/ch429.json",
+  "textHash": "fnv1a64:28b73401242996a8",
+  "jsonHash": "fnv1a64:1f9a92413e7296ea",
+  "findings": []
+}

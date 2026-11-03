@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-287-WANT",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I want to do or be later.",
+  "prerequisites": []
+}

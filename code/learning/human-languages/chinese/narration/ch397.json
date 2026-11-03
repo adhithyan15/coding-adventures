@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 397,
+  "title": "Surely Not",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:d054a8ee6eda4b7f",
+  "lessons": [
+    {
+      "id": "ZH-C397-fanggezi",
+      "sequence": 30190,
+      "title": "fàng gēzi — to stand someone up",
+      "headword": "fàng gēzi",
+      "romanization": "fàng gēzi",
+      "gloss": "to stand someone up",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:62c34124bfd7fc2f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for round the clock, then the Mandarin for even if."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fàng gēzi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fàng gēzi — \"to stand someone up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ tā yòu fàng gēzi wǒ jiù bù děng tā le — If he stands me up again, I won't wait for him any more."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fàng gēzi is built from fàng 'to let go' and gēzi 'a pigeon', all inherited from Middle Chinese, pjangH, kop and tsiX (Guangyun, in Baxter's transcription), which glosses the second 'the name of a bird'. Letting the pigeon fly is a modern saying, and how it came to mean standing someone up is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fàng gēzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fàng gēzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fàng gēzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fàng gēzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ tā yòu fàng gēzi wǒ jiù bù děng tā le — If he stands me up again, I won't wait for him any more.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ tā yòu fàng gēzi wǒ jiù bù děng tā le* — If he stands me up again, I won't wait for him any more.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for round the clock, then the Mandarin for even if, then say fàng gēzi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for round the clock, then the Mandarin for even if, then say *fàng gēzi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fàng gēzi mean? (\"To stand someone up\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C397-nandao",
+      "sequence": 30200,
+      "title": "难道 (nándào) — surely not (in a question)",
+      "headword": "难道",
+      "romanization": "nándào",
+      "gloss": "surely not (in a question)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9d4845900419d3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for even if, then the Mandarin for to stand someone up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 难道",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "难道 — nándào — \"surely not (in a question)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "难道你不想去吗 nándào nǐ bù xiǎng qù ma — Surely you want to go?"
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 难 (nán) — ten strokes in two pieces: on the left 又 made narrow, with a dot for its last stroke; on the right the bird piece, eight strokes. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "难道 (nándào) is built from 难 (nán) 'hard' and dào 'to say', both inherited from Middle Chinese, nan and dawX (Guangyun, in Baxter's transcription), which glosses the first 'difficult' and the second 'a way'. The sense 'to say' is not given there, and how the pair came to ask whether something can really be so is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nándào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nándào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nándào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nándào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nándào nǐ bù xiǎng qù ma — Surely you want to go?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nándào nǐ bù xiǎng qù ma* — Surely you want to go?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for even if, then the Mandarin for to stand someone up, then say nándào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for even if, then the Mandarin for to stand someone up, then say *nándào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 难道 (nándào) mean? (\"Surely not (in a question)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W397-nan-hard",
+      "sequence": 30205,
+      "title": "难 (nán) — a narrow 又, then the bird piece",
+      "headword": "难",
+      "romanization": "nán",
+      "gloss": "难 — a narrow 又 ending in a dot, then the bird piece",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ddddeaa983e889ce",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a narrow 又, then the bird piece",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a narrow 又, then the bird piece and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nándào — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nándào* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "取 又."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — qǔ, yòu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *qǔ*, *yòu*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a narrow 又, then the bird piece",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "难 (nán)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, 又 made narrow, two strokes: a bar that turns and falls to the lower left, then a dot instead of the long stroke."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, the bird piece, eight strokes. A stroke falling to the left. A long vertical down from it. A dot at the top right. Three short bars, one under another. A second vertical down through them. Then a long bar across the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 8 = ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "难 (nán), all ten, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 难, all ten, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 难 (nán)? (Ten.) What ends the left piece? (A dot.) How many short bars in the bird piece before the long one? (Three.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 难 (nán), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C397-nande",
+      "sequence": 30210,
+      "title": "难得 (nándé) — rare; hard to come by",
+      "headword": "难得",
+      "romanization": "nándé",
+      "gloss": "rare; hard to come by",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:78fba2a16d64edab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to stand someone up, then the Mandarin for surely not (in a question)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 难得",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "难得 — nándé — \"rare; hard to come by\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们难得有时间一起吃饭 wǒmen nándé yǒu shíjiān yìqǐ chī fàn — We seldom get time to eat together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "难得 (nándé) is built from 难 (nán) 'hard' and 得 'to get', both inherited from Middle Chinese, nan and tok (Guangyun, in Baxter's transcription), which glosses the first 'difficult'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nándé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nándé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nándé, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nándé*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen nándé yǒu shíjiān yìqǐ chī fàn — We seldom get time to eat together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen nándé yǒu shíjiān yìqǐ chī fàn* — We seldom get time to eat together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to stand someone up, then the Mandarin for surely not (in a question), then say nándé again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to stand someone up, then the Mandarin for surely not (in a question), then say *nándé* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 难得 (nándé) mean? (\"Rare; hard to come by\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C397-weinan",
+      "sequence": 30220,
+      "title": "为难 (wéinán) — in an awkward spot; torn (about what to do)",
+      "headword": "为难",
+      "romanization": "wéinán",
+      "gloss": "in an awkward spot; torn (about what to do)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:008802561b95306f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for surely not (in a question), then the Mandarin for hard to come by."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 为难",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "为难 — wéinán — \"in an awkward spot; torn (about what to do)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我不想说不所以很为难 wǒ bù xiǎng shuō bù suǒyǐ hěn wéinán — I don't want to say no, so I'm in an awkward spot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "为难 (wéinán) is built from 为 'to make' and 难 (nán) 'hard', both inherited from Middle Chinese, hjwe and nan (Guangyun, in Baxter's transcription), which glosses the first 'to do' and the second 'difficult'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wéinán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wéinán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wéinán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wéinán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ bù xiǎng shuō bù suǒyǐ hěn wéinán — I don't want to say no, so I'm in an awkward spot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ bù xiǎng shuō bù suǒyǐ hěn wéinán* — I don't want to say no, so I'm in an awkward spot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for surely not (in a question), then the Mandarin for hard to come by, then say wéinán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for surely not (in a question), then the Mandarin for hard to come by, then say *wéinán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 为难 (wéinán) mean? (\"In an awkward spot; torn (about what to do)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C397-jiekou",
+      "sequence": 30230,
+      "title": "jièkǒu — excuse (a poor reason)",
+      "headword": "jièkǒu",
+      "romanization": "jièkǒu",
+      "gloss": "excuse (a poor reason)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51084bf07b4a9d89",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for hard to come by, then the Mandarin for in an awkward spot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jièkǒu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jièkǒu — \"excuse (a poor reason)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yàoshi nǐ bù xiǎng qù jiù bié zhǎo jièkǒu — If you don't want to go, don't make excuses."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jièkǒu is built from jiè 'to borrow' and 口 'a mouth', both inherited from Middle Chinese, tsjaeH and khuwX (Guangyun, in Baxter's transcription), which glosses the first 'to borrow': words borrowed to cover the real reason."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jièkǒu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jièkǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jièkǒu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jièkǒu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi nǐ bù xiǎng qù jiù bié zhǎo jièkǒu — If you don't want to go, don't make excuses.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi nǐ bù xiǎng qù jiù bié zhǎo jièkǒu* — If you don't want to go, don't make excuses.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for hard to come by, then the Mandarin for in an awkward spot, then say jièkǒu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for hard to come by, then the Mandarin for in an awkward spot, then say *jièkǒu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jièkǒu mean? (\"Excuse (a poor reason)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

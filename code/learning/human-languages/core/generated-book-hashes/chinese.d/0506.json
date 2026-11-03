@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:22e0183a37f8b99c",
+  "lessonIds": [
+    "ZH-C506-yuedui",
+    "ZH-C506-yanzou",
+    "ZH-C506-xiaotiqin",
+    "ZH-C506-jingju",
+    "ZH-C506-gemi"
+  ],
+  "tex": "chinese/book/chapters/ch506-music-on-stage.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C518-taiyangneng",
+    "language": "chinese",
+    "chapter": 518,
+    "sequence": 39220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9a5c21f05bad7442"
+  },
+  "findings": []
+}

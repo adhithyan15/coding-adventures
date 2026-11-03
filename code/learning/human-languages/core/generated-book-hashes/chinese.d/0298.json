@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:bce48bba0f215694",
+  "lessonIds": [
+    "ZH-C298-huozai",
+    "ZH-C298-jiuhuo",
+    "ZH-W298-jiu-save",
+    "ZH-C298-xiaofangyuan",
+    "ZH-C298-han",
+    "ZH-C298-jiuming"
+  ],
+  "tex": "chinese/book/chapters/ch298-a-fire.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C319-laidian",
+    "language": "chinese",
+    "chapter": 319,
+    "sequence": 25070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5479bd04a7e8b017"
+  },
+  "findings": []
+}

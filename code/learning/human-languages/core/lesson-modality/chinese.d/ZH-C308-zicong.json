@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C308-zicong",
+    "language": "chinese",
+    "chapter": 308,
+    "sequence": 23940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:27ccc5db5fcb4f45"
+  },
+  "findings": []
+}

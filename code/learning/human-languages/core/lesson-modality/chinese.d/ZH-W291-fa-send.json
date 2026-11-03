@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W291-fa-send",
+    "language": "chinese",
+    "chapter": 291,
+    "sequence": 23065,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f53b72c135223738",
+    "detachableSegments": [
+      "Script — a bent stroke, a sweep, a fork and a dot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 312,
+  "sourceHash": "fnv1a64:c4d0a8165ba7f481",
+  "lessonIds": [
+    "ZH-C312-jianyu",
+    "ZH-C312-fakuan",
+    "ZH-C312-dajia",
+    "ZH-C312-huogai",
+    "ZH-C312-sihuo",
+    "ZH-R312-review-308-312"
+  ],
+  "tex": "chinese/book/chapters/ch312-locked-up.tex"
+}

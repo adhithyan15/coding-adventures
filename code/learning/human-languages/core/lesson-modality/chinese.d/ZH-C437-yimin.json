@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C437-yimin",
+    "language": "chinese",
+    "chapter": 437,
+    "sequence": 33400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d14ac0437a261d4c"
+  },
+  "findings": []
+}
