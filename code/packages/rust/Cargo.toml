@@ -787,6 +787,7 @@ members = [
     "csprng",
     "ct-compare",
     "test-bootstrap",
+    "warrant-grammar",
     "zeroize",
     "x3dh",
     "double-ratchet",
