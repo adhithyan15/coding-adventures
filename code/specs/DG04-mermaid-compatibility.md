@@ -187,6 +187,8 @@ prior `UpdateElementStyle` paint and semantic style overrides. Repeated C4
 boundaries with the same alias likewise update the existing structural group,
 including its label, type metadata, and enclosing boundary, while retaining
 authored boundary styling. Repeated C4
+deployment nodes follow the same alias-based update behavior while preserving
+their typed deployment metadata and portable detail paint. Repeated C4
 relationships with the same endpoint pair update the
 existing semantic relationship, including its arrow and detail metadata, while
 retaining prior `UpdateRelStyle` paint and label offsets. C4 relationship

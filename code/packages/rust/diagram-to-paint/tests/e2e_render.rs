@@ -193,6 +193,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-deployment-nodes-11.16.1-visual-corpus.json"
     ));
+    const C4_DEPLOYMENT_REDECLARATIONS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-deployment-redeclarations-11.16.1-corpus.json"
+    ));
+    const C4_DEPLOYMENT_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-deployment-redeclarations-11.16.1-visual-corpus.json"
+    ));
     const C4_BOUNDARY_TYPES_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-boundary-types-11.16.1-corpus.json"
@@ -5465,6 +5473,49 @@ line "Target" [35, 50, 68, 82]"##,
         }
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_c4_deployment_nodes_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_deployment_redeclarations_to_png() {
+        let syntax: Value = serde_json::from_str(C4_DEPLOYMENT_REDECLARATIONS_CORPUS).unwrap();
+        let visual: Value =
+            serde_json::from_str(C4_DEPLOYMENT_REDECLARATIONS_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+        let diagram = parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.groups.len(), 1);
+        assert_eq!(layout.groups[0].label, "Runtime");
+        assert_eq!(layout.nodes.len(), 2);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#e0f2fe")
+        )));
+        let metadata = scene.metadata.as_ref().unwrap();
+        assert_eq!(metadata.get("c4.group.0.deploymentNodeType"), Some(&"nodeR".to_string()));
+        let pixels = render(&scene);
+        write_png(
+            &pixels,
+            "/tmp/mermaid_c4_deployment_redeclarations_0_e2e.png",
+        )
+        .unwrap();
         assert!(pixels.width > 0 && pixels.height > 0);
     }
 
