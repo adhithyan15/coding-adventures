@@ -437,3 +437,6 @@ under #18581: source `8819839dc63d78c4c5eeda21f833f51364746420`, 13 assets,
 12 checksums, and 11 manifest payloads. Artifact and signing limits are unchanged.
 
 Failed XAML validation retains a separate seven-day diagnostic artifact with known build ZIPs, source/hash receipts and a bounded smoke-log tail. Diagnostic artifacts are excluded from release publication (#18845).
+
+The native XAML smoke test interprets window dimensions as logical units and
+scales them using the target window DPI before checking adaptive navigation.

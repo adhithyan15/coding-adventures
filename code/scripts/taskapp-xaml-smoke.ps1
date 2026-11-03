@@ -54,6 +54,8 @@ using System;
 using System.Runtime.InteropServices;
 
 public static class TaskAppWindow {
+    [DllImport("user32.dll")]
+    public static extern uint GetDpiForWindow(IntPtr hWnd);
     [DllImport("user32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool MoveWindow(
@@ -132,6 +134,12 @@ function Find-ByAutomationId($root, $automationId, $controlType) {
 
 function Set-TaskAppWindowSize($proc, $width, $height) {
     $proc.Refresh()
+    # NavigationView breakpoints use logical units; MoveWindow uses pixels.
+    # Query the app window, not the PowerShell process's DPI awareness.
+    $dpi = [TaskAppWindow]::GetDpiForWindow($proc.MainWindowHandle)
+    if ($dpi -eq 0) { throw 'Could not read TaskApp window DPI.' }
+    $width = [int][Math]::Round($width * $dpi / 96.0)
+    $height = [int][Math]::Round($height * $dpi / 96.0)
     if (-not [TaskAppWindow]::MoveWindow(
             $proc.MainWindowHandle, 100, 100, $width, $height, $true)) {
         $errorCode = [Runtime.InteropServices.Marshal]::GetLastWin32Error()
