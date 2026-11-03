@@ -75,6 +75,31 @@ parses (see [ruby-parser/src/_grammar.rs](../ruby-parser/src/_grammar.rs)):
   language-visible, so a bare trailing `if` at program scope stays a
   statement; only method/branch bodies implicitly return.)
 
+- **Bare method names (#18778).**  Ruby decides at parse time what a bare
+  `g` is: a local if an assignment (or parameter) `g` appears earlier in the
+  scope, otherwise a call `g()`.  So `def g; 42; end; puts g` prints 42.  The
+  lowerer follows that rule with the locals it has seen so far (and, inside a
+  block or lambda, the locals of the scopes around it).  A name that a class
+  or module also defines is left as a variable reference, because inside the
+  class it would mean `self.g`; the validator then refuses it rather than a
+  backend running the wrong method.
+- **`for x in xs [do] … end` (#18778).**  No new scope, as in Ruby: `x` is a
+  local of the enclosing scope (declared `nil` first if new) and keeps the
+  last item.  The SIR loop iterates a fresh `__for_<n>` and stores it into
+  `x` first thing in the body.  Locals first assigned in the body are
+  locals of the enclosing scope too, declared `nil` before the loop, so they
+  are still there after it.  `a...b` and `a..b` with an integer-literal `b`
+  become a `ForRange`; `a..b` with any other `b` counts with `<=` in a
+  `While` (`b + 1` is wrong for `1..2.5`); a Float-literal start is refused,
+  as Ruby cannot iterate from a Float; anything else is a `ForEach`.  A
+  parameter as the loop variable is refused.
+- **`rescue => e` (#18778)** binds `e` with no class list (a catch-all).
+- **Loop bodies** are statements only: a trailing `puts` in a `while` or
+  `for` body is an `ExprStmt`, never the body's value (the C and Ruby
+  backends emit only a loop body's statements).
+- **`x if c` as a method's last statement** returns `x` when `c` holds and
+  `nil` otherwise.
+
 ## Usage
 
 ```rust
@@ -120,6 +145,14 @@ function).
 ## What's deferred
 
 - Control flow beyond v0 and refinements.
+- `for a, b in pairs` (one loop variable only), the value of a `for` loop
+  (a method that ends in one returns `nil`, not the iterable), locals a
+  `while` body introduces staying visible after the loop, and a `rescue =>
+  e` binding staying visible after its clause (#18798).
+- A block that assigns an outer local (`t = 0; xs.each { |x| t = t + x }`):
+  the block's `t` is a new block local, so the read of `t` is refused.
+- A lambda body that reads an outer local (lambdas capture nothing yet), and
+  calling a lambda (`g.call(1)` is a built-in method call no backend runs).
 - Implicit return of a trailing **`begin`/`rescue`** (a trailing `if`/`unless`
   and `case` — both `case/when` and `case/in` — now promote to the block value),
   and of a block/lambda's tail conditional.

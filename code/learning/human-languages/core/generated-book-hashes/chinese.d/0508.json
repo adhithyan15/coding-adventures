@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:77f4ef8a7ea00e70",
+  "lessonIds": [
+    "ZH-C508-jiemei",
+    "ZH-C508-xiongmei",
+    "ZH-C508-dushengzinu",
+    "ZH-C508-qifu",
+    "ZH-C508-dongshi",
+    "ZH-R508-review-504-508"
+  ],
+  "tex": "chinese/book/chapters/ch508-brothers-and-sisters.tex"
+}

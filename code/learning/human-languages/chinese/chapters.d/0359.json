@@ -1,0 +1,19 @@
+{
+  "chapter": 359,
+  "title": "Rules",
+  "label": "ch:zh-rules",
+  "canDo": "I can talk about keeping and breaking rules, putting limits on things, and what is right.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C359-daode",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 359: I can talk about keeping and breaking rules, putting limits on things, and what is right.",
+    "assesses": [
+      "ZH-LEX-C359-RULES359-03",
+      "ZH-LEX-C359-RULES359-04",
+      "ZH-LEX-C359-RULES359-05"
+    ]
+  }
+}

@@ -183,7 +183,12 @@ element access for free), the native/LLVM target has no such runtime, so each
 length (`icmp uge i64 idx, len` — a single check that catches both `>= len` and a
 negative index, since a negative `i64` is a huge unsigned value) and branches to a
 `call void @llvm.trap(); unreachable` block when out of range. This is the
-static-backend realisation of E5's "out-of-bounds → trap" rule. The element type
+static-backend realisation of E5's "out-of-bounds → trap" rule. (Strings are
+different since LANG83 PR5a: a folded out-of-range `str_index` / `str_slice`
+calls the module's `@__iir_trap` with `Trap.Bounds`, which flushes stdout and
+names the kind, and the runtime path's `twig_runtime.c` helpers do the same
+through `__twig_trap`. `@__twig_str_concat` takes the module's string ceiling
+as a third argument and raises `Trap.Overflow` past it.) The element type
 (`i64`/`double`/`i32`/`float`) comes from the op's `type_hint`; the index is always
 `i64`.
 

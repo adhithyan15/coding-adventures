@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C436-dixing",
+    "language": "chinese",
+    "chapter": 436,
+    "sequence": 33310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:984d611dcf5896a1"
+  },
+  "findings": []
+}

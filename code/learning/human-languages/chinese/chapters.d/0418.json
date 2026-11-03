@@ -1,0 +1,19 @@
+{
+  "chapter": 418,
+  "title": "Checking In",
+  "label": "ch:zh-checking-in",
+  "canDo": "I can check in for a flight, go through the formalities, say flights are grounded and a bag is too heavy.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C418-chaozhong",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 418: I can check in for a flight, go through the formalities, say flights are grounded and a bag is too heavy.",
+    "assesses": [
+      "ZH-LEX-C418-CHECKIN418-03",
+      "ZH-LEX-C418-CHECKIN418-04",
+      "ZH-LEX-C418-CHECKIN418-05"
+    ]
+  }
+}

@@ -3484,6 +3484,101 @@ mod tests {
         assert!(tree_has_token_value(rc, "e"), "expected `e` token");
     }
 
+    // ---------------------------------------------------------------
+    // #18778 — `for`, `rescue => e`, `f() + f` as a statement, and a
+    // `[` that starts a new line.
+    // ---------------------------------------------------------------
+
+    /// The rule names of `ast`'s top-level statements, in order.
+    fn statement_rules(ast: &GrammarASTNode) -> Vec<String> {
+        ast.children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => n
+                    .children
+                    .iter()
+                    .find_map(|cc| match cc {
+                        ASTNodeOrToken::Node(inner) => Some(inner.rule_name.clone()),
+                        _ => None,
+                    }),
+                _ => None,
+            })
+            .collect()
+    }
+
+    #[test]
+    fn test_parse_for_loop_with_and_without_do() {
+        let ast = parse_ruby("for x in [1, 2]\n  puts x\nend\nfor i in 0...3 do\n  puts i\nend\n");
+        assert_eq!(statement_rules(&ast), vec!["for_statement", "for_statement"]);
+        let f = find_descendant(&ast, "for_statement").expect("for_statement");
+        assert!(tree_has_token_value(f, "x"), "the loop variable");
+        assert!(find_descendant(f, "array_literal").is_some(), "the iterable");
+    }
+
+    #[test]
+    fn test_parse_rescue_arrow_without_an_exception_class() {
+        // `rescue => e` used to match a bare `rescue` and leave `=> e` as
+        // a paren-less call statement in the clause body.
+        let ast = parse_ruby("begin\n  x = 1\nrescue => e\n  y = 2\nend");
+        let rc = find_descendant(&ast, "rescue_clause").expect("expected rescue_clause");
+        assert!(find_descendant(rc, "exception_list").is_none());
+        let direct: Vec<&str> = rc
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Token(t) => Some(t.value.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(direct, vec!["rescue", "=>", "e"], "the binding is the clause's own");
+        assert!(find_descendant(rc, "method_call_no_paren").is_none());
+    }
+
+    #[test]
+    fn test_parse_call_plus_name_as_a_statement() {
+        // `f() + f` at the start of a statement, inside a lambda and a
+        // block, and before a modifier: a whole expression, not a call
+        // followed by a stray `+`.
+        for src in [
+            "f() + f",
+            "g = ->(f) { f() + f }",
+            "[1].each { |f| f() * f }",
+            "f() - 1 if c",
+            "f() == 2",
+        ] {
+            let ast = parse_ruby(src);
+            assert_eq!(statement_rules(&ast).len(), 1, "{src:?}");
+        }
+        // A call alone is still a `method_call` statement.
+        assert_eq!(statement_rules(&parse_ruby("f(1)\ng(2)")), vec!["method_call", "method_call"]);
+    }
+
+    #[test]
+    fn test_parse_bracket_on_a_new_line_starts_a_new_statement() {
+        let ast = parse_ruby("x = 5\n[1].each { |v| puts v }");
+        assert_eq!(statement_rules(&ast).len(), 2);
+        assert!(find_descendant(&ast, "index_suffix").is_none());
+        // On the same line it is still an index.
+        let ast = parse_ruby("x = a[1]");
+        assert!(find_descendant(&ast, "index_suffix").is_some());
+    }
+
+    #[test]
+    fn test_parse_locals_spelled_like_the_lexer_tags() {
+        // The line-start tag is `[ line start`, a value no name can spell.
+        // The first tag, `lbracket_line_start`, was an identifier, so the
+        // lookahead refused `puts lbracket_line_start` (review of #18778).
+        // `if_modifier` is only ever matched positively, after a complete
+        // expression, so a local of that name is unaffected too.
+        let ast = parse_ruby(
+            "lbracket_line_start = 1\nputs lbracket_line_start\nif_modifier = 2\nputs if_modifier\nx = a[if_modifier]\n",
+        );
+        assert_eq!(
+            statement_rules(&ast),
+            vec!["assignment", "method_call_no_paren", "assignment", "method_call_no_paren", "assignment"]
+        );
+    }
+
     #[test]
     fn test_parse_begin_multi_type_rescue() {
         // Phase 16b — `rescue Foo, Bar => e` parses with an

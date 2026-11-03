@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C424-diaotou",
+  "pathSegment": "ZH-PATH-424-ROADS424",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-424-ROADS424",
+      "order": 1
+    }
+  ]
+}

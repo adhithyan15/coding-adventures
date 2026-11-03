@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:1d0d2a1da3296fc9",
+  "lessonIds": [
+    "ZH-C307-fenshou",
+    "ZH-C307-lihun",
+    "ZH-C307-zaihun",
+    "ZH-C307-miyue",
+    "ZH-C307-hunsha",
+    "ZH-R307-review-302-307"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch307.txt",
+  "json": "chinese/narration/ch307.json",
+  "textHash": "fnv1a64:9e11e3e75f746989",
+  "jsonHash": "fnv1a64:01f88d6c6f98adf1",
+  "findings": []
+}

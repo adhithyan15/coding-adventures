@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:a750ac606dd3fbff",
+  "lessonIds": [
+    "ZH-C317-qingnian",
+    "ZH-C317-chengnian",
+    "ZH-C317-hunyin",
+    "ZH-C317-jiating",
+    "ZH-C317-shixian",
+    "ZH-R317-review-313-317",
+    "ZH-R317-review-final-317"
+  ],
+  "tex": "chinese/book/chapters/ch317-looking-back.tex"
+}

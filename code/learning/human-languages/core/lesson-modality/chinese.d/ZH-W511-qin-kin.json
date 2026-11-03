@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W511-qin-kin",
+    "language": "chinese",
+    "chapter": 511,
+    "sequence": 38295,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:91677d7d5eca44e1",
+    "detachableSegments": [
+      "Script — the top of yì, then four strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

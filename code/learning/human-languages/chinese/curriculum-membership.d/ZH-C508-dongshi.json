@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C508-dongshi",
+  "pathSegment": "ZH-PATH-508-SIBLINGS508",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-508-SIBLINGS508",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "language": "chinese",
+  "chapter": 278,
+  "sourceHash": "fnv1a64:e2e685415fbd13b2",
+  "lessonIds": [
+    "ZH-C278-zuihou",
+    "ZH-W278-zui",
+    "ZH-C278-sequence",
+    "ZH-W278-ran",
+    "ZH-C278-shouxian",
+    "ZH-C278-jiezhe",
+    "ZH-C278-le-yihou",
+    "ZH-C278-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch278.txt",
+  "json": "chinese/narration/ch278.json",
+  "textHash": "fnv1a64:7832fde9b1d913e0",
+  "jsonHash": "fnv1a64:6ecfc316d7ec8734",
+  "findings": []
+}

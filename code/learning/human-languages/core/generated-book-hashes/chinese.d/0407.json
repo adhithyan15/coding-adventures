@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:8551038737f3518a",
+  "lessonIds": [
+    "ZH-C407-jinzhan",
+    "ZH-C407-ruanwo",
+    "ZH-C407-kongwei",
+    "ZH-C407-zhongdianzhan",
+    "ZH-C407-dongche",
+    "ZH-R407-review-402-407"
+  ],
+  "tex": "chinese/book/chapters/ch407-pulling-in.tex"
+}

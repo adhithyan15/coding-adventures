@@ -1,0 +1,19 @@
+{
+  "chapter": 443,
+  "title": "Keeping It Clean",
+  "label": "ch:zh-keeping-it-clean",
+  "canDo": "I can say the water is clear, protect a river, visit a nature reserve, escort someone and talk about fishing.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C443-buyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 443: I can say the water is clear, protect a river, visit a nature reserve, escort someone and talk about fishing.",
+    "assesses": [
+      "ZH-LEX-C443-CLEAN443-03",
+      "ZH-LEX-C443-CLEAN443-04",
+      "ZH-LEX-C443-CLEAN443-05"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W478-shang-hurt",
+    "language": "chinese",
+    "chapter": 478,
+    "sequence": 36045,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:74668111893e6f8a",
+    "detachableSegments": [
+      "Script — 亻, then a short top over 力"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C475-houbei",
+    "language": "chinese",
+    "chapter": 475,
+    "sequence": 35890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62d5fc2cf2980e77"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W295-xin-new",
+    "language": "chinese",
+    "chapter": 295,
+    "sequence": 23265,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:87f65cef21d2d6b0",
+    "detachableSegments": [
+      "Script — two pieces on the left, one on the right"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

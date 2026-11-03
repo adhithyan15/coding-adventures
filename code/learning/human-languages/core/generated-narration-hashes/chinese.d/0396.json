@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:94841e33b477065c",
+  "lessonIds": [
+    "ZH-C396-buguan",
+    "ZH-C396-jiran",
+    "ZH-C396-chufei",
+    "ZH-C396-quantian",
+    "ZH-C396-jishi",
+    "ZH-R396-review-392-396"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch396.txt",
+  "json": "chinese/narration/ch396.json",
+  "textHash": "fnv1a64:f4b8ae9f972fd5de",
+  "jsonHash": "fnv1a64:5435a3b281f01b72",
+  "findings": []
+}

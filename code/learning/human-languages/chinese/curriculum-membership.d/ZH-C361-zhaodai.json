@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C361-zhaodai",
+  "pathSegment": "ZH-PATH-361-GUEST361",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-361-GUEST361",
+      "order": 1
+    }
+  ]
+}

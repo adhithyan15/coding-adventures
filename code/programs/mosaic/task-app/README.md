@@ -46,6 +46,10 @@ The two adapters consume the same data-driven presentation lifecycle in
 canonical engine state and user-visible core slots after every step. See
 `code/specs/task-app-presentation-contract-v1.md` for coverage and the two explicit
 host-only exclusions (theme storage and locale-formatted calendar copy).
+`fixtures/task-name-matching-v1.json` is the same idea for one rule: which task a
+note's typed *Attach to task* name resolves to (accented Latin, Greek final sigma,
+German ß, Turkish dotted I, trimming and ties). Both hosts run every case; the rule
+is `code/specs/task-app-notes-ui-v1.md`'s addendum v1.4.
 The first-run product acceptance and its focused follow-up queue are recorded in
 `code/specs/task-app-first-run-usability-audit-v1.md`. Which of Mosaic's nine
 backends TaskApp is actually finished on is measured in

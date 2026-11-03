@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:adde799a240ea2c6",
+  "lessonIds": [
+    "ZH-C417-haiguan",
+    "ZH-C417-rujing",
+    "ZH-C417-chujing",
+    "ZH-C417-shenbao",
+    "ZH-C417-mianshui"
+  ],
+  "tex": "chinese/book/chapters/ch417-customs.tex"
+}

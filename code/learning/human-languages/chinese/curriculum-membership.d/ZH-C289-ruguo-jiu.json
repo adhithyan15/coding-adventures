@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C289-ruguo-jiu",
+  "pathSegment": "ZH-PATH-289-IFTIME",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-289-IFTIME",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C387-zhangdan",
+    "language": "chinese",
+    "chapter": 387,
+    "sequence": 29690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:791ad0e822aacb5c"
+  },
+  "findings": []
+}

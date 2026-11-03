@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:48b23aed7b807e1b",
+  "lessonIds": [
+    "ZH-C363-zunzhong",
+    "ZH-C363-xiaosheng",
+    "ZH-C363-falu",
+    "ZH-C363-fanfa",
+    "ZH-C363-suzhi",
+    "ZH-R363-review-358-363"
+  ],
+  "tex": "chinese/book/chapters/ch363-out-in-public.tex"
+}

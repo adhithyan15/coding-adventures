@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W390-ding-settle",
+    "language": "chinese",
+    "chapter": 390,
+    "sequence": 29835,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:a715987b7d74dcc0",
+    "detachableSegments": [
+      "Script — the roof of 安 over the foot of 是"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

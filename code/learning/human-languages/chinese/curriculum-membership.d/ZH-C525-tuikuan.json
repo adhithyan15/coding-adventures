@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C525-tuikuan",
+  "pathSegment": "ZH-PATH-525-SERVICE525",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-525-SERVICE525",
+      "order": 5
+    }
+  ]
+}

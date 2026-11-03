@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 402,
+  "sourceHash": "fnv1a64:f72a81ab91467cbd",
+  "lessonIds": [
+    "ZH-C402-chengke",
+    "ZH-C402-houche",
+    "ZH-C402-gaotie",
+    "ZH-C402-huancheng",
+    "ZH-C402-chexiang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch402.txt",
+  "json": "chinese/narration/ch402.json",
+  "textHash": "fnv1a64:c4d8d3a245570855",
+  "jsonHash": "fnv1a64:c314999ae9549b26",
+  "findings": []
+}

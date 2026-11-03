@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:9d875a2d3aea638f",
+  "lessonIds": [
+    "ZH-C332-danzi",
+    "ZH-C332-gui",
+    "ZH-W332-gui-ghost",
+    "ZH-C332-naogui",
+    "ZH-C332-jiangui",
+    "ZH-C332-renjian"
+  ],
+  "tex": "chinese/book/chapters/ch332-ghost-stories.tex"
+}

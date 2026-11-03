@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W297-gu-old",
+    "language": "chinese",
+    "chapter": 297,
+    "sequence": 23375,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:05972e2aa6049538",
+    "detachableSegments": [
+      "Script — 十 over 口, then the striking piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

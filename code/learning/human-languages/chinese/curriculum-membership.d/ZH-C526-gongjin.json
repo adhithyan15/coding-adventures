@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C526-gongjin",
+  "pathSegment": "ZH-PATH-526-WEIGHT526",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-526-WEIGHT526",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:7f6b3fc11036a2cf",
+  "lessonIds": [
+    "ZH-C425-zhusu",
+    "ZH-C425-jiudian",
+    "ZH-W425-jiu-wine",
+    "ZH-C425-kefang",
+    "ZH-C425-fangka",
+    "ZH-C425-datang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch425.txt",
+  "json": "chinese/narration/ch425.json",
+  "textHash": "fnv1a64:a82d61550018805a",
+  "jsonHash": "fnv1a64:088a081d819e7456",
+  "findings": []
+}

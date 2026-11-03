@@ -1,0 +1,19 @@
+{
+  "chapter": 296,
+  "title": "A Crash",
+  "label": "ch:zh-a-crash",
+  "canDo": "I can talk about a crash on the road: the brakes, a new driver and paying for the damage.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C296-peiqian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 296: I can talk about a crash on the road: the brakes, a new driver and paying for the damage.",
+    "assesses": [
+      "ZH-LEX-C296-CRASH296-03",
+      "ZH-LEX-C296-CRASH296-04",
+      "ZH-LEX-C296-CRASH296-05"
+    ]
+  }
+}

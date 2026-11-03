@@ -1,0 +1,19 @@
+{
+  "chapter": 397,
+  "title": "Surely Not",
+  "label": "ch:zh-surely-not",
+  "canDo": "I can talk about being stood up, asking whether something can really be so, rare chances, awkward spots and excuses.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C397-jiekou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 397: I can talk about being stood up, asking whether something can really be so, rare chances, awkward spots and excuses.",
+    "assesses": [
+      "ZH-LEX-C397-SURELY397-03",
+      "ZH-LEX-C397-SURELY397-04",
+      "ZH-LEX-C397-SURELY397-05"
+    ]
+  }
+}

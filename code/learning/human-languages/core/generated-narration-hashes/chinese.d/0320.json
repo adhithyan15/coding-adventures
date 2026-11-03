@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:627267cdd2170d0b",
+  "lessonIds": [
+    "ZH-C320-guaduan",
+    "ZH-C320-boda",
+    "ZH-C320-datong",
+    "ZH-C320-shuoqi",
+    "ZH-C320-yuyin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch320.txt",
+  "json": "chinese/narration/ch320.json",
+  "textHash": "fnv1a64:19347b8c4f223b2b",
+  "jsonHash": "fnv1a64:f2add5d11ab93545",
+  "findings": []
+}

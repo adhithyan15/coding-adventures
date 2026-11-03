@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C532-ruyi",
+  "pathSegment": "ZH-PATH-532-HOPE532",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-532-HOPE532",
+      "order": 4
+    }
+  ]
+}

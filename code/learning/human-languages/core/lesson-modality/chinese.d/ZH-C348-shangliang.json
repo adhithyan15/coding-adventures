@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C348-shangliang",
+    "language": "chinese",
+    "chapter": 348,
+    "sequence": 27110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4911a9d00d168f7e"
+  },
+  "findings": []
+}

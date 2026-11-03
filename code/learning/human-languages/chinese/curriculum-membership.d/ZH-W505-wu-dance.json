@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W505-wu-dance",
+  "pathSegment": "ZH-PATH-505-DANCE505",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-505-DANCE505",
+      "order": 2
+    }
+  ]
+}

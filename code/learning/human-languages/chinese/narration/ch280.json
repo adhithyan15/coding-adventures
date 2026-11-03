@@ -1,0 +1,1097 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 280,
+  "title": "What I Think",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:43bd5df277c05328",
+  "lessons": [
+    {
+      "id": "ZH-C280-yijian",
+      "sequence": 21160,
+      "title": "意见 (yìjiàn) — a suggestion; an objection",
+      "headword": "意见",
+      "romanization": "yìjiàn",
+      "gloss": "a suggestion; an objection",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ac4e63b71446051d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on what people put forward when they disagree."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 他突然来了 — tā tūrán lái le — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 他突然来了 — *tā tūrán lái le* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kànfǎ, a view — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kànfǎ*, a view — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yǒuyìsi, interesting — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yǒuyìsi*, interesting — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 意见",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "意见 — yìjiàn — \"a suggestion; an objection\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你有什么意见 nǐ yǒu shénme yìjiàn — What do you suggest? Or: what's your objection?"
+            },
+            {
+              "kind": "speech",
+              "text": "我没有意见 wǒ méiyǒu yìjiàn — I've no objection; fine by me."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the first character in your hand. It is the yì of yǒuyìsi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "意见 (yìjiàn) is built from 意 (yì) 'intention' and 见 'to see', both inherited from Middle Chinese, 'iH and kenH (Guangyun, in Baxter's transcription). The dictionary glosses the first 'will, intention' and the second 'to look'; 'a suggestion' or 'an objection' for the pair is the modern word's own sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kànfǎ is your view of a matter; 意见 (yìjiàn) is what you put forward about it, and often it is a point against."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a noun: you have one, 有意见, or you have none, 没有意见."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yìjiàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yìjiàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yìjiàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yìjiàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "你有什么意见 — nǐ yǒu shénme yìjiàn — What do you suggest?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 你有什么意见 — *nǐ yǒu shénme yìjiàn* — What do you suggest?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我没有意见 — wǒ méiyǒu yìjiàn — I've no objection.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我没有意见 — *wǒ méiyǒu yìjiàn* — I've no objection.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say kànfǎ, then 意见 (yìjiàn): a view, then a point you put forward",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *kànfǎ*, then 意见: a view, then a point you put forward]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 意见 (yìjiàn) mean? (\"A suggestion; an objection\".) How do you say you have no objection? (我没有意见.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W280-yi",
+      "sequence": 21170,
+      "title": "意 (yì) — the left of 站 on top, then 日 and 心",
+      "headword": "意",
+      "romanization": "yì",
+      "gloss": "意 — the left of 站 on top, then 日 and 心",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:797a85711401f7fa",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the left of 站 on top, then 日 and 心",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the left of 站 on top, then 日 and 心 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yìjiàn — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yìjiàn* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "站 日 心."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — zhàn, rì, xīn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *zhàn*, *rì*, *xīn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the left of 站 on top, then 日 and 心",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "意 (yì)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, and you write every one of them already."
+            },
+            {
+              "kind": "speech",
+              "text": "The left of 站, five strokes, here on top and wider: the dot, the bar, a dot on the left, a left-falling stroke on the right, and a long horizontal. In 站 that last stroke rises; here it lies flat and runs the whole width."
+            },
+            {
+              "kind": "speech",
+              "text": "日, four strokes, in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "心, four strokes, at the foot: the left dot, the curve along the foot that hooks up, the middle dot, the right dot."
+            },
+            {
+              "kind": "speech",
+              "text": "5 + 4 + 4 = thirteen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "意 (yì), all thirteen, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 意, all thirteen, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 意 (yì)? (Thirteen.) Which character you write has the same top? (站, where it stands on the left.) What is at the foot? (心.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 意 (yì), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C280-juede",
+      "sequence": 21180,
+      "title": "我觉得… (wǒ juéde …) — I think",
+      "headword": "我觉得…",
+      "romanization": "wǒ juéde …",
+      "gloss": "我觉得 and a whole sentence: what I think",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:25de5b5a22f71644",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word you have said for a long time, printed for the first time."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "意见, aloud — yìjiàn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 意见, aloud — *yìjiàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say juéde, to find; to think — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *juéde*, to find; to think — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say rènwéi, to hold a view — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *rènwéi*, to hold a view — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 我觉得 and a whole sentence",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "我觉得 and then a whole sentence gives your opinion: the sentence after it is what you think."
+            },
+            {
+              "kind": "speech",
+              "text": "我觉得他说得对 wǒ juéde tā shuō de duì — I think he's right. 我觉得今天太冷了 wǒ juéde jīntiān tài lěng le — I find it too cold today."
+            },
+            {
+              "kind": "speech",
+              "text": "Both characters of juéde, 觉 and 得, are ones you write, so 我觉得 prints in characters now."
+            },
+            {
+              "kind": "speech",
+              "text": "To ask, put 你觉得 in front: nǐ juéde zěnmeyàng?, what do you think?"
+            },
+            {
+              "kind": "speech",
+              "text": "rènwéi says the same more formally, a view you hold and would defend; 我觉得 is the everyday one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我觉得他说得对 — wǒ juéde tā shuō de duì — I think he's right.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我觉得他说得对 — *wǒ juéde tā shuō de duì* — I think he's right.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我觉得今天太冷了 — wǒ juéde jīntiān tài lěng le — I find it too cold today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我觉得今天太冷了 — *wǒ juéde jīntiān tài lěng le* — I find it too cold today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ juéde zěnmeyàng — What do you think?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ juéde zěnmeyàng* — What do you think?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you think of today's weather, with 我觉得",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you think of today's weather, with 我觉得]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What comes after 我觉得? (A whole sentence: what you think.) How do you ask what someone thinks? (nǐ juéde zěnmeyàng.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C280-juede-right",
+              "prompt": "How do you say 'I think he's right', in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-JUEDE-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "我觉得他说得对",
+                "wǒ juéde tā shuō de duì",
+                "wo juede ta shuo de dui"
+              ],
+              "feedback": {
+                "correct": "我觉得他说得对: 我觉得, then the sentence.",
+                "incorrect": "我觉得他说得对. The opinion is the whole sentence after 我觉得."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C280-haoxiang",
+      "sequence": 21190,
+      "title": "hǎoxiàng — as if; to look like",
+      "headword": "hǎoxiàng",
+      "romanization": "hǎoxiàng",
+      "gloss": "as if; to look like (a guess)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f68bd7d9e0681e36",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's opinion, and a word that sounds like this one's end."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我觉得今天太冷了, aloud — wǒ juéde jīntiān tài lěng le",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我觉得今天太冷了, aloud — *wǒ juéde jīntiān tài lěng le*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiàng, to be like — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiàng*, to be like — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 看来 — kànlai, it seems — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 看来 — *kànlai*, it seems — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: hǎoxiàng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hǎoxiàng — \"as if; to look like\", a guess."
+            },
+            {
+              "kind": "speech",
+              "text": "tā hǎoxiàng bìng le — He looks as if he's ill."
+            },
+            {
+              "kind": "speech",
+              "text": "jīntiān hǎoxiàng yào xiàyǔ — It looks like rain today."
+            },
+            {
+              "kind": "speech",
+              "text": "Its second character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hǎoxiàng is built from 好 and xiàng 'to be like', both inherited from Middle Chinese, xawX and zjangX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'good, fine' and the second 'to be like'; 'as if' for the pair is the word's own sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "我觉得 is your opinion. 看来 draws a conclusion from what you see. hǎoxiàng is softer still: a guess about how things look."
+            },
+            {
+              "kind": "speech",
+              "text": "It goes before the verb, after the person: tā hǎoxiàng bìng le."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎoxiàng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎoxiàng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hǎoxiàng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hǎoxiàng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā hǎoxiàng bìng le — He looks as if he's ill.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā hǎoxiàng bìng le* — He looks as if he's ill.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān hǎoxiàng yào xiàyǔ — It looks like rain today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān hǎoxiàng yào xiàyǔ* — It looks like rain today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say xiàng, then hǎoxiàng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *xiàng*, then *hǎoxiàng*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hǎoxiàng mean? (\"As if; to look like\".) Is it sure? (No: it is a guess.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C280-zheme",
+      "sequence": 21200,
+      "title": "这么 (zhème) — so; like this",
+      "headword": "这么",
+      "romanization": "zhème",
+      "gloss": "so; this much; like this",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b34cfbed49b1fe6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's guess, and a word that points the other way."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hǎoxiàng, as if — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hǎoxiàng*, as if — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "那么, aloud — nàme",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 那么, aloud — *nàme*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 这么",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "这么 — zhème — \"so; this much; like this\"."
+            },
+            {
+              "kind": "speech",
+              "text": "今天这么冷 jīntiān zhème lěng — It's so cold today!"
+            },
+            {
+              "kind": "speech",
+              "text": "今天天气这么好 jīntiān tiānqì zhème hǎo — The weather's so good today!"
+            },
+            {
+              "kind": "speech",
+              "text": "Both characters are ones you write."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "这么 (zhème) is built from 这 'this' and the ending 么 of 什么. No dictionary we use records an older form of 这 in this sense, or of the ending, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "那么 points at something over there, as in 他没有你那么高. 这么 (zhème) points at what is here and now: 今天这么冷."
+            },
+            {
+              "kind": "speech",
+              "text": "Both go before an adjective: 这么冷, 这么好."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhème",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhème*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhème, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhème*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "今天这么冷 — jīntiān zhème lěng — It's so cold today!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 今天这么冷 — *jīntiān zhème lěng* — It's so cold today!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "今天天气这么好 — jīntiān tiānqì zhème hǎo — The weather's so good today!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 今天天气这么好 — *jīntiān tiānqì zhème hǎo* — The weather's so good today!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 那么, then 这么 (zhème): there, then here",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 那么, then 这么: there, then here]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 这么 (zhème) mean? (\"So; this much\".) And 那么? (So, of something over there.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C280-practice",
+      "sequence": 21210,
+      "title": "我觉得这个意见很好 (wǒ juéde zhège yìjiàn hěn hǎo)",
+      "headword": "我觉得这个意见很好",
+      "romanization": "wǒ juéde zhège yìjiàn hěn hǎo",
+      "gloss": "two speakers weigh a plan: a suggestion, an objection, a guess and an opinion",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9214644c38642744",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with a plan and two people deciding on it."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "今天这么冷, aloud — jīntiān zhème lěng",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 今天这么冷, aloud — *jīntiān zhème lěng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say hǎoxiàng, as if — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *hǎoxiàng*, as if — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我没有意见 — wǒ méiyǒu yìjiàn — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我没有意见 — *wǒ méiyǒu yìjiàn* — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 明天我们去山上 好不好 míngtiān wǒmen qù shān shàng, hǎo bu hǎo — Shall we go up the mountain tomorrow? B: 我觉得这个意见很好 wǒ juéde zhège yìjiàn hěn hǎo — I think that's a good suggestion. A: 你们有意见吗 nǐmen yǒu yìjiàn ma — Any objections? B: wǒ méiyǒu yìjiàn, tā hǎoxiàng bù xiǎng qù — None from me. He looks as if he doesn't want to go. A: 为什么 wèishénme — Why? B: wǒ juéde tā tài lèi le — I think he's too tired. A: 今天这么冷 明天会冷吗 jīntiān zhème lěng, míngtiān huì lěng ma — It's so cold today. Will it be cold tomorrow? B: 我觉得不会 wǒ juéde bú huì — I don't think so."
+            },
+            {
+              "kind": "speech",
+              "text": "我觉得 answers on its own too: 我觉得不会, I don't think it will. The 不 goes after 我觉得, with the verb it denies."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C280-practice-tired",
+              "prompt": "Why does B think he doesn't want to go?",
+              "assesses": [
+                "ZH-PERFORMANCE-OPINION-01",
+                "ZH-GRAMMAR-JUEDE-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "he's too tired",
+                "too tired",
+                "tired",
+                "tài lèi",
+                "tā tài lèi le",
+                "he is tired"
+              ],
+              "feedback": {
+                "correct": "wǒ juéde tā tài lèi le: too tired.",
+                "incorrect": "B says wǒ juéde tā tài lèi le: he's too tired."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — giving an opinion",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four ways to say how you see it, from sure to unsure:"
+            },
+            {
+              "kind": "speech",
+              "text": "我觉得他说得对 wǒ juéde tā shuō de duì — your opinion."
+            },
+            {
+              "kind": "speech",
+              "text": "我没有意见 wǒ méiyǒu yìjiàn — no objection."
+            },
+            {
+              "kind": "speech",
+              "text": "tā hǎoxiàng bìng le — a guess."
+            },
+            {
+              "kind": "speech",
+              "text": "今天这么冷 jīntiān zhème lěng — so cold, here and now."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Nǐ juéde míngtiān huì xiàyǔ ma?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Give your opinion of a plan for the weekend, and one objection."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "意见 (yìjiàn) — the left of 站 on top, then 日, then 心",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 意见 — the left of 站 on top, then 日, then 心]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我觉得这个意见很好 — wǒ juéde zhège yìjiàn hěn hǎo — I think that's a good suggestion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我觉得这个意见很好 — *wǒ juéde zhège yìjiàn hěn hǎo* — I think that's a good suggestion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ juéde zěnmeyàng — What do you think?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ juéde zěnmeyàng* — What do you think?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "我觉得今天这么冷",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 我觉得今天这么冷]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say you think he's right. (我觉得他说得对.) Say you have no objection. (我没有意见.) Say he looks ill. (tā hǎoxiàng bìng le.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

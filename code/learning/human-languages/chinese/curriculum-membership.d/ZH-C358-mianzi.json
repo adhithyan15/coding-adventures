@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C358-mianzi",
+  "pathSegment": "ZH-PATH-358-MANNERS358",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-358-MANNERS358",
+      "order": 5
+    }
+  ]
+}

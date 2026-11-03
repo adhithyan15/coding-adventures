@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:70e149a9c61388f3",
+  "lessonIds": [
+    "ZH-C494-gaokao",
+    "ZH-W494-kao-test",
+    "ZH-C494-kaosheng",
+    "ZH-C494-baokao",
+    "ZH-C494-kaoshang",
+    "ZH-C494-luobang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch494.txt",
+  "json": "chinese/narration/ch494.json",
+  "textHash": "fnv1a64:03a8896cd93fc148",
+  "jsonHash": "fnv1a64:0b5d9e60e4d297c2",
+  "findings": []
+}

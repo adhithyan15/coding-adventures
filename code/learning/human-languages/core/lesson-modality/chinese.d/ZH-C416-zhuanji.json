@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C416-zhuanji",
+    "language": "chinese",
+    "chapter": 416,
+    "sequence": 31750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:24cf02c2e717bbe0"
+  },
+  "findings": []
+}

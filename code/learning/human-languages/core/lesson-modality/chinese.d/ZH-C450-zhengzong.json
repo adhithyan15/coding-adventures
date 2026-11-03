@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C450-zhengzong",
+    "language": "chinese",
+    "chapter": 450,
+    "sequence": 34060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc1b8066eb38572d"
+  },
+  "findings": []
+}

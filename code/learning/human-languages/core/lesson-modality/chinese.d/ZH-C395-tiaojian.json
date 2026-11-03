@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C395-tiaojian",
+    "language": "chinese",
+    "chapter": 395,
+    "sequence": 30120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b17beb0d2079247e"
+  },
+  "findings": []
+}

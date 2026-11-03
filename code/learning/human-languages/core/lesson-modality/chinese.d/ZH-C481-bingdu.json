@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C481-bingdu",
+    "language": "chinese",
+    "chapter": 481,
+    "sequence": 36230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ebe2f1c797f41b31"
+  },
+  "findings": []
+}

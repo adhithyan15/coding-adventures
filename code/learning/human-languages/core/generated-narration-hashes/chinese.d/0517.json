@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 517,
+  "sourceHash": "fnv1a64:e9cdf465ee3c0cf3",
+  "lessonIds": [
+    "ZH-C517-tianliang",
+    "ZH-C517-guang-light",
+    "ZH-W517-guang",
+    "ZH-C517-faguang",
+    "ZH-C517-xingguang",
+    "ZH-C517-huanghun"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch517.txt",
+  "json": "chinese/narration/ch517.json",
+  "textHash": "fnv1a64:9fd8b9a832e6e259",
+  "jsonHash": "fnv1a64:6bd9ee8aeee22084",
+  "findings": []
+}

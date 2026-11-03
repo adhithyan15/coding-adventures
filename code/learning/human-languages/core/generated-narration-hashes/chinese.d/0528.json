@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:f960b0b5a4932d10",
+  "lessonIds": [
+    "ZH-C528-pengqiao",
+    "ZH-C528-budebu",
+    "ZH-C528-chouqian",
+    "ZH-C528-dadu",
+    "ZH-C528-ouran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch528.txt",
+  "json": "chinese/narration/ch528.json",
+  "textHash": "fnv1a64:14fb5b90d59a4b76",
+  "jsonHash": "fnv1a64:b903c41e5349ed9c",
+  "findings": []
+}

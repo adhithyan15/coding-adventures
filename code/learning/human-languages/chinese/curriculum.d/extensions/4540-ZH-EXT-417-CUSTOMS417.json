@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-417-CUSTOMS417",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can go through customs, come into and leave a country, declare things and buy duty-free.",
+  "prerequisites": []
+}

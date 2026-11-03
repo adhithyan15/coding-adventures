@@ -1,0 +1,19 @@
+{
+  "chapter": 512,
+  "title": "Dreams",
+  "label": "ch:zh-dreams",
+  "canDo": "I can talk about my ambition in life, chasing a dream, making something of myself, fame and top schools.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C512-mingxiao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 512: I can talk about my ambition in life, chasing a dream, making something of myself, fame and top schools.",
+    "assesses": [
+      "ZH-LEX-C512-DREAMS512-03",
+      "ZH-LEX-C512-DREAMS512-04",
+      "ZH-LEX-C512-DREAMS512-05"
+    ]
+  }
+}

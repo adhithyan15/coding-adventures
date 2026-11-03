@@ -1,0 +1,21 @@
+{
+  "chapter": 363,
+  "title": "Out in Public",
+  "label": "ch:zh-out-in-public",
+  "canDo": "I can talk about respect, speaking quietly, the law and how people behave.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R363-review-358-363",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 363: I can talk about respect, speaking quietly, the law and how people behave.",
+    "assesses": [
+      "ZH-LEX-C363-PUBLIC363-01",
+      "ZH-LEX-C363-PUBLIC363-02",
+      "ZH-LEX-C363-PUBLIC363-03",
+      "ZH-LEX-C363-PUBLIC363-04",
+      "ZH-LEX-C363-PUBLIC363-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C355-haoyi",
+  "pathSegment": "ZH-PATH-355-REFUSE355",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-355-REFUSE355",
+      "order": 1
+    }
+  ]
+}

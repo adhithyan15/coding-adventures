@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C379-zhian",
+    "language": "chinese",
+    "chapter": 379,
+    "sequence": 29290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eadb228628a7d878"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C367-jianjie",
+    "language": "chinese",
+    "chapter": 367,
+    "sequence": 28110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a0618a749ba36a6"
+  },
+  "findings": []
+}

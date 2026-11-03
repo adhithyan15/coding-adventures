@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C516-shulin",
+    "language": "chinese",
+    "chapter": 516,
+    "sequence": 39130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:413d151972a39455"
+  },
+  "findings": []
+}

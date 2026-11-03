@@ -1,0 +1,21 @@
+{
+  "chapter": 536,
+  "title": "When Wishes Come True",
+  "label": "ch:zh-when-wishes-come-true",
+  "canDo": "I can say a wish comes true, a dream is fulfilled and life gets better, tell a dream, and say there's something to look forward to.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-R536-review-532-536",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 536: I can say a wish comes true, a dream is fulfilled and life gets better, tell a dream, and say there's something to look forward to.",
+    "assesses": [
+      "ZH-LEX-C536-DREAM536-01",
+      "ZH-LEX-C536-DREAM536-02",
+      "ZH-LEX-C536-DREAM536-03",
+      "ZH-LEX-C536-DREAM536-04",
+      "ZH-LEX-C536-DREAM536-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C461-xinai",
+    "language": "chinese",
+    "chapter": 461,
+    "sequence": 35180,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f67127a640cb6ae4"
+  },
+  "findings": []
+}

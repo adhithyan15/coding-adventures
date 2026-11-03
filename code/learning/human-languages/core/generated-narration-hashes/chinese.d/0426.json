@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:7bea2892686b52bf",
+  "lessonIds": [
+    "ZH-C426-dachuangfang",
+    "ZH-C426-keman",
+    "ZH-C426-ludian",
+    "ZH-C426-xingji",
+    "ZH-C426-chazuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch426.txt",
+  "json": "chinese/narration/ch426.json",
+  "textHash": "fnv1a64:7092dae67103da59",
+  "jsonHash": "fnv1a64:1d2b48380eced5f3",
+  "findings": []
+}

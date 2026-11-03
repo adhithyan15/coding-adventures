@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C463-danxiao",
+    "language": "chinese",
+    "chapter": 463,
+    "sequence": 35250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8300e18cffb1e4b"
+  },
+  "findings": []
+}

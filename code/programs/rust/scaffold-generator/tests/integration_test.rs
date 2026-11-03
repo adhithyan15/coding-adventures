@@ -707,3 +707,37 @@ fn test_changelog_has_date_format() {
         date_line
     );
 }
+
+// =========================================================================
+// Haskell BUILD files
+// =========================================================================
+//
+// The generated BUILD must select the Command Line Tools linker on macOS in
+// exactly the shape `build-tool --validate-build-files` accepts, and the
+// generated BUILD_windows must stay free of that POSIX prefix because Windows
+// runs it under `cmd /C`.
+
+#[test]
+fn test_generate_haskell_build_selects_darwin_clt_linker() {
+    let dir = temp_dir("haskell-build");
+    generate_haskell(&dir, "my-package", "A test package", "", &[], &[]).unwrap();
+    let build = fs::read_to_string(dir.join("BUILD")).unwrap();
+    assert_eq!(
+        build,
+        "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.\n\
+         # Scope the selection to Cabal and its children, keeping other packages intact.\n\
+         if [ \"$(uname -s)\" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; cabal test all\n"
+    );
+    let cabal = fs::read_to_string(dir.join("coding-adventures-my-package.cabal")).unwrap();
+    assert!(cabal.contains("test-suite spec"));
+}
+
+#[test]
+fn test_generate_haskell_build_windows_keeps_plain_command() {
+    let dir = temp_dir("haskell-build-windows");
+    generate_haskell(&dir, "my-package", "A test package", "", &[], &[]).unwrap();
+    let build_windows = fs::read_to_string(dir.join("BUILD_windows")).unwrap();
+    assert_eq!(build_windows, "cabal test all\n");
+    assert!(!build_windows.contains("uname"));
+    assert!(!build_windows.contains("DEVELOPER_DIR"));
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C494-gaokao",
+    "language": "chinese",
+    "chapter": 494,
+    "sequence": 37410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6dd4d1719080ad0f"
+  },
+  "findings": []
+}

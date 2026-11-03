@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C445-beike",
+  "pathSegment": "ZH-PATH-445-SEA445",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-445-SEA445",
+      "order": 3
+    }
+  ]
+}

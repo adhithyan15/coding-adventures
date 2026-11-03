@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C410-tongguo",
+    "language": "chinese",
+    "chapter": 410,
+    "sequence": 31430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d8b13bd543bd7a5e"
+  },
+  "findings": []
+}

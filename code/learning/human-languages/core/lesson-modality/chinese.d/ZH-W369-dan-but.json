@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W369-dan-but",
+    "language": "chinese",
+    "chapter": 369,
+    "sequence": 28205,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e8f0e8d69a8d6a5c",
+    "detachableSegments": [
+      "Script — the person piece, then the sun over a line"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

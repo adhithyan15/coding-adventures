@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-538-CAUSE538",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-538-CAUSE538"
+  ],
+  "after": []
+}

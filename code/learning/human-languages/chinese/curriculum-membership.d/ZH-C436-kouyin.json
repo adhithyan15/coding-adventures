@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C436-kouyin",
+  "pathSegment": "ZH-PATH-436-SOUTH436",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-436-SOUTH436",
+      "order": 5
+    }
+  ]
+}

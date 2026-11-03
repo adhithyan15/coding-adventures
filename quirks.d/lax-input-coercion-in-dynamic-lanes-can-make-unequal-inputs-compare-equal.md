@@ -2,7 +2,7 @@
 package: */ct-compare
 lane: typescript python csharp
 rung: E0
-status: open
+status: mitigated
 ---
 
 # Lax input coercion in dynamic lanes can make unequal inputs compare equal
@@ -14,7 +14,7 @@ integer as a length, treating a null array as empty), so two different inputs
 can become the same bytes. Subclasses, proxies and look-alike objects can also
 misreport their contents.
 
-**Fix in progress** (adhithyan15/coding-adventures#18780) for the TypeScript, Python and C# `ct-compare` lanes: inputs are
+**Mitigated** (adhithyan15/coding-adventures#18780, merged) for the TypeScript, Python and C# `ct-compare` lanes: inputs are
 validated rather than coerced, only genuine built-in byte types are accepted,
 and each input is read once into a fresh copy. The general lesson for the
 property engine: generators must produce values that **violate** the declared

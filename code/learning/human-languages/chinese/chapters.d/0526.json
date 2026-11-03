@@ -1,0 +1,20 @@
+{
+  "chapter": 526,
+  "title": "How Heavy?",
+  "label": "ch:zh-how-heavy",
+  "canDo": "I can weigh things, talk about kilograms and weight, and say I eat or drink a lot or a little.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C526-shaoliang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 526: I can weigh things, talk about kilograms and weight, and say I eat or drink a lot or a little.",
+    "assesses": [
+      "ZH-LEX-C526-WEIGHT526-03",
+      "ZH-LEX-C526-WEIGHT526-04",
+      "ZH-LEX-C526-WEIGHT526-05",
+      "ZH-SCRIPT-LIANG-AMOUNT-01"
+    ]
+  }
+}

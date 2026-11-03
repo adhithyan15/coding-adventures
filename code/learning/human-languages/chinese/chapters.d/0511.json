@@ -1,0 +1,20 @@
+{
+  "chapter": 511,
+  "title": "Close Family",
+  "label": "ch:zh-close-family",
+  "canDo": "I can talk about my nearest and dearest, my father and mother, children by birth and doing things myself.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C511-qinzi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 511: I can talk about my nearest and dearest, my father and mother, children by birth and doing things myself.",
+    "assesses": [
+      "ZH-LEX-C511-KIN511-03",
+      "ZH-LEX-C511-KIN511-04",
+      "ZH-LEX-C511-KIN511-05",
+      "ZH-SCRIPT-QIN-KIN-01"
+    ]
+  }
+}

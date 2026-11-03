@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 375,
+  "sourceHash": "fnv1a64:d8a3c2f9618ccdb2",
+  "lessonIds": [
+    "ZH-C375-qiong",
+    "ZH-C375-shehui",
+    "ZH-W375-she-society",
+    "ZH-C375-juan",
+    "ZH-C375-zhiyuanzhe",
+    "ZH-C375-huxiang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch375.txt",
+  "json": "chinese/narration/ch375.json",
+  "textHash": "fnv1a64:4ba4d65df9c7f9a4",
+  "jsonHash": "fnv1a64:5928ff586473d5c7",
+  "findings": []
+}

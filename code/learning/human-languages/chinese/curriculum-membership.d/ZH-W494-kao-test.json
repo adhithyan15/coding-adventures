@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W494-kao-test",
+  "pathSegment": "ZH-PATH-494-GAOKAO494",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-494-GAOKAO494",
+      "order": 1
+    }
+  ]
+}

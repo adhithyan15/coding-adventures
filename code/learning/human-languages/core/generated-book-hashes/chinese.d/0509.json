@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:897e4b549d219384",
+  "lessonIds": [
+    "ZH-C509-dangjia",
+    "ZH-C509-fumu",
+    "ZH-W509-mu-mother",
+    "ZH-C509-munu",
+    "ZH-C509-muyu",
+    "ZH-C509-houma"
+  ],
+  "tex": "chinese/book/chapters/ch509-parents.tex"
+}

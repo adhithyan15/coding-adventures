@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C501-huode",
+  "pathSegment": "ZH-PATH-501-WINNERS501",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-501-WINNERS501",
+      "order": 3
+    }
+  ]
+}

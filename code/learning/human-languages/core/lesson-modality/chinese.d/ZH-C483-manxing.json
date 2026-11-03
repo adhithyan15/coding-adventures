@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C483-manxing",
+    "language": "chinese",
+    "chapter": 483,
+    "sequence": 36330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:25f3b24c05dd35a4"
+  },
+  "findings": []
+}

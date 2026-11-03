@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C304-baodao-register",
+  "pathSegment": "ZH-PATH-304-SCHOOL304",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-304-SCHOOL304",
+      "order": 3
+    }
+  ]
+}

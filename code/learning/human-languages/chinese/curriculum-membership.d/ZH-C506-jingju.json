@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C506-jingju",
+  "pathSegment": "ZH-PATH-506-BAND506",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-506-BAND506",
+      "order": 3
+    }
+  ]
+}

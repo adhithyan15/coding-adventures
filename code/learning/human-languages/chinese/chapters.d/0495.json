@@ -1,0 +1,19 @@
+{
+  "chapter": 495,
+  "title": "Marks",
+  "label": "ch:zh-marks",
+  "canDo": "I can talk about a midterm exam, the exam hall, full marks, cheating and hard questions.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C495-nanti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 495: I can talk about a midterm exam, the exam hall, full marks, cheating and hard questions.",
+    "assesses": [
+      "ZH-LEX-C495-MARKS495-03",
+      "ZH-LEX-C495-MARKS495-04",
+      "ZH-LEX-C495-MARKS495-05"
+    ]
+  }
+}

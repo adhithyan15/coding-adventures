@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C342-zhongqiu",
+  "pathSegment": "ZH-PATH-342-AUTUMN342",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-342-AUTUMN342",
+      "order": 1
+    }
+  ]
+}

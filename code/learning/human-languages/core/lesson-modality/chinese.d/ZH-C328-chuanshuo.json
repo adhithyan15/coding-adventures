@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C328-chuanshuo",
+    "language": "chinese",
+    "chapter": 328,
+    "sequence": 25520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2c6983cc26f550e"
+  },
+  "findings": []
+}

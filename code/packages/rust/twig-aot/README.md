@@ -104,6 +104,16 @@ never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
   word typed `any` for the stack map while its mnemonic stays `mov_i64`.
   `tests/gc_param_roots.rs` reproduces each case end to end.
 
+**Strings fail closed (LANG83 PR5a).** `__twig_str_index` / `__twig_str_slice`
+out of range raise `Trap.Bounds` through `__twig_trap` (stdout flushed, the
+kind on stderr), and `__twig_str_concat(a, b, max)` raises `Trap.Overflow`
+when the result would exceed `max`, the module's string ceiling, which the
+lowering passes as an immediate. A folded out-of-range `str_index` /
+`str_slice` compiles to `trap "Trap.Bounds"`, and a literal concat fold stops
+at the ceiling. A literal string's `alloc_bytes` handle is typed `str`, so it
+(and its `mov` alias) is a root in the precise stack map, like every run-time
+string.
+
 - **String buffers and other allocations** — `alloc_bytes` (the buffer behind
   every runtime string) is typed `i64` by the string lowering, but it is a GC
   block, and in a stack-mapped frame an unnamed slot is invisible to the

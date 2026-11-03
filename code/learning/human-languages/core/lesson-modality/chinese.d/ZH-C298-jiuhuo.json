@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C298-jiuhuo",
+    "language": "chinese",
+    "chapter": 298,
+    "sequence": 23420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4405e9441a8f5e93"
+  },
+  "findings": []
+}

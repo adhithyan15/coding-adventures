@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 377,
+  "sourceHash": "fnv1a64:920abd5581d314ab",
+  "lessonIds": [
+    "ZH-C377-jumin",
+    "ZH-C377-shequ",
+    "ZH-W377-qu-area",
+    "ZH-C377-xiaoqu",
+    "ZH-C377-zhouwei",
+    "ZH-C377-xuequfang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch377.txt",
+  "json": "chinese/narration/ch377.json",
+  "textHash": "fnv1a64:7deb27a7e62c273c",
+  "jsonHash": "fnv1a64:e478f3010fe02505",
+  "findings": []
+}

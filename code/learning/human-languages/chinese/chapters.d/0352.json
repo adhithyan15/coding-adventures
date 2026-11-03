@@ -1,0 +1,19 @@
+{
+  "chapter": 352,
+  "title": "Same Here",
+  "label": "ch:zh-same-here",
+  "canDo": "I can say I feel the same, give my approval and say what I really meant.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C352-biaoshi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 352: I can say I feel the same, give my approval and say what I really meant.",
+    "assesses": [
+      "ZH-LEX-C352-AGREE352-03",
+      "ZH-LEX-C352-AGREE352-04",
+      "ZH-LEX-C352-AGREE352-05"
+    ]
+  }
+}

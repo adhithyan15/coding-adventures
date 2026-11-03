@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C450-zhaopaicai",
+    "language": "chinese",
+    "chapter": 450,
+    "sequence": 34070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:18b1bdcc1abada2a"
+  },
+  "findings": []
+}

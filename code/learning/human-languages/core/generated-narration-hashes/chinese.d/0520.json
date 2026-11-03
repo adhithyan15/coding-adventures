@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 520,
+  "sourceHash": "fnv1a64:114a4a64b7176f65",
+  "lessonIds": [
+    "ZH-C520-jiadian",
+    "ZH-C520-kaiguan",
+    "ZH-C520-reshuiqi",
+    "ZH-C520-nuanqi",
+    "ZH-C520-shengdian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch520.txt",
+  "json": "chinese/narration/ch520.json",
+  "textHash": "fnv1a64:b982c2c4eb5bb4a6",
+  "jsonHash": "fnv1a64:3b294d9d0623787a",
+  "findings": []
+}

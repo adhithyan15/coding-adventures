@@ -1,7 +1,4 @@
 {
-  "omits": [
-    "NARRATIVE-SEQUENCE",
-    "ASPECT-ONGOING-PAST"
-  ],
+  "omits": [],
   "relocates": {}
 }

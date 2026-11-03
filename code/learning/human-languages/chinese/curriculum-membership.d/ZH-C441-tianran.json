@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C441-tianran",
+  "pathSegment": "ZH-PATH-441-CAMP441",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-441-CAMP441",
+      "order": 4
+    }
+  ]
+}

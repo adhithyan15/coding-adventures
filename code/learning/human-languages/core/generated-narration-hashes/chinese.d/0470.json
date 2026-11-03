@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:af3165b4f5dc8b1e",
+  "lessonIds": [
+    "ZH-C470-zisi",
+    "ZH-C470-guzhi",
+    "ZH-C470-jiaoao",
+    "ZH-C470-mahu",
+    "ZH-C470-ben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch470.txt",
+  "json": "chinese/narration/ch470.json",
+  "textHash": "fnv1a64:5972dc87a32eb930",
+  "jsonHash": "fnv1a64:ea6cb7667e3ada2a",
+  "findings": []
+}

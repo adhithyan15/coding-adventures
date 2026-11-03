@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C300-shengming",
+    "language": "chinese",
+    "chapter": 300,
+    "sequence": 23530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:83ba936733b2d0b6"
+  },
+  "findings": []
+}

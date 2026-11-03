@@ -19,7 +19,7 @@
 //! use interpreter_ir::{IIRModule, IIRFunction, IIRInstr};
 //!
 //! // An empty module fails validation (EmptyModule) on every backend.
-//! let empty = IIRModule { name: "e".into(), functions: vec![], entry_point: None, language: "t".into(), exports: vec![], imports: vec![], release: None };
+//! let empty = IIRModule { name: "e".into(), functions: vec![], entry_point: None, language: "t".into(), exports: vec![], imports: vec![], release: None, str_max_bytes: None };
 //!
 //! match compile_iir(&empty, "iir-wasm") {
 //!     Err(IIRAdapterError::ValidationFailed { backend, errors }) => {

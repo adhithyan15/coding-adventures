@@ -62,7 +62,14 @@ fn conformance_runtime() -> PathBuf {
         .status()
         .expect("build the conformance runtime");
     assert!(status.success(), "conformance runtime failed to build");
-    let stem = root.join("target").join("debug");
+    // The build above inherits CARGO_TARGET_DIR, so the library lands there
+    // when it is set (relative to `root`, the build's working directory),
+    // not in the workspace's own `target`.
+    let target = std::env::var_os("CARGO_TARGET_DIR")
+        .filter(|dir| !dir.is_empty())
+        .map(|dir| root.join(dir))
+        .unwrap_or_else(|| root.join("target"));
+    let stem = target.join("debug");
     for name in [
         "libmosaic_app_conformance.dylib",
         "libmosaic_app_conformance.so",
@@ -187,6 +194,8 @@ fn the_emitted_xaml_host_answers_effects() {
         "deferred",
         "scoped",
         "quarantine",
+        "quarantine-uninspectable",
+        "quarantine-inspection-error",
     ] {
         let stdout = run(
             Command::new("dotnet")
@@ -249,6 +258,12 @@ fn the_emitted_xaml_host_answers_effects() {
         "a file that could not move aside is not written over",
         "the warning stays showing after an event",
         "no quarantine was replaced",
+        "an uninspectable name is not reported as taken",
+        "the warning names the first name and stops there",
+        "an uninspectable name leaves saving off",
+        "the rejected file is not written over",
+        "an inspection error is reported with the name it hit",
+        "an inspection error is not counted as a taken name",
         "answering from another thread does not deadlock",
         "answering a deferred effect settles it",
         "the deferred answer's value reached the app",

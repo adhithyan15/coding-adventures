@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W413-fei-fly",
+    "language": "chinese",
+    "chapter": 413,
+    "sequence": 31575,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:054ae748be0a2252",
+    "detachableSegments": [
+      "Script — a hooked turn, then two small strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

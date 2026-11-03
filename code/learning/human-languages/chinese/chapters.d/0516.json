@@ -1,0 +1,19 @@
+{
+  "chapter": 516,
+  "title": "Trees and Leaves",
+  "label": "ch:zh-trees-and-leaves",
+  "canDo": "I can talk about trees, fruit trees, woods, fallen leaves and fruit that is not ripe yet.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C516-chengshu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 516: I can talk about trees, fruit trees, woods, fallen leaves and fruit that is not ripe yet.",
+    "assesses": [
+      "ZH-LEX-C516-TREES516-03",
+      "ZH-LEX-C516-TREES516-04",
+      "ZH-LEX-C516-TREES516-05"
+    ]
+  }
+}

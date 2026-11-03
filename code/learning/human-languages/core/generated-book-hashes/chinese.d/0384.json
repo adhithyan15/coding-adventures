@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 384,
+  "sourceHash": "fnv1a64:7959698a4626594a",
+  "lessonIds": [
+    "ZH-C384-zhongshu",
+    "ZH-C384-chengwei",
+    "ZH-W384-cheng-become",
+    "ZH-C384-chengben",
+    "ZH-C384-ziyuan",
+    "ZH-C384-zengjia"
+  ],
+  "tex": "chinese/book/chapters/ch384-becoming-green.tex"
+}

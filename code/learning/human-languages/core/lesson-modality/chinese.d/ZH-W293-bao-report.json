@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W293-bao-report",
+    "language": "chinese",
+    "chapter": 293,
+    "sequence": 23165,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:0d9c9be05cf1a8d0",
+    "detachableSegments": [
+      "Script — the hand piece, then a hook, a post and a fork"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

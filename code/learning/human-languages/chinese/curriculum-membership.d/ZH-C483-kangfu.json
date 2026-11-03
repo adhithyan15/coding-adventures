@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C483-kangfu",
+  "pathSegment": "ZH-PATH-483-BETTER483",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-483-BETTER483",
+      "order": 1
+    }
+  ]
+}

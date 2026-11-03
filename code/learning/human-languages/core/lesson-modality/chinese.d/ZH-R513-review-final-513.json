@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R513-review-final-513",
+    "language": "chinese",
+    "chapter": 513,
+    "sequence": 38450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d27982d51bcb8ee3"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W336-song-send",
+    "language": "chinese",
+    "chapter": 336,
+    "sequence": 25945,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b2efeaf9c95a36a4",
+    "detachableSegments": [
+      "Script — 关 in the walking piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

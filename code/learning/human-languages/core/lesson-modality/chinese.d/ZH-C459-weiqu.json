@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C459-weiqu",
+    "language": "chinese",
+    "chapter": 459,
+    "sequence": 35090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eab41eeb9c072c97"
+  },
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W342-qiu-autumn",
+    "language": "chinese",
+    "chapter": 342,
+    "sequence": 26255,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:9030b58838ee13df",
+    "detachableSegments": [
+      "Script — the grain piece, then 火"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

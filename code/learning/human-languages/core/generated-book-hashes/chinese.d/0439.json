@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:89bbab5641727bd1",
+  "lessonIds": [
+    "ZH-C439-daotian",
+    "ZH-C439-guoyuan",
+    "ZH-C439-nongjiale",
+    "ZH-C439-yazi",
+    "ZH-C439-sanxin"
+  ],
+  "tex": "chinese/book/chapters/ch439-country-life.tex"
+}

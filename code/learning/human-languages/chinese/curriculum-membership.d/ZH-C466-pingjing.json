@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C466-pingjing",
+  "pathSegment": "ZH-PATH-466-CALM466",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-466-CALM466",
+      "order": 5
+    }
+  ]
+}

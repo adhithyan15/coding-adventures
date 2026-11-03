@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C510-tengai",
+  "pathSegment": "ZH-PATH-510-GRAND510",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-510-GRAND510",
+      "order": 3
+    }
+  ]
+}

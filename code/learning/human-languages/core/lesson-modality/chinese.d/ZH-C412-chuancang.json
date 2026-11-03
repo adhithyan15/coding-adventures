@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C412-chuancang",
+    "language": "chinese",
+    "chapter": 412,
+    "sequence": 31530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ba116361f34e5bb4"
+  },
+  "findings": []
+}

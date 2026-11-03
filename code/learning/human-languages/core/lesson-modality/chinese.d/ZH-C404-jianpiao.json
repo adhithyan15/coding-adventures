@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C404-jianpiao",
+    "language": "chinese",
+    "chapter": 404,
+    "sequence": 31110,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:faf0cc0ec636acb0"
+  },
+  "findings": []
+}

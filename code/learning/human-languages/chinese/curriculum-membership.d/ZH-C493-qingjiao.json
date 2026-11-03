@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C493-qingjiao",
+  "pathSegment": "ZH-PATH-493-TUTOR493",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-493-TUTOR493",
+      "order": 5
+    }
+  ]
+}

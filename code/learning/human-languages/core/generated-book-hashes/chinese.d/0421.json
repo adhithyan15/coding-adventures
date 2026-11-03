@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 421,
+  "sourceHash": "fnv1a64:2943d56adb7b3c06",
+  "lessonIds": [
+    "ZH-C421-gonglu",
+    "ZH-C421-gaosu",
+    "ZH-W421-su-speed",
+    "ZH-C421-chesu",
+    "ZH-C421-shoufeizhan",
+    "ZH-C421-chaosu"
+  ],
+  "tex": "chinese/book/chapters/ch421-on-the-expressway.tex"
+}

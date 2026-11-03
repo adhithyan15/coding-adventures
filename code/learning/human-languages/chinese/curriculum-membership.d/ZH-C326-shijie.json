@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C326-shijie",
+  "pathSegment": "ZH-PATH-326-WORLD326",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-326-WORLD326",
+      "order": 1
+    }
+  ]
+}

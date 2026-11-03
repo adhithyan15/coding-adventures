@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C438-quanbu",
+  "pathSegment": "ZH-PATH-438-NORTH438",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-438-NORTH438",
+      "order": 5
+    }
+  ]
+}

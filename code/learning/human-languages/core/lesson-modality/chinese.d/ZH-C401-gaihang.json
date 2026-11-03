@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C401-gaihang",
+    "language": "chinese",
+    "chapter": 401,
+    "sequence": 30400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:309dda5fc7af494d"
+  },
+  "findings": []
+}

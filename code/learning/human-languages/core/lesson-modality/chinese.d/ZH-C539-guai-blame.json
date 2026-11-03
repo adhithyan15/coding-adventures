@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C539-guai-blame",
+    "language": "chinese",
+    "chapter": 539,
+    "sequence": 40300,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cdff710b2b8a105a"
+  },
+  "findings": []
+}

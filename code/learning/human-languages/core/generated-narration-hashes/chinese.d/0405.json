@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:7c7bcba7a892eab7",
+  "lessonIds": [
+    "ZH-C405-zhida",
+    "ZH-C405-jinru",
+    "ZH-W405-ru-enter",
+    "ZH-C405-churu",
+    "ZH-C405-mobanche",
+    "ZH-C405-tingkao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch405.txt",
+  "json": "chinese/narration/ch405.json",
+  "textHash": "fnv1a64:7a4e405f032bd240",
+  "jsonHash": "fnv1a64:62d1ad35937c4051",
+  "findings": []
+}

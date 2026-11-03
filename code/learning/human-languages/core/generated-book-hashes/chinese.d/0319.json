@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:65bf61e6185c66c3",
+  "lessonIds": [
+    "ZH-C319-huidian",
+    "ZH-C319-xinxin",
+    "ZH-W319-xin-letter",
+    "ZH-C319-laidian",
+    "ZH-C319-tongxin",
+    "ZH-C319-huafei"
+  ],
+  "tex": "chinese/book/chapters/ch319-calls-and-confidence.tex"
+}

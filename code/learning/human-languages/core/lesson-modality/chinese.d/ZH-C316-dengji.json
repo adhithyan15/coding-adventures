@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C316-dengji",
+    "language": "chinese",
+    "chapter": 316,
+    "sequence": 24340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce95c4098ddea353"
+  },
+  "findings": []
+}

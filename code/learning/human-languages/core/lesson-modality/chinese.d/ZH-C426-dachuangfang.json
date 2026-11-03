@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C426-dachuangfang",
+    "language": "chinese",
+    "chapter": 426,
+    "sequence": 32240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a20ca407a5250e7"
+  },
+  "findings": []
+}

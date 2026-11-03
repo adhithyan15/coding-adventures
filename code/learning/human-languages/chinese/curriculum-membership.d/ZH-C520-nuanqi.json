@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C520-nuanqi",
+  "pathSegment": "ZH-PATH-520-APPLIANCE520",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-520-APPLIANCE520",
+      "order": 3
+    }
+  ]
+}

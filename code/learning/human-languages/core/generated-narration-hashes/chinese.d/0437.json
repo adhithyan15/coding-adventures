@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 437,
+  "sourceHash": "fnv1a64:36bcc397736a9a6f",
+  "lessonIds": [
+    "ZH-C437-shanqu",
+    "ZH-C437-pingyuan",
+    "ZH-C437-shamo",
+    "ZH-C437-gaoyuan",
+    "ZH-C437-yimin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch437.txt",
+  "json": "chinese/narration/ch437.json",
+  "textHash": "fnv1a64:455a18dff6f5eaab",
+  "jsonHash": "fnv1a64:e270031505c03659",
+  "findings": []
+}

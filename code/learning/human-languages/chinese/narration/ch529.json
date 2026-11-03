@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 529,
+  "title": "Good Luck, Bad Luck",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:db7c14c35c069b72",
+  "lessons": [
+    {
+      "id": "ZH-C529-daomei",
+      "sequence": 39770,
+      "title": "dǎoméi — to be out of luck; to have bad luck",
+      "headword": "dǎoméi",
+      "romanization": "dǎoméi",
+      "gloss": "to be out of luck; to have bad luck",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54f8d057797734bc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to make a bet, then the Mandarin for happening by chance."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dǎoméi",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dǎoméi — \"to be out of luck; to have bad luck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jīntiān zhēn dǎoméi wǒ de qiánbāo bú jiàn le — What bad luck today: my wallet's gone."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dǎoméi is built from dǎo 'to fall over' and méi 'mould'. The first is inherited from Middle Chinese tawX (Guangyun, in Baxter's transcription), glossed 'to fall flat'; no dictionary we use records an older form of the second, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dǎoméi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dǎoméi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dǎoméi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dǎoméi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān zhēn dǎoméi wǒ de qiánbāo bú jiàn le — What bad luck today: my wallet's gone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān zhēn dǎoméi wǒ de qiánbāo bú jiàn le* — What bad luck today: my wallet's gone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to make a bet, then the Mandarin for happening by chance, then say dǎoméi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to make a bet, then the Mandarin for happening by chance, then say *dǎoméi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dǎoméi mean? (\"To be out of luck; to have bad luck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C529-yunqi",
+      "sequence": 39780,
+      "title": "运气 (yùnqi) — a person's luck (good or bad)",
+      "headword": "运气",
+      "romanization": "yùnqi",
+      "gloss": "a person's luck (good or bad)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:227a97288d040229",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for happening by chance, then the Mandarin for to be out of luck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 运气",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "运气 — yùnqi — \"a person's luck (good or bad)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "运气好的话我们就能买到票 yùnqi hǎo dehuà wǒmen jiù néng mǎi dào piào — With luck, we'll be able to get tickets."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 运 (yùn) — seven strokes in two pieces: 云 first, four strokes; then the walking piece, three strokes, as in 这, along the left and the foot. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "运气 (yùnqi) is built from 运 (yùn) and 气 'breath', both inherited from Middle Chinese, hjunH and khj+jH (Guangyun, in Baxter's transcription), which glosses the first 'far', 'to move' and 'to carry'. The sense 'luck' is not given there; the second is said light."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yùnqi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yùnqi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yùnqi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yùnqi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yùnqi hǎo dehuà wǒmen jiù néng mǎi dào piào — With luck, we'll be able to get tickets.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yùnqi hǎo dehuà wǒmen jiù néng mǎi dào piào* — With luck, we'll be able to get tickets.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for happening by chance, then the Mandarin for to be out of luck, then say yùnqi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for happening by chance, then the Mandarin for to be out of luck, then say *yùnqi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 运气 (yùnqi) mean? (\"A person's luck (good or bad)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W529-yun-luck",
+      "sequence": 39785,
+      "title": "运 (yùn) — 云 first, then the walking piece",
+      "headword": "运",
+      "romanization": "yùn",
+      "gloss": "运 — 云, then the walking piece",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b5a4f05386e61404",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 云 first, then the walking piece",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 云 first, then the walking piece and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yùnqi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yùnqi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "云 这."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — yún, zhè",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *yún*, *zhè*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 云 first, then the walking piece",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "运 (yùn)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and the walking piece comes last, though it runs up the left and along the foot. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The inside piece, 云, four strokes, as you wrote it: a short bar, a longer bar, a stroke that falls to the left and turns right along the bottom, then a dot."
+            },
+            {
+              "kind": "speech",
+              "text": "The walking piece, three strokes, as in 这: a dot, a stroke that zigzags down, then a long sweep along the foot to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 3 = seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "运 (yùn), all seven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 运, all seven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 运 (yùn) have? (Two: 云 and the walking piece.) Which is written first? (云.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 运 (yùn), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C529-zouyun",
+      "sequence": 39790,
+      "title": "走运 (zǒuyùn) — to be in luck",
+      "headword": "走运",
+      "romanization": "zǒuyùn",
+      "gloss": "to be in luck",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f689a35da22ac1b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to be out of luck, then the Mandarin for a person's luck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 走运",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "走运 — zǒuyùn — \"to be in luck\"."
+            },
+            {
+              "kind": "speech",
+              "text": "如果你走运就能找到好工作 rúguǒ nǐ zǒuyùn jiù néng zhǎo dào hǎo gōngzuò — If you're in luck, you'll find a good job."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "走运 (zǒuyùn) is built from 走 'to go' and 运 (yùn) 'luck', both inherited from Middle Chinese, tsuwX and hjunH (Guangyun, in Baxter's transcription), which glosses the first 'to hurry'; the sense 'luck' of the second is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǒuyùn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǒuyùn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zǒuyùn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zǒuyùn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ nǐ zǒuyùn jiù néng zhǎo dào hǎo gōngzuò — If you're in luck, you'll find a good job.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ nǐ zǒuyùn jiù néng zhǎo dào hǎo gōngzuò* — If you're in luck, you'll find a good job.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to be out of luck, then the Mandarin for a person's luck, then say zǒuyùn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to be out of luck, then the Mandarin for a person's luck, then say *zǒuyùn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 走运 (zǒuyùn) mean? (\"To be in luck\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C529-xingyun",
+      "sequence": 39800,
+      "title": "xìngyùn — lucky; fortunate",
+      "headword": "xìngyùn",
+      "romanization": "xìngyùn",
+      "gloss": "lucky; fortunate",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4f98bb51b4233726",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a person's luck, then the Mandarin for to be in luck."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xìngyùn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xìngyùn — \"lucky; fortunate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ hěn xìngyùn bùrán wǒ jiù chídào le — I was lucky, or I'd have been late."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xìngyùn is built from xìng and 运 (yùn) 'luck', both inherited from Middle Chinese, heangX and hjunH (Guangyun, in Baxter's transcription). The dictionary glosses the first, after an older book, as having good fortune and escaping harm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xìngyùn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xìngyùn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xìngyùn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xìngyùn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ hěn xìngyùn bùrán wǒ jiù chídào le — I was lucky, or I'd have been late.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ hěn xìngyùn bùrán wǒ jiù chídào le* — I was lucky, or I'd have been late.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a person's luck, then the Mandarin for to be in luck, then say xìngyùn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a person's luck, then the Mandarin for to be in luck, then say *xìngyùn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xìngyùn mean? (\"Lucky; fortunate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C529-mingyun",
+      "sequence": 39810,
+      "title": "mìngyùn — fate; destiny",
+      "headword": "mìngyùn",
+      "romanization": "mìngyùn",
+      "gloss": "fate; destiny",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1882b44d8149c9e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to be in luck, then the Mandarin for fortunate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mìngyùn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mìngyùn — \"fate; destiny\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jíshǐ mìngyùn bù hǎo wǒmen yě yào nǔlì — Even if fate is against us, we have to keep trying."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mìngyùn is built from mìng and 运 (yùn) 'luck', both inherited from Middle Chinese, mjaengH and hjunH (Guangyun, in Baxter's transcription), which glosses the first 'to order' and 'to send': what has been ordered for you."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mìngyùn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mìngyùn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mìngyùn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mìngyùn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jíshǐ mìngyùn bù hǎo wǒmen yě yào nǔlì — Even if fate is against us, we have to keep trying.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jíshǐ mìngyùn bù hǎo wǒmen yě yào nǔlì* — Even if fate is against us, we have to keep trying.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to be in luck, then the Mandarin for fortunate, then say mìngyùn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to be in luck, then the Mandarin for fortunate, then say *mìngyùn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mìngyùn mean? (\"Fate; destiny\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

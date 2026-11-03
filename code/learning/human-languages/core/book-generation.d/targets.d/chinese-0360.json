@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 360,
+  "output": "chinese/book/chapters/ch360-no-need.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

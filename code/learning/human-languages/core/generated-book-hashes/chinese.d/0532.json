@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:4f37da60f2034ba4",
+  "lessonIds": [
+    "ZH-C532-youwang",
+    "ZH-W532-wang-hope",
+    "ZH-C532-babude",
+    "ZH-C532-qiwang",
+    "ZH-C532-ruyi",
+    "ZH-C532-zhiwang"
+  ],
+  "tex": "chinese/book/chapters/ch532-hoping-for-more.tex"
+}

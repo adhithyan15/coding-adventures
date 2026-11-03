@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 319,
+  "sourceHash": "fnv1a64:a63ebcfe030d9a9e",
+  "lessonIds": [
+    "ZH-C319-huidian",
+    "ZH-C319-xinxin",
+    "ZH-W319-xin-letter",
+    "ZH-C319-laidian",
+    "ZH-C319-tongxin",
+    "ZH-C319-huafei"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch319.txt",
+  "json": "chinese/narration/ch319.json",
+  "textHash": "fnv1a64:f95845a0152fc86c",
+  "jsonHash": "fnv1a64:f2dfd0b330825d06",
+  "findings": []
+}

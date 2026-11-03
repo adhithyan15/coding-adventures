@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C510-sunzi",
+  "pathSegment": "ZH-PATH-510-GRAND510",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-510-GRAND510",
+      "order": 1
+    }
+  ]
+}

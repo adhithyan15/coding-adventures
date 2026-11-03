@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C362-bixu",
+    "language": "chinese",
+    "chapter": 362,
+    "sequence": 27830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7248f2f3ffc2013c"
+  },
+  "findings": []
+}

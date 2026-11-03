@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C390-yueding",
+  "pathSegment": "ZH-PATH-390-AGREE390",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-390-AGREE390",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W469-wen-warm",
+  "pathSegment": "ZH-PATH-469-GENTLE469",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-469-GENTLE469",
+      "order": 2
+    }
+  ]
+}

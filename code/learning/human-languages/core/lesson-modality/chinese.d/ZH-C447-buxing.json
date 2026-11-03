@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C447-buxing",
+    "language": "chinese",
+    "chapter": 447,
+    "sequence": 33870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1bded2a825bc7074"
+  },
+  "findings": []
+}

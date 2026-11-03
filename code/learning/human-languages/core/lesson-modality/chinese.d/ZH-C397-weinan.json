@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C397-weinan",
+    "language": "chinese",
+    "chapter": 397,
+    "sequence": 30220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:008802561b95306f"
+  },
+  "findings": []
+}

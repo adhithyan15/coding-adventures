@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "You've Got a Point",
+  "label": "ch:zh-you-ve-got-a-point",
+  "canDo": "I can say someone has a point, talk someone round and say something is not necessarily so.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C353-rentong",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say someone has a point, talk someone round and say something is not necessarily so.",
+    "assesses": [
+      "ZH-LEX-C353-POINT353-03",
+      "ZH-LEX-C353-POINT353-04",
+      "ZH-LEX-C353-POINT353-05"
+    ]
+  }
+}

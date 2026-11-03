@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W337-zhu-wish",
+    "language": "chinese",
+    "chapter": 337,
+    "sequence": 25995,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ae93affb28a857d7",
+    "detachableSegments": [
+      "Script — the spirit piece, then 口 over 儿"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

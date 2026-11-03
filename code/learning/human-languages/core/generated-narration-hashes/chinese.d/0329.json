@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 329,
+  "sourceHash": "fnv1a64:4eb09a7d0073820e",
+  "lessonIds": [
+    "ZH-C329-tonghua",
+    "ZH-C329-gongzhu",
+    "ZH-C329-xiannu",
+    "ZH-C329-xiaoshi",
+    "ZH-C329-jieju",
+    "ZH-R329-review-324-329"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch329.txt",
+  "json": "chinese/narration/ch329.json",
+  "textHash": "fnv1a64:31b68459daff7f07",
+  "jsonHash": "fnv1a64:94d6471e5a5ef4c6",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 540,
+  "sourceHash": "fnv1a64:bccb16e8b7a27ac9",
+  "lessonIds": [
+    "ZH-C540-guguai",
+    "ZH-C540-lianlei",
+    "ZH-C540-nanmian",
+    "ZH-C540-qianyinhouguo",
+    "ZH-C540-zenmehuishi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch540.txt",
+  "json": "chinese/narration/ch540.json",
+  "textHash": "fnv1a64:7b9cce07390d3d00",
+  "jsonHash": "fnv1a64:0223ba1d6e5320b9",
+  "findings": []
+}

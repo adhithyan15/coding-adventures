@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 359,
+  "sourceHash": "fnv1a64:3b7d6b2808f09574",
+  "lessonIds": [
+    "ZH-C359-guize",
+    "ZH-C359-zunshou",
+    "ZH-C359-weifan",
+    "ZH-C359-xianzhi",
+    "ZH-C359-daode"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch359.txt",
+  "json": "chinese/narration/ch359.json",
+  "textHash": "fnv1a64:035a21a8d77f5403",
+  "jsonHash": "fnv1a64:5322900a9508267b",
+  "findings": []
+}

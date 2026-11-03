@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:085af7780fcfc294",
+  "lessonIds": [
+    "ZH-C334-zhengyue",
+    "ZH-C334-hongbao",
+    "ZH-W334-hong-red",
+    "ZH-C334-tie",
+    "ZH-C334-chunlian",
+    "ZH-C334-honghuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch334.txt",
+  "json": "chinese/narration/ch334.json",
+  "textHash": "fnv1a64:3accfb2dde99d399",
+  "jsonHash": "fnv1a64:00caddae95fd11c4",
+  "findings": []
+}

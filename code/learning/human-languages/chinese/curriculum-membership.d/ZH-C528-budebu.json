@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C528-budebu",
+  "pathSegment": "ZH-PATH-528-CHANCE528",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-528-CHANCE528",
+      "order": 1
+    }
+  ]
+}

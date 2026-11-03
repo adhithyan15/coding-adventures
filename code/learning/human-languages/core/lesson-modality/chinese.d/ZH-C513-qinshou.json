@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C513-qinshou",
+    "language": "chinese",
+    "chapter": 513,
+    "sequence": 38430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:536fc7df6e1a7d41"
+  },
+  "findings": []
+}

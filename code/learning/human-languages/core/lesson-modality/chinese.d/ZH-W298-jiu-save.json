@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W298-jiu-save",
+    "language": "chinese",
+    "chapter": 298,
+    "sequence": 23425,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7eacad9a3f090c34",
+    "detachableSegments": [
+      "Script — a hooked post with small strokes, then the striking piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

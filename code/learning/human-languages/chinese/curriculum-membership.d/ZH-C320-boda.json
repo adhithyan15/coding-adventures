@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C320-boda",
+  "pathSegment": "ZH-PATH-320-PHONE320",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-320-PHONE320",
+      "order": 1
+    }
+  ]
+}

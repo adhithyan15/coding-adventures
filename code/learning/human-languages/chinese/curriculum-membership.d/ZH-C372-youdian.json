@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C372-youdian",
+  "pathSegment": "ZH-PATH-372-ANYWAY372",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-372-ANYWAY372",
+      "order": 4
+    }
+  ]
+}

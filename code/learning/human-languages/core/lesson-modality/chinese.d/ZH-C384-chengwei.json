@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C384-chengwei",
+    "language": "chinese",
+    "chapter": 384,
+    "sequence": 29520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3934f1a46f094c19"
+  },
+  "findings": []
+}

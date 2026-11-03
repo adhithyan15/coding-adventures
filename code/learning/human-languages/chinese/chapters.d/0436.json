@@ -1,0 +1,20 @@
+{
+  "chapter": 436,
+  "title": "North and South",
+  "label": "ch:zh-north-and-south",
+  "canDo": "I can talk about the lie of the land, the south and the north, a dialect and an accent.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C436-kouyin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 436: I can talk about the lie of the land, the south and the north, a dialect and an accent.",
+    "assesses": [
+      "ZH-LEX-C436-SOUTH436-03",
+      "ZH-LEX-C436-SOUTH436-04",
+      "ZH-LEX-C436-SOUTH436-05",
+      "ZH-SCRIPT-FANG-SIDE-01"
+    ]
+  }
+}

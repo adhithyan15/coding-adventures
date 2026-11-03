@@ -1,0 +1,19 @@
+{
+  "chapter": 471,
+  "title": "Eyes",
+  "label": "ch:zh-eyes",
+  "canDo": "I can talk about tears, what is right in front of me, petty people, being short-sighted and a wink.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C471-zhayan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 471: I can talk about tears, what is right in front of me, petty people, being short-sighted and a wink.",
+    "assesses": [
+      "ZH-LEX-C471-EYES471-03",
+      "ZH-LEX-C471-EYES471-04",
+      "ZH-LEX-C471-EYES471-05"
+    ]
+  }
+}

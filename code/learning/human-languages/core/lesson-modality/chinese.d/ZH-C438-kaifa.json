@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C438-kaifa",
+    "language": "chinese",
+    "chapter": 438,
+    "sequence": 33410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2abb9e28c96dd07e"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C524-huanjia",
+  "pathSegment": "ZH-PATH-524-PRICE524",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-524-PRICE524",
+      "order": 4
+    }
+  ]
+}

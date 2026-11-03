@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:bc1c98e39ef1e781",
+  "lessonIds": [
+    "ZH-C451-chisu",
+    "ZH-C451-tese",
+    "ZH-W451-se-colour",
+    "ZH-C451-chuse",
+    "ZH-C451-sucai",
+    "ZH-C451-sheng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch451.txt",
+  "json": "chinese/narration/ch451.json",
+  "textHash": "fnv1a64:8fc9971590b6d397",
+  "jsonHash": "fnv1a64:a7d0e4320da771d8",
+  "findings": []
+}

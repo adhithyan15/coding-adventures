@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C336-songli",
+    "language": "chinese",
+    "chapter": 336,
+    "sequence": 25960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3e5d63dc1b9a0734"
+  },
+  "findings": []
+}

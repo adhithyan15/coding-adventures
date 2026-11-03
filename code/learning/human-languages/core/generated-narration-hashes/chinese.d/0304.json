@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 304,
+  "sourceHash": "fnv1a64:4f7f21cc887530c7",
+  "lessonIds": [
+    "ZH-C304-ruxue",
+    "ZH-C304-riji",
+    "ZH-W304-ji-note",
+    "ZH-C304-baodao-register",
+    "ZH-C304-xuefei",
+    "ZH-C304-jizhu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch304.txt",
+  "json": "chinese/narration/ch304.json",
+  "textHash": "fnv1a64:8fa5bd2c8bf2519a",
+  "jsonHash": "fnv1a64:674054f2405f0212",
+  "findings": []
+}

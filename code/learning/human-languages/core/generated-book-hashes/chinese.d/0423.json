@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:a605add97a33ef9d",
+  "lessonIds": [
+    "ZH-C423-lukuang",
+    "ZH-C423-dongnan",
+    "ZH-W423-nan-south",
+    "ZH-C423-xinan",
+    "ZH-C423-nanxia",
+    "ZH-C423-nanbei"
+  ],
+  "tex": "chinese/book/chapters/ch423-going-south.tex"
+}

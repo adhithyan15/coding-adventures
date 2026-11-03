@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W328-chuan-pass",
+  "pathSegment": "ZH-PATH-328-LEGEND328",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-328-LEGEND328",
+      "order": 2
+    }
+  ]
+}

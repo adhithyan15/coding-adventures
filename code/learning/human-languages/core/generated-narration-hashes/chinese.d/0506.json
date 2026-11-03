@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 506,
+  "sourceHash": "fnv1a64:3db651eca1d6ad5d",
+  "lessonIds": [
+    "ZH-C506-yuedui",
+    "ZH-C506-yanzou",
+    "ZH-C506-xiaotiqin",
+    "ZH-C506-jingju",
+    "ZH-C506-gemi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch506.txt",
+  "json": "chinese/narration/ch506.json",
+  "textHash": "fnv1a64:d401e52856b85be8",
+  "jsonHash": "fnv1a64:d4717af8da3cd111",
+  "findings": []
+}

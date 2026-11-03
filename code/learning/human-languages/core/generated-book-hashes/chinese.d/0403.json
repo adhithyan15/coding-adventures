@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 403,
+  "sourceHash": "fnv1a64:469ee4ea64329466",
+  "lessonIds": [
+    "ZH-C403-houcheshi",
+    "ZH-C403-luke",
+    "ZH-W403-lu-travel",
+    "ZH-C403-zhengdian",
+    "ZH-C403-liecheyuan",
+    "ZH-C403-zhanzhang"
+  ],
+  "tex": "chinese/book/chapters/ch403-travellers.tex"
+}

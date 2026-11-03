@@ -1,0 +1,7 @@
+{
+  "language": "chinese",
+  "chapter": 512,
+  "output": "chinese/book/chapters/ch512-dreams.tex",
+  "unicodeScript": "Han",
+  "scriptCommand": "zh"
+}

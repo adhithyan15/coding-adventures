@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:7dcde604059e3e0b",
+  "lessonIds": [
+    "ZH-C490-guanli",
+    "ZH-C490-hezuo",
+    "ZH-C490-yeban",
+    "ZH-C490-xinku",
+    "ZH-C490-kaichu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch490.txt",
+  "json": "chinese/narration/ch490.json",
+  "textHash": "fnv1a64:f72161f52e27c6e4",
+  "jsonHash": "fnv1a64:95d35f7237b27a92",
+  "findings": []
+}

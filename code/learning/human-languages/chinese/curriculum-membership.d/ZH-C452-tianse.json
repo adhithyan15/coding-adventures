@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C452-tianse",
+  "pathSegment": "ZH-PATH-452-AFTERMEAL452",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-452-AFTERMEAL452",
+      "order": 3
+    }
+  ]
+}

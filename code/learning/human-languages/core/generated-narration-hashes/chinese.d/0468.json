@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 468,
+  "sourceHash": "fnv1a64:883e97af635af9b1",
+  "lessonIds": [
+    "ZH-C468-shanliang",
+    "ZH-C468-heqi",
+    "ZH-C468-jianqiang",
+    "ZH-C468-qinkuai",
+    "ZH-C468-titie"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch468.txt",
+  "json": "chinese/narration/ch468.json",
+  "textHash": "fnv1a64:1a95b7525aaa5f07",
+  "jsonHash": "fnv1a64:2211cf2ca44bb1aa",
+  "findings": []
+}

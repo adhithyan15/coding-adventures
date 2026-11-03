@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 386,
+  "sourceHash": "fnv1a64:ff8f577c1f95ceae",
+  "lessonIds": [
+    "ZH-C386-ershou",
+    "ZH-C386-biancheng",
+    "ZH-W386-bian-change",
+    "ZH-C386-xianzhi",
+    "ZH-C386-huasuan",
+    "ZH-C386-biantian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch386.txt",
+  "json": "chinese/narration/ch386.json",
+  "textHash": "fnv1a64:17015c05b0357e7e",
+  "jsonHash": "fnv1a64:67fddaf5e777356d",
+  "findings": []
+}

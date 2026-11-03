@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C287-ambition",
+  "pathSegment": "ZH-PATH-287-WANT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-287-WANT",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 459,
+  "sourceHash": "fnv1a64:b50eb02e3b478fa1",
+  "lessonIds": [
+    "ZH-C459-gudan",
+    "ZH-C459-shiqing",
+    "ZH-W459-qing-feeling",
+    "ZH-C459-ganqing",
+    "ZH-C459-xinlihua",
+    "ZH-C459-weiqu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch459.txt",
+  "json": "chinese/narration/ch459.json",
+  "textHash": "fnv1a64:0f25f4a8b6f6de6f",
+  "jsonHash": "fnv1a64:912a8d55713e7a70",
+  "findings": []
+}

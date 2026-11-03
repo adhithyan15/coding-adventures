@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C398-xiancheng",
+    "language": "chinese",
+    "chapter": 398,
+    "sequence": 30270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:47a861e05f6f7de6"
+  },
+  "findings": []
+}
