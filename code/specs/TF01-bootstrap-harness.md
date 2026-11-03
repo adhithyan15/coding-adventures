@@ -135,6 +135,7 @@ has an `op` field (text) naming what it tests:
 |---|---|---|
 | `deep_equal` | `actual`, `expected`, `verdict` (`"pass"`/`"fail"`), `failure_id` (fail only) | §3.1 |
 | `error_is` | `raised`, `expected`, `verdict`, `failure_id` (fail only) | §3.2 |
+| `failure_id_valid` | `input` (text), `valid` (bool) | Closed protocol vocabulary, §5.3 |
 | `splitmix64` | `seed`, `outputs` (list of int) | §5.1 |
 | `fnv1a64` | `input` (bytes), `hash` (int) | §5.1 |
 | `shuffle` | `seed`, `ids` (list of text), `order` (list of text) | §5.2 |
@@ -150,6 +151,8 @@ The validator (`code/scripts/bootstrap_harness_conformance.py`) enforces:
   implementation;
 - `splitmix64` agreement with the published reference vector;
 - that every `tfv_reject` text really is rejected;
+- that the failure-ID cases cover every registered ID and at least one
+  unregistered ID, and every membership answer is independently derived;
 - that `cases.tfv` is exactly what `cases.json` generates.
 
 ## 5. The run protocol
@@ -224,6 +227,23 @@ ok 3 - ct-compare/eq-u64-zero
   | `panic` | a panic or exception escaped the test |
   | `corpus-mismatch` | the self-corpus expected a different answer |
   | `corpus-malformed` | a self-corpus record lacks the fields its `op` needs |
+
+  The runner validates this vocabulary at the TAP serialization boundary,
+  including failures constructed directly by a callback. An unregistered ID
+  is a protocol error. Before writing that verdict's `not ok` line or YAML,
+  the runner emits exactly `Bail out! invalid failure id`, marks the summary
+  as bailed, and stops running tests. The offending ID and callback message
+  are never printed. Unlike registration errors, this can occur after a plan
+  and a valid prefix of test results. Previously reported counts are retained;
+  the malformed verdict is not counted as a reported pass or failure. The
+  process exits nonzero. Registered failures retain their existing behavior,
+  including continuing to the next test.
+
+  A pure membership predicate can be exposed for consumers, but validation in
+  a convenience constructor alone is insufficient: the output boundary must
+  also guard direct construction of the public failure value. The corpus
+  tests membership; runner tests exercise the real bail-out output, summary,
+  early stop, valid baselines, and writer-error propagation.
 
 - The process exits **0 when every test passed, 1 otherwise** (including a
   bail-out, or standard output closing before the report is written), and

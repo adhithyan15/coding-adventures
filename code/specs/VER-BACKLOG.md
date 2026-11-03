@@ -38,9 +38,10 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | Priority / ID | Work | State / prerequisite and acceptance |
 |---|---|---|
 | done / VER-P003 | TF01 Rust L0 bootstrap | #18807 merged as 6a09869c279; expected head 4e608afe3bc9 verified on fetched main; all checks acceptable |
-| P1 / VER-P004 | Rust CT01 corpus through L0 | #18849 retargeted to main after P003 merge; local checks pass; awaiting final-head hosted CI; every case, fixed-array API, fresh output, error mapping, logical work fields, regeneration/build selection |
-| P1 / VER-I004 | Enforce TF01's closed failure vocabulary at the Rust harness boundary | ready after P004; rejected invalid IDs must not escape as unregistered TAP diagnostics; spec, negative corpus and caller compatibility before code |
-| P1 / VER-P005 | Warrant v0 specification | waiting P004; VER04 syntax/types/bindings and negative examples |
+| done / VER-P004 | Rust CT01 corpus through L0 | #18849 merged as 0bee67f3a81; expected head ca72cad1191 verified on fetched main; all 44 checks acceptable |
+| P2 / VER-CI001 | Retain diagnostics for intermittent macOS iPad UI failure | original job125811351687 failed; bounded same-head retry125843044183 and run41602352046 attempt2 passed; root cause and missing UI-state artifacts remain unresolved; no assertions weakened |
+| P1 / VER-I004 | Enforce TF01's closed failure vocabulary at the Rust harness boundary | selected after verified P004 merge and overlap audit; local spec-first work replayed onto fetched main; final-source validation/security review before publication |
+| P1 / VER-P005 | Warrant v0 specification | after I004; VER04 syntax/types/bindings and negative examples |
 | P1 / VER-P006 | Warrant grammar/generated lexer/parser | waiting P005; positive/negative corpus and drift gate |
 | P1 / VER-P007 | Warrant type checker/Rust bindings | waiting P006; missing exports, wrong types and vacuous bindings reject |
 | P1 / VER-P008 | Rust backend and ct-compare.warrant | waiting P007; generated tests through L0, checked regeneration |
@@ -81,6 +82,58 @@ can progress independently once their prerequisites are available.
 | VER26 follow-on | Busicom-to-gates, a capability-bearing pilot, then other languages |
 
 ## Discoveries and current plan
+
+Post-P004 prioritization: expected head ca72cad1191 merged as 0bee67f3a81,
+reachable on fetched main. No overlapping open TF01/bootstrap/Warrant PR was
+found in the live open-PR audit. Select I004's demonstrated validation gap
+before Warrant's new design work. Replay only the six private I004 commits onto
+main so the next PR does not duplicate P004. Preserve the CI diagnostic and
+local checkpoint-ref discoveries below as follow-ups, not new feature scope.
+
+- Local tooling follow-up: a general fetch failed on an unrelated broken
+  `refs/codex/turn-diffs/checkpoints/...` object. A main-only fetch with an
+  explicit origin/main negotiation tip succeeded; live main matched the fetched
+  ref. Preserve those checkpoint refs and diagnose their owner separately;
+  no repository-wide integrity repair is claimed. This does not outrank I004.
+
+P004 CI triage: macOS SwiftUI step failed TrestleUiTests.swift:132 after typing
+and Add, with exit65 and one real failed test. The same UI test passed on
+bootstrap head4e608afe3bc9; its test/layout/SwiftUI emitter/bindings/task-core are
+unchanged, and task-mosaic-app's diff adds only cfg(test) cases. This supports
+one bounded diagnostic retry, not a claim that the root cause is fixed. GitHub
+rejects a job rerun while sibling jobs keep the run active; wait without
+cancelling them, refresh the expected head, then retry only the failed job.
+No SwiftUI UI state/xcresult artifacts were retained. If the failure repeats,
+capture the actual input values/view hierarchy and retained diagnostics before
+choosing a behavioral fix. The unresolved diagnostic gap stays recorded even
+if the retry passes; do not turn it into an unrelated TaskApp feature tranche.
+
+The bounded retry did pass: the actual Trestle UI test passed at
+2026-11-03T10:38:20Z (111.675 seconds); the SwiftUI step, Flutter iOS builds,
+affected package tests and the full workflow attempt2 completed successfully.
+This is native execution evidence, not a root-cause repair. CI001 is no longer
+a P004 merge blocker, but its diagnostic follow-up remains open.
+
+I004 was prepared locally while #18849 waited for CI and is now selected;
+it has no PR and is not delivered. Its spec preserves the string-taking
+Verdict API and validates at serialization, so direct construction cannot
+bypass the guard. Publication still requires final-source validation and
+security review after the completed merge, overlap audit and prioritization.
+
+Local preparation evidence for I004: the new runtime tests first reproduced
+three failures on the old runner. With the guard, 31 Rust harness unit tests,
+85 self-corpus records, the CT01 18 unit + 26 L0 + 6 IR checks, and Clippy pass.
+The independent Python harness suite passes 25 tests and the CT01 suites 16.
+Actual sabotage runs retain 18 registered harness failures and three registered
+CT01 failures, with nonzero exits. Instrumented tests pass; the direct LLVM
+report is 92.53% overall harness source-line coverage (100% in verdict.rs).
+An early read-only security review passed. This remains unpublished local
+evidence and must be reconciled/validated on the final publication head.
+
+The I004 regeneration path also exposed a Windows byte-transport gap: the
+bootstrap generator's default text writer could translate LF to CRLF while its
+text check normalized that difference away. I004 writes LF explicitly and pins
+the actual generated bytes, without weakening the strict TFV parser.
 
 - During pending CI for P004, its two negative-check failure paths were found
   to invent adapter-specific IDs outside TF01's closed vocabulary. Correct them
@@ -126,8 +179,8 @@ pass 16 tests; Clippy and Ruff pass; focused Go repository-input tests pass.
 Direct LLVM reporting over the instrumented run covers 145/145 ct-compare source
 lines. The full Go suite passed on the initial integration tree and on the
 focused dependent branch with `-count=1 -timeout=2m`. Hosted CI remains separate.
-Bootstrap's exact head passed a fresh security sub-agent
-review; its existing auto-merge remains waiting for CI.
+Bootstrap and P004 passed exact-head security reviews and hosted CI, and their
+expected-head merges have been verified on fetched main.
 
 P004 plan: specify deterministic CT01-to-TFV projection and fixed-width dispatch;
 falsify stale transport/work/results; execute all real public operations through
