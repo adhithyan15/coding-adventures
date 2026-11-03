@@ -136,6 +136,9 @@ any double-quoted argument is the receiving program's business, so
 `python -c "import os; print(os.devnull)"` or `perl -e "print $x"` is fine.
 The parts of a hand-off line outside its quoted payload are still `cmd`'s:
 `bash -c "..." >/dev/null` fails, because `cmd` opens the redirect target.
+Single quotes are not quotes to `cmd` (it still splits `bash -c 'a && b'` at
+the `&&` and redirects at a `>` inside them), so a hand-off payload must be
+double-quoted.
 
 The failure mode is quiet, which is why this is validated rather than left to
 CI. `where swift >/dev/null 2>/dev/null && swift test || echo skipping` never
@@ -148,8 +151,8 @@ was written.
 
 **Validator rule `windows-posix-syntax`.** `--validate-build-files` reads every
 package's `BUILD_windows` directly, on every host, and rejects a line that
-uses, outside double quotes and outside a `bash`/`sh`/`powershell`/`pwsh`
-hand-off's quoted payload, any of these POSIX-only constructs:
+uses, outside double-quoted text (which is where a `bash -c "..."` hand-off's
+payload lives), any of these POSIX-only constructs:
 
 - `/dev/null`;
 - `command -v`;
