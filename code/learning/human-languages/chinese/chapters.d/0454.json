@@ -1,0 +1,19 @@
+{
+  "chapter": 454,
+  "title": "The Information Desk",
+  "label": "ch:zh-the-information-desk",
+  "canDo": "I can find the information desk, make an inquiry, talk about books, give directions and pick up a brochure.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C454-xuanchuance",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 454: I can find the information desk, make an inquiry, talk about books, give directions and pick up a brochure.",
+    "assesses": [
+      "ZH-LEX-C454-INFO454-03",
+      "ZH-LEX-C454-INFO454-04",
+      "ZH-LEX-C454-INFO454-05"
+    ]
+  }
+}

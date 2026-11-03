@@ -1,0 +1,19 @@
+{
+  "chapter": 313,
+  "title": "Moving House",
+  "label": "ch:zh-moving-house",
+  "canDo": "I can talk about doing up a new home, settling down and getting used to a new place.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C313-shiying",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 313: I can talk about doing up a new home, settling down and getting used to a new place.",
+    "assesses": [
+      "ZH-LEX-C313-MOVE313-03",
+      "ZH-LEX-C313-MOVE313-04",
+      "ZH-LEX-C313-MOVE313-05"
+    ]
+  }
+}

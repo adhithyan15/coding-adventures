@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:a525b0a8a3ae3e5e",
+  "lessonIds": [
+    "ZH-C349-kandai",
+    "ZH-C349-xiangfa",
+    "ZH-W349-fa-rule",
+    "ZH-C349-shuofa",
+    "ZH-C349-zuofa",
+    "ZH-C349-zhuzhang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch349.txt",
+  "json": "chinese/narration/ch349.json",
+  "textHash": "fnv1a64:ac1502d19514011d",
+  "jsonHash": "fnv1a64:6a759a68b3deb62b",
+  "findings": []
+}

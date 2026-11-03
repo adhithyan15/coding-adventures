@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C488-kexuejia",
+    "language": "chinese",
+    "chapter": 488,
+    "sequence": 37120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6db4b3b4ef491ec"
+  },
+  "findings": []
+}

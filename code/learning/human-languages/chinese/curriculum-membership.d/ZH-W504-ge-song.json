@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W504-ge-song",
+  "pathSegment": "ZH-PATH-504-SONGS504",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-504-SONGS504",
+      "order": 2
+    }
+  ]
+}

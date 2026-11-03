@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 348,
+  "sourceHash": "fnv1a64:2ec7a87fe0294901",
+  "lessonIds": [
+    "ZH-C348-taolun",
+    "ZH-C348-shangliang",
+    "ZH-C348-zhenglun",
+    "ZH-C348-duifang",
+    "ZH-C348-yizhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch348.txt",
+  "json": "chinese/narration/ch348.json",
+  "textHash": "fnv1a64:964566310f13ec27",
+  "jsonHash": "fnv1a64:a9639ebf76cce53e",
+  "findings": []
+}

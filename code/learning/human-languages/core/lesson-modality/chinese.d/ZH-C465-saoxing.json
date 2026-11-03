@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C465-saoxing",
+    "language": "chinese",
+    "chapter": 465,
+    "sequence": 35370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d37cf552c8e9ca88"
+  },
+  "findings": []
+}

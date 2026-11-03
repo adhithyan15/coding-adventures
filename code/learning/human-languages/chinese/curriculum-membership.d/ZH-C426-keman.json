@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C426-keman",
+  "pathSegment": "ZH-PATH-426-ROOM426",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-426-ROOM426",
+      "order": 1
+    }
+  ]
+}

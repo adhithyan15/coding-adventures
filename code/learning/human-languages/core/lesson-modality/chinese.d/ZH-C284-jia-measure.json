@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C284-jia-measure",
+    "language": "chinese",
+    "chapter": 284,
+    "sequence": 21530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b0c9b6f8350e6157"
+  },
+  "findings": []
+}

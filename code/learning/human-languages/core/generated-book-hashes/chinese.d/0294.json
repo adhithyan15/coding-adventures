@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 294,
+  "sourceHash": "fnv1a64:1b7ec0c8838c2bcb",
+  "lessonIds": [
+    "ZH-C294-qingkuang",
+    "ZH-C294-yinqi",
+    "ZH-C294-yingxiang",
+    "ZH-C294-zhongyu",
+    "ZH-C294-yushi"
+  ],
+  "tex": "chinese/book/chapters/ch294-how-it-turned-out.tex"
+}

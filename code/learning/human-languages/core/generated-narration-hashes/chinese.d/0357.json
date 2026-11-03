@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 357,
+  "sourceHash": "fnv1a64:7f51eeac8dbb437f",
+  "lessonIds": [
+    "ZH-C357-rencuo",
+    "ZH-C357-qihua",
+    "ZH-C357-kouqi",
+    "ZH-C357-piping",
+    "ZH-C357-biaoyang",
+    "ZH-R357-review-352-357"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch357.txt",
+  "json": "chinese/narration/ch357.json",
+  "textHash": "fnv1a64:9b7d8970df498568",
+  "jsonHash": "fnv1a64:29c37ab07545c861",
+  "findings": []
+}

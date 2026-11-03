@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C372-daodi",
+  "pathSegment": "ZH-PATH-372-ANYWAY372",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-372-ANYWAY372",
+      "order": 1
+    }
+  ]
+}

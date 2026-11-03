@@ -1,0 +1,23 @@
+{
+  "chapter": 286,
+  "title": "How It Felt",
+  "label": "ch:zh-how-it-felt",
+  "canDo": "I can say how something felt and how long it lasted.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C286-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying how something felt with 我感觉 and a feeling, how long it lasted with the length after the verb, how long and what a pity, built on one new written character: 感.",
+    "assesses": [
+      "ZH-LEX-C286-GANJUE-01",
+      "ZH-SCRIPT-GAN-01",
+      "ZH-GRAMMAR-FEELING-01",
+      "ZH-GRAMMAR-DURATION-01",
+      "ZH-LEX-C286-DUOJIU-01",
+      "ZH-LEX-C286-YIHAN-01",
+      "ZH-PERFORMANCE-FEELING-01"
+    ]
+  }
+}

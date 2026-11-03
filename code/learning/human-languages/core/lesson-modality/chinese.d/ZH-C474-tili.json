@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C474-tili",
+    "language": "chinese",
+    "chapter": 474,
+    "sequence": 35840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a5c1da422a54f4bf"
+  },
+  "findings": []
+}

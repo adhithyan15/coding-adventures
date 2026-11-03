@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 509,
+  "sourceHash": "fnv1a64:37d0aeaf430ca343",
+  "lessonIds": [
+    "ZH-C509-dangjia",
+    "ZH-C509-fumu",
+    "ZH-W509-mu-mother",
+    "ZH-C509-munu",
+    "ZH-C509-muyu",
+    "ZH-C509-houma"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch509.txt",
+  "json": "chinese/narration/ch509.json",
+  "textHash": "fnv1a64:f05d071d70d63aca",
+  "jsonHash": "fnv1a64:8bdb4f69e0fd33c8",
+  "findings": []
+}

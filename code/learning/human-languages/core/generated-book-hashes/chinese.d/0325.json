@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:30f2157cd2123f47",
+  "lessonIds": [
+    "ZH-C325-jiangshu",
+    "ZH-C325-qushi",
+    "ZH-W325-shi-world",
+    "ZH-C325-houdai",
+    "ZH-C325-shidai",
+    "ZH-C325-xiangnian"
+  ],
+  "tex": "chinese/book/chapters/ch325-gone-but-remembered.tex"
+}

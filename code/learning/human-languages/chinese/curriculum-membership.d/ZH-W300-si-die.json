@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W300-si-die",
+  "pathSegment": "ZH-PATH-300-DEATH300",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-300-DEATH300",
+      "order": 2
+    }
+  ]
+}

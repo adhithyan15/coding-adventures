@@ -1,0 +1,19 @@
+{
+  "chapter": 356,
+  "title": "A Missed Chance",
+  "label": "ch:zh-a-missed-chance",
+  "canDo": "I can say I missed a chance, slipped up and put a mistake right.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C356-gaizheng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 356: I can say I missed a chance, slipped up and put a mistake right.",
+    "assesses": [
+      "ZH-LEX-C356-MISS356-03",
+      "ZH-LEX-C356-MISS356-04",
+      "ZH-LEX-C356-MISS356-05"
+    ]
+  }
+}

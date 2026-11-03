@@ -1,0 +1,19 @@
+{
+  "chapter": 297,
+  "title": "Whose Fault",
+  "label": "ch:zh-whose-fault",
+  "canDo": "I can say who was to blame for an accident, what came of it and who dealt with it.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C297-chuli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 297: I can say who was to blame for an accident, what came of it and who dealt with it.",
+    "assesses": [
+      "ZH-LEX-C297-FAULT297-03",
+      "ZH-LEX-C297-FAULT297-04",
+      "ZH-LEX-C297-FAULT297-05"
+    ]
+  }
+}

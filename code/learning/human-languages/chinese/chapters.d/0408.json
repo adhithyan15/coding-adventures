@@ -1,0 +1,20 @@
+{
+  "chapter": 408,
+  "title": "By Bus",
+  "label": "ch:zh-by-bus",
+  "canDo": "I can find the bus stop, take public transport, pay with coins and say where a route starts.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C408-qidian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 408: I can find the bus stop, take public transport, pay with coins and say where a route starts.",
+    "assesses": [
+      "ZH-LEX-C408-BUS408-03",
+      "ZH-LEX-C408-BUS408-04",
+      "ZH-LEX-C408-BUS408-05",
+      "ZH-SCRIPT-JIAO-CROSS-01"
+    ]
+  }
+}

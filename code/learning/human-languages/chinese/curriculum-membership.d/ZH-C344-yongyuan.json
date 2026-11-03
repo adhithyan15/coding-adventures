@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C344-yongyuan",
+  "pathSegment": "ZH-PATH-344-MEMORY344",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-344-MEMORY344",
+      "order": 4
+    }
+  ]
+}

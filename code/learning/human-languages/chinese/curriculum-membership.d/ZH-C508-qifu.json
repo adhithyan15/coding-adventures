@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C508-qifu",
+  "pathSegment": "ZH-PATH-508-SIBLINGS508",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-508-SIBLINGS508",
+      "order": 3
+    }
+  ]
+}

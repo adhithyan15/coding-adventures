@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C435-dengshan",
+    "language": "chinese",
+    "chapter": 435,
+    "sequence": 33250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fb062b15f360163"
+  },
+  "findings": []
+}

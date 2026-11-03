@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 426,
+  "sourceHash": "fnv1a64:ae58a42f15be1761",
+  "lessonIds": [
+    "ZH-C426-dachuangfang",
+    "ZH-C426-keman",
+    "ZH-C426-ludian",
+    "ZH-C426-xingji",
+    "ZH-C426-chazuo"
+  ],
+  "tex": "chinese/book/chapters/ch426-booking-a-room.tex"
+}

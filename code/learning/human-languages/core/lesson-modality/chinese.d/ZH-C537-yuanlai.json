@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C537-yuanlai",
+    "language": "chinese",
+    "chapter": 537,
+    "sequence": 40200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:67d2cfd50f66dc84"
+  },
+  "findings": []
+}

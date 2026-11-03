@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C527-gezi",
+  "pathSegment": "ZH-PATH-527-ORDER527",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-527-ORDER527",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,852 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 392,
+  "title": "A Change of Plan",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:3328fefe07c26d43",
+  "lessons": [
+    {
+      "id": "ZH-C392-gai",
+      "sequence": 29930,
+      "title": "改 (gǎi) — to alter; to amend",
+      "headword": "改",
+      "romanization": "gǎi",
+      "gloss": "to alter; to amend",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:849ad7cffd1ac44c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to make it onto a train, then the Mandarin for when the time comes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 改",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改 — gǎi — \"to alter; to amend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "时间改了我们下午三点见面 shíjiān gǎi le wǒmen xiàwǔ sān diǎn jiànmiàn — The time's changed: we're meeting at three in the afternoon."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 改 (gǎi) — seven strokes in two pieces: on the left a bar that turns down, a short bar, and a vertical that bends right and flicks up; on the right the right piece of 做. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改 (gǎi) is inherited from Middle Chinese kojX (Guangyun, in Baxter's transcription), glossed 'to change'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shíjiān gǎi le wǒmen xiàwǔ sān diǎn jiànmiàn — The time's changed: we're meeting at three in the afternoon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shíjiān gǎi le wǒmen xiàwǔ sān diǎn jiànmiàn* — The time's changed: we're meeting at three in the afternoon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to make it onto a train, then the Mandarin for when the time comes, then say gǎi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to make it onto a train, then the Mandarin for when the time comes, then say *gǎi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 改 (gǎi) mean? (\"To alter; to amend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W392-gai-alter",
+      "sequence": 29935,
+      "title": "改 (gǎi) — a bent piece, then the right piece of 做",
+      "headword": "改",
+      "romanization": "gǎi",
+      "gloss": "改 — a bent piece of three strokes, then the right piece of 做",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:89fd5844c0b94fe1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a bent piece, then the right piece of 做",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a bent piece, then the right piece of 做 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gǎi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gǎi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "做 变."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — zuò, biàn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *zuò*, *biàn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a bent piece, then the right piece of 做",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改 (gǎi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, three strokes. A bar that turns down. A short bar under it. Then a vertical that comes down, bends right along the foot and flicks up."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, four strokes, the right piece of 做. A short stroke falling to the left. A bar from it to the right. A long stroke falling to the left. Then a long stroke falling to the right across it."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 4 = seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "改 (gǎi), all seven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 改, all seven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 改 (gǎi)? (Seven.) Where have you made the right piece before? (On the right of 做.) How does the left piece end? (A bend to the right and a flick up.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 改 (gǎi), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C392-gaiqi",
+      "sequence": 29940,
+      "title": "改期 (gǎiqī) — to change the date (of an event)",
+      "headword": "改期",
+      "romanization": "gǎiqī",
+      "gloss": "to change the date (of an event)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82f61bbd3c0ba790",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for when the time comes, then the Mandarin for to alter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 改期",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改期 — gǎiqī — \"to change the date (of an event)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "要是下雨晚会就改期 yàoshi xiàyǔ wǎnhuì jiù gǎiqī — If it rains, the party will be moved to another date."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改期 (gǎiqī) is built from 改 (gǎi) 'to alter' and 期 'a set time', both inherited from Middle Chinese, kojX and gi (Guangyun, in Baxter's transcription), which glosses the second 'an appointed meeting'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎiqī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎiqī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎiqī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎiqī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi xiàyǔ wǎnhuì jiù gǎiqī — If it rains, the party will be moved to another date.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi xiàyǔ wǎnhuì jiù gǎiqī* — If it rains, the party will be moved to another date.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for when the time comes, then the Mandarin for to alter, then say gǎiqī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for when the time comes, then the Mandarin for to alter, then say *gǎiqī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 改期 (gǎiqī) mean? (\"To change the date (of an event)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C392-gaibian",
+      "sequence": 29950,
+      "title": "改变 (gǎibiàn) — to make different (a plan or a habit)",
+      "headword": "改变",
+      "romanization": "gǎibiàn",
+      "gloss": "to make different (a plan or a habit)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:05fbdc89f10ba588",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to alter, then the Mandarin for to change the date."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 改变",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改变 — gǎibiàn — \"to make different (a plan or a habit)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ tiānqì bù hǎo wǒmen jiù gǎibiàn jìhuà — If the weather's bad, we'll change our plans."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改变 (gǎibiàn) is built from 改 (gǎi) 'to alter' and 变 'to change', both inherited from Middle Chinese, kojX and pjenH (Guangyun, in Baxter's transcription), which glosses the first 'to change' and the second 'to transform'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎibiàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎibiàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎibiàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎibiàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ tiānqì bù hǎo wǒmen jiù gǎibiàn jìhuà — If the weather's bad, we'll change our plans.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ tiānqì bù hǎo wǒmen jiù gǎibiàn jìhuà* — If the weather's bad, we'll change our plans.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to alter, then the Mandarin for to change the date, then say gǎibiàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to alter, then the Mandarin for to change the date, then say *gǎibiàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 改变 (gǎibiàn) mean? (\"To make different (a plan or a habit)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C392-gaiming",
+      "sequence": 29960,
+      "title": "改名 (gǎimíng) — to change the name (of)",
+      "headword": "改名",
+      "romanization": "gǎimíng",
+      "gloss": "to change the name (of)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4301e7477292aeb4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to change the date, then the Mandarin for to make different."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 改名",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改名 — gǎimíng — \"to change the name (of)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "那家饭店改名了 nà jiā fàndiàn gǎimíng le — That restaurant has changed its name."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改名 (gǎimíng) is built from 改 (gǎi) 'to alter' and 名 'a name', both inherited from Middle Chinese, kojX and mjieng (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎimíng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎimíng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎimíng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎimíng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nà jiā fàndiàn gǎimíng le — That restaurant has changed its name.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nà jiā fàndiàn gǎimíng le* — That restaurant has changed its name.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to change the date, then the Mandarin for to make different, then say gǎimíng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to change the date, then the Mandarin for to make different, then say *gǎimíng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 改名 (gǎimíng) mean? (\"To change the name (of)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C392-gaikou",
+      "sequence": 29970,
+      "title": "改口 (gǎikǒu) — to change one's tune; to take back what one said",
+      "headword": "改口",
+      "romanization": "gǎikǒu",
+      "gloss": "to change one's tune; to take back what one said",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16767e619c9f8ef0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to make different, then the Mandarin for to change the name (of)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 改口",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改口 — gǎikǒu — \"to change one's tune; to take back what one said\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā zuótiān shuō bú qù jīntiān yòu gǎikǒu le — Yesterday he said he wasn't going; today he's changed his tune."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: gǎi is said with a rising tone before kǒu, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "改口 (gǎikǒu) is built from 改 (gǎi) 'to alter' and 口 'the mouth', both inherited from Middle Chinese, kojX and khuwX (Guangyun, in Baxter's transcription), which glosses the second 'what a person speaks and eats with': altering what comes out of the mouth."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎikǒu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎikǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎikǒu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎikǒu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā zuótiān shuō bú qù jīntiān yòu gǎikǒu le — Yesterday he said he wasn't going; today he's changed his tune.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā zuótiān shuō bú qù jīntiān yòu gǎikǒu le* — Yesterday he said he wasn't going; today he's changed his tune.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to make different, then the Mandarin for to change the name (of), then say gǎikǒu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to make different, then the Mandarin for to change the name (of), then say *gǎikǒu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 改口 (gǎikǒu) mean? (\"To change one's tune; to take back what one said\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:2b56d6fe38a7449b",
+  "lessonIds": [
+    "ZH-C306-xinniang",
+    "ZH-C306-jingguo",
+    "ZH-W306-jing-pass",
+    "ZH-C306-xinren",
+    "ZH-C306-juxing",
+    "ZH-C306-xitang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch306.txt",
+  "json": "chinese/narration/ch306.json",
+  "textHash": "fnv1a64:fc0c80b5f2d8414b",
+  "jsonHash": "fnv1a64:6e6ad1055ebf05dd",
+  "findings": []
+}

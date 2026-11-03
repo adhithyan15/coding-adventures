@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C400-suoduan",
+  "pathSegment": "ZH-PATH-400-ADJUST400",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-400-ADJUST400",
+      "order": 2
+    }
+  ]
+}

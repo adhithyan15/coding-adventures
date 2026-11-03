@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:282be41f6584f28e",
+  "lessonIds": [
+    "ZH-C392-gai",
+    "ZH-W392-gai-alter",
+    "ZH-C392-gaiqi",
+    "ZH-C392-gaibian",
+    "ZH-C392-gaiming",
+    "ZH-C392-gaikou"
+  ],
+  "tex": "chinese/book/chapters/ch392-a-change-of-plan.tex"
+}

@@ -3,6 +3,7 @@ import path from "node:path";
 import { humanLanguageLedgerPlugin } from "./human-language-ledger-plugin.ts";
 import { rawLoadThrottlePlugin } from "./raw-load-throttle-plugin.ts";
 import { scriptInventoryPlugin } from "@coding-adventures/script-ductus/script-inventory-plugin.ts";
+import { isEagerScriptDataModuleId, scriptProvenancePlugin } from "./script-provenance-plugin.ts";
 import { isBookLedgerModuleId } from "./chunk-routing.ts";
 // How lesson batches are grouped lives in ONE module, imported by both this
 // config and scripts/check-bundle.mjs. The gate used to recover the band width
@@ -29,6 +30,9 @@ export default defineConfig({
     rawLoadThrottlePlugin({ curriculumRoot }),
     humanLanguageLedgerPlugin({ curriculumRoot }),
     scriptInventoryPlugin({ curriculumRoot }),
+    // Eager inventories carry only each stroke source's url; the citation and
+    // caveat prose stay in the lazy handwriting tools (script-provenance-plugin.ts).
+    scriptProvenancePlugin({ curriculumRoot }),
   ],
   // Relative base → the built index.html works when opened from any path
   // (local file, GitHub Pages sub-path, etc.) without a deploy-specific prefix.
@@ -118,7 +122,10 @@ export default defineConfig({
               // fell through to the entry chunk, so twenty Persian and Urdu
               // digit rows pushed `index` past the 500 kB gate (#17194) while
               // the script-data batches had room to spare.
-              test: /learning[\\/]human-languages[\\/]data[\\/]scripts[\\/]|virtual:script-ductus-inventories/,
+              // The same two families, read through one tested predicate that also
+              // admits the slim inventory copies and leaves out the full files only
+              // the lazy stroke modules import (script-provenance-plugin.ts).
+              test: isEagerScriptDataModuleId,
               // Source-verified stroke metadata grows with every HL-C09
               // tranche. Keep the eager canonical corpus in a few cacheable
               // batches instead of allowing one chunk to cross the 500 kB

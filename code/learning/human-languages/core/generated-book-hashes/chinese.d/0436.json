@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:e9793a24711b27a9",
+  "lessonIds": [
+    "ZH-C436-dixing",
+    "ZH-C436-nanfang",
+    "ZH-W436-fang-side",
+    "ZH-C436-beifang",
+    "ZH-C436-fangyan",
+    "ZH-C436-kouyin"
+  ],
+  "tex": "chinese/book/chapters/ch436-north-and-south.tex"
+}

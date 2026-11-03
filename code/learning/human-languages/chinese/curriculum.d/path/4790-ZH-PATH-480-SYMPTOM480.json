@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-480-SYMPTOM480",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-480-SYMPTOM480"
+  ],
+  "after": []
+}

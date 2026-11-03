@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W393-wan-myriad",
+  "pathSegment": "ZH-PATH-393-BESURE393",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-393-BESURE393",
+      "order": 2
+    }
+  ]
+}

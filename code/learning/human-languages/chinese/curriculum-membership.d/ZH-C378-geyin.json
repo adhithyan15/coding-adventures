@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C378-geyin",
+  "pathSegment": "ZH-PATH-378-NOISE378",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-378-NOISE378",
+      "order": 2
+    }
+  ]
+}

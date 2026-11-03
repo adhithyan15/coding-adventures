@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-520-APPLIANCE520",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about household appliances, light switches, the water heater, the heating and saving electricity.",
+  "prerequisites": []
+}

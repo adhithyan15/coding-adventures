@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W399-zhi-only",
+    "language": "chinese",
+    "chapter": 399,
+    "sequence": 30305,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:047b17a6ef3808bc",
+    "detachableSegments": [
+      "Script — 口 over 八"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

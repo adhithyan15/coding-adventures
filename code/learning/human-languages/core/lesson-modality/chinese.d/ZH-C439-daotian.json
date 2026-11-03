@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C439-daotian",
+    "language": "chinese",
+    "chapter": 439,
+    "sequence": 33460,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e297d75149675792"
+  },
+  "findings": []
+}

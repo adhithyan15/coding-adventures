@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:0a8304857ce98030",
+  "lessonIds": [
+    "ZH-C330-jicheng",
+    "ZH-C330-wangzi",
+    "ZH-W330-wang-king",
+    "ZH-C330-guowang",
+    "ZH-C330-wanghou",
+    "ZH-C330-wangguo"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch330.txt",
+  "json": "chinese/narration/ch330.json",
+  "textHash": "fnv1a64:d2bcddba45b9919a",
+  "jsonHash": "fnv1a64:c07903eac0a91d54",
+  "findings": []
+}

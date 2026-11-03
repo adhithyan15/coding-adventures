@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C324-jinian",
+    "language": "chinese",
+    "chapter": 324,
+    "sequence": 25320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:26f45380e0963786"
+  },
+  "findings": []
+}

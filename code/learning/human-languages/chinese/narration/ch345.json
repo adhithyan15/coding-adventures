@@ -1,0 +1,918 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 345,
+  "title": "Looking Back",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:5f319c1214780dde",
+  "lessons": [
+    {
+      "id": "ZH-C345-jushuo",
+      "sequence": 26390,
+      "title": "jùshuō — it is said that; reportedly",
+      "headword": "jùshuō",
+      "romanization": "jùshuō",
+      "gloss": "it is said that; reportedly",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4da101038add139",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a photo album, then the Mandarin for forever and ever."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jùshuō",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jùshuō — \"it is said that; reportedly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jùshuō zhège chuánshuō yǒu liǎngqiān nián le — They say this legend is two thousand years old."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jùshuō is built from jù 'to rely on' and 说 'to say', both inherited from Middle Chinese, kjoH and sywet (Guangyun, in Baxter's transcription), which glosses the first 'to lean on' and 'to cite'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jùshuō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jùshuō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jùshuō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jùshuō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jùshuō zhège chuánshuō yǒu liǎngqiān nián le — They say this legend is two thousand years old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jùshuō zhège chuánshuō yǒu liǎngqiān nián le* — They say this legend is two thousand years old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a photo album, then the Mandarin for forever and ever, then say jùshuō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a photo album, then the Mandarin for forever and ever, then say *jùshuō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jùshuō mean? (\"It is said that; reportedly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C345-congci",
+      "sequence": 26400,
+      "title": "cóngcǐ — from then on",
+      "headword": "cóngcǐ",
+      "romanization": "cóngcǐ",
+      "gloss": "from then on",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:02eeea7c9b394b21",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for forever and ever, then the Mandarin for reportedly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cóngcǐ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cóngcǐ — \"from then on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "cóngcǐ wángzǐ hé gōngzhǔ zhù zài yìqǐ — From then on the prince and the princess lived together."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cóngcǐ is built from 从 'from' and cǐ 'this', both inherited from Middle Chinese, dzjowng and tshjeX (Guangyun, in Baxter's transcription), which glosses the first 'to follow' and the second with a word for 'to stop'; the sense 'this' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cóngcǐ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cóngcǐ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cóngcǐ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cóngcǐ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cóngcǐ wángzǐ hé gōngzhǔ zhù zài yìqǐ — From then on the prince and the princess lived together.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cóngcǐ wángzǐ hé gōngzhǔ zhù zài yìqǐ* — From then on the prince and the princess lived together.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for forever and ever, then the Mandarin for reportedly, then say cóngcǐ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for forever and ever, then the Mandarin for reportedly, then say *cóngcǐ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cóngcǐ mean? (\"From then on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C345-qiyuan",
+      "sequence": 26410,
+      "title": "qǐyuán — origin",
+      "headword": "qǐyuán",
+      "romanization": "qǐyuán",
+      "gloss": "origin",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9314541e8ec0934",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for reportedly, then the Mandarin for from then on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: qǐyuán",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qǐyuán — \"origin\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ zhīdào Chūnjié de qǐyuán ma — Do you know how the lunar new year began?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qǐyuán is built from 起 'to rise' and yuán 'a source', both inherited from Middle Chinese, khiX and ngjwon (Guangyun, in Baxter's transcription), which says of the second that the head of a river is called so."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐyuán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐyuán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐyuán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐyuán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ zhīdào Chūnjié de qǐyuán ma — Do you know how the lunar new year began?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ zhīdào Chūnjié de qǐyuán ma* — Do you know how the lunar new year began?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for reportedly, then the Mandarin for from then on, then say qǐyuán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for reportedly, then the Mandarin for from then on, then say *qǐyuán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does qǐyuán mean? (\"Origin\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C345-wangyou",
+      "sequence": 26420,
+      "title": "wǎngyǒu — online friend",
+      "headword": "wǎngyǒu",
+      "romanization": "wǎngyǒu",
+      "gloss": "online friend",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:51bc6cc1a9ec6373",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for from then on, then the Mandarin for the origin of a custom."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wǎngyǒu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wǎngyǒu — \"online friend\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ hé wǒ de wǎngyǒu jiànmiàn le — I met my online friend in person."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: wǎng is said with a rising tone before yǒu, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wǎngyǒu is built from 网 'a net' and yǒu 'a friend', both inherited from Middle Chinese, mjangX and hjuwX (Guangyun, in Baxter's transcription), which glosses the first 'a net for fish or game'. The internet sense is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎngyǒu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎngyǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎngyǒu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎngyǒu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ hé wǒ de wǎngyǒu jiànmiàn le — I met my online friend in person.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ hé wǒ de wǎngyǒu jiànmiàn le* — I met my online friend in person.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for from then on, then the Mandarin for the origin of a custom, then say wǎngyǒu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for from then on, then the Mandarin for the origin of a custom, then say *wǎngyǒu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wǎngyǒu mean? (\"Online friend\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C345-youbian",
+      "sequence": 26430,
+      "title": "yóubiān — postcode",
+      "headword": "yóubiān",
+      "romanization": "yóubiān",
+      "gloss": "postcode",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:961d30c8f45cb36b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the origin of a custom, then the Mandarin for an online friend."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yóubiān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yóubiān — \"postcode\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ jiā de yóubiān shì duōshao — What's your postcode?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yóubiān is built from yóu 'the post' and biān 'to arrange', a short form of a longer name. Both are inherited from Middle Chinese, hjuw and pjien (Guangyun, in Baxter's transcription), which calls the first a lodge on the border; the dictionary lists the second under pen and pjien, both glossed 'to put in order'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yóubiān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yóubiān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yóubiān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yóubiān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ jiā de yóubiān shì duōshao — What's your postcode?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ jiā de yóubiān shì duōshao* — What's your postcode?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the origin of a custom, then the Mandarin for an online friend, then say yóubiān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the origin of a custom, then the Mandarin for an online friend, then say *yóubiān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yóubiān mean? (\"Postcode\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R345-review-341-345",
+      "sequence": 26440,
+      "title": "Looking back: from Mooncakes to Looking Back",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Mooncakes to Looking Back",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb4640c4fa1b30dd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for sweet bean paste and a mooncake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sweet bean paste, a mooncake, the filling of a dumpling, to taste food with care, trade in a shop",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sweet bean paste, a mooncake, the filling of a dumpling, to taste food with care, trade in a shop]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to enjoy the moon, the Mid-Autumn Festival, the time during an event, sweet osmanthus flowers, one's native place",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to enjoy the moon, the Mid-Autumn Festival, the time during an event, sweet osmanthus flowers, one's native place]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bright moonlight, for many years now, deep in one's heart, good wishes sent to someone, to share good things",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bright moonlight, for many years now, deep in one's heart, good wishes sent to someone, to share good things]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to keep something safe, a memory of the past, past events, a photo album, forever and ever",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to keep something safe, a memory of the past, past events, a photo album, forever and ever]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reportedly, from then on, the origin of a custom, an online friend, a postcode",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: reportedly, from then on, the origin of a custom, an online friend, a postcode]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "饼 秋 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 饼 秋 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sweet bean paste? (dòushā.) A mooncake? (月饼, yuèbǐng.) The filling of a dumpling? (xiànr.) To taste food with care? (pǐncháng.) Trade in a shop? (生意, shēngyi.) To enjoy the moon? (shǎngyuè.) The Mid-Autumn Festival? (中秋, Zhōngqiū.) The time during an event? (期间, qījiān.) Sweet osmanthus flowers? (guìhuā.) One's native place? (jiāxiāng.) Bright moonlight? (yuèguāng.) For many years now? (多年, duōnián.) Deep in one's heart? (心中, xīnzhōng.) Good wishes sent to someone? (zhùfú.) To share good things? (fēnxiǎng.) To keep something safe? (bǎocún.) A memory of the past? (jìyì.) Past events? (wǎngshì.) A photo album? (xiàngcè.) Forever and ever? (yǒngyuǎn.) Reportedly? (jùshuō.) From then on? (cóngcǐ.) The origin of a custom? (qǐyuán.) An online friend? (wǎngyǒu.) A postcode? (yóubiān.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R345-review-final-345",
+      "sequence": 26450,
+      "title": "Looking Back — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd7eaf084f87b208",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for reportedly and from then on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "reportedly, from then on, the origin of a custom, an online friend, a postcode",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: reportedly, from then on, the origin of a custom, an online friend, a postcode]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Reportedly? (jùshuō.) From then on? (cóngcǐ.) The origin of a custom? (qǐyuán.) An online friend? (wǎngyǒu.) A postcode? (yóubiān.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

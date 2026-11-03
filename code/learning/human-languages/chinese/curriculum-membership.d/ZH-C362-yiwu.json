@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C362-yiwu",
+  "pathSegment": "ZH-PATH-362-MUST362",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-362-MUST362",
+      "order": 5
+    }
+  ]
+}

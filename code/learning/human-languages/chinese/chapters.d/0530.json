@@ -1,0 +1,19 @@
+{
+  "chapter": 530,
+  "title": "Winning a Prize",
+  "label": "ch:zh-winning-a-prize",
+  "canDo": "I can talk about lottery tickets, prize draws, winning a prize and trying my luck.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C530-toujiang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 530: I can talk about lottery tickets, prize draws, winning a prize and trying my luck.",
+    "assesses": [
+      "ZH-LEX-C530-PRIZE530-03",
+      "ZH-LEX-C530-PRIZE530-04",
+      "ZH-LEX-C530-PRIZE530-05"
+    ]
+  }
+}

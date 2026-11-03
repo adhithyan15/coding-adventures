@@ -977,6 +977,29 @@ describe("generateHaskell", () => {
     removeDir(tmpDir);
   });
 
+  it("emits a BUILD that selects the Darwin CLT linker", () => {
+    // The exact shape build-tool --validate-build-files accepts: the two-line
+    // explanation, then the Darwin-only DEVELOPER_DIR export in front of the
+    // unchanged `cabal test all`.
+    generateHaskell(tmpDir, "my-pkg", "A test package", "", [], []);
+    const build = fs.readFileSync(path.join(tmpDir, "BUILD"), "utf-8");
+    expect(build).toBe(
+      "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.\n" +
+        "# Scope the selection to Cabal and its children, keeping other packages intact.\n" +
+        'if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; cabal test all\n',
+    );
+  });
+
+  it("emits a BUILD_windows with the plain command and no POSIX prefix", () => {
+    // cmd /C cannot parse the prefix, so Windows keeps the plain command it
+    // ran before the prefix existed.
+    generateHaskell(tmpDir, "my-pkg", "A test package", "", [], []);
+    const buildWindows = fs.readFileSync(path.join(tmpDir, "BUILD_windows"), "utf-8");
+    expect(buildWindows).toBe("cabal test all\n");
+    expect(buildWindows).not.toContain("uname");
+    expect(buildWindows).not.toContain("DEVELOPER_DIR");
+  });
+
   it("creates cabal file with correct name", () => {
     generateHaskell(tmpDir, "my-pkg", "A test package", "", [], []);
     const content = fs.readFileSync(path.join(tmpDir, "coding-adventures-my-pkg.cabal"), "utf-8");

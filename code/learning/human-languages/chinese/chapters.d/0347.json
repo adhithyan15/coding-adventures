@@ -1,0 +1,19 @@
+{
+  "chapter": 347,
+  "title": "What Do You Mean?",
+  "label": "ch:zh-what-do-you-mean",
+  "canDo": "I can ask what something means, say an idea is a good one and say I know from experience.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C347-tihui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 347: I can ask what something means, say an idea is a good one and say I know from experience.",
+    "assesses": [
+      "ZH-LEX-C347-MEANING347-03",
+      "ZH-LEX-C347-MEANING347-04",
+      "ZH-LEX-C347-MEANING347-05"
+    ]
+  }
+}

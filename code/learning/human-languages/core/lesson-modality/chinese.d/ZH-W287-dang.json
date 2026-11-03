@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W287-dang",
+    "language": "chinese",
+    "chapter": 287,
+    "sequence": 21710,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4455cf9d0892e34b",
+    "detachableSegments": [
+      "Script — the top of 常, then the foot of 雪"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

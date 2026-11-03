@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C442-jiang",
+    "language": "chinese",
+    "chapter": 442,
+    "sequence": 33660,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8fa0898e308b734e"
+  },
+  "findings": []
+}

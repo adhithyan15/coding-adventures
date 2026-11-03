@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C331-shenxian",
+  "pathSegment": "ZH-PATH-331-MAGIC331",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-331-MAGIC331",
+      "order": 1
+    }
+  ]
+}

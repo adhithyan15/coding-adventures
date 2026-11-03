@@ -1,0 +1,19 @@
+{
+  "chapter": 460,
+  "title": "Feeling Low",
+  "label": "ch:zh-feeling-low",
+  "canDo": "I can say I feel down, ask why someone sighs, say I am embarrassed and that I feel for someone or envy them.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C460-xianmu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 460: I can say I feel down, ask why someone sighs, say I am embarrassed and that I feel for someone or envy them.",
+    "assesses": [
+      "ZH-LEX-C460-LOW460-03",
+      "ZH-LEX-C460-LOW460-04",
+      "ZH-LEX-C460-LOW460-05"
+    ]
+  }
+}

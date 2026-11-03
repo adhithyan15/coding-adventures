@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W443-hu-guard",
+    "language": "chinese",
+    "chapter": 443,
+    "sequence": 33685,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:c148048f803c03ed",
+    "detachableSegments": [
+      "Script — the hand piece, then the top of 房"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

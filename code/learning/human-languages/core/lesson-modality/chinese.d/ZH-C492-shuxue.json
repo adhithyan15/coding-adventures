@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C492-shuxue",
+    "language": "chinese",
+    "chapter": 492,
+    "sequence": 37320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80e1cd0753b336cd"
+  },
+  "findings": []
+}

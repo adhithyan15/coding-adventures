@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C301-guzhe",
+  "pathSegment": "ZH-PATH-301-ESCAPE301",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-301-ESCAPE301",
+      "order": 3
+    }
+  ]
+}

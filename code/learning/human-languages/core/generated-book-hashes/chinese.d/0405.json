@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 405,
+  "sourceHash": "fnv1a64:f13da615f495e06c",
+  "lessonIds": [
+    "ZH-C405-zhida",
+    "ZH-C405-jinru",
+    "ZH-W405-ru-enter",
+    "ZH-C405-churu",
+    "ZH-C405-mobanche",
+    "ZH-C405-tingkao"
+  ],
+  "tex": "chinese/book/chapters/ch405-through-the-gates.tex"
+}

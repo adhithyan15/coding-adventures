@@ -3070,13 +3070,47 @@ fn source_tree_has_expected_shape() {
     assert_contains(&xaml_host, "QuarantineSnapshot(path);");
     assert_contains(&xaml_host, "path + \".corrupt\"");
     assert_contains(&xaml_host, "$\"{path}.corrupt.{index}\"");
-    assert_contains(&xaml_host, "File.Copy(path, corrupt, overwrite: false);");
+    // The name is claimed and written in one step: CreateNew makes it, and the
+    // bytes go through that same handle. File.Copy could leave a partial copy
+    // that read as "taken" on every later try, burning all ten names.
+    let claim =
+        "copy = new FileStream(corrupt, FileMode.CreateNew, FileAccess.Write, FileShare.Delete);";
+    assert_contains(&xaml_host, claim);
+    assert!(
+        !xaml_host.contains("File.Copy(path, corrupt"),
+        "the quarantine must not claim a name with File.Copy"
+    );
     // A name is taken when anything is there, a dangling link included, and
-    // a refused copy is a taken name only if something is now there: Windows
+    // a refused claim is a taken name only if something is now there: Windows
     // reports a directory in the way as access denied, not "already exists".
     assert_contains(&xaml_host, "|| new FileInfo(corrupt).LinkTarget is not null;");
-    let copy = xaml_host.find("File.Copy(path, corrupt, overwrite: false);").unwrap();
-    assert_contains(&xaml_host[copy..], "if (QuarantineNameTaken(corrupt))");
+    let claimed = xaml_host.find(claim).unwrap();
+    assert_contains(
+        &xaml_host[claimed..],
+        "if (QuarantineNameTaken(corrupt, out unreadable))",
+    );
+    // A failed copy deletes exactly the file this attempt created, and stops.
+    let copied = xaml_host[claimed..].find("source.CopyTo(copy);").unwrap() + claimed;
+    assert_contains(&xaml_host[copied..], "RemovePartialCopy(corrupt);");
+    // A name that cannot be inspected is an error, reported with that name,
+    // never a taken name that sends the loop on to the next one.
+    let inspect = xaml_host
+        .find("private static bool QuarantineNameTaken(string corrupt, out string? unreadable)")
+        .expect("QuarantineNameTaken");
+    let inspect_body =
+        &xaml_host[inspect..inspect + xaml_host[inspect..].find("\n    }\n").unwrap()];
+    assert_contains(
+        inspect_body,
+        "unreadable = $\"could not inspect {corrupt}: {ex.Message}\";",
+    );
+    assert!(
+        !inspect_body.contains("return true;"),
+        "an uninspectable quarantine name must not count as taken"
+    );
+    assert_contains(
+        &xaml_host,
+        "if (unreadable is not null)\n            {\n                DisablePersistence(unreadable);",
+    );
     assert_contains(&xaml_host, "private const int MaxQuarantinedSnapshots = 10;");
     assert_contains(&xaml_host, "PersistenceDisabled = true;");
     // The react backend's TypeScript web host mirrors engram-host.mjs, whose

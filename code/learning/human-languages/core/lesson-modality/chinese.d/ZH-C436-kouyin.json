@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C436-kouyin",
+    "language": "chinese",
+    "chapter": 436,
+    "sequence": 33350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8f73dc8b9299b47"
+  },
+  "findings": []
+}

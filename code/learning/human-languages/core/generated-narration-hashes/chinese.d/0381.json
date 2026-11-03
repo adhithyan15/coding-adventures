@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 381,
+  "sourceHash": "fnv1a64:e234dcc345e08644",
+  "lessonIds": [
+    "ZH-C381-fenlei",
+    "ZH-C381-quanjia",
+    "ZH-W381-quan-whole",
+    "ZH-C381-huishou",
+    "ZH-C381-quanguo",
+    "ZH-C381-anquangan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch381.txt",
+  "json": "chinese/narration/ch381.json",
+  "textHash": "fnv1a64:215674381830adbd",
+  "jsonHash": "fnv1a64:8c72c561ab5a2154",
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W502-hua-paint",
+  "pathSegment": "ZH-PATH-502-PAINT502",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-502-PAINT502",
+      "order": 2
+    }
+  ]
+}

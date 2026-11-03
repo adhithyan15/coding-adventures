@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C375-shehui",
+    "language": "chinese",
+    "chapter": 375,
+    "sequence": 29060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b00c1ffbd5d3b2de"
+  },
+  "findings": []
+}

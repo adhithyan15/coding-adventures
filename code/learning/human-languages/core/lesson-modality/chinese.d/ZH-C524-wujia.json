@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C524-wujia",
+    "language": "chinese",
+    "chapter": 524,
+    "sequence": 39550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c6f44f46b4fbc3e"
+  },
+  "findings": []
+}

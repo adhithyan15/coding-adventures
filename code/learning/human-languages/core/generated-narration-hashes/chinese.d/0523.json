@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:e1d403625fe78208",
+  "lessonIds": [
+    "ZH-C523-pifa",
+    "ZH-C523-maimai",
+    "ZH-W523-mai-sell",
+    "ZH-C523-maijia-seller",
+    "ZH-C523-maijia-buyer",
+    "ZH-C523-lingshou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch523.txt",
+  "json": "chinese/narration/ch523.json",
+  "textHash": "fnv1a64:0f0caa3cbb10b538",
+  "jsonHash": "fnv1a64:ca8fcd50c8e40fde",
+  "findings": []
+}

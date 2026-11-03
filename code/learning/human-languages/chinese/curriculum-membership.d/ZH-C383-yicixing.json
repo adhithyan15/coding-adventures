@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C383-yicixing",
+  "pathSegment": "ZH-PATH-383-ENERGY383",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-383-ENERGY383",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C452-canjinzhi",
+  "pathSegment": "ZH-PATH-452-AFTERMEAL452",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-452-AFTERMEAL452",
+      "order": 4
+    }
+  ]
+}

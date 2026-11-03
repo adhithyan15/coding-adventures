@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 538,
+  "title": "One Thing Leads to Another",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f924ac1ff8eafb97",
+  "lessons": [
+    {
+      "id": "ZH-C538-miande",
+      "sequence": 40240,
+      "title": "miǎnde — so as not to; lest",
+      "headword": "miǎnde",
+      "romanization": "miǎnde",
+      "gloss": "so as not to; lest",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb14e661d353286a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to cause damage, then the Mandarin for how well it works."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: miǎnde",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "miǎnde — \"so as not to; lest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ zuìhǎo dài yǔsǎn miǎnde línyǔ — You'd better take an umbrella, so you don't get caught in the rain."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "miǎnde is built from miǎn 'to escape' and 得, both inherited from Middle Chinese, mjenX and tok (Guangyun, in Baxter's transcription), which glosses the first 'to stop' and 'to get free of'; the second is said light."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miǎnde",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miǎnde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "miǎnde, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *miǎnde*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ zuìhǎo dài yǔsǎn miǎnde línyǔ — You'd better take an umbrella, so you don't get caught in the rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ zuìhǎo dài yǔsǎn miǎnde línyǔ* — You'd better take an umbrella, so you don't get caught in the rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to cause damage, then the Mandarin for how well it works, then say miǎnde again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to cause damage, then the Mandarin for how well it works, then say *miǎnde* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does miǎnde mean? (\"So as not to; lest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C538-conger",
+      "sequence": 40250,
+      "title": "cóng'ér — and thereby; and in this way",
+      "headword": "cóng'ér",
+      "romanization": "cóng'ér",
+      "gloss": "and thereby; and in this way",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:43879395ae7e3942",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for how well it works, then the Mandarin for so as not to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: cóng'ér",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cóng'ér — \"and thereby; and in this way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen gǎi le shíjiān cóng'ér jiějué le zhège wèntí — We changed the time, and so solved the problem."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cóng'ér is built from 从 'to follow' and ér 'and', both inherited from Middle Chinese, dzjowng and nyi (Guangyun, in Baxter's transcription), which glosses the second as a grammar word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cóng'ér",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cóng'ér*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cóng'ér, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cóng'ér*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen gǎi le shíjiān cóng'ér jiějué le zhège wèntí — We changed the time, and so solved the problem.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen gǎi le shíjiān cóng'ér jiějué le zhège wèntí* — We changed the time, and so solved the problem.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for how well it works, then the Mandarin for so as not to, then say cóng'ér again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for how well it works, then the Mandarin for so as not to, then say *cóng'ér* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does cóng'ér mean? (\"And thereby; and in this way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C538-benshen",
+      "sequence": 40260,
+      "title": "本身 (běnshēn) — itself (in itself)",
+      "headword": "本身",
+      "romanization": "běnshēn",
+      "gloss": "itself (in itself)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8078c45e251d9b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for so as not to, then the Mandarin for and thereby."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 本身",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "本身 — běnshēn — \"itself (in itself)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这个问题本身不大 zhège wèntí běnshēn bú dà — The problem itself isn't a big one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "本身 (běnshēn) is built from 本 'the root' and 身 'the body', both inherited from Middle Chinese, pwonX and syin (Guangyun, in Baxter's transcription), which says, after an older dictionary, that the base of a tree is pwonX."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "běnshēn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *běnshēn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "běnshēn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *běnshēn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège wèntí běnshēn bú dà — The problem itself isn't a big one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège wèntí běnshēn bú dà* — The problem itself isn't a big one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for so as not to, then the Mandarin for and thereby, then say běnshēn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for so as not to, then the Mandarin for and thereby, then say *běnshēn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 本身 (běnshēn) mean? (\"Itself (in itself)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C538-chansheng",
+      "sequence": 40270,
+      "title": "chǎnshēng — to arise; to come about",
+      "headword": "chǎnshēng",
+      "romanization": "chǎnshēng",
+      "gloss": "to arise; to come about",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cfc03a298c2b1b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for and thereby, then the Mandarin for in itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chǎnshēng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chǎnshēng — \"to arise; to come about\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yàoshi bù shuō qīngchu jiù huì chǎnshēng wùhuì — If you don't make it clear, misunderstandings will arise."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chǎnshēng is built from chǎn 'to bear' and 生 'to be born', both inherited from Middle Chinese, sreanX and srjaeng (Guangyun, in Baxter's transcription), which glosses the first 'to give birth'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chǎnshēng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chǎnshēng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chǎnshēng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chǎnshēng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi bù shuō qīngchu jiù huì chǎnshēng wùhuì — If you don't make it clear, misunderstandings will arise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi bù shuō qīngchu jiù huì chǎnshēng wùhuì* — If you don't make it clear, misunderstandings will arise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for and thereby, then the Mandarin for in itself, then say chǎnshēng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for and thereby, then the Mandarin for in itself, then say *chǎnshēng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chǎnshēng mean? (\"To arise; to come about\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C538-genben",
+      "sequence": 40280,
+      "title": "gēnběn — not in the least; (not) at all",
+      "headword": "gēnběn",
+      "romanization": "gēnběn",
+      "gloss": "not in the least; (not) at all",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a0be812987689c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for in itself, then the Mandarin for to arise from something."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gēnběn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gēnběn — \"not in the least; (not) at all\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jíshǐ nǐ shuō le tā yě gēnběn bù tīng — Even if you tell him, he won't listen at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gēnběn is built from gēn 'a root' and 本 'the base of a tree', both inherited from Middle Chinese, kon and pwonX (Guangyun, in Baxter's transcription), which glosses the first 'roots': down to the roots."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēnběn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēnběn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gēnběn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gēnběn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jíshǐ nǐ shuō le tā yě gēnběn bù tīng — Even if you tell him, he won't listen at all.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jíshǐ nǐ shuō le tā yě gēnběn bù tīng* — Even if you tell him, he won't listen at all.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for in itself, then the Mandarin for to arise from something, then say gēnběn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for in itself, then the Mandarin for to arise from something, then say *gēnběn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gēnběn mean? (\"Not in the least; (not) at all\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

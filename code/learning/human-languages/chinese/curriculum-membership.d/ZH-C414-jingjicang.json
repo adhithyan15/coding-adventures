@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C414-jingjicang",
+  "pathSegment": "ZH-PATH-414-CABIN414",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-414-CABIN414",
+      "order": 2
+    }
+  ]
+}

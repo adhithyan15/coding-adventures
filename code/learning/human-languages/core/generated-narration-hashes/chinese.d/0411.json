@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:7e9d02f2fbf1afb9",
+  "lessonIds": [
+    "ZH-C411-matou",
+    "ZH-C411-chuanzhang",
+    "ZH-W411-chuan-boat",
+    "ZH-C411-kaichuan",
+    "ZH-C411-duchuan",
+    "ZH-C411-jiushengyi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch411.txt",
+  "json": "chinese/narration/ch411.json",
+  "textHash": "fnv1a64:4568d4e6c897ed34",
+  "jsonHash": "fnv1a64:cb11ffe4ccc16f32",
+  "findings": []
+}

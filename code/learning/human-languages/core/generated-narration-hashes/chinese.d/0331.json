@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:dd2754e9e491bee2",
+  "lessonIds": [
+    "ZH-C331-yaoguai",
+    "ZH-C331-shenxian",
+    "ZH-C331-mofa",
+    "ZH-C331-baowu",
+    "ZH-C331-cang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch331.txt",
+  "json": "chinese/narration/ch331.json",
+  "textHash": "fnv1a64:543d6e19ec9d6a15",
+  "jsonHash": "fnv1a64:a0cbe97784921e72",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:ee4c399f654e1858",
+  "lessonIds": [
+    "ZH-C410-changtu",
+    "ZH-C410-chefei",
+    "ZH-C410-tongguo",
+    "ZH-C410-kaitong",
+    "ZH-C410-shanglu"
+  ],
+  "tex": "chinese/book/chapters/ch410-long-trips.tex"
+}

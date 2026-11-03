@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W379-an-calm",
+    "language": "chinese",
+    "chapter": 379,
+    "sequence": 29265,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bff8de67a8974a16",
+    "detachableSegments": [
+      "Script — the roof of 家, then 女"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

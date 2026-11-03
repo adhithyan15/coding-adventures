@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C376-shegong",
+  "pathSegment": "ZH-PATH-376-PUBLIC376",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-376-PUBLIC376",
+      "order": 1
+    }
+  ]
+}

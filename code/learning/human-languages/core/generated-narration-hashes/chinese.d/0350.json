@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:0c8331e2e1efdb9f",
+  "lessonIds": [
+    "ZH-C350-shishi",
+    "ZH-C350-zhengming",
+    "ZH-C350-genju",
+    "ZH-C350-panduan",
+    "ZH-C350-queshi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch350.txt",
+  "json": "chinese/narration/ch350.json",
+  "textHash": "fnv1a64:fd3f06f1671e2c44",
+  "jsonHash": "fnv1a64:9237679aca7ce6f8",
+  "findings": []
+}

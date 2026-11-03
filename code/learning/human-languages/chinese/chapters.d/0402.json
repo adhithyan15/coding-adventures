@@ -1,0 +1,19 @@
+{
+  "chapter": 402,
+  "title": "At the Station",
+  "label": "ch:zh-at-the-station",
+  "canDo": "I can talk about passengers, the waiting room, fast trains, changing trains and the carriages.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C402-chexiang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 402: I can talk about passengers, the waiting room, fast trains, changing trains and the carriages.",
+    "assesses": [
+      "ZH-LEX-C402-STATION402-03",
+      "ZH-LEX-C402-STATION402-04",
+      "ZH-LEX-C402-STATION402-05"
+    ]
+  }
+}

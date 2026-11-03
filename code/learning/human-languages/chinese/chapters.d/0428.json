@@ -1,0 +1,19 @@
+{
+  "chapter": 428,
+  "title": "Moving On",
+  "label": "ch:zh-moving-on",
+  "canDo": "I can say where a door leads, follow an announcement, and talk about the trip back, the plan and receipts.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C428-fapiao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 428: I can say where a door leads, follow an announcement, and talk about the trip back, the plan and receipts.",
+    "assesses": [
+      "ZH-LEX-C428-MOVEON428-03",
+      "ZH-LEX-C428-MOVEON428-04",
+      "ZH-LEX-C428-MOVEON428-05"
+    ]
+  }
+}

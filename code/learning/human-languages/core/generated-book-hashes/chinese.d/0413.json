@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 413,
+  "sourceHash": "fnv1a64:b7e48fab656ad95e",
+  "lessonIds": [
+    "ZH-C413-dengji-board",
+    "ZH-C413-fei",
+    "ZH-W413-fei-fly",
+    "ZH-C413-jizhang",
+    "ZH-C413-jiangluo",
+    "ZH-C413-feikuai",
+    "ZH-R413-review-408-413"
+  ],
+  "tex": "chinese/book/chapters/ch413-up-in-the-air.tex"
+}

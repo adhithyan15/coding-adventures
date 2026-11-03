@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:32d6103355483d1a",
+  "lessonIds": [
+    "ZH-C501-yundongyuan",
+    "ZH-C501-guanjun",
+    "ZH-C501-jinpai",
+    "ZH-C501-huode",
+    "ZH-C501-qiuxing"
+  ],
+  "tex": "chinese/book/chapters/ch501-winners.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C313-cai",
+    "language": "chinese",
+    "chapter": 313,
+    "sequence": 24200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:643cf45a76555c37"
+  },
+  "findings": []
+}

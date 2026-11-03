@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C425-datang",
+    "language": "chinese",
+    "chapter": 425,
+    "sequence": 32230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48d972508c72fb14"
+  },
+  "findings": []
+}

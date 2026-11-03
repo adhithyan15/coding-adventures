@@ -1,0 +1,21 @@
+{
+  "chapter": 373,
+  "title": "Pros and Cons",
+  "label": "ch:zh-pros-and-cons",
+  "canDo": "I can weigh up strong and weak points, benefits and harm, and tell someone not to take it seriously.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R373-review-final-373",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 373: I can weigh up strong and weak points, benefits and harm, and tell someone not to take it seriously.",
+    "assesses": [
+      "ZH-LEX-C373-PROSCONS373-01",
+      "ZH-LEX-C373-PROSCONS373-02",
+      "ZH-LEX-C373-PROSCONS373-03",
+      "ZH-LEX-C373-PROSCONS373-04",
+      "ZH-LEX-C373-PROSCONS373-05"
+    ]
+  }
+}

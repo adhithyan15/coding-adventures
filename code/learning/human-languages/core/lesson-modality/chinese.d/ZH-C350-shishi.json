@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C350-shishi",
+    "language": "chinese",
+    "chapter": 350,
+    "sequence": 27200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f16a30d53e69eab1"
+  },
+  "findings": []
+}

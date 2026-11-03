@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C377-shequ",
+  "pathSegment": "ZH-PATH-377-AREA377",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-377-AREA377",
+      "order": 1
+    }
+  ]
+}

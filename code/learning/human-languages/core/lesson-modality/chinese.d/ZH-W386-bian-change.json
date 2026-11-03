@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W386-bian-change",
+    "language": "chinese",
+    "chapter": 386,
+    "sequence": 29635,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f6e5ba4254337b0b",
+    "detachableSegments": [
+      "Script — a dot and a bar over four short strokes, then 又"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

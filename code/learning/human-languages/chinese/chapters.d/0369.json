@@ -1,0 +1,19 @@
+{
+  "chapter": 369,
+  "title": "Making It Clear",
+  "label": "ch:zh-making-it-clear",
+  "canDo": "I can make something clear, give an example, and add a second point and a further one.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C369-lingwai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 369: I can make something clear, give an example, and add a second point and a further one.",
+    "assesses": [
+      "ZH-LEX-C369-CLEAR369-03",
+      "ZH-LEX-C369-CLEAR369-04",
+      "ZH-LEX-C369-CLEAR369-05"
+    ]
+  }
+}

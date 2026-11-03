@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C519-sijiruchun",
+  "pathSegment": "ZH-PATH-519-OUTDOORS519",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-519-OUTDOORS519",
+      "order": 2
+    }
+  ]
+}

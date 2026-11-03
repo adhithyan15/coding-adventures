@@ -1,0 +1,19 @@
+{
+  "chapter": 486,
+  "title": "Looking for Work",
+  "label": "ch:zh-looking-for-work",
+  "canDo": "I can talk about job adverts, a CV, applying for a job, an internship and pay and conditions.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C486-daiyu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 486: I can talk about job adverts, a CV, applying for a job, an internship and pay and conditions.",
+    "assesses": [
+      "ZH-LEX-C486-JOBHUNT486-03",
+      "ZH-LEX-C486-JOBHUNT486-04",
+      "ZH-LEX-C486-JOBHUNT486-05"
+    ]
+  }
+}

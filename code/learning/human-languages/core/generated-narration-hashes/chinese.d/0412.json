@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 412,
+  "sourceHash": "fnv1a64:73b6d12b09d81830",
+  "lessonIds": [
+    "ZH-C412-gangkou",
+    "ZH-C412-jiaban",
+    "ZH-C412-chuancang",
+    "ZH-C412-kaoan",
+    "ZH-C412-kechuan"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch412.txt",
+  "json": "chinese/narration/ch412.json",
+  "textHash": "fnv1a64:e861b19c7e7e7c45",
+  "jsonHash": "fnv1a64:04d6154a7b0c05aa",
+  "findings": []
+}

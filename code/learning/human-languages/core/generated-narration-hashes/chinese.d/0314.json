@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 314,
+  "sourceHash": "fnv1a64:1f716584ebdffffa",
+  "lessonIds": [
+    "ZH-C314-zangli",
+    "ZH-C314-shengqian",
+    "ZH-C314-anwei",
+    "ZH-C314-mudi",
+    "ZH-C314-liulei"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch314.txt",
+  "json": "chinese/narration/ch314.json",
+  "textHash": "fnv1a64:126bb312117ed4b3",
+  "jsonHash": "fnv1a64:9de357268357eeb0",
+  "findings": []
+}

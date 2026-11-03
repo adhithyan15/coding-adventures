@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 378,
+  "sourceHash": "fnv1a64:ea4fe5bfc665c5f8",
+  "lessonIds": [
+    "ZH-C378-zaoyin",
+    "ZH-C378-baoyuan",
+    "ZH-C378-geyin",
+    "ZH-C378-shengren",
+    "ZH-C378-wuye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch378.txt",
+  "json": "chinese/narration/ch378.json",
+  "textHash": "fnv1a64:89ed92c44a7046dc",
+  "jsonHash": "fnv1a64:a74897b48b2e5c70",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 439,
+  "sourceHash": "fnv1a64:586e086aa8134389",
+  "lessonIds": [
+    "ZH-C439-daotian",
+    "ZH-C439-guoyuan",
+    "ZH-C439-nongjiale",
+    "ZH-C439-yazi",
+    "ZH-C439-sanxin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch439.txt",
+  "json": "chinese/narration/ch439.json",
+  "textHash": "fnv1a64:ff441e25b2349886",
+  "jsonHash": "fnv1a64:ee231d6fdf906216",
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W384-cheng-become",
+    "language": "chinese",
+    "chapter": 384,
+    "sequence": 29525,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8851d20082248f53",
+    "detachableSegments": [
+      "Script — a bar, a fall, a small turn, then the slanting hook of 我"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

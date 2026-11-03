@@ -127,6 +127,47 @@ module CodingAdventures
       folded.zero?
     end
 
+    # -- Bit-returning equality (CT01, "How a lane receives the selection bit")
+    #
+    # ct_select_bytes takes its selection bit as an Integer, because every way
+    # Ruby has of turning true/false into 1/0 is an if, a ?: or a lookup. A
+    # caller holding only ct_eq's boolean would need exactly that branch, so
+    # each equality also returns the bit itself, computed from the difference
+    # accumulator with arithmetic only. Ruby's >> on a negative Integer is an
+    # arithmetic shift, so for an accumulator in 0..255:
+    #
+    #   acc = 0          (0 - 1) >> 8 = -1,  -1 & 1 = 1   (equal)
+    #   acc = 1 .. 255   (acc - 1) >> 8 = 0,  0 & 1 = 0   (different)
+    #
+    # Use it as ct_select_bytes(a, b, ct_eq_bit(x, y)).
+
+    # 1 when the byte strings are equal, else 0. A length mismatch is 0 and
+    # reads neither input; lengths are public.
+    def ct_eq_bit(left, right)
+      left_bytes = as_bytes(left)
+      right_bytes = as_bytes(right)
+      return 0 unless left_bytes.bytesize == right_bytes.bytesize
+
+      accumulator = 0
+      index = 0
+      while index < left_bytes.bytesize
+        accumulator |= left_bytes.getbyte(index) ^ right_bytes.getbyte(index)
+        index += 1
+      end
+      ((accumulator - 1) >> 8) & 1
+    end
+
+    # Fixed-size companion to ct_eq_bit (an alias, as ct_eq_fixed is).
+    def ct_eq_fixed_bit(left, right) = ct_eq_bit(left, right)
+
+    # 1 when the two unsigned 64-bit values are equal, else 0. The difference
+    # lies in 0..2^64-1, so subtracting 1 is negative exactly when it was 0.
+    def ct_eq_u64_bit(left, right)
+      validate_u64!(left, "left")
+      validate_u64!(right, "right")
+      ((((left ^ right) & U64_MAX) - 1) >> 64) & 1
+    end
+
     def as_bytes(value)
       case value
       when String

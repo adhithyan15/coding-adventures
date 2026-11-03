@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C323-gudai",
+    "language": "chinese",
+    "chapter": 323,
+    "sequence": 25280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:62135f8bb58ec956"
+  },
+  "findings": []
+}

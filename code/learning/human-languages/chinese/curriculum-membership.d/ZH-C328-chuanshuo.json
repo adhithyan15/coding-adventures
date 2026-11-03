@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C328-chuanshuo",
+  "pathSegment": "ZH-PATH-328-LEGEND328",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-328-LEGEND328",
+      "order": 1
+    }
+  ]
+}

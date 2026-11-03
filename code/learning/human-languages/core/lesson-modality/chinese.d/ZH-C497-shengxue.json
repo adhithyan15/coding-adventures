@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C497-shengxue",
+    "language": "chinese",
+    "chapter": 497,
+    "sequence": 37600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e34b08f331964bc7"
+  },
+  "findings": []
+}

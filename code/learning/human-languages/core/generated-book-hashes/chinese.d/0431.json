@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:2bb85a7138703889",
+  "lessonIds": [
+    "ZH-C431-jieshuo",
+    "ZH-C431-chunyou",
+    "ZH-W431-you-tour",
+    "ZH-C431-youchuan",
+    "ZH-C431-duo",
+    "ZH-C431-heying"
+  ],
+  "tex": "chinese/book/chapters/ch431-a-spring-outing.tex"
+}

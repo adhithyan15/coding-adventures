@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W375-she-society",
+    "language": "chinese",
+    "chapter": 375,
+    "sequence": 29065,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:99efb26ad3996097",
+    "detachableSegments": [
+      "Script — the sign piece, then the earth piece"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

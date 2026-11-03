@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C520-shengdian",
+  "pathSegment": "ZH-PATH-520-APPLIANCE520",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-520-APPLIANCE520",
+      "order": 4
+    }
+  ]
+}

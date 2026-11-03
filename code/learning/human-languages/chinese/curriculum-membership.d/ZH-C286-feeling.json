@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C286-feeling",
+  "pathSegment": "ZH-PATH-286-FELT",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-286-FELT",
+      "order": 2
+    }
+  ]
+}

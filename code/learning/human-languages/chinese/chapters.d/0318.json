@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "Letters from Far Away",
+  "label": "ch:zh-letters-from-far-away",
+  "canDo": "I can talk about a pen pal, an envelope and a postcard, wait for a reply and pass a message on.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C318-zhuangao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can talk about a pen pal, an envelope and a postcard, wait for a reply and pass a message on.",
+    "assesses": [
+      "ZH-LEX-C318-LETTER318-03",
+      "ZH-LEX-C318-LETTER318-04",
+      "ZH-LEX-C318-LETTER318-05"
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "chapter": 283,
+  "title": "Which Way?",
+  "label": "ch:zh-which-way",
+  "canDo": "I can ask the way and follow simple directions.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C283-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Asking the way with 去 … 怎么走, following directions with wǎng, saying again with 再 and passing by on the way, built on two new written characters: 怎 and 走.",
+    "assesses": [
+      "ZH-LEX-C283-ZENME-01",
+      "ZH-SCRIPT-ZEN-01",
+      "ZH-GRAMMAR-ZENME-ZOU-01",
+      "ZH-SCRIPT-ZOU-01",
+      "ZH-LEX-C283-WANG-01",
+      "ZH-LEX-C283-ZAI-01",
+      "ZH-LEX-C283-LUGUO-01",
+      "ZH-PERFORMANCE-DIRECTIONS-01"
+    ]
+  }
+}

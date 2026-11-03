@@ -1,0 +1,19 @@
+{
+  "chapter": 449,
+  "title": "Tastes",
+  "label": "ch:zh-tastes",
+  "canDo": "I can talk about a night market, tastes in food, local flavours, light food and greasy food.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C449-youni",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 449: I can talk about a night market, tastes in food, local flavours, light food and greasy food.",
+    "assesses": [
+      "ZH-LEX-C449-TASTE449-03",
+      "ZH-LEX-C449-TASTE449-04",
+      "ZH-LEX-C449-TASTE449-05"
+    ]
+  }
+}

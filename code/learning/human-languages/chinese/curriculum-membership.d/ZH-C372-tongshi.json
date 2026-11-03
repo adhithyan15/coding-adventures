@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C372-tongshi",
+  "pathSegment": "ZH-PATH-372-ANYWAY372",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-372-ANYWAY372",
+      "order": 2
+    }
+  ]
+}

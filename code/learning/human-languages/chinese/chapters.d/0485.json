@@ -1,0 +1,21 @@
+{
+  "chapter": 485,
+  "title": "Body and Mind",
+  "label": "ch:zh-body-and-mind",
+  "canDo": "I can talk about stress, energy, body and mind, my frame of mind and relieving stress.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R485-review-final-485",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 485: I can talk about stress, energy, body and mind, my frame of mind and relieving stress.",
+    "assesses": [
+      "ZH-LEX-C485-MIND485-01",
+      "ZH-LEX-C485-MIND485-02",
+      "ZH-LEX-C485-MIND485-03",
+      "ZH-LEX-C485-MIND485-04",
+      "ZH-LEX-C485-MIND485-05"
+    ]
+  }
+}

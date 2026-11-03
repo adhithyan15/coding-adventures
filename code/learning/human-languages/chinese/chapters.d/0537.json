@@ -1,0 +1,19 @@
+{
+  "chapter": 537,
+  "title": "As It Turns Out",
+  "label": "ch:zh-as-it-turns-out",
+  "canDo": "I can say what started something, that it turns out to be so, what it leads to and causes, and whether it works.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C537-xiaoguo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 537: I can say what started something, that it turns out to be so, what it leads to and causes, and whether it works.",
+    "assesses": [
+      "ZH-LEX-C537-TURNS537-03",
+      "ZH-LEX-C537-TURNS537-04",
+      "ZH-LEX-C537-TURNS537-05"
+    ]
+  }
+}

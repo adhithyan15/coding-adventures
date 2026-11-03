@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 533,
+  "sourceHash": "fnv1a64:e6c5dbcc60f704d0",
+  "lessonIds": [
+    "ZH-C533-xiangwang",
+    "ZH-C533-xiwang",
+    "ZH-W533-xi-hope",
+    "ZH-C533-kewang",
+    "ZH-C533-juewang",
+    "ZH-C533-xinxiangshicheng"
+  ],
+  "tex": "chinese/book/chapters/ch533-i-hope-so.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C485-shenxin",
+  "pathSegment": "ZH-PATH-485-MIND485",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-485-MIND485",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C387-cunkuan",
+    "language": "chinese",
+    "chapter": 387,
+    "sequence": 29680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fe70d6d62efaacf8"
+  },
+  "findings": []
+}

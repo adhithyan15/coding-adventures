@@ -1,0 +1,852 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 390,
+  "title": "As We Agreed",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:6bb16eb16a6423e8",
+  "lessons": [
+    {
+      "id": "ZH-C390-queding",
+      "sequence": 29820,
+      "title": "quèdìng — to be certain; to settle on",
+      "headword": "quèdìng",
+      "romanization": "quèdìng",
+      "gloss": "to be certain; to settle on",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f8124c88a17a0aa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for as a precaution, then the Mandarin for to fall due."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: quèdìng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quèdìng — \"to be certain; to settle on\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ hái bú quèdìng míngtiān néng bu néng qù — I'm not sure yet whether I can go tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "quèdìng is built from què 'firm' and dìng 'settled', both inherited from Middle Chinese, khaewk and dengH (Guangyun, in Baxter's transcription), which glosses the first 'steadfast' and the second 'calm'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quèdìng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quèdìng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "quèdìng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *quèdìng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ hái bú quèdìng míngtiān néng bu néng qù — I'm not sure yet whether I can go tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ hái bú quèdìng míngtiān néng bu néng qù* — I'm not sure yet whether I can go tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for as a precaution, then the Mandarin for to fall due, then say quèdìng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for as a precaution, then the Mandarin for to fall due, then say *quèdìng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does quèdìng mean? (\"To be certain; to settle on\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C390-yueding",
+      "sequence": 29830,
+      "title": "约定 (yuēdìng) — to agree on a time; to fix (a time or place) together",
+      "headword": "约定",
+      "romanization": "yuēdìng",
+      "gloss": "to agree on a time; to fix (a time or place) together",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cbf47b5fd7761710",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to fall due, then the Mandarin for to be certain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 约定",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "约定 — yuēdìng — \"to agree on a time; to fix (a time or place) together\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们约定明天早上八点见面 wǒmen yuēdìng míngtiān zǎoshang bā diǎn jiànmiàn — We agreed to meet at eight tomorrow morning."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 定 (dìng) — eight strokes in two pieces: the roof of 安 on top, and under it the five strokes at the foot of 是. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "约定 (yuēdìng) is built from 约 'to bind' and 定 (dìng) 'settled', both inherited from Middle Chinese, 'jak and dengH (Guangyun, in Baxter's transcription), which glosses the second 'calm'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuēdìng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuēdìng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuēdìng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuēdìng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen yuēdìng míngtiān zǎoshang bā diǎn jiànmiàn — We agreed to meet at eight tomorrow morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen yuēdìng míngtiān zǎoshang bā diǎn jiànmiàn* — We agreed to meet at eight tomorrow morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to fall due, then the Mandarin for to be certain, then say yuēdìng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to fall due, then the Mandarin for to be certain, then say *yuēdìng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 约定 (yuēdìng) mean? (\"To agree on a time; to fix (a time or place) together\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W390-ding-settle",
+      "sequence": 29835,
+      "title": "定 (dìng) — the roof of 安 over the foot of 是",
+      "headword": "定",
+      "romanization": "dìng",
+      "gloss": "定 — the roof of 安 over the foot of 是",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:a715987b7d74dcc0",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the roof of 安 over the foot of 是",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the roof of 安 over the foot of 是 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yuēdìng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yuēdìng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "安 是."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — ān, shì",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *ān*, *shì*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the roof of 安 over the foot of 是",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "定 (dìng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, top before bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "The roof, three strokes, as on top of 安: a dot, a short stroke down on the left, and a bar that turns down and hooks."
+            },
+            {
+              "kind": "speech",
+              "text": "Under it, five strokes, the foot of 是. A bar. A short vertical down from its middle. A short bar to the right of the vertical. Then a stroke falling to the left, and a long stroke falling to the right that sweeps along the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 5 = eight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "定 (dìng), all eight, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 定, all eight, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 定 (dìng)? (Eight.) What is on top? (The roof of 安.) Where have you made the bottom piece before? (At the foot of 是.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 定 (dìng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C390-dingqi",
+      "sequence": 29840,
+      "title": "定期 (dìngqī) — at regular intervals; periodically",
+      "headword": "定期",
+      "romanization": "dìngqī",
+      "gloss": "at regular intervals; periodically",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:65d001dc58c9bd84",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to be certain, then the Mandarin for to agree on a time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 定期",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "定期 — dìngqī — \"at regular intervals; periodically\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你最好定期去看医生 nǐ zuìhǎo dìngqī qù kàn yīshēng — You'd better see a doctor regularly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "定期 (dìngqī) is built from 定 (dìng) 'settled' and 期 'a set time', both inherited from Middle Chinese, dengH and gi (Guangyun, in Baxter's transcription), which glosses the second 'a limit'. The level tone of qī is irregular, as in 星期."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dìngqī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dìngqī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dìngqī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dìngqī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ zuìhǎo dìngqī qù kàn yīshēng — You'd better see a doctor regularly.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ zuìhǎo dìngqī qù kàn yīshēng* — You'd better see a doctor regularly.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to be certain, then the Mandarin for to agree on a time, then say dìngqī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to be certain, then the Mandarin for to agree on a time, then say *dìngqī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 定期 (dìngqī) mean? (\"At regular intervals; periodically\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C390-ruqi",
+      "sequence": 29850,
+      "title": "如期 (rúqī) — as planned (on the agreed date)",
+      "headword": "如期",
+      "romanization": "rúqī",
+      "gloss": "as planned (on the agreed date)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0af03c2dd4b3ef3a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to agree on a time, then the Mandarin for at regular intervals."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 如期",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "如期 — rúqī — \"as planned (on the agreed date)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "要是不下雨我们就如期去山里 yàoshi bú xiàyǔ wǒmen jiù rúqī qù shān lǐ — If it doesn't rain, we'll go to the hills as planned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "如期 (rúqī) is built from 如 'as' and 期 'a set time', both inherited from Middle Chinese, nyo and gi (Guangyun, in Baxter's transcription), which glosses the first 'like' and the second 'an appointed meeting'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúqī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúqī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúqī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúqī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi bú xiàyǔ wǒmen jiù rúqī qù shān lǐ — If it doesn't rain, we'll go to the hills as planned.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi bú xiàyǔ wǒmen jiù rúqī qù shān lǐ* — If it doesn't rain, we'll go to the hills as planned.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to agree on a time, then the Mandarin for at regular intervals, then say rúqī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to agree on a time, then the Mandarin for at regular intervals, then say *rúqī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 如期 (rúqī) mean? (\"As planned (on the agreed date)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C390-dayue",
+      "sequence": 29860,
+      "title": "大约 (dàyuē) — approximately; roughly (a time or number)",
+      "headword": "大约",
+      "romanization": "dàyuē",
+      "gloss": "approximately; roughly (a time or number)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3eb9113b9a6e7fb2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for at regular intervals, then the Mandarin for on the agreed date."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 大约",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "大约 — dàyuē — \"approximately; roughly (a time or number)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yàoshi bù dǔchē wǒ dàyuē bā diǎn dào — If there's no traffic, I'll be there at about eight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "大约 (dàyuē) is built from 大 'big' and 约 'to bind', both inherited from Middle Chinese, dajH and 'jak (Guangyun, in Baxter's transcription), which glosses the second 'to tie up' and 'sparing'. How the pair came to mean 'roughly' is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàyuē",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàyuē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàyuē, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàyuē*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi bù dǔchē wǒ dàyuē bā diǎn dào — If there's no traffic, I'll be there at about eight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi bù dǔchē wǒ dàyuē bā diǎn dào* — If there's no traffic, I'll be there at about eight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for at regular intervals, then the Mandarin for on the agreed date, then say dàyuē again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for at regular intervals, then the Mandarin for on the agreed date, then say *dàyuē* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 大约 (dàyuē) mean? (\"Approximately; roughly (a time or number)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

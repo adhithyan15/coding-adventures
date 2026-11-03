@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C304-jizhu",
+  "pathSegment": "ZH-PATH-304-SCHOOL304",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-304-SCHOOL304",
+      "order": 5
+    }
+  ]
+}

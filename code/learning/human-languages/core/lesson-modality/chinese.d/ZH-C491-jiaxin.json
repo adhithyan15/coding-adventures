@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C491-jiaxin",
+    "language": "chinese",
+    "chapter": 491,
+    "sequence": 37250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:14ce6b8a54cf6377"
+  },
+  "findings": []
+}

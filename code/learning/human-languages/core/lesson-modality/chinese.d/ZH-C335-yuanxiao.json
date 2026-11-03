@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C335-yuanxiao",
+    "language": "chinese",
+    "chapter": 335,
+    "sequence": 25870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:432a095ce3adce98"
+  },
+  "findings": []
+}

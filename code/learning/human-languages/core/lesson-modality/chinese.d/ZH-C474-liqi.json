@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C474-liqi",
+    "language": "chinese",
+    "chapter": 474,
+    "sequence": 35830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:32d8531f5fa99947"
+  },
+  "findings": []
+}

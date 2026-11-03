@@ -1,0 +1,19 @@
+{
+  "chapter": 484,
+  "title": "Staying Well",
+  "label": "ch:zh-staying-well",
+  "canDo": "I can talk about preventing illness, giving up drinking, forming a habit, feeling worn out and fighting off colds.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C484-dikangli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 484: I can talk about preventing illness, giving up drinking, forming a habit, feeling worn out and fighting off colds.",
+    "assesses": [
+      "ZH-LEX-C484-WELL484-03",
+      "ZH-LEX-C484-WELL484-04",
+      "ZH-LEX-C484-WELL484-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C422-xibei",
+    "language": "chinese",
+    "chapter": 422,
+    "sequence": 32050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4a1c4dfcb77733ae"
+  },
+  "findings": []
+}

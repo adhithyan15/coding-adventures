@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C400-yuanding",
+  "pathSegment": "ZH-PATH-400-ADJUST400",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-400-ADJUST400",
+      "order": 3
+    }
+  ]
+}
