@@ -40,6 +40,14 @@ retained target SAN. Separate caller-owned ASN.1 budgets bound both decoders.
 The non-copyable success retains the complete server path and advanced
 path-length state beside optional constrained-name evidence.
 
+`validate_x509_rsa_sha512_reviewed_intermediate_server_name_constraints_policy`
+then consumes that selected-anchor result and applies the exact retained
+intermediate's NameConstraints to the exact retained target SAN. An absent
+extension succeeds without new DNS evidence. A present extension must be
+critical and must decode under a separate caller-owned budget as the supported
+permitted-and-excluded-dNSName subset; exclusions take precedence. The
+non-copyable result retains the complete selected-anchor proof.
+
 `validate_x509_rsa_sha512_reviewed_server_anchor_policy` then consumes that
 complete proof and derives both inputs to its DNS-policy decision from it:
 
@@ -56,12 +64,13 @@ payload-free categories. The non-copyable success retains the complete input
 proof beside optional constrained-name evidence.
 
 This composition performs no new signature work or root lookup. Its bounded
-parsing is limited to exact reviewed-anchor constraint bytes and the exact
-target SAN retained by the consumed direct or two-link proof. The two-link
-bindings perform no parsing. None of these APIs constructs or validates a
-path, applies intermediate or IP constraints, checks revocation or hostnames,
-performs TLS or HTTP, authorizes OAuth transport, or opens a network
-connection. It does not make concrete HTTPS or live-provider use ready.
+parsing is limited to exact reviewed-anchor constraint bytes, an exact retained
+intermediate's critical NameConstraints, and the exact target SAN retained by
+the consumed proof. The two-link bindings perform no parsing. None of these
+APIs constructs or validates a path, applies non-DNS or IP constraints, checks
+revocation or hostnames, performs TLS or HTTP, authorizes OAuth transport, or
+opens a network connection. It does not make concrete HTTPS or live-provider
+use ready.
 
 ## Validation
 
