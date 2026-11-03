@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-03
+
+### Added
+
+- Added a construction-bound complete-intermediate-policy composition for the
+  exact non-terminal issuer that authenticates one projected SHA-512 link.
+- Added a construction-bound path-length transition that retains the ordered
+  authenticated-intermediate proof with the advanced state.
+- Added terminal, detached-policy, byte-equal re-decode, and exhausted
+  path-length rejection coverage.
+
+### Security
+
+- Terminal rejection and exact decoded-object identity checks run before RSA
+  work, preventing detached or terminal policy from authorizing cryptography
+  for a constructed adjacency. The composition grants no complete-path,
+  trust, identity, revocation, TLS, HTTP, OAuth, audit, trace, provider, or
+  network authority.
+
 ## [0.4.0] - 2026-11-03
 
 ### Added

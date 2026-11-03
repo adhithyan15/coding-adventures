@@ -29,6 +29,15 @@ validated issuer key. This preserves one construction step's order without
 authenticating another link, applying complete issuer policy, validating a
 path, or establishing trust.
 
+A stronger construction-bound entry point accepts complete intermediate policy
+only for the exact projected non-terminal issuer. It rejects a terminal issuer
+or policy for any other decoded object before RSA work, then retains the
+authenticated adjacency and complete policy together. Its bounded path-length
+follow-up derives the transition only from that retained policy and keeps the
+ordered proof with the advanced state. The caller still supplies the initial
+state; this composition does not authenticate another adjacency, prove prior
+traversal, validate a complete path, or establish trust.
+
 The stronger policy-link entry point consumes certificate-wide critical-
 extension and issuing-CA role evidence plus certificate-bound, data-driven RSA
 algorithm/key evidence. It rejects evidence retained from any other decoded
