@@ -183,9 +183,11 @@ describe("Marathi A2 timed mock pair", () => {
     expect(read("mock-1-examiner-script.md")).toContain("पन्नास रुपये");
     expect(read("mock-1-examiner-script.md")).toContain("order the learner asks them");
     expect(read("mock-1-examiner-script.md")).not.toMatch(/पाचव्या\s+पाचव्या/u);
+    expect(read("mock-1-examiner-script.md")).not.toMatch(/पिशवी\s+आम्ही\s+चहा|चहा\s+चहाच्या/u);
     expect(read("mock-2-answer-key.md")).toContain("ask what to\nbring");
     expect(read("mock-2-examiner-script.md")).toContain("reply **वही**");
-    expect(read("mock-2-examiner-script.md")).toContain("ती नऊ वाजता उघडी असते");
+    expect(read("mock-2-answer-key.md")).toContain("which days and what time the room opens");
+    expect(read("mock-2-examiner-script.md")).toContain("ती नऊ वाजता उघडी आहे");
     expect(read("mock-2-examiner-script.md")).toContain("पुस्तक दोन आठवड्यांत परत द्या");
 
     const lessonDir = join(curriculumRoot, "marathi", "lessons");
@@ -205,19 +207,203 @@ describe("Marathi A2 timed mock pair", () => {
       return readFileSync(lessonPath, "utf8");
     }).join("\n");
     const lessonTokens = new Set(lessonCorpus.match(/[\u0900-\u097F]+/gu) ?? []);
-    const scoredArtifacts = [1, 2].flatMap((form) => [
+    const boundary = JSON.parse(readFileSync(
+      join(curriculumRoot, "marathi", "assessment-boundaries", "a2.json"),
+      "utf8",
+    )) as A2Boundary;
+    const scoredArtifactBodies = [1, 2].flatMap((form) => [
       read(`mock-${form}.md`),
+      read(`mock-${form}-answer-key.md`),
       read(`mock-${form}-examiner-script.md`),
-    ]).join("\n");
+    ]);
+    const scoredArtifacts = scoredArtifactBodies.join("\n");
+
+    // The next Marathi rung owns these constructions. A token appearing in
+    // an earlier vocabulary lesson is not enough to make its later inflected
+    // or connective use A2 evidence.
+    for (const [label, laterRungSurface] of [
+      ["ongoing past", /[\u0900-\u097F]+त\s+हो(?:तो|ती|ता|ते|त्या|तं)/u],
+      ["causal -mule", /[\u0900-\u097F]+मुळे/u],
+      ["conditional -lyas", /[\u0900-\u097F]+ल्यास/u],
+      ["B1 sequence connector", /त्यानंतर/u],
+      ["B1 result connector", /म्हणून/u],
+      ["C278 while surface", /(?:असताना|[\u0900-\u097F]+ताना)/u],
+      ["C278 past habit", /(?:जायचो|जायची|जायचे)/u],
+      ["C279 conjunctive -un", /(?:करून|घेऊन|वाचून|बसून|पाहून|खाऊन|पिऊन|जाऊन|येऊन|निघून|ठेवून|देऊन|बोलून|चालून|लिहून|ऐकून)/u],
+      ["C279 season noun", /ऋतू/u],
+      ["C280 opinion frame", /मला\s+वाटतं\s+की/u],
+      ["C280 result frame", /त्यामुळे/u],
+      ["C281 obligation", /[\u0900-\u097F]+ला\s+पाहिजे/u],
+      ["C281 prohibition", /नये/u],
+      ["C281 knowledge noun", /ज्ञान/u],
+      ["C282 directions", /(?:कसं\s+जायचं|किती\s+दूर|उजवीकडे|डावीकडे|समोर)/u],
+      ["C283 lost surface", /हरवल/u],
+      ["C283 missed surface", /चुकल/u],
+      ["C283 ticket surface", /तिकीट/u],
+      ["C284 emotion noun", /(?:भीती|ध्येय|राग)/u],
+      ["C284 dative want frame", /[\u0900-\u097F]+ायचं\s+आहे/u],
+      ["C285 comparison", /(?:पेक्षा|सर्वात)/u],
+      ["C285 duration frame", /(?:पासून|पर्यंत|दिवसभर)/u],
+      ["C286 otherwise", /नाहीतर/u],
+      ["C287 dependency", /अवलंबून/u],
+      ["C287 counterfactual", /[\u0900-\u097F]+ल[ोाीे]\s+अस(?:तो|ता|ती|ते)/u],
+      ["unowned future passive", /[\u0900-\u097F]+(?:ला|ली|ले|लं|ल्या)\s+जा(?:ईल|तील)/u],
+      ["C277 future or plan copula", /(?:असेल|असतील|आहोत)/u],
+      ["later inclusive pronoun", /(?:^|[^\u0900-\u097F])आपण(?:$|[^\u0900-\u097F])/u],
+      ["later habitual copula", /(?:असते|असतात)/u],
+      ["unowned impersonal ability", /(?:घेता|ठेवता|वाचता|बोलता)\s+(?:ये|यावं)/u],
+      ["unowned ability combination", /असू\s+शकत/u],
+      ["unowned prescriptive or subjunctive", /(?:घ्यावी|द्यावे|यावं|घालावी|आणावी|करावा|आणावं|द्यावी|भेटावं|बोलावं|करावी|द्यावं|ठेवावी|मागावी)/u],
+      ["unowned relative or result participle", /[\u0900-\u097F]+ले(?:ला|ली|लेले|लं|ल्या|ल्यां|लेल्या)/u],
+      ["unowned agreeing future participle", /[\u0900-\u097F]+णार(?:ा|ी|े|्या)/u],
+      ["C280 demonstrative discourse form", /असं/u],
+      ["later concessive or conditional", /(?:^|[^\u0900-\u097F])तरी(?:$|[^\u0900-\u097F])/u],
+      ["unowned before-time nominal", /वाजण्यापूर्वी/u],
+      ["unowned nominalized decision", /[\u0900-\u097F]+ण्याचं(?:\s+[\u0900-\u097F]+){0,3}\s+ठरवल/u],
+      ["untaught instead construction", /ऐवजी/u],
+      ["later negative conjunctive", /(?:^|[^\u0900-\u097F])न\s+[\u0900-\u097F]+ता(?:$|[^\u0900-\u097F])/u],
+      ["later first-time adverb", /पहिल्यांदा/u],
+      ["unowned attributive postposition", /[\u0900-\u097F]+वरील/u],
+      ["later distributive source", /महिन्यातून/u],
+      ["later reciprocal", /एकमेकांना/u],
+      ["unowned feminine friend", /मैत्रीण/u],
+      ["unowned bicycle-ride compound", /सायकलफेरी/u],
+      ["later verbal-adjective or deontic family", /[\u0900-\u097F]+ायच[\u0900-\u097F]*/u],
+      ["later list noun", /यादी/u],
+      ["later collective numeral", /दोघ/u],
+      ["later reflexive pronoun", /स्वतः/u],
+      ["unowned partitive direction", /पैकी/u],
+      ["unowned abstract cleanliness noun", /स्वच्छत/u],
+      ["untaught father noun", /बाबा/u],
+      ["unowned attention collocation", /(?:लक्ष\s+द्या|लक्षात\s+ठेवा)/u],
+      ["awkward late-notice collocation", /उशीर\s+घरी\s+सांगेन/u],
+      ["later use verb", /वापर/u],
+      ["unowned summon verb", /बोलव/u],
+      ["later drive verb", /चालव/u],
+      ["later sentence noun", /वाक्य/u],
+      ["later negative future copula", /नसेल/u],
+      ["later finish verb", /संप(?:ेल|लं)/u],
+      ["later depart verb", /सुट(?:ेल|णार)/u],
+      ["later appear verb", /दिसली/u],
+      ["later start surface", /(?:^|[^\u0900-\u097F])सुरू(?:$|[^\u0900-\u097F])/u],
+      ["later previous surface", /मागच्या/u],
+      ["later nice adjective", /(?:^|[^\u0900-\u097F])छान(?:$|[^\u0900-\u097F])/u],
+      ["later all adjective", /सगळी/u],
+      ["later complete adjective", /(?:^|[^\u0900-\u097F])पूर्ण(?:$|[^\u0900-\u097F])/u],
+      ["later new adjective", /नवीन/u],
+      ["later ready adjective", /(?:^|[^\u0900-\u097F])तयार(?:$|[^\u0900-\u097F])/u],
+      ["later en-route locative", /वाटेत/u],
+      ["later attributive last surface", /(?:^|[^\u0900-\u097F])गेल्या(?:$|[^\u0900-\u097F])/u],
+      ["unowned productive dative infinitive", /[\u0900-\u097F]+ायला/u],
+      ["unowned reading noun", /वाचन/u],
+      ["unowned market-held sense", /बाजार[^\n.]{0,80}भर(?:तो|ला|ेल)/u],
+      ["later people noun", /(?:^|[^\u0900-\u097F])लोक(?:ांना|ांनी)?(?:$|[^\u0900-\u097F])/u],
+      ["later change noun", /(?:^|[^\u0900-\u097F])बदल(?:$|[^\u0900-\u097F])/u],
+      ["broken possessive agreement", /गावाचे\s+आणि\s+शहराची\s+माणसं/u],
+      ["later quantity word", /अनेक/u],
+      ["later manner adverb", /शांतपणे/u],
+      ["later reflexive possessive", /आपल(?:ा|ी|े|्या)/u],
+      ["later about postposition", /बद्दल/u],
+      ["untaught feminine teacher noun", /शिक्षिका/u],
+      ["untaught student noun", /विद्यार्थ/u],
+      ["unowned choice verb", /निवड[\u0900-\u097F]*/u],
+      ["untaught wait idiom", /वाट\s+पाह/u],
+      ["later attributive locative", /[\u0900-\u097F]+मधील|(?:शहर|गाव|शाळा|घर|पुस्तक|बाजार|प्रवास)ातील/u],
+    ] as const) {
+      expect(scoredArtifacts, `later-rung scored surface: ${label}`).not.toMatch(laterRungSurface);
+    }
+    for (const laterRungCondition of [
+      "पाऊस पडत असेल तर",
+      "हवामान चांगलं असेल तर",
+      "पाऊस आला तर",
+    ]) {
+      expect(scoredArtifacts, `later-rung scored condition: ${laterRungCondition}`)
+        .not.toContain(laterRungCondition);
+    }
+    expect(scoredArtifacts.match(/[\u0900-\u097F]+/gu) ?? [], "B1 conditional token")
+      .not.toContain("तर");
+    expect(scoredArtifacts.match(/[\u0900-\u097F]+/gu) ?? [], "B1 condition introducer")
+      .not.toContain("जर");
+
+    // Reject close reuse from the complete excluded B1 grammar/story seam,
+    // including the rain account and direction payoff that exposed the leak.
+    // Four-word spans catch distinctive copied phrasing; the sole allow-list
+    // entry is the earlier C160-owned future question repeated at C277.
+    const excludedB1Sources = readdirSync(lessonDir).filter((name) => {
+      const chapter = Number(/^MR-C(\d+)-/u.exec(name)?.[1]);
+      return chapter >= boundary.firstExcludedChapter && chapter <= 287;
+    });
+    expect(excludedB1Sources.length).toBeGreaterThan(0);
+    const excludedB1Spans = new Set(
+      excludedB1Sources.flatMap((name) => {
+        const words = readFileSync(join(lessonDir, name), "utf8")
+          .match(/[\u0900-\u097F]+/gu) ?? [];
+        return words.slice(0, -3).map((_, index) => words.slice(index, index + 4).join(" "));
+      }),
+    );
+    const permittedRepeatedSpans = new Set(["तुम्ही काय करणार आहात"]);
+    const scoredSpans = scoredArtifactBodies.flatMap((body) => {
+      const words = body.match(/[\u0900-\u097F]+/gu) ?? [];
+      return words.slice(0, -3).map((_, index) => words.slice(index, index + 4).join(" "));
+    });
+    const unapprovedRepeatedSpans = scoredSpans
+      .filter((span) => excludedB1Spans.has(span) && !permittedRepeatedSpans.has(span));
+    expect(unapprovedRepeatedSpans, "no unapproved four-word scored span may reuse the excluded B1 seam")
+      .toEqual([]);
+
+    // Lexical rewrites must not preserve the excluded C279 story's distinctive
+    // structure. Scope the fingerprint to form 1's first connected account so
+    // ordinary A2 words elsewhere cannot hide a semantic source copy.
+    const formOneConnectedAccount = read("mock-1.md").match(
+      /<!-- mock-part:a2-reading-connected-everyday-text-one -->([\s\S]*?)<!-- \/mock-part:a2-reading-connected-everyday-text-one -->/u,
+    )?.[1] ?? "";
+    for (const [label, signals] of [
+      ["rainy village setting", [/पावसाळ|पाऊस/u, /गाव/u]],
+      ["rail-and-book journey", [/(?:गाडी|स्टेशन)/u, /पुस्तक/u]],
+      ["mother's courtyard story meal", [/आई/u, /चहा/u, /अंगण/u, /(?:गोष्ट|भाकरी)/u]],
+    ] as const) {
+      expect(signals.every((signal) => signal.test(formOneConnectedAccount)), `no C279 semantic reuse: ${label}`)
+        .toBe(false);
+    }
+
+    // Every content root in the independently structured replacement account
+    // is tied to an explicit regular lesson at or before C275. Inflection is
+    // exercised by the already-owned A2 grammar; new lexical content may not
+    // enter merely because the whole-file token digest changed.
+    for (const [root, owner, headword] of [
+      ["शनिवार", "MR-C125-sanivar", "शनिवार"], ["सकाळ", "MR-C66-sakal", "सकाळ"],
+      ["मित्र", "MR-C11-mitra", "मित्र"], ["मोठ", "MR-C49-motha", "मोठा"],
+      ["शाळा", "MR-C94-shala", "शाळा"], ["मराठी", "MR-C05-mi-marathi-bolto", "मराठी"],
+      ["पुस्तक", "MR-C93-pustak", "पुस्तक"], ["कार्यक्रम", "MR-C263-karyakram", "कार्यक्रम"],
+      ["बसस्थानक", "MR-C271-basasthanak", "बसस्थानक"], ["बस", "MR-C114-bas", "बस"],
+      ["चहा", "MR-C10-chaha", "चहा"], ["खिडकी", "MR-C89-khidki", "खिडकी"],
+      ["पाणी", "MR-C10-paani", "पाणी"], ["दुकान", "MR-C113-dukan", "दुकान"],
+      ["नाव", "MR-C02-naav", "नाव"], ["खोली", "MR-C41-kholi", "खोली"],
+      ["गोष्ट", "MR-C120-gosta", "गोष्ट"], ["प्रवास", "MR-C119-pravas", "प्रवास"],
+      ["इतिहास", "MR-C250-itihas", "इतिहास"], ["संगीत", "MR-C120-sangit", "संगीत"],
+      ["आरोग्य", "MR-C169-arogya", "आरोग्य"], ["शिक्षक", "MR-C77-shiksak", "शिक्षक"],
+      ["भात", "MR-C85-bhat", "भात"], ["बाग", "MR-C128-bag", "बाग"],
+      ["गाण", "MR-C79-gane", "गाणे"], ["माहिती", "MR-C191-mahiti", "माहिती"],
+      ["आई", "MR-C74-ai", "आई"], ["वही", "MR-C93-vahi", "वही"],
+      ["पेन", "MR-C93-pen", "पेन"], ["संग्रहालय", "MR-C245-sangrahalay", "संग्रहालय"],
+      ["नकाशा", "MR-C94-nakasha", "नकाशा"], ["कपड", "MR-C115-kapde", "कपडे"],
+      ["चित्र", "MR-C95-chitra", "चित्र"], ["नाण", "MR-C182-nane", "नाणे"],
+      ["घर", "MR-C41-ghar", "घर"], ["दिवस", "MR-C66-divas", "दिवस"],
+      ["मुल", "MR-C74-mulga", "मुलगा"],
+    ] as const) {
+      const ownerChapter = Number(owner.match(/^MR-C(\d+)-/u)?.[1]);
+      expect(ownerChapter, `${owner} chapter`).toBeLessThanOrEqual(boundary.maxRegularChapter);
+      const ownerLesson = readFileSync(join(lessonDir, `${owner}.md`), "utf8");
+      expect(ownerLesson, `${owner} identity`).toContain(`id: ${owner}`);
+      const authoredHeadword = /^headword:\s*(.+)$/mu.exec(ownerLesson)?.[1].replaceAll('"', "") ?? "";
+      expect(authoredHeadword, `${owner} headword owns ${root}`).toContain(headword);
+      expect(formOneConnectedAccount, `replacement account uses ${root}`).toContain(root);
+    }
 
     // The language-owned boundary contract is the authority for the A2
     // grammar and functional-language forms used by these papers. Bind every
     // owner in that contract to at least one visible assessed form, and bind
     // each selected form back to both the declaration and its pre-gate lesson.
-    const boundary = JSON.parse(readFileSync(
-      join(curriculumRoot, "marathi", "assessment-boundaries", "a2.json"),
-      "utf8",
-    )) as A2Boundary;
     expect(boundary).toMatchObject({
       language: "marathi",
       level: "A2",
@@ -281,9 +467,9 @@ describe("Marathi A2 timed mock pair", () => {
     // vocabulary sample. Any new or substituted Devanagari surface form must
     // change this digest and receive a fresh source-boundary review.
     const scoredTokenInventory = [...scoredTokens].sort();
-    expect(scoredTokenInventory).toHaveLength(855);
+    expect(scoredTokenInventory).toHaveLength(724);
     expect(createHash("sha256").update(scoredTokenInventory.join("\n"), "utf8").digest("hex"))
-      .toBe("610769072fa2a583185781fb22763e0f131b6495b57f7aa5da787ffaf4ad29fe");
+      .toBe("b1e8aac7966dec4bdb71e4e0ab4c35e17aa156b0ff6efd815bdefd3beaa459f4");
     // This inventory spans the answer-bearing nouns and the open-task topic
     // roots in every reading, listening, writing, and speaking part. Each root
     // must be visible both in the scored pair and in a lesson published before
