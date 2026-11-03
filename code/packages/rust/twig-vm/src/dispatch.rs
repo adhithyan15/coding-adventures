@@ -400,6 +400,17 @@ pub enum RunError {
         /// The registered kind, e.g. `"Trap.Bounds"`.
         kind: String,
     },
+    /// The module failed a load-time IIR check, so nothing ran (#18800).
+    ///
+    /// Today the only check is the LANG83 string ceiling,
+    /// `IIRModule::str_ceiling_errors`: a `str_const` longer than the
+    /// module's ceiling, or a `str_max_bytes` above `STR_MAX_BYTES`. vm-core
+    /// (`VMError::InvalidModule`) and every compiled column refuse the same
+    /// modules; before #18800 twig-vm ran them.
+    InvalidModule {
+        /// Every violation, as `interpreter-ir` words it.
+        errors: Vec<String>,
+    },
 }
 
 impl std::fmt::Display for RunError {
@@ -429,6 +440,7 @@ impl std::fmt::Display for RunError {
                 write!(f, "host/{function}: expected integer, got {received}")
             }
             RunError::Trap { kind } => write!(f, "trap: {kind}"),
+            RunError::InvalidModule { errors } => write!(f, "invalid IIR module: {}", errors.join("; ")),
         }
     }
 }
@@ -1018,6 +1030,7 @@ pub fn run_with_profile(
         .find(|f| f.name == entry_name)
         .ok_or_else(|| RunError::NoEntryPoint(entry_name.to_string()))?;
 
+    check_str_ceiling(module)?;
     let mut budget = ExecutionBudget::new();
     let mut debug: Option<&mut dyn crate::debug::DebugHooks> = None;
     dispatch(module, entry, &[], 0, &mut budget, globals, ic_table, profile, &mut debug)
@@ -1050,9 +1063,24 @@ pub fn run_with_debug(
         .find(|f| f.name == entry_name)
         .ok_or_else(|| RunError::NoEntryPoint(entry_name.to_string()))?;
 
+    check_str_ceiling(module)?;
     let mut budget = ExecutionBudget::new();
     let mut debug_opt: Option<&mut dyn crate::debug::DebugHooks> = Some(debug);
     dispatch(module, entry, &[], 0, &mut budget, globals, ic_table, profile, &mut debug_opt)
+}
+
+/// Load-time check (#18800): refuse a module whose string literals do not
+/// fit its LANG83 string ceiling, before any instruction runs — the check
+/// vm-core and every compiled column run (`IIRModule::str_ceiling_errors`).
+/// Both entry points that start a run ([`run_with_profile`] and
+/// [`run_with_debug`]; the others delegate to the first) call it.
+fn check_str_ceiling(module: &IIRModule) -> Result<(), RunError> {
+    let errors = module.str_ceiling_errors();
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(RunError::InvalidModule { errors })
+    }
 }
 
 // Per-run instruction counter — enforces
@@ -1542,7 +1570,7 @@ fn trap(kind: &str) -> RunError {
 ///
 /// | | direct call | here |
 /// |---|---|---|
-/// | `string-append` | the registry ceiling, 2³⁰ − 64 bytes | the **module's** ceiling, `IIRModule::str_ceiling()`, as `str_concat` uses |
+/// | `string-append`, `make-string` | the registry ceiling, 2³⁰ − 64 bytes | the **module's** ceiling, `IIRModule::str_ceiling()`, as `str_concat` uses |
 /// | `RuntimeError::Trap { kind }` | `RunError::Runtime(..)` | `RunError::Trap { kind }`, as the ops' own traps |
 ///
 /// So Twig's `(string-ref s 3)` on a 3-character string raises
@@ -1555,10 +1583,11 @@ fn call_lispy_builtin(
     builtin: lang_runtime_core::BuiltinFn<LispyBinding>,
     args: &[LispyValue],
 ) -> Result<LispyValue, RunError> {
-    let result = if name == "string-append" {
-        dynval_runtime::builtins::string_append_within(args, module.str_ceiling() as usize)
-    } else {
-        builtin(args)
+    let ceiling = module.str_ceiling() as usize;
+    let result = match name {
+        "string-append" => dynval_runtime::builtins::string_append_within(args, ceiling),
+        "make-string" => dynval_runtime::builtins::make_string_within(args, ceiling),
+        _ => builtin(args),
     };
     result.map_err(|e| match e {
         RuntimeError::Trap { kind } => RunError::Trap { kind },
@@ -6613,6 +6642,58 @@ mod tests {
         }
         // The twig-vm ceiling and the builtin's registry ceiling are one value.
         assert_eq!(dynval_runtime::builtins::STR_MAX_BYTES as u64, u64::from(interpreter_ir::STR_MAX_BYTES));
+    }
+
+    /// #18800 security review: `call_builtin "make-string"` is the other
+    /// builtin that grows a string, so it obeys the module's ceiling too.
+    #[test]
+    fn builtin_make_string_past_the_module_ceiling_is_trap_overflow() {
+        let make = |ceiling| builtin_call("make-string", vec![Operand::Int(5), Operand::Int(i64::from(b'x'))], ceiling);
+        assert_eq!(run(&make(Some(4))).unwrap_err(), RunError::Trap { kind: "Trap.Overflow".into() });
+        for ceiling in [Some(5), None] {
+            let v = run(&make(ceiling)).unwrap();
+            // SAFETY: v was produced by alloc_string.
+            assert_eq!(unsafe { dynval_runtime::string_bytes(v) }, Some(&b"xxxxx"[..]), "{ceiling:?}");
+        }
+    }
+
+    /// #18800 security review: twig-vm refuses, before running anything, a
+    /// module whose `str_const` is longer than its ceiling (or whose ceiling
+    /// is above `STR_MAX_BYTES`), as vm-core and every compiled column do.
+    /// Before, it ran the module.
+    #[test]
+    fn a_literal_past_the_module_ceiling_is_refused_at_load() {
+        let program = |len: usize, ceiling: Option<u32>| {
+            let mut m = module_with_main(
+                vec![
+                    IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("z".repeat(len))], "str"),
+                    IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                    IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "any"),
+                ],
+                3,
+            );
+            m.str_max_bytes = ceiling;
+            m
+        };
+        for (m, kind) in [(program(17, Some(16)), "StrTooLong"), (program(0, Some(interpreter_ir::STR_MAX_BYTES + 1)), "StrMaxBytes")] {
+            match run(&m) {
+                Err(RunError::InvalidModule { errors }) => assert!(errors.iter().any(|e| e.starts_with(kind)), "{errors:?}"),
+                other => panic!("expected InvalidModule ({kind}), got {other:?}"),
+            }
+            // A hook that would record any instruction run: none may be.
+            struct NoRun;
+            impl crate::debug::DebugHooks for NoRun {
+                fn before_instruction(&mut self, f: &str, _: usize, pc: usize, _: &dyn crate::debug::DebugFrame) {
+                    panic!("{f}@{pc} ran before the load-time refusal");
+                }
+            }
+            let mut hooks = NoRun;
+            let err = run_with_debug(&m, &mut Globals::new(), &mut ICTable::new(), &mut ProfileTable::new(), &mut hooks)
+                .unwrap_err();
+            assert!(matches!(err, RunError::InvalidModule { .. }), "{err:?}");
+            assert!(err.to_string().starts_with("invalid IIR module: "), "{err}");
+        }
+        assert_eq!(run(&program(16, Some(16))).unwrap().as_int(), Some(16));
     }
 
     /// The same contract when the builtin is called as a closure value: here

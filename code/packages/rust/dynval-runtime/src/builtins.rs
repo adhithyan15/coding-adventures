@@ -33,6 +33,7 @@
 //! | `string-ref s i` | `str_index` | `Trap.Bounds` | `i < 0` or `i ≥ length` |
 //! | `substring s a b` | `str_slice` | `Trap.Bounds` | not `0 ≤ a ≤ b ≤ length` |
 //! | `string-append a b` | `str_concat` | `Trap.Overflow` | `len a + len b` > the ceiling ([`STR_MAX_BYTES`]) |
+//! | `make-string n ch` | — | `Trap.Overflow` | `n × len_utf8(ch)` > the ceiling |
 //!
 //! An operand of the wrong *type* (a non-string, a non-integer index) is
 //! still a `TypeError`: that is not one of the closed `Trap.*` kinds.
@@ -1070,23 +1071,56 @@ pub fn string_append_within(args: &[LispyValue], ceiling: usize) -> Result<Lispy
     Ok(heap::alloc_string(&result))
 }
 
-/// `(make-string n ch) → String` — build a string of `n` copies of code point `ch` (LANG47).
+/// `(make-string n ch) → String` — build a string of `n` copies of code point `ch` (LANG47),
+/// under the registry-wide ceiling [`STR_MAX_BYTES`].
+///
+/// The context-free builtin [`crate::LispyBinding`] resolves; twig-vm calls
+/// [`make_string_within`] with its module's ceiling instead.
 pub fn make_string(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    make_string_within(args, STR_MAX_BYTES)
+}
+
+/// `(make-string n ch)` under an explicit string ceiling, in bytes.
+///
+/// `make-string` is the other builtin that *grows* a string (with
+/// `string-append`), so it obeys the same contract (#18800 security review):
+///
+/// | input | result |
+/// |-------|--------|
+/// | `n < 0` | `TypeError` (unchanged) |
+/// | `ch` not a Unicode scalar value (negative, ≥ 2³², a surrogate, > U+10FFFF) | `TypeError` |
+/// | `n × len_utf8(ch)` overflows, or exceeds `ceiling` | `Trap.Overflow`, before anything is allocated |
+///
+/// Before, `n as usize * cp.len_utf8()` could wrap, a huge `n` asked the
+/// allocator for that many bytes, and `ch as u32` truncated, so
+/// `ch = 2³² + 65` built `"A"`s. `ceiling` is clamped to [`STR_MAX_BYTES`].
+///
+/// ```
+/// use dynval_runtime::builtins::make_string_within;
+/// use dynval_runtime::LispyValue;
+/// use lang_runtime_core::RuntimeError;
+/// let args = [LispyValue::int(3), LispyValue::int(0xE9)]; // "ééé": 6 bytes
+/// assert!(make_string_within(&args, 6).is_ok());
+/// assert_eq!(make_string_within(&args, 5), Err(RuntimeError::Trap { kind: "Trap.Overflow".into() }));
+/// ```
+pub fn make_string_within(args: &[LispyValue], ceiling: usize) -> Result<LispyValue, RuntimeError> {
     if args.len() != 2 {
         return Err(arity_error("make-string", 2, args.len()));
     }
     let n  = as_int("make-string", args[0])?;
     let ch = as_int("make-string", args[1])?;
-    if n < 0 {
+    let Ok(n) = usize::try_from(n) else {
         return Err(RuntimeError::TypeError(format!("make-string: length {n} is negative")));
-    }
-    let cp = char::from_u32(ch as u32).ok_or_else(|| {
+    };
+    let cp = u32::try_from(ch).ok().and_then(char::from_u32).ok_or_else(|| {
         RuntimeError::TypeError(format!("make-string: {ch} is not a valid Unicode code point"))
     })?;
-    let mut s = String::with_capacity(n as usize * cp.len_utf8());
-    for _ in 0..n {
-        s.push(cp);
+    let ceiling = ceiling.min(STR_MAX_BYTES);
+    match n.checked_mul(cp.len_utf8()) {
+        Some(bytes) if bytes <= ceiling => {}
+        _ => return Err(trap(TRAP_OVERFLOW)),
     }
+    let s: String = std::iter::repeat_n(cp, n).collect();
     Ok(heap::alloc_string(s.as_bytes()))
 }
 
@@ -1716,6 +1750,30 @@ mod tests {
         assert_eq!(unsafe { heap::string_bytes(v).unwrap() }, b"abc");
         let v2 = string_append(&[s("abc"), s("")]).unwrap();
         assert_eq!(unsafe { heap::string_bytes(v2).unwrap() }, b"abc");
+    }
+
+    /// #18800 security review: `make-string` past the ceiling is
+    /// `Trap.Overflow`, checked before anything is allocated, including a
+    /// length whose byte count overflows `usize`; a code point that is not a
+    /// Unicode scalar value is a `TypeError`, never truncated.
+    #[test]
+    fn make_string_past_the_ceiling_is_trap_overflow() {
+        let make = |n: i64, ch: i64, ceiling: usize| make_string_within(&[i(n), i(ch)], ceiling);
+        assert_eq!(make(5, b'x' as i64, 4), Err(overflow()));
+        assert_eq!(make(3, 0xE9, 5), Err(overflow())); // "é" is 2 bytes: 6 > 5
+        assert_eq!(make(crate::value::INT_MAX, 0x1F600, usize::MAX), Err(overflow())); // 4 × 2⁶⁰ bytes
+        assert_eq!(make(crate::value::INT_MAX, b'x' as i64, usize::MAX), Err(overflow()));
+        let v = make(3, 0xE9, 6).unwrap();
+        assert_eq!(unsafe { heap::string_bytes(v).unwrap() }, "ééé".as_bytes());
+        assert!(make(0, b'x' as i64, 0).is_ok());
+        // The code point is checked, not truncated: 2³² + 65 is not 'A'.
+        for ch in [(1 << 32) + 65, -1, 0xD800, 0x11_0000] {
+            assert!(matches!(make(1, ch, 9), Err(RuntimeError::TypeError(_))), "{ch:#x}");
+        }
+        assert!(matches!(make(-1, b'x' as i64, 9), Err(RuntimeError::TypeError(_))));
+        // The context-free builtin: the registry ceiling.
+        assert_eq!(make_string(&[i(crate::value::INT_MAX), i(b'x' as i64)]), Err(overflow()));
+        assert!(make_string(&[i(2), i(b'x' as i64)]).is_ok());
     }
 
     #[test]
