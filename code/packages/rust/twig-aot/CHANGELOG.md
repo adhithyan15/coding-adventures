@@ -1,5 +1,11 @@
 # Changelog — `twig-aot`
 
+## Unreleased — LANG83 PR5b — literals are bytes
+
+- **`lower_string_literals_for_aot` stores every literal byte exactly.** The printable-ASCII filter is gone: a `str_const` of any `Str` (its UTF-8) or raw-byte `Operand::Bytes` literal becomes `alloc_bytes` plus one `store_byte` per byte, NUL and 0x80–0xFF included. Before, any other literal was left for the backend, which refused it. The fold table holds bytes, so a literal `str_slice` that splits a UTF-8 character (`"é"[1..2]` is `A9`) and a literal `str_concat` of non-ASCII literals fold instead of falling back to the runtime helpers.
+- The constant-compare helper treats an `Operand::Bytes` as not a signed word, like `Str`.
+- Tests `non_ascii_and_raw_byte_literals_lower_to_exact_byte_stores` and `literal_folds_keep_bytes_that_are_not_utf8` (both fail on the previous lowering).
+
 ## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused before lowering
 
 - New `check_str_ceiling`, run first by `prepare_module_for_aot` (so by every module compile: Linux and Windows x86-64, macOS AArch64 objects and executables, `compile_module_to_arm64_bytes`) and by `compile_typed_module_to_arm64_bytes`, which skips that step. A `str_const` longer than the module's ceiling, or a `str_max_bytes` above `STR_MAX_BYTES`, is `AotError::Compile` with `interpreter-ir`'s `StrTooLong` / `StrMaxBytes` message. It runs on the module as given, because `lower_string_literals_for_aot` turns literals into `alloc_bytes` blocks. Before, the literal was baked in and the module compiled.
