@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.7.0 - 2026-11-03
+
+### Added
+
+- Added bounded critical intermediate DNS NameConstraints policy for the exact
+  intermediate and target retained by a routed two-link server path.
+- Added coverage for absent constraints, permitted and excluded DNS subtrees,
+  criticality, and redacted target violations.
+
+### Security
+
+- The composition derives the intermediate, target, and validated target SAN
+  index through one retained proof and keeps all prior anchor-policy evidence.
+- Only the repository's supported permitted-and-excluded-DNS subset is applied;
+  this does not cover IP or other name forms, generalized path validation,
+  hostname verification, revocation, TLS, HTTP, OAuth, or network use.
+
 ## 0.6.0 - 2026-11-03
 
 ### Added

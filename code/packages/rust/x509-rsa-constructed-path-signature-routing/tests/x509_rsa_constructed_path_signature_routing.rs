@@ -27,6 +27,7 @@ use x509_rsa_constructed_path_signature_routing::{
     bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
     bind_x509_rsa_constructed_reviewed_intermediate_server_path,
     validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy,
+    validate_x509_rsa_constructed_reviewed_intermediate_server_name_constraints_policy,
     verify_x509_rsa_constructed_path_policy_signature,
     BoundX509RsaConstructedReviewedIntermediatePath,
     X509RsaConstructedPathIntermediatePolicyErrorKind,
@@ -932,7 +933,7 @@ fn binds_complete_server_policy_to_exact_routed_reviewed_target() {
 }
 
 #[test]
-fn retains_exact_routed_server_path_when_reviewed_anchor_is_unconstrained() {
+fn retains_exact_routed_server_path_through_unconstrained_anchor_and_intermediate_policy() {
     let target_encoded = fixture(TARGET_HEX);
     let intermediate_encoded = fixture(INTERMEDIATE_HEX);
     let root_encoded = fixture(ROOT_HEX);
@@ -945,16 +946,24 @@ fn retains_exact_routed_server_path_when_reviewed_anchor_is_unconstrained() {
     )
     .unwrap();
 
-    let validated = validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy(
+    let anchor_policy = validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy(
         bound,
         Asn1Limits::default(),
         Asn1Limits::default(),
     )
     .unwrap();
+    let validated =
+        validate_x509_rsa_constructed_reviewed_intermediate_server_name_constraints_policy(
+            anchor_policy,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
 
     assert_eq!(validated.constrained_dns_names(), None);
     assert!(std::ptr::eq(
         validated
+            .anchor_policy()
             .reviewed_server_path()
             .server_policy()
             .certificate(),
@@ -962,6 +971,7 @@ fn retains_exact_routed_server_path_when_reviewed_anchor_is_unconstrained() {
     ));
     assert!(std::ptr::eq(
         validated
+            .anchor_policy()
             .reviewed_server_path()
             .reviewed_path()
             .reviewed_terminal()
@@ -971,7 +981,7 @@ fn retains_exact_routed_server_path_when_reviewed_anchor_is_unconstrained() {
     ));
     assert_eq!(
         format!("{validated:?}"),
-        "ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy"
+        "ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy"
     );
 }
 
