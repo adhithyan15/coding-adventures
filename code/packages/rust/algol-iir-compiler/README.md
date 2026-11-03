@@ -355,6 +355,9 @@ Checked integer multiplication may also scale one square root before
 `entier`. The compiler computes the floor from the exact squared coefficient
 in `u128`, including the negated ceiling-root case; overflow, multiple roots,
 division, overrides, and dynamic roots remain conservative.
+Left-to-right integer divisions may reduce that coefficient when every division
+is exact. Fractional coefficients, rooted divisors, zero divisors, overflow,
+multiple roots, overrides, and dynamic roots remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
