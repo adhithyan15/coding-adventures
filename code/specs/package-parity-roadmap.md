@@ -20371,3 +20371,17 @@ this PR-number lifecycle receipt is committed and pushed normally. Independent
 exact-head publication review must pass before marking it ready; every hosted
 check on the final reviewed head must then complete terminal acceptable while
 GitHub still reports the PR mergeable before guarded squash auto-merge.
+
+#### Rust Cargo test-trigger core PR #18853 ready receipt
+
+Independent publication review issued SHIP for exact lifecycle head
+`f185778a48faaea5b1800d09f3228b62aa82e95e`. It verified the PR identity and
+base, 19-file GitHub/local parity, current-main and Lua merge ancestry, active
+publication ceiling, zero live overlap, byte-identical reviewed implementation,
+the valid 185-case/328-file corpus, focused Go witness, and ignored-inclusive
+worktree cleanliness with no findings. Mark PR #18853 ready at
+`2026-11-03T08:27:37Z`; hosted checks remain queued or in progress and
+auto-merge remains disabled. Commit and push this receipt normally, require a
+fresh independent review of the resulting exact head, and enable guarded
+squash auto-merge only after every exact-head check is terminal acceptable and
+GitHub still reports the PR mergeable.
