@@ -1,5 +1,10 @@
 # Changelog — iir-to-beam
 
+## Unreleased — LANG83 PR5b — literals are bytes
+
+- **`validate_for_beam` accepts any `str_const` literal**, a `Str` or a raw-byte `Operand::Bytes`; the printable-ASCII check is gone. A string is a list of integers 0–255, so the lowering emits one `put_list` element per byte, whatever its value.
+- New `tests/lang83_pr5b.rs` (`any_literal_byte_becomes_one_list_element`), which fails on the previous validator.
+
 ## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused at compile time
 
 - `validate_for_beam` (and so `lower_iir_to_beam` and the codegen registry) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.
