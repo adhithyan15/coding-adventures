@@ -1408,6 +1408,53 @@ or HTTP, authorize OAuth transport, or grant network authority. The pure
 public-certificate composition performs no credential access, signing,
 storage, clock acquisition, audit event, trace emission, I/O, or external
 effect. Concrete HTTPS and live-provider readiness remain unavailable.
+A bounded target-policy follow-up now consumes that data-driven routed
+two-link result together with complete server-certificate policy. It succeeds
+only when the policy retains the exact decoded target object in the retained
+construction; policy for a byte-equal independent decode fails closed. The
+non-copyable result keeps complete target critical-extension, algorithm,
+end-entity role, SAN-only identity, explicit-time validity, and purpose policy
+together with both routed signature results, complete intermediate policy,
+advanced caller-owned path-length state, and reviewed Mozilla root selection.
+This pure public-certificate composition performs no credential access,
+signing, storage, clock acquisition, audit event, trace emission, I/O, or
+external effect. It does not derive the initial path-length cap from anchor
+policy, apply anchor or intermediate constraints, check revocation, generalize
+path validation, perform TLS or HTTP, authorize OAuth transport, or grant
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+A bounded selected-anchor DNS-policy follow-up now consumes that exact routed
+server-path result. It derives the target certificate only from retained
+complete server policy and derives optional constraint bytes only from the
+exact reviewed terminal selected by the same authenticated construction.
+Separate caller-owned limits bound the repository-owned reviewed-constraint
+and Subject Alternative Name decoders. An unconstrained snapshot entry retains
+the complete proof without DNS evidence; a constrained entry requires every
+target dNSName to satisfy the supported permitted DNS subtrees and retains only
+a payload-free count. This pure public-certificate composition performs no
+credential access, signing, storage, clock acquisition, audit event, trace
+emission, I/O, or external effect. It does not apply intermediate, excluded,
+or non-DNS anchor constraints, derive the initial path-length cap, check
+revocation, generalize path validation, perform TLS or HTTP, authorize OAuth
+transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+An additive bounded intermediate DNS-policy follow-up now consumes that exact
+anchor-policy proof. It derives the intermediate certificate, target
+certificate, and already-validated target SAN extension index only through the
+retained routed construction. An absent NameConstraints extension succeeds
+without manufacturing evidence; a present extension must be critical and must
+decode under a separate caller-owned limit before every target dNSName is
+checked against the supported permitted-and-excluded-DNS subset. Success keeps
+the complete target policy, both routed signatures, complete intermediate
+policy, advanced caller-owned path-length state, reviewed root selection,
+anchor-policy evidence, and optional payload-free intermediate constrained-
+name evidence together. This pure public-certificate composition performs no
+credential access, signing, storage, clock acquisition, audit event, trace
+emission, I/O, or external effect. It does not support additional
+intermediates, derive the initial path-length cap, apply IP or other name-form
+constraints, verify a hostname, check revocation, generalize path validation,
+perform TLS or HTTP, authorize OAuth transport, or grant network authority.
+Concrete HTTPS and live-provider readiness remain unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each

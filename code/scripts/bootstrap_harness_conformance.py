@@ -39,6 +39,7 @@ MASK = (1 << 64) - 1
 SHAPES = {
     "deep_equal": {"actual", "expected", "verdict"},
     "error_is": {"raised", "expected", "verdict"},
+    "failure_id_valid": {"input", "valid"},
     "splitmix64": {"seed", "outputs"},
     "fnv1a64": {"input", "hash"},
     "shuffle": {"seed", "ids", "order"},
@@ -48,6 +49,16 @@ SHAPES = {
 FAILURE_IDS = {
     "deep_equal": {"not-deep-equal"},
     "error_is": {"no-error", "wrong-error"},
+}
+
+# Independent protocol oracle, pinned by TF01 rather than a lane's output.
+REGISTERED_FAILURE_IDS = {
+    "not-deep-equal",
+    "no-error",
+    "wrong-error",
+    "panic",
+    "corpus-mismatch",
+    "corpus-malformed",
 }
 
 
@@ -145,6 +156,8 @@ def check(cases: list[dict]) -> list[str]:
     seen_verdicts: dict[str, set[str]] = {"deep_equal": set(), "error_is": set()}
     seen_failures: dict[str, set[str]] = {"deep_equal": set(), "error_is": set()}
     reference_vector_present = False
+    seen_registered_ids: set[str] = set()
+    rejected_id_present = False
     for case in cases:
         cid, op = case.get("id"), case.get("op")
         if op not in SHAPES:
@@ -167,6 +180,18 @@ def check(cases: list[dict]) -> list[str]:
             seen_verdicts[op].add(case["verdict"])
             if failure:
                 seen_failures[op].add(failure)
+        elif op == "failure_id_valid":
+            if value["input"][0] != "text" or value["valid"][0] != "bool":
+                problems.append(f"{cid}: needs text input and bool valid")
+                continue
+            candidate = value["input"][1]
+            got = candidate in REGISTERED_FAILURE_IDS
+            if got != value["valid"][1]:
+                problems.append(f"{cid}: failure-ID membership disagrees")
+            if got:
+                seen_registered_ids.add(candidate)
+            else:
+                rejected_id_present = True
         elif op == "splitmix64":
             rng = SplitMix64(value["seed"][1])
             got = [("int", rng.next()) for _ in value["outputs"][1]]
@@ -202,6 +227,11 @@ def check(cases: list[dict]) -> list[str]:
             problems.append(f"{op}: failure ids never exercised: {sorted(missing)}")
     if not reference_vector_present:
         problems.append("splitmix64: the published seed-0 reference vector is missing")
+    missing_ids = REGISTERED_FAILURE_IDS - seen_registered_ids
+    if missing_ids:
+        problems.append(f"registered failure IDs missing: {sorted(missing_ids)}")
+    if not rejected_id_present:
+        problems.append("failure_id_valid: needs an unregistered-ID rejection")
     return problems
 
 
@@ -214,7 +244,7 @@ def main(argv: list[str] | None = None) -> int:
     generated = tfv.encode_file(to_records(cases))
     target = FIXTURE / "cases.tfv"
     if args.write:
-        target.write_text(generated, encoding="utf-8")
+        target.write_text(generated, encoding="utf-8", newline="\n")
     elif not target.exists() or target.read_text(encoding="utf-8") != generated:
         problems.append("cases.tfv is stale: run with --write")
     elif tfv.parse_file(generated) != to_records(cases):

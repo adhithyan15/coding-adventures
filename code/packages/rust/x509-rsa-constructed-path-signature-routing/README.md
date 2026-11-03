@@ -41,12 +41,37 @@ signature proofs, and keeps the intermediate's complete policy and advanced
 path-length state with the reviewed-root handoff. Proofs from a separately
 constructed path fail even when they select the same decoded certificates.
 
+A target-policy follow-up consumes that routed reviewed construction together
+with complete server-certificate policy. It requires the policy to retain the
+construction's exact decoded target object and keeps both non-copyable inputs
+together. A byte-equal independent decode does not match, so identity,
+validity, purpose, end-entity role, critical-extension, and algorithm policy
+cannot be spliced onto another construction.
+
+A selected-anchor DNS-policy follow-up derives the target only from that
+complete server policy and derives optional constraint bytes only from the
+exact reviewed terminal retained by the same routed proof. Caller-owned limits
+bound both repository-owned decoders. Unconstrained snapshot entries retain
+the complete proof without DNS evidence; constrained entries require every
+target dNSName to satisfy the supported permitted subtree set and retain only
+a payload-free count.
+
+An additive intermediate DNS-policy follow-up consumes that complete anchor-
+policy proof. It derives the exact intermediate, target, and target SAN index
+only through retained evidence. An absent NameConstraints extension succeeds
+without new DNS evidence; a present extension must be critical and every
+target dNSName must satisfy the supported permitted-and-excluded-DNS subset
+under separate caller-owned decoder limits. Success retains the entire prior
+proof plus only a payload-free constrained-name count.
+
 Reviewed-root selection is snapshot membership, not complete trust. The
 fixed-shape result does not generalize to additional intermediates, derive the
 initial path-length cap from anchor policy, define full Name comparison, apply
-trust-anchor or name constraints, validate target identity or time, check
-revocation, perform TLS or HTTP, authorize OAuth transport, or open a network
-connection. It does not make concrete HTTPS or live-provider use ready.
+IP or other name-form constraints, excluded or non-DNS anchor constraints,
+check revocation, perform hostname verification, TLS, or HTTP, authorize OAuth
+transport, or open a network connection. Target identity, time, purpose, and
+the supported reviewed-anchor and intermediate DNS subsets do not make the
+whole path valid. This does not make concrete HTTPS or live-provider use ready.
 
 ## Validation
 

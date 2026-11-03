@@ -18,7 +18,7 @@ reading, and pinned by data:
   L1  Warrant: specs compiled into plain tests ─┐
   L0  test-bootstrap  ◄─────────────────────────┘  this crate
         ▲
-        └── checked by code/specs/fixtures/test-bootstrap-v1 (72 cases),
+        └── checked by code/specs/fixtures/test-bootstrap-v1 (85 cases),
             whose answers an independent Python reference re-derives
 ```
 
@@ -72,6 +72,12 @@ ok 1 - math/two-plus-two
   the test's id.
 - A panic fails that test and the run continues. Its message is not copied
   into TAP, because it may quote inputs.
+- Failure IDs are limited to TF01's six registered values. The runner checks
+  `verdict::is_registered_failure_id` at serialization, including directly
+  constructed `Verdict::Fail` values. An unknown ID emits only
+  `Bail out! invalid failure id`, stops remaining tests and exits nonzero;
+  neither the invalid ID nor its message is printed. A valid reported prefix
+  keeps its counts, and the malformed verdict is not counted as a result.
 - Exit status: 0 when every test passed, 1 otherwise, 2 for a bad command line.
 
 ## Sabotage mode
@@ -85,7 +91,8 @@ every normal run, but it fails this check.
 ## Its own tests
 
 - `src/**`: unit tests on libtest, for the parts the corpus cannot reach
-  (TAP layout, argument parsing, panics, bad ids).
+  (TAP layout, argument parsing, panics, bad ids, runtime protocol bail-outs
+  and their writer-error behavior).
 - `tests/self_corpus.rs`: every record of `cases.tfv` run on this harness.
   The corpus is embedded with `include_str!`, so the crate reads no files and
   `required_capabilities.json` is empty.

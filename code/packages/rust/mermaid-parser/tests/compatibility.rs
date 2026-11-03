@@ -2701,12 +2701,9 @@ fn pinned_c4_relationship_arrows_reach_semantic_ir() {
     assert!(backward.relationships[0].start_arrow);
     assert!(!backward.relationships[0].end_arrow);
 
-    let short_backward = parse_c4_diagram(
-        fixtures[2]["source"].as_str().expect("short backward relationship source"),
-    )
-    .expect("C4 Rel_B fixture must parse");
-    assert!(short_backward.relationships[0].start_arrow);
-    assert!(!short_backward.relationships[0].end_arrow);
+    let unsupported = &syntax["invalid"][0];
+    assert_eq!(unsupported["name"], "unsupported-short-backward-relationship");
+    assert!(parse_c4_diagram(unsupported["source"].as_str().unwrap()).is_err());
 }
 
 #[test]

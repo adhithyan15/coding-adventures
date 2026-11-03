@@ -1,5 +1,56 @@
 # Changelog
 
+## 0.7.0 - 2026-11-03
+
+### Added
+
+- Added bounded critical intermediate DNS NameConstraints policy for the exact
+  intermediate and target retained by a routed two-link server path.
+- Added coverage for absent constraints, permitted and excluded DNS subtrees,
+  criticality, and redacted target violations.
+
+### Security
+
+- The composition derives the intermediate, target, and validated target SAN
+  index through one retained proof and keeps all prior anchor-policy evidence.
+- Only the repository's supported permitted-and-excluded-DNS subset is applied;
+  this does not cover IP or other name forms, generalized path validation,
+  hostname verification, revocation, TLS, HTTP, OAuth, or network use.
+
+## 0.6.0 - 2026-11-03
+
+### Added
+
+- Added bounded selected-anchor DNS policy for the exact target and reviewed
+  terminal retained by a routed two-link server path.
+- Added coverage for unconstrained reviewed roots, permitted DNS subtrees,
+  target violations, and missing Subject Alternative Name.
+
+### Security
+
+- The composition derives both target and reviewed constraint bytes through
+  one retained proof and keeps diagnostics free of certificate names.
+- Only the reviewed snapshot's supported permitted DNS subset is applied; this
+  does not cover intermediate, excluded, or non-DNS constraints, revocation,
+  TLS, HTTP, OAuth, or network use.
+
+## 0.5.0 - 2026-11-03
+
+### Added
+
+- Added exact-object binding between complete target-server certificate policy
+  and one routed target -> intermediate -> reviewed-root construction.
+- Added coverage for retained policy/path evidence and rejection of policy for
+  a byte-equal independently decoded target.
+
+### Security
+
+- The binding prevents complete identity, validity, purpose, end-entity role,
+  critical-extension, or algorithm policy from being attached to another
+  construction's target.
+- The result does not apply anchor or intermediate constraints, check
+  revocation, or authorize TLS, HTTP, OAuth, or network use.
+
 ## 0.4.0 - 2026-11-03
 
 ### Added

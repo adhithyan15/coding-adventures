@@ -31,6 +31,23 @@ impl Verdict {
     }
 }
 
+/// The complete TF01 section 5.3 failure vocabulary.
+///
+/// This is a protocol predicate, not an assertion about a subject. The runner
+/// applies it when serializing, so callers cannot bypass it by constructing
+/// the public `Fail` variant instead of using the convenience constructor.
+pub fn is_registered_failure_id(id: &str) -> bool {
+    matches!(
+        id,
+        "not-deep-equal"
+            | "no-error"
+            | "wrong-error"
+            | "panic"
+            | "corpus-mismatch"
+            | "corpus-malformed"
+    )
+}
+
 /// `Pass` when `actual` and `expected` are deep-equal, else
 /// `Fail("not-deep-equal")`.
 ///
