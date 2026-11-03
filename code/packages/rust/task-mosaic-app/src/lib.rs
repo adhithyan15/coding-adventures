@@ -4442,6 +4442,210 @@ mod tests {
         assert_eq!("   ".trim(), "");
     }
 
+    // ── one trim for every typed name (6e2b) ───────────────────────────────
+
+    /// One case of `fixtures/task-name-trimming-v1.json`. The web host's
+    /// `__tests__/task-name-trimming.test.ts` reads the same file.
+    #[derive(Debug, Deserialize)]
+    struct TaskNameTrimCase {
+        name: String,
+        typed: String,
+        /// The name every composer stores; `None` means it trims to empty,
+        /// so every composer refuses it or does nothing.
+        stored: Option<String>,
+    }
+
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct TaskNameTrimVectors {
+        schema_version: u32,
+        white_space: Vec<String>,
+        cases: Vec<TaskNameTrimCase>,
+    }
+
+    fn task_name_trim_vectors() -> TaskNameTrimVectors {
+        serde_json::from_str(include_str!(
+            "../../../../programs/mosaic/task-app/fixtures/task-name-trimming-v1.json"
+        ))
+        .expect("valid task-name trimming vectors")
+    }
+
+    /// Every composer here trims with `str::trim`, which removes
+    /// `char::is_whitespace` — Unicode `White_Space`. Pin that set to the
+    /// fixture's list over every scalar value, so a host whose trim differs
+    /// (JavaScript's `.trim()` keeps U+0085 and removes U+FEFF) cannot pass
+    /// the same list.
+    #[test]
+    fn str_trim_removes_exactly_the_shared_white_space() {
+        let vectors = task_name_trim_vectors();
+        assert_eq!(vectors.schema_version, 1);
+        let expected: Vec<u32> = vectors
+            .white_space
+            .iter()
+            .map(|hex| u32::from_str_radix(hex, 16).expect("hex code point"))
+            .collect();
+        assert_eq!(expected.len(), 25);
+        let mut trimmed = Vec::new();
+        for c in (0..=0x10FFFF).filter_map(char::from_u32) {
+            let one = c.to_string();
+            match one.trim() {
+                "" => trimmed.push(c as u32),
+                kept => assert_eq!(kept, one, "U+{:04X} trimmed to something else", c as u32),
+            }
+        }
+        assert_eq!(trimmed, expected);
+        assert_eq!("\u{0085}".trim(), "");
+        assert_eq!("\u{FEFF}".trim(), "\u{FEFF}");
+    }
+
+    /// Every shared case, typed into every name composer: Add Task, the
+    /// edit-task Save, the Sheet Name cell (column 0), a new label, the
+    /// Sheet Labels cell (column 4), a new project, a new checklist and a
+    /// new checklist item. Each must store the case's trimmed name, or, for
+    /// a name that trims to empty, do what it does for an empty field.
+    #[test]
+    fn typed_names_are_trimmed_by_the_shared_vectors() {
+        let vectors = task_name_trim_vectors();
+        assert!(!vectors.cases.is_empty());
+        for case in &vectors.cases {
+            let label = case.name.as_str();
+            let typed = json!({ "value": case.typed });
+            let started = || {
+                let mut app = TaskMosaicApp::with_clock(fixed_clock);
+                app.start(context()).unwrap();
+                app
+            };
+            let names = |app: &TaskMosaicApp| -> Vec<String> {
+                app.active_project()
+                    .tasks
+                    .values()
+                    .map(|task| task.name.clone())
+                    .collect()
+            };
+            let stored_or = |fallback: &str| vec![case.stored.clone().unwrap_or(fallback.into())];
+            let stored_list = || case.stored.clone().into_iter().collect::<Vec<String>>();
+
+            // Add Task.
+            let mut app = started();
+            send(&mut app, "newTaskNameChange", typed.clone());
+            let props = send(&mut app, "addTask", json!({}));
+            assert_eq!(names(&app), stored_list(), "{label}: Add Task");
+            let error = if case.stored.is_some() {
+                ""
+            } else {
+                "Enter a task name."
+            };
+            assert_eq!(
+                props["new-task-name-error"], error,
+                "{label}: Add Task error"
+            );
+
+            // The edit-task field's Save.
+            let mut app = notes_app(); // one task, "Groceries"
+            send(&mut app, "showList", json!({}));
+            send(&mut app, "editTask", json!({ "index": 0 }));
+            send(&mut app, "editTaskNameChange", typed.clone());
+            let props = send(&mut app, "saveTaskEdit", json!({}));
+            assert_eq!(names(&app), stored_or("Groceries"), "{label}: Save");
+            assert_eq!(props["edit-task-name-error"], error, "{label}: Save error");
+
+            // The Sheet Name cell.
+            let mut app = notes_app();
+            send(&mut app, "showSheet", json!({}));
+            send(&mut app, "sheetNavigate", json!({ "row": 0, "col": 0 }));
+            send(&mut app, "sheetEditCommit", typed.clone());
+            assert_eq!(names(&app), stored_or("Groceries"), "{label}: Sheet Name");
+
+            // The label composer.
+            let mut app = started();
+            send(&mut app, "newLabelNameChange", typed.clone());
+            send(&mut app, "addLabel", json!({}));
+            let labels: Vec<String> = app
+                .active_project()
+                .labels
+                .values()
+                .map(|l| l.name.clone())
+                .collect();
+            assert_eq!(labels, stored_list(), "{label}: new label");
+
+            // The Sheet Labels cell: the untrimmed name finds the label
+            // stored trimmed; an all-White_Space cell names no label, so it
+            // clears the one already on the task.
+            let mut app = notes_app();
+            let task = app.active_project().tasks.keys().next().unwrap().clone();
+            let lbl = LabelId::from_raw("lbl");
+            app.active_project_mut().upsert_label(Label {
+                id: lbl.clone(),
+                name: case.stored.clone().unwrap_or("Seed label".into()),
+                color: String::new(),
+            });
+            if case.stored.is_none() {
+                app.active_project_mut()
+                    .set_task_labels(&task, vec![lbl.clone()])
+                    .unwrap();
+            }
+            send(&mut app, "showSheet", json!({}));
+            send(&mut app, "sheetNavigate", json!({ "row": 0, "col": 4 }));
+            send(&mut app, "sheetEditCommit", typed.clone());
+            let expected: Vec<LabelId> = case.stored.iter().map(|_| lbl.clone()).collect();
+            assert_eq!(
+                app.active_project().tasks[&task].labels,
+                expected,
+                "{label}: Sheet Labels"
+            );
+
+            // The project composer.
+            let mut app = started();
+            let before: BTreeSet<ProjectId> =
+                app.state.workspace.projects.keys().cloned().collect();
+            send(&mut app, "newProjectNameChange", typed.clone());
+            send(&mut app, "addProject", json!({}));
+            let added: Vec<String> = app
+                .state
+                .workspace
+                .projects
+                .iter()
+                .filter(|(id, _)| !before.contains(*id))
+                .map(|(_, project)| project.name.clone())
+                .collect();
+            assert_eq!(added, stored_list(), "{label}: new project");
+
+            // The checklist composer.
+            let mut app = checklists_app();
+            send(&mut app, "newChecklistNameChange", typed.clone());
+            send(&mut app, "createChecklist", json!({}));
+            let checklists: Vec<String> = app
+                .active_project()
+                .checklists
+                .values()
+                .map(|c| c.name.clone())
+                .collect();
+            assert_eq!(checklists, stored_list(), "{label}: new checklist");
+
+            // The checklist item composer.
+            let mut app = checklists_app();
+            template(&mut app, "Seed list", &[]);
+            let root = app
+                .active_project()
+                .checklists
+                .values()
+                .next()
+                .unwrap()
+                .root
+                .clone();
+            send(&mut app, "newChecklistItemChange", typed.clone());
+            send(&mut app, "addChecklistItem", json!({}));
+            let items: Vec<String> = app
+                .active_project()
+                .tasks
+                .values()
+                .filter(|task| task.parent.as_ref() == Some(&root))
+                .map(|task| task.name.clone())
+                .collect();
+            assert_eq!(items, stored_list(), "{label}: new checklist item");
+        }
+    }
+
     /// The tie rule directly, without going through events: of two tasks
     /// whose names lowercase alike, the lower id wins, whichever was typed
     /// exactly and whichever was inserted first.

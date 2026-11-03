@@ -67,7 +67,13 @@ const SHEET_FIELDS: SheetField[] = [
     width: 240,
     editable: true,
     sortable: true,
-    write: (id, value) => (value.trim() ? { op: "renameTask", args: { id, name: value.trim() } } : null),
+    // A typed name, so trimmed of Unicode White_Space like every other one
+    // (trimWhiteSpace, below; backlog 6e2b): `.trim()` would keep U+0085 and
+    // strip U+FEFF, and store a different name than task-mosaic-app does.
+    write: (id, value) => {
+      const name = trimWhiteSpace(value);
+      return name ? { op: "renameTask", args: { id, name } } : null;
+    },
   },
   {
     field: { builtin: "deadline" },
@@ -144,7 +150,9 @@ const SHEET_FIELDS: SheetField[] = [
     // Label *creation* is its own composer (see the label-composer row wrapping the
     // Sheet in TaskApp.mll) — assignment here only ever references what already exists.
     write: (id, value, ctx) => {
-      const names = value.split(",").map((s) => s.trim()).filter(Boolean);
+      // Each part is a typed label name: trimmed as the label was when it was
+      // created (trimWhiteSpace), or "Urgent\u0085" could never find "Urgent".
+      const names = value.split(",").map((s) => trimWhiteSpace(s)).filter(Boolean);
       const ids: string[] = [];
       for (const name of names) {
         const labelId = ctx?.labelsByName.get(name.toLowerCase());
@@ -725,7 +733,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   /// order; for a branch, listed in that branch of the question `parent`.
   /// Everything it did is undone if a step fails.
   const addItemUnder = (template: any, parent: string, branch: boolean | null): boolean => {
-    const name = newChecklistItem.trim();
+    const name = trimWhiteSpace(newChecklistItem);
     if (!name) return false;
     // After this item the subtree is items + 2 tasks (root + this one);
     // instantiate refuses more than task-core's cap.
@@ -1265,7 +1273,9 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // Refused past the task-name cap as typed, as a note title is (6e4).
           if (!draftFits(event.value, newName, scalarCount, TASK_NAME_MAX_CHARS)) break;
           newName = event.value;
-          if (newName.trim()) newNameError = "";
+          // The same test addTask applies, so the error clears exactly when
+          // Add would now accept the draft.
+          if (trimWhiteSpace(newName)) newNameError = "";
           break;
         case "newTaskDueChange":
           newDue = event.value;
@@ -1278,7 +1288,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // A task named before the cap loads whole and may only shrink.
           if (!draftFits(event.value, editTaskName, scalarCount, TASK_NAME_MAX_CHARS)) break;
           editTaskName = event.value;
-          if (editTaskName.trim()) {
+          if (trimWhiteSpace(editTaskName)) {
             editTaskNameError = "";
           }
           break;
@@ -1303,7 +1313,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
         }
         case "saveTaskEdit": {
           if (!editingTask) break;
-          const name = editTaskName.trim();
+          const name = trimWhiteSpace(editTaskName);
           if (!name) {
             editTaskNameError = "Enter a task name.";
             break;
@@ -1390,7 +1400,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           if (chars(event.value) <= CHECKLIST_TEXT_MAX) newChecklistItem = event.value;
           break;
         case "createChecklist": {
-          const name = newChecklistName.trim();
+          const name = trimWhiteSpace(newChecklistName);
           if (!name) break;
           const id = nextChecklistId("checklist");
           if (id === null) {
@@ -1798,7 +1808,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           newLabel = event.value;
           break;
         case "addLabel": {
-          const name = newLabel.trim();
+          const name = trimWhiteSpace(newLabel);
           if (!name) break;
           // Label ids share the same monotonic counter tasks/notes already mint from
           // (`t${n}`/`n${n}`) — the "l" prefix keeps the namespace distinct, so no
@@ -1825,7 +1835,7 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           break;
         case "addProject":
         case "addSubproject": {
-          const name = newProject.trim();
+          const name = trimWhiteSpace(newProject);
           if (!name) break;
           // "+ Sub" nests under whatever is currently shown; "+ Project" stays top-level.
           const parent =
@@ -1886,7 +1896,10 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           break;
         }
         case "addTask": {
-          const name = newName.trim();
+          // Every typed name is trimmed of Unicode White_Space, never with
+          // `.trim()` (task-app-data-model.md, "Typed names are trimmed";
+          // trimWhiteSpace below says why the two differ).
+          const name = trimWhiteSpace(newName);
           if (!name) {
             newNameError = "Enter a task name.";
             break;
@@ -2008,6 +2021,15 @@ export function taskNameKey(name: string): string {
  *   U+FEFF   cut       kept   kept
  *
  * Every other character the two trim alike.
+ *
+ * This is the one trim for every name or label a person types — task names
+ * (Add Task, the edit field, the Sheet Name cell), label names (the label
+ * composer, each part of the Sheet Labels cell), project names, checklist
+ * names and items, and the note's task-name field — because task-core
+ * stores a name verbatim and task-mosaic-app trims each of those with
+ * `str::trim` (backlog 6e2b; task-app-data-model.md, "Typed names are
+ * trimmed of Unicode White_Space"). The cases both hosts run are
+ * `code/programs/mosaic/task-app/fixtures/task-name-trimming-v1.json`.
  *
  * Why a loop and not `text.replace(/^\p{White_Space}+|\p{White_Space}+$/gu, "")`:
  * the second alternative is anchored only at its end, so the regex engine

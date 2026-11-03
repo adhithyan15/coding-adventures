@@ -145,7 +145,7 @@ The wire names are the raw emit names. Every error leaves the app unchanged:
 | `onShowChecklists` | — | view → Checklists |
 | `onSelectChecklist` | `{index}` | a library row just rendered |
 | `onNewChecklistNameChange` | `{value}` | composer |
-| `onCreateChecklist` | — | `create_checklist_template` with the trimmed name. An empty name is a no-op. Selects the new template and clears the composer |
+| `onCreateChecklist` | — | `create_checklist_template` with the name trimmed of Unicode `White_Space` (`task-app-data-model.md`, *Typed names are trimmed*; the item composer trims the same way). An empty name is a no-op. Selects the new template and clears the composer |
 | `onNewChecklistItemChange` | `{value}` | composer |
 | `onAddChecklistItem` | — | `create_task` under the selected template's root, then clears the composer. An empty name is a no-op; with no template selected, the event is an error |
 | `onStartChecklistRun` | — | `instantiate_checklist(selected template, new run id)`, then selects the run |
