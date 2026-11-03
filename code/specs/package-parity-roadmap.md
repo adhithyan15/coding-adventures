@@ -20515,3 +20515,16 @@ implementation. Keep the separate 12-reader registry, four-reader CI-gate,
 two-reader test-trigger, and future Haskell scopes unchanged. Commit this merge
 receipt and selection normally, reconcile current live PRs once more, and
 require fresh exact-head review before first publication.
+
+#### Duplicate-discovery fixture selector PR #18885 draft receipt
+
+Open draft PR #18885 at `2026-11-03T14:13:38Z` from exact independently
+reviewed head `a119e9b6f8ac4fe3a38f1495db775fb93bc0f6e4` over exact base
+`14fb4342823b6ea37768f1ad7becb01fdc29d1dd`. The branch did not previously
+exist remotely, the first push was normal, and all six live PRs at publication
+had zero exact-path overlap with the four product paths or the state and roadmap
+receipts. Keep PR #18885 draft while this PR-number receipt is committed and
+pushed normally. Require fresh independent review of the resulting exact head
+before marking it ready; keep auto-merge disabled until every check on that
+exact reviewed head is terminal acceptable and GitHub still reports the PR
+mergeable.

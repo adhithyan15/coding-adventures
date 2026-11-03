@@ -16,8 +16,10 @@
       "external-approval"
     ]
   },
-  "active_pr": null,
-  "active_prs": [],
+  "active_pr": 18885,
+  "active_prs": [
+    18885
+  ],
   "last_ci_action": {
     "observed_at": "2026-11-03T14:03:43Z",
     "pr_number": 18879,
@@ -22794,13 +22796,18 @@
     {
       "id": "build-tool-duplicate-discovery-fixture-native-ci-selection",
       "title": "Select existing native duplicate-discovery readers for fixture-only CI changes",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [
         "build-tool-shared-discovery-fixture-native-ci-selection",
         "build-tool-elixir-discovery-duplicate-identity-conformance"
       ],
       "branch": "codex/build-tool-duplicate-discovery-selector",
-      "pr_number": null,
+      "pr_number": 18885,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/18885",
+      "pr_opened_at": "2026-11-03T14:13:38Z",
+      "draft_creation_head": "a119e9b6f8ac4fe3a38f1495db775fb93bc0f6e4",
+      "publication_head": "a119e9b6f8ac4fe3a38f1495db775fb93bc0f6e4",
+      "publication_base": "14fb4342823b6ea37768f1ad7becb01fdc29d1dd",
       "delivery_class": "portable",
       "discovered_at": "2026-10-12T14:47:18.946915-07:00",
       "discovered_revision": "2a02fb26abbb61e6aa0601ee19a450d94d8be9b8",
@@ -22814,7 +22821,7 @@
       "rebase_notes": "Rebased conflict-free onto the origin/main snapshot 14fb4342823b6ea37768f1ad7becb01fdc29d1dd used for final prepublication review after two path-disjoint merged commits. The implementation patch identity remained unchanged. A final overlap audit removed only the redundant Go changelog section because older open PR #18844 used the same insertion anchor; the remaining four product paths were disjoint from every live PR in that review snapshot.",
       "implementation_revision": "c5307563a3600c6920b65a3d0274fb1202981db0",
       "validation_revision": "c5307563a3600c6920b65a3d0274fb1202981db0",
-      "validation_notes": "Exact product scope changes four paths: the Go selector, a 315-line focused suite, Go README, and the CI-gate registry. Focused eight-test selection, Go vet/build, full relevant Go tests, neutral corpus validation at 185 cases and 328 files, 27 schema tests, 93 runner tests, gofmt, diff hygiene, and ignored-inclusive cleanliness pass. The only unskipped full-Go failure is a pre-existing generator round-trip requiring unavailable pwsh; the package passes when that exact environment-only test is skipped. Independent security/correctness review issued SHIP for exact routing, the six-reader roster, language filtering, old rename/deletion sources, union and prerequisite closure, missing-root atomic failure, three-platform plans, and the absence of authority, state, fixture, schema, workflow, or native-reader drift. Removing the redundant changelog section changes no production or test behavior.",
+      "validation_notes": "Exact product scope changes four paths: the Go selector, a 315-line focused suite, Go README, and the CI-gate registry. Focused eight-test selection, Go vet/build, full relevant Go tests, neutral corpus validation at 185 cases and 328 files, 27 schema tests, 93 runner tests, gofmt, diff hygiene, and ignored-inclusive cleanliness pass. The only unskipped full-Go failure is a pre-existing generator round-trip requiring unavailable pwsh; the package passes when that exact environment-only test is skipped. Independent security/correctness review issued SHIP for exact routing, the six-reader roster, language filtering, old rename/deletion sources, union and prerequisite closure, missing-root atomic failure, three-platform plans, and the absence of authority, state, fixture, schema, workflow, or native-reader drift. Removing the redundant changelog section changes no production or test behavior. Draft PR #18885 was opened from exact reviewed head a119e9b6f8ac4fe3a38f1495db775fb93bc0f6e4 over exact base 14fb4342823b6ea37768f1ad7becb01fdc29d1dd after a normal first push; the six live PRs at publication had zero exact-path overlap with all six changed paths.",
       "reference_refresh_e3731d": "Read-only routing plan refreshed at unchanged complete Go tree c1536e7676628151402619ff191018969516bbb4: direct duplicate readers remain Go/Elixir/Ruby/Rust/Swift/TypeScript, separate from registry12 and CIgate4. Exact duplicate relation absent in main.go selector. Prediction only, no fresh detector/native execution; detailed independent RED/negative/union/platform/drift plan saved in build-tool-duplicate-routing-e373-plan-refresh.md."
     },
     {
