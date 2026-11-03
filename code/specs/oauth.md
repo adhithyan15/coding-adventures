@@ -1423,6 +1423,21 @@ policy, apply anchor or intermediate constraints, check revocation, generalize
 path validation, perform TLS or HTTP, authorize OAuth transport, or grant
 network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
+A bounded selected-anchor DNS-policy follow-up now consumes that exact routed
+server-path result. It derives the target certificate only from retained
+complete server policy and derives optional constraint bytes only from the
+exact reviewed terminal selected by the same authenticated construction.
+Separate caller-owned limits bound the repository-owned reviewed-constraint
+and Subject Alternative Name decoders. An unconstrained snapshot entry retains
+the complete proof without DNS evidence; a constrained entry requires every
+target dNSName to satisfy the supported permitted DNS subtrees and retains only
+a payload-free count. This pure public-certificate composition performs no
+credential access, signing, storage, clock acquisition, audit event, trace
+emission, I/O, or external effect. It does not apply intermediate, excluded,
+or non-DNS anchor constraints, derive the initial path-length cap, check
+revocation, generalize path validation, perform TLS or HTTP, authorize OAuth
+transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
 A bounded `x509-certificate-path-length-policy` prerequisite now applies the
 RFC 5280 path-length state transition to caller-ordered intermediate-CA role
 evidence. The caller supplies the initial maximum, identifies whether each

@@ -13,6 +13,7 @@
 #![deny(unsafe_code)]
 
 use core::fmt;
+use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
 use x509_certificate_path_construction::ConstructedX509CertificatePathAdjacentLink;
 use x509_certificate_path_length_policy::{
@@ -22,12 +23,17 @@ use x509_certificate_policy::{
     ValidatedCertificateAlgorithmPolicy, ValidatedCertificateRolePolicy, X509CertificateRole,
 };
 use x509_intermediate_certificate_policy::ValidatedX509IntermediateCertificatePolicy;
+use x509_name_constraints::{
+    decode_name_constraints_contents, evaluate_dns_names, ConstrainedDnsNames,
+    DnsConstraintErrorKind, NameConstraintsErrorKind,
+};
 use x509_rsa_algorithm_policy::ValidatedX509RsaAlgorithmPolicy;
 use x509_rsa_signature_routing::{
     verify_x509_rsa_policy_signature, VerifiedX509RsaPolicySignature, X509RsaSignatureRoute,
     X509RsaSignatureRoutingErrorKind,
 };
 use x509_server_certificate_policy::ValidatedX509ServerCertificatePolicy;
+use x509_subject_alt_name::{decode_subject_alt_name, SubjectAltNameErrorKind};
 use x509_webpki_root_anchor_selection::SelectedReviewedWebPkiRootAnchor;
 
 /// Stable, payload-free constructed-path RSA routing failures.
@@ -197,6 +203,14 @@ impl std::error::Error for X509RsaConstructedPathReviewedIntermediatePathError {
 pub enum X509RsaConstructedPathReviewedServerPolicyErrorKind {
     /// The server policy and constructed path retain different target objects.
     EvidenceMismatch,
+    /// The selected reviewed anchor's constraint bytes were malformed or unsupported.
+    InvalidAnchorNameConstraints(NameConstraintsErrorKind),
+    /// The constrained target did not contain Subject Alternative Name.
+    MissingTargetSubjectAlternativeName,
+    /// The target's Subject Alternative Name extension was malformed.
+    InvalidTargetSubjectAlternativeName(SubjectAltNameErrorKind),
+    /// At least one target dNSName was invalid or outside the permitted subtrees.
+    TargetDnsNameConstraints(DnsConstraintErrorKind),
 }
 
 /// A redacted reviewed server-path binding failure.
@@ -488,6 +502,73 @@ impl<'path, 'server_certificate, 'target, 'target_encoded, 'candidates, 'candida
 impl fmt::Debug for BoundX509RsaConstructedReviewedIntermediateServerPath<'_, '_, '_, '_, '_, '_> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("BoundX509RsaConstructedReviewedIntermediateServerPath")
+    }
+}
+
+/// Non-copyable routed server path after reviewed-anchor DNS policy.
+///
+/// The exact target is derived from complete server policy retained by the
+/// routed proof. Constraint bytes are derived from its exact selected reviewed
+/// terminal. Success proves either that the snapshot entry has no constraints
+/// or that every target dNSName satisfies its supported permitted DNS
+/// subtrees. This does not apply intermediate constraints, excluded or non-DNS
+/// anchor constraints, revocation, TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    reviewed_server_path: BoundX509RsaConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    constrained_dns_names: Option<ConstrainedDnsNames>,
+}
+
+impl<'path, 'server_certificate, 'target, 'target_encoded, 'candidates, 'candidate_encoded>
+    ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the consumed complete routed server-path evidence.
+    #[must_use]
+    pub const fn reviewed_server_path(
+        &self,
+    ) -> &BoundX509RsaConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.reviewed_server_path
+    }
+
+    /// Return DNS evidence when the reviewed snapshot entry carried constraints.
+    #[must_use]
+    pub const fn constrained_dns_names(&self) -> Option<ConstrainedDnsNames> {
+        self.constrained_dns_names
+    }
+}
+
+impl fmt::Debug
+    for ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy<'_, '_, '_, '_, '_, '_>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy")
     }
 }
 
@@ -1227,6 +1308,118 @@ pub fn bind_x509_rsa_constructed_reviewed_intermediate_server_path<
     })
 }
 
+/// Apply selected reviewed-anchor DNS policy to one exact routed server path.
+///
+/// Both the target certificate and optional constraint bytes are derived only
+/// through the consumed proof. Separate caller limits bound the constraint and
+/// Subject Alternative Name decoders. The complete proof remains retained.
+pub fn validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy<
+    'path,
+    'server_certificate,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    reviewed_server_path: BoundX509RsaConstructedReviewedIntermediateServerPath<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy<
+        'path,
+        'server_certificate,
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509RsaConstructedPathReviewedServerPolicyError,
+> {
+    let certificate = reviewed_server_path.server_policy().certificate();
+    let subject_alt_name_extension_index = reviewed_server_path
+        .server_policy()
+        .identity()
+        .extension_index();
+    let name_constraints = reviewed_server_path
+        .reviewed_path()
+        .reviewed_terminal()
+        .reviewed_anchor()
+        .name_constraints();
+    let constrained_dns_names = evaluate_selected_anchor_dns_policy(
+        certificate,
+        subject_alt_name_extension_index,
+        name_constraints,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(
+        ValidatedX509RsaConstructedReviewedIntermediateServerAnchorPolicy {
+            reviewed_server_path,
+            constrained_dns_names,
+        },
+    )
+}
+
+fn evaluate_selected_anchor_dns_policy(
+    certificate: &x509_certificate::X509Certificate<'_>,
+    subject_alt_name_extension_index: usize,
+    name_constraints: Option<&[u8]>,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<Option<ConstrainedDnsNames>, X509RsaConstructedPathReviewedServerPolicyError> {
+    let Some(encoded_constraints) = name_constraints else {
+        return Ok(None);
+    };
+
+    let mut constraint_decoder = Asn1Decoder::new(constraint_limits);
+    let constraints =
+        decode_name_constraints_contents(&mut constraint_decoder, encoded_constraints).map_err(
+            |error| {
+                X509RsaConstructedPathReviewedServerPolicyError::new(
+                X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidAnchorNameConstraints(
+                    error.kind(),
+                ),
+            )
+            },
+        )?;
+    let extension = certificate
+        .tbs_certificate()
+        .extensions()
+        .and_then(|extensions| extensions.get(subject_alt_name_extension_index))
+        .ok_or_else(|| {
+            X509RsaConstructedPathReviewedServerPolicyError::new(
+                X509RsaConstructedPathReviewedServerPolicyErrorKind::MissingTargetSubjectAlternativeName,
+            )
+        })?;
+    let mut subject_alt_name_decoder = Asn1Decoder::new(subject_alt_name_limits);
+    let subject_alt_name = decode_subject_alt_name(&mut subject_alt_name_decoder, extension)
+        .map_err(|error| {
+            X509RsaConstructedPathReviewedServerPolicyError::new(
+                X509RsaConstructedPathReviewedServerPolicyErrorKind::InvalidTargetSubjectAlternativeName(
+                    error.kind(),
+                ),
+            )
+        })?;
+    let constrained_dns_names = evaluate_dns_names(&constraints, subject_alt_name.dns_names())
+        .map_err(|error| {
+            X509RsaConstructedPathReviewedServerPolicyError::new(
+                X509RsaConstructedPathReviewedServerPolicyErrorKind::TargetDnsNameConstraints(
+                    error.kind(),
+                ),
+            )
+        })?;
+
+    Ok(Some(constrained_dns_names))
+}
+
 fn same_exact_object<T>(left: &T, right: &T) -> bool {
     core::ptr::eq(left, right)
 }
@@ -1234,6 +1427,105 @@ fn same_exact_object<T>(left: &T, right: &T) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use x509_certificate::decode_x509_certificate;
+    use x509_subject_alt_name::SUBJECT_ALT_NAME_OID;
+
+    const SIGNATURE_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
+    const KEY_OID_DER: &[u8] = &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x01];
+    const SUBJECT_ALT_NAME_OID_DER: &[u8] = &[0x55, 0x1d, 0x11];
+    const NULL_DER: &[u8] = &[0x05, 0x00];
+
+    fn der(tag: u8, value: &[u8]) -> Vec<u8> {
+        let mut encoded = Vec::with_capacity(value.len() + 4);
+        encoded.push(tag);
+        match value.len() {
+            length @ 0..=127 => encoded.push(length as u8),
+            length @ 128..=255 => encoded.extend([0x81, length as u8]),
+            length @ 256..=65_535 => {
+                encoded.extend([0x82, (length >> 8) as u8, length as u8]);
+            }
+            _ => panic!("test value too large"),
+        }
+        encoded.extend(value);
+        encoded
+    }
+
+    fn algorithm(oid: &[u8]) -> Vec<u8> {
+        let mut fields = der(0x06, oid);
+        fields.extend(NULL_DER);
+        der(0x30, &fields)
+    }
+
+    fn name(value: &[u8]) -> Vec<u8> {
+        let mut attribute = der(0x06, &[0x55, 0x04, 0x03]);
+        attribute.extend(der(0x0c, value));
+        der(0x30, &der(0x31, &der(0x30, &attribute)))
+    }
+
+    fn extension(oid: &[u8], value: &[u8]) -> Vec<u8> {
+        let mut fields = der(0x06, oid);
+        fields.extend(der(0x04, value));
+        der(0x30, &fields)
+    }
+
+    fn subject_alt_name(names: &[Vec<u8>]) -> Vec<u8> {
+        extension(SUBJECT_ALT_NAME_OID_DER, &der(0x30, &names.concat()))
+    }
+
+    fn dns_name(value: &str) -> Vec<u8> {
+        der(0x82, value.as_bytes())
+    }
+
+    fn permitted_dns_subtrees(subtrees: &[&[u8]]) -> Vec<u8> {
+        let mut contents = Vec::new();
+        for subtree in subtrees {
+            contents.extend(der(0x30, &der(0x82, subtree)));
+        }
+        der(0xa0, &contents)
+    }
+
+    fn certificate(extensions: &[Vec<u8>]) -> Vec<u8> {
+        let mut validity = der(0x17, b"260101000000Z");
+        validity.extend(der(0x17, b"270101000000Z"));
+        let mut subject_public_key_info = algorithm(KEY_OID_DER);
+        subject_public_key_info.extend(der(0x03, &[0x00, 0x30, 0x00]));
+        let mut tbs = der(0xa0, &der(0x02, &[0x02]));
+        tbs.extend(der(0x02, &[0x01]));
+        tbs.extend(algorithm(SIGNATURE_OID_DER));
+        tbs.extend(name(b"issuer.example"));
+        tbs.extend(der(0x30, &validity));
+        tbs.extend(name(b"api.example.test"));
+        tbs.extend(der(0x30, &subject_public_key_info));
+        if !extensions.is_empty() {
+            tbs.extend(der(0xa3, &der(0x30, &extensions.concat())));
+        }
+        let mut fields = der(0x30, &tbs);
+        fields.extend(algorithm(SIGNATURE_OID_DER));
+        fields.extend(der(0x03, &[0x00, 0xde, 0xad]));
+        der(0x30, &fields)
+    }
+
+    fn evaluate(
+        encoded: &[u8],
+        constraints: Option<&[u8]>,
+    ) -> Result<Option<ConstrainedDnsNames>, X509RsaConstructedPathReviewedServerPolicyError> {
+        let certificate = decode_x509_certificate(encoded, Asn1Limits::default()).unwrap();
+        evaluate_selected_anchor_dns_policy(
+            &certificate,
+            certificate
+                .tbs_certificate()
+                .extensions()
+                .and_then(|extensions| {
+                    extensions
+                        .iter()
+                        .position(|extension| extension.extension_id().equals(SUBJECT_ALT_NAME_OID))
+                })
+                .unwrap_or(usize::MAX),
+            constraints,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+    }
 
     #[test]
     fn exact_object_identity_rejects_byte_equal_distinct_values() {
@@ -1257,6 +1549,53 @@ mod tests {
         assert_eq!(
             error.to_string(),
             "X.509 RSA constructed-path signature routing error ChildEvidenceMismatch"
+        );
+    }
+
+    #[test]
+    fn reviewed_anchor_constraints_apply_to_every_target_dns_name() {
+        let encoded = certificate(&[subject_alt_name(&[
+            dns_name("api.tr"),
+            dns_name("*.service.tr"),
+        ])]);
+        let constraints = permitted_dns_subtrees(&[b".tr"]);
+
+        let constrained = evaluate(&encoded, Some(&constraints)).unwrap().unwrap();
+
+        assert_eq!(constrained.count(), 2);
+    }
+
+    #[test]
+    fn reviewed_anchor_constraint_violation_is_redacted_and_stable() {
+        let encoded = certificate(&[subject_alt_name(&[
+            dns_name("api.tr"),
+            dns_name("secret.internal"),
+        ])]);
+        let constraints = permitted_dns_subtrees(&[b".tr"]);
+
+        let error = evaluate(&encoded, Some(&constraints)).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::TargetDnsNameConstraints(
+                DnsConstraintErrorKind::PresentedDnsNameNotPermitted,
+            )
+        );
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("api.tr"));
+        assert!(!diagnostic.contains("secret.internal"));
+    }
+
+    #[test]
+    fn constrained_target_requires_subject_alt_name() {
+        let encoded = certificate(&[]);
+        let constraints = permitted_dns_subtrees(&[b".tr"]);
+
+        let error = evaluate(&encoded, Some(&constraints)).unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509RsaConstructedPathReviewedServerPolicyErrorKind::MissingTargetSubjectAlternativeName
         );
     }
 }

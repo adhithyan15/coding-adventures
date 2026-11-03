@@ -48,14 +48,22 @@ together. A byte-equal independent decode does not match, so identity,
 validity, purpose, end-entity role, critical-extension, and algorithm policy
 cannot be spliced onto another construction.
 
+A selected-anchor DNS-policy follow-up derives the target only from that
+complete server policy and derives optional constraint bytes only from the
+exact reviewed terminal retained by the same routed proof. Caller-owned limits
+bound both repository-owned decoders. Unconstrained snapshot entries retain
+the complete proof without DNS evidence; constrained entries require every
+target dNSName to satisfy the supported permitted subtree set and retain only
+a payload-free count.
+
 Reviewed-root selection is snapshot membership, not complete trust. The
 fixed-shape result does not generalize to additional intermediates, derive the
 initial path-length cap from anchor policy, define full Name comparison, apply
-trust-anchor or name constraints, check revocation, perform TLS or HTTP,
-authorize OAuth transport, or open a network connection. Target identity,
-time, and purpose are retained only inside the complete server policy and do
-not make the whole path valid. This does not make concrete HTTPS or live-
-provider use ready.
+intermediate, excluded, or non-DNS anchor constraints, check revocation,
+perform TLS or HTTP, authorize OAuth transport, or open a network connection.
+Target identity, time, purpose, and supported reviewed-anchor permitted DNS
+policy do not make the whole path valid. This does not make concrete HTTPS or
+live-provider use ready.
 
 ## Validation
 
