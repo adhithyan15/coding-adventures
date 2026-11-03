@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+pub mod bounded;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TypeErrorDiagnostic {
     pub message: String,

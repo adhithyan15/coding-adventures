@@ -306,14 +306,45 @@ pub fn run_source_at(source: &str, release: Option<&str>) -> Result<RunOutput, R
     run_module(module)
 }
 
+/// The most steps [`run_module`] ever grants: the largest `main` the
+/// instruction budget admits, plus one (see [`step_budget`]).
+const MAX_VM_STEPS: u64 = MAX_IIR_INSTRUCTIONS as u64 + 1;
+
+/// The VM step budget [`run_module`] gives `module`, derived from the
+/// module itself (#18475), as Python's runner derives its own.
+///
+/// Every module this compiler writes is one straight-line `main`: no
+/// jumps, no calls, no helper functions. Each instruction executes at most
+/// once, so
+///
+/// ```text
+///   steps ≤ len(main) + 1      (the +1 is the budget check after `ret`)
+/// ```
+///
+/// and that is the whole budget. Until #18475 it was a flat
+/// [`MAX_IIR_INSTRUCTIONS`] (1,000,000) for every module, so a hand-built
+/// module handed to this public function — `label L; jmp L` — spun a
+/// million steps before stopping. Now it stops after three, while the
+/// compiler's own output, which never loops, still gets exactly enough.
+/// A `main` longer than the instruction budget (only possible by hand) is
+/// capped at [`MAX_VM_STEPS`].
+fn step_budget(module: &IIRModule) -> u64 {
+    let Some(main) = module.get_function("main") else {
+        // `execute` refuses a module with no `main` before running anything.
+        return 1;
+    };
+    (main.instructions.len() as u64).saturating_add(1).min(MAX_VM_STEPS)
+}
+
 /// Run a compiled module on `vm-core`, capturing `print_i64` and `putchar`
 /// into one ordered, bounded buffer (LANG83 "ordered output stream").
+///
+/// The run gets [`step_budget`]`(&module)` steps: one per instruction of
+/// `main`, plus one.
 pub fn run_module(mut module: IIRModule) -> Result<RunOutput, RunError> {
     let output = Arc::new(Mutex::new(Vec::<u8>::new()));
     let mut vm = VMCore::new();
-    // The program is straight-line, so it can execute at most as many
-    // instructions as it holds.
-    vm.max_instructions = Some(MAX_IIR_INSTRUCTIONS as u64);
+    vm.max_instructions = Some(step_budget(&module));
     let sink = Arc::clone(&output);
     vm.builtins_mut().register("print_i64", move |args| {
         let [Value::Int(number)] = args else {

@@ -53,7 +53,7 @@ use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
-use vm_core::{errors::VMError, value::Value, VMCore};
+use vm_core::{errors::VMError, frame::VMFrame, value::Value, VMCore};
 
 // ---------------------------------------------------------------------------
 // LANG84 phase 7a: the release path (`py-int-print`)
@@ -124,7 +124,29 @@ pub fn compile_ast(tree: &GrammarASTNode, module_name: &str) -> Result<IIRModule
     if !errors.is_empty() {
         return Err(format!("invalid Python IIR: {}", errors.join("; ")));
     }
+    check_pilot_frames(&module)?;
     Ok(module)
+}
+
+/// The vm-core register backstop for the float pilot (#18475): the same
+/// load-time check, `VMFrame::check_register_limit`, that the release path
+/// runs in `release_api::check_frames`.
+///
+/// Today it cannot fire. [`check_ast_budget`] caps the tree at
+/// `MAX_AST_ITEMS` = 16,384 items, and the pilot spends at most one fresh
+/// `pyN` (or `py:name`) register per item, far below vm-core's 65,536.
+/// But that safety is an accident of two numbers in two places: raising
+/// the item cap, or a lowering that spends more registers per item, would
+/// let a module compile here and then fail when vm-core loads it. With the
+/// backstop, "compiles" implies "vm-core will load it" by construction,
+/// at the cost of one linear pass over the instructions.
+fn check_pilot_frames(module: &IIRModule) -> Result<(), String> {
+    for function in &module.functions {
+        VMFrame::check_register_limit(function).map_err(|error| {
+            format!("Python IIR function `{}` does not fit a vm-core frame: {error}", function.name)
+        })?;
+    }
+    Ok(())
 }
 
 // Callers may pass their own grammar tree, so check it iteratively before the
@@ -1200,6 +1222,33 @@ mod tests {
             end_line: None,
             end_column: None,
         }
+    }
+
+    /// #18475: the float pilot's modules go through vm-core's load-time
+    /// register check, as the release path's do. The pilot's own tree cap
+    /// keeps its output far below the limit, so the check is exercised on
+    /// hand-built modules: a `main` of exactly vm-core's 65,536 registers
+    /// passes, one more is refused naming the function. Before #18475 the
+    /// pilot had no such check to call.
+    #[test]
+    fn pilot_frames_are_held_to_the_vm_core_frame_limit() {
+        let limit = vm_core::frame::VMFrame::MAX_FRAME_REGISTERS;
+        let main_of = |registers: usize| {
+            let mut instructions: Vec<IIRInstr> = (0..registers)
+                .map(|i| IIRInstr::new("const", Some(format!("py{i}")), vec![Operand::Float(1.0)], "f64"))
+                .collect();
+            instructions.push(IIRInstr::new("ret_void", None, vec![], "void"));
+            let mut module = IIRModule::new("m", "python");
+            module.add_or_replace(IIRFunction::new("main", vec![], "void", instructions));
+            module
+        };
+        check_pilot_frames(&main_of(limit)).expect("exactly the frame limit loads");
+        let error = check_pilot_frames(&main_of(limit + 1)).unwrap_err();
+        assert!(error.contains("`main`") && error.contains(&(limit + 1).to_string()), "{error}");
+
+        // The pilot's real output passes through the same check.
+        let module = compile_source("x = 1.5\nprint(x, x + 1.0)\n", "m").unwrap();
+        check_pilot_frames(&module).unwrap();
     }
 
     #[test]

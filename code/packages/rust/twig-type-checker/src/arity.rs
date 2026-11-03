@@ -65,15 +65,18 @@ pub fn check_arity(
     // English-correct pluralisation: "1 argument" vs "2 arguments".
     let arg_word = |n: usize| if n == 1 { "argument" } else { "arguments" };
 
-    errors.push(TypeErrorDiagnostic {
-        message: format!(
-            "arity error: {label} expects {} {}, got {} {}",
-            expected,
-            arg_word(expected),
-            actual,
-            arg_word(actual),
-        ),
-        line,
-        column,
-    });
+    type_checker_protocol::bounded::push_bounded(
+        errors,
+        TypeErrorDiagnostic {
+            message: format!(
+                "arity error: {label} expects {} {}, got {} {}",
+                expected,
+                arg_word(expected),
+                actual,
+                arg_word(actual),
+            ),
+            line,
+            column,
+        },
+    );
 }

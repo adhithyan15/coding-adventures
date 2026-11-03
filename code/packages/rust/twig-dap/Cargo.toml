@@ -9,6 +9,9 @@ dap-adapter-core = { path = "../dap-adapter-core" }
 twig-ir-compiler = { path = "../twig-ir-compiler" }
 interpreter-ir   = { path = "../interpreter-ir" }
 debug-sidecar    = { path = "../debug-sidecar" }
+# #18474 review: read the source within the compiler's budget, regular
+# files only, never blocking on a FIFO or tty.
+bounded-source-file = { path = "../bounded-source-file" }
 
 [[bin]]
 name = "twig-dap"
