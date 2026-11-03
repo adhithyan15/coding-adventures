@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C287-mubiao",
+  "pathSegment": "ZH-PATH-287-WANT",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-287-WANT",
+      "order": 4
+    }
+  ]
+}

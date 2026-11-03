@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C447-raolu",
+    "language": "chinese",
+    "chapter": 447,
+    "sequence": 33900,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:77b6db140e7a9c3a"
+  },
+  "findings": []
+}

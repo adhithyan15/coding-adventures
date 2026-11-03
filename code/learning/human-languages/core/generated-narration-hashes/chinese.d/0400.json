@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 400,
+  "sourceHash": "fnv1a64:15c631a6ffdd5b51",
+  "lessonIds": [
+    "ZH-C400-tiaozheng",
+    "ZH-C400-yanchang",
+    "ZH-C400-suoduan",
+    "ZH-C400-yuanding",
+    "ZH-C400-anding"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch400.txt",
+  "json": "chinese/narration/ch400.json",
+  "textHash": "fnv1a64:deafa82b05323bbb",
+  "jsonHash": "fnv1a64:d0a4d5add1daa9a5",
+  "findings": []
+}

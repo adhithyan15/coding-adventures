@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:5c26ed45528c776b",
+  "lessonIds": [
+    "ZH-C346-kaolu",
+    "ZH-C346-guandian",
+    "ZH-C346-ganxiang",
+    "ZH-C346-yiwei",
+    "ZH-C346-guji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch346.txt",
+  "json": "chinese/narration/ch346.json",
+  "textHash": "fnv1a64:3ea27604dfadc32f",
+  "jsonHash": "fnv1a64:a7c257959834dcb7",
+  "findings": []
+}

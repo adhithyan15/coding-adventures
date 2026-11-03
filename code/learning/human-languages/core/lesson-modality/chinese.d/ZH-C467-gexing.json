@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C467-gexing",
+    "language": "chinese",
+    "chapter": 467,
+    "sequence": 35470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dce080bd6dde2217"
+  },
+  "findings": []
+}

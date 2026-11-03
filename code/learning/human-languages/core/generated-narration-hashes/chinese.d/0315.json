@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:cb8cee050ed1aa0d",
+  "lessonIds": [
+    "ZH-C315-jianjian",
+    "ZH-C315-you",
+    "ZH-W315-you-again",
+    "ZH-C315-zizai",
+    "ZH-C315-jingran",
+    "ZH-C315-rengran"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch315.txt",
+  "json": "chinese/narration/ch315.json",
+  "textHash": "fnv1a64:2ad66132a121af74",
+  "jsonHash": "fnv1a64:da9cc53442f7c013",
+  "findings": []
+}

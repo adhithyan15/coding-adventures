@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C467-tianxing",
+  "pathSegment": "ZH-PATH-467-PERSON467",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-467-PERSON467",
+      "order": 3
+    }
+  ]
+}

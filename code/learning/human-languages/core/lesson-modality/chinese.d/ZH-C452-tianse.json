@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C452-tianse",
+    "language": "chinese",
+    "chapter": 452,
+    "sequence": 34160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:724026dd02e5e75d"
+  },
+  "findings": []
+}

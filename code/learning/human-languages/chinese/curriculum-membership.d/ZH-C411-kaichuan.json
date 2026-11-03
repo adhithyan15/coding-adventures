@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C411-kaichuan",
+  "pathSegment": "ZH-PATH-411-FERRY411",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-411-FERRY411",
+      "order": 3
+    }
+  ]
+}

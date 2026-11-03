@@ -1,5 +1,25 @@
 # Changelog
 
+## Unreleased — `not` is a builtin; stores inside `begin`/`rescue` (#18798)
+
+- **A `rescue => e` binding the clause stores into** (`e = 5`) is now
+  declared with `let_keyword` (`let mut` when assigned); a plain `let` failed
+  rustc.  Test `stores_inside_try_catch_compile` (also covers the outer
+  local stored inside a `TryCatch`).
+
+- **`not`.**  Every Ruby `unless`, `until` and `!x` lowers to
+  `BuiltinCall("not", [x])`, which panicked `unknown builtin: not`.  The
+  emitter now inlines `__sir::Value::Bool(!__sir::truthy(&(x)))` and
+  `call_builtin_by_name` has a `"not"` arm.  Test
+  `emit_not_builtin_negates_by_truthiness`.
+- **A store into an outer local inside a `TryCatch`.**
+  `collect_assigned_locals` skipped `TryCatch` bodies (its comment said the
+  node was refused by the capability check, which stopped being true), so
+  `x = 0; begin; x = 1; rescue; end` declared `x` with a plain `let` and
+  rustc failed: `cannot assign twice to immutable variable`.  It now walks
+  the body, every `rescue` clause and the `ensure` body.  End-to-end check:
+  `sir-conformance`'s `rb_store_into_an_outer_local_inside_begin`.
+
 ## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
 
 ### Constants and the renamed `main` (follow-ups to #18485)

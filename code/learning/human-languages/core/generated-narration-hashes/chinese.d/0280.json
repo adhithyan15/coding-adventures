@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:43bd5df277c05328",
+  "lessonIds": [
+    "ZH-C280-yijian",
+    "ZH-W280-yi",
+    "ZH-C280-juede",
+    "ZH-C280-haoxiang",
+    "ZH-C280-zheme",
+    "ZH-C280-practice"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch280.txt",
+  "json": "chinese/narration/ch280.json",
+  "textHash": "fnv1a64:963b7c754d6041c4",
+  "jsonHash": "fnv1a64:79d4cd1517e7ed76",
+  "findings": []
+}

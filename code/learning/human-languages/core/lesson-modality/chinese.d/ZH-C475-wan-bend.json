@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C475-wan-bend",
+    "language": "chinese",
+    "chapter": 475,
+    "sequence": 35910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9c0b12e7d7f8208a"
+  },
+  "findings": []
+}

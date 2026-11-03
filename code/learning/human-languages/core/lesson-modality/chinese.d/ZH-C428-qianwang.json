@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C428-qianwang",
+    "language": "chinese",
+    "chapter": 428,
+    "sequence": 32350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2b6d3d895c23fd32"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C523-lingshou",
+    "language": "chinese",
+    "chapter": 523,
+    "sequence": 39500,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7a42dd493683e11"
+  },
+  "findings": []
+}

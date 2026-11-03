@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W487-ye-career",
+    "language": "chinese",
+    "chapter": 487,
+    "sequence": 37065,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:770f8d032c6d271a",
+    "detachableSegments": [
+      "Script — two verticals, two short strokes, a long bar"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

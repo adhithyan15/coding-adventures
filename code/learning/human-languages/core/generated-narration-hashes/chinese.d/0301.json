@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:6e34c26cc5672e11",
+  "lessonIds": [
+    "ZH-C301-tao",
+    "ZH-C301-huang",
+    "ZH-C301-fu-help",
+    "ZH-C301-guzhe",
+    "ZH-C301-guoran",
+    "ZH-R301-review-296-301"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch301.txt",
+  "json": "chinese/narration/ch301.json",
+  "textHash": "fnv1a64:c08603e5140ea725",
+  "jsonHash": "fnv1a64:54917d7378c0480e",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 399,
+  "sourceHash": "fnv1a64:bdacad90c36fdc9a",
+  "lessonIds": [
+    "ZH-C399-yaoqiu",
+    "ZH-C399-zhiyou",
+    "ZH-W399-zhi-only",
+    "ZH-C399-zhiyao",
+    "ZH-C399-manzu",
+    "ZH-C399-chengjia"
+  ],
+  "tex": "chinese/book/chapters/ch399-only-if.tex"
+}

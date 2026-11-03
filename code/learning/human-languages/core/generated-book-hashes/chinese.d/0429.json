@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 429,
+  "sourceHash": "fnv1a64:333441b4e7077c52",
+  "lessonIds": [
+    "ZH-C429-lutu",
+    "ZH-C429-shunlu",
+    "ZH-C429-dache-lift",
+    "ZH-C429-chuxing",
+    "ZH-C429-lufei",
+    "ZH-R429-review-425-429",
+    "ZH-R429-review-final-429"
+  ],
+  "tex": "chinese/book/chapters/ch429-home-again.tex"
+}

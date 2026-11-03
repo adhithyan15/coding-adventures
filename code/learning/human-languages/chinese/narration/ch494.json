@@ -1,0 +1,848 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 494,
+  "title": "The Entrance Exam",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:70e149a9c61388f3",
+  "lessons": [
+    {
+      "id": "ZH-C494-gaokao",
+      "sequence": 37410,
+      "title": "高考 (gāokǎo) — college entrance exam",
+      "headword": "高考",
+      "romanization": "gāokǎo",
+      "gloss": "college entrance exam",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6dd4d1719080ad0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to tutor, then the Mandarin for to seek advice."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 高考",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "高考 — gāokǎo — \"college entrance exam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "gāokǎo de shíhou wǒ gǎnjué hěn jǐnzhāng — I felt very nervous during the entrance exam."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 考 (kǎo) — six strokes: the top of 老 lǎo, four strokes, then a short bar and a stroke that drops, runs right, turns down and hooks. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "高考 (gāokǎo) is built from 高 'high' and 考 (kǎo) 'to examine', both inherited from Middle Chinese, kaw and khawX (Guangyun, in Baxter's transcription), which glosses the second 'to check' and 'to complete'. It is short for a longer official name, the exam for the higher schools."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāokǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāokǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāokǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāokǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāokǎo de shíhou wǒ gǎnjué hěn jǐnzhāng — I felt very nervous during the entrance exam.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāokǎo de shíhou wǒ gǎnjué hěn jǐnzhāng* — I felt very nervous during the entrance exam.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to tutor, then the Mandarin for to seek advice, then say gāokǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to tutor, then the Mandarin for to seek advice, then say *gāokǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 高考 (gāokǎo) mean? (\"College entrance exam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W494-kao-test",
+      "sequence": 37415,
+      "title": "考 (kǎo) — the top of lǎo, then two strokes",
+      "headword": "考",
+      "romanization": "kǎo",
+      "gloss": "考 — the top of 老, then two strokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:18ce6214a0fbf255",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the top of lǎo, then two strokes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the top of lǎo, then two strokes and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say gāokǎo — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *gāokǎo* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "老 高."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — lǎo, gāo",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *lǎo*, *gāo*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the top of lǎo, then two strokes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "考 (kǎo)."
+            },
+            {
+              "kind": "speech",
+              "text": "The top of 老, four strokes, as in 老 and on the left of 教: a short bar, a vertical through it, a long bar, and a long stroke falling to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "Then two strokes under it: a short bar, and a stroke that starts under the bar's left end, drops a little, runs right, then turns down and hooks to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 2 = six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "考 (kǎo), all six, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 考, all six, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes does 考 (kǎo) have? (Six.) What are the first four? (The top of 老.) How does the last stroke end? (It turns down and hooks to the left.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 考 (kǎo), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C494-kaosheng",
+      "sequence": 37420,
+      "title": "考生 (kǎoshēng) — exam candidate",
+      "headword": "考生",
+      "romanization": "kǎoshēng",
+      "gloss": "exam candidate",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f3a9088ba8adf3ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to seek advice, then the Mandarin for the college entrance exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 考生",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "考生 — kǎoshēng — \"exam candidate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "kǎoshēng dōu hěn jǐnzhāng — The candidates are all nervous."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "考生 (kǎoshēng) is built from 考 (kǎo) 'to examine' and 生 'a student', both inherited from Middle Chinese, khawX and srjaeng (Guangyun, in Baxter's transcription), which glosses the second 'to grow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎoshēng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎoshēng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎoshēng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎoshēng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎoshēng dōu hěn jǐnzhāng — The candidates are all nervous.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎoshēng dōu hěn jǐnzhāng* — The candidates are all nervous.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to seek advice, then the Mandarin for the college entrance exam, then say kǎoshēng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to seek advice, then the Mandarin for the college entrance exam, then say *kǎoshēng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 考生 (kǎoshēng) mean? (\"Exam candidate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C494-baokao",
+      "sequence": 37430,
+      "title": "报考 (bàokǎo) — to enter for an exam; to apply to a school by exam",
+      "headword": "报考",
+      "romanization": "bàokǎo",
+      "gloss": "to enter for an exam; to apply to a school by exam",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9387aa6061b1866d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the college entrance exam, then the Mandarin for an exam candidate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 报考",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "报考 — bàokǎo — \"to enter for an exam; to apply to a school by exam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ xiǎng bàokǎo Běijīng de dàxué — I want to apply to universities in Beijing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "报考 (bàokǎo) is built from 报 'to report' and 考 (kǎo) 'to examine', both inherited from Middle Chinese, pawH and khawX (Guangyun, in Baxter's transcription), which glosses the first 'to report'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàokǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàokǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bàokǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bàokǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiǎng bàokǎo Běijīng de dàxué — I want to apply to universities in Beijing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiǎng bàokǎo Běijīng de dàxué* — I want to apply to universities in Beijing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the college entrance exam, then the Mandarin for an exam candidate, then say bàokǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the college entrance exam, then the Mandarin for an exam candidate, then say *bàokǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 报考 (bàokǎo) mean? (\"To enter for an exam; to apply to a school by exam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C494-kaoshang",
+      "sequence": 37440,
+      "title": "考上 (kǎoshàng) — to get into (a school) by exam; to pass the entrance exam for",
+      "headword": "考上",
+      "romanization": "kǎoshàng",
+      "gloss": "to get into (a school) by exam; to pass the entrance exam for",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2b66fad679043ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an exam candidate, then the Mandarin for to enter for an exam."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 考上",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "考上 — kǎoshàng — \"to get into (a school) by exam; to pass the entrance exam for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā fùxí le yì nián cái kǎoshàng dàxué — He revised for a year before he got into university."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "考上 (kǎoshàng) is built from 考 (kǎo) 'to examine' and 上 'to go up', both inherited from Middle Chinese, khawX and dzyangX (Guangyun, in Baxter's transcription), which glosses the second 'to climb'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎoshàng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎoshàng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎoshàng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎoshàng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā fùxí le yì nián cái kǎoshàng dàxué — He revised for a year before he got into university.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā fùxí le yì nián cái kǎoshàng dàxué* — He revised for a year before he got into university.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an exam candidate, then the Mandarin for to enter for an exam, then say kǎoshàng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an exam candidate, then the Mandarin for to enter for an exam, then say *kǎoshàng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 考上 (kǎoshàng) mean? (\"To get into (a school) by exam; to pass the entrance exam for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C494-luobang",
+      "sequence": 37450,
+      "title": "luòbǎng — to fail an entrance exam",
+      "headword": "luòbǎng",
+      "romanization": "luòbǎng",
+      "gloss": "to fail an entrance exam",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6818bf0526e9416",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to enter for an exam, then the Mandarin for to pass the entrance exam for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: luòbǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "luòbǎng — \"to fail an entrance exam\"."
+            },
+            {
+              "kind": "speech",
+              "text": "luòbǎng yǐhòu tā gǎnjué hěn nánguò — After he failed the entrance exam, he felt awful."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "luòbǎng is built from luò 'to fall' and bǎng 'a board', both inherited from Middle Chinese, lak and pangX (Guangyun, in Baxter's transcription), which glosses the first as leaves falling and the second 'a wooden board'. Falling off the list of names posted on a board is the usual explanation, but the dictionary does not give that sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luòbǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luòbǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luòbǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luòbǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "luòbǎng yǐhòu tā gǎnjué hěn nánguò — After he failed the entrance exam, he felt awful.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *luòbǎng yǐhòu tā gǎnjué hěn nánguò* — After he failed the entrance exam, he felt awful.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to enter for an exam, then the Mandarin for to pass the entrance exam for, then say luòbǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to enter for an exam, then the Mandarin for to pass the entrance exam for, then say *luòbǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does luòbǎng mean? (\"To fail an entrance exam\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

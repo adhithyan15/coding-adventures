@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C449-qingdan",
+  "pathSegment": "ZH-PATH-449-TASTE449",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-449-TASTE449",
+      "order": 4
+    }
+  ]
+}

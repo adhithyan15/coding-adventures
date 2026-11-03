@@ -1,0 +1,19 @@
+{
+  "chapter": 470,
+  "title": "Faults",
+  "label": "ch:zh-faults",
+  "canDo": "I can say someone is selfish, stubborn, a bit full of himself or sloppy, and that I feel stupid.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C470-ben",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 470: I can say someone is selfish, stubborn, a bit full of himself or sloppy, and that I feel stupid.",
+    "assesses": [
+      "ZH-LEX-C470-FAULTS470-03",
+      "ZH-LEX-C470-FAULTS470-04",
+      "ZH-LEX-C470-FAULTS470-05"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W351-li-reason",
+    "language": "chinese",
+    "chapter": 351,
+    "sequence": 27265,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d8560418d15e3d5b",
+    "detachableSegments": [
+      "Script — the jade piece, then lǐ"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

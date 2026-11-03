@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C422-beishang",
+    "language": "chinese",
+    "chapter": 422,
+    "sequence": 32060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f85b5fe9591f4afd"
+  },
+  "findings": []
+}

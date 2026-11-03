@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:93dc5b6682db2e94",
+  "lessonIds": [
+    "ZH-C486-zhaopin",
+    "ZH-C486-jianli",
+    "ZH-C486-yingpin",
+    "ZH-C486-shixi",
+    "ZH-C486-daiyu"
+  ],
+  "tex": "chinese/book/chapters/ch486-looking-for-work.tex"
+}

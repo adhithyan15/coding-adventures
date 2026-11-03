@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C512-chengcai",
+    "language": "chinese",
+    "chapter": 512,
+    "sequence": 38360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4c950e056e795b44"
+  },
+  "findings": []
+}

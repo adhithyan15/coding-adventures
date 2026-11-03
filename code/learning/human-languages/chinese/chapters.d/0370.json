@@ -1,0 +1,19 @@
+{
+  "chapter": 370,
+  "title": "The Key Point",
+  "label": "ch:zh-the-key-point",
+  "canDo": "I can name a factor and the key point, say what effect something had, and sum up.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C370-zongzhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 370: I can name a factor and the key point, say what effect something had, and sum up.",
+    "assesses": [
+      "ZH-LEX-C370-KEY370-03",
+      "ZH-LEX-C370-KEY370-04",
+      "ZH-LEX-C370-KEY370-05"
+    ]
+  }
+}

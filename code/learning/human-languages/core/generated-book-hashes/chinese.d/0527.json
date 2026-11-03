@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 527,
+  "sourceHash": "fnv1a64:775e2dd9558328f4",
+  "lessonIds": [
+    "ZH-C527-xiadan",
+    "ZH-C527-baozhuang",
+    "ZH-C527-huiyuan",
+    "ZH-C527-youhui",
+    "ZH-C527-gezi"
+  ],
+  "tex": "chinese/book/chapters/ch527-ordering-online.tex"
+}

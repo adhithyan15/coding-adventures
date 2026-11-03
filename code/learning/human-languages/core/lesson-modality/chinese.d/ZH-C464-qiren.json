@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C464-qiren",
+    "language": "chinese",
+    "chapter": 464,
+    "sequence": 35330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:246bab245ad14da8"
+  },
+  "findings": []
+}

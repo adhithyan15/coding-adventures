@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W418-ting-stop",
+    "language": "chinese",
+    "chapter": 418,
+    "sequence": 31845,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:b3a452e3fd82165f",
+    "detachableSegments": [
+      "Script — the person piece, then a tall right side"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 365,
+  "sourceHash": "fnv1a64:a47359e5afd4e9e6",
+  "lessonIds": [
+    "ZH-C365-jianyi",
+    "ZH-C365-keshi",
+    "ZH-W365-ke-can",
+    "ZH-C365-kejian",
+    "ZH-C365-buru",
+    "ZH-C365-zhonggao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch365.txt",
+  "json": "chinese/narration/ch365.json",
+  "textHash": "fnv1a64:d07a089dcef58026",
+  "jsonHash": "fnv1a64:13d4d276da8cda60",
+  "findings": []
+}

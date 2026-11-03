@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 407,
+  "sourceHash": "fnv1a64:6e4a21312e0900b9",
+  "lessonIds": [
+    "ZH-C407-jinzhan",
+    "ZH-C407-ruanwo",
+    "ZH-C407-kongwei",
+    "ZH-C407-zhongdianzhan",
+    "ZH-C407-dongche",
+    "ZH-R407-review-402-407"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch407.txt",
+  "json": "chinese/narration/ch407.json",
+  "textHash": "fnv1a64:aa1b8090806e2811",
+  "jsonHash": "fnv1a64:98c0b0a47e280d26",
+  "findings": []
+}

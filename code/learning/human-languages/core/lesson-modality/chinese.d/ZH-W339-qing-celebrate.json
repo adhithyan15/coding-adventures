@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W339-qing-celebrate",
+    "language": "chinese",
+    "chapter": 339,
+    "sequence": 26095,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:52985ed69765097e",
+    "detachableSegments": [
+      "Script — the roof piece over 大"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C474-shouzhi",
+    "language": "chinese",
+    "chapter": 474,
+    "sequence": 35860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a86f31892980b358"
+  },
+  "findings": []
+}

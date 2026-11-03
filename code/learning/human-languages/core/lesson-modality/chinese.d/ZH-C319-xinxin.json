@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C319-xinxin",
+    "language": "chinese",
+    "chapter": 319,
+    "sequence": 25060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d0d812b7dffd097f"
+  },
+  "findings": []
+}

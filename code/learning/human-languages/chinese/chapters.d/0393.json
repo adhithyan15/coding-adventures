@@ -1,0 +1,19 @@
+{
+  "chapter": 393,
+  "title": "Be Sure To",
+  "label": "ch:zh-be-sure-to",
+  "canDo": "I can talk about telling someone to remember, being sure to, what money can't do, any time and things going smoothly.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C393-shunli",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 393: I can talk about telling someone to remember, being sure to, what money can't do, any time and things going smoothly.",
+    "assesses": [
+      "ZH-LEX-C393-BESURE393-03",
+      "ZH-LEX-C393-BESURE393-04",
+      "ZH-LEX-C393-BESURE393-05"
+    ]
+  }
+}

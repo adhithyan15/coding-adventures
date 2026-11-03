@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 318,
+  "sourceHash": "fnv1a64:69239e9747759a49",
+  "lessonIds": [
+    "ZH-C318-biyou",
+    "ZH-C318-xinfeng",
+    "ZH-C318-mingxinpian",
+    "ZH-C318-huiyin",
+    "ZH-C318-zhuangao"
+  ],
+  "tex": "chinese/book/chapters/ch318-letters-from-far-away.tex"
+}

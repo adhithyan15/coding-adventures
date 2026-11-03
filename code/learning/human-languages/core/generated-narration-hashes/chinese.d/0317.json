@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 317,
+  "sourceHash": "fnv1a64:260e633fe5617dca",
+  "lessonIds": [
+    "ZH-C317-qingnian",
+    "ZH-C317-chengnian",
+    "ZH-C317-hunyin",
+    "ZH-C317-jiating",
+    "ZH-C317-shixian",
+    "ZH-R317-review-313-317",
+    "ZH-R317-review-final-317"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch317.txt",
+  "json": "chinese/narration/ch317.json",
+  "textHash": "fnv1a64:323561cce1dc5058",
+  "jsonHash": "fnv1a64:5bc7e1ed33328685",
+  "findings": []
+}

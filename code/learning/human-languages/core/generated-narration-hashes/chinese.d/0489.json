@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 489,
+  "sourceHash": "fnv1a64:2ed19858af0b8183",
+  "lessonIds": [
+    "ZH-C489-tiaocao",
+    "ZH-C489-zhigong",
+    "ZH-W489-zhi-post",
+    "ZH-C489-quanzhi",
+    "ZH-C489-zhiwei",
+    "ZH-C489-shengzhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch489.txt",
+  "json": "chinese/narration/ch489.json",
+  "textHash": "fnv1a64:89944b69ed38253e",
+  "jsonHash": "fnv1a64:7c895078ac83c66f",
+  "findings": []
+}

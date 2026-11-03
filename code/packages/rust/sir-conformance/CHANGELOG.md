@@ -4,6 +4,27 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18798)
+
+- Re-review follow-up: 3 more programs — statements after a block opener
+  on one line (`{ |x| foo; bar }`, `do |x| foo; bar end`, `{ |x| puts;
+  puts 2 }`), `then` after a condition, and a `-`/`[` line after
+  `x = super`.
+- Security review follow-up: 5 more programs — `super` ending its line,
+  `super; setup` and `x = super` ⏎ `puts x`, `yield` ending its line,
+  a bare `puts` before a modifier `if`, and a `rescue` binding the clause
+  reassigns (Rust and JavaScript refused or threw).  `return`/`break`/
+  `next` ending a line are covered by the frontend tests only: no backend
+  runs a `return`/`break`/`next` builtin yet (#18798).
+- `tests/ruby_sir_gaps.rs` gains 10 Ruby programs, each checked against
+  real `ruby` and run on all six backends: a line starting with `-`, `+`
+  or `(` (after an assignment, a name and `;`), an operator ending a line
+  and a leading-dot chain, a lone name before a `(` line, a bare `puts`,
+  `unless`/`until`/`!` (Go and Rust panicked `unknown builtin: not`),
+  `rescue Klass` ⏎ next line, a method-level `rescue`'s value, `;` between
+  statements, and a store into an outer local inside `begin`/`rescue`
+  (rustc refused it).
+
 ### Added (#18778)
 
 - Review follow-up: `tests/ruby_sir_gaps.rs` gains `for`-body locals

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:1b0b255cb9b9fad3",
+  "lessonIds": [
+    "ZH-C522-loushui",
+    "ZH-C522-shangmen",
+    "ZH-C522-shuifei",
+    "ZH-C522-menling",
+    "ZH-C522-diban"
+  ],
+  "tex": "chinese/book/chapters/ch522-something-needs-fixing.tex"
+}

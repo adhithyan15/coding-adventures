@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C443-qingche",
+    "language": "chinese",
+    "chapter": 443,
+    "sequence": 33670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:230e5f4813494c85"
+  },
+  "findings": []
+}

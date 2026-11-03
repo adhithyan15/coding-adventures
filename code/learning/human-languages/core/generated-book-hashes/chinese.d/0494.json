@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 494,
+  "sourceHash": "fnv1a64:e6b0ad473580c8e7",
+  "lessonIds": [
+    "ZH-C494-gaokao",
+    "ZH-W494-kao-test",
+    "ZH-C494-kaosheng",
+    "ZH-C494-baokao",
+    "ZH-C494-kaoshang",
+    "ZH-C494-luobang"
+  ],
+  "tex": "chinese/book/chapters/ch494-the-entrance-exam.tex"
+}

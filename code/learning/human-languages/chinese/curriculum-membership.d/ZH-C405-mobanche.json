@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C405-mobanche",
+  "pathSegment": "ZH-PATH-405-GATES405",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-405-GATES405",
+      "order": 4
+    }
+  ]
+}

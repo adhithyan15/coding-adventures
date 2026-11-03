@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C532-babude",
+    "language": "chinese",
+    "chapter": 532,
+    "sequence": 39940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8e1801f7f8d58290"
+  },
+  "findings": []
+}

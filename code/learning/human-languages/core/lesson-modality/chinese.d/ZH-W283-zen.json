@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W283-zen",
+    "language": "chinese",
+    "chapter": 283,
+    "sequence": 21390,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:848e194cf64bc2ea",
+    "detachableSegments": [
+      "Script — the right of 作, then 心"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

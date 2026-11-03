@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 459,
+  "title": "On My Mind",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:b50eb02e3b478fa1",
+  "lessons": [
+    {
+      "id": "ZH-C459-gudan",
+      "sequence": 35050,
+      "title": "gūdān — lonely; on one's own",
+      "headword": "gūdān",
+      "romanization": "gūdān",
+      "gloss": "lonely; on one's own",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47596ea2f0fd2812",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for relaxed and at ease, then the Mandarin for fed up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gūdān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gūdān — \"lonely; on one's own\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ yí ge rén zhù le liǎng nián yǒudiǎnr gūdān — I've lived on my own for two years, and I'm a bit lonely."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gūdān is built from gū 'an orphan' and dān 'single', both inherited from Middle Chinese, ku and tan (Guangyun, in Baxter's transcription), which glosses the first 'a fatherless child' and the second as single against double."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gūdān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gūdān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gūdān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gūdān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ yí ge rén zhù le liǎng nián yǒudiǎnr gūdān — I've lived on my own for two years, and I'm a bit lonely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ yí ge rén zhù le liǎng nián yǒudiǎnr gūdān* — I've lived on my own for two years, and I'm a bit lonely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for relaxed and at ease, then the Mandarin for fed up, then say gūdān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for relaxed and at ease, then the Mandarin for fed up, then say *gūdān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gūdān mean? (\"Lonely; on one's own\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C459-shiqing",
+      "sequence": 35060,
+      "title": "事情 (shìqing) — matter; affair",
+      "headword": "事情",
+      "romanization": "shìqing",
+      "gloss": "matter; affair",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0524c7212df97777",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for fed up, then the Mandarin for lonely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 事情",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "事情 — shìqing — \"matter; affair\"."
+            },
+            {
+              "kind": "speech",
+              "text": "今天我有很多事情要做 jīntiān wǒ yǒu hěn duō shìqing yào zuò — I've got a lot of things to do today."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 情 (qíng) — eleven strokes in three pieces: on the left the heart piece, a dot, a second dot and a long vertical; at the top right a bar, a second bar, a vertical through them and a long bar; and under them 月 yuè, four strokes. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "事情 (shìqing) is built from 事 'an affair' and 情 (qíng) 'feeling', both inherited from Middle Chinese, dzriH and dzjeng (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to employ' and 'to set up', and explains the second, after an older book, as what a person desires; in this word the second is said light, and why it joins the first is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shìqing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shìqing*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shìqing, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shìqing*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīntiān wǒ yǒu hěn duō shìqing yào zuò — I've got a lot of things to do today.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīntiān wǒ yǒu hěn duō shìqing yào zuò* — I've got a lot of things to do today.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for fed up, then the Mandarin for lonely, then say shìqing again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for fed up, then the Mandarin for lonely, then say *shìqing* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 事情 (shìqing) mean? (\"Matter; affair\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W459-qing-feeling",
+      "sequence": 35065,
+      "title": "情 (qíng) — the heart piece, then a top over 月",
+      "headword": "情",
+      "romanization": "qíng",
+      "gloss": "情 — the heart piece, then a top of four strokes over 月",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3be0bd369cf81e5d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the heart piece, then a top over 月",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the heart piece, then a top over 月 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say shìqing — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *shìqing* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "月 事."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — yuè, shì",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *yuè*, *shì*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the heart piece, then a top over 月",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "情 (qíng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces: the left first, then the top right, then the bottom right. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, three strokes: the heart piece. A short dot on the left, a short dot on the right falling to the right, then a long vertical down between them from top to foot."
+            },
+            {
+              "kind": "speech",
+              "text": "The top right, four strokes. A bar from left to right, a second bar under it, a vertical down through both, then a long bar under them, wider than the two above."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom right, 月, four strokes. The stroke down the left that curves to the left at the foot, the stroke that runs right, turns down and hooks, then the two short bars inside."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 4 + 4 = eleven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "情 (qíng), all eleven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 情, all eleven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 情 (qíng) have? (Three: three strokes, four and four.) Which piece comes last? (月, at the bottom right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 情 (qíng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C459-ganqing",
+      "sequence": 35070,
+      "title": "感情 (gǎnqíng) — affection between people; feelings for each other",
+      "headword": "感情",
+      "romanization": "gǎnqíng",
+      "gloss": "affection between people; feelings for each other",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5bf95de0260bcc82",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for lonely, then the Mandarin for a matter to deal with."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 感情",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "感情 — gǎnqíng — \"affection between people; feelings for each other\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen rènshi le shí nián gǎnqíng hěn hǎo — We've known each other for ten years, and we're very close."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "感情 (gǎnqíng) is built from 感 'to move' and 情 (qíng) 'feeling', both inherited from Middle Chinese, komX and dzjeng (Guangyun, in Baxter's transcription), which glosses the first 'to move'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎnqíng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎnqíng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎnqíng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎnqíng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen rènshi le shí nián gǎnqíng hěn hǎo — We've known each other for ten years, and we're very close.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen rènshi le shí nián gǎnqíng hěn hǎo* — We've known each other for ten years, and we're very close.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for lonely, then the Mandarin for a matter to deal with, then say gǎnqíng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for lonely, then the Mandarin for a matter to deal with, then say *gǎnqíng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 感情 (gǎnqíng) mean? (\"Affection between people; feelings for each other\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C459-xinlihua",
+      "sequence": 35080,
+      "title": "心里话 (xīnlihuà) — what is really on one's mind; words from the heart",
+      "headword": "心里话",
+      "romanization": "xīnlihuà",
+      "gloss": "what is really on one's mind; words from the heart",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7f36f169ab9d0501",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a matter to deal with, then the Mandarin for affection between people."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 心里话",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "心里话 — xīnlihuà — \"what is really on one's mind; words from the heart\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè shì wǒ de xīnlihuà bàituō nǐ bié gàosu biérén — This is what I really think, so please don't tell anyone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "心里话 (xīnlihuà) is built from 心 'heart', 里 'inside' and 话 'words', all inherited from Middle Chinese, sim, liX and hwaejH (Guangyun, in Baxter's transcription), which glosses the second 'inside' and the third 'speech'. The middle syllable is said light."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnlihuà",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnlihuà*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīnlihuà, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīnlihuà*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè shì wǒ de xīnlihuà bàituō nǐ bié gàosu biérén — This is what I really think, so please don't tell anyone.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè shì wǒ de xīnlihuà bàituō nǐ bié gàosu biérén* — This is what I really think, so please don't tell anyone.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a matter to deal with, then the Mandarin for affection between people, then say xīnlihuà again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a matter to deal with, then the Mandarin for affection between people, then say *xīnlihuà* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 心里话 (xīnlihuà) mean? (\"What is really on one's mind; words from the heart\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C459-weiqu",
+      "sequence": 35090,
+      "title": "wěiqu — wronged; hurt by unfair blame",
+      "headword": "wěiqu",
+      "romanization": "wěiqu",
+      "gloss": "wronged; hurt by unfair blame",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eab41eeb9c072c97",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for affection between people, then the Mandarin for what is really on one's mind."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wěiqu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wěiqu — \"wronged; hurt by unfair blame\"."
+            },
+            {
+              "kind": "speech",
+              "text": "biérén bù xiāngxìn wǒ wǒ gǎnjué hěn wěiqu — Nobody believes me, and I feel really hard done by."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wěiqu is built from wěi and qū, both inherited from Middle Chinese, 'jweX and khjut (Guangyun, in Baxter's transcription), which glosses both as bent; the sense of a person feeling wronged is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wěiqu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wěiqu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wěiqu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wěiqu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biérén bù xiāngxìn wǒ wǒ gǎnjué hěn wěiqu — Nobody believes me, and I feel really hard done by.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biérén bù xiāngxìn wǒ wǒ gǎnjué hěn wěiqu* — Nobody believes me, and I feel really hard done by.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for affection between people, then the Mandarin for what is really on one's mind, then say wěiqu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for affection between people, then the Mandarin for what is really on one's mind, then say *wěiqu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wěiqu mean? (\"Wronged; hurt by unfair blame\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

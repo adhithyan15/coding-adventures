@@ -1,0 +1,19 @@
+{
+  "chapter": 496,
+  "title": "Levels",
+  "label": "ch:zh-levels",
+  "canDo": "I can talk about learning by heart, advanced, intermediate and elementary levels, and repeating a year.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C496-liuji",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 496: I can talk about learning by heart, advanced, intermediate and elementary levels, and repeating a year.",
+    "assesses": [
+      "ZH-LEX-C496-LEVELS496-03",
+      "ZH-LEX-C496-LEVELS496-04",
+      "ZH-LEX-C496-LEVELS496-05"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W440-cun-village",
+    "language": "chinese",
+    "chapter": 440,
+    "sequence": 33525,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:762093fb84fe9685",
+    "detachableSegments": [
+      "Script — the tree piece, then the right piece of 对"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

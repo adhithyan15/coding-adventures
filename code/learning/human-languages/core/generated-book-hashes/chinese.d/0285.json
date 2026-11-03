@@ -1,0 +1,16 @@
+{
+  "language": "chinese",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:e564597716edcdbf",
+  "lessonIds": [
+    "ZH-C285-zhaohui",
+    "ZH-C285-problem",
+    "ZH-C285-zhengjian",
+    "ZH-C285-guashi",
+    "ZH-C285-lianxi",
+    "ZH-C285-potential",
+    "ZH-W285-a-note",
+    "ZH-C285-practice"
+  ],
+  "tex": "chinese/book/chapters/ch285-lost-on-the-way.tex"
+}

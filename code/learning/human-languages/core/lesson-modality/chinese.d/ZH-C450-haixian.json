@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C450-haixian",
+    "language": "chinese",
+    "chapter": 450,
+    "sequence": 34030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:39d2a7442a0d0aea"
+  },
+  "findings": []
+}

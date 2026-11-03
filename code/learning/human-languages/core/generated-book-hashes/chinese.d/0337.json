@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:45c16e1fb28423ee",
+  "lessonIds": [
+    "ZH-C337-gongxi",
+    "ZH-C337-zhu-wish",
+    "ZH-W337-zhu-wish",
+    "ZH-C337-xinyi",
+    "ZH-C337-haoyun",
+    "ZH-C337-xuyuan"
+  ],
+  "tex": "chinese/book/chapters/ch337-best-wishes.tex"
+}

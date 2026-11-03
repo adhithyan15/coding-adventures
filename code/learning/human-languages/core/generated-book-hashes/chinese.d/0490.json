@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 490,
+  "sourceHash": "fnv1a64:cc4f9bd5b46e6d5f",
+  "lessonIds": [
+    "ZH-C490-guanli",
+    "ZH-C490-hezuo",
+    "ZH-C490-yeban",
+    "ZH-C490-xinku",
+    "ZH-C490-kaichu"
+  ],
+  "tex": "chinese/book/chapters/ch490-pressure-at-work.tex"
+}

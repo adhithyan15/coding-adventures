@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C452-xiaofei",
+  "pathSegment": "ZH-PATH-452-AFTERMEAL452",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-452-AFTERMEAL452",
+      "order": 2
+    }
+  ]
+}

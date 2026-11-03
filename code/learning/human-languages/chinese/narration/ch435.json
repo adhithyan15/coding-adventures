@@ -1,0 +1,841 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 435,
+  "title": "At the Top",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:55e77e48b0337028",
+  "lessons": [
+    {
+      "id": "ZH-C435-dengshan",
+      "sequence": 33250,
+      "title": "dēngshān — to climb a mountain",
+      "headword": "dēngshān",
+      "romanization": "dēngshān",
+      "gloss": "to climb a mountain",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2fb062b15f360163",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to keep as a souvenir, then the Mandarin for an account of a journey."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēngshān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēngshān — \"to climb a mountain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhōumò wǒmen zuò huǒchē qù dēngshān — At the weekend we're taking the train to go climbing."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēngshān is built from dēng 'to ascend' and 山 'a mountain', both inherited from Middle Chinese, tong and srean (Guangyun, in Baxter's transcription), which glosses the first 'to rise' and 'to go up'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēngshān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēngshān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēngshān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēngshān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhōumò wǒmen zuò huǒchē qù dēngshān — At the weekend we're taking the train to go climbing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhōumò wǒmen zuò huǒchē qù dēngshān* — At the weekend we're taking the train to go climbing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to keep as a souvenir, then the Mandarin for an account of a journey, then say dēngshān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to keep as a souvenir, then the Mandarin for an account of a journey, then say *dēngshān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēngshān mean? (\"To climb a mountain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C435-shanding",
+      "sequence": 33260,
+      "title": "shāndǐng — top of a mountain; summit",
+      "headword": "shāndǐng",
+      "romanization": "shāndǐng",
+      "gloss": "top of a mountain; summit",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:56df6e6f5bd388b3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an account of a journey, then the Mandarin for to climb a mountain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shāndǐng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shāndǐng — \"top of a mountain; summit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "cóng zhèr wǎng qián zǒu shí fēnzhōng jiù dào shāndǐng le — Walk on for ten minutes from here and you'll be at the top."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shāndǐng is built from 山 'a mountain' and dǐng 'the top', both inherited from Middle Chinese, srean and tengX (Guangyun, in Baxter's transcription), which glosses the second as the crown of the head."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāndǐng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāndǐng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāndǐng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāndǐng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cóng zhèr wǎng qián zǒu shí fēnzhōng jiù dào shāndǐng le — Walk on for ten minutes from here and you'll be at the top.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cóng zhèr wǎng qián zǒu shí fēnzhōng jiù dào shāndǐng le* — Walk on for ten minutes from here and you'll be at the top.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an account of a journey, then the Mandarin for to climb a mountain, then say shāndǐng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an account of a journey, then the Mandarin for to climb a mountain, then say *shāndǐng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shāndǐng mean? (\"Top of a mountain; summit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C435-richu",
+      "sequence": 33270,
+      "title": "日出 (rìchū) — sunrise",
+      "headword": "日出",
+      "romanization": "rìchū",
+      "gloss": "sunrise",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dae669fabc143824",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to climb a mountain, then the Mandarin for the summit."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 日出",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "日出 — rìchū — \"sunrise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们早上五点起来看日出 wǒmen zǎoshang wǔ diǎn qǐlai kàn rìchū — We're getting up at five in the morning to watch the sunrise."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "日出 (rìchū) is built from 日 'the sun' and 出 'to come out', both inherited from Middle Chinese, nyit and tsyhwit (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rìchū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rìchū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rìchū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rìchū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zǎoshang wǔ diǎn qǐlai kàn rìchū — We're getting up at five in the morning to watch the sunrise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zǎoshang wǔ diǎn qǐlai kàn rìchū* — We're getting up at five in the morning to watch the sunrise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to climb a mountain, then the Mandarin for the summit, then say rìchū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to climb a mountain, then the Mandarin for the summit, then say *rìchū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 日出 (rìchū) mean? (\"Sunrise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C435-zhuangguan",
+      "sequence": 33280,
+      "title": "zhuàngguān — magnificent; spectacular",
+      "headword": "zhuàngguān",
+      "romanization": "zhuàngguān",
+      "gloss": "magnificent; spectacular",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:72587ae44f91ccf2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the summit, then the Mandarin for the sunrise."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhuàngguān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhuàngguān — \"magnificent; spectacular\"."
+            },
+            {
+              "kind": "speech",
+              "text": "shāndǐng de rìchū hěn zhuàngguān — The sunrise from the summit is spectacular."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhuàngguān is built from zhuàng 'grand' and guān 'a sight', both inherited from Middle Chinese, tsrjangH and kwan (Guangyun, in Baxter's transcription), which glosses the first 'big' and the second 'to view'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhuàngguān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhuàngguān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhuàngguān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhuàngguān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shāndǐng de rìchū hěn zhuàngguān — The sunrise from the summit is spectacular.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shāndǐng de rìchū hěn zhuàngguān* — The sunrise from the summit is spectacular.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the summit, then the Mandarin for the sunrise, then say zhuàngguān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the summit, then the Mandarin for the sunrise, then say *zhuàngguān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhuàngguān mean? (\"Magnificent; spectacular\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C435-xiashan",
+      "sequence": 33290,
+      "title": "下山 (xiàshān) — to come down a mountain",
+      "headword": "下山",
+      "romanization": "xiàshān",
+      "gloss": "to come down a mountain",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ae48c9888f03d43a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the sunrise, then the Mandarin for spectacular."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 下山",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "下山 — xiàshān — \"to come down a mountain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "下山以后我们坐车回酒店 xiàshān yǐhòu wǒmen zuò chē huí jiǔdiàn — After coming down the mountain, we take the bus back to the hotel."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "下山 (xiàshān) is built from 下 'to go down' and 山 'a mountain', both inherited from Middle Chinese, haeX and srean (Guangyun, in Baxter's transcription), which glosses the first 'low' and 'to come down'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàshān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàshān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàshān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàshān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàshān yǐhòu wǒmen zuò chē huí jiǔdiàn — After coming down the mountain, we take the bus back to the hotel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàshān yǐhòu wǒmen zuò chē huí jiǔdiàn* — After coming down the mountain, we take the bus back to the hotel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the sunrise, then the Mandarin for spectacular, then say xiàshān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the sunrise, then the Mandarin for spectacular, then say *xiàshān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 下山 (xiàshān) mean? (\"To come down a mountain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R435-review-430-435",
+      "sequence": 33300,
+      "title": "Looking back: from Seeing the Sights to At the Top",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Seeing the Sights to At the Top",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5481c4b6a0be446",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to go sightseeing and a historic site."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to go sightseeing, a historic site, a scenic area, to take a selfie, the peak season",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to go sightseeing, a historic site, a scenic area, to take a selfie, the peak season]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to give a running commentary, a spring outing, a pleasure boat, many, to pose for a group photo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to give a running commentary, a spring outing, a pleasure boat, many, to pose for a group photo]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "few, the off season, a public holiday, a full-price ticket, to be shut to the public",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: few, the off season, a public holiday, a full-price ticket, to be shut to the public]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to receive visitors, beyond the sea, a sea of people, a Chinese person settled abroad, to go out to sea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to receive visitors, beyond the sea, a sea of people, a Chinese person settled abroad, to go out to sea]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a tour group, to meet up as a group, to do some shopping, to keep as a souvenir, an account of a journey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a tour group, to meet up as a group, to do some shopping, to keep as a souvenir, an account of a journey]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to climb a mountain, the summit, the sunrise, spectacular, to come down a mountain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to climb a mountain, the summit, the sunrise, spectacular, to come down a mountain]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "游 海 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 游 海 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To go sightseeing? (guānguāng.) A historic site? (gǔjì.) A scenic area? (jǐngqū.) To take a selfie? (zìpāi.) The peak season? (wàngjì.) To give a running commentary? (解说, jiěshuō.) A spring outing? (春游, chūnyóu.) A pleasure boat? (游船, yóuchuán.) Many? (多, duō.) To pose for a group photo? (héyǐng.) Few? (少, shǎo.) The off season? (dànjì.) A public holiday? (节假日, jiéjiàrì.) A full-price ticket? (全票, quánpiào.) To be shut to the public? (guānbì.) To receive visitors? (jiēdài.) Beyond the sea? (海外, hǎiwài.) A sea of people? (人山人海, rénshānrénhǎi.) A Chinese person settled abroad? (huáqiáo.) To go out to sea? (出海, chūhǎi.) A tour group? (lǚyóutuán.) To meet up as a group? (jíhé.) To do some shopping? (gòuwù.) To keep as a souvenir? (liúniàn.) An account of a journey? (游记, yóujì.) To climb a mountain? (dēngshān.) The summit? (shāndǐng.) The sunrise? (日出, rìchū.) Spectacular? (zhuàngguān.) To come down a mountain? (下山, xiàshān.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

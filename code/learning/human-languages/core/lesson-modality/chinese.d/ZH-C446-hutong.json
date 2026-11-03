@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C446-hutong",
+    "language": "chinese",
+    "chapter": 446,
+    "sequence": 33820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e8f8dff8d3dd3e62"
+  },
+  "findings": []
+}

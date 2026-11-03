@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:3a4ffdb61ba0e372",
+  "lessonIds": [
+    "ZH-C287-dang",
+    "ZH-W287-dang",
+    "ZH-C287-ambition",
+    "ZH-C287-mengxiang",
+    "ZH-C287-mubiao",
+    "ZH-C287-zui-most",
+    "ZH-C287-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch287.txt",
+  "json": "chinese/narration/ch287.json",
+  "textHash": "fnv1a64:d3c8b1c16d5473d3",
+  "jsonHash": "fnv1a64:c2e4636a784dec3e",
+  "findings": []
+}

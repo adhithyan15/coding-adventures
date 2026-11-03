@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C299-jishi",
+    "language": "chinese",
+    "chapter": 299,
+    "sequence": 23470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23a8a3c8c1d29564"
+  },
+  "findings": []
+}

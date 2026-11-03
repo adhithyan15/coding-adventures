@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C502-huajia",
+    "language": "chinese",
+    "chapter": 502,
+    "sequence": 37840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4b44ac4eb5d2df96"
+  },
+  "findings": []
+}

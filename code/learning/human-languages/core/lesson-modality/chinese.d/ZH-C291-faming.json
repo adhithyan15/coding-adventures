@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C291-faming",
+    "language": "chinese",
+    "chapter": 291,
+    "sequence": 23060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed85341b5fce9602"
+  },
+  "findings": []
+}

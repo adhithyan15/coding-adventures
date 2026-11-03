@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 508,
+  "sourceHash": "fnv1a64:640ad6a3329301aa",
+  "lessonIds": [
+    "ZH-C508-jiemei",
+    "ZH-C508-xiongmei",
+    "ZH-C508-dushengzinu",
+    "ZH-C508-qifu",
+    "ZH-C508-dongshi",
+    "ZH-R508-review-504-508"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch508.txt",
+  "json": "chinese/narration/ch508.json",
+  "textHash": "fnv1a64:0432db8f32b22467",
+  "jsonHash": "fnv1a64:daa25fd2223c7b43",
+  "findings": []
+}

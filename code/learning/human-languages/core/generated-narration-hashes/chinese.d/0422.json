@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 422,
+  "sourceHash": "fnv1a64:2e1b3c2bc71e81bf",
+  "lessonIds": [
+    "ZH-C422-daohang",
+    "ZH-C422-dongbei",
+    "ZH-W422-bei-north",
+    "ZH-C422-xibei",
+    "ZH-C422-beishang",
+    "ZH-C422-kuaisu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch422.txt",
+  "json": "chinese/narration/ch422.json",
+  "textHash": "fnv1a64:55b1e9a4134e4229",
+  "jsonHash": "fnv1a64:398c022afcc1be48",
+  "findings": []
+}

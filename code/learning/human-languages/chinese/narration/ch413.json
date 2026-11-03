@@ -1,0 +1,988 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 413,
+  "title": "Up in the Air",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:72f910a766ca0b33",
+  "lessons": [
+    {
+      "id": "ZH-C413-dengji-board",
+      "sequence": 31560,
+      "title": "dēngjī — to board a plane",
+      "headword": "dēngjī",
+      "romanization": "dēngjī",
+      "gloss": "to board a plane",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2423c4af6fffc663",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to come in to shore, then the Mandarin for a passenger ship."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dēngjī",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēngjī — \"to board a plane\"."
+            },
+            {
+              "kind": "speech",
+              "text": "dēngjī yǐqián wǒmen zuò zài zhèr děng — Until we board, we'll sit here and wait."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dēngjī is built from dēng 'to go up' and 机 'a plane', both inherited from Middle Chinese, tong and kj+j (Guangyun, in Baxter's transcription), which glosses the first 'to rise' and, after an older dictionary, 'to get up into a carriage'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēngjī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēngjī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēngjī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēngjī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dēngjī yǐqián wǒmen zuò zài zhèr děng — Until we board, we'll sit here and wait.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dēngjī yǐqián wǒmen zuò zài zhèr děng* — Until we board, we'll sit here and wait.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to come in to shore, then the Mandarin for a passenger ship, then say dēngjī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to come in to shore, then the Mandarin for a passenger ship, then say *dēngjī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dēngjī mean? (\"To board a plane\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C413-fei",
+      "sequence": 31570,
+      "title": "飞 (fēi) — to fly",
+      "headword": "飞",
+      "romanization": "fēi",
+      "gloss": "to fly",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:46ccd92f87c78c6b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a passenger ship, then the Mandarin for to board a plane."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 飞",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "飞 — fēi — \"to fly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "飞机飞得很高 fēijī fēi de hěn gāo — The plane is flying very high."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 飞 (fēi) — three strokes: a bar that turns and slants down to the right, ending in a hook up; then a short stroke falling to the left and a dot, near the top on the right. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "飞 (fēi) is inherited from Middle Chinese pj+j (Guangyun, in Baxter's transcription), glossed 'to fly, to soar'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēijī fēi de hěn gāo — The plane is flying very high.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēijī fēi de hěn gāo* — The plane is flying very high.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a passenger ship, then the Mandarin for to board a plane, then say fēi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a passenger ship, then the Mandarin for to board a plane, then say *fēi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 飞 (fēi) mean? (\"To fly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W413-fei-fly",
+      "sequence": 31575,
+      "title": "飞 (fēi) — a hooked turn, then two small strokes",
+      "headword": "飞",
+      "romanization": "fēi",
+      "gloss": "飞 — a bar that turns and hooks, then a short stroke and a dot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:054ae748be0a2252",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a hooked turn, then two small strokes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a hooked turn, then two small strokes and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say fēi — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *fēi* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "机 起."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — jī, qǐ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *jī*, *qǐ*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a hooked turn, then two small strokes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "飞 (fēi)."
+            },
+            {
+              "kind": "speech",
+              "text": "One piece, three strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "First, a bar to the right that turns and slants down to the right, then flicks up at the end: one stroke, without lifting the pen."
+            },
+            {
+              "kind": "speech",
+              "text": "Then a short stroke falling to the left, on the right of the turn."
+            },
+            {
+              "kind": "speech",
+              "text": "Last, a dot under it, falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "One long stroke and two short ones: three."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "飞 (fēi), all three, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 飞, all three, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 飞 (fēi)? (Three.) Which stroke is the longest? (The first, the bar that turns and hooks.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 飞 (fēi), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C413-jizhang",
+      "sequence": 31580,
+      "title": "机长 (jīzhǎng) — plane's captain; pilot in command",
+      "headword": "机长",
+      "romanization": "jīzhǎng",
+      "gloss": "plane's captain; pilot in command",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a3a6dd5d93e25c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to board a plane, then the Mandarin for to fly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 机长",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "机长 — jīzhǎng — \"plane's captain; pilot in command\"."
+            },
+            {
+              "kind": "speech",
+              "text": "机长说飞机马上要到了 jīzhǎng shuō fēijī mǎshàng yào dào le — The captain says we'll be there soon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "机长 (jīzhǎng) is built from 机 'a plane' and 长 'the head', both inherited from Middle Chinese, kj+j and trjangX (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīzhǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīzhǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīzhǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīzhǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīzhǎng shuō fēijī mǎshàng yào dào le — The captain says we'll be there soon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīzhǎng shuō fēijī mǎshàng yào dào le* — The captain says we'll be there soon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to board a plane, then the Mandarin for to fly, then say jīzhǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to board a plane, then the Mandarin for to fly, then say *jīzhǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 机长 (jīzhǎng) mean? (\"Plane's captain; pilot in command\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C413-jiangluo",
+      "sequence": 31590,
+      "title": "jiàngluò — to land; to come down onto the runway",
+      "headword": "jiàngluò",
+      "romanization": "jiàngluò",
+      "gloss": "to land; to come down onto the runway",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6575632c2f0e9b12",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to fly, then the Mandarin for the pilot in command."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiàngluò",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiàngluò — \"to land; to come down onto the runway\"."
+            },
+            {
+              "kind": "speech",
+              "text": "fēijī jiàngluò yǐhòu wǒmen zuò dìtiě qù bīnguǎn — Once the plane has landed, we'll take the metro to the hotel."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiàngluò is built from jiàng 'to come down' and luò 'to fall', both inherited from Middle Chinese, kaewngH and lak (Guangyun, in Baxter's transcription), which glosses the first 'down, to come down' and the second as leaves falling from a tree."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiàngluò",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiàngluò*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiàngluò, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiàngluò*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēijī jiàngluò yǐhòu wǒmen zuò dìtiě qù bīnguǎn — Once the plane has landed, we'll take the metro to the hotel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēijī jiàngluò yǐhòu wǒmen zuò dìtiě qù bīnguǎn* — Once the plane has landed, we'll take the metro to the hotel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to fly, then the Mandarin for the pilot in command, then say jiàngluò again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to fly, then the Mandarin for the pilot in command, then say *jiàngluò* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiàngluò mean? (\"To land; to come down onto the runway\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C413-feikuai",
+      "sequence": 31600,
+      "title": "飞快 (fēikuài) — very fast; as fast as flying",
+      "headword": "飞快",
+      "romanization": "fēikuài",
+      "gloss": "very fast; as fast as flying",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3468de9388ba2035",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the pilot in command, then the Mandarin for to come down onto the runway."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 飞快",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "飞快 — fēikuài — \"very fast; as fast as flying\"."
+            },
+            {
+              "kind": "speech",
+              "text": "时间过得飞快 shíjiān guò de fēikuài — Time flies."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "飞快 (fēikuài) is built from 飞 (fēi) 'to fly' and 快 'fast', both inherited from Middle Chinese, pj+j and khwaejH (Guangyun, in Baxter's transcription), which glosses the second 'to one's liking'; the sense 'fast' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēikuài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēikuài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fēikuài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fēikuài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shíjiān guò de fēikuài — Time flies.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shíjiān guò de fēikuài* — Time flies.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the pilot in command, then the Mandarin for to come down onto the runway, then say fēikuài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the pilot in command, then the Mandarin for to come down onto the runway, then say *fēikuài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 飞快 (fēikuài) mean? (\"Very fast; as fast as flying\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R413-review-408-413",
+      "sequence": 31610,
+      "title": "Looking back: from By Bus to Up in the Air",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from By Bus to Up in the Air",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14a3962db4340e8e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a bus stop sign and public transport."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bus stop sign, public transport, to drop coins in the box, a long-distance coach, a starting point",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bus stop sign, public transport, to drop coins in the box, a long-distance coach, a starting point]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rush hour, the traffic on the roads, to open to traffic, a ticket seller, to take a taxi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rush hour, the traffic on the roads, to open to traffic, a ticket seller, to take a taxi]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "long-distance, the fare for a ride, to pass through, to launch a new transport line, to hit the road",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: long-distance, the fare for a ride, to pass through, to launch a new transport line, to hit the road]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a pier for boats, a ship's captain, to set sail, a ferry across the water, a life jacket",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a pier for boats, a ship's captain, to set sail, a ferry across the water, a life jacket]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a harbour for ships, the ship's deck, a ship's cabin, to come in to shore, a passenger ship",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a harbour for ships, the ship's deck, a ship's cabin, to come in to shore, a passenger ship]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to board a plane, to fly, the pilot in command, to come down onto the runway, as fast as flying",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to board a plane, to fly, the pilot in command, to come down onto the runway, as fast as flying]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "交 通 船 飞 (fēi) — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 交 通 船 飞 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A bus stop sign? (zhànpái.) Public transport? (公交, gōngjiāo.) To drop coins in the box? (tóubì.) A long-distance coach? (客车, kèchē.) A starting point? (起点, qǐdiǎn.) The rush hour? (gāofēng.) The traffic on the roads? (交通, jiāotōng.) To open to traffic? (通车, tōngchē.) A ticket seller? (shòupiàoyuán.) To take a taxi? (打车, dǎchē.) Long-distance? (chángtú.) The fare for a ride? (chēfèi.) To pass through? (通过, tōngguò.) To launch a new transport line? (开通, kāitōng.) To hit the road? (上路, shànglù.) A pier for boats? (mǎtou.) A ship's captain? (船长, chuánzhǎng.) To set sail? (开船, kāichuán.) A ferry across the water? (dùchuán.) A life jacket? (救生衣, jiùshēngyī.) A harbour for ships? (gǎngkǒu.) The ship's deck? (jiǎbǎn.) A ship's cabin? (chuáncāng.) To come in to shore? (kào'àn.) A passenger ship? (客船, kèchuán.) To board a plane? (dēngjī.) To fly? (飞, fēi.) The pilot in command? (机长, jīzhǎng.) To come down onto the runway? (jiàngluò.) As fast as flying? (飞快, fēikuài.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:974f98f0bd58e9e4",
+  "lessonIds": [
+    "ZH-C430-guanguang",
+    "ZH-C430-guji",
+    "ZH-C430-jingqu",
+    "ZH-C430-zipai",
+    "ZH-C430-wangji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch430.txt",
+  "json": "chinese/narration/ch430.json",
+  "textHash": "fnv1a64:44ccb29749099af5",
+  "jsonHash": "fnv1a64:ecfcc0d5a8d3ce64",
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 382,
+  "sourceHash": "fnv1a64:db67b926775d2e6d",
+  "lessonIds": [
+    "ZH-C382-zhiban",
+    "ZH-C382-baoan",
+    "ZH-W382-bao-keep",
+    "ZH-C382-jiankong",
+    "ZH-C382-baozheng",
+    "ZH-C382-xunluo"
+  ],
+  "tex": "chinese/book/chapters/ch382-the-security-guard.tex"
+}

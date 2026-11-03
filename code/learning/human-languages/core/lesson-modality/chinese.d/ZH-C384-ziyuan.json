@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C384-ziyuan",
+    "language": "chinese",
+    "chapter": 384,
+    "sequence": 29540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:363c54af71f9a264"
+  },
+  "findings": []
+}

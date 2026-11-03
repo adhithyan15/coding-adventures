@@ -1,0 +1,19 @@
+{
+  "chapter": 466,
+  "title": "Keeping Calm",
+  "label": "ch:zh-keeping-calm",
+  "canDo": "I can say someone is lost in thought, tell someone to calm down, talk about my heartbeat, smiles and peace of mind.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C466-pingjing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 466: I can say someone is lost in thought, tell someone to calm down, talk about my heartbeat, smiles and peace of mind.",
+    "assesses": [
+      "ZH-LEX-C466-CALM466-03",
+      "ZH-LEX-C466-CALM466-04",
+      "ZH-LEX-C466-CALM466-05"
+    ]
+  }
+}

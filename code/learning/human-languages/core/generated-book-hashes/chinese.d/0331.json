@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:ccec88e945b6dd02",
+  "lessonIds": [
+    "ZH-C331-yaoguai",
+    "ZH-C331-shenxian",
+    "ZH-C331-mofa",
+    "ZH-C331-baowu",
+    "ZH-C331-cang"
+  ],
+  "tex": "chinese/book/chapters/ch331-monsters-and-treasure.tex"
+}

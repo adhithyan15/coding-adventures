@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:31d56365b16ee59a",
+  "lessonIds": [
+    "ZH-C496-beishu",
+    "ZH-C496-gaoji",
+    "ZH-W496-ji-grade",
+    "ZH-C496-zhongji",
+    "ZH-C496-chuji",
+    "ZH-C496-liuji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch496.txt",
+  "json": "chinese/narration/ch496.json",
+  "textHash": "fnv1a64:7867445a385d30cf",
+  "jsonHash": "fnv1a64:d19f3b0d49c511e0",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C494-luobang",
+    "language": "chinese",
+    "chapter": 494,
+    "sequence": 37450,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b6818bf0526e9416"
+  },
+  "findings": []
+}

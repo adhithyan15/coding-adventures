@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C486-yingpin",
+    "language": "chinese",
+    "chapter": 486,
+    "sequence": 37020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:19914d16b6b9be7d"
+  },
+  "findings": []
+}

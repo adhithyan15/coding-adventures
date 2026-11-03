@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W436-fang-side",
+    "language": "chinese",
+    "chapter": 436,
+    "sequence": 33325,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:080c40764265bf7b",
+    "detachableSegments": [
+      "Script — a dot over a bar, a hook and a long stroke"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

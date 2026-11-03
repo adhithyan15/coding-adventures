@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C459-shiqing",
+    "language": "chinese",
+    "chapter": 459,
+    "sequence": 35060,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0524c7212df97777"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 524,
+  "sourceHash": "fnv1a64:9ab0dd2670e3e1a4",
+  "lessonIds": [
+    "ZH-C524-jiezhang",
+    "ZH-C524-banjia",
+    "ZH-W524-jia-price",
+    "ZH-C524-yaojia",
+    "ZH-C524-huanjia",
+    "ZH-C524-wujia"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch524.txt",
+  "json": "chinese/narration/ch524.json",
+  "textHash": "fnv1a64:7f84ec7a76d1e78c",
+  "jsonHash": "fnv1a64:e0752649bd7974ff",
+  "findings": []
+}

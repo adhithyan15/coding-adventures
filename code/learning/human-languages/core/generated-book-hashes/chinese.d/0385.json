@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 385,
+  "sourceHash": "fnv1a64:848d37b7d959cbc2",
+  "lessonIds": [
+    "ZH-C385-tigao",
+    "ZH-C385-bacheng",
+    "ZH-C385-jieneng",
+    "ZH-C385-zhongshi",
+    "ZH-C385-fangshi",
+    "ZH-R385-review-380-385"
+  ],
+  "tex": "chinese/book/chapters/ch385-good-reasons.tex"
+}

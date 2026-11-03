@@ -1,0 +1,19 @@
+{
+  "chapter": 425,
+  "title": "The Hotel",
+  "label": "ch:zh-the-hotel",
+  "canDo": "I can talk about a place to stay, a big hotel, its guest rooms, the room card and the lobby.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C425-datang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 425: I can talk about a place to stay, a big hotel, its guest rooms, the room card and the lobby.",
+    "assesses": [
+      "ZH-LEX-C425-HOTEL425-03",
+      "ZH-LEX-C425-HOTEL425-04",
+      "ZH-LEX-C425-HOTEL425-05"
+    ]
+  }
+}

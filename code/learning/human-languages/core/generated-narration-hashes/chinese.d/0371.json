@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 371,
+  "sourceHash": "fnv1a64:bb845a33ffa4c008",
+  "lessonIds": [
+    "ZH-C371-shenzhi",
+    "ZH-C371-suiran",
+    "ZH-W371-sui-though",
+    "ZH-C371-jielun",
+    "ZH-C371-zongjie",
+    "ZH-C371-yuanze"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch371.txt",
+  "json": "chinese/narration/ch371.json",
+  "textHash": "fnv1a64:909691c8a5bdb9b7",
+  "jsonHash": "fnv1a64:6d85f58b31a369b0",
+  "findings": []
+}

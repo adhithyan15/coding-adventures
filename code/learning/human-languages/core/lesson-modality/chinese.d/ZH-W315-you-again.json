@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W315-you-again",
+    "language": "chinese",
+    "chapter": 315,
+    "sequence": 24305,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4d2442f9b04d45cb",
+    "detachableSegments": [
+      "Script — the fork at the foot of 报"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

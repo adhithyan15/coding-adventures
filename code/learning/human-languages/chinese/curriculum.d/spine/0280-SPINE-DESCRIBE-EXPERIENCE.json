@@ -1,8 +1,4 @@
 {
-  "omits": [
-    "ADJECTIVE-FEELING",
-    "AMBITION-EXPRESS",
-    "TIME-DURATION"
-  ],
+  "omits": [],
   "relocates": {}
 }

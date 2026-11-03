@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C484-jiejiu",
+    "language": "chinese",
+    "chapter": 484,
+    "sequence": 36350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f95f5a079d4e3318"
+  },
+  "findings": []
+}

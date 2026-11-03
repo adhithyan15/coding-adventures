@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C430-guji",
+  "pathSegment": "ZH-PATH-430-SIGHTS430",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-430-SIGHTS430",
+      "order": 1
+    }
+  ]
+}

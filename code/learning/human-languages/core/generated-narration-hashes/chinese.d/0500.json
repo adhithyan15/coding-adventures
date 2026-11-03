@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:8f613aea0bc6bd73",
+  "lessonIds": [
+    "ZH-C500-huosheng",
+    "ZH-C500-qiusai",
+    "ZH-W500-sai-match",
+    "ZH-C500-juesai",
+    "ZH-C500-bifen",
+    "ZH-C500-shangchang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch500.txt",
+  "json": "chinese/narration/ch500.json",
+  "textHash": "fnv1a64:1e2049bab07dcb26",
+  "jsonHash": "fnv1a64:cd871b57b68b0c89",
+  "findings": []
+}

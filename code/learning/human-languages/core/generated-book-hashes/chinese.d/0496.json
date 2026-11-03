@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 496,
+  "sourceHash": "fnv1a64:ae7f765e50208966",
+  "lessonIds": [
+    "ZH-C496-beishu",
+    "ZH-C496-gaoji",
+    "ZH-W496-ji-grade",
+    "ZH-C496-zhongji",
+    "ZH-C496-chuji",
+    "ZH-C496-liuji"
+  ],
+  "tex": "chinese/book/chapters/ch496-levels.tex"
+}

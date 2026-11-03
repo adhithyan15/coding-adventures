@@ -1,0 +1,19 @@
+{
+  "chapter": 483,
+  "title": "Getting Better",
+  "label": "ch:zh-getting-better",
+  "canDo": "I can say someone's illness is improving, that someone has recovered, and talk about nourishing food, keeping well and long illnesses.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C483-manxing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 483: I can say someone's illness is improving, that someone has recovered, and talk about nourishing food, keeping well and long illnesses.",
+    "assesses": [
+      "ZH-LEX-C483-BETTER483-03",
+      "ZH-LEX-C483-BETTER483-04",
+      "ZH-LEX-C483-BETTER483-05"
+    ]
+  }
+}

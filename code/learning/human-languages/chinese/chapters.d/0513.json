@@ -1,0 +1,21 @@
+{
+  "chapter": 513,
+  "title": "Ambitions",
+  "label": "ch:zh-ambitions",
+  "canDo": "I can talk about starting a business, reaching a goal, striving for it and doing it with my own hands.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R513-review-final-513",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 513: I can talk about starting a business, reaching a goal, striving for it and doing it with my own hands.",
+    "assesses": [
+      "ZH-LEX-C513-AMBITION513-01",
+      "ZH-LEX-C513-AMBITION513-02",
+      "ZH-LEX-C513-AMBITION513-03",
+      "ZH-LEX-C513-AMBITION513-04",
+      "ZH-LEX-C513-AMBITION513-05"
+    ]
+  }
+}

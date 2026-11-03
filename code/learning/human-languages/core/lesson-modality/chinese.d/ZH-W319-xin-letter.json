@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W319-xin-letter",
+    "language": "chinese",
+    "chapter": 319,
+    "sequence": 25065,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bb6909e954648de0",
+    "detachableSegments": [
+      "Script — the person piece, then a dot, three bars and 口"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C512-mingxiao",
+    "language": "chinese",
+    "chapter": 512,
+    "sequence": 38380,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:88e288c90d7b1bb9"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C314-anwei",
+  "pathSegment": "ZH-PATH-314-FUNERAL314",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-314-FUNERAL314",
+      "order": 2
+    }
+  ]
+}

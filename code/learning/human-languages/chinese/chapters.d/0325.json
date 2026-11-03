@@ -1,0 +1,19 @@
+{
+  "chapter": 325,
+  "title": "Gone but Remembered",
+  "label": "ch:zh-gone-but-remembered",
+  "canDo": "I can give an account of the past, say someone has died, and talk about descendants, generations and missing someone.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C325-xiangnian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 325: I can give an account of the past, say someone has died, and talk about descendants, generations and missing someone.",
+    "assesses": [
+      "ZH-LEX-C325-PASSED325-03",
+      "ZH-LEX-C325-PASSED325-04",
+      "ZH-LEX-C325-PASSED325-05"
+    ]
+  }
+}

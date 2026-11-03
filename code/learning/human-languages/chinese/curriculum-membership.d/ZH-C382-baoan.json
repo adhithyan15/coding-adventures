@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C382-baoan",
+  "pathSegment": "ZH-PATH-382-GUARD382",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-382-GUARD382",
+      "order": 1
+    }
+  ]
+}

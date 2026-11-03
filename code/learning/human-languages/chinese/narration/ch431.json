@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 431,
+  "title": "A Spring Outing",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:2100702c11e775d2",
+  "lessons": [
+    {
+      "id": "ZH-C431-jieshuo",
+      "sequence": 33050,
+      "title": "解说 (jiěshuō) — to give a running commentary",
+      "headword": "解说",
+      "romanization": "jiěshuō",
+      "gloss": "to give a running commentary",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e0fd9a65edad4332",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to take a selfie, then the Mandarin for the peak season."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 解说",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "解说 — jiěshuō — \"to give a running commentary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "dǎoyóu zhèngzài gěi wǒmen jiěshuō — The guide is giving us a commentary."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "解说 (jiěshuō) is built from 解 'to explain' and 说 'to speak', both inherited from Middle Chinese, keaX and sywet (Guangyun, in Baxter's transcription), which glosses the first 'to explain' and the second 'to tell'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiěshuō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiěshuō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiěshuō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiěshuō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dǎoyóu zhèngzài gěi wǒmen jiěshuō — The guide is giving us a commentary.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dǎoyóu zhèngzài gěi wǒmen jiěshuō* — The guide is giving us a commentary.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to take a selfie, then the Mandarin for the peak season, then say jiěshuō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to take a selfie, then the Mandarin for the peak season, then say *jiěshuō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 解说 (jiěshuō) mean? (\"To give a running commentary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C431-chunyou",
+      "sequence": 33060,
+      "title": "春游 (chūnyóu) — spring outing",
+      "headword": "春游",
+      "romanization": "chūnyóu",
+      "gloss": "spring outing",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3c47ac85172e9f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the peak season, then the Mandarin for to give a running commentary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 春游",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "春游 — chūnyóu — \"spring outing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我们坐火车去春游 wǒmen zuò huǒchē qù chūnyóu — We're going on a spring outing by train."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 游 (yóu) — twelve strokes in three pieces: on the left the water piece of 洗, three strokes; in the middle a dot, a bar, a stroke that turns down and hooks, and a stroke falling to the left; on the right a short stroke falling to the left and a bar, with 子 under them. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "春游 (chūnyóu) is built from 春 'spring' and 游 (yóu) 'to roam', both inherited from Middle Chinese, tsyhwin and yuw (Guangyun, in Baxter's transcription), which glosses the second 'to float' and 'to let loose'; the sense 'to tour' is usually explained as a widening of it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūnyóu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūnyóu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūnyóu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūnyóu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zuò huǒchē qù chūnyóu — We're going on a spring outing by train.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zuò huǒchē qù chūnyóu* — We're going on a spring outing by train.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the peak season, then the Mandarin for to give a running commentary, then say chūnyóu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the peak season, then the Mandarin for to give a running commentary, then say *chūnyóu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 春游 (chūnyóu) mean? (\"Spring outing\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W431-you-tour",
+      "sequence": 33065,
+      "title": "游 (yóu) — the water piece, a middle piece, then 子",
+      "headword": "游",
+      "romanization": "yóu",
+      "gloss": "游 — the water piece, a middle piece of four strokes, then 子 under a small roof",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:48e84a6913e04a12",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the water piece, a middle piece, then 子",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the water piece, a middle piece, then 子 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say chūnyóu — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *chūnyóu* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "洗 子."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — xǐ, zǐ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *xǐ*, *zǐ*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the water piece, a middle piece, then 子",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "游 (yóu)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, left to right. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, the water piece, three strokes, as in 洗: two dots, then a stroke that rises to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The middle piece, four strokes. A dot on top. A bar under it. Under the bar, a stroke that runs a little to the right, turns down and hooks to the left at the foot. Then a stroke falling to the left, from under the bar."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, five strokes. A short stroke falling to the left and a bar, like a small roof. Under them 子 zǐ: a bar that turns down to the left, a vertical with a hook, and a bar across."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 4 + 5 = twelve."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "游 (yóu), all twelve, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 游, all twelve, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 游 (yóu) have? (Three: three strokes, four and five.) Which written character sits at the bottom right? (子, three strokes.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 游 (yóu), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C431-youchuan",
+      "sequence": 33070,
+      "title": "游船 (yóuchuán) — pleasure boat",
+      "headword": "游船",
+      "romanization": "yóuchuán",
+      "gloss": "pleasure boat",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8297ca6ec96d1e88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to give a running commentary, then the Mandarin for a spring outing."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 游船",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "游船 — yóuchuán — \"pleasure boat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zuò yóuchuán qù hú duìmiàn — We're taking a pleasure boat across the lake."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "游船 (yóuchuán) is built from 游 (yóu) 'to roam' and 船 'a boat', both inherited from Middle Chinese, yuw and zywen (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yóuchuán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yóuchuán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yóuchuán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yóuchuán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zuò yóuchuán qù hú duìmiàn — We're taking a pleasure boat across the lake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zuò yóuchuán qù hú duìmiàn* — We're taking a pleasure boat across the lake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to give a running commentary, then the Mandarin for a spring outing, then say yóuchuán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to give a running commentary, then the Mandarin for a spring outing, then say *yóuchuán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 游船 (yóuchuán) mean? (\"Pleasure boat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C431-duo",
+      "sequence": 33080,
+      "title": "多 (duō) — many; much; a lot of",
+      "headword": "多",
+      "romanization": "duō",
+      "gloss": "many; much; a lot of",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c3157ba10b3c10f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a spring outing, then the Mandarin for a pleasure boat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 多",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多 — duō — \"many; much; a lot of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "春天这儿的游客很多 chūntiān zhèr de yóukè hěn duō — In spring there are a lot of visitors here."
+            },
+            {
+              "kind": "speech",
+              "text": "Before a noun it is usually 很多 hěn duō: 很多人 'a lot of people'."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "多 (duō) is inherited from Middle Chinese ta (Guangyun, in Baxter's transcription), which glosses it 'many'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duō",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duō*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "duō, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *duō*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūntiān zhèr de yóukè hěn duō — In spring there are a lot of visitors here.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūntiān zhèr de yóukè hěn duō* — In spring there are a lot of visitors here.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a spring outing, then the Mandarin for a pleasure boat, then say duō again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a spring outing, then the Mandarin for a pleasure boat, then say *duō* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 多 (duō) mean? (\"Many; much; a lot of\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C431-heying",
+      "sequence": 33090,
+      "title": "héyǐng — to have a group photo taken; to pose for a group photo",
+      "headword": "héyǐng",
+      "romanization": "héyǐng",
+      "gloss": "to have a group photo taken; to pose for a group photo",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c84d7cf5040ddf9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a pleasure boat, then the Mandarin for many."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: héyǐng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "héyǐng — \"to have a group photo taken; to pose for a group photo\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zài jiǔdiàn ménkǒu héyǐng — We're having a group photo taken outside the hotel."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "héyǐng is built from hé 'together' and yǐng 'a likeness', both inherited from Middle Chinese, hop and 'jaengX (Guangyun, in Baxter's transcription), which glosses the first 'to join' and the second as a shape and its shadow; the sense 'a photograph' is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "héyǐng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *héyǐng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "héyǐng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *héyǐng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zài jiǔdiàn ménkǒu héyǐng — We're having a group photo taken outside the hotel.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zài jiǔdiàn ménkǒu héyǐng* — We're having a group photo taken outside the hotel.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a pleasure boat, then the Mandarin for many, then say héyǐng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a pleasure boat, then the Mandarin for many, then say *héyǐng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does héyǐng mean? (\"To have a group photo taken; to pose for a group photo\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

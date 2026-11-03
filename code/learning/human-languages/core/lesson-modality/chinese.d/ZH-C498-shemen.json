@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C498-shemen",
+    "language": "chinese",
+    "chapter": 498,
+    "sequence": 37650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e69c28c24725ebd"
+  },
+  "findings": []
+}

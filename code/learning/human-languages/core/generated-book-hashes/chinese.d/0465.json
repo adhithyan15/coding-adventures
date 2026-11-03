@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:83e02ed65a439746",
+  "lessonIds": [
+    "ZH-C465-tongkuai",
+    "ZH-C465-saoxing",
+    "ZH-W465-xing-mood",
+    "ZH-C465-leguan",
+    "ZH-C465-beiguan",
+    "ZH-C465-zixin"
+  ],
+  "tex": "chinese/book/chapters/ch465-spoiling-the-fun.tex"
+}

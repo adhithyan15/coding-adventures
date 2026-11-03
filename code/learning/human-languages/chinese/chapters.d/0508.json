@@ -1,0 +1,21 @@
+{
+  "chapter": 508,
+  "title": "Brothers and Sisters",
+  "label": "ch:zh-brothers-and-sisters",
+  "canDo": "I can talk about sisters, a brother and sister, only children, being picked on and growing up sensible.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R508-review-504-508",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 508: I can talk about sisters, a brother and sister, only children, being picked on and growing up sensible.",
+    "assesses": [
+      "ZH-LEX-C508-SIBLINGS508-01",
+      "ZH-LEX-C508-SIBLINGS508-02",
+      "ZH-LEX-C508-SIBLINGS508-03",
+      "ZH-LEX-C508-SIBLINGS508-04",
+      "ZH-LEX-C508-SIBLINGS508-05"
+    ]
+  }
+}

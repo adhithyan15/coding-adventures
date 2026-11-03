@@ -1,0 +1,19 @@
+{
+  "chapter": 422,
+  "title": "Going North",
+  "label": "ch:zh-going-north",
+  "canDo": "I can use a satnav, name the northeast and the northwest, say we are heading north and take a fast bus.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C422-kuaisu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 422: I can use a satnav, name the northeast and the northwest, say we are heading north and take a fast bus.",
+    "assesses": [
+      "ZH-LEX-C422-NORTH422-03",
+      "ZH-LEX-C422-NORTH422-04",
+      "ZH-LEX-C422-NORTH422-05"
+    ]
+  }
+}

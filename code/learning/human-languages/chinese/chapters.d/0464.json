@@ -1,0 +1,19 @@
+{
+  "chapter": 464,
+  "title": "Losing My Temper",
+  "label": "ch:zh-losing-my-temper",
+  "canDo": "I can say someone lost their temper or has a hot temper, that someone is infuriating, and that I am furious.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C464-fennu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 464: I can say someone lost their temper or has a hot temper, that someone is infuriating, and that I am furious.",
+    "assesses": [
+      "ZH-LEX-C464-ANGRY464-03",
+      "ZH-LEX-C464-ANGRY464-04",
+      "ZH-LEX-C464-ANGRY464-05"
+    ]
+  }
+}

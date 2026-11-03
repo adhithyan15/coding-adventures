@@ -1,0 +1,19 @@
+{
+  "chapter": 300,
+  "title": "Life and Death",
+  "label": "ch:zh-life-and-death",
+  "canDo": "I can talk about an earthquake and an explosion, who died, and what they died of.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C300-baozha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 300: I can talk about an earthquake and an explosion, who died, and what they died of.",
+    "assesses": [
+      "ZH-LEX-C300-DEATH300-03",
+      "ZH-LEX-C300-DEATH300-04",
+      "ZH-LEX-C300-DEATH300-05"
+    ]
+  }
+}

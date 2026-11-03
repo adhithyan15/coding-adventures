@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C369-danshi",
+    "language": "chinese",
+    "chapter": 369,
+    "sequence": 28200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:163dd5ef349790a8"
+  },
+  "findings": []
+}

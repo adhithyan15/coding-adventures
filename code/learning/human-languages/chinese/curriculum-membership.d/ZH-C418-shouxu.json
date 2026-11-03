@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C418-shouxu",
+  "pathSegment": "ZH-PATH-418-CHECKIN418",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-418-CHECKIN418",
+      "order": 1
+    }
+  ]
+}

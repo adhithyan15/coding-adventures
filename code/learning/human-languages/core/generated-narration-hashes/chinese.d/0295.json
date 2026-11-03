@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:6a7480b7a030e90f",
+  "lessonIds": [
+    "ZH-C295-zuichu",
+    "ZH-C295-chongxin",
+    "ZH-W295-xin-new",
+    "ZH-C295-dangtian",
+    "ZH-C295-shihou",
+    "ZH-C295-dangchang",
+    "ZH-R295-review-290-295"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch295.txt",
+  "json": "chinese/narration/ch295.json",
+  "textHash": "fnv1a64:dd84f70fb05c8f4d",
+  "jsonHash": "fnv1a64:e76b77572e23271d",
+  "findings": []
+}

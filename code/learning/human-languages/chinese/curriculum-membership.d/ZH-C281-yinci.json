@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C281-yinci",
+  "pathSegment": "ZH-PATH-281-EXAMPLE",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-281-EXAMPLE",
+      "order": 4
+    }
+  ]
+}

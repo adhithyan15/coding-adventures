@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — a `rescue` binding the clause reassigns (#18798)
+
+`rescue => e` ⏎ `e = 5` failed: the binding was always `const`
+(`Assignment to constant variable` at run time).  It is now `let`, like every
+other binding.  Test `emit_try_catch_emits_rescue_matches_else_chain` (updated expectation); end-to-end, `sir-conformance`'s
+`rb_rescue_binding_reassigned_in_the_clause`.
+
 ## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
 
 ### Globals and constants never collide with functions; a constant assignment is refused, not a panic

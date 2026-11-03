@@ -1,0 +1,910 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 401,
+  "title": "Plans for the Future",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:3df6a99ceb778bc2",
+  "lessons": [
+    {
+      "id": "ZH-C401-qiantu",
+      "sequence": 30390,
+      "title": "qiántú — prospects; future (of a person or job)",
+      "headword": "qiántú",
+      "romanization": "qiántú",
+      "gloss": "prospects; future (of a person or job)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:87ecb42cb7e9aca9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for originally planned, then the Mandarin for settled and secure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: qiántú",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qiántú — \"prospects; future (of a person or job)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ juéde zhège gōngzuò hěn yǒu qiántú — I think this job has good prospects."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qiántú is built from 前 'ahead' and tú 'a road', both inherited from Middle Chinese, dzen and du (Guangyun, in Baxter's transcription), which glosses the second 'a way': the road ahead."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qiántú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qiántú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qiántú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qiántú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ juéde zhège gōngzuò hěn yǒu qiántú — I think this job has good prospects.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ juéde zhège gōngzuò hěn yǒu qiántú* — I think this job has good prospects.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for originally planned, then the Mandarin for settled and secure, then say qiántú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for originally planned, then the Mandarin for settled and secure, then say *qiántú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does qiántú mean? (\"Prospects; future (of a person or job)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C401-gaihang",
+      "sequence": 30400,
+      "title": "gǎiháng — to change careers",
+      "headword": "gǎiháng",
+      "romanization": "gǎiháng",
+      "gloss": "to change careers",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:309dda5fc7af494d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for settled and secure, then the Mandarin for future prospects."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gǎiháng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gǎiháng — \"to change careers\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yàoshi bù xǐhuan zhège gōngzuò wǒ jiù gǎiháng — If I don't like this job, I'll change careers."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gǎiháng is built from 改 'to alter' and háng 'a line', both inherited from Middle Chinese, kojX and hang (Guangyun, in Baxter's transcription), which glosses the second 'a rank' and 'a row'. A line of work is a later sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎiháng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎiháng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎiháng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎiháng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi bù xǐhuan zhège gōngzuò wǒ jiù gǎiháng — If I don't like this job, I'll change careers.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi bù xǐhuan zhège gōngzuò wǒ jiù gǎiháng* — If I don't like this job, I'll change careers.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for settled and secure, then the Mandarin for future prospects, then say gǎiháng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for settled and secure, then the Mandarin for future prospects, then say *gǎiháng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gǎiháng mean? (\"To change careers\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C401-chengzhang",
+      "sequence": 30410,
+      "title": "成长 (chéngzhǎng) — to mature (as a person)",
+      "headword": "成长",
+      "romanization": "chéngzhǎng",
+      "gloss": "to mature (as a person)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7b42317e688a60c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for future prospects, then the Mandarin for to change careers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 成长",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "成长 — chéngzhǎng — \"to mature (as a person)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "孩子成长得很快 háizi chéngzhǎng de hěn kuài — Children grow up fast."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "成长 (chéngzhǎng) is built from 成 'to complete' and 长 'to grow', both inherited from Middle Chinese, dzyeng and trjangX (Guangyun, in Baxter's transcription), which glosses the second 'big'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngzhǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngzhǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngzhǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngzhǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "háizi chéngzhǎng de hěn kuài — Children grow up fast.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *háizi chéngzhǎng de hěn kuài* — Children grow up fast.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for future prospects, then the Mandarin for to change careers, then say chéngzhǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for future prospects, then the Mandarin for to change careers, then say *chéngzhǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 成长 (chéngzhǎng) mean? (\"To mature (as a person)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C401-bianlao",
+      "sequence": 30420,
+      "title": "变老 (biànlǎo) — to get old",
+      "headword": "变老",
+      "romanization": "biànlǎo",
+      "gloss": "to get old",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9f2714c8c1c3ffc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to change careers, then the Mandarin for to mature (as a person)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 变老",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "变老 — biànlǎo — \"to get old\"."
+            },
+            {
+              "kind": "speech",
+              "text": "人都会变老 rén dōu huì biànlǎo — Everyone gets old."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "变老 (biànlǎo) is built from 变 'to change' and 老 'old', both inherited from Middle Chinese, pjenH and lawX (Guangyun, in Baxter's transcription), which glosses the second 'aged'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biànlǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biànlǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "biànlǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *biànlǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rén dōu huì biànlǎo — Everyone gets old.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rén dōu huì biànlǎo* — Everyone gets old.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to change careers, then the Mandarin for to mature (as a person), then say biànlǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to change careers, then the Mandarin for to mature (as a person), then say *biànlǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 变老 (biànlǎo) mean? (\"To get old\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C401-yiqie",
+      "sequence": 30430,
+      "title": "yíqiè — everything; all",
+      "headword": "yíqiè",
+      "romanization": "yíqiè",
+      "gloss": "everything; all",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b66be0f935a88009",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to mature (as a person), then the Mandarin for to get older."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yíqiè",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yíqiè — \"everything; all\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhǐyào nǐ zài yíqiè dōu hǎo — As long as you're here, everything's fine."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Tone: 一 is said yí here, rising, because qiè after it is a falling tone."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yíqiè is built from 一 'one' and qiè, both inherited from Middle Chinese, 'jit and tshejH (Guangyun, in Baxter's transcription), which glosses the second, in this tone, 'the many': all of them as one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yíqiè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yíqiè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yíqiè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yíqiè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyào nǐ zài yíqiè dōu hǎo — As long as you're here, everything's fine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyào nǐ zài yíqiè dōu hǎo* — As long as you're here, everything's fine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to mature (as a person), then the Mandarin for to get older, then say yíqiè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to mature (as a person), then the Mandarin for to get older, then say *yíqiè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yíqiè mean? (\"Everything; all\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R401-review-397-401",
+      "sequence": 30440,
+      "title": "Looking back: from Surely Not to Plans for the Future",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Surely Not to Plans for the Future",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4538d86f8af35fad",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to stand someone up and surely not (in a question)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to stand someone up, surely not (in a question), hard to come by, in an awkward spot, an excuse (a poor reason)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to stand someone up, surely not (in a question), hard to come by, in an awkward spot, an excuse (a poor reason)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "your attitude, the difference, a region of a country, ready-made, to hinge on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: your attitude, the difference, a region of a country, ready-made, to hinge on]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to demand (of someone), only if, as long as, to meet (a requirement), to marry and settle down",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to demand (of someone), only if, as long as, to meet (a requirement), to marry and settle down]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to adjust, to extend (in time), to shorten, originally planned, settled and secure",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to adjust, to extend (in time), to shorten, originally planned, settled and secure]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "future prospects, to change careers, to mature (as a person), to get older, everything",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: future prospects, to change careers, to mature (as a person), to get older, everything]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "难 只 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 难 只 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To stand someone up? (fàng gēzi.) Surely not (in a question)? (难道, nándào.) Hard to come by? (难得, nándé.) In an awkward spot? (为难, wéinán.) An excuse (a poor reason)? (jièkǒu.) Your attitude? (tàidu.) The difference? (qūbié.) A region of a country? (地区, dìqū.) Ready-made? (现成, xiànchéng.) To hinge on? (qǔjuéyú.) To demand (of someone)? (yāoqiú.) Only if? (只有, zhǐyǒu.) As long as? (只要, zhǐyào.) To meet (a requirement)? (mǎnzú.) To marry and settle down? (成家, chéngjiā.) To adjust? (tiáozhěng.) To extend (in time)? (yáncháng.) To shorten? (suōduǎn.) Originally planned? (yuándìng.) Settled and secure? (安定, āndìng.) Future prospects? (qiántú.) To change careers? (gǎiháng.) To mature (as a person)? (成长, chéngzhǎng.) To get older? (变老, biànlǎo.) Everything? (yíqiè.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R401-review-final-401",
+      "sequence": 30450,
+      "title": "Plans for the Future — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eeb37c34f0f7394d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for future prospects and to change careers."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "future prospects, to change careers, to mature (as a person), to get older, everything",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: future prospects, to change careers, to mature (as a person), to get older, everything]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Future prospects? (qiántú.) To change careers? (gǎiháng.) To mature (as a person)? (成长, chéngzhǎng.) To get older? (变老, biànlǎo.) Everything? (yíqiè.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

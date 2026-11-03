@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C451-sheng",
+    "language": "chinese",
+    "chapter": 451,
+    "sequence": 34120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:921ce7f299358c3c"
+  },
+  "findings": []
+}

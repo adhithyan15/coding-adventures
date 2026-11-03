@@ -56,10 +56,14 @@ fn conformance_runtime() -> PathBuf {
         .status()
         .expect("build the conformance runtime");
     assert!(status.success(), "conformance runtime failed to build");
-    let library = root
-        .join("target")
-        .join("debug")
-        .join("libmosaic_app_conformance.dylib");
+    // The build above inherits CARGO_TARGET_DIR, so the library lands there
+    // when it is set (relative to `root`, the build's working directory),
+    // not in the workspace's own `target`.
+    let target = std::env::var_os("CARGO_TARGET_DIR")
+        .filter(|dir| !dir.is_empty())
+        .map(|dir| root.join(dir))
+        .unwrap_or_else(|| root.join("target"));
+    let library = target.join("debug").join("libmosaic_app_conformance.dylib");
     assert!(
         library.is_file(),
         "missing conformance runtime at {library:?}"

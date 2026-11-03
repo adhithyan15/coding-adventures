@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C420-weizhang",
+    "language": "chinese",
+    "chapter": 420,
+    "sequence": 31970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dc070daea5081dfa"
+  },
+  "findings": []
+}

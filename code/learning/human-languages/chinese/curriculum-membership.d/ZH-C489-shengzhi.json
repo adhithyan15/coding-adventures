@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C489-shengzhi",
+  "pathSegment": "ZH-PATH-489-STAFF489",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-489-STAFF489",
+      "order": 5
+    }
+  ]
+}

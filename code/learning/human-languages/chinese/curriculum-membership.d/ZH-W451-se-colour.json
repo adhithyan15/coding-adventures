@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W451-se-colour",
+  "pathSegment": "ZH-PATH-451-SPECIAL451",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-451-SPECIAL451",
+      "order": 2
+    }
+  ]
+}

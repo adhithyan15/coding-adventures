@@ -104,17 +104,22 @@ to the first free quarantine name -- `mosaic-state.v1.json.corrupt`, then
 A quarantine is never replaced or deleted, since it may hold the user's real
 data. A name is taken when anything is there: a file, a directory, or a link,
 even a dangling one. Taken names are skipped, and the step that takes a name
-refuses an existing target. XAML uses `File.Move(..., overwrite: false)`, which
-is atomic on Windows. Flutter, Qt, Compose and SwiftUI claim the name first with
+refuses an existing target. Every host claims the name first with
 an exclusive create (`createSync(exclusive: true)`, `QIODevice::NewOnly`,
-`Files.createFile`, `open(O_CREAT | O_EXCL)`) and then rename atomically onto
-that empty placeholder. They cannot use a plain move: `dart:io`'s rename
-replaces, `QFile::rename` falls back to a truncating copy, and on POSIX the
-JDK's `Files.move` and Foundation's `moveItem` check and then rename(2), which
-replaces whatever appeared in between. When the exclusive step fails, the host
-looks at the name again and moves on if something is now there; it never
-decides that from the error, because Windows reports a directory in the way as
-access denied rather than "exists". If the move fails or all ten names are taken, the rejected file is
+`Files.createFile`, `open(O_CREAT | O_EXCL)`, `FileMode.CreateNew`) and then
+renames atomically onto that empty placeholder. None can use a plain move:
+`dart:io`'s rename replaces, `QFile::rename` falls back to a truncating copy,
+on POSIX the JDK's `Files.move` and Foundation's `moveItem` check and then
+rename(2), which replaces whatever appeared in between, and .NET's
+`File.Move(..., overwrite: false)` is link(2) then unlink(2), which can fail
+halfway and leave the name as a hard link to the live file. When the exclusive
+step fails, the host looks at the name again and moves on if something is now
+there; it never decides that from the error, because Windows reports a
+directory in the way as access denied rather than "exists". A failed attempt
+never uses a name up (a placeholder the move did not fill is removed), and a
+name the host cannot even inspect is reported as that error, with the name,
+rather than counted as taken: counting it would walk all ten and claim they
+were all taken. If the move fails or all ten names are taken, the rejected file is
 still at the live path, so the host saves nothing for the rest of the session
 and its warning ends "This session will not be saved."
 Set `MOSAIC_APP_STATE_PATH` to an explicit file for tests or portable launches.

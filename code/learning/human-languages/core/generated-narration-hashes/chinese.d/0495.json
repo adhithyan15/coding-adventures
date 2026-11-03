@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 495,
+  "sourceHash": "fnv1a64:4d21f0925b24981a",
+  "lessonIds": [
+    "ZH-C495-qizhong",
+    "ZH-C495-kaochang",
+    "ZH-C495-manfen",
+    "ZH-C495-zuobi",
+    "ZH-C495-nanti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch495.txt",
+  "json": "chinese/narration/ch495.json",
+  "textHash": "fnv1a64:af23894467015e2b",
+  "jsonHash": "fnv1a64:e140b431d50f2fcf",
+  "findings": []
+}

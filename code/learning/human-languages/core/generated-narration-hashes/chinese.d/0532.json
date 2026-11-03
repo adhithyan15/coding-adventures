@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 532,
+  "sourceHash": "fnv1a64:b4dc1f25b360adc2",
+  "lessonIds": [
+    "ZH-C532-youwang",
+    "ZH-W532-wang-hope",
+    "ZH-C532-babude",
+    "ZH-C532-qiwang",
+    "ZH-C532-ruyi",
+    "ZH-C532-zhiwang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch532.txt",
+  "json": "chinese/narration/ch532.json",
+  "textHash": "fnv1a64:b24630f6d3740bb8",
+  "jsonHash": "fnv1a64:02108bd04294a3fe",
+  "findings": []
+}

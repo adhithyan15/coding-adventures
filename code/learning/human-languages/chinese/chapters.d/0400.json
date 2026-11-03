@@ -1,0 +1,19 @@
+{
+  "chapter": 400,
+  "title": "Moving the Dates",
+  "label": "ch:zh-moving-the-dates",
+  "canDo": "I can talk about adjusting a plan, making a stay longer or a trip shorter, the original plan and a settled life.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C400-anding",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 400: I can talk about adjusting a plan, making a stay longer or a trip shorter, the original plan and a settled life.",
+    "assesses": [
+      "ZH-LEX-C400-ADJUST400-03",
+      "ZH-LEX-C400-ADJUST400-04",
+      "ZH-LEX-C400-ADJUST400-05"
+    ]
+  }
+}

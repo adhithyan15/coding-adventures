@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-334-REDENV334",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-334-REDENV334"
+  ],
+  "after": []
+}

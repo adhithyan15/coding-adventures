@@ -1,0 +1,864 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 454,
+  "title": "The Information Desk",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:4069b022b2ed06d0",
+  "lessons": [
+    {
+      "id": "ZH-C454-fuwutai",
+      "sequence": 34240,
+      "title": "fúwùtái — service desk; information desk",
+      "headword": "fúwùtái",
+      "romanization": "fúwùtái",
+      "gloss": "service desk; information desk",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:521f60e177f92ae7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to carry in the hand, then the Mandarin for a luggage tag."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fúwùtái",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fúwùtái — \"service desk; information desk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "qù fúwùtái zěnme zǒu — How do I get to the information desk?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fúwùtái is built from fúwù 'to serve' and tái 'a platform', all inherited from Middle Chinese, bjuwk, mjuH and doj (Guangyun, in Baxter's transcription), which glosses the first 'to serve', the second 'affairs' and the last as a high square terrace."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fúwùtái",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fúwùtái*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fúwùtái, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fúwùtái*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qù fúwùtái zěnme zǒu — How do I get to the information desk?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qù fúwùtái zěnme zǒu* — How do I get to the information desk?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to carry in the hand, then the Mandarin for a luggage tag, then say fúwùtái again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to carry in the hand, then the Mandarin for a luggage tag, then say *fúwùtái* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fúwùtái mean? (\"Service desk; information desk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C454-zixun",
+      "sequence": 34250,
+      "title": "zīxún — to make an inquiry; to ask for advice",
+      "headword": "zīxún",
+      "romanization": "zīxún",
+      "gloss": "to make an inquiry; to ask for advice",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6be002e144c9619b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a luggage tag, then the Mandarin for an information desk."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zīxún",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zīxún — \"to make an inquiry; to ask for advice\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ kěyǐ qù fúwùtái zīxún — You can ask at the information desk."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zīxún is built from zī 'to consult' and xún 'to ask', both inherited from Middle Chinese, tsij and swin (Guangyun, in Baxter's transcription), which glosses the first 'to take counsel' and the second 'to consult'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zīxún",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zīxún*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zīxún, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zīxún*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ kěyǐ qù fúwùtái zīxún — You can ask at the information desk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ kěyǐ qù fúwùtái zīxún* — You can ask at the information desk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a luggage tag, then the Mandarin for an information desk, then say zīxún again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a luggage tag, then the Mandarin for an information desk, then say *zīxún* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zīxún mean? (\"To make an inquiry; to ask for advice\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C454-tushu",
+      "sequence": 34260,
+      "title": "图书 (túshū) — books on the shelves (of a library or bookshop)",
+      "headword": "图书",
+      "romanization": "túshū",
+      "gloss": "books on the shelves (of a library or bookshop)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2ef3e23ae534ed9a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for an information desk, then the Mandarin for to make an inquiry."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 图书",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "图书 — túshū — \"books on the shelves (of a library or bookshop)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这家书店的中文图书很多 zhè jiā shūdiàn de Zhōngwén túshū hěn duō — This bookshop has lots of Chinese books."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 图 (tú) — eight strokes: the frame of 国, and inside it a short stroke falling to the left, a bar that turns down to the left, a long stroke falling to the right, and two dots. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "图书 (túshū) is built from 图 (tú) 'a picture' and 书 'a book', both inherited from Middle Chinese, du and syo (Guangyun, in Baxter's transcription), which glosses the first 'to plan'; the sense 'a picture, a map' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "túshū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *túshū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "túshū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *túshū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè jiā shūdiàn de Zhōngwén túshū hěn duō — This bookshop has lots of Chinese books.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè jiā shūdiàn de Zhōngwén túshū hěn duō* — This bookshop has lots of Chinese books.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for an information desk, then the Mandarin for to make an inquiry, then say túshū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for an information desk, then the Mandarin for to make an inquiry, then say *túshū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 图书 (túshū) mean? (\"Books on the shelves (of a library or bookshop)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W454-tu-chart",
+      "sequence": 34265,
+      "title": "图 (tú) — a frame, and five strokes inside it",
+      "headword": "图",
+      "romanization": "tú",
+      "gloss": "图 — the frame of 国, with five strokes inside",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:c5405a7104981a51",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a frame, and five strokes inside it",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a frame, and five strokes inside it and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say túshū — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *túshū* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "国 回."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — guó, huí",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *guó*, *huí*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a frame, and five strokes inside it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "图 (tú)."
+            },
+            {
+              "kind": "speech",
+              "text": "A frame and what is inside it, as in 国: the frame opens first, takes its inside, and closes last."
+            },
+            {
+              "kind": "speech",
+              "text": "The frame, three strokes. A vertical down the left. A bar that turns down the right side. The bar across the foot comes last, after the inside."
+            },
+            {
+              "kind": "speech",
+              "text": "The inside, five strokes. A short stroke falling to the left. A bar that turns down to the left. A long stroke falling to the right, across it. Then two dots, one under the other."
+            },
+            {
+              "kind": "speech",
+              "text": "2 + 5 + 1 = eight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "图 (tú), all eight, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 图, all eight, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 图 (tú)? (Eight.) Which stroke comes last? (The bar that closes the frame at the foot.) How many dots inside? (Two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 图 (tú), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C454-zhilu",
+      "sequence": 34270,
+      "title": "zhǐlù — to give directions; to show someone the way",
+      "headword": "zhǐlù",
+      "romanization": "zhǐlù",
+      "gloss": "to give directions; to show someone the way",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2afc5558059ca83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to make an inquiry, then the Mandarin for books on the shelves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhǐlù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhǐlù — \"to give directions; to show someone the way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā gěi wǒ zhǐlù gàosu wǒ wǎng qián zǒu — He gave me directions and told me to go straight on."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhǐlù is built from zhǐ 'to point' and 路 'a road', both inherited from Middle Chinese, tsyijX and luH (Guangyun, in Baxter's transcription), which glosses the first as a finger and 'to show'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐlù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐlù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐlù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐlù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā gěi wǒ zhǐlù gàosu wǒ wǎng qián zǒu — He gave me directions and told me to go straight on.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā gěi wǒ zhǐlù gàosu wǒ wǎng qián zǒu* — He gave me directions and told me to go straight on.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to make an inquiry, then the Mandarin for books on the shelves, then say zhǐlù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to make an inquiry, then the Mandarin for books on the shelves, then say *zhǐlù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhǐlù mean? (\"To give directions; to show someone the way\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C454-xuanchuance",
+      "sequence": 34280,
+      "title": "xuānchuáncè — brochure; leaflet",
+      "headword": "xuānchuáncè",
+      "romanization": "xuānchuáncè",
+      "gloss": "brochure; leaflet",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ba09a8001f30080",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for books on the shelves, then the Mandarin for to show someone the way."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xuānchuáncè",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xuānchuáncè — \"brochure; leaflet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "fúwùtái yǒu hěn duō miǎnfèi de xuānchuáncè — The information desk has lots of free brochures."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xuānchuáncè is built from xuānchuán 'to spread the word' and cè 'a booklet', all inherited from Middle Chinese, sjwen, drjwen and tsrheak (Guangyun, in Baxter's transcription), which glosses the first 'to spread', the second 'to turn' and the last as a set of bamboo slips."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xuānchuáncè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xuānchuáncè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xuānchuáncè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xuānchuáncè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fúwùtái yǒu hěn duō miǎnfèi de xuānchuáncè — The information desk has lots of free brochures.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fúwùtái yǒu hěn duō miǎnfèi de xuānchuáncè* — The information desk has lots of free brochures.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for books on the shelves, then the Mandarin for to show someone the way, then say xuānchuáncè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for books on the shelves, then the Mandarin for to show someone the way, then say *xuānchuáncè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xuānchuáncè mean? (\"Brochure; leaflet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

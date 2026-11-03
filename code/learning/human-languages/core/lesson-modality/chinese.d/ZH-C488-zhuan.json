@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C488-zhuan",
+    "language": "chinese",
+    "chapter": 488,
+    "sequence": 37140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0b2323b5060aa265"
+  },
+  "findings": []
+}

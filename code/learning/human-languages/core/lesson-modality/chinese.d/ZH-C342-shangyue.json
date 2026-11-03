@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C342-shangyue",
+    "language": "chinese",
+    "chapter": 342,
+    "sequence": 26240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b3f310ea87de355"
+  },
+  "findings": []
+}

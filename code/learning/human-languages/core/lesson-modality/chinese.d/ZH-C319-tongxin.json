@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C319-tongxin",
+    "language": "chinese",
+    "chapter": 319,
+    "sequence": 25080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c3cd91558d8dab99"
+  },
+  "findings": []
+}

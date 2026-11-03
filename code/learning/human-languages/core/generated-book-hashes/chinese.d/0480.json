@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:ddf9837f61b8f332",
+  "lessonIds": [
+    "ZH-C480-touyun",
+    "ZH-C480-fayang",
+    "ZH-C480-liubiti",
+    "ZH-C480-guomin",
+    "ZH-C480-shimian",
+    "ZH-R480-review-476-480"
+  ],
+  "tex": "chinese/book/chapters/ch480-symptoms.tex"
+}

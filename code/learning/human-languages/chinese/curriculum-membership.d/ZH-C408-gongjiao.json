@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C408-gongjiao",
+  "pathSegment": "ZH-PATH-408-BUS408",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-408-BUS408",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 376,
+  "sourceHash": "fnv1a64:bedddbf846b75f21",
+  "lessonIds": [
+    "ZH-C376-huodong",
+    "ZH-C376-shegong",
+    "ZH-C376-aihu",
+    "ZH-C376-rangzuo",
+    "ZH-C376-guangchangwu"
+  ],
+  "tex": "chinese/book/chapters/ch376-out-in-public.tex"
+}

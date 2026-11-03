@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C363-falu",
+    "language": "chinese",
+    "chapter": 363,
+    "sequence": 27890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:94f36d8f55ef0add"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C402-chengke",
+    "language": "chinese",
+    "chapter": 402,
+    "sequence": 31000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e1462800343c207"
+  },
+  "findings": []
+}

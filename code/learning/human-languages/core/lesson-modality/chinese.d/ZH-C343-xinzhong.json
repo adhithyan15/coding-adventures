@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C343-xinzhong",
+    "language": "chinese",
+    "chapter": 343,
+    "sequence": 26310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9995a48931ca8af9"
+  },
+  "findings": []
+}

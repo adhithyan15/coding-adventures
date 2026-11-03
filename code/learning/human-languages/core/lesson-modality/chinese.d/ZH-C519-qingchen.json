@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C519-qingchen",
+    "language": "chinese",
+    "chapter": 519,
+    "sequence": 39260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8c48cd2dddf05439"
+  },
+  "findings": []
+}

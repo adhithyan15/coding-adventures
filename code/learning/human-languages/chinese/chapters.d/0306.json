@@ -1,0 +1,19 @@
+{
+  "chapter": 306,
+  "title": "The Wedding",
+  "label": "ch:zh-the-wedding",
+  "canDo": "I can talk about the bride and the couple, the wedding sweets, and how the day went.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C306-xitang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 306: I can talk about the bride and the couple, the wedding sweets, and how the day went.",
+    "assesses": [
+      "ZH-LEX-C306-WEDDING306-03",
+      "ZH-LEX-C306-WEDDING306-04",
+      "ZH-LEX-C306-WEDDING306-05"
+    ]
+  }
+}

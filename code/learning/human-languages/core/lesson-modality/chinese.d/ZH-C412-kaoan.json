@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C412-kaoan",
+    "language": "chinese",
+    "chapter": 412,
+    "sequence": 31540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:224a6bf69dcb52b4"
+  },
+  "findings": []
+}

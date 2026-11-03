@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:6378e5e3a79d2c6c",
+  "lessonIds": [
+    "ZH-C333-chunwan",
+    "ZH-C333-chuxi",
+    "ZH-C333-nianyefan",
+    "ZH-C333-shousui",
+    "ZH-C333-bainian"
+  ],
+  "tex": "chinese/book/chapters/ch333-new-year-s-eve.tex"
+}

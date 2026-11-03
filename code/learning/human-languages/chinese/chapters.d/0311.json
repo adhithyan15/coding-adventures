@@ -1,0 +1,19 @@
+{
+  "chapter": 311,
+  "title": "The Police Car",
+  "label": "ch:zh-the-police-car",
+  "canDo": "I can talk about an investigation, a police car, a chase, an alarm and the traffic police.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C311-jiaojing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 311: I can talk about an investigation, a police car, a chase, an alarm and the traffic police.",
+    "assesses": [
+      "ZH-LEX-C311-POLICE311-03",
+      "ZH-LEX-C311-POLICE311-04",
+      "ZH-LEX-C311-POLICE311-05"
+    ]
+  }
+}

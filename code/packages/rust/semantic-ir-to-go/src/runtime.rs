@@ -1436,6 +1436,14 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_true_div(args)
 	case "neg":
 		return _sir_neg(args)
+	case "not":
+		// #18798 — boolean negation by SIR truthiness, for a first-class
+		// reference to the builtin; a direct `not(x)` call is inlined by
+		// the emitter.  With no argument it negates nil, as `!nil` does.
+		if len(args) == 0 {
+			return Value(true)
+		}
+		return Value(!_sir_truthy(args[0]))
 	case "=", "==":
 		return _sir_eq(args)
 	case "!=":

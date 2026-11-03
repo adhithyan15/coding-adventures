@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C433-huaqiao",
+  "pathSegment": "ZH-PATH-433-OVERSEAS433",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-433-OVERSEAS433",
+      "order": 4
+    }
+  ]
+}

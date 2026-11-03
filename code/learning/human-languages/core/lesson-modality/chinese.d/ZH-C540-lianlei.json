@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C540-lianlei",
+    "language": "chinese",
+    "chapter": 540,
+    "sequence": 40350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b43c8fad9a2f6ec"
+  },
+  "findings": []
+}

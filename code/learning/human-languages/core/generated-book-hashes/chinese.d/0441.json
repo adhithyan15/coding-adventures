@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 441,
+  "sourceHash": "fnv1a64:7c59d015b09ca9c8",
+  "lessonIds": [
+    "ZH-C441-jiaoqu",
+    "ZH-C441-yewai",
+    "ZH-C441-zhangpeng",
+    "ZH-C441-shenghuo",
+    "ZH-C441-tianran",
+    "ZH-R441-review-436-441"
+  ],
+  "tex": "chinese/book/chapters/ch441-out-in-the-open.tex"
+}

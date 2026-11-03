@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C476-shetou",
+    "language": "chinese",
+    "chapter": 476,
+    "sequence": 35940,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3b76c641383308f"
+  },
+  "findings": []
+}

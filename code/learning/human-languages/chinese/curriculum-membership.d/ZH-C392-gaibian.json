@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C392-gaibian",
+  "pathSegment": "ZH-PATH-392-NEWPLAN392",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-392-NEWPLAN392",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 299,
+  "sourceHash": "fnv1a64:80faebbd861bc4a6",
+  "lessonIds": [
+    "ZH-C299-dejiu",
+    "ZH-C299-jishi",
+    "ZH-C299-jijiu",
+    "ZH-C299-yundao",
+    "ZH-C299-qiangjiu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch299.txt",
+  "json": "chinese/narration/ch299.json",
+  "textHash": "fnv1a64:65ccca4532623003",
+  "jsonHash": "fnv1a64:f1de3817c6906d00",
+  "findings": []
+}

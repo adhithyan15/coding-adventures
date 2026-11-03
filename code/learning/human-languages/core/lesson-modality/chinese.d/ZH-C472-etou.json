@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C472-etou",
+    "language": "chinese",
+    "chapter": 472,
+    "sequence": 35760,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ee42c10bf5d1af9"
+  },
+  "findings": []
+}

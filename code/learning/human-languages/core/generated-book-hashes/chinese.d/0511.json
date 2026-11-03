@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:a24f19b861bdb612",
+  "lessonIds": [
+    "ZH-C511-qinren",
+    "ZH-W511-qin-kin",
+    "ZH-C511-fuqin",
+    "ZH-C511-muqin",
+    "ZH-C511-qinsheng",
+    "ZH-C511-qinzi"
+  ],
+  "tex": "chinese/book/chapters/ch511-close-family.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 507,
+  "title": "Fathers and Sons",
+  "label": "ch:zh-fathers-and-sons",
+  "canDo": "I can talk about brothers, fathers and sons, fathers and daughters, married couples and my elders.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C507-zhangbei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 507: I can talk about brothers, fathers and sons, fathers and daughters, married couples and my elders.",
+    "assesses": [
+      "ZH-LEX-C507-FATHER507-03",
+      "ZH-LEX-C507-FATHER507-04",
+      "ZH-LEX-C507-FATHER507-05"
+    ]
+  }
+}

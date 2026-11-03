@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:24a4af6f55cfe346",
+  "lessonIds": [
+    "ZH-C288-jiu",
+    "ZH-W288-jiu",
+    "ZH-C288-yaoshi",
+    "ZH-C288-conditional",
+    "ZH-C288-dehua",
+    "ZH-C288-depends",
+    "ZH-C288-practice"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch288.txt",
+  "json": "chinese/narration/ch288.json",
+  "textHash": "fnv1a64:5d3f248e42c04819",
+  "jsonHash": "fnv1a64:3c7151505d90cd25",
+  "findings": []
+}

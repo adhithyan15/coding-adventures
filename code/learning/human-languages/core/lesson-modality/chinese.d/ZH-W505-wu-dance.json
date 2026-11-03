@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W505-wu-dance",
+    "language": "chinese",
+    "chapter": 505,
+    "sequence": 37995,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2c0cd0a2c3652168",
+    "detachableSegments": [
+      "Script — eight strokes on top, then two pieces below"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

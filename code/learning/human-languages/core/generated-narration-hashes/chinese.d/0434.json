@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 434,
+  "sourceHash": "fnv1a64:5f9a4ec4458d303d",
+  "lessonIds": [
+    "ZH-C434-luyoutuan",
+    "ZH-C434-jihe",
+    "ZH-C434-gouwu",
+    "ZH-C434-liunian",
+    "ZH-C434-youji"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch434.txt",
+  "json": "chinese/narration/ch434.json",
+  "textHash": "fnv1a64:dfcbb333bb25634e",
+  "jsonHash": "fnv1a64:e5ca4c21997f8e6b",
+  "findings": []
+}

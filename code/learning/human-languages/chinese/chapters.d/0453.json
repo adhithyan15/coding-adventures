@@ -1,0 +1,19 @@
+{
+  "chapter": 453,
+  "title": "Bags and Cases",
+  "label": "ch:zh-bags-and-cases",
+  "canDo": "I can talk about a backpack, a suitcase, stuffing things in, carrying a case and a luggage tag.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C453-biaoqian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 453: I can talk about a backpack, a suitcase, stuffing things in, carrying a case and a luggage tag.",
+    "assesses": [
+      "ZH-LEX-C453-BAGS453-03",
+      "ZH-LEX-C453-BAGS453-04",
+      "ZH-LEX-C453-BAGS453-05"
+    ]
+  }
+}

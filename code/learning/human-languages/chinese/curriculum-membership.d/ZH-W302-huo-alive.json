@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W302-huo-alive",
+  "pathSegment": "ZH-PATH-302-BIRTH302",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-302-BIRTH302",
+      "order": 2
+    }
+  ]
+}

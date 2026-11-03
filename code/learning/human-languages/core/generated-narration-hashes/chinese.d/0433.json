@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:0618baacb385e548",
+  "lessonIds": [
+    "ZH-C433-jiedai",
+    "ZH-C433-haiwai",
+    "ZH-W433-hai-sea",
+    "ZH-C433-renshanrenhai",
+    "ZH-C433-huaqiao",
+    "ZH-C433-chuhai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch433.txt",
+  "json": "chinese/narration/ch433.json",
+  "textHash": "fnv1a64:f66e3c640d5acce9",
+  "jsonHash": "fnv1a64:46d2ca8ca4d63d88",
+  "findings": []
+}

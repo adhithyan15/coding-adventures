@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 487,
+  "sourceHash": "fnv1a64:ec640a02452cf5a2",
+  "lessonIds": [
+    "ZH-C487-hangye",
+    "ZH-C487-shiye",
+    "ZH-W487-ye-career",
+    "ZH-C487-jiuye",
+    "ZH-C487-shiye-jobless",
+    "ZH-C487-gongchang"
+  ],
+  "tex": "chinese/book/chapters/ch487-a-career.tex"
+}

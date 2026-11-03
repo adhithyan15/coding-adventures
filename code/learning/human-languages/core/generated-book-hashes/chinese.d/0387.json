@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:d3dd4ed86beebe9b",
+  "lessonIds": [
+    "ZH-C387-shouru",
+    "ZH-C387-cunkuan",
+    "ZH-C387-zhangdan",
+    "ZH-C387-wanggou",
+    "ZH-C387-yusuan"
+  ],
+  "tex": "chinese/book/chapters/ch387-money-in-money-out.tex"
+}

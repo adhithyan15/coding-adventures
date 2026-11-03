@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:f9a8d91e01e3f57a",
+  "lessonIds": [
+    "ZH-C338-guojie",
+    "ZH-C338-baifang",
+    "ZH-C338-tuanyuan",
+    "ZH-C338-jiari",
+    "ZH-C338-fengsu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch338.txt",
+  "json": "chinese/narration/ch338.json",
+  "textHash": "fnv1a64:c7d17c0fe1df2ee1",
+  "jsonHash": "fnv1a64:8cd5e7db24e5874e",
+  "findings": []
+}

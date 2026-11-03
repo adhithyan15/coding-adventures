@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C415-dengjipai",
+  "pathSegment": "ZH-PATH-415-TERMINAL415",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-415-TERMINAL415",
+      "order": 2
+    }
+  ]
+}

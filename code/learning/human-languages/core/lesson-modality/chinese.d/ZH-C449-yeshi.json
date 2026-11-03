@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C449-yeshi",
+    "language": "chinese",
+    "chapter": 449,
+    "sequence": 33980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:69d5b3c04b3b1ec7"
+  },
+  "findings": []
+}

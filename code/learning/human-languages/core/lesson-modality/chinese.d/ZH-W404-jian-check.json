@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W404-jian-check",
+    "language": "chinese",
+    "chapter": 404,
+    "sequence": 31115,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e03b1dbc672743b4",
+    "detachableSegments": [
+      "Script — the tree piece, then a roof and what is under it"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

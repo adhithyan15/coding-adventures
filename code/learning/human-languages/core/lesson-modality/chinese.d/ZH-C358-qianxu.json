@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C358-qianxu",
+    "language": "chinese",
+    "chapter": 358,
+    "sequence": 27650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ea373b0aab62f9eb"
+  },
+  "findings": []
+}
