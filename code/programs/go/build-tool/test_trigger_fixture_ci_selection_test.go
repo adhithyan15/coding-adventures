@@ -201,7 +201,7 @@ func TestTestTriggerFixtureConsumerMapTracksNativeReferences(t *testing.T) {
 			return nil
 		}
 		switch filepath.Ext(entry.Name()) {
-		case ".cs", ".dart", ".ex", ".exs", ".fs", ".fsx", ".go", ".hs", ".java", ".kt", ".lua", ".ml", ".mli", ".pl", ".pm", ".py", ".rb", ".rs", ".swift", ".ts":
+		case ".cs", ".dart", ".ex", ".exs", ".fs", ".fsx", ".go", ".hs", ".java", ".kt", ".lua", ".ml", ".mli", ".pl", ".pm", ".py", ".rb", ".rs", ".swift", ".t", ".ts":
 		default:
 			return nil
 		}
