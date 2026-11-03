@@ -4103,3 +4103,31 @@ fn only_the_entry_point_has_external_linkage() {
     let lib = lower(&module(None));
     assert!(!lib.contains("define internal"), "a library module keeps external linkage:\n{lib}");
 }
+
+/// #18800 security review, the WASM fail-open's reproducer on LLVM:
+/// `d = str_const "x" [bool]`, then `d = a ++ a` past a ceiling of 8, then
+/// `str_len d`. The concat must be the run-time call (which traps), and the
+/// length must be read from `d`'s header at run time, never folded from the
+/// stale "x" (1) or from the 16-byte join. (LLVM's validator already refuses a
+/// `str_const` whose hint is not `"str"`, so only that spelling reaches the
+/// lowering; the others are pinned as refusals.)
+#[test]
+fn a_rewritten_string_variable_never_reads_its_stale_literal() {
+    for hint in ["bool", "void", "str"] {
+        let mut m = module_with(IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("d".into()), vec![Operand::Str("x".into())], hint),
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("abcdefgh".into())], "str"),
+            IIRInstr::new("str_concat", Some("d".into()), vec![Operand::Var("a".into()), Operand::Var("a".into())], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("d".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        m.str_max_bytes = Some(8);
+        if hint != "str" {
+            assert!(matches!(lower_iir_to_llvm(&m, &IIRLlvmConfig::default()), Err(IIRLlvmError::ValidationFailed(_))));
+            continue;
+        }
+        let ll = lower(&m);
+        assert!(ll.contains("call i64 @__twig_str_concat("), "{hint}: the concat is a run-time call:\n{ll}");
+        assert!(!ll.contains("ret i64 1\n") && !ll.contains("ret i64 16\n"), "{hint}: a folded length:\n{ll}");
+    }
+}

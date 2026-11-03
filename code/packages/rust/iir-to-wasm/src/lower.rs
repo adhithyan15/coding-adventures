@@ -304,19 +304,36 @@ fn collect_runtime_valued_str_vars(fn_: &IIRFunction) -> HashSet<String> {
         .filter(|(_, ty)| ty == "str")
         .map(|(name, _)| name.as_str())
         .collect();
-    let mut written_strings = HashSet::new();
+    // Every write of every variable, whatever its op and type hint (#18800).
+    let mut writes: HashMap<&str, usize> = HashMap::new();
+    for dest in fn_.instructions.iter().filter_map(|i| i.dest.as_deref()) {
+        *writes.entry(dest).or_default() += 1;
+    }
     for instr in &fn_.instructions {
         let Some(dest) = instr.dest.as_deref() else {
             continue;
         };
-        if instr.type_hint != "str" {
+        // A string producer is recognised by its op as well as its hint:
+        // validation accepts a `str_const` / `str_concat` / `str_slice` whose
+        // `type_hint` is not `"str"` (e.g. `"bool"`), and such a write still
+        // puts a literal in the table.
+        let is_string_producer =
+            instr.type_hint == "str" || matches!(instr.op.as_str(), "str_const" | "str_concat" | "str_slice");
+        if !is_string_producer {
             continue;
         }
         // The literal table is keyed by variable, not instruction position.
         // Two writes in the SAME block are already enough to make its final
         // literal wrong for an earlier read. Use live handles for every write
         // and propagate that representation to downstream consumers.
-        if !written_strings.insert(dest) {
+        //
+        // Every write counts, not only the `"str"`-hinted ones (#18800). This
+        // pass used to count only those, so `d = str_const "x" [bool]` then
+        // `d = str_concat a, a [str]` looked like one write: `d` kept the
+        // literal "x", and when the concat was not folded (because the join
+        // was past the string ceiling) every read of `d` folded to "x" and
+        // the concat's `Trap.Overflow` never ran.
+        if writes.get(dest).copied().unwrap_or(0) > 1 {
             worklist.push(dest);
         }
         // How many leading `srcs` carry the string(s) this op derives its result
@@ -1558,7 +1575,32 @@ fn emit_instr(
                 // this site emitted the trap, with the over-long bytes already in
                 // the data segment.) And `str_const`s past the ceiling never get
                 // here: validation refuses them.
-                debug_assert!(lit.bytes.len() <= lang83.str_ceiling as usize, "a fold past the ceiling");
+                //
+                // Always-on check, in release builds too (#18800 security
+                // review): the folded value must be exactly this concat's
+                // two operands' literals joined, and within the ceiling. The
+                // literal table is keyed by variable name, so a bug that left a
+                // stale entry for `dest` would otherwise emit a wrong value
+                // here and skip the op's trap. Refuse to compile instead.
+                let joined = match instr.srcs.as_slice() {
+                    [Operand::Var(a), Operand::Var(b)] => {
+                        string_literals.get(a.as_str()).zip(string_literals.get(b.as_str())).map(|(la, lb)| {
+                            let mut v = la.bytes.clone();
+                            v.extend_from_slice(&lb.bytes);
+                            v
+                        })
+                    }
+                    _ => None,
+                };
+                if joined.as_deref() != Some(lit.bytes.as_slice()) || lit.bytes.len() > lang83.str_ceiling as usize {
+                    return Err(IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: format!(
+                            "str_concat {dest:?}: its folded literal is not its operands' joined literals \
+                             within the string ceiling (internal fold-table inconsistency); refusing to compile"
+                        ),
+                    });
+                }
                 // Both operands are literals — the joined bytes are a compile-time
                 // constant.  Normally the handle is that constant's raw data-segment
                 // offset.  But when this folded result crosses a call boundary
@@ -5590,6 +5632,14 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                     lit.len,
                                 );
                             }
+                            // `dest` now holds a run-time string, so it must not
+                            // keep a literal an earlier write gave it: the table is
+                            // keyed by name, and the lowering would fold every read
+                            // of `dest` (this concat included) to that stale value
+                            // (#18800 security review).
+                            if let Some(fn_strings) = string_literals.get_mut(&fn_.name) {
+                                fn_strings.remove(dest);
+                            }
                             continue;
                         };
                         let mut bytes = left_lit.bytes;
@@ -5716,6 +5766,11 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                     });
                             }
                             None => {
+                                // As for a concat that is not folded: forget any
+                                // literal an earlier write gave `dest` (#18800).
+                                if let Some(fn_strings) = string_literals.get_mut(&fn_.name) {
+                                    fn_strings.remove(dest);
+                                }
                                 // Runtime slice (a runtime-handle source and/or
                                 // runtime indices): the lowering bump-allocates a
                                 // fresh `[i32 len][bytes]` block and `memory.copy`s the

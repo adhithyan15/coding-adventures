@@ -5714,6 +5714,39 @@ mod tests {
         assert_eq!(ceiling_passed_to_c(&f), i64::from(interpreter_ir::STR_MAX_BYTES), "clamped");
     }
 
+    /// #18800 security review: the WASM fail-open's reproducer on the native
+    /// columns. `d = str_const "x"` (any hint), then `d = a ++ a` past a
+    /// ceiling of 8, then `str_len d`: the concat must be the run-time call
+    /// with the ceiling, and `str_len d` must not fold to the stale literal's
+    /// length (1) or the join's (16).
+    #[test]
+    fn a_rewritten_string_variable_never_reads_its_stale_literal() {
+        for hint in ["bool", "void", "str"] {
+            let mut module = IIRModule::new("m", "iir");
+            module.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+                IIRInstr::new("str_const", Some("d".into()), vec![Operand::Str("x".into())], hint),
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("abcdefgh".into())], "str"),
+                IIRInstr::new("str_concat", Some("d".into()), vec![Operand::Var("a".into()), Operand::Var("a".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("d".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ]));
+            module.str_max_bytes = Some(8);
+            prepare_module_for_aot(&mut module).unwrap();
+            let f = &module.functions[0];
+            let concat = f.instructions.iter().find(|i| i.dest.as_deref() == Some("d") && i.op == "call_builtin");
+            assert!(
+                concat.is_some_and(|i| matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "str_concat")),
+                "{hint}: the concat is a run-time call: {:?}",
+                f.instructions
+            );
+            let n = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n")).expect("n is defined");
+            assert!(
+                !(n.op == "const" && matches!(n.srcs.first(), Some(Operand::Int(1 | 16)))),
+                "{hint}: str_len d was folded: {n:?}"
+            );
+        }
+    }
+
     /// #18800 item 1: every native entry point refuses a `str_const` longer
     /// than the module's ceiling before it lowers anything. Before, the
     /// literal was baked into an `alloc_bytes` block and the module compiled

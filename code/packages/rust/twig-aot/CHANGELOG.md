@@ -6,6 +6,7 @@
 - Behaviour change: a module with `str_max_bytes` above `STR_MAX_BYTES` is now refused instead of having its ceiling clamped. `a_call_builtin_str_concat_gets_the_clamped_module_ceiling` pins the refusal through `prepare_module_for_aot`, and the clamp (still in `str_ceiling()`) through `lower_string_literals_for_aot` directly.
 - Test `a_literal_past_the_module_ceiling_is_refused_on_every_native_entry` (fails without the check).
 - Comments (item 5): the runtime `str_concat` path and its lowering test describe `__twig_str_concat(a, b, max)` / `call_builtin "str_concat" a b max` (they still said two arguments). Comment only.
+- Test `a_rewritten_string_variable_never_reads_its_stale_literal` pins that the reproducer of the WASM fail-open the security review found lowers to the run-time `str_concat` call with no folded length, for every hint. It is a guard and also passes without changes.
 
 ## Unreleased — LANG83 PR5a — native strings fail closed
 

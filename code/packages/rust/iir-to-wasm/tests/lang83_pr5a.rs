@@ -274,3 +274,41 @@ fn a_literal_join_past_the_ceiling_is_left_to_the_runtime_check() {
     // And a chain within the ceiling still folds all the way (8 → 16 → 32).
     assert_eq!(run(&doubling_chain(2, None)), Ok(32));
 }
+
+// ── #18800 security review: a stale literal must not stand in for a write ──
+
+/// `d = str_const "x"` with a non-`str` hint (validation accepts it), then
+/// `d = <op>`, then `str_len d`. The fold table is keyed by name, so `d`'s
+/// first literal must not answer for the second write.
+fn rewritten(first_hint: &str, second: IIRInstr, ceiling: Option<u32>) -> IIRModule {
+    module(
+        vec![IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("d".into()), vec![Operand::Str("x".into())], first_hint),
+            text("a", "abcdefgh"),
+            int("lo", 2),
+            int("hi", 99),
+            second,
+            IIRInstr::new("str_len", Some("n".into()), vec![v("d")], "i64"),
+            IIRInstr::new("ret", None, vec![v("n")], "i64"),
+        ])],
+        ceiling,
+    )
+}
+
+/// The reviewer's reproducer: under a ceiling of 8, `d = a ++ a` (16 bytes) is
+/// not folded, but the not-folded branch left `d`'s earlier literal "x" in the
+/// table, so `str_len d` returned 1 and the concat's `Trap.Overflow` never
+/// ran (before PR5a's follow-up the fold-site trap caught it). Now `d` is
+/// run-time valued (it is written twice, whatever the hints) and the run-time
+/// check traps. Same for a literal `str_slice` whose constant range is out of
+/// bounds: it must trap `Trap.Bounds`, not read the stale literal.
+#[test]
+fn a_rewritten_string_variable_never_reads_its_stale_literal() {
+    let concat = || IIRInstr::new("str_concat", Some("d".into()), vec![v("a"), v("a")], "str");
+    let slice = || IIRInstr::new("str_slice", Some("d".into()), vec![v("a"), v("lo"), v("hi")], "str");
+    for hint in ["bool", "void", "str"] {
+        assert_eq!(run(&rewritten(hint, concat(), Some(8))), Err(Some(OVERFLOW)), "concat, first hint {hint}");
+        assert_eq!(run(&rewritten(hint, concat(), None)), Ok(16), "concat fits, first hint {hint}");
+        assert_eq!(run(&rewritten(hint, slice(), None)), Err(Some(BOUNDS)), "slice, first hint {hint}");
+    }
+}
