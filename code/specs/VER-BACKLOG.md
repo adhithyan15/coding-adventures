@@ -39,6 +39,7 @@ Each selected group is split into bounded PRs if its implementation requires it.
 |---|---|---|
 | done / VER-P003 | TF01 Rust L0 bootstrap | #18807 merged as 6a09869c279; expected head 4e608afe3bc9 verified on fetched main; all checks acceptable |
 | P1 / VER-P004 | Rust CT01 corpus through L0 | #18849 retargeted to main after P003 merge; local checks pass; awaiting final-head hosted CI; every case, fixed-array API, fresh output, error mapping, logical work fields, regeneration/build selection |
+| P1 / VER-I004 | Enforce TF01's closed failure vocabulary at the Rust harness boundary | ready after P004; rejected invalid IDs must not escape as unregistered TAP diagnostics; spec, negative corpus and caller compatibility before code |
 | P1 / VER-P005 | Warrant v0 specification | waiting P004; VER04 syntax/types/bindings and negative examples |
 | P1 / VER-P006 | Warrant grammar/generated lexer/parser | waiting P005; positive/negative corpus and drift gate |
 | P1 / VER-P007 | Warrant type checker/Rust bindings | waiting P006; missing exports, wrong types and vacuous bindings reject |
@@ -80,6 +81,13 @@ can progress independently once their prerequisites are available.
 | VER26 follow-on | Busicom-to-gates, a capability-bearing pilot, then other languages |
 
 ## Discoveries and current plan
+
+- During pending CI for P004, its two negative-check failure paths were found
+  to invent adapter-specific IDs outside TF01's closed vocabulary. Correct them
+  to corpus-mismatch and validate the actual failing TAP with sabotage mode.
+  Follow-up I004 hardens the bootstrap API/output boundary so this class cannot
+  recur silently. Prioritize that concrete validation gap before selecting
+  Warrant's next design tranche after P004 merges.
 
 - VER00's original "nothing implemented" banner is stale; distinguish landed
   foundations from full-program completion.

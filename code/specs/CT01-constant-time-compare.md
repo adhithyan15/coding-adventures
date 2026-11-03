@@ -173,3 +173,10 @@ CFG gate remains separate compiler evidence; VER20 will prove full traces.
 Negative adapter cases must detect wrong equality/selection, successful output
 in place of a required error, and malformed work metadata. TF01's independent
 self-corpus and sabotage BUILD remain the checks of the underlying harness.
+
+Adapter diagnostics use TF01's closed failure vocabulary. A valid baseline
+that fails or an injected defect that escapes detection is `corpus-mismatch`;
+malformed transport is `corpus-malformed`. Adapter-specific diagnostic text
+belongs in the message, never in a new failure ID. Running this adapter with
+TF01's `--sabotage always-pass` must fail its negative checks while emitting
+only registered TF01 failure IDs.
