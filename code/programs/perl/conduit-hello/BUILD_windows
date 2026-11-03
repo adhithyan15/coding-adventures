@@ -1,2 +1,5 @@
 # build-tool: deps=perl/conduit
-if command -v mise >/dev/null 2>&1; then PERL_BIN=$(mise which perl 2>/dev/null || true); fi && if [ -z "${PERL_BIN:-}" ]; then PERL_BIN=$(command -v perl); fi && ( cd ../../../packages/perl/conduit && cargo build --release && dlext=$("$PERL_BIN" -MConfig -e 'print $Config{dlext}') && mkdir -p lib/auto/CodingAdventures/Conduit && cp target/release/Conduit.dll lib/auto/CodingAdventures/Conduit/Conduit.$dlext ) && "$PERL_BIN" -c hello.pl && prove -v t/
+# Each line runs as its own `cmd /C`, so no sh syntax. The perl on PATH is the
+# one that loads the extension, so it is the one asked for $Config{dlext}.
+cd ..\..\..\packages\perl\conduit && cargo build --release && perl -MConfig -MFile::Path=make_path -MFile::Copy=copy -e "make_path('lib/auto/CodingAdventures/Conduit'); copy('target/release/Conduit.dll', 'lib/auto/CodingAdventures/Conduit/Conduit.' . $Config{dlext}) or die qq{cannot stage Conduit.dll: $!\n}"
+perl -c hello.pl && prove -v t/

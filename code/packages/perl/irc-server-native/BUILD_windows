@@ -1,1 +1,5 @@
-if command -v mise >/dev/null 2>&1; then PERL_BIN=$(mise which perl 2>/dev/null || true); fi && if [ -z "${PERL_BIN:-}" ]; then PERL_BIN=$(command -v perl); fi && cargo build --release && dlext=$("$PERL_BIN" -MConfig -e 'print $Config{dlext}') && mkdir -p lib/auto/CodingAdventures/IrcServerNative && cp target/release/IrcServerNative.dll lib/auto/CodingAdventures/IrcServerNative/IrcServerNative.$dlext && prove -I"$PWD/lib" -v t/
+# Each line runs as its own `cmd /C`, so no sh syntax. The perl on PATH is the
+# one prove loads the extension into, so it is the one asked for $Config{dlext}.
+cargo build --release
+perl -MConfig -MFile::Path=make_path -MFile::Copy=copy -e "make_path('lib/auto/CodingAdventures/IrcServerNative'); copy('target/release/IrcServerNative.dll', 'lib/auto/CodingAdventures/IrcServerNative/IrcServerNative.' . $Config{dlext}) or die qq{cannot stage IrcServerNative.dll: $!\n}"
+prove -I"%CD%\lib" -v t/
