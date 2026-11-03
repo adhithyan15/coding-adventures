@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "spec": "code/specs/task-app-data-model.md, \"Typed names are trimmed of Unicode White_Space\"",
+  "about": "How a typed name or label is trimmed before it is stored. `whiteSpace` is every Unicode White_Space code point, in hex; each host's trim must remove exactly these from a one-character name and keep every other code point. Each case types `typed` into every name composer of a fresh app (Add Task, the edit-task field's Save, the Sheet Name cell, a new label, the Sheet Labels cell, a new project, a new checklist and a new checklist item) and checks what was stored. `stored` is the name every composer must store; null means the trimmed name is empty, so every composer must refuse it or do nothing, exactly as it does for an empty field. task-mosaic-app's native test and the web host's test both run every case, so the two hosts cannot drift apart. Invisible characters are written as \\u escapes.",
+  "whiteSpace": [
+    "0009", "000A", "000B", "000C", "000D", "0020", "0085", "00A0", "1680",
+    "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "200A",
+    "2028", "2029", "202F", "205F", "3000"
+  ],
+  "cases": [
+    { "name": "nothing to trim", "typed": "Groceries", "stored": "Groceries" },
+    { "name": "spaces and tabs", "typed": " \tGroceries\t ", "stored": "Groceries" },
+    { "name": "NO-BREAK SPACE", "typed": " Groceries ", "stored": "Groceries" },
+    { "name": "IDEOGRAPHIC SPACE", "typed": "　買い物　", "stored": "買い物" },
+    { "name": "NEXT LINE is White_Space (JS trim keeps it)", "typed": "Groceries\u0085", "stored": "Groceries" },
+    { "name": "NEXT LINE leading", "typed": "\u0085Groceries", "stored": "Groceries" },
+    { "name": "ZERO WIDTH NO-BREAK SPACE is not White_Space (JS trim strips it)", "typed": "﻿Groceries", "stored": "﻿Groceries" },
+    { "name": "ZERO WIDTH NO-BREAK SPACE trailing, outside a space", "typed": "Groceries﻿ ", "stored": "Groceries﻿" },
+    { "name": "ZERO WIDTH NO-BREAK SPACE stops the trim", "typed": " ﻿ Groceries", "stored": "﻿ Groceries" },
+    { "name": "a name that is only ZERO WIDTH NO-BREAK SPACE is not empty", "typed": "﻿", "stored": "﻿" },
+    { "name": "LINE and PARAGRAPH SEPARATOR", "typed": " Groceries ", "stored": "Groceries" },
+    { "name": "OGHAM SPACE MARK, EN QUAD to HAIR SPACE, NARROW NBSP, MMSP", "typed": "   Groceries  ", "stored": "Groceries" },
+    { "name": "mixed, every kind at both ends", "typed": " 　\u0085  \n\r\u000b\u000cGroceries\t    \u0085 ", "stored": "Groceries" },
+    { "name": "inner White_Space is kept", "typed": "  Gro ce\u0085ries  ", "stored": "Gro ce\u0085ries" },
+    { "name": "ZERO WIDTH SPACE is not White_Space", "typed": "​Groceries", "stored": "​Groceries" },
+    { "name": "MONGOLIAN VOWEL SEPARATOR is not White_Space", "typed": "Groceries᠎", "stored": "Groceries᠎" },
+    { "name": "only NEXT LINE is empty (JS trim keeps it)", "typed": "\u0085", "stored": null },
+    { "name": "all White_Space is empty", "typed": " \t\n\u000b\u000c\r\u0085                 　", "stored": null },
+    { "name": "plain spaces are empty", "typed": "   ", "stored": null }
+  ]
+}
