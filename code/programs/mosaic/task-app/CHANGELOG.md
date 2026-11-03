@@ -9,6 +9,10 @@ cut.
 
 ### Added
 
+- Retain failed XAML build payloads and bounded native smoke evidence separately
+  from verified release artifacts; restrict publication downloads to verified
+  release artifact names (#18845).
+
 - Task names are capped at 512 characters on every host (backlog 6e4).
   Nothing limited a task's name before, so a pasted or restored
   multi-megabyte one was stored, re-rendered and lowercased on every note
@@ -2057,7 +2061,3 @@ Without them nothing in this layout would have been vertically centred, and the 
 - End-to-end in a browser: adding tasks auto-schedules them (e.g. three tasks land on
   consecutive working days Mon→Tue→Wed), completion toggles work, and the projected
   finish updates — all driven by the Rust engine over WASM, with no console errors.
-
-## Unreleased - XAML diagnostics (#18845)
-
-Retain failed XAML build payloads and bounded native smoke evidence separately from verified release artifacts. Restrict publication downloads to verified release artifact names.
