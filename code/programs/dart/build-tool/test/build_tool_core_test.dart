@@ -46,6 +46,13 @@ void main() {
           jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
       final domain = fixture['domain'];
       if (domain != 'graph' && domain != 'diff_selection') continue;
+      if (domain == 'diff_selection') {
+        final input = fixture['input']! as Map<String, Object?>;
+        final options = input['options']! as Map<String, Object?>;
+        // This closed variant uses package-name strings rather than the
+        // legacy path-selection package records consumed here.
+        if (options.containsKey('trigger_relations')) continue;
+      }
       seen.add(fixture['id']! as String);
       if (domain == 'graph') {
         _assertGraphFixture(fixture);

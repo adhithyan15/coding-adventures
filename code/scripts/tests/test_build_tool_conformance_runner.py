@@ -150,7 +150,7 @@ class CorpusTests(unittest.TestCase):
 
         self.assertEqual(summary["schema_version"], 1)
         # Keep this pin in sync with every reviewed shared-corpus addition.
-        self.assertEqual(summary["case_count"], 179)
+        self.assertEqual(summary["case_count"], 185)
         self.assertEqual(summary["implementation_count"], 16)
         self.assertEqual(summary["established_languages"], 15)
         self.assertEqual(summary["execution_case_count"], 0)
@@ -3884,6 +3884,98 @@ class PureDomainValidationTests(unittest.TestCase):
             runner.validate_case_document(dishonest, **self._schema_args())
         self.assertEqual(raised.exception.code, "EXPECTED_GRAPH_RESULT_INVALID")
 
+    def test_test_trigger_selection_oracle_routes_before_legacy_diff(self) -> None:
+        fixtures = [
+            "test-trigger-selection-dev-cycle-outside-graph.json",
+            "test-trigger-selection-empty.json",
+            "test-trigger-selection-graph-cycle.json",
+            "test-trigger-selection-one-hop.json",
+            "test-trigger-selection-prerequisites-after-hop.json",
+            "test-trigger-selection-unknown-relation.json",
+        ]
+        with mock.patch.object(
+            runner,
+            "_package_index",
+            side_effect=AssertionError(
+                "test-trigger package names must not enter legacy object-package validation"
+            ),
+        ) as legacy_index:
+            for filename in fixtures:
+                with self.subTest(filename=filename):
+                    case = load_case(filename)
+                    runner.validate_case_document(
+                        case,
+                        **self._schema_args(),
+                    )
+                    runner.assert_result_matches(
+                        case,
+                        case["expected"],
+                        **self._result_schema_args(),
+                    )
+        legacy_index.assert_not_called()
+
+        one_hop = load_case("test-trigger-selection-one-hop.json")
+        self.assertEqual(
+            runner._expected_test_trigger_selection(one_hop["input"]["options"]),
+            (
+                {"rust/emit"},
+                {
+                    "rust/app-lib",
+                    "rust/builder",
+                    "rust/emit",
+                    "rust/emit-tests",
+                    "rust/harness",
+                },
+                {"rust/base"},
+            ),
+        )
+
+        for filename, diagnostic in (
+            (
+                "test-trigger-selection-graph-cycle.json",
+                "TEST_TRIGGER_GRAPH_CYCLE",
+            ),
+            (
+                "test-trigger-selection-unknown-relation.json",
+                "TEST_TRIGGER_RELATION_UNKNOWN",
+            ),
+        ):
+            with self.subTest(filename=filename):
+                case = load_case(filename)
+                self.assertEqual(
+                    runner._expected_test_trigger_selection(
+                        case["input"]["options"]
+                    ),
+                    diagnostic,
+                )
+                dishonest = copy.deepcopy(case)
+                dishonest["expected"]["diagnostics"] = [
+                    {"code": "TEST_TRIGGER_OTHER", "severity": "error"}
+                ]
+                with self.assertRaises(runner.ConformanceError) as raised:
+                    runner.validate_case_document(
+                        dishonest,
+                        **self._schema_args(),
+                    )
+                self.assertEqual(
+                    raised.exception.code,
+                    "EXPECTED_TEST_TRIGGER_ERROR_INVALID",
+                )
+
+        dishonest_success = copy.deepcopy(one_hop)
+        dishonest_success["expected"]["result"]["affected_packages"].append(
+            "rust/harness-user"
+        )
+        with self.assertRaises(runner.ConformanceError) as raised:
+            runner.validate_case_document(
+                dishonest_success,
+                **self._schema_args(),
+            )
+        self.assertEqual(
+            raised.exception.code,
+            "EXPECTED_TEST_TRIGGER_RESULT_INVALID",
+        )
+
     def test_diff_unknown_path_error_is_checked_by_the_independent_oracle(self) -> None:
         case = load_case("diff-selection-unknown-error.json")
         runner.validate_case_document(case, **self._schema_args())
@@ -4594,7 +4686,7 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         summary = json.loads(stdout.getvalue())
         # This second pin covers the CLI machine-readable summary path.
-        self.assertEqual(summary["case_count"], 179)
+        self.assertEqual(summary["case_count"], 185)
 
     def test_validate_result_reports_match_and_rejects_execution_override(self) -> None:
         case_path = CASES_ROOT / "graph-diamond.json"

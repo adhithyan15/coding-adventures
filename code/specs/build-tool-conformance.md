@@ -921,6 +921,33 @@ set, excluding packages already affected. All three lists are sorted by
 qualified name. Structural, boundary, match-limit, and unknown-path errors
 still return an empty result rather than a partial forced selection.
 
+Cargo test-trigger selection is a second, narrower `diff_selection` operation
+over already materialized package names, ordinary graph edges, test-trigger
+relations, and changed-package seeds. It does not parse `Cargo.toml`; manifest
+reading and repository discovery remain separate resolution concerns. The
+operation computes the ordinary dependent closure of the changed seeds, adds
+the direct test-trigger targets of packages in that closure exactly once, then
+computes ordinary prerequisites of the union. A trigger target does not gain
+its graph dependents, a trigger relation is not followed transitively, and
+prerequisites added in the last step do not fire triggers. Trigger relations
+therefore remain outside the dependency graph and may contain cycles. The
+three result lists are sorted `changed_packages`, `affected_packages`
+(dependent closure plus one-hop trigger targets), and
+`prerequisite_packages` (ordinary prerequisite closure excluding affected
+packages).
+
+This operation is bounded to 4,096 packages, 16,384 graph edges, 16,384
+test-trigger relations, and 4,096 changed seeds. Cardinality ceilings are
+checked in that order before element validation. Package and graph validation
+then precede graph-cycle detection; relation endpoint, self-edge, and duplicate
+validation precede changed-seed duplicate and endpoint validation. Every
+failure returns no partial selection and one stable `TEST_TRIGGER_*`
+diagnostic. The checked fixture tranche pins one-hop selection, prerequisite
+closure after the hop, a trigger cycle outside an acyclic graph, the empty
+request, an unknown relation endpoint, and an ordinary graph cycle. The
+operation accepts inert values only and gains no filesystem, Git, process,
+environment, network, clock, randomness, or credential authority.
+
 The adapter must not read the caller's real checkout, Git config, hooks, or
 credentials.
 
@@ -1730,6 +1757,12 @@ structured command fields use the shared definitions in the corpus schema.
 | `validation` | platform, selected checks, normalized package declarations, dependency edges, and optional orphan-crate/ledger snapshots | `valid` plus sorted stable diagnostic codes |
 | `toolchain_detection` | target platform, package-language records with closed inline BUILD-front snapshots, `null`/empty/explicit package selection, explicit forced-full mode, and forced toolchains | the complete canonical toolchain registry as a sorted boolean map |
 | `cli` | a portable action, decision condition, and whether the action would require later execution | exit code only |
+
+The Cargo test-trigger variant also uses `diff_selection`, but its closed
+`options` record is `packages`, ordinary `edges`, `trigger_relations`, and
+`changed_packages`; its result has the same three sorted selection lists. Its
+fixtures use the distinct `test-trigger-selection-*.json` filename prefix so
+the existing package-root `diff-selection-*.json` roster remains unchanged.
 
 `ci_gate_selection` applies one fixed operation-wide ceiling of 50,000,000
 path-selection work units whenever `force` is false, both snapshots are
