@@ -178,7 +178,10 @@ describe("Marathi A2 timed mock pair", () => {
       for (const row of expected[form]) expect(key).toContain(row);
     }
     expect(read("mock-1-answer-key.md")).toContain("ask both times and the fare");
+    expect(read("mock-1-examiner-script.md")).toContain("जाण्याची बस सकाळी आठ वाजता आहे");
+    expect(read("mock-1-examiner-script.md")).toContain("ती सहा वाजता आहे");
     expect(read("mock-1-examiner-script.md")).toContain("पन्नास रुपये");
+    expect(read("mock-1-examiner-script.md")).toContain("order the learner asks them");
     expect(read("mock-1-examiner-script.md")).not.toMatch(/पाचव्या\s+पाचव्या/u);
     expect(read("mock-2-answer-key.md")).toContain("ask what to\nbring");
     expect(read("mock-2-examiner-script.md")).toContain("reply **वही**");

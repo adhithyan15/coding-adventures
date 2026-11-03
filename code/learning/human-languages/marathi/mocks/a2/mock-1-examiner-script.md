@@ -80,6 +80,9 @@ Show only this card: **तुम्ही भेट दिलेलं एक �
 Show and read only this Marathi card: **तुम्हाला बसने गावाला जायचं आहे.
 गाव आणि प्रवासाचा दिवस सांगा. जाण्याची आणि परत येण्याची वेळ विचारा. बससाठी
 किती पैसे द्यायचे ते विचारा. माहिती पूर्ण नसेल तर पुन्हा विचारा आणि शेवटी धन्यवाद द्या.**
-Reply **परतीची बस संध्याकाळी आहे** without giving a time so the learner must
-clarify. If asked about the fare, reply **पन्नास रुपये**. Do not supply an
+If asked about the outward time, reply **जाण्याची बस सकाळी आठ वाजता आहे**.
+When asked about the return time, first reply **परतीची बस संध्याकाळी आहे**
+without giving a time so the learner must clarify; after the clarification,
+reply **ती सहा वाजता आहे**. If asked about the fare, reply **पन्नास रुपये**.
+Answer those questions in the order the learner asks them. Do not supply an
 answer model.
