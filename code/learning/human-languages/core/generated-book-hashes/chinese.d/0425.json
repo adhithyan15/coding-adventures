@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 425,
+  "sourceHash": "fnv1a64:1acc45fb5297827c",
+  "lessonIds": [
+    "ZH-C425-zhusu",
+    "ZH-C425-jiudian",
+    "ZH-W425-jiu-wine",
+    "ZH-C425-kefang",
+    "ZH-C425-fangka",
+    "ZH-C425-datang"
+  ],
+  "tex": "chinese/book/chapters/ch425-the-hotel.tex"
+}

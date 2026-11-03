@@ -48,6 +48,13 @@ module CodingAdventures
     # Examples of invalid names: "MyPackage", "my_package", "-bad"
     KEBAB_RE = /\A[a-z][a-z0-9]*(-[a-z0-9]+)*\z/
 
+    # The Darwin-only DEVELOPER_DIR selection every generated Haskell BUILD
+    # line carries (explained in generate_haskell). It is the exact prefix
+    # shape that `build-tool --validate-build-files` accepts, so it is kept
+    # as one constant.
+    HASKELL_DARWIN_CLT_PREFIX = 'if [ "$(uname -s)" = Darwin ]; then ' \
+      "export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; "
+
     # =====================================================================
     # Name Normalization
     # =====================================================================
@@ -1263,7 +1270,35 @@ module CodingAdventures
         cabal_project += "          ../#{dep}\n"
       end
 
-      build = "cabal test all\n"
+      # BUILD: select the Command Line Tools linker on macOS.
+      #
+      # GHC 9.4.8's macOS bindist hardcodes a Command Line Tools (CLT) SDK
+      # sysroot. On a runner whose default developer directory is an *older*
+      # Xcode, that Xcode's linker is handed CLT SDK stubs it cannot parse
+      # (`arm64e.x1`) and every link fails. Exporting DEVELOPER_DIR selects
+      # the matching CLT linker:
+      #
+      #   uname -s   effect of the prefix               then
+      #   Darwin     export DEVELOPER_DIR=<CLT path>    run cabal test all
+      #   Linux      nothing                            run cabal test all
+      #
+      # The build tool runs every BUILD line as its own `sh -c`, so the export
+      # lives only as long as that line's process tree, and `cabal test all`
+      # runs last, so its exit status is the line's. Cabal builds the whole
+      # local project inside that one process, so the package root itself
+      # must carry the selection. `build-tool --validate-build-files` rejects
+      # a Haskell BUILD without it (see lessons.d/
+      # ghc-must-select-the-linker-matching-its-hardcoded-macos-sdk.md).
+      build = "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.\n" \
+        "# Scope the selection to Cabal and its children, keeping other packages intact.\n" \
+        "#{HASKELL_DARWIN_CLT_PREFIX}cabal test all\n"
+
+      # BUILD_windows: the plain command, without the POSIX prefix.
+      #
+      # Windows runs BUILD lines under `cmd /C`, which cannot parse
+      # `if [ ... ]; then ...; fi`. Before the prefix existed Windows simply
+      # ran BUILD's `cabal test all`; this override keeps exactly that.
+      build_windows = "cabal test all\n"
 
       FileUtils.mkdir_p(File.join(target_dir, "src"))
       FileUtils.mkdir_p(File.join(target_dir, "test"))
@@ -1273,6 +1308,7 @@ module CodingAdventures
       write_file(File.join(target_dir, "src", "#{module_name}.hs"), lib_hs)
       write_file(File.join(target_dir, "test", "Spec.hs"), spec_hs)
       write_file(File.join(target_dir, "BUILD"), build)
+      write_file(File.join(target_dir, "BUILD_windows"), build_windows)
     end
 
     # =====================================================================
@@ -1346,14 +1382,18 @@ module CodingAdventures
     # Repository Root Detection
     # =====================================================================
 
-    # Walk up from cwd to find the git root directory.
+    # Walk up from `start` (the cwd by default) to find the git root directory.
     #
     # @return [String] path to the repository root
     # @raise [RuntimeError] if not inside a git repository
-    def self.find_repo_root
-      d = Dir.pwd
+    #
+    # The marker is `.git` of either kind: a directory in an ordinary clone,
+    # but a *file* (holding `gitdir: ...`) in a linked worktree or submodule.
+    # Checking only for a directory walked straight past a worktree's root.
+    def self.find_repo_root(start = Dir.pwd)
+      d = start
       loop do
-        return d if Dir.exist?(File.join(d, ".git"))
+        return d if File.exist?(File.join(d, ".git"))
 
         parent = File.dirname(d)
         raise "not inside a git repository" if parent == d
@@ -1460,16 +1500,30 @@ module CodingAdventures
     # Main Entry Point
     # =====================================================================
 
+    # Where the CLI spec lives. The JSON is shared by every language's
+    # scaffold-generator, so it sits beside them in code/programs/ rather
+    # than inside this package. Each ".." climbs one directory from this
+    # file's own directory (__dir__ = lib/coding_adventures/scaffold_generator):
+    #
+    #   ".." x1  lib/coding_adventures/
+    #   ".." x2  lib/
+    #   ".." x3  ruby/scaffold-generator/   (this package: no spec here)
+    #   ".." x4  ruby/
+    #   ".." x5  code/programs/             <- scaffold-generator.json
+    #
+    # The old three-level path stopped inside this package, so main raised
+    # ENOENT before parsing a single flag.
+    SPEC_FILE = File.expand_path("../../../../../scaffold-generator.json", __dir__)
+
     # Parse CLI arguments via CLI Builder and scaffold packages.
     #
     # This is the main entry point for the scaffold-generator program.
     # The entire CLI interface is defined in scaffold-generator.json;
-    # this method just orchestrates the business logic.
-    def self.main
-      spec_file = File.join(File.dirname(__FILE__), "..", "..", "..", "scaffold-generator.json")
-
+    # this method just orchestrates the business logic. `argv` defaults to
+    # the process arguments; tests pass their own.
+    def self.main(argv = ARGV)
       begin
-        result = CodingAdventures::CliBuilder::Parser.new(spec_file, ["scaffold-generator"] + ARGV).parse
+        result = CodingAdventures::CliBuilder::Parser.new(SPEC_FILE, ["scaffold-generator"] + argv).parse
       rescue CodingAdventures::CliBuilder::ParseErrors => e
         e.errors.each { |err| warn "scaffold-generator: #{err.message}" }
         exit 1

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W500-sai-match",
+    "language": "chinese",
+    "chapter": 500,
+    "sequence": 37735,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:441a50ff3044be0b",
+    "detachableSegments": [
+      "Script — a roof, a middle of seven strokes, a foot of four"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

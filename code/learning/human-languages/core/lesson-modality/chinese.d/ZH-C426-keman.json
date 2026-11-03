@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C426-keman",
+    "language": "chinese",
+    "chapter": 426,
+    "sequence": 32250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:33dd18498920c2cf"
+  },
+  "findings": []
+}

@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 535,
+  "sourceHash": "fnv1a64:3b5d030cdbdda014",
+  "lessonIds": [
+    "ZH-C535-yuanyi",
+    "ZH-W535-yuan-wish",
+    "ZH-C535-yuanwang",
+    "ZH-C535-ruyuan",
+    "ZH-C535-ziyuan",
+    "ZH-C535-danyuan"
+  ],
+  "tex": "chinese/book/chapters/ch535-if-you-re-willing.tex"
+}

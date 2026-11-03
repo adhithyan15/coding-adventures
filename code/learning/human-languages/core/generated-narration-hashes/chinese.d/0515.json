@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 515,
+  "sourceHash": "fnv1a64:62e8f9e6efe34bf7",
+  "lessonIds": [
+    "ZH-C515-hanleng",
+    "ZH-C515-siji",
+    "ZH-W515-ji-season",
+    "ZH-C515-yuji",
+    "ZH-C515-bishu",
+    "ZH-C515-shouhuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch515.txt",
+  "json": "chinese/narration/ch515.json",
+  "textHash": "fnv1a64:b34511974073133a",
+  "jsonHash": "fnv1a64:6721130aca03948e",
+  "findings": []
+}

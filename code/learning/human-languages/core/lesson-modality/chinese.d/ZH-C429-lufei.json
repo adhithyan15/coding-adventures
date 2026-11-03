@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C429-lufei",
+    "language": "chinese",
+    "chapter": 429,
+    "sequence": 32430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75a94b5cb6b79d21"
+  },
+  "findings": []
+}

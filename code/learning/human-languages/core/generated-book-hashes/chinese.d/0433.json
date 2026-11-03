@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 433,
+  "sourceHash": "fnv1a64:fd488cc5c2a17bf9",
+  "lessonIds": [
+    "ZH-C433-jiedai",
+    "ZH-C433-haiwai",
+    "ZH-W433-hai-sea",
+    "ZH-C433-renshanrenhai",
+    "ZH-C433-huaqiao",
+    "ZH-C433-chuhai"
+  ],
+  "tex": "chinese/book/chapters/ch433-from-overseas.tex"
+}

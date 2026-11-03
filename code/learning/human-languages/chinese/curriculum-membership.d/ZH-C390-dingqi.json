@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C390-dingqi",
+  "pathSegment": "ZH-PATH-390-AGREE390",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-390-AGREE390",
+      "order": 3
+    }
+  ]
+}

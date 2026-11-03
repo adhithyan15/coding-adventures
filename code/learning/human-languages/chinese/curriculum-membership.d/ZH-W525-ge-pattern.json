@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W525-ge-pattern",
+  "pathSegment": "ZH-PATH-525-SERVICE525",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-525-SERVICE525",
+      "order": 2
+    }
+  ]
+}

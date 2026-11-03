@@ -1,0 +1,19 @@
+{
+  "chapter": 444,
+  "title": "An Island",
+  "label": "ch:zh-an-island",
+  "canDo": "I can talk about diving, an island, a peninsula, a lighthouse and sunscreen.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C444-fangshaishuang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 444: I can talk about diving, an island, a peninsula, a lighthouse and sunscreen.",
+    "assesses": [
+      "ZH-LEX-C444-ISLAND444-03",
+      "ZH-LEX-C444-ISLAND444-04",
+      "ZH-LEX-C444-ISLAND444-05"
+    ]
+  }
+}

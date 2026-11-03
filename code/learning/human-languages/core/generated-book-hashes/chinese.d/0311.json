@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:e6ea28d24731c4a8",
+  "lessonIds": [
+    "ZH-C311-diaocha",
+    "ZH-C311-jingche",
+    "ZH-W311-jing-alert",
+    "ZH-C311-zhui",
+    "ZH-C311-jingbao",
+    "ZH-C311-jiaojing"
+  ],
+  "tex": "chinese/book/chapters/ch311-the-police-car.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 378,
+  "title": "Noise Next Door",
+  "label": "ch:zh-noise-next-door",
+  "canDo": "I can talk about noise, complaining, thin walls, strangers at the door and the management office.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C378-wuye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 378: I can talk about noise, complaining, thin walls, strangers at the door and the management office.",
+    "assesses": [
+      "ZH-LEX-C378-NOISE378-03",
+      "ZH-LEX-C378-NOISE378-04",
+      "ZH-LEX-C378-NOISE378-05"
+    ]
+  }
+}

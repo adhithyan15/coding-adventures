@@ -24,19 +24,29 @@ scaffold-generator.json (spec)     generator.rb (this tool)
 
 ## Usage
 
+Install the gems once (`bundle install` in this directory), then run
+`scaffold_generator_tool.rb` from anywhere inside the checkout you want to
+change. It scaffolds into the repository containing the current directory;
+a linked git worktree counts as its own repository.
+
 ```bash
+SG=code/programs/ruby/scaffold-generator/scaffold_generator_tool.rb
+
 # Generate a library for all 6 languages
-ruby scaffold_generator_tool.rb my-package --description "A cool package"
+ruby $SG my-package --description "A cool package"
 
 # Generate for a specific language
-ruby scaffold_generator_tool.rb my-package -l ruby --description "A cool package"
+ruby $SG my-package -l ruby --description "A cool package"
 
 # With dependencies and layer info
-ruby scaffold_generator_tool.rb my-package -l python -d logic-gates,arithmetic --layer 5
+ruby $SG my-package -l python -d logic-gates,arithmetic --layer 5
 
 # Dry run (preview what would be generated)
-ruby scaffold_generator_tool.rb my-package --dry-run
+ruby $SG my-package --dry-run
 ```
+
+The CLI spec is the `scaffold-generator.json` that every language's
+generator shares, in `code/programs/`.
 
 ## Dependencies
 

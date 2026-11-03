@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 479,
+  "sourceHash": "fnv1a64:15f227235598e1c9",
+  "lessonIds": [
+    "ZH-C479-shangba",
+    "ZH-C479-xie",
+    "ZH-W479-xie-blood",
+    "ZH-C479-zhixue",
+    "ZH-C479-xianxue",
+    "ZH-C479-xueya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch479.txt",
+  "json": "chinese/narration/ch479.json",
+  "textHash": "fnv1a64:8e4a5eab1d40c896",
+  "jsonHash": "fnv1a64:502c85060c34722a",
+  "findings": []
+}

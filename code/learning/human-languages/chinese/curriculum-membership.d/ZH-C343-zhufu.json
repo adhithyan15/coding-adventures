@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C343-zhufu",
+  "pathSegment": "ZH-PATH-343-FARAWAY343",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-343-FARAWAY343",
+      "order": 3
+    }
+  ]
+}

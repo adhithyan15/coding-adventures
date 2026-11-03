@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 473,
+  "sourceHash": "fnv1a64:233a1170e116ed40",
+  "lessonIds": [
+    "ZH-C473-zui",
+    "ZH-C473-yayi",
+    "ZH-W473-ya-tooth",
+    "ZH-C473-yachi",
+    "ZH-C473-baya",
+    "ZH-C473-buya"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch473.txt",
+  "json": "chinese/narration/ch473.json",
+  "textHash": "fnv1a64:e40f94fe4f94b40b",
+  "jsonHash": "fnv1a64:e98f7c6d950efea1",
+  "findings": []
+}

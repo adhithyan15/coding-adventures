@@ -1,0 +1,19 @@
+{
+  "chapter": 291,
+  "title": "Something New",
+  "label": "ch:zh-something-new",
+  "canDo": "I can say someone was interviewed, something was invented, an event broke out and news was announced.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C291-xuanbu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 291: I can say someone was interviewed, something was invented, an event broke out and news was announced.",
+    "assesses": [
+      "ZH-LEX-C291-INVENT291-03",
+      "ZH-LEX-C291-INVENT291-04",
+      "ZH-LEX-C291-INVENT291-05"
+    ]
+  }
+}

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — a `rescue` binding the clause reassigns (#18798)
+
+`rescue => e` ⏎ `e = 5` failed: the binding was always `const`
+(the reassignment did not type-check).  It is now `let` when the clause stores into it (`const` otherwise), like every
+other binding.  Test `rescue_binding_that_the_clause_reassigns_is_let_ts`; end-to-end, `sir-conformance`'s
+`rb_rescue_binding_reassigned_in_the_clause`.
+
 ## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
 
 ### Globals and constants never collide with functions

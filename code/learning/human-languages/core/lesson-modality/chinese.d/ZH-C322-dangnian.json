@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C322-dangnian",
+    "language": "chinese",
+    "chapter": 322,
+    "sequence": 25200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:80b4217d675b82d7"
+  },
+  "findings": []
+}

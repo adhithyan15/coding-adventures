@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 356,
+  "sourceHash": "fnv1a64:a454770628eac009",
+  "lessonIds": [
+    "ZH-C356-jiaoxun",
+    "ZH-C356-cuoguo",
+    "ZH-W356-cuo-wrong",
+    "ZH-C356-chucuo",
+    "ZH-C356-cuowu",
+    "ZH-C356-gaizheng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch356.txt",
+  "json": "chinese/narration/ch356.json",
+  "textHash": "fnv1a64:007adb8e3b2391f7",
+  "jsonHash": "fnv1a64:f367d51859e98791",
+  "findings": []
+}

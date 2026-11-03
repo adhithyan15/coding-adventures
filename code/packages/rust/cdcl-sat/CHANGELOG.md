@@ -1,5 +1,16 @@
 # Changelog — `cdcl-sat`
 
+## 0.3.0 — 2026-11-02
+
+### Added
+
+- `Solver::set_work_budget` and `Stats::work` (watch-list visits during
+  propagation). A conflict budget alone does not bound time on formulas
+  with millions of clauses; the work budget does. When it runs out, `solve`
+  returns `Unknown` and the solver stays usable. Added for the VER10 BV
+  tactic after its security review timed a 155-byte 512-bit multiplication
+  query at more than 300 s.
+
 ## 0.2.0 — 2026-11-02
 
 VER11: DRAT proof logging.

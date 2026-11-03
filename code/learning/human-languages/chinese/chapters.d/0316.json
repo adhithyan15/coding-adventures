@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "A New Place",
+  "label": "ch:zh-a-new-place",
+  "canDo": "I can talk about registering in a new town, getting to know it, and life there.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C316-ziran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can talk about registering in a new town, getting to know it, and life there.",
+    "assesses": [
+      "ZH-LEX-C316-PLACE316-03",
+      "ZH-LEX-C316-PLACE316-04",
+      "ZH-LEX-C316-PLACE316-05"
+    ]
+  }
+}

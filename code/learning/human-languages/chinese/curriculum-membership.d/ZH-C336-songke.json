@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C336-songke",
+  "pathSegment": "ZH-PATH-336-SEEOFF336",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-336-SEEOFF336",
+      "order": 3
+    }
+  ]
+}

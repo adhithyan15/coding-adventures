@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Talking It Over",
+  "label": "ch:zh-talking-it-over",
+  "canDo": "I can say we are discussing something, talk it over with the other side and say we all agree.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C348-yizhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can say we are discussing something, talk it over with the other side and say we all agree.",
+    "assesses": [
+      "ZH-LEX-C348-TALK348-03",
+      "ZH-LEX-C348-TALK348-04",
+      "ZH-LEX-C348-TALK348-05"
+    ]
+  }
+}

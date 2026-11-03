@@ -1,0 +1,19 @@
+{
+  "chapter": 303,
+  "title": "A Name and a School",
+  "label": "ch:zh-a-name-and-a-school",
+  "canDo": "I can talk about naming a baby, a childhood name, nursery school and the start of term.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C303-xinsheng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 303: I can talk about naming a baby, a childhood name, nursery school and the start of term.",
+    "assesses": [
+      "ZH-LEX-C303-NAME303-03",
+      "ZH-LEX-C303-NAME303-04",
+      "ZH-LEX-C303-NAME303-05"
+    ]
+  }
+}

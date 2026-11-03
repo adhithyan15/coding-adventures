@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 396,
+  "sourceHash": "fnv1a64:3110e780b00030e0",
+  "lessonIds": [
+    "ZH-C396-buguan",
+    "ZH-C396-jiran",
+    "ZH-C396-chufei",
+    "ZH-C396-quantian",
+    "ZH-C396-jishi",
+    "ZH-R396-review-392-396"
+  ],
+  "tex": "chinese/book/chapters/ch396-whatever-happens.tex"
+}

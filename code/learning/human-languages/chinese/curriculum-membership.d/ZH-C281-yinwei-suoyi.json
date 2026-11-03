@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C281-yinwei-suoyi",
+  "pathSegment": "ZH-PATH-281-EXAMPLE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-281-EXAMPLE",
+      "order": 2
+    }
+  ]
+}

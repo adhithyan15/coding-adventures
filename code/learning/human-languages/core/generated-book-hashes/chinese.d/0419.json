@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:c86758e7be492d80",
+  "lessonIds": [
+    "ZH-C419-jieji",
+    "ZH-C419-duihuan",
+    "ZH-C419-waibi",
+    "ZH-C419-guoji",
+    "ZH-C419-guonei",
+    "ZH-R419-review-414-419"
+  ],
+  "tex": "chinese/book/chapters/ch419-arrivals.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C332-gui",
+  "pathSegment": "ZH-PATH-332-GHOST332",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-332-GHOST332",
+      "order": 1
+    }
+  ]
+}

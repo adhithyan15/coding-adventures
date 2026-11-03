@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 302,
+  "sourceHash": "fnv1a64:a5f1462fbfbe444e",
+  "lessonIds": [
+    "ZH-C302-huaiyun",
+    "ZH-C302-huo",
+    "ZH-W302-huo-alive",
+    "ZH-C302-yinger",
+    "ZH-C302-jiuhuo-revive",
+    "ZH-C302-shuangbaotai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch302.txt",
+  "json": "chinese/narration/ch302.json",
+  "textHash": "fnv1a64:c12a433f4e61e4d4",
+  "jsonHash": "fnv1a64:dfbabedfb09a617e",
+  "findings": []
+}

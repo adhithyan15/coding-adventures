@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C278-sequence",
+  "pathSegment": "ZH-PATH-278-FIRST",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-278-FIRST",
+      "order": 2
+    }
+  ]
+}

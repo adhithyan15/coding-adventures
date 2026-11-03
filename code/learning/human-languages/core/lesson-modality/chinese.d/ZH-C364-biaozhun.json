@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C364-biaozhun",
+    "language": "chinese",
+    "chapter": 364,
+    "sequence": 27950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1759abccae8b2e98"
+  },
+  "findings": []
+}

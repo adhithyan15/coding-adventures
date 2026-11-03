@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:47c08dc118b5edb2",
+  "lessonIds": [
+    "ZH-C344-baocun",
+    "ZH-C344-jiyi",
+    "ZH-C344-wangshi",
+    "ZH-C344-xiangce",
+    "ZH-C344-yongyuan"
+  ],
+  "tex": "chinese/book/chapters/ch344-keeping-memories.tex"
+}

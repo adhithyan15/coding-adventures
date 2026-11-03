@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:9e2bc513bf728689",
+  "lessonIds": [
+    "ZH-C409-gaofeng",
+    "ZH-C409-jiaotong",
+    "ZH-W409-tong-through",
+    "ZH-C409-tongche",
+    "ZH-C409-shoupiaoyuan",
+    "ZH-C409-dache"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch409.txt",
+  "json": "chinese/narration/ch409.json",
+  "textHash": "fnv1a64:f2edfc36d7e4e48a",
+  "jsonHash": "fnv1a64:a83bd390948dfed0",
+  "findings": []
+}

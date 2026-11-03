@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C523-maimai",
+    "language": "chinese",
+    "chapter": 523,
+    "sequence": 39470,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bd034922de36a9f9"
+  },
+  "findings": []
+}

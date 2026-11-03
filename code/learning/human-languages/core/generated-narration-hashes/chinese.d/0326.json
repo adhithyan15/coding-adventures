@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:e4548f4aff293383",
+  "lessonIds": [
+    "ZH-C326-guojia",
+    "ZH-C326-shijie",
+    "ZH-W326-jie-boundary",
+    "ZH-C326-waijie",
+    "ZH-C326-jianli",
+    "ZH-C326-wenming"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch326.txt",
+  "json": "chinese/narration/ch326.json",
+  "textHash": "fnv1a64:14b0b1138cc09189",
+  "jsonHash": "fnv1a64:25d64124af7e9cc3",
+  "findings": []
+}

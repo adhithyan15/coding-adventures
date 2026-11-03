@@ -148,8 +148,22 @@ class CommandLineTests(unittest.TestCase):
                 ]
             fixture.write_text(json.dumps(document), encoding="utf-8")
             self.assertEqual(self.run_main(fixture)[0], 1)
+            self.assertFalse((fixture.parent / MODULE.FLAT).exists())
             self.assertEqual(self.run_main(fixture, "--write")[0], 0)
             self.assertEqual(json.loads(fixture.read_text()), MODULE.load())
+
+    def test_stale_flat_form_is_caught_and_write_repairs_it(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = pathlib.Path(tmp) / "cases.json"
+            fixture.write_text(MODULE.FIXTURE.read_text(encoding="utf-8"))
+            (fixture.parent / MODULE.FLAT).write_text("case\n")
+            code, stderr = self.run_main(fixture)
+            self.assertEqual(code, 1)
+            self.assertIn("cases.txt is stale", stderr)
+            self.assertEqual(self.run_main(fixture, "--write")[0], 0)
+            flat = (fixture.parent / MODULE.FLAT).read_text()
+            real = (MODULE.FIXTURE.parent / MODULE.FLAT).read_text()
+            self.assertEqual(flat, real)
 
     def test_duplicate_json_key_is_refused(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

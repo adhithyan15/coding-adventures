@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C409-gaofeng",
+    "language": "chinese",
+    "chapter": 409,
+    "sequence": 31360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9458657b4544a9b4"
+  },
+  "findings": []
+}

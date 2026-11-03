@@ -1,0 +1,21 @@
+{
+  "chapter": 396,
+  "title": "Whatever Happens",
+  "label": "ch:zh-whatever-happens",
+  "canDo": "I can talk about doing something no matter what, since something is so, unless something happens, all day and even if something happens.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-R396-review-392-396",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 396: I can talk about doing something no matter what, since something is so, unless something happens, all day and even if something happens.",
+    "assesses": [
+      "ZH-LEX-C396-NOMATTER396-01",
+      "ZH-LEX-C396-NOMATTER396-02",
+      "ZH-LEX-C396-NOMATTER396-03",
+      "ZH-LEX-C396-NOMATTER396-04",
+      "ZH-LEX-C396-NOMATTER396-05"
+    ]
+  }
+}

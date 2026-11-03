@@ -1,0 +1,19 @@
+{
+  "chapter": 439,
+  "title": "Country Life",
+  "label": "ch:zh-country-life",
+  "canDo": "I can talk about rice paddies, an orchard, a farm stay, ducks and getting away to unwind.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C439-sanxin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 439: I can talk about rice paddies, an orchard, a farm stay, ducks and getting away to unwind.",
+    "assesses": [
+      "ZH-LEX-C439-COUNTRY439-03",
+      "ZH-LEX-C439-COUNTRY439-04",
+      "ZH-LEX-C439-COUNTRY439-05"
+    ]
+  }
+}

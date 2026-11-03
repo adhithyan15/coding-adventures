@@ -1200,12 +1200,13 @@ mod tests {
 
     #[test]
     fn narrowing_lt_proves_call() {
-        // In the true branch of `(< x 128)`, x is narrowed to RefinedInt(x < 128).
-        // The `ascii-info` annotation is `[0, 128)`.
-        // Evidence: Predicated([x < 128]) — the solver checks [0,128) ∧ ¬(x < 128)
-        //   which is UNSAT → ProvenSafe → no error in the then-branch.
+        // `x` is a non-negative `(Int 0 1000)`. In the true branch of
+        // `(< x 128)` it is narrowed further, to x < 128. The `ascii-info`
+        // annotation is `[0, 128)`. Evidence: x ∈ [0, 1000) ∧ x < 128. The
+        // solver asks whether evidence ∧ ¬[0, 128) is satisfiable, finds it
+        // UNSAT → ProvenSafe → no error in the then-branch.
         let src = format!(
-            "{} (define (process (x : int)) (if (< x 128) (ascii-info x) 0))",
+            "{} (define (process (x : (Int 0 1000))) (if (< x 128) (ascii-info x) 0))",
             ascii_info_prelude()
         );
         let r = tc_strict(&src);
@@ -1215,6 +1216,20 @@ mod tests {
             r.errors
         );
         assert!(r.errors.is_empty(), "unexpected errors: {:?}", r.errors);
+    }
+
+    #[test]
+    fn narrowing_one_bound_does_not_prove_the_other() {
+        // With a plain `int`, `(< x 128)` says nothing about the lower bound:
+        // x = -1 passes the guard and violates `[0, 128)`. This was once
+        // "proven safe" only because the LIA tactic never tried negative
+        // values (LANG24 soundness contract); it must be reported.
+        let src = format!(
+            "{} (define (process (x : int)) (if (< x 128) (ascii-info x) 0))",
+            ascii_info_prelude()
+        );
+        let r = tc_strict(&src);
+        assert!(has_refinement_error(&r), "x = -1 is a counter-example: {:?}", r.errors);
     }
 
     #[test]
@@ -1311,15 +1326,16 @@ mod tests {
             "(define < (lambda (a b) #t))",
         ] {
             let src = format!(
-                "{} {op_def} (define (process (x : int)) (if (< x 128) (ascii-info x) 0))",
+                "{} {op_def} (define (process (x : (Int 0 1000))) (if (< x 128) (ascii-info x) 0))",
                 ascii_info_prelude()
             );
             let r = tc_strict(&src);
             assert!(has_refinement_error(&r), "{src}: {:?}", r.errors);
         }
-        // Control: with the builtin `<` the same call IS proven safe.
+        // Control: with the builtin `<` the same call IS proven safe (x is
+        // non-negative, so `x < 128` puts it in `[0, 128)`).
         let src = format!(
-            "{} (define (process (x : int)) (if (< x 128) (ascii-info x) 0))",
+            "{} (define (process (x : (Int 0 1000))) (if (< x 128) (ascii-info x) 0))",
             ascii_info_prelude()
         );
         assert!(tc_strict(&src).ok, "{src}");
@@ -1330,7 +1346,7 @@ mod tests {
         // With the builtin `not`, the else-branch of `(not (< x 128))` has
         // x < 128 — safe.  The user's `not` is the identity, so there the
         // else-branch has x >= 128.
-        let body = "(define (process (x : int)) (if (not (< x 128)) 0 (ascii-info x)))";
+        let body = "(define (process (x : (Int 0 1000))) (if (not (< x 128)) 0 (ascii-info x)))";
         let src = format!("{} {body}", ascii_info_prelude());
         assert!(tc_strict(&src).ok, "control: {src}");
         let src = format!("{} (define (not c) c) {body}", ascii_info_prelude());
@@ -1356,7 +1372,7 @@ mod tests {
         // `not`, so the guard still narrows and the call is proven safe.
         let src = format!(
             "{} (union not (A) (B)) \
-             (define (process (x : int)) (if (not (>= x 128)) (ascii-info x) 0))",
+             (define (process (x : (Int 0 1000))) (if (not (>= x 128)) (ascii-info x) 0))",
             ascii_info_prelude()
         );
         let r = tc_strict(&src);

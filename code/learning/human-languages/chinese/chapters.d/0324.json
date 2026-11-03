@@ -1,0 +1,19 @@
+{
+  "chapter": 324,
+  "title": "Remembering",
+  "label": "ch:zh-remembering",
+  "canDo": "I can say something came back to me, honour someone's memory, leave something behind and talk about an era.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C324-yinxiang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 324: I can say something came back to me, honour someone's memory, leave something behind and talk about an era.",
+    "assesses": [
+      "ZH-LEX-C324-RECALL324-03",
+      "ZH-LEX-C324-RECALL324-04",
+      "ZH-LEX-C324-RECALL324-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:93ec93d700939fd6",
+  "lessonIds": [
+    "ZH-C327-mingren",
+    "ZH-C327-yingxiong",
+    "ZH-C327-huangdi",
+    "ZH-C327-dazhang",
+    "ZH-C327-zhanzheng"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch327.txt",
+  "json": "chinese/narration/ch327.json",
+  "textHash": "fnv1a64:709134b3fdb1ced7",
+  "jsonHash": "fnv1a64:075ba79ae8ed2ee7",
+  "findings": []
+}

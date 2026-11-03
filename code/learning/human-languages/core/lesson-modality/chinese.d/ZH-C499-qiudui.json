@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C499-qiudui",
+    "language": "chinese",
+    "chapter": 499,
+    "sequence": 37670,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a4170ae01099293a"
+  },
+  "findings": []
+}

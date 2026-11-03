@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 432,
+  "sourceHash": "fnv1a64:f46b23264b4a9e6e",
+  "lessonIds": [
+    "ZH-C432-shao",
+    "ZH-C432-danji",
+    "ZH-C432-jiejiari",
+    "ZH-C432-quanpiao",
+    "ZH-C432-guanbi"
+  ],
+  "tex": "chinese/book/chapters/ch432-busy-and-quiet.tex"
+}

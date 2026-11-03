@@ -1,0 +1,19 @@
+{
+  "chapter": 390,
+  "title": "As We Agreed",
+  "label": "ch:zh-as-we-agreed",
+  "canDo": "I can talk about being sure, agreeing on a time, doing things regularly, keeping to a date and giving a rough time.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C390-dayue",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 390: I can talk about being sure, agreeing on a time, doing things regularly, keeping to a date and giving a rough time.",
+    "assesses": [
+      "ZH-LEX-C390-AGREE390-03",
+      "ZH-LEX-C390-AGREE390-04",
+      "ZH-LEX-C390-AGREE390-05"
+    ]
+  }
+}

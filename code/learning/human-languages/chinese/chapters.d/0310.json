@@ -1,0 +1,19 @@
+{
+  "chapter": 310,
+  "title": "Who Did It",
+  "label": "ch:zh-who-did-it",
+  "canDo": "I can talk about a suspect, a witness and evidence, lying and owning up.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C310-chengren",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 310: I can talk about a suspect, a witness and evidence, lying and owning up.",
+    "assesses": [
+      "ZH-LEX-C310-SUSPECT310-03",
+      "ZH-LEX-C310-SUSPECT310-04",
+      "ZH-LEX-C310-SUSPECT310-05"
+    ]
+  }
+}

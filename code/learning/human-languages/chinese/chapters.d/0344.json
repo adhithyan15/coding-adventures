@@ -1,0 +1,19 @@
+{
+  "chapter": 344,
+  "title": "Keeping Memories",
+  "label": "ch:zh-keeping-memories",
+  "canDo": "I can say I kept something, talk about memories, the past and a photo album, and say I will never forget.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C344-yongyuan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 344: I can say I kept something, talk about memories, the past and a photo album, and say I will never forget.",
+    "assesses": [
+      "ZH-LEX-C344-MEMORY344-03",
+      "ZH-LEX-C344-MEMORY344-04",
+      "ZH-LEX-C344-MEMORY344-05"
+    ]
+  }
+}

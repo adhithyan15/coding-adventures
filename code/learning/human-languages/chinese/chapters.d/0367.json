@@ -1,0 +1,19 @@
+{
+  "chapter": 367,
+  "title": "I See What You Mean",
+  "label": "ch:zh-i-see-what-you-mean",
+  "canDo": "I can say I understand someone, know them well, and find an idea ridiculous.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C367-kexiao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 367: I can say I understand someone, know them well, and find an idea ridiculous.",
+    "assesses": [
+      "ZH-LEX-C367-SEE367-03",
+      "ZH-LEX-C367-SEE367-04",
+      "ZH-LEX-C367-SEE367-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 522,
+  "sourceHash": "fnv1a64:58d34be422b41d7c",
+  "lessonIds": [
+    "ZH-C522-loushui",
+    "ZH-C522-shangmen",
+    "ZH-C522-shuifei",
+    "ZH-C522-menling",
+    "ZH-C522-diban"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch522.txt",
+  "json": "chinese/narration/ch522.json",
+  "textHash": "fnv1a64:300a2bd26db6d7f9",
+  "jsonHash": "fnv1a64:f9c442e46f9a1631",
+  "findings": []
+}

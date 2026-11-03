@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 470,
+  "sourceHash": "fnv1a64:43be5688d7802f25",
+  "lessonIds": [
+    "ZH-C470-zisi",
+    "ZH-C470-guzhi",
+    "ZH-C470-jiaoao",
+    "ZH-C470-mahu",
+    "ZH-C470-ben"
+  ],
+  "tex": "chinese/book/chapters/ch470-faults.tex"
+}

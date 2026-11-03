@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C539-chikui",
+    "language": "chinese",
+    "chapter": 539,
+    "sequence": 40320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1da1aff99327e03b"
+  },
+  "findings": []
+}

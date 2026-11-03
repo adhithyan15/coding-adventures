@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:e1064e115338fb54",
+  "lessonIds": [
+    "ZH-C345-jushuo",
+    "ZH-C345-congci",
+    "ZH-C345-qiyuan",
+    "ZH-C345-wangyou",
+    "ZH-C345-youbian",
+    "ZH-R345-review-341-345",
+    "ZH-R345-review-final-345"
+  ],
+  "tex": "chinese/book/chapters/ch345-looking-back.tex"
+}

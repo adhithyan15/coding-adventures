@@ -1,0 +1,19 @@
+{
+  "chapter": 494,
+  "title": "The Entrance Exam",
+  "label": "ch:zh-the-entrance-exam",
+  "canDo": "I can talk about the college entrance exam, the candidates, applying, getting in and failing.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C494-luobang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 494: I can talk about the college entrance exam, the candidates, applying, getting in and failing.",
+    "assesses": [
+      "ZH-LEX-C494-GAOKAO494-03",
+      "ZH-LEX-C494-GAOKAO494-04",
+      "ZH-LEX-C494-GAOKAO494-05"
+    ]
+  }
+}

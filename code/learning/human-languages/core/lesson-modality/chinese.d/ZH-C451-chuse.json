@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C451-chuse",
+    "language": "chinese",
+    "chapter": 451,
+    "sequence": 34100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9f3025cde743e030"
+  },
+  "findings": []
+}

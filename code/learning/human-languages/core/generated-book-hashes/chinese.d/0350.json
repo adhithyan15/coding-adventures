@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:e0f13b2b7ab7082d",
+  "lessonIds": [
+    "ZH-C350-shishi",
+    "ZH-C350-zhengming",
+    "ZH-C350-genju",
+    "ZH-C350-panduan",
+    "ZH-C350-queshi"
+  ],
+  "tex": "chinese/book/chapters/ch350-facts-and-grounds.tex"
+}

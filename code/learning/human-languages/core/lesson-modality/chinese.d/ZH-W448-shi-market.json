@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W448-shi-market",
+    "language": "chinese",
+    "chapter": 448,
+    "sequence": 33945,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:2bfd00dfe57a50c8",
+    "detachableSegments": [
+      "Script — a dot and a bar over three strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

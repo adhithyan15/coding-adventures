@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C345-wangyou",
+    "language": "chinese",
+    "chapter": 345,
+    "sequence": 26420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:51bc6cc1a9ec6373"
+  },
+  "findings": []
+}

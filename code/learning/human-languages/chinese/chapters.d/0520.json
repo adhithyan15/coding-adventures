@@ -1,0 +1,19 @@
+{
+  "chapter": 520,
+  "title": "Around the House",
+  "label": "ch:zh-around-the-house",
+  "canDo": "I can talk about household appliances, light switches, the water heater, the heating and saving electricity.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C520-shengdian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 520: I can talk about household appliances, light switches, the water heater, the heating and saving electricity.",
+    "assesses": [
+      "ZH-LEX-C520-APPLIANCE520-03",
+      "ZH-LEX-C520-APPLIANCE520-04",
+      "ZH-LEX-C520-APPLIANCE520-05"
+    ]
+  }
+}

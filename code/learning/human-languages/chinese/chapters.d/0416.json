@@ -1,0 +1,19 @@
+{
+  "chapter": 416,
+  "title": "A Storm",
+  "label": "ch:zh-a-storm",
+  "canDo": "I can say a flight is held up by a storm, that someone missed a plane, and talk about changing planes.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C416-feixing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 416: I can say a flight is held up by a storm, that someone missed a plane, and talk about changing planes.",
+    "assesses": [
+      "ZH-LEX-C416-STORM416-03",
+      "ZH-LEX-C416-STORM416-04",
+      "ZH-LEX-C416-STORM416-05"
+    ]
+  }
+}

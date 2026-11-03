@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C302-yinger",
+    "language": "chinese",
+    "chapter": 302,
+    "sequence": 23640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6eac2bc8ec55b6ae"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C450-zhaopaicai",
+  "pathSegment": "ZH-PATH-450-LOCAL450",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-450-LOCAL450",
+      "order": 5
+    }
+  ]
+}

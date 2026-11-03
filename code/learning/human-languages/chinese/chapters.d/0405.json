@@ -1,0 +1,19 @@
+{
+  "chapter": 405,
+  "title": "Through the Gates",
+  "label": "ch:zh-through-the-gates",
+  "canDo": "I can say a train goes straight through, go in and out of the station, and talk about the last train.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C405-tingkao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 405: I can say a train goes straight through, go in and out of the station, and talk about the last train.",
+    "assesses": [
+      "ZH-LEX-C405-GATES405-03",
+      "ZH-LEX-C405-GATES405-04",
+      "ZH-LEX-C405-GATES405-05"
+    ]
+  }
+}

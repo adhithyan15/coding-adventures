@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 485,
+  "sourceHash": "fnv1a64:2b7f93d5d3dd2e63",
+  "lessonIds": [
+    "ZH-C485-yali",
+    "ZH-C485-jingshen",
+    "ZH-C485-shenxin",
+    "ZH-C485-xintai",
+    "ZH-C485-jianya",
+    "ZH-R485-review-481-485",
+    "ZH-R485-review-final-485"
+  ],
+  "tex": "chinese/book/chapters/ch485-body-and-mind.tex"
+}

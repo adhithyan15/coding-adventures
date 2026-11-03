@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C476-jianbang",
+  "pathSegment": "ZH-PATH-476-NECK476",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-476-NECK476",
+      "order": 2
+    }
+  ]
+}

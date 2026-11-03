@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:6950b6169e3a948a",
+  "lessonIds": [
+    "ZH-C368-zhishao",
+    "ZH-C368-maobing",
+    "ZH-C368-liaobuqi",
+    "ZH-C368-guli",
+    "ZH-C368-xuanze",
+    "ZH-R368-review-364-368"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch368.txt",
+  "json": "chinese/narration/ch368.json",
+  "textHash": "fnv1a64:65b47a80b5437561",
+  "jsonHash": "fnv1a64:4732828216c5eb90",
+  "findings": []
+}

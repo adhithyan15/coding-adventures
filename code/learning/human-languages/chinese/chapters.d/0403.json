@@ -1,0 +1,20 @@
+{
+  "chapter": 403,
+  "title": "Travellers",
+  "label": "ch:zh-travellers",
+  "canDo": "I can say we were in time for the train, talk about travellers and trains on time, and find the staff.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C403-zhanzhang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 403: I can say we were in time for the train, talk about travellers and trains on time, and find the staff.",
+    "assesses": [
+      "ZH-LEX-C403-TRAVELLER403-03",
+      "ZH-LEX-C403-TRAVELLER403-04",
+      "ZH-LEX-C403-TRAVELLER403-05",
+      "ZH-SCRIPT-LU-TRAVEL-01"
+    ]
+  }
+}

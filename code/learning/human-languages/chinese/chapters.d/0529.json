@@ -1,0 +1,19 @@
+{
+  "chapter": 529,
+  "title": "Good Luck, Bad Luck",
+  "label": "ch:zh-good-luck-bad-luck",
+  "canDo": "I can talk about luck, being lucky or unlucky, being in luck and fate.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C529-mingyun",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 529: I can talk about luck, being lucky or unlucky, being in luck and fate.",
+    "assesses": [
+      "ZH-LEX-C529-LUCK529-03",
+      "ZH-LEX-C529-LUCK529-04",
+      "ZH-LEX-C529-LUCK529-05"
+    ]
+  }
+}

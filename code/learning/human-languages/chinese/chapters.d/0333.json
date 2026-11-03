@@ -1,0 +1,19 @@
+{
+  "chapter": 333,
+  "title": "New Year's Eve",
+  "label": "ch:zh-new-year-s-eve",
+  "canDo": "I can talk about New Year's Eve, the gala on TV, the reunion dinner, staying up and New Year visits.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C333-bainian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 333: I can talk about New Year's Eve, the gala on TV, the reunion dinner, staying up and New Year visits.",
+    "assesses": [
+      "ZH-LEX-C333-EVE333-03",
+      "ZH-LEX-C333-EVE333-04",
+      "ZH-LEX-C333-EVE333-05"
+    ]
+  }
+}

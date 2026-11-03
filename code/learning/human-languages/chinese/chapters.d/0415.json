@@ -1,0 +1,19 @@
+{
+  "chapter": 415,
+  "title": "The Terminal",
+  "label": "ch:zh-the-terminal",
+  "canDo": "I can find the terminal, check in a bag, show my boarding pass, go through security and find the gate.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C415-dengjikou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 415: I can find the terminal, check in a bag, show my boarding pass, go through security and find the gate.",
+    "assesses": [
+      "ZH-LEX-C415-TERMINAL415-03",
+      "ZH-LEX-C415-TERMINAL415-04",
+      "ZH-LEX-C415-TERMINAL415-05"
+    ]
+  }
+}

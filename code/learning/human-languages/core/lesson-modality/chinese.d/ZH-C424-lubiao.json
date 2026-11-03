@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C424-lubiao",
+    "language": "chinese",
+    "chapter": 424,
+    "sequence": 32150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4446cbf8d55822d7"
+  },
+  "findings": []
+}

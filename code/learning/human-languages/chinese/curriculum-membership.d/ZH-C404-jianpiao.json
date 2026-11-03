@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C404-jianpiao",
+  "pathSegment": "ZH-PATH-404-TICKET404",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-404-TICKET404",
+      "order": 1
+    }
+  ]
+}

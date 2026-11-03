@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:d3b996bff90e0dcf",
+  "lessonIds": [
+    "ZH-C394-chenggong",
+    "ZH-C394-shibai",
+    "ZH-C394-maoxian",
+    "ZH-C394-baifei",
+    "ZH-C394-bubian"
+  ],
+  "tex": "chinese/book/chapters/ch394-success-or-failure.tex"
+}

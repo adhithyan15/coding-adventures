@@ -1,0 +1,19 @@
+{
+  "chapter": 432,
+  "title": "Busy and Quiet",
+  "label": "ch:zh-busy-and-quiet",
+  "canDo": "I can say there are few visitors, talk about the off season and public holidays, buy a full-price ticket and hear that a place is closed.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C432-guanbi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 432: I can say there are few visitors, talk about the off season and public holidays, buy a full-price ticket and hear that a place is closed.",
+    "assesses": [
+      "ZH-LEX-C432-QUIET432-03",
+      "ZH-LEX-C432-QUIET432-04",
+      "ZH-LEX-C432-QUIET432-05"
+    ]
+  }
+}

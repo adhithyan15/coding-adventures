@@ -920,8 +920,29 @@ func TestGenerateHaskellUsesRepositoryConventions(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot read BUILD: %v", err)
 	}
-	if string(build) != "cabal test\n" {
-		t.Errorf("BUILD = %q, want plain cabal test", build)
+	// The Darwin front must select the Command Line Tools linker, in exactly
+	// the shape build-tool --validate-build-files accepts, around the
+	// generator's unchanged plain `cabal test`.
+	wantBuild := "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.\n" +
+		"# Scope the selection to Cabal and its children, keeping other packages intact.\n" +
+		`if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; cabal test` + "\n"
+	if string(build) != wantBuild {
+		t.Errorf("BUILD = %q, want %q", build, wantBuild)
+	}
+
+	// Windows runs BUILD_windows under cmd /C, which cannot parse the POSIX
+	// prefix, so it must never carry the Darwin selection.
+	buildWindows, err := os.ReadFile(filepath.Join(tmpDir, "BUILD_windows"))
+	if err != nil {
+		t.Fatalf("cannot read BUILD_windows: %v", err)
+	}
+	for _, forbidden := range []string{"uname", "DEVELOPER_DIR"} {
+		if strings.Contains(string(buildWindows), forbidden) {
+			t.Errorf("BUILD_windows = %q must not contain %q", buildWindows, forbidden)
+		}
+	}
+	if string(buildWindows) != "echo \"haskell support not enabled in windows CI yet -- skipping\"\n" {
+		t.Errorf("BUILD_windows = %q, want the existing Windows skip record", buildWindows)
 	}
 
 	capabilityPath := filepath.Join(tmpDir, "required_capabilities.json")

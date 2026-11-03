@@ -1,0 +1,22 @@
+{
+  "chapter": 289,
+  "title": "If I Had the Time",
+  "label": "ch:zh-if-i-had-the-time",
+  "canDo": "I can say what I would do if things were different, and write six connected lines.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-R289-review-final-289",
+    "kind": "production",
+    "summary": "Complete ZH-R289-review-final-289: one dialogue across the B1 core, after saying what would happen with 如果 … 就会 …, otherwise with 不然, and writing six connected lines to a friend about a trip that went wrong.",
+    "assesses": [
+      "ZH-LEX-C289-RUGUO-01",
+      "ZH-SCRIPT-GUO-FRUIT-01",
+      "ZH-GRAMMAR-RUGUO-JIU-01",
+      "ZH-GRAMMAR-RUGUO-JIUHUI-01",
+      "ZH-LEX-C289-BURAN-01"
+    ],
+    "note": "ZH-W289-six-lines is the core's third piece of connected-composition evidence: six lines that lean on each other, for a named reader (a friend) and a real purpose (telling them what went wrong, and what to do about it), after one controlled line (ZH-W281-one-reason) and a four-line note (ZH-W285-a-note). Pinyin inside the lines is licensed for words whose characters the book has not taught."
+  }
+}

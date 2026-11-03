@@ -1,0 +1,864 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 465,
+  "title": "Spoiling the Fun",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:9c2c0acc9024ed92",
+  "lessons": [
+    {
+      "id": "ZH-C465-tongkuai",
+      "sequence": 35360,
+      "title": "tòngkuài — delighted; to one's heart's content",
+      "headword": "tòngkuài",
+      "romanization": "tòngkuài",
+      "gloss": "delighted; to one's heart's content",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f6079e12a057cd90",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to take it out on someone, then the Mandarin for furious."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tòngkuài",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tòngkuài — \"delighted; to one's heart's content\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen wán le yì tiān wán de hěn tòngkuài — We spent the whole day having fun and enjoyed every minute of it."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tòngkuài is built from tòng 'to hurt' and 快 'glad', both inherited from Middle Chinese, thuwngH and khwaejH (Guangyun, in Baxter's transcription), which glosses the first 'illness' and 'to hurt' and the second as what pleases the heart. The sense 'thoroughly' for the first is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tòngkuài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tòngkuài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tòngkuài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tòngkuài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen wán le yì tiān wán de hěn tòngkuài — We spent the whole day having fun and enjoyed every minute of it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen wán le yì tiān wán de hěn tòngkuài* — We spent the whole day having fun and enjoyed every minute of it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to take it out on someone, then the Mandarin for furious, then say tòngkuài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to take it out on someone, then the Mandarin for furious, then say *tòngkuài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tòngkuài mean? (\"Delighted; to one's heart's content\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C465-saoxing",
+      "sequence": 35370,
+      "title": "扫兴 (sǎoxìng) — deflated; with the fun spoiled",
+      "headword": "扫兴",
+      "romanization": "sǎoxìng",
+      "gloss": "deflated; with the fun spoiled",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d37cf552c8e9ca88",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for furious, then the Mandarin for to one's heart's content."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 扫兴",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "扫兴 — sǎoxìng — \"deflated; with the fun spoiled\"."
+            },
+            {
+              "kind": "speech",
+              "text": "下雨了真扫兴 xiàyǔ le zhēn sǎoxìng — It's raining. What a let-down."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 兴 (xìng) — six strokes in three pieces: at the top a dot, a second dot and a short stroke falling to the left; a long bar across; and under it 八 bā, two strokes. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "扫兴 (sǎoxìng) is built from 扫 'to sweep' and 兴 (xìng) 'high spirits', both inherited from Middle Chinese, sawX and xingH (Guangyun, in Baxter's transcription). The dictionary glosses the first 'to sweep away'; it gives the second reading no gloss of its own, so 'high spirits' is the usual explanation, not a settled one."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sǎoxìng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sǎoxìng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sǎoxìng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sǎoxìng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàyǔ le zhēn sǎoxìng — It's raining. What a let-down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàyǔ le zhēn sǎoxìng* — It's raining. What a let-down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for furious, then the Mandarin for to one's heart's content, then say sǎoxìng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for furious, then the Mandarin for to one's heart's content, then say *sǎoxìng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 扫兴 (sǎoxìng) mean? (\"Deflated; with the fun spoiled\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W465-xing-mood",
+      "sequence": 35375,
+      "title": "兴 (xìng) — three short strokes over a bar, and 八 under it",
+      "headword": "兴",
+      "romanization": "xìng",
+      "gloss": "兴 — three short strokes, a long bar, then 八",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8524c9ed6f45637d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — three short strokes over a bar, and 八 under it",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — three short strokes over a bar, and 八 under it and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say sǎoxìng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *sǎoxìng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "八 高."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — bā, gāo",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *bā*, *gāo*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — three short strokes over a bar, and 八 under it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "兴 (xìng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, top to bottom. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The top, three strokes. A dot on the left, a second dot in the middle, both falling to the right, then a short stroke on the right falling to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "The bar, one stroke. A long bar across, from left to right, wider than everything above it."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom, 八, two strokes. A stroke falling to the left, then a short stroke falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 1 + 2 = six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "兴 (xìng), all six, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 兴, all six, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 兴 (xìng) have? (Three: three strokes, one and two.) What is under the bar? (八.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 兴 (xìng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C465-leguan",
+      "sequence": 35380,
+      "title": "lèguān — optimistic",
+      "headword": "lèguān",
+      "romanization": "lèguān",
+      "gloss": "optimistic",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:afb0ba452f1aa394",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to one's heart's content, then the Mandarin for the fun spoiled."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: lèguān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lèguān — \"optimistic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ nǎinai shì wǒmen jiā zuì lèguān de rén — My grandmother is the most optimistic person in our family."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "lèguān is built from 乐 'joy' and guān 'to view', both inherited from Middle Chinese, lak and kwan (Guangyun, in Baxter's transcription), which glosses the first 'joy' and the second 'to look': looking at things with joy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lèguān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lèguān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lèguān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lèguān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ nǎinai shì wǒmen jiā zuì lèguān de rén — My grandmother is the most optimistic person in our family.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ nǎinai shì wǒmen jiā zuì lèguān de rén* — My grandmother is the most optimistic person in our family.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to one's heart's content, then the Mandarin for the fun spoiled, then say lèguān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to one's heart's content, then the Mandarin for the fun spoiled, then say *lèguān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does lèguān mean? (\"Optimistic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C465-beiguan",
+      "sequence": 35390,
+      "title": "bēiguān — pessimistic",
+      "headword": "bēiguān",
+      "romanization": "bēiguān",
+      "gloss": "pessimistic",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:489fd429a71a4141",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the fun spoiled, then the Mandarin for optimistic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bēiguān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bēiguān — \"pessimistic\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ bié zhème bēiguān — Don't be so pessimistic."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bēiguān is built from bēi 'grief' and guān 'to view', both inherited from Middle Chinese, pij and kwan (Guangyun, in Baxter's transcription), which glosses the first 'pain' and the second 'to look'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēiguān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēiguān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bēiguān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bēiguān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ bié zhème bēiguān — Don't be so pessimistic.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ bié zhème bēiguān* — Don't be so pessimistic.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the fun spoiled, then the Mandarin for optimistic, then say bēiguān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the fun spoiled, then the Mandarin for optimistic, then say *bēiguān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bēiguān mean? (\"Pessimistic\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C465-zixin",
+      "sequence": 35400,
+      "title": "自信 (zìxìn) — self-confident; sure of oneself",
+      "headword": "自信",
+      "romanization": "zìxìn",
+      "gloss": "self-confident; sure of oneself",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16d51fbb3a507eea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for optimistic, then the Mandarin for pessimistic."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 自信",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "自信 — zìxìn — \"self-confident; sure of oneself\"."
+            },
+            {
+              "kind": "speech",
+              "text": "看到他这么自信我很高兴 kàn dào tā zhème zìxìn wǒ hěn gāoxìng — I'm really glad to see him so sure of himself."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "自信 (zìxìn) is built from 自 'self' and 信 'to trust', both inherited from Middle Chinese, dzijH and sinH (Guangyun, in Baxter's transcription), which glosses the first 'from' and the second 'faithful' and 'proof'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zìxìn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zìxìn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zìxìn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zìxìn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kàn dào tā zhème zìxìn wǒ hěn gāoxìng — I'm really glad to see him so sure of himself.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kàn dào tā zhème zìxìn wǒ hěn gāoxìng* — I'm really glad to see him so sure of himself.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for optimistic, then the Mandarin for pessimistic, then say zìxìn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for optimistic, then the Mandarin for pessimistic, then say *zìxìn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 自信 (zìxìn) mean? (\"Self-confident; sure of oneself\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

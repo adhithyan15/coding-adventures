@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C484-jiejiu",
+  "pathSegment": "ZH-PATH-484-WELL484",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-484-WELL484",
+      "order": 1
+    }
+  ]
+}

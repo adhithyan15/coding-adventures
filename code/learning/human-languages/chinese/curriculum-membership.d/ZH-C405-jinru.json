@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C405-jinru",
+  "pathSegment": "ZH-PATH-405-GATES405",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-405-GATES405",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 334,
+  "title": "Red Envelopes",
+  "label": "ch:zh-red-envelopes",
+  "canDo": "I can talk about the first lunar month, red envelopes, couplets by the door and a business doing well.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C334-honghuo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 334: I can talk about the first lunar month, red envelopes, couplets by the door and a business doing well.",
+    "assesses": [
+      "ZH-LEX-C334-REDENV334-03",
+      "ZH-LEX-C334-REDENV334-04",
+      "ZH-LEX-C334-REDENV334-05",
+      "ZH-SCRIPT-HONG-RED-01"
+    ]
+  }
+}

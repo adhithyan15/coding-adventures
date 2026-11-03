@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 367,
+  "sourceHash": "fnv1a64:e9695128f711010a",
+  "lessonIds": [
+    "ZH-C367-wuhui",
+    "ZH-C367-liaojie",
+    "ZH-W367-jie-untie",
+    "ZH-C367-lijie",
+    "ZH-C367-jianjie",
+    "ZH-C367-kexiao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch367.txt",
+  "json": "chinese/narration/ch367.json",
+  "textHash": "fnv1a64:9d383cbd33a08548",
+  "jsonHash": "fnv1a64:0914d8d46f33c07a",
+  "findings": []
+}

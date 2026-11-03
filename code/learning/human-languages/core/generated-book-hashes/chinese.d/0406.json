@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 406,
+  "sourceHash": "fnv1a64:7b73a6da1cb63373",
+  "lessonIds": [
+    "ZH-C406-yongji",
+    "ZH-C406-laihui",
+    "ZH-C406-gaiqian",
+    "ZH-C406-qiche",
+    "ZH-C406-xinglijia"
+  ],
+  "tex": "chinese/book/chapters/ch406-a-busy-platform.tex"
+}

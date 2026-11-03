@@ -1,0 +1,19 @@
+{
+  "chapter": 384,
+  "title": "Becoming Green",
+  "label": "ch:zh-becoming-green",
+  "canDo": "I can talk about planting trees, becoming something, what things cost to make, resources and growth.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C384-zengjia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 384: I can talk about planting trees, becoming something, what things cost to make, resources and growth.",
+    "assesses": [
+      "ZH-LEX-C384-BECOME384-03",
+      "ZH-LEX-C384-BECOME384-04",
+      "ZH-LEX-C384-BECOME384-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C327-huangdi",
+  "pathSegment": "ZH-PATH-327-HERO327",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-327-HERO327",
+      "order": 2
+    }
+  ]
+}

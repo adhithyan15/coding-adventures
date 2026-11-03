@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C359-weifan",
+  "pathSegment": "ZH-PATH-359-RULES359",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-359-RULES359",
+      "order": 2
+    }
+  ]
+}

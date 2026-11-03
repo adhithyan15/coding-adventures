@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-532-HOPE532",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-532-HOPE532"
+  ],
+  "after": []
+}

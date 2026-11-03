@@ -143,6 +143,7 @@ members = [
     "constraint-engine",
     "cdcl-sat",
     "drat-check",
+    "bit-blaster",
     "constraint-instructions",
     "constraint-vm",
     "core",

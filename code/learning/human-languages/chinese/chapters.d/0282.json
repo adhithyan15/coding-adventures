@@ -1,0 +1,24 @@
+{
+  "chapter": 282,
+  "title": "You Should Rest",
+  "label": "ch:zh-you-should-rest",
+  "canDo": "I can say what someone should or had better do.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C282-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Giving advice with 应该 and 不应该, saying it is time with 该, what is wise with 最好 and what cannot be helped with děi, built on two new written characters: 该 and 应.",
+    "assesses": [
+      "ZH-LEX-C282-GAI-01",
+      "ZH-SCRIPT-GAI-01",
+      "ZH-LEX-C282-YINGGAI-01",
+      "ZH-SCRIPT-YING-01",
+      "ZH-GRAMMAR-YINGGAI-01",
+      "ZH-LEX-C282-ZUIHAO-01",
+      "ZH-LEX-C282-DEI-01",
+      "ZH-PERFORMANCE-SHOULD-01"
+    ]
+  }
+}

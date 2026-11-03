@@ -8,3 +8,7 @@ description = "LANG24 PR 24-D — instruction-stream executor for the generic Co
 constraint-core = { path = "../constraint-core" }
 constraint-instructions = { path = "../constraint-instructions" }
 constraint-engine = { path = "../constraint-engine" }
+
+# Test-only: reads the QF_BV corpus in tests/qfbv/*.smt2.
+[dev-dependencies]
+smt-lib-format = { path = "../smt-lib-format" }

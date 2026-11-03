@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:d3946ee333297d04",
+  "lessonIds": [
+    "ZH-C328-shenhua",
+    "ZH-C328-chuanshuo",
+    "ZH-W328-chuan-pass",
+    "ZH-C328-liuchuan",
+    "ZH-C328-long",
+    "ZH-C328-chuanhua"
+  ],
+  "tex": "chinese/book/chapters/ch328-a-legend.tex"
+}

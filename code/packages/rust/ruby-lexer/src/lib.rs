@@ -29,15 +29,21 @@
 //! literals, string interpolation, and parser-driven `f /x/`
 //! resolution all arrive in later phases.
 
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 
-use lexer::token::{Token, TokenType};
+use lexer::token::{Token, TokenType, TOKEN_SYNTHETIC};
 use state_machine::transducer::{EffectfulInput, EffectfulStateMachine};
 
 mod _grammar;
 mod lex_state;
 mod machine;
 mod oracle;
+#[cfg(test)]
+mod reference_passes;
+#[cfg(test)]
+mod differential_tests;
+#[cfg(test)]
+mod linear_time_tests;
 
 /// LANG84 per-release token tables, generated from
 /// `code/grammars/ruby/ruby<release>.tokens` by
@@ -73,6 +79,71 @@ pub struct Diagnostic {
     pub code: String,
     pub line: usize,
     pub column: usize,
+}
+
+/// #18814 — the most source bytes one lexer accepts: 1 MiB.
+///
+/// Source text is untrusted, so every entry point ([`RubyLexer::push`],
+/// and through it [`tokenize_ruby`], [`tokenize_ruby_for_version`],
+/// [`tokenize_ruby_with_oracle`] and [`tokenize_ruby_diag`]) refuses a
+/// larger input before lexing any of it, instead of holding a caller for
+/// as long as the input takes.
+///
+/// Why 1 MiB: it is `MAX_TRUSTED_SOURCE_BYTES` in
+/// `coding-adventures-ruby-parser`, the most source the parser's release
+/// API lets even a trusted caller parse (its untrusted default is 64 KiB),
+/// so no caller that can parse the result is refused here.  Lexing is
+/// linear since #18814 — every fusion pass, and the removal of heredoc tag
+/// names, is one sweep — so 1 MiB lexes
+/// in a few seconds in a debug build; before #18814 the passes were
+/// quadratic and 400 KB of `a&.b` took about 150 s.
+pub const MAX_SOURCE_BYTES: usize = 1024 * 1024;
+
+/// #18814 — why lexing stopped, for the entry points that return a
+/// `Result` ([`RubyLexer::push`], [`tokenize_ruby_for_version`]).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RubyLexError {
+    /// A budget was exceeded, and nothing of the offending input was
+    /// lexed.  `which` names the budget (`"source bytes"`), `limit` is its
+    /// value, and `actual` is what the input would have brought the total
+    /// to.
+    Budget {
+        which: &'static str,
+        limit: usize,
+        actual: usize,
+    },
+    /// Every other failure: an unknown era, or a state-machine error.  The
+    /// message is the one these entry points returned as a bare `String`
+    /// before #18814.
+    Lex(String),
+}
+
+impl std::fmt::Display for RubyLexError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Budget { which, limit, actual } => write!(
+                f,
+                "ruby lexer: {which} ({actual}) exceed the limit of {limit}"
+            ),
+            Self::Lex(message) => f.write_str(message),
+        }
+    }
+}
+
+impl std::error::Error for RubyLexError {}
+
+impl From<String> for RubyLexError {
+    fn from(message: String) -> Self {
+        Self::Lex(message)
+    }
+}
+
+/// Callers that carry lexer failures as a `String` (the legacy parser API,
+/// `try_create_ruby_parser`) keep working with `?`.
+impl From<RubyLexError> for String {
+    fn from(error: RubyLexError) -> Self {
+        error.to_string()
+    }
 }
 
 /// Stateful Ruby lexer.
@@ -124,6 +195,16 @@ pub struct RubyLexer {
     /// - otherwise the candidate is cleared and the `<<` stays as a
     ///   plain left-shift operator.
     heredoc_op_candidate: Option<usize>,
+    /// #18814 review: indices of the heredoc tag `Name` tokens that
+    /// [`RubyLexer::finalize_heredoc`] has retired but not yet removed.
+    /// They are all removed together, in one sweep, by
+    /// [`RubyLexer::remove_retired_heredoc_tags`] — see there for why.
+    retired_heredoc_tags: Vec<usize>,
+    /// Test-only: finalize heredocs with the pre-#18814 body, which
+    /// removed each tag at once (`reference_passes.rs`), so the
+    /// differential tests can compare the two.
+    #[cfg(test)]
+    reference_heredocs: bool,
     /// Phase 4b: the Ruby era this lexer is targeting.  Drives the
     /// post-pass token-stream rewriter (see
     /// [`RubyLexer::apply_era_token_fusions`]) which folds adjacent
@@ -149,6 +230,15 @@ pub struct RubyLexer {
     /// state machine emits `/` as a plain Op token.  The compound-
     /// assign fusion pass then folds `Op(/) Equals` → `Name("/=")`.
     suppress_regex_open: bool,
+    /// #18814 — source bytes accepted by [`RubyLexer::push`] so far, held
+    /// against [`MAX_SOURCE_BYTES`] across every call.
+    bytes_pushed: usize,
+    /// #18814 — engine steps the trace may hold before
+    /// [`RubyLexer::forget_engine_trace`] drops it.  Always
+    /// [`ENGINE_TRACE_LIMIT`] in production; the tests lower it to 1 (drop
+    /// after every step) and raise it to `usize::MAX` (never drop) to prove
+    /// dropping it never changes a token.
+    engine_trace_limit: usize,
 }
 
 /// Phase 3c — a heredoc opener whose body we still owe.
@@ -228,10 +318,15 @@ impl RubyLexer {
             interp_brace_depth: 0,
             pending_heredocs: VecDeque::new(),
             heredoc_op_candidate: None,
+            retired_heredoc_tags: Vec::new(),
+            #[cfg(test)]
+            reference_heredocs: false,
             era: canonical_era.to_string(),
             whitespace_before_token: Vec::new(),
             whitespace_pending: false,
             suppress_regex_open: false,
+            bytes_pushed: 0,
+            engine_trace_limit: ENGINE_TRACE_LIMIT,
         })
     }
 
@@ -252,7 +347,21 @@ impl RubyLexer {
     /// resume.  This is the cleanest way to implement Ruby's
     /// "line-based" heredoc semantics on top of a fundamentally
     /// character-based state machine.
-    pub fn push(&mut self, source: &str) -> Result<(), String> {
+    ///
+    /// #18814: refuses, before reading a byte, any source that would take
+    /// the total pushed into this lexer past [`MAX_SOURCE_BYTES`], with
+    /// [`RubyLexError::Budget`].  A refused call changes nothing, so the
+    /// lexer still holds exactly what earlier calls fed it.
+    pub fn push(&mut self, source: &str) -> Result<(), RubyLexError> {
+        let total = self.bytes_pushed.saturating_add(source.len());
+        if total > MAX_SOURCE_BYTES {
+            return Err(RubyLexError::Budget {
+                which: "source bytes",
+                limit: MAX_SOURCE_BYTES,
+                actual: total,
+            });
+        }
+        self.bytes_pushed = total;
         let chars: Vec<char> = source.chars().collect();
         let mut i = 0;
         while i < chars.len() {
@@ -279,12 +388,36 @@ impl RubyLexer {
             self.suppress_regex_open = ch == '/' && chars.get(i + 1) == Some(&'=');
             self.step_char(ch)?;
             self.suppress_regex_open = false;
+            self.forget_engine_trace()?;
             i += 1;
             if ch == '\n' && !self.pending_heredocs.is_empty() {
                 i = self.capture_heredoc_bodies(&chars, i)?;
             }
         }
         Ok(())
+    }
+
+    /// #18814 — keep the engine's step trace from growing with the input.
+    ///
+    /// `EffectfulStateMachine::process` appends a copy of every step it
+    /// takes (state names, input, effects) to a trace that only `reset`
+    /// clears.  This lexer never reads it, but it grew by one entry per
+    /// character: lexing the 1 MiB [`MAX_SOURCE_BYTES`] budget peaked near
+    /// 600 MB, almost all of it trace.  So every [`ENGINE_TRACE_LIMIT`]
+    /// steps the trace is dropped: `reset` clears it (and rewinds the
+    /// engine to its initial state), and `set_current_state` puts the
+    /// engine straight back where it was.  The engine keeps no other state
+    /// between steps, so lexing is unchanged; the cost is one state-name
+    /// copy per few thousand characters.
+    fn forget_engine_trace(&mut self) -> Result<(), String> {
+        if self.machine.trace().len() < self.engine_trace_limit {
+            return Ok(());
+        }
+        let current = self.machine.current_state().to_string();
+        self.machine.reset();
+        self.machine
+            .set_current_state(current)
+            .map_err(|e| format!("ruby lexer: failed to restore the engine state after dropping its trace: {e}"))
     }
 
     /// Phase FC — true iff `chars[i..]` is exactly the program-terminator
@@ -356,14 +489,19 @@ impl RubyLexer {
             //   Plain (`<<EOF`):    exact line == tag.
             //   DashIndent (`<<-`): line stripped of leading ws == tag.
             //   TildeIndent (`<<~`): line stripped of leading ws == tag.
-            let front = self.pending_heredocs.front().unwrap();
-            let front_tag = front.tag.clone();
-            let front_variant = front.variant;
-            let trimmed_line = line.trim_start();
-            let is_terminator = match front_variant {
-                HeredocVariant::Plain => line == front_tag,
-                HeredocVariant::DashIndent | HeredocVariant::TildeIndent => {
-                    trimmed_line == front_tag
+            //
+            // Borrow the tag rather than cloning it: a clone per body line
+            // cost tag-length × body-lines, quadratic inside the 1 MiB
+            // budget (a 250 KB tag over 548k empty lines took ~3.7 s; #18814
+            // re-review). `str` equality checks lengths first, so a
+            // non-matching line of a different length costs O(1).
+            let is_terminator = {
+                let front = self.pending_heredocs.front().unwrap();
+                match front.variant {
+                    HeredocVariant::Plain => line == front.tag,
+                    HeredocVariant::DashIndent | HeredocVariant::TildeIndent => {
+                        line.trim_start() == front.tag
+                    }
                 }
             };
             if is_terminator {
@@ -377,10 +515,17 @@ impl RubyLexer {
                 }
             }
         }
-        // Apply token replacements in descending order so earlier
-        // indices remain valid as later tokens are removed.
+        // Apply token replacements in descending order.  (Only the
+        // pre-#18814 reference, which removed each tag at once, needs it:
+        // removing a later index first kept the earlier ones valid.
+        // `finalize_heredoc` removes nothing, so its order is free.)
         finalized.sort_by_key(|h| std::cmp::Reverse(h.op_idx));
         for h in finalized {
+            #[cfg(test)]
+            if self.reference_heredocs {
+                self.ref_finalize_heredoc(h);
+                continue;
+            }
             self.finalize_heredoc(h);
         }
         Ok(i)
@@ -409,12 +554,17 @@ impl RubyLexer {
             HeredocVariant::TildeIndent => "<<~",
         };
         let value = format!("{prefix}{}\n{body}{}", h.tag, h.tag);
-        // Remove the tag Name first (higher index) so op_idx stays
-        // valid.  Both indices were captured at emit time and the
-        // tokens between them have not moved (body capture inserts
-        // no tokens).
+        // #18814 review: retire the tag `Name` instead of removing it.
+        // `Vec::remove` here shifted every token after the tag, once per
+        // heredoc, so `k` heredocs on one line (`foo(<<A, <<A, …)` then
+        // `A` ⏎ × k) cost O(k²) — 80 000 of them took 30 s in a release
+        // build.  Nothing moves now, so every index captured at emit time
+        // (this `op_idx`, later openers' indices, the
+        // `heredoc_op_candidate`) stays valid, and
+        // `remove_retired_heredoc_tags` takes all the tags out in one
+        // sweep before anyone reads the stream.
         if h.tag_idx < self.tokens.len() {
-            self.tokens.remove(h.tag_idx);
+            self.retired_heredoc_tags.push(h.tag_idx);
         }
         if h.op_idx < self.tokens.len() {
             let line = self.tokens[h.op_idx].line;
@@ -435,10 +585,56 @@ impl RubyLexer {
     /// accumulators), emits an EOF token, then applies era-specific
     /// token-stream fusions (Phase 4b+).
     pub fn finish(&mut self) -> Result<(), String> {
+        self.drain_machine()?;
+        self.remove_retired_heredoc_tags();
+        self.apply_era_token_fusions();
+        Ok(())
+    }
+
+    /// #18814 review — remove every heredoc tag `Name` that
+    /// [`Self::finalize_heredoc`] retired, in one O(tokens) sweep.
+    ///
+    /// The heredoc `<<TAG` lexes as two tokens, the `<<` opener and the
+    /// `TAG` name; once the body is captured the opener becomes the
+    /// `String` and the name must go.  Removing each name the moment its
+    /// heredoc closed cost a shift of the whole tail per heredoc; retiring
+    /// them and removing them all here costs one pass however many there
+    /// are.  The indices are into the stream as emitted (nothing is
+    /// removed before this runs), so a sorted list walked alongside
+    /// `Vec::retain` finds each one.
+    ///
+    /// The tags' whitespace flags are removed in the same sweep (#18820).
+    ///
+    /// Runs before anything reads the stream: at the end of lexing
+    /// ([`Self::finish`], before the fusion passes) and in
+    /// [`Self::drain_tokens`] (for a caller that drains without finishing,
+    /// or after an error).
+    fn remove_retired_heredoc_tags(&mut self) {
+        if self.retired_heredoc_tags.is_empty() {
+            return;
+        }
+        let mut retired = std::mem::take(&mut self.retired_heredoc_tags);
+        retired.sort_unstable();
+        retired.dedup();
+        // #18820: each tag's whitespace flag goes with it.  The flags are
+        // a parallel array — `whitespace_before_token[i]` says whether
+        // whitespace preceded `tokens[i]` — and the old code removed the
+        // tag but not its flag, so after a heredoc every token read the
+        // flag of the token before it: `x &.y` lexed `&` `.` (the `.`
+        // inherited the space before `&`) and `x = 1.5` lexed `1` `.` `5`.
+        // The heredoc's `String` keeps the flag of its `<<` opener.
+        remove_sorted_indices(&mut self.tokens, &retired);
+        remove_sorted_indices(&mut self.whitespace_before_token, &retired);
+    }
+
+    /// Feed end-of-input to the engine until it reaches its final state,
+    /// emitting whatever its peek states were still holding (and the EOF
+    /// token).  The first half of [`Self::finish`]; the differential tests
+    /// call it on its own to capture the stream before any fusion pass.
+    fn drain_machine(&mut self) -> Result<(), String> {
         const MAX_DRAIN: usize = 32;
         for _ in 0..MAX_DRAIN {
             if self.machine.is_final() {
-                self.apply_era_token_fusions();
                 return Ok(());
             }
             let step = self
@@ -477,11 +673,20 @@ impl RubyLexer {
     /// Future eras will plug in here without touching the
     /// state-machine TOML.
     fn apply_era_token_fusions(&mut self) {
+        self.run_era_token_fusions(&mut |_, _| {});
+    }
+
+    /// [`Self::apply_era_token_fusions`], calling `after_each` with each
+    /// step's name after the step runs.  Production passes a no-op; the
+    /// differential tests compare every step against the pre-#18814
+    /// reference pipeline (`reference_passes.rs`).
+    fn run_era_token_fusions(&mut self, after_each: &mut dyn FnMut(&str, &RubyLexer)) {
         // The range fusions (`..` / `...`) are unconditional — Ruby
         // has had range literals since 1.0.  They run first so
         // later era-gated passes operate on the already-fused
         // stream.
         self.fuse_range_ops();
+        after_each("fuse_range_ops", self);
         // Phase 4l — radix-prefixed integers (`0x1F`, `0b1010`,
         // `0o17`, `0d10`) are pre-1.0 Ruby; no era gating.  Runs
         // BEFORE float fusion — they share the `Int "0"` left flank,
@@ -489,11 +694,13 @@ impl RubyLexer {
         // float dot doesn't, so the two passes are non-overlapping.
         // Ordering is documentation-only.
         self.fuse_radix_integers();
+        after_each("fuse_radix_integers", self);
         // Phase 4k — float literals (`1.5`, `1e10`, `1.5e-3`, etc.)
         // are pre-1.0 Ruby; no era gating.  Runs after range fusion
         // so `1..5` (which the range pass converts to `Int ".." Int`)
         // doesn't get mistaken for a float.
         self.fuse_float_literals();
+        after_each("fuse_float_literals", self);
         // Phase 8a-2 (FC) companion — pre-fuse `>>` and `>>=`.
         //
         // The 1.8-baseline state machine emits `>>` as two separate
@@ -513,11 +720,13 @@ impl RubyLexer {
         // compound-assign fusion (currently moot — `>>=` is folded
         // directly here, but the pattern stays consistent).
         self.fuse_right_shifts();
+        after_each("fuse_right_shifts", self);
         // Phase 6p companion — fuse compound-assignment operators
         // (`+=`, `-=`, `*=`, `/=`, `||=`, `&&=`).  Pre-1.0 Ruby, so
         // no era gating.  Runs AFTER float/radix fusions (which fold
         // numeric forms) so `x +=` doesn't fight with `1e+10` etc.
         self.fuse_compound_assigns();
+        after_each("fuse_compound_assigns", self);
         // Phase 6q companion — re-tag the trailing-modifier keywords
         // (`if`, `unless`, `while`, `until`) to `if_modifier`,
         // `unless_modifier`, `while_modifier`, `until_modifier` when
@@ -532,25 +741,138 @@ impl RubyLexer {
         // fused-token shape (notably `end` of a same-line block
         // already in place if relevant).
         self.tag_modifier_keywords();
-        // #18778 — re-tag a `[` that starts a new statement (see
-        // `tag_line_start_brackets`).  Same reason as the modifier pass:
-        // the grammar ignores newlines, so the lexer says where one ends a
-        // statement.  Pre-1.0 Ruby — no era gating.
-        self.tag_line_start_brackets();
+        after_each("tag_modifier_keywords", self);
         if era_at_least(&self.era, "1.9.1") {
             self.fuse_lambda_arrow();
+            after_each("fuse_lambda_arrow", self);
         }
         if era_at_least(&self.era, "2.1") {
             self.fuse_numeric_suffixes();
+            after_each("fuse_numeric_suffixes", self);
         }
         if era_at_least(&self.era, "2.3") {
             self.fuse_safe_nav();
+            after_each("fuse_safe_nav", self);
         }
         if era_at_least(&self.era, "2.6") {
             self.mark_endless_ranges();
+            after_each("mark_endless_ranges", self);
         }
         if era_at_least(&self.era, "2.7") {
             self.mark_numbered_block_params();
+            after_each("mark_numbered_block_params", self);
+        }
+        // #18778 / #18798 — say where a newline (or `;`) ends a statement
+        // (see `mark_statement_ends`).  Same reason as the modifier pass:
+        // the grammar ignores newlines, so the lexer must.  Pre-1.0 Ruby —
+        // no era gating.  It runs LAST, after every fusion, so it sees the
+        // final token shapes: the `-` of a lambda arrow `->` is already
+        // part of a `->` token and is never mistaken for a unary minus.
+        self.mark_statement_ends();
+        after_each("mark_statement_ends", self);
+    }
+
+    /// #18814 — the one engine every token-fusion pass runs on: fold runs
+    /// of adjacent tokens in a single left-to-right sweep, in place.
+    ///
+    /// ## Why not `Vec::remove`
+    ///
+    /// The passes used to fold a pair by overwriting the left token and
+    /// calling `tokens.remove(i + 1)` (and the same on the whitespace
+    /// flags).  `Vec::remove` shifts every later token one slot left, so a
+    /// file with `k` fusions among `n` tokens paid `O(n·k)`: 400 KB of
+    /// `a&.b` — one fusion per line — took about 150 s to lex.
+    ///
+    /// ## How this sweep works
+    ///
+    /// Two cursors walk the same vector.  `r` reads the next unexamined
+    /// token; `w` counts the tokens already settled, which sit packed in
+    /// `tokens[..w]`.  The last settled token, `tokens[w - 1]`, is the
+    /// *left half* the pass tries to extend:
+    ///
+    /// ```text
+    ///   settled            gap (stale)       unread
+    ///  ┌─────────────────┬─────────────────┬──────────────────────┐
+    ///  │ … Name(a)  `&`  │ (moved / fused) │ Dot(.)  Name(b)  …   │
+    ///  └─────────────────┴─────────────────┴──────────────────────┘
+    ///               ↑ w-1                    ↑ r
+    /// ```
+    ///
+    /// - If `fuse(left, tokens[r..r + followers], their whitespace flags)`
+    ///   returns a token, it replaces the left half and the followers are
+    ///   skipped (`r += followers`): nothing moves.
+    /// - Otherwise `tokens[r]` is settled: swapped down to slot `w` (a
+    ///   no-op while nothing has fused yet), and it becomes the next left
+    ///   half.
+    ///
+    /// Every token is read once and moved at most once, so the pass is
+    /// `O(n)` whatever the number of fusions.  At the end the vector is
+    /// truncated to `w`, and the whitespace flags, compacted in step,
+    /// lose the same slots.
+    ///
+    /// ## Exactly the old stream
+    ///
+    /// `after` says what the old loop did with its index after a fusion,
+    /// and this sweep mirrors it:
+    ///
+    /// | old loop after a fusion        | `AfterFusion` | next left half       |
+    /// |--------------------------------|---------------|----------------------|
+    /// | stays on `i` (`continue`)      | `Retry`       | the fused token      |
+    /// | `i += 1`                       | `MoveOn`      | the token after it   |
+    ///
+    /// `fuse` sees the follower's whitespace flag at its own index, as the
+    /// old loop did (it kept the flags parallel by removing the same
+    /// slots).  Should the flags ever outnumber the tokens, the extra
+    /// ones are left exactly where they were.  (Before #18820,
+    /// `finalize_heredoc` removed a token without its flag, so they did.)
+    /// The differential tests in
+    /// `differential_tests.rs` hold every pass to the pre-#18814 stream,
+    /// step by step.
+    fn fuse_adjacent(
+        &mut self,
+        followers: usize,
+        after: AfterFusion,
+        fuse: impl Fn(&Token, &[Token], &[bool]) -> Option<Token>,
+    ) {
+        debug_assert!((1..=MAX_FOLLOWERS).contains(&followers));
+        let tokens = &mut self.tokens;
+        let ws = &mut self.whitespace_before_token;
+        let n = tokens.len();
+        let gap_at = |ws: &[bool], k: usize| ws.get(k).copied().unwrap_or(false);
+        let mut w = 0;
+        let mut r = 0;
+        // `MoveOn`: the token just fused may not be extended again.
+        let mut sealed = false;
+        while r < n {
+            if w > 0 && !sealed && r + followers <= n {
+                let mut gaps = [false; MAX_FOLLOWERS];
+                for (k, gap) in gaps.iter_mut().enumerate().take(followers) {
+                    *gap = gap_at(ws, r + k);
+                }
+                if let Some(fused) = fuse(&tokens[w - 1], &tokens[r..r + followers], &gaps[..followers]) {
+                    tokens[w - 1] = fused;
+                    r += followers;
+                    sealed = after == AfterFusion::MoveOn;
+                    continue;
+                }
+            }
+            if w != r {
+                tokens.swap(w, r);
+                if r < ws.len() {
+                    ws[w] = ws[r];
+                }
+            }
+            w += 1;
+            r += 1;
+            sealed = false;
+        }
+        tokens.truncate(w);
+        // Drop the flags of the folded tokens (slots `w..n`), keeping any
+        // flags beyond `n` in place.
+        if ws.len() >= n {
+            ws.drain(w..n);
+        } else {
+            ws.truncate(w);
         }
     }
 
@@ -589,42 +911,18 @@ impl RubyLexer {
     ///   the parser ends up with `Int(0)` + `Name("x9z")` which it
     ///   will reject as a syntax error.
     fn fuse_radix_integers(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_zero = a.type_ == TokenType::Number && a.value == "0";
-                let b_is_radix_body = b.type_ == TokenType::Name
-                    && is_radix_integer_body(&b.value);
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_zero && b_is_radix_body && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!(
-                    "0{}",
-                    self.tokens[i + 1].value
-                );
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        // `0` `xDEAD_BEEF` → `0xDEAD_BEEF`.  The fused token is never the
+        // left half of another radix literal, so the scan moves past it.
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let b = &f[0];
+            let fuses = a.type_ == TokenType::Number
+                && a.value == "0"
+                && b.type_ == TokenType::Name
+                && is_radix_integer_body(&b.value)
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Number, format!("0{}", b.value)))
+        });
     }
 
     /// Phase 4k — fuse float-literal token sequences emitted by the
@@ -660,170 +958,61 @@ impl RubyLexer {
     /// approach is uniform with how `..` / `...` / `->` / `&.` / `2r`
     /// / `_1` already work and avoids that complexity.
     fn fuse_float_literals(&mut self) {
-        // Step 1: `Int Dot Int` (no whitespace between any of the
-        // three) fuses to a single `Number("X.Y")` token.
-        let mut i = 0;
-        while i + 2 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let c = &self.tokens[i + 2];
-                let a_is_int = a.type_ == TokenType::Number
-                    && self.is_integer_lexeme(&a.value);
-                let b_is_dot = b.type_ == TokenType::Dot;
-                let c_is_int = c.type_ == TokenType::Number
-                    && self.is_integer_lexeme(&c.value);
-                let same_line = a.line == b.line && b.line == c.line;
-                let no_ws_b = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                let no_ws_c = !self
-                    .whitespace_before_token
-                    .get(i + 2)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_int && b_is_dot && c_is_int && same_line && no_ws_b && no_ws_c
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!(
-                    "{}.{}",
-                    self.tokens[i].value,
-                    self.tokens[i + 2].value
-                );
-                self.tokens.remove(i + 2);
-                self.whitespace_before_token.remove(i + 2);
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-                // Don't advance i — the scientific-notation suffix
-                // (if any) may follow.
-            } else {
-                i += 1;
-            }
-        }
+        // Three linear sweeps, one per shape.  Each retries the fused token
+        // as the left half of the next match, which is how `1.5e10` (step
+        // 1 makes `1.5`) and `1.5e-3` find their exponent in a later step
+        // and how a run of matches folds left to right.
+        //
+        // Step 1: `Int Dot Int` (no whitespace between any of the three)
+        // fuses to a single `Number("X.Y")` token.
+        self.fuse_adjacent(2, AfterFusion::Retry, |a, f, gap| {
+            let (b, c) = (&f[0], &f[1]);
+            let fuses = a.type_ == TokenType::Number
+                && is_integer_lexeme(&a.value)
+                && b.type_ == TokenType::Dot
+                && c.type_ == TokenType::Number
+                && is_integer_lexeme(&c.value)
+                && a.line == b.line
+                && b.line == c.line
+                && !gap[0]
+                && !gap[1];
+            fuses.then(|| fused_token(a, TokenType::Number, format!("{}.{}", a.value, c.value)))
+        });
         // Step 2: `Number Name(e<digits>)` (or `Int Name(e<digits>)`)
-        // fuses the trailing scientific notation when the name's
-        // lexeme is exactly `[eE]<digit_or_underscore>+`.  No sign
-        // case (handled in step 3).
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_num = a.type_ == TokenType::Number;
-                let b_is_unsigned_exp = b.type_ == TokenType::Name
-                    && is_unsigned_exponent_lexeme(&b.value);
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_num && b_is_unsigned_exp && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!(
-                    "{}{}",
-                    self.tokens[i].value,
-                    self.tokens[i + 1].value
-                );
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-                // Don't advance — the signed-exponent step below
-                // might still match (unlikely but harmless).
-            } else {
-                i += 1;
-            }
-        }
+        // fuses the trailing scientific notation when the name's lexeme
+        // is exactly `[eE]<digit_or_underscore>+`.  No sign case (handled
+        // in step 3).
+        self.fuse_adjacent(1, AfterFusion::Retry, |a, f, gap| {
+            let b = &f[0];
+            let fuses = a.type_ == TokenType::Number
+                && b.type_ == TokenType::Name
+                && is_unsigned_exponent_lexeme(&b.value)
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Number, format!("{}{}", a.value, b.value)))
+        });
         // Step 3: `Number Name("e"|"E") (Plus|Minus) Int` fuses the
         // trailing signed exponent.  Four tokens collapse to one.
-        let mut i = 0;
-        while i + 3 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let c = &self.tokens[i + 2];
-                let d = &self.tokens[i + 3];
-                let a_is_num = a.type_ == TokenType::Number;
-                let b_is_e = b.type_ == TokenType::Name
-                    && (b.value == "e" || b.value == "E");
-                let c_is_sign = (c.type_ == TokenType::Plus && c.value == "+")
-                    || (c.type_ == TokenType::Minus && c.value == "-");
-                let d_is_int = d.type_ == TokenType::Number
-                    && self.is_integer_lexeme(&d.value);
-                let same_line =
-                    a.line == b.line && b.line == c.line && c.line == d.line;
-                let no_ws_b = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                let no_ws_c = !self
-                    .whitespace_before_token
-                    .get(i + 2)
-                    .copied()
-                    .unwrap_or(false);
-                let no_ws_d = !self
-                    .whitespace_before_token
-                    .get(i + 3)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_num
-                    && b_is_e
-                    && c_is_sign
-                    && d_is_int
-                    && same_line
-                    && no_ws_b
-                    && no_ws_c
-                    && no_ws_d
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!(
-                    "{}{}{}{}",
-                    self.tokens[i].value,
-                    self.tokens[i + 1].value,
-                    self.tokens[i + 2].value,
-                    self.tokens[i + 3].value
-                );
-                for _ in 0..3 {
-                    self.tokens.remove(i + 1);
-                    self.whitespace_before_token.remove(i + 1);
-                }
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            } else {
-                i += 1;
-            }
-        }
+        self.fuse_adjacent(3, AfterFusion::Retry, |a, f, gap| {
+            let (b, c, d) = (&f[0], &f[1], &f[2]);
+            let fuses = a.type_ == TokenType::Number
+                && b.type_ == TokenType::Name
+                && (b.value == "e" || b.value == "E")
+                && ((c.type_ == TokenType::Plus && c.value == "+")
+                    || (c.type_ == TokenType::Minus && c.value == "-"))
+                && d.type_ == TokenType::Number
+                && is_integer_lexeme(&d.value)
+                && a.line == b.line
+                && b.line == c.line
+                && c.line == d.line
+                && !gap[0]
+                && !gap[1]
+                && !gap[2];
+            fuses.then(|| {
+                let value = format!("{}{}{}{}", a.value, b.value, c.value, d.value);
+                fused_token(a, TokenType::Number, value)
+            })
+        });
     }
 
     /// Phase 8a-2 (FC) companion — fold `>>` and `>>=`.
@@ -857,61 +1046,21 @@ impl RubyLexer {
     /// Era: pre-1.0 Ruby — every era ≥ 1.8 emits the same problematic
     /// pre-fusion shape, so no gating.
     fn fuse_right_shifts(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            // Left token must be `Name(">")`.
-            let is_gt = {
-                let a = &self.tokens[i];
-                a.type_ == TokenType::Name && a.value == ">"
-            };
-            if !is_gt {
-                i += 1;
-                continue;
+        // Retry the fused token: three-`>` sequences (e.g. `a>>>b`, which
+        // is illegal in Ruby anyway) get partial-folded the same way the
+        // old one-`Vec::remove`-per-fusion loop folded them.
+        self.fuse_adjacent(1, AfterFusion::Retry, |a, f, gap| {
+            let b = &f[0];
+            if !(a.type_ == TokenType::Name && a.value == ">") {
+                return None;
             }
-            // Right token must be `Name(">")` or `Name(">=")`, on the
-            // same line, with no whitespace gap.
-            let (new_value_opt, same_line, no_ws) = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                let nv: Option<&'static str> = if b.type_ == TokenType::Name {
-                    match b.value.as_str() {
-                        ">" => Some(">>"),
-                        ">=" => Some(">>="),
-                        _ => None,
-                    }
-                } else {
-                    None
-                };
-                (nv, same_line, no_ws)
+            let value = match (b.type_, b.value.as_str()) {
+                (TokenType::Name, ">") => ">>",
+                (TokenType::Name, ">=") => ">>=",
+                _ => return None,
             };
-            if let Some(nv) = new_value_opt {
-                if same_line && no_ws {
-                    let span_line = self.tokens[i].line;
-                    let span_col = self.tokens[i].column;
-                    self.tokens.remove(i + 1);
-                    self.whitespace_before_token.remove(i + 1);
-                    self.tokens[i] = Token {
-                        type_: TokenType::Name,
-                        value: nv.to_string(),
-                        line: span_line,
-                        column: span_col,
-                        type_name: None,
-                        flags: None, cv: None,
-                    };
-                    // Don't advance — three-`>` sequences (e.g. `a>>>b`,
-                    // which is illegal in Ruby anyway) get correctly
-                    // partial-folded on the next iteration.
-                    continue;
-                }
-            }
-            i += 1;
-        }
+            (a.line == b.line && !gap[0]).then(|| fused_token(a, TokenType::Name, value.to_string()))
+        });
     }
 
     /// Phase 6p companion — fuse compound-assignment operators
@@ -947,79 +1096,34 @@ impl RubyLexer {
     /// Era: pre-1.0 Ruby — every era ≥ 1.8 emits the same fused
     /// shape, so no gating.
     fn fuse_compound_assigns(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let (left_lexeme, is_arith): (&str, bool) = {
-                let a = &self.tokens[i];
-                match a.type_ {
-                    TokenType::Plus => ("+", true),
-                    TokenType::Minus => ("-", true),
-                    TokenType::Star => ("*", true),
-                    TokenType::Slash => ("/", true),
-                    // `||`, `&&`, `%`, `**`, `<<`, `&`, `|`, `^`
-                    // all come through as Name (catch-all in
-                    // classify_op_token).  Filter by value so we
-                    // don't accidentally fuse `foo =` into something.
-                    TokenType::Name
-                        if matches!(
-                            a.value.as_str(),
-                            "||" | "&&" | "%" | "**" | "<<" | "&" | "|" | "^"
-                        ) =>
-                    {
-                        let lex: &'static str = match a.value.as_str() {
-                            "||" => "||",
-                            "&&" => "&&",
-                            "%" => "%",
-                            "**" => "**",
-                            "<<" => "<<",
-                            "&" => "&",
-                            "|" => "|",
-                            "^" => "^",
-                            _ => unreachable!(),
-                        };
-                        (lex, false)
-                    }
-                    _ => {
-                        i += 1;
-                        continue;
-                    }
+        // Retry the fused token (chained compounds are illegal, and a fused
+        // `+=` never matches a left half, so this only matters for being
+        // exactly the stream the old loop produced).
+        self.fuse_adjacent(1, AfterFusion::Retry, |a, f, gap| {
+            let left_lexeme = match a.type_ {
+                TokenType::Plus => "+",
+                TokenType::Minus => "-",
+                TokenType::Star => "*",
+                TokenType::Slash => "/",
+                // `||`, `&&`, `%`, `**`, `<<`, `&`, `|`, `^` all come
+                // through as Name (catch-all in classify_op_token).
+                // Filter by value so we don't accidentally fuse `foo =`
+                // into something.
+                TokenType::Name
+                    if matches!(
+                        a.value.as_str(),
+                        "||" | "&&" | "%" | "**" | "<<" | "&" | "|" | "^"
+                    ) =>
+                {
+                    a.value.as_str()
                 }
+                _ => return None,
             };
-            let merge = {
-                let b = &self.tokens[i + 1];
-                let b_is_eq = b.type_ == TokenType::Equals;
-                let same_line = self.tokens[i].line == b.line;
-                // No whitespace gap between op and `=`.
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                b_is_eq && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!("{left_lexeme}=");
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-                // Don't advance — chained compounds are illegal but
-                // the next iteration's guard will handle it cleanly.
-            } else {
-                // Reference `is_arith` once so the compiler doesn't
-                // warn — the variable is documentary for now.
-                let _ = is_arith;
-                i += 1;
-            }
-        }
+            let b = &f[0];
+            // No whitespace gap between op and `=`.
+            let fuses = b.type_ == TokenType::Equals && a.line == b.line && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Name, format!("{left_lexeme}=")))
+        });
     }
 
     /// Phase 6q companion — re-tag trailing-modifier keywords.
@@ -1094,83 +1198,476 @@ impl RubyLexer {
         }
     }
 
-    /// #18778 — re-tag an `[` that opens a new statement.
+    /// #18778 / #18798 — mark where a newline (or a `;`) ends a statement.
     ///
-    /// In Ruby a newline after a complete expression ends the statement, so
-    /// a line that starts with `[` starts a new one with an array literal:
+    /// Ruby ends a statement at a newline that follows a complete
+    /// expression.  `ruby.grammar` ignores newlines — the grammar parser
+    /// steps over every `Newline` token — so on its own it glues the next
+    /// line onto the one before, and some programs print a wrong answer
+    /// with no error at all:
     ///
-    /// ```text
-    /// x = 5
-    /// [1].each { |v| puts v }     # two statements: Ruby prints 1
+    /// | source                      | glued reading          | Ruby reads it as            |
+    /// |-----------------------------|------------------------|-----------------------------|
+    /// | `x = 5` ⏎ `[1].each { … }`  | `x = 5[1].each { … }`  | two statements              |
+    /// | `x = 5` ⏎ `-1` ⏎ `puts x`   | `x = 5 - 1`: prints 4  | `x = 5`, then `-1`: prints 5 |
+    /// | `x = foo` ⏎ `(1)`           | `x = foo(1)`           | `x = foo`, then `(1)`       |
+    /// | `puts` ⏎ `puts 2`           | `puts(puts 2)`         | a blank line, then `2`      |
+    /// | `rescue Boom` ⏎ `puts 40`   | `rescue` + `Boom(puts 40)` | class `Boom`, body `puts 40` |
+    /// | `super` ⏎ `puts "hi"`       | `super(puts) ; "hi"`   | `super`, then `puts "hi"`   |
+    /// | `return; 42`                | `return 42`            | `return` (nil)              |
+    ///
+    /// The grammar is shared by six languages' parsers and only Rust's
+    /// grammar tool has adjacency predicates, so the fix is portable data:
+    /// this pass re-tags or inserts tokens, and the grammar refuses or
+    /// consumes them with plain literals.  The other languages' lexers never
+    /// produce them, so nothing changes there.  Four steps, in order:
+    ///
+    /// 1. [`Self::semicolons_end_lines`] — a `;` between statements becomes
+    ///    a `Newline`, so `def risky; raise "x"; rescue => e; 1; end` lexes
+    ///    as the same program on five lines.
+    /// 2. [`Self::end_rescue_class_lists`] — a `rescue` line with no `=>`
+    ///    gets a `;` after its class list (or after a bare `rescue`).
+    /// 3. [`Self::tag_line_start_tokens`] — a `[`, `(`, `-` or `+` that
+    ///    starts a line after a complete expression is re-tagged.
+    /// 4. [`Self::end_lone_names`] — a name alone on its line, where a
+    ///    statement starts, gets a `;` after it, and so does a keyword that
+    ///    takes a paren-less argument list (`super`, `yield`, `return`,
+    ///    `break`, `next`) when its line (or a `;`) ends right after it.
+    ///
+    /// Every step is linear in the number of tokens: the synthetic `;`s
+    /// are found first and then spliced in by one rebuild of the token
+    /// vector ([`Self::insert_statement_ends`]), and block-parameter
+    /// positions are looked up in a set or walked in order, so a large file
+    /// costs no more per token than a small one.
+    fn mark_statement_ends(&mut self) {
+        self.semicolons_end_lines();
+        self.end_rescue_class_lists();
+        self.tag_line_start_tokens();
+        self.end_lone_names();
+    }
+
+    /// The `(open, close)` indices of every block-parameter list's `|`
+    /// bars: a `|` right after `{` or `do` opens one, and the next `|`
+    /// closes it (`do |x; y|`, `{ |a, b| … }`).
+    fn block_param_bars(&self) -> Vec<(usize, usize)> {
+        let is_bar = |t: &Token| t.type_ == TokenType::Name && t.value == "|";
+        let mut out = Vec::new();
+        let mut i = 0;
+        while i < self.tokens.len() {
+            let opens = is_bar(&self.tokens[i])
+                && i > 0
+                && match &self.tokens[i - 1] {
+                    t if t.type_ == TokenType::LBrace => true,
+                    t => t.type_ == TokenType::Keyword && t.value == "do",
+                };
+            if opens {
+                // No closing bar anywhere after this one means no later bar
+                // either, so the search can stop (and never rescans).
+                let Some(close) = (i + 1..self.tokens.len()).find(|&k| is_bar(&self.tokens[k])) else {
+                    break;
+                };
+                out.push((i, close));
+                i = close;
+            }
+            i += 1;
+        }
+        out
+    }
+
+    /// Step 1: a `;` that separates statements is a line break.
+    ///
+    /// Ruby's `;` and a newline both end a statement, and the grammar has
+    /// no statement separator at all (it ignores newlines instead), so a
+    /// `;` used to stop the parse: `x = 1; puts x` was a parse error.  The
+    /// token keeps its `;` value but becomes a `Newline`, which the parser
+    /// steps over and the later steps treat as the end of a line.
+    ///
+    /// The one `;` the grammar does use is kept: the one that starts a
+    /// block's block-local names, `do |x; y|`.
+    fn semicolons_end_lines(&mut self) {
+        // The bar pairs come in token order and never overlap, so one
+        // pointer walks them alongside `i`.
+        let params = self.block_param_bars();
+        let mut next_pair = 0;
+        for i in 0..self.tokens.len() {
+            while next_pair < params.len() && params[next_pair].1 < i {
+                next_pair += 1;
+            }
+            let inside_params = params
+                .get(next_pair)
+                .is_some_and(|&(open, close)| open < i && i < close);
+            if self.tokens[i].type_ == TokenType::Semicolon && !inside_params {
+                self.tokens[i].type_ = TokenType::Newline;
+            }
+        }
+    }
+
+    /// Insert a synthetic `;` ([`STATEMENT_END`]) right after each
+    /// `tokens[i]` for `i` in `after` (ascending, no repeats), in one
+    /// rebuild of the token vector: O(tokens + insertions).  (Inserting
+    /// them one at a time with `Vec::insert` moved the whole tail each time,
+    /// which made a file of many short statements quadratic.)
+    ///
+    /// The token's type is `Semicolon`, which no grammar rule matches by
+    /// type; the grammar consumes it as the literal `";"` only where a
+    /// statement, a keyword's argument list or a `rescue` class list may end.
+    fn insert_statement_ends(&mut self, after: &[usize]) {
+        if after.is_empty() {
+            return;
+        }
+        let old_tokens = std::mem::take(&mut self.tokens);
+        let old_ws = std::mem::take(&mut self.whitespace_before_token);
+        let mut tokens = Vec::with_capacity(old_tokens.len() + after.len());
+        let mut ws = Vec::with_capacity(old_ws.len() + after.len());
+        let mut pending = after.iter().peekable();
+        for (i, token) in old_tokens.into_iter().enumerate() {
+            let insert_here = pending.next_if(|&&a| a == i).is_some();
+            let end = insert_here.then(|| Token {
+                type_: TokenType::Semicolon,
+                value: STATEMENT_END.to_string(),
+                line: token.line,
+                column: token.column + token.value.chars().count(),
+                type_name: None,
+                // Not in the source: the grammar parser leaves it out of
+                // every node's span, and `source_spelling` drops it.
+                flags: Some(TOKEN_SYNTHETIC),
+                cv: None,
+            });
+            tokens.push(token);
+            if let Some(w) = old_ws.get(i) {
+                ws.push(*w);
+            }
+            if let Some(end) = end {
+                tokens.push(end);
+                if i < old_ws.len() {
+                    ws.push(false);
+                }
+            }
+        }
+        self.tokens = tokens;
+        self.whitespace_before_token = ws;
+    }
+
+    /// Step 2: end a `rescue` clause's class list at its line break.
+    ///
+    /// ```ruby
+    /// rescue Boom        # the class list is `Boom` …
+    ///   puts 40          # … and this is the clause's first statement
     /// ```
     ///
-    /// The grammar ignores newlines, so it read `x = 5[1].each …` — an
-    /// index into `5` — and the C backend failed with `undefined method []`.
-    /// Worse, `puts` ⏎ `[7].each …` read as `puts([7].each …)` and printed a
-    /// wrong answer with no error at all.
+    /// The grammar cannot see the newline, so a class list without `=> e`
+    /// used to read `Boom` as a paren-less call: `Boom(puts 40)`.  And a
+    /// bare `rescue` followed by a line holding one name (`rescue` ⏎
+    /// `retry_count` ⏎ …) could read that name as the class.  So when the
+    /// line is `rescue` alone, or `rescue A, B` with nothing after the last
+    /// class, a `;` goes after it; `rescue_clause` consumes it as the end
+    /// of the list.  A comma at the end of a line continues the list onto
+    /// the next one, as in Ruby.  Any other shape (`=> e`, `A::B`, `then`)
+    /// is left as it is.
+    fn end_rescue_class_lists(&mut self) {
+        let ends_line =
+            |t: &Token| matches!(t.type_, TokenType::Newline | TokenType::Eof);
+        // Each `rescue` scans only its own class list, and the lists never
+        // overlap, so finding them all is linear; then one rebuild.
+        let mut ends = Vec::new();
+        let mut i = 0;
+        while i < self.tokens.len() {
+            let is_rescue =
+                self.tokens[i].type_ == TokenType::Keyword && self.tokens[i].value == "rescue";
+            if !is_rescue {
+                i += 1;
+                continue;
+            }
+            // `end_at`: the token the `;` goes after, once the line is known
+            // to end there.
+            let mut end_at = None;
+            match self.tokens.get(i + 1) {
+                Some(t) if ends_line(t) => end_at = Some(i),
+                _ => {
+                    let mut j = i + 1;
+                    while self.tokens.get(j).is_some_and(|t| {
+                        t.type_ == TokenType::Name && is_identifier_like(&t.value)
+                    }) {
+                        match self.tokens.get(j + 1) {
+                            Some(t) if ends_line(t) => {
+                                end_at = Some(j);
+                                break;
+                            }
+                            Some(t) if t.type_ == TokenType::Comma => {
+                                j += 2;
+                                while self.tokens.get(j).is_some_and(|t| t.type_ == TokenType::Newline) {
+                                    j += 1;
+                                }
+                            }
+                            _ => break,
+                        }
+                    }
+                }
+            }
+            if let Some(at) = end_at {
+                ends.push(at);
+                i = at + 1;
+            } else {
+                i += 1;
+            }
+        }
+        self.insert_statement_ends(&ends);
+    }
+
+    /// Step 3: re-tag a `[`, `(`, `-` or `+` that starts a statement.
+    ///
+    /// Each of these can both start a statement and continue the
+    /// expression before it (`a[0]`, `f(1)`, `a - 1`, `a + 1`).  Ruby
+    /// decides by the newline; here the lexer does:
+    ///
+    /// | token | tag                  | refused by (grammar)                                    | still accepted by          |
+    /// |-------|----------------------|---------------------------------------------------------|----------------------------|
+    /// | `[`   | [`LINE_START_LBRACKET`] | `index_suffix`, a paren-less call's first argument   | `array_literal`            |
+    /// | `(`   | [`LINE_START_LPAREN`]   | a call's argument list (`f(…)`, `.m(…)`, `def f(…)`), a paren-less call's first argument | `( expression )` |
+    /// | `-`   | [`LINE_START_MINUS`]    | binary `-` in `sum`, a paren-less call's first argument | `unary_minus`         |
+    /// | `+`   | [`LINE_START_PLUS`]     | binary `+` in `sum`                                   | `unary_plus`               |
     ///
     /// Trigger (both must hold):
-    /// - the token is `LBracket` `[`, and at least one `Newline` token sits
-    ///   between it and the preceding non-`Newline` token (a newline inside
+    /// - at least one `Newline` token (a line break or a `;`) sits between
+    ///   the token and the preceding non-`Newline` token (a newline inside
     ///   a multi-line string is part of that string, not a `Newline`
     ///   token, so `"a⏎b"[0]` is still an index);
-    /// - that preceding token ends an expression — the same test
-    ///   [`Self::tag_modifier_keywords`] uses.  After `,`, `(`, `[`, an
-    ///   operator or a keyword such as `in`, the statement is not over, so
+    /// - that preceding token ends an expression ([`Self::ends_expression`]).
+    ///   After `,`, `(`, `[`, `=`, an operator or a keyword such as `in`,
+    ///   the statement is not over, so `x = 5 -` ⏎ `1` is still `5 - 1` and
     ///   a multi-line array (`[⏎  [1, 2],⏎  [3, 4]⏎]`) is unaffected.
     ///
-    /// Effect: the token's `value` becomes [`LINE_START_LBRACKET`]; its
-    /// `type_` stays `LBracket`, so `array_literal` (which matches
-    /// `LBRACKET` by type) still accepts it, while `index_suffix` and a
-    /// paren-less call's first argument refuse that value (the grammar's
-    /// `!"[ line start"` lookaheads).
-    fn tag_line_start_brackets(&mut self) {
+    /// The type is kept, so every rule that matches the token by type still
+    /// accepts it; only the grammar's `!"… line start"` lookaheads see the
+    /// difference.  A line that starts with `.` (`.map { … }`) is not
+    /// touched, so a leading-dot method chain still continues the line
+    /// before, as in Ruby.
+    fn tag_line_start_tokens(&mut self) {
         let mut prev: Option<usize> = None;
         let mut newline_since_prev = false;
         for i in 0..self.tokens.len() {
-            match self.tokens[i].type_ {
-                TokenType::Newline => {
-                    newline_since_prev = true;
-                    continue;
+            if self.tokens[i].type_ == TokenType::Newline {
+                newline_since_prev = true;
+                continue;
+            }
+            if newline_since_prev && prev.is_some_and(|j| self.ends_expression(j)) {
+                let tag = match (self.tokens[i].type_, self.tokens[i].value.as_str()) {
+                    (TokenType::LBracket, "[") => Some(LINE_START_LBRACKET),
+                    (TokenType::LParen, "(") => Some(LINE_START_LPAREN),
+                    (TokenType::Minus, "-") => Some(LINE_START_MINUS),
+                    (TokenType::Plus, "+") => Some(LINE_START_PLUS),
+                    _ => None,
+                };
+                if let Some(tag) = tag {
+                    self.tokens[i].value = tag.to_string();
                 }
-                TokenType::LBracket
-                    if newline_since_prev && prev.is_some_and(|j| self.ends_expression(j)) =>
-                {
-                    self.tokens[i].value = LINE_START_LBRACKET.to_string();
-                }
-                _ => {}
             }
             prev = Some(i);
             newline_since_prev = false;
         }
     }
 
-    /// Whether `tokens[j]` can end an expression: a literal, a name, a
-    /// closing bracket, or one of the value keywords.  Shared by the
-    /// modifier-keyword and line-start-bracket passes.
-    fn ends_expression(&self, j: usize) -> bool {
-        match self.tokens[j].type_ {
-            TokenType::Number
-            | TokenType::String
-            | TokenType::Name
+    /// Step 4: end a statement that is one name alone on its line, and the
+    /// argument list of a keyword that ends its line.
+    ///
+    /// ```ruby
+    /// puts          # a call with no arguments: prints a blank line
+    /// puts 2
+    /// super         # the zero-argument `super`: forwards the parameters
+    /// puts "hi"
+    /// ```
+    ///
+    /// A paren-less call's arguments start on the callee's own line, but
+    /// `method_call_no_paren` cannot see the line break, so this read as
+    /// `puts(puts 2)`.  Any statement that is a lone name has the same
+    /// problem (`foo` ⏎ `bar` was `foo(bar)`), so a `;` goes after the
+    /// name, `expression_stmt` consumes it, and a paren-less call cannot
+    /// start with it.
+    ///
+    /// The keywords that take a paren-less argument list have it too, and
+    /// worse, because a `;` is a line break here (step 1): `super` ⏎
+    /// `puts "hi"` read as `super(puts)` and then `"hi"`, and `return; 42`
+    /// as `return 42`.  So `super`, `yield`, `return`, `break` and `next`
+    /// at the end of a line get a `;` too, which their own rules consume
+    /// (`super_expr = "super" ( ";" | [ super_args ] )`, and the same shape
+    /// for the others).  `super` can stand anywhere an expression can
+    /// (`x = super`), so it gets the `;` wherever it ends a line, unless it
+    /// is a method name (`obj.super`, `def super`, `:super`).  The other
+    /// four are statements, so — like a name — they get it only where a
+    /// statement starts; elsewhere (`x = yield`) the grammar reads them as
+    /// a bare keyword value, which takes no arguments.
+    ///
+    /// A name or statement keyword must be where a statement starts: right
+    /// after a token that opens one ([`Self::opens_statement`]: `{`, the
+    /// `|` that closes block parameters, `do`, `then`, `else`, `begin`,
+    /// `ensure`, `rescue`, a step-2 `;`), on the same line or not; or first
+    /// on its line after a token that ends an expression
+    /// ([`Self::ends_expression`]).  So `{ |x| foo; bar }` and `begin foo;
+    /// bar end` end `foo`, as in Ruby.  After `,`, `(`, `=`, `or` or an
+    /// operator it is the rest of an expression and is left alone.  No `;` goes in when the next line
+    /// cannot be an argument anyway: it starts with `end`, another clause
+    /// keyword, a closing bracket, or a `.` that continues a method chain.
+    fn end_lone_names(&mut self) {
+        let closing_bars: HashSet<usize> =
+            self.block_param_bars().into_iter().map(|(_, close)| close).collect();
+        // Find them all first, then splice them in with one rebuild.
+        // (Whether a token ends its statement never depends on another
+        // insertion here: one would only replace a token that already ends
+        // an expression with a `;`, and both start a statement.)
+        let ends: Vec<usize> = (0..self.tokens.len())
+            .filter(|&i| self.ends_its_statement(i, &closing_bars))
+            .collect();
+        self.insert_statement_ends(&ends);
+    }
+
+    /// Whether `tokens[i]` gets a synthetic `;` in step 4 (see
+    /// [`Self::end_lone_names`]): a name or keyword that ends its line where
+    /// that ends its statement, followed by a line that could otherwise be
+    /// read as its argument.  `closing_bars` holds the indices of the `|`
+    /// that close block parameters.
+    ///
+    /// Cost: the walks over `Newline` runs before and after `i` are paid
+    /// once per name or keyword that touches the run, so the whole pass is
+    /// linear.
+    fn ends_its_statement(&self, i: usize, closing_bars: &HashSet<usize>) -> bool {
+        #[derive(PartialEq)]
+        enum Kind {
+            /// A name, or `yield`/`return`/`break`/`next`: a statement start.
+            Statement,
+            /// `super`: anywhere but a method-name position.
+            Super,
+        }
+        let t = &self.tokens[i];
+        let kind = match t.type_ {
+            TokenType::Name if is_identifier_like(&t.value) => Kind::Statement,
+            TokenType::Keyword => match t.value.as_str() {
+                "yield" | "return" | "break" | "next" => Kind::Statement,
+                "super" => Kind::Super,
+                _ => return false,
+            },
+            _ => return false,
+        };
+        if self.tokens.get(i + 1).map(|t| t.type_) != Some(TokenType::Newline) {
+            return false;
+        }
+        // The token before.
+        let mut p = i;
+        while p > 0 && self.tokens[p - 1].type_ == TokenType::Newline {
+            p -= 1;
+        }
+        let placed = if kind == Kind::Super {
+            // Not a method name: `obj.super`, `obj&.super`, `A::super`,
+            // `:super`, `def super`, `alias super …`.
+            i == 0 || {
+                let pt = &self.tokens[i - 1];
+                !(matches!(pt.type_, TokenType::Dot | TokenType::Colon)
+                    || (pt.type_ == TokenType::Name && pt.value == "&.")
+                    || (pt.type_ == TokenType::Keyword
+                        && matches!(pt.value.as_str(), "def" | "alias" | "undef")))
+            }
+        } else if p == 0 {
+            true // the first token of the file
+        } else if p < i {
+            // First on its line: the line before ended a statement, or
+            // opened one (`do` ⏎ `foo`).
+            self.ends_expression(p - 1) || self.opens_statement(p - 1, closing_bars)
+        } else {
+            // Something precedes it on its own line, so it starts a
+            // statement only right after a token that opens one:
+            // `{ |x| foo; bar }`, `begin foo; bar end`, `then return; x`.
+            // Anything else (`x = foo`, `a or return`) is mid-expression.
+            self.opens_statement(i - 1, closing_bars)
+        };
+        if !placed {
+            return false;
+        }
+        // The token after: one that could start an argument.
+        let next = (i + 1..self.tokens.len()).find(|&k| self.tokens[k].type_ != TokenType::Newline);
+        let Some(next) = next else { return false };
+        let nt = &self.tokens[next];
+        match nt.type_ {
+            TokenType::Eof
             | TokenType::RParen
             | TokenType::RBracket
-            | TokenType::RBrace => true,
-            TokenType::Keyword => matches!(
-                self.tokens[j].value.as_str(),
-                "nil" | "true" | "false" | "self" | "end"
+            | TokenType::RBrace
+            | TokenType::Dot => false,
+            TokenType::Keyword => !matches!(
+                nt.value.as_str(),
+                "end" | "else" | "elsif" | "when" | "in" | "rescue" | "ensure" | "then" | "do"
             ),
+            TokenType::Name => nt.value != "&.",
+            _ => true,
+        }
+    }
+
+    /// Whether a statement starts right after `tokens[j]`, wherever the
+    /// next token is: the one rule for step 4, shared by lone names and the
+    /// line-ending keywords (#18798 re-review).
+    ///
+    /// | token                                   | example                         |
+    /// |-----------------------------------------|---------------------------------|
+    /// | `{` (a block, a `->` body)              | `xs.each { foo; bar }`          |
+    /// | the `|` that closes block parameters    | `{ \|x\| next; bar }`           |
+    /// | `do` `then` `else` `begin` `ensure` `rescue` | `begin foo; bar end`, `when 1 then foo; bar` |
+    /// | a synthetic `;` (step 2)                | `rescue` ;  ⏎ `note`            |
+    ///
+    /// A line break, or a source `;` (a `Newline` since step 1), after a
+    /// complete expression also ends a statement; that case is
+    /// [`Self::ends_expression`], checked by the caller only when a line
+    /// break sits between.  `elsif c then` is covered by `then`.
+    fn opens_statement(&self, j: usize, closing_bars: &HashSet<usize>) -> bool {
+        let t = &self.tokens[j];
+        match t.type_ {
+            TokenType::Semicolon | TokenType::LBrace => true,
+            // A keyword spelled in method-name position is a method call,
+            // not an opener: `5.then foo`, `obj&.do`, `A::begin` (re-review
+            // LOW: `x = 5.then foo` ⏎ `bar` must not split after `then`).
+            TokenType::Keyword => {
+                matches!(
+                    t.value.as_str(),
+                    "do" | "then" | "else" | "begin" | "ensure" | "rescue"
+                ) && !self.follows_method_call_dot(j)
+            }
+            TokenType::Name => closing_bars.contains(&j),
             _ => false,
         }
     }
 
-    /// Phase 4k helper — true iff `s` is a pure integer-shaped lexeme
-    /// (digits and underscore separators only, no dot or exponent).
-    /// Used to discriminate already-fused float Numbers from the
-    /// integer Numbers that float-fusion is allowed to consume.
-    fn is_integer_lexeme(&self, s: &str) -> bool {
-        !s.is_empty()
-            && s.chars().all(|c| c.is_ascii_digit() || c == '_')
+    /// Whether `tokens[j]` is spelled where a method name goes, right after
+    /// `.`, `&.` or `::`, so a keyword there names a method.
+    fn follows_method_call_dot(&self, j: usize) -> bool {
+        j > 0 && {
+            let pt = &self.tokens[j - 1];
+            matches!(pt.type_, TokenType::Dot | TokenType::Colon)
+                || (pt.type_ == TokenType::Name && pt.value == "&.")
+        }
+    }
+
+    /// Whether `tokens[j]` can end an expression: a literal, a name, a
+    /// closing bracket, or one of the value keywords.  Shared by the
+    /// modifier-keyword pass and [`Self::mark_statement_ends`].
+    ///
+    /// The lexer leaves most operators (`<`, `&&`, `=>`, `?`, `|`, …) on
+    /// `Name` tokens, so a `Name` counts only when it spells an identifier
+    /// or a sigil variable (`x`, `Foo`, `empty?`, `@a`, `$g`).  `x = a &&`
+    /// ⏎ `-b` is one expression, as in Ruby.
+    fn ends_expression(&self, j: usize) -> bool {
+        match self.tokens[j].type_ {
+            TokenType::Number
+            | TokenType::String
+            | TokenType::RParen
+            | TokenType::RBracket
+            | TokenType::RBrace => true,
+            TokenType::Name => is_identifier_like(&self.tokens[j].value),
+            // `super` and `yield` are values too (`x = super`), so a `-`,
+            // `+`, `(` or `[` on the next line starts a new statement after
+            // them (#18798 re-review: `super` ⏎ `-1` read as `super - 1`).
+            TokenType::Keyword => matches!(
+                self.tokens[j].value.as_str(),
+                "nil" | "true" | "false" | "self" | "end" | "super" | "yield"
+            ),
+            _ => false,
+        }
     }
 
     /// 2.1: fold a `Number` token followed (with no whitespace) by
@@ -1180,40 +1677,17 @@ impl RubyLexer {
     /// tokens (a number plus a stray identifier).  The era gate
     /// keeps that behaviour faithful for older programs.
     fn fuse_numeric_suffixes(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_num = a.type_ == TokenType::Number;
-                let b_is_suffix = b.type_ == TokenType::Name
-                    && (b.value == "r" || b.value == "i");
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_num && b_is_suffix && same_line && no_ws
-            };
-            if merge {
-                let suffix = self.tokens[i + 1].value.clone();
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                let new_value = format!("{}{}", self.tokens[i].value, suffix);
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Number,
-                    value: new_value,
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        // `2` `r` → `2r`.  Moves past the fused token, so `2ri` stays
+        // `2r` `i`, as before.
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let b = &f[0];
+            let fuses = a.type_ == TokenType::Number
+                && b.type_ == TokenType::Name
+                && (b.value == "r" || b.value == "i")
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Number, format!("{}{}", a.value, b.value)))
+        });
     }
 
     /// Unconditional: fold adjacent `Dot` tokens into a single
@@ -1223,71 +1697,21 @@ impl RubyLexer {
     /// leaves the multi-dot composition to this post-pass — same
     /// pattern Phase 4b/4c used for `->` and `&.`.
     fn fuse_range_ops(&mut self) {
-        // First pass: combine pairs of adjacent Dots into `..`.
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let both_dots =
-                    a.type_ == TokenType::Dot && b.type_ == TokenType::Dot;
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                both_dots && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: "..".to_string(),
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
-        // Second pass: `..` (now a Name token from the first pass)
-        // followed by a Dot fuses into `...`.
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_dotdot = a.type_ == TokenType::Name && a.value == "..";
-                let b_is_dot = b.type_ == TokenType::Dot;
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_dotdot && b_is_dot && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: "...".to_string(),
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        let adjacent = |a: &Token, b: &Token, gap: bool| a.line == b.line && !gap;
+        // First sweep: combine pairs of adjacent Dots into `..`.  It moves
+        // past each `..`, so `...` becomes `..` `.` here …
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let both_dots = a.type_ == TokenType::Dot && f[0].type_ == TokenType::Dot;
+            (both_dots && adjacent(a, &f[0], gap[0]))
+                .then(|| fused_token(a, TokenType::Name, "..".to_string()))
+        });
+        // … and the second sweep folds `..` (now a Name token) followed by
+        // a Dot into `...`.
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let dotdot_dot = a.type_ == TokenType::Name && a.value == ".." && f[0].type_ == TokenType::Dot;
+            (dotdot_dot && adjacent(a, &f[0], gap[0]))
+                .then(|| fused_token(a, TokenType::Name, "...".to_string()))
+        });
     }
 
     /// 2.6: tag `..` / `...` range tokens followed by a *closer*
@@ -1352,37 +1776,16 @@ impl RubyLexer {
     /// token's recorded column can be up to 2 ahead of the source
     /// position.
     fn fuse_safe_nav(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_amp = a.value == "&" && matches!(a.type_, TokenType::Name);
-                let b_is_dot = b.type_ == TokenType::Dot && b.value == ".";
-                let same_line = a.line == b.line;
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_amp && b_is_dot && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: "&.".to_string(),
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let b = &f[0];
+            let fuses = a.value == "&"
+                && a.type_ == TokenType::Name
+                && b.type_ == TokenType::Dot
+                && b.value == "."
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Name, "&.".to_string()))
+        });
     }
 
     /// 1.9.1: fold adjacent `Op("-")` + `Op(">")` tokens into a
@@ -1402,47 +1805,24 @@ impl RubyLexer {
     /// strictly ≥ 3 — `-` at col N, space at N+1, `>` token emitted
     /// from col N+3).
     fn fuse_lambda_arrow(&mut self) {
-        let mut i = 0;
-        while i + 1 < self.tokens.len() {
-            let merge = {
-                let a = &self.tokens[i];
-                let b = &self.tokens[i + 1];
-                let a_is_minus =
-                    a.type_ == TokenType::Minus && a.value == "-";
-                let b_is_gt = b.value == ">"
-                    && matches!(b.type_, TokenType::Name);
-                let same_line = a.line == b.line;
-                // Phase 4c: require that no whitespace was consumed
-                // between the two tokens — the parallel array tracks
-                // this explicitly so we don't have to interpret
-                // peek-state column quirks.
-                let no_ws = !self
-                    .whitespace_before_token
-                    .get(i + 1)
-                    .copied()
-                    .unwrap_or(false);
-                a_is_minus && b_is_gt && same_line && no_ws
-            };
-            if merge {
-                let span_line = self.tokens[i].line;
-                let span_col = self.tokens[i].column;
-                self.tokens.remove(i + 1);
-                self.whitespace_before_token.remove(i + 1);
-                self.tokens[i] = Token {
-                    type_: TokenType::Name,
-                    value: "->".to_string(),
-                    line: span_line,
-                    column: span_col,
-                    type_name: None,
-                    flags: None, cv: None,
-                };
-            }
-            i += 1;
-        }
+        self.fuse_adjacent(1, AfterFusion::MoveOn, |a, f, gap| {
+            let b = &f[0];
+            // Phase 4c: require that no whitespace was consumed between
+            // the two tokens — the parallel array tracks this explicitly
+            // so we don't have to interpret peek-state column quirks.
+            let fuses = a.type_ == TokenType::Minus
+                && a.value == "-"
+                && b.value == ">"
+                && b.type_ == TokenType::Name
+                && a.line == b.line
+                && !gap[0];
+            fuses.then(|| fused_token(a, TokenType::Name, "->".to_string()))
+        });
     }
 
     /// Take ownership of all tokens emitted so far.
     pub fn drain_tokens(&mut self) -> Vec<Token> {
+        self.remove_retired_heredoc_tags();
         std::mem::take(&mut self.tokens)
     }
 
@@ -1984,6 +2364,73 @@ pub const NUMBERED_BLOCK_PARAM_FLAG: u32 = 1 << 0;
 /// parser can reject them.
 pub const ENDLESS_RANGE_FLAG: u32 = 1 << 1;
 
+/// #18814 — how many engine steps [`RubyLexer::push`] lets the state
+/// machine's trace hold before dropping it (see
+/// `RubyLexer::forget_engine_trace`).  Small enough that the trace stays a
+/// few hundred KB, large enough that dropping it costs nothing measurable.
+const ENGINE_TRACE_LIMIT: usize = 4096;
+
+/// #18814 — what a fusion pass does after folding tokens into the one
+/// before them; see [`RubyLexer::fuse_adjacent`].
+///
+/// No pass's fused token can be the left half of its own pattern again
+/// (`2r` is not a `Number` followed by a lone `r`, `..` is not a `Dot`,
+/// `1.5` is not an integer lexeme, `>>` is not `>`), so the two variants
+/// produce the same stream for every pass today.  Each pass still names
+/// the one its old loop used, so the equivalence with the old code does
+/// not rest on that argument.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum AfterFusion {
+    /// The fused token is tried again as the left half of the next match
+    /// (`1.5` then `e10`; `>` `>` `>`).
+    Retry,
+    /// The scan moves past the fused token: the next left half is the
+    /// token after it (`..` then `.` stays two tokens in the first range
+    /// sweep).
+    MoveOn,
+}
+
+/// #18814 — the most tokens a fusion pass folds into the one before them
+/// (the signed exponent: `e` `+` `3` after the mantissa).
+const MAX_FOLLOWERS: usize = 3;
+
+/// #18814 — the token a fusion pass leaves in place of the tokens it
+/// folded: the left token's position, a new type and value, and no type
+/// name, flags or code value (as every pass built it before #18814).
+fn fused_token(left: &Token, type_: TokenType, value: String) -> Token {
+    Token {
+        type_,
+        value,
+        line: left.line,
+        column: left.column,
+        type_name: None,
+        flags: None,
+        cv: None,
+    }
+}
+
+/// #18814 review — remove `v[i]` for every `i` in `sorted` (ascending, no
+/// repeats) in one `Vec::retain` pass: each element is visited once, and
+/// the list is walked alongside, so the cost is O(len) however many go.
+/// Indices past the end are ignored.
+fn remove_sorted_indices<T>(v: &mut Vec<T>, sorted: &[usize]) {
+    let mut next = sorted.iter().copied().peekable();
+    let mut idx = 0;
+    v.retain(|_| {
+        let remove = next.next_if_eq(&idx).is_some();
+        idx += 1;
+        !remove
+    });
+}
+
+/// Phase 4k helper — true iff `s` is a pure integer-shaped lexeme
+/// (digits and underscore separators only, no dot or exponent).
+/// Used to discriminate already-fused float Numbers from the
+/// integer Numbers that float-fusion is allowed to consume.
+fn is_integer_lexeme(s: &str) -> bool {
+    !s.is_empty() && s.chars().all(|c| c.is_ascii_digit() || c == '_')
+}
+
 /// Phase 4d — true if `s` is `_1`, `_2`, …, `_9` exactly.  These
 /// are the only nine numbered block parameter lexemes Ruby 2.7+
 /// recognises.  `_0`, `_10`, `_1abc` etc. are NOT numbered params
@@ -2213,7 +2660,7 @@ fn is_ruby_keyword(s: &str) -> bool {
 // `ruby-parser` keeps working without changes.
 // ---------------------------------------------------------------------------
 
-/// #18778 — the value `tag_line_start_brackets` gives a `[` that opens a
+/// #18778 — the value `tag_line_start_tokens` gives a `[` that opens a
 /// new statement (its type stays `LBracket`).  The grammar refuses it with
 /// the literal lookahead `!"[ line start"`.  A grammar literal matches a
 /// token's value whatever the token's type, so the tag must be a value no
@@ -2225,9 +2672,110 @@ fn is_ruby_keyword(s: &str) -> bool {
 /// The other languages' grammar parsers have no such guard (#18798).
 pub const LINE_START_LBRACKET: &str = "[ line start";
 
+/// #18798 — the value `tag_line_start_tokens` gives a `(` that opens a new
+/// statement (its type stays `LParen`): `x = foo` ⏎ `(1)` is `x = foo`, then
+/// `(1)`, not `x = foo(1)`.  Spelled with a space for the reason given at
+/// [`LINE_START_LBRACKET`].
+pub const LINE_START_LPAREN: &str = "( line start";
+
+/// #18798 — the value `tag_line_start_tokens` gives a `-` that starts a new
+/// statement (its type stays `Minus`, so `unary_minus` still takes it):
+/// `x = 5` ⏎ `-1` is `x = 5`, then `-1`, not `x = 5 - 1`.
+pub const LINE_START_MINUS: &str = "- line start";
+
+/// #18798 — the value `tag_line_start_tokens` gives a `+` that starts a new
+/// statement (its type stays `Plus`, so `unary_plus` still takes it).
+pub const LINE_START_PLUS: &str = "+ line start";
+
+/// #18798 — the synthetic token `mark_statement_ends` inserts where a
+/// newline ends a statement the grammar would otherwise continue: after a
+/// name alone on its line (`puts` ⏎ `puts 2`) and after a `rescue` line's
+/// class list (`rescue Boom` ⏎ `puts 40`).  It is a `Semicolon` token
+/// spelled `;`, because a `;` is exactly what Ruby would accept there: the
+/// grammar consumes it as the literal `";"` (`expression_stmt`,
+/// `rescue_clause`), and a source `;` means the same thing to the other
+/// languages' parsers, which never produce the synthetic one.
+pub const STATEMENT_END: &str = ";";
+
+/// #18798 — what the source wrote for a token, undoing
+/// `mark_statement_ends`: `None` for a synthetic statement end (nothing was
+/// written there), the bare `[`, `(`, `-` or `+` for a line-start tag, and
+/// the token's own value otherwise (a `;` that became a `Newline` keeps the
+/// value `;`).  For a tool that compares this lexer's output with the source
+/// or with another lexer.
+pub fn source_spelling(token: &Token) -> Option<&str> {
+    if token.flags.unwrap_or(0) & TOKEN_SYNTHETIC != 0 {
+        return None;
+    }
+    Some(match token.value.as_str() {
+        LINE_START_LBRACKET => "[",
+        LINE_START_LPAREN => "(",
+        LINE_START_MINUS => "-",
+        LINE_START_PLUS => "+",
+        other => other,
+    })
+}
+
+/// Whether a `Name` token's value spells an identifier or a sigil variable
+/// (`x`, `Foo`, `empty?`, `save!`, `@a`, `@@c`, `$g`, `_1`) rather than one
+/// of the operators the lexer leaves on `Name` tokens (`<`, `&&`, `=>`,
+/// `?`, `|`, `..`, `->`, `&.`).
+fn is_identifier_like(value: &str) -> bool {
+    value
+        .chars()
+        .next()
+        .is_some_and(|c| c.is_alphanumeric() || matches!(c, '_' | '@' | '$'))
+}
+
+/// #18814 review — the `type_name` of the token [`budget_refusal_tokens`]
+/// returns.  No grammar names it, so a grammar-driven parser handed the
+/// refusal fails at its first token.
+pub const BUDGET_REFUSAL_TYPE_NAME: &str = "RUBY_LEX_BUDGET_EXCEEDED";
+
+/// #18814 review — what the entry points that cannot return an error
+/// ([`tokenize_ruby`], [`tokenize_ruby_with_oracle`],
+/// [`tokenize_ruby_diag`]) return for a source they refused to lex.
+///
+/// An empty list would read as an empty program, and a lone `Eof` *is* the
+/// empty program, so either would let a caller run nothing and call it a
+/// success.  Instead the list fails closed: one synthetic token (flag
+/// `TOKEN_SYNTHETIC`, so [`source_spelling`] drops it) whose `type_name` is
+/// [`BUDGET_REFUSAL_TYPE_NAME`] and whose value is the error message, then
+/// `Eof`.  Both sit at line 1, column 1.
+pub fn budget_refusal_tokens(error: &RubyLexError) -> Vec<Token> {
+    vec![
+        Token {
+            type_: TokenType::Name,
+            value: error.to_string(),
+            line: 1,
+            column: 1,
+            type_name: Some(BUDGET_REFUSAL_TYPE_NAME.to_string()),
+            flags: Some(TOKEN_SYNTHETIC),
+            cv: None,
+        },
+        Token {
+            type_: TokenType::Eof,
+            value: String::new(),
+            line: 1,
+            column: 1,
+            type_name: None,
+            flags: None,
+            cv: None,
+        },
+    ]
+}
+
 /// Tokenize Ruby source (Phase-1 = Ruby 1.8 lexer).  Returns the
 /// EOF-terminated token list.  Diagnostics are dropped silently;
 /// call [`tokenize_ruby_diag`] to inspect them.
+///
+/// #18814: a source longer than [`MAX_SOURCE_BYTES`] is not lexed.  This
+/// function cannot return an error, so it fails closed: the result is
+/// [`budget_refusal_tokens`] — one synthetic refusal token
+/// ([`BUDGET_REFUSAL_TYPE_NAME`], carrying the message) and `Eof` — which
+/// no grammar rule matches, so a parser rejects it rather than reading an
+/// empty program.  [`tokenize_ruby_for_version`] returns the typed
+/// [`RubyLexError::Budget`] instead.
 pub fn tokenize_ruby(source: &str) -> Vec<Token> {
     tokenize_ruby_diag(source).0
 }
@@ -2243,7 +2791,17 @@ pub fn tokenize_ruby(source: &str) -> Vec<Token> {
 /// deltas (e.g. lambda `->` in 1.9.1, safe-nav `&.` in 2.3) arrive
 /// in subsequent phases.  Callers that need version gating today
 /// can already plumb the era string through to downstream tooling.
-pub fn tokenize_ruby_for_version(source: &str, version: &str) -> Result<Vec<Token>, String> {
+///
+/// #18814: a source longer than [`MAX_SOURCE_BYTES`] is refused with
+/// [`RubyLexError::Budget`] before anything is built or lexed.
+pub fn tokenize_ruby_for_version(source: &str, version: &str) -> Result<Vec<Token>, RubyLexError> {
+    if source.len() > MAX_SOURCE_BYTES {
+        return Err(RubyLexError::Budget {
+            which: "source bytes",
+            limit: MAX_SOURCE_BYTES,
+            actual: source.len(),
+        });
+    }
     let mut lexer = RubyLexer::new(version)?;
     lexer.push(source)?;
     lexer.finish()?;
@@ -2254,13 +2812,18 @@ pub fn tokenize_ruby_for_version(source: &str, version: &str) -> Result<Vec<Toke
 /// caller already has a local-variable scope to consult — most
 /// notably the parser, which collects locals as it walks the
 /// source.
+///
+/// #18814: like [`tokenize_ruby`], a source longer than
+/// [`MAX_SOURCE_BYTES`] fails closed with [`budget_refusal_tokens`].
 pub fn tokenize_ruby_with_oracle(
     source: &str,
     oracle: Box<dyn ParserOracle>,
 ) -> Vec<Token> {
     let mut lexer = RubyLexer::with_oracle("1.8", oracle).expect("ruby 1.8 lexer definition");
-    if lexer.push(source).is_err() {
-        return lexer.drain_tokens();
+    match lexer.push(source) {
+        Ok(()) => {}
+        Err(e @ RubyLexError::Budget { .. }) => return budget_refusal_tokens(&e),
+        Err(RubyLexError::Lex(_)) => return lexer.drain_tokens(),
     }
     if lexer.finish().is_err() {
         return lexer.drain_tokens();
@@ -2269,6 +2832,11 @@ pub fn tokenize_ruby_with_oracle(
 }
 
 /// Same as [`tokenize_ruby`] but also returns recorded diagnostics.
+///
+/// #18814: a source longer than [`MAX_SOURCE_BYTES`] yields
+/// [`budget_refusal_tokens`] (a refusal token and `Eof`, so it fails
+/// closed) and one diagnostic, `lex-error:` followed by the
+/// [`RubyLexError::Budget`] message, at line 1, column 1.
 pub fn tokenize_ruby_diag(source: &str) -> (Vec<Token>, Vec<Diagnostic>) {
     let mut lexer = RubyLexer::new("1.8").expect("ruby 1.8 lexer definition");
     if let Err(e) = lexer.push(source) {
@@ -2278,7 +2846,11 @@ pub fn tokenize_ruby_diag(source: &str) -> (Vec<Token>, Vec<Diagnostic>) {
             line: lexer.line,
             column: lexer.column,
         });
-        return (lexer.drain_tokens(), diags);
+        let tokens = match e {
+            RubyLexError::Budget { .. } => budget_refusal_tokens(&e),
+            RubyLexError::Lex(_) => lexer.drain_tokens(),
+        };
+        return (tokens, diags);
     }
     if let Err(e) = lexer.finish() {
         let mut diags = lexer.diagnostics.clone();
@@ -2897,12 +3469,16 @@ mod tests {
 
     #[test]
     fn newline_is_significant() {
+        // #18798 — `a` alone on its line, before a line that could be its
+        // argument, also gets a `;` after it (`end_lone_names`): `a` ⏎ `b`
+        // is two statements, not the call `a(b)`.
         let toks = tokenize_ruby("a\nb");
         let p = pairs(&toks);
         assert_eq!(
             p,
             vec![
                 (TokenType::Name, "a"),
+                (TokenType::Semicolon, STATEMENT_END),
                 (TokenType::Newline, "\n"),
                 (TokenType::Name, "b"),
             ]
@@ -3157,7 +3733,8 @@ mod tests {
     #[test]
     fn tokenize_ruby_for_version_rejects_unknown() {
         let err = tokenize_ruby_for_version("x\n", "5.0").unwrap_err();
-        assert!(err.contains("not a recognized Ruby era"));
+        assert!(matches!(err, RubyLexError::Lex(_)), "{err:?}");
+        assert!(err.to_string().contains("not a recognized Ruby era"));
     }
 
     // -----------------------------------------------------------------
@@ -4684,6 +5261,283 @@ mod tests {
                 bracket_values(src)
             );
         }
+    }
+
+    // -----------------------------------------------------------------
+    // #18798 — `mark_statement_ends`: the line-start `(`, `-` and `+`
+    // tags, the synthetic `;` after a lone name and after a `rescue`
+    // class list, and `;` as a line break.
+    // -----------------------------------------------------------------
+
+    /// `(type, value)` of every token but `Newline`/`Eof`, era 3.0.
+    fn significant(src: &str) -> Vec<(TokenType, String)> {
+        tokenize_ruby_for_version(src, "3.0")
+            .unwrap()
+            .into_iter()
+            .filter(|t| !matches!(t.type_, TokenType::Newline | TokenType::Eof))
+            .map(|t| (t.type_, t.value))
+            .collect()
+    }
+
+    #[test]
+    fn paren_and_signs_starting_a_statement_are_retagged() {
+        // Type kept (so `( expression )`, `unary_minus` and `unary_plus`
+        // still take them); value tagged.  After a number, a name, `end`,
+        // and a `;`, which is a line break too.
+        for (src, ty, tag) in [
+            ("x = foo\n(1)", TokenType::LParen, LINE_START_LPAREN),
+            ("x = 5\n-1", TokenType::Minus, LINE_START_MINUS),
+            ("x = 5\n- 1", TokenType::Minus, LINE_START_MINUS),
+            ("x = 5\n+1", TokenType::Plus, LINE_START_PLUS),
+            ("if a\n  b\nend\n-1", TokenType::Minus, LINE_START_MINUS),
+            ("x = 5; -1", TokenType::Minus, LINE_START_MINUS),
+        ] {
+            assert!(
+                significant(src).contains(&(ty, tag.to_string())),
+                "{src:?}: {:?}",
+                significant(src)
+            );
+        }
+    }
+
+    #[test]
+    fn paren_and_signs_that_continue_an_expression_are_left_alone() {
+        // On the same line; after an operator, `=`, `(` or `,` that ends
+        // the line before; and after `&&`, which the lexer keeps on a
+        // `Name` token but which does not end an expression.
+        for src in [
+            "f(1) - g(2) + h",
+            "x = 5 -\n1",
+            "x = 5 +\n1",
+            "x =\n-1",
+            "f(\n(1))",
+            "f(1,\n-2)",
+            "x = a &&\n-b",
+            "x = a ||\n(b)",
+        ] {
+            assert!(
+                !significant(src).iter().any(|(_, v)| v.ends_with(" line start")),
+                "{src:?}: {:?}",
+                significant(src)
+            );
+        }
+        // A lambda arrow at the start of a line is not a minus.
+        assert!(significant("x = 1\n->(a) { a }")
+            .iter()
+            .any(|(t, v)| *t == TokenType::Name && v == "->"));
+    }
+
+    #[test]
+    fn a_name_alone_on_its_line_ends_its_statement() {
+        let ends = |src: &str| {
+            significant(src)
+                .iter()
+                .filter(|(t, v)| *t == TokenType::Semicolon && v == STATEMENT_END)
+                .count()
+        };
+        // At the top, after an expression, after `do |x|`, `{`, `begin`,
+        // `else` and a `;` (a line break here).
+        for src in [
+            "puts\nputs 2",
+            "x = 1\nfoo\nbar",
+            "[1].each do |x|\n  puts\n  puts x\nend",
+            "f {\n  g\n  h 1\n}",
+            "begin\n  g\n  h 1\nend",
+            "if a\n  1\nelse\n  g\n  h 1\nend",
+            "x = 1; g; h 1",
+        ] {
+            assert!(ends(src) >= 1, "{src:?}: {:?}", significant(src));
+        }
+        // Not when something precedes it on its line, when the line before
+        // ends in an operator, `,` or `(`, or when the next line cannot be
+        // an argument: `end`, a closing bracket, a leading `.`, the end.
+        for src in [
+            "puts 1\nputs 2",
+            "x = 1 +\n  y\nz 1",
+            "f(1,\n  y\n)",
+            "def f\n  x\nend",
+            "x = [1]\n  .first",
+            "x = a\n  &.b",
+            "foo",
+            "f {\n  g\n}",
+        ] {
+            assert_eq!(ends(src), 0, "{src:?}: {:?}", significant(src));
+        }
+    }
+
+    #[test]
+    fn a_keyword_ending_its_line_ends_its_argument_list() {
+        // The value of the token right after each keyword: a synthetic `;`
+        // when the line (or a source `;`) ends there.  `super` ⏎ `puts
+        // "hi"` read as `super(puts)`, and `super; setup` as
+        // `super(setup)`, `return; 42` as `return 42`.
+        let after = |src: &str, kw: &str| -> Option<(TokenType, bool)> {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            let at = toks.iter().position(|t| t.type_ == TokenType::Keyword && t.value == kw)?;
+            toks.get(at + 1)
+                .map(|t| (t.type_, t.flags.unwrap_or(0) & TOKEN_SYNTHETIC != 0))
+        };
+        let ended = Some((TokenType::Semicolon, true));
+        for (src, kw) in [
+            ("def initialize\n  super\n  puts \"hi\"\nend", "super"),
+            ("def initialize\n  super; setup\nend", "super"),
+            ("x = super\nputs x", "super"),
+            ("def t\n  yield\n  puts \"x\"\nend", "yield"),
+            ("def t\n  yield; foo\nend", "yield"),
+            ("def f\n  return\n  42\nend", "return"),
+            ("def f\n  return; 42\nend", "return"),
+            ("while true\n  break\n  x\nend", "break"),
+            ("xs.each do |x|\n  next\n  puts x\nend", "next"),
+        ] {
+            assert_eq!(after(src, kw), ended, "{src:?}");
+        }
+        // Not when arguments follow on the line, when the next line cannot
+        // be an argument, when the keyword is a method name, or (for the
+        // statement keywords) when it is a value inside an expression.
+        for (src, kw) in [
+            ("super(1)\nputs 2", "super"),
+            ("super 1\nputs 2", "super"),
+            ("def f\n  super\nend", "super"),
+            ("x = obj.super\nputs x", "super"),
+            ("def f\n  return\nend", "return"),
+            ("x = super\n  .to_s", "super"),
+            ("x = yield\nputs x", "yield"),
+            ("a or return\nputs 1", "return"),
+        ] {
+            assert_ne!(after(src, kw), ended, "{src:?}");
+        }
+    }
+
+    #[test]
+    fn a_statement_starts_after_an_opener_on_the_same_line() {
+        // `(source, token)`: the token must be followed by a synthetic `;`.
+        // Each of these read the next statement as its argument (#18798
+        // re-review): the opener is on the token's own line.
+        for (src, tok) in [
+            ("xs.each { |x| foo; bar }", "foo"),
+            ("wrap { yield; cleanup }", "yield"),
+            ("xs.each { |x| next; bar }", "next"),
+            ("begin foo; bar end", "foo"),
+            ("loop do foo; bar end", "foo"),
+            ("l = -> { foo; bar }", "foo"),
+            ("[1].each { puts; puts 2 }", "puts"),
+            ("if c then return; x end", "return"),
+            ("case a\nwhen 1 then foo; bar\nend", "foo"),
+            ("if a\n  1\nelse foo; bar\nend", "foo"),
+            ("begin\nensure foo; bar\nend", "foo"),
+            ("x = 1\nreturn\n-1", "return"),
+        ] {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            let at = toks.iter().position(|t| t.value == tok).unwrap_or_else(|| panic!("{src:?}"));
+            assert!(
+                toks[at + 1].type_ == TokenType::Semicolon && source_spelling(&toks[at + 1]).is_none(),
+                "{src:?}: {toks:?}"
+            );
+        }
+        // Mid-expression on its line: left alone.
+        // A keyword in method-name position (`5.then`, `obj&.do`, `A::begin`)
+        // is a method call, not an opener: `foo` after it is its argument.
+        for (src, tok) in [
+            ("x = foo; bar", "foo"),
+            ("a or return; puts 1", "return"),
+            ("f(a, b; c)", "b"),
+            ("x = 5.then foo\nbar", "foo"),
+            ("x = obj&.do foo\nbar", "foo"),
+            ("x = A::begin foo\nbar", "foo"),
+        ] {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            let at = toks.iter().position(|t| t.value == tok).unwrap();
+            assert_ne!(toks[at + 1].type_, TokenType::Semicolon, "{src:?}: {toks:?}");
+        }
+    }
+
+    #[test]
+    fn super_and_yield_end_an_expression() {
+        // `x = super` ⏎ `-1` read as `x = super - 1`, ⏎ `[1]` as `super[1]`.
+        for (src, tag) in [
+            ("x = super\n-1", LINE_START_MINUS),
+            ("x = super\n[1]", LINE_START_LBRACKET),
+            ("x = super\n(1)", LINE_START_LPAREN),
+            ("x = yield\n-1", LINE_START_MINUS),
+            ("x = yield\n+1", LINE_START_PLUS),
+        ] {
+            assert!(
+                tokenize_ruby_for_version(src, "3.0").unwrap().iter().any(|t| t.value == tag),
+                "{src:?}"
+            );
+        }
+    }
+
+    /// The pass is linear: 200k lines that each end a statement (each a
+    /// lone name followed by another) once took a `Vec::insert` apiece,
+    /// each moving the whole tail of a 600k-token vector.  The whole lex
+    /// takes about 2 s in a debug build here; the bound leaves room for a
+    /// slow CI runner while still catching a quadratic pass.
+    #[test]
+    fn many_statement_ends_lex_in_bounded_time() {
+        let src = "a\nb\n".repeat(100_000);
+        let start = std::time::Instant::now();
+        let toks = tokenize_ruby_for_version(&src, "3.0").unwrap();
+        let elapsed = start.elapsed();
+        let ends = toks.iter().filter(|t| t.type_ == TokenType::Semicolon).count();
+        assert_eq!(ends, 199_999, "every name but the last ends its statement");
+        assert!(elapsed < std::time::Duration::from_secs(20), "took {elapsed:?}");
+    }
+
+    #[test]
+    fn a_rescue_line_without_a_binding_ends_with_a_semicolon() {
+        // After the class list, a bare `rescue`, and a list continued after
+        // a trailing comma; the `;` is synthetic (not in the source).
+        for (src, before) in [
+            ("begin\nrescue Boom\n  puts 40\nend", "Boom"),
+            ("begin\nrescue\n  note\nend", "rescue"),
+            ("begin\nrescue A,\n  B\n  puts 1\nend", "B"),
+            ("begin\nrescue A, B; puts 1\nend", "B"),
+        ] {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            let at = toks
+                .iter()
+                .position(|t| t.type_ == TokenType::Semicolon)
+                .unwrap_or_else(|| panic!("{src:?}: {toks:?}"));
+            assert_eq!(toks[at - 1].value, before, "{src:?}: {toks:?}");
+            assert_eq!(source_spelling(&toks[at]), None);
+        }
+        // A binding, or a shape the grammar does not take, is left alone.
+        for src in ["begin\nrescue Boom => e\n  1\nend", "begin\nrescue => e\n  1\nend", "begin\nrescue A::B\n  1\nend"] {
+            assert!(
+                !tokenize_ruby_for_version(src, "3.0")
+                    .unwrap()
+                    .iter()
+                    .any(|t| t.type_ == TokenType::Semicolon),
+                "{src:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn a_semicolon_between_statements_is_a_line_break() {
+        let toks = tokenize_ruby_for_version("x = 1; y = 2", "3.0").unwrap();
+        assert!(toks.iter().any(|t| t.type_ == TokenType::Newline && t.value == ";"), "{toks:?}");
+        assert!(!toks.iter().any(|t| t.type_ == TokenType::Semicolon), "{toks:?}");
+        // The one that starts block-local names stays a `Semicolon`.
+        for src in ["f do |x; y|\nend", "f { |a, b; c| a }"] {
+            let toks = tokenize_ruby_for_version(src, "3.0").unwrap();
+            assert!(toks.iter().any(|t| t.type_ == TokenType::Semicolon && t.value == ";"), "{src:?}: {toks:?}");
+        }
+    }
+
+    #[test]
+    fn source_spelling_undoes_the_tags() {
+        let spelled: Vec<String> = tokenize_ruby_for_version("x = foo\n(1)\n-2\n+3\n[4]\nputs\nputs 5; 6", "3.0")
+            .unwrap()
+            .iter()
+            .filter(|t| t.type_ != TokenType::Eof && (t.type_ != TokenType::Newline || t.value == ";"))
+            .filter_map(|t| source_spelling(t).map(str::to_string))
+            .collect();
+        assert_eq!(
+            spelled,
+            ["x", "=", "foo", "(", "1", ")", "-", "2", "+", "3", "[", "4", "]", "puts", "puts", "5", ";", "6"]
+        );
     }
 
     #[test]

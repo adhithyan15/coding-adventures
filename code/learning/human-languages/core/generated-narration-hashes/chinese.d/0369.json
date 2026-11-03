@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 369,
+  "sourceHash": "fnv1a64:700ccce82d64e20e",
+  "lessonIds": [
+    "ZH-C369-shuoming",
+    "ZH-C369-danshi",
+    "ZH-W369-dan-but",
+    "ZH-C369-juli",
+    "ZH-C369-qici",
+    "ZH-C369-lingwai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch369.txt",
+  "json": "chinese/narration/ch369.json",
+  "textHash": "fnv1a64:393cc602c55a9b57",
+  "jsonHash": "fnv1a64:e07c524b35bd8d8d",
+  "findings": []
+}

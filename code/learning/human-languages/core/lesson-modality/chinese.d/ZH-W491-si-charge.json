@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W491-si-charge",
+    "language": "chinese",
+    "chapter": 491,
+    "sequence": 37265,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f01efcf344de3d7c",
+    "detachableSegments": [
+      "Script — a hooked frame, a short bar, then kǒu"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

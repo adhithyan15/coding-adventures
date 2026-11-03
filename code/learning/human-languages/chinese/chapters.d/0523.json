@@ -1,0 +1,19 @@
+{
+  "chapter": 523,
+  "title": "Buying and Selling",
+  "label": "ch:zh-buying-and-selling",
+  "canDo": "I can talk about running a business, sellers and buyers, and selling wholesale or retail.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C523-lingshou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 523: I can talk about running a business, sellers and buyers, and selling wholesale or retail.",
+    "assesses": [
+      "ZH-LEX-C523-TRADE523-03",
+      "ZH-LEX-C523-TRADE523-04",
+      "ZH-LEX-C523-TRADE523-05"
+    ]
+  }
+}

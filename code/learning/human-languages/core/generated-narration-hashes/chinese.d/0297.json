@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:17ef23f2f61072b2",
+  "lessonIds": [
+    "ZH-C297-baoxian",
+    "ZH-C297-shigu",
+    "ZH-W297-gu-old",
+    "ZH-C297-zeren",
+    "ZH-C297-houguo",
+    "ZH-C297-chuli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch297.txt",
+  "json": "chinese/narration/ch297.json",
+  "textHash": "fnv1a64:d16f381ec8de0943",
+  "jsonHash": "fnv1a64:421fa5a6a0724a16",
+  "findings": []
+}

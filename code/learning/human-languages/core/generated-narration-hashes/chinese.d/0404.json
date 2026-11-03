@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 404,
+  "sourceHash": "fnv1a64:16a7a3670563c466",
+  "lessonIds": [
+    "ZH-C404-shoupiaochu",
+    "ZH-C404-jianpiao",
+    "ZH-W404-jian-check",
+    "ZH-C404-bupiao",
+    "ZH-C404-wopu",
+    "ZH-C404-yingzuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch404.txt",
+  "json": "chinese/narration/ch404.json",
+  "textHash": "fnv1a64:4cd063d799553a2e",
+  "jsonHash": "fnv1a64:f4a709d69fbeb0d4",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C347-sikao",
+    "language": "chinese",
+    "chapter": 347,
+    "sequence": 27070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3a2c8fdd56c633de"
+  },
+  "findings": []
+}

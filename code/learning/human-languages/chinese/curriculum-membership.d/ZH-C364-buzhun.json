@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C364-buzhun",
+  "pathSegment": "ZH-PATH-364-ALLOW364",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-364-ALLOW364",
+      "order": 1
+    }
+  ]
+}

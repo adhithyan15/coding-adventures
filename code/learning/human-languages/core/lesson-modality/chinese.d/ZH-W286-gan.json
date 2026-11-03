@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W286-gan",
+    "language": "chinese",
+    "chapter": 286,
+    "sequence": 21640,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d3c6967c1c686f51",
+    "detachableSegments": [
+      "Script — a frame with 口 inside, then 心"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

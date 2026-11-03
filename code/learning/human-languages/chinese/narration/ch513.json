@@ -1,0 +1,910 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 513,
+  "title": "Ambitions",
+  "drivablePrefix": 7,
+  "sourceHash": "fnv1a64:81ae52f8edacc9d2",
+  "lessons": [
+    {
+      "id": "ZH-C513-chuangye",
+      "sequence": 38390,
+      "title": "chuàngyè — to start a business; to found an enterprise",
+      "headword": "chuàngyè",
+      "romanization": "chuàngyè",
+      "gloss": "to start a business; to found an enterprise",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fba14cc962333dc6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to become famous, then the Mandarin for a top school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chuàngyè",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chuàngyè — \"to start a business; to found an enterprise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "dàxué bìyè yǐhòu wǒ xiǎng zìjǐ chuàngyè — After university I want to start my own business."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chuàngyè is built from chuàng 'to found' and 业 'an undertaking', both inherited from Middle Chinese, tsrhjangH and ngjaep (Guangyun, in Baxter's transcription). The dictionary gives the first as another spelling of a word it glosses, after an older dictionary, 'to found a craft and begin an undertaking'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chuàngyè",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chuàngyè*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chuàngyè, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chuàngyè*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàxué bìyè yǐhòu wǒ xiǎng zìjǐ chuàngyè — After university I want to start my own business.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàxué bìyè yǐhòu wǒ xiǎng zìjǐ chuàngyè* — After university I want to start my own business.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to become famous, then the Mandarin for a top school, then say chuàngyè again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to become famous, then the Mandarin for a top school, then say *chuàngyè* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chuàngyè mean? (\"To start a business; to found an enterprise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C513-dadao",
+      "sequence": 38400,
+      "title": "dádào — to attain (a goal); to reach a level",
+      "headword": "dádào",
+      "romanization": "dádào",
+      "gloss": "to attain (a goal); to reach a level",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ec9d800e2f63a15",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a top school, then the Mandarin for to start a business."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dádào",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dádào — \"to attain (a goal); to reach a level\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā xué le sān nián dádào le zìjǐ de mùbiāo — He studied for three years and reached his goal."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dádào is built from dá 'to get through' and 到 'to arrive', both inherited from Middle Chinese, dat and tawH (Guangyun, in Baxter's transcription), which glosses the first 'to reach through' and the second 'to arrive'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dádào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dádào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dádào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dádào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā xué le sān nián dádào le zìjǐ de mùbiāo — He studied for three years and reached his goal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā xué le sān nián dádào le zìjǐ de mùbiāo* — He studied for three years and reached his goal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a top school, then the Mandarin for to start a business, then say dádào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a top school, then the Mandarin for to start a business, then say *dádào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dádào mean? (\"To attain (a goal); to reach a level\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C513-zhengqu",
+      "sequence": 38410,
+      "title": "zhēngqǔ — to strive for; to fight for",
+      "headword": "zhēngqǔ",
+      "romanization": "zhēngqǔ",
+      "gloss": "to strive for; to fight for",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bee2f37493687498",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to start a business, then the Mandarin for to attain (a goal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhēngqǔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhēngqǔ — \"to strive for; to fight for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ yào zhēngqǔ kǎoshàng míngxiào — I'm going to do my best to get into a top school."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhēngqǔ is built from zhēng 'to contend' and 取 'to take', both inherited from Middle Chinese, tsreang and tshjuX (Guangyun, in Baxter's transcription), which glosses the first 'to compete' and the second 'to receive'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhēngqǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhēngqǔ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhēngqǔ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhēngqǔ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ yào zhēngqǔ kǎoshàng míngxiào — I'm going to do my best to get into a top school.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ yào zhēngqǔ kǎoshàng míngxiào* — I'm going to do my best to get into a top school.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to start a business, then the Mandarin for to attain (a goal), then say zhēngqǔ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to start a business, then the Mandarin for to attain (a goal), then say *zhēngqǔ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhēngqǔ mean? (\"To strive for; to fight for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C513-fendou",
+      "sequence": 38420,
+      "title": "fèndòu — to struggle (towards a goal)",
+      "headword": "fèndòu",
+      "romanization": "fèndòu",
+      "gloss": "to struggle (towards a goal)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5c73e9e27ae5f1fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to attain (a goal), then the Mandarin for to strive for."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fèndòu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fèndòu — \"to struggle (towards a goal)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā fèndòu le shí nián cái chénggōng — He struggled for ten years before he succeeded."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fèndòu is built from fèn 'to spread the wings' and dòu 'to fight', both inherited from Middle Chinese, pjunH and tuwH (Guangyun, in Baxter's transcription), which glosses the first as a bird spreading its feathers and the second, after an older dictionary, as two men facing each other with weapons."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fèndòu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fèndòu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fèndòu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fèndòu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā fèndòu le shí nián cái chénggōng — He struggled for ten years before he succeeded.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā fèndòu le shí nián cái chénggōng* — He struggled for ten years before he succeeded.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to attain (a goal), then the Mandarin for to strive for, then say fèndòu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to attain (a goal), then the Mandarin for to strive for, then say *fèndòu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fèndòu mean? (\"To struggle (towards a goal)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C513-qinshou",
+      "sequence": 38430,
+      "title": "亲手 (qīnshǒu) — with one's own hands",
+      "headword": "亲手",
+      "romanization": "qīnshǒu",
+      "gloss": "with one's own hands",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:536fc7df6e1a7d41",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to strive for, then the Mandarin for to struggle (towards a goal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 亲手",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "亲手 — qīnshǒu — \"with one's own hands\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我想亲手开一家饭店 wǒ xiǎng qīnshǒu kāi yì jiā fàndiàn — I want to open a restaurant with my own hands."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "亲手 (qīnshǒu) is built from 亲 'close' and 手 'a hand', both inherited from Middle Chinese, tshin and syuwX (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīnshǒu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīnshǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīnshǒu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīnshǒu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiǎng qīnshǒu kāi yì jiā fàndiàn — I want to open a restaurant with my own hands.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiǎng qīnshǒu kāi yì jiā fàndiàn* — I want to open a restaurant with my own hands.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to strive for, then the Mandarin for to struggle (towards a goal), then say qīnshǒu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to strive for, then the Mandarin for to struggle (towards a goal), then say *qīnshǒu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 亲手 (qīnshǒu) mean? (\"With one's own hands\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R513-review-509-513",
+      "sequence": 38440,
+      "title": "Looking back: from Parents to Ambitions",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Parents to Ambitions",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44818902b56ce899",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to run the household and one's mother and father."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to run the household, one's mother and father, a mother and daughter, one's mother tongue, a stepmother",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to run the household, one's mother and father, a mother and daughter, one's mother tongue, a stepmother]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "grandma on the mother's side, a grandson, a granddaughter, to dote on, to soothe a child",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: grandma on the mother's side, a grandson, a granddaughter, to dote on, to soothe a child]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one's nearest and dearest, father (the formal word), mother (the formal word), one's own (by birth), personally (doing it oneself)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one's nearest and dearest, father (the formal word), mother (the formal word), one's own (by birth), personally (doing it oneself)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "one's ambition in life, to pursue (a goal), to make something of oneself, to become famous, a top school",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: one's ambition in life, to pursue (a goal), to make something of oneself, to become famous, a top school]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to start a business, to attain (a goal), to strive for, to struggle (towards a goal), with one's own hands",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to start a business, to attain (a goal), to strive for, to struggle (towards a goal), with one's own hands]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "母 亲 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 母 亲 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To run the household? (当家, dāngjiā.) One's mother and father? (父母, fùmǔ.) A mother and daughter? (母女, mǔnǚ.) One's mother tongue? (母语, mǔyǔ.) A stepmother? (后妈, hòumā.) Grandma on the mother's side? (wàipó.) A grandson? (sūnzi.) A granddaughter? (sūnnǚ.) To dote on? (疼爱, téng'ài.) To soothe a child? (hǒng.) One's nearest and dearest? (亲人, qīnrén.) Father (the formal word)? (父亲, fùqīn.) Mother (the formal word)? (母亲, mǔqīn.) One's own (by birth)? (亲生, qīnshēng.) Personally (doing it oneself)? (亲自, qīnzì.) One's ambition in life? (zhìxiàng.) To pursue (a goal)? (zhuīqiú.) To make something of oneself? (成才, chéngcái.) To become famous? (成名, chéngmíng.) A top school? (名校, míngxiào.) To start a business? (chuàngyè.) To attain (a goal)? (dádào.) To strive for? (zhēngqǔ.) To struggle (towards a goal)? (fèndòu.) With one's own hands? (亲手, qīnshǒu.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R513-review-final-513",
+      "sequence": 38450,
+      "title": "Ambitions — once more",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "one more pass over the last chapter's words",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d27982d51bcb8ee3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to start a business and to attain (a goal)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to start a business, to attain (a goal), to strive for, to struggle (towards a goal), with one's own hands",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to start a business, to attain (a goal), to strive for, to struggle (towards a goal), with one's own hands]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To start a business? (chuàngyè.) To attain (a goal)? (dádào.) To strive for? (zhēngqǔ.) To struggle (towards a goal)? (fèndòu.) With one's own hands? (亲手, qīnshǒu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

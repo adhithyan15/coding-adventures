@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C303-xiaoming",
+  "pathSegment": "ZH-PATH-303-NAME303",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-303-NAME303",
+      "order": 1
+    }
+  ]
+}

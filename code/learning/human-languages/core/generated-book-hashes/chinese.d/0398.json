@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:78f1570dd585bff1",
+  "lessonIds": [
+    "ZH-C398-taidu",
+    "ZH-C398-qubie",
+    "ZH-C398-diqu",
+    "ZH-C398-xiancheng",
+    "ZH-C398-qujueyu"
+  ],
+  "tex": "chinese/book/chapters/ch398-it-depends.tex"
+}

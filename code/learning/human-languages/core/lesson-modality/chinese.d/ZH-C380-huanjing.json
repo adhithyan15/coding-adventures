@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C380-huanjing",
+    "language": "chinese",
+    "chapter": 380,
+    "sequence": 29310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ceef8ac902599d26"
+  },
+  "findings": []
+}

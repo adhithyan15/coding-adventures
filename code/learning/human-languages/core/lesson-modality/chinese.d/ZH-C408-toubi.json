@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C408-toubi",
+    "language": "chinese",
+    "chapter": 408,
+    "sequence": 31330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a53fa71e86cb731e"
+  },
+  "findings": []
+}

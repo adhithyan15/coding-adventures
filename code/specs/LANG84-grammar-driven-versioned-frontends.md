@@ -240,6 +240,7 @@ validated at generation time. Every frontend MUST enforce a
 | Pending deferred bodies (E5) | 64 per line, 4,096 total | lexer |
 | Goal-directed lex calls (E7) | 2 × source bytes + 1,024 | lexer/parser |
 | Binding log (E7) | ≤ token count; scope depth ≤ parser depth cap | parser |
+| Source bytes, legacy hand-written `ruby-lexer` (non-IIR callers) | 1 MiB (`MAX_SOURCE_BYTES`, = Ruby's `MAX_TRUSTED_SOURCE_BYTES`); typed `RubyLexError::Budget { which, limit, actual }` (#18814) | `RubyLexer::push`, `tokenize_ruby_for_version` |
 
 A budget breach is a typed `Budget { which, limit }` error. It MUST NOT be a
 panic, an abort or a stack overflow.

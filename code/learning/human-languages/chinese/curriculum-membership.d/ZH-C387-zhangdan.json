@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C387-zhangdan",
+  "pathSegment": "ZH-PATH-387-MONEY387",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-387-MONEY387",
+      "order": 2
+    }
+  ]
+}

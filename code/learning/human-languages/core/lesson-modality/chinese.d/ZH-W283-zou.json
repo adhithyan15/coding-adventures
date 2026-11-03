@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W283-zou",
+    "language": "chinese",
+    "chapter": 283,
+    "sequence": 21410,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8bb333300012a505",
+    "detachableSegments": [
+      "Script — 土, then four strokes along the foot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

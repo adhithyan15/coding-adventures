@@ -84,6 +84,9 @@ pub struct Stats {
     pub deleted: u64,
     /// Number of literals removed from learned clauses by minimisation.
     pub minimized_literals: u64,
+    /// Watch-list entries visited by unit propagation: the solver's main
+    /// cost, and what [`Solver::set_work_budget`] bounds.
+    pub work: u64,
 }
 
 // ---------------------------------------------------------------------------
@@ -231,6 +234,9 @@ pub struct Solver {
     failed: Vec<Lit>,
     /// Remaining conflicts allowed, if the caller set a budget.
     conflict_budget: Option<u64>,
+    /// `stats.work` value at which the search stops, if the caller set a
+    /// work budget.
+    work_limit: Option<u64>,
     stats: Stats,
 
     // --- proof logging (VER11 §4) ---
@@ -276,6 +282,7 @@ impl Solver {
             model: Vec::new(),
             failed: Vec::new(),
             conflict_budget: None,
+            work_limit: None,
             stats: Stats::default(),
             proof: None,
             touched: false,
@@ -333,6 +340,22 @@ impl Solver {
     /// After that every `solve` answers `Unsat` immediately.
     pub fn is_ok(&self) -> bool {
         self.ok
+    }
+
+    /// Limit the propagation work (watch-list visits, [`Stats::work`]) the
+    /// **next** `solve` calls may do in total. `None` removes the limit.
+    ///
+    /// A conflict budget alone is not a time bound: on a formula with
+    /// millions of clauses one conflict can take a long time to reach. This
+    /// counts the work itself. When it runs out, `solve` returns
+    /// [`SolveResult::Unknown`] and the solver remains usable.
+    pub fn set_work_budget(&mut self, budget: Option<u64>) {
+        self.work_limit = budget.map(|b| self.stats.work.saturating_add(b));
+    }
+
+    /// Whether a conflict or work budget has run out.
+    fn out_of_budget(&self) -> bool {
+        self.conflict_budget == Some(0) || self.work_limit.is_some_and(|l| self.stats.work >= l)
     }
 
     /// Start recording a DRAT proof (VER11 §4). Must be called before the
@@ -581,6 +604,7 @@ impl Solver {
             while i < ws.len() {
                 let w = ws[i];
                 i += 1;
+                self.stats.work += 1;
                 if lit_value(&self.assigns, w.blocker) == LBool::True {
                     ws[j] = w;
                     j += 1;
@@ -996,7 +1020,7 @@ impl Solver {
                 continue;
             }
 
-            if conflicts_here >= max_conflicts || self.conflict_budget == Some(0) {
+            if conflicts_here >= max_conflicts || self.out_of_budget() {
                 self.cancel_until(0);
                 return LBool::Undef;
             }
@@ -1059,7 +1083,7 @@ impl Solver {
         let mut status = LBool::Undef;
         let mut restart = 0u64;
         while status == LBool::Undef {
-            if self.conflict_budget == Some(0) {
+            if self.out_of_budget() {
                 break;
             }
             let limit = RESTART_UNIT.saturating_mul(luby(restart));
@@ -1290,6 +1314,18 @@ mod tests {
         assert_eq!(s.solve(), SolveResult::Unknown); // budget already spent
         s.set_conflict_budget(None);
         assert_eq!(s.solve(), SolveResult::Unsat);
+    }
+
+    #[test]
+    fn work_budget_returns_unknown_and_solver_stays_usable() {
+        let mut s = Solver::new();
+        pigeonhole(&mut s, 7);
+        s.set_work_budget(Some(1000));
+        assert_eq!(s.solve(), SolveResult::Unknown);
+        assert!(s.stats().work >= 1000);
+        s.set_work_budget(None);
+        assert_eq!(s.solve(), SolveResult::Unsat);
+        assert!(s.stats().work > 1000);
     }
 
     #[test]

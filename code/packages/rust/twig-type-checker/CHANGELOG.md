@@ -41,6 +41,21 @@
   refused by both entry points with no accessor registered; one under it is
   checked as before.
 
+## Unreleased — tests no longer assert a false proof (LANG24 LIA soundness)
+
+### Changed
+
+- **Four narrowing tests asserted that `(if (< x 128) (ascii-info x) 0)`
+  proves `ascii-info`'s `[0, 128)` for a plain `int` x.** It does not:
+  `x = -1` passes the guard. The tests passed only because
+  `constraint-engine`'s LIA tactic never tried negative values and answered
+  UNSAT. With that fixed, the checker correctly reports the counterexample
+  `-1`. The tests keep their intent (narrowing through the builtin `<` /
+  `not` proves the call; a user-defined one does not) with a non-negative
+  `(x : (Int 0 1000))`, where the proof is real. A new test,
+  `narrowing_one_bound_does_not_prove_the_other`, pins the plain-`int`
+  case as an error.
+
 ## Unreleased — #18438: a user definition shadows a builtin
 
 ### Fixed

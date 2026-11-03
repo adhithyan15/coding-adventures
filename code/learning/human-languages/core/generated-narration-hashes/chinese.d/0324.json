@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 324,
+  "sourceHash": "fnv1a64:67fff6418d327778",
+  "lessonIds": [
+    "ZH-C324-xiangqi",
+    "ZH-C324-jinian",
+    "ZH-C324-liuxia",
+    "ZH-C324-shidai",
+    "ZH-C324-yinxiang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch324.txt",
+  "json": "chinese/narration/ch324.json",
+  "textHash": "fnv1a64:37c48ca920a74c2f",
+  "jsonHash": "fnv1a64:1d3d4cbc5dc630e4",
+  "findings": []
+}

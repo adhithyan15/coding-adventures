@@ -1,0 +1,24 @@
+{
+  "chapter": 278,
+  "title": "First, Then, Last",
+  "label": "ch:zh-first-then-last",
+  "canDo": "I can tell what happened first, next and last.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C278-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Telling things in order with 先, 然后 and 最后, first of all and straight after, and 了 … 以后 for after doing, built on two new written characters: 最 and 然.",
+    "assesses": [
+      "ZH-LEX-C278-ZUIHOU-01",
+      "ZH-SCRIPT-ZUI-01",
+      "ZH-GRAMMAR-SEQUENCE-01",
+      "ZH-SCRIPT-RAN-01",
+      "ZH-LEX-C278-SHOUXIAN-01",
+      "ZH-LEX-C278-JIEZHE-01",
+      "ZH-GRAMMAR-LE-YIHOU-01",
+      "ZH-PERFORMANCE-SEQUENCE-01"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 298,
+  "sourceHash": "fnv1a64:63bde5c57df58af2",
+  "lessonIds": [
+    "ZH-C298-huozai",
+    "ZH-C298-jiuhuo",
+    "ZH-W298-jiu-save",
+    "ZH-C298-xiaofangyuan",
+    "ZH-C298-han",
+    "ZH-C298-jiuming"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch298.txt",
+  "json": "chinese/narration/ch298.json",
+  "textHash": "fnv1a64:f69143a3526df1f9",
+  "jsonHash": "fnv1a64:f36365b5e416edc0",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C347-tihui",
+    "language": "chinese",
+    "chapter": 347,
+    "sequence": 27090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5718ce6784b44fc6"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C288-practice",
+  "pathSegment": "ZH-PATH-288-RAINS",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "ZH-EXT-288-RAINS",
+      "order": 6
+    }
+  ]
+}

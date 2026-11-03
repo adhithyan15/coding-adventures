@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:bd650598b5684b23",
+  "lessonIds": [
+    "ZH-C415-hangzhanlou",
+    "ZH-C415-tuoyun",
+    "ZH-C415-dengjipai",
+    "ZH-C415-anjian",
+    "ZH-C415-dengjikou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch415.txt",
+  "json": "chinese/narration/ch415.json",
+  "textHash": "fnv1a64:50e43f1f085c48fd",
+  "jsonHash": "fnv1a64:86b357a0cbb93f42",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C513-chuangye",
+    "language": "chinese",
+    "chapter": 513,
+    "sequence": 38390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fba14cc962333dc6"
+  },
+  "findings": []
+}

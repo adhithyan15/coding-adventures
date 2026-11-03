@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W532-wang-hope",
+    "language": "chinese",
+    "chapter": 532,
+    "sequence": 39935,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:f9bf10445bcad446",
+    "detachableSegments": [
+      "Script — a small piece and 月, then 王 under them"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

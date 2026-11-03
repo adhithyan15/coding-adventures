@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:fd793c8d3f68aa6e",
+  "lessonIds": [
+    "ZH-C358-limao",
+    "ZH-C358-zhenzheng",
+    "ZH-W358-zhen-true",
+    "ZH-C358-zhenxin",
+    "ZH-C358-qianxu",
+    "ZH-C358-mianzi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch358.txt",
+  "json": "chinese/narration/ch358.json",
+  "textHash": "fnv1a64:d9f60e4e8ff854f3",
+  "jsonHash": "fnv1a64:a4d8dfd291e238d6",
+  "findings": []
+}

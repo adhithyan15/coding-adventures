@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 486,
+  "sourceHash": "fnv1a64:dd4fee4efd18318b",
+  "lessonIds": [
+    "ZH-C486-zhaopin",
+    "ZH-C486-jianli",
+    "ZH-C486-yingpin",
+    "ZH-C486-shixi",
+    "ZH-C486-daiyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch486.txt",
+  "json": "chinese/narration/ch486.json",
+  "textHash": "fnv1a64:00287fba84ddc766",
+  "jsonHash": "fnv1a64:35924183ad63bd8f",
+  "findings": []
+}

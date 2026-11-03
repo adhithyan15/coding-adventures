@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C447-renxingdao",
+  "pathSegment": "ZH-PATH-447-WALK447",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-447-WALK447",
+      "order": 4
+    }
+  ]
+}

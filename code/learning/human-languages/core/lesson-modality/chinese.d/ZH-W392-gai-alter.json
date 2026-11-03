@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W392-gai-alter",
+    "language": "chinese",
+    "chapter": 392,
+    "sequence": 29935,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:89fd5844c0b94fe1",
+    "detachableSegments": [
+      "Script — a bent piece, then the right piece of 做"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

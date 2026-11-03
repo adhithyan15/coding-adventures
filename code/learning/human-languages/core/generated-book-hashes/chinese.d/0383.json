@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 383,
+  "sourceHash": "fnv1a64:4926b5a94396a251",
+  "lessonIds": [
+    "ZH-C383-dianfei",
+    "ZH-C383-langfei",
+    "ZH-C383-nengyuan",
+    "ZH-C383-jianshao",
+    "ZH-C383-yicixing"
+  ],
+  "tex": "chinese/book/chapters/ch383-saving-energy.tex"
+}

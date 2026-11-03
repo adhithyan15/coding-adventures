@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C283-zai-again",
+    "language": "chinese",
+    "chapter": 283,
+    "sequence": 21430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c1932427a10da160"
+  },
+  "findings": []
+}

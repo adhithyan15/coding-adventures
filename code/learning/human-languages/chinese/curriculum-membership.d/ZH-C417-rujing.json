@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C417-rujing",
+  "pathSegment": "ZH-PATH-417-CUSTOMS417",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-417-CUSTOMS417",
+      "order": 1
+    }
+  ]
+}

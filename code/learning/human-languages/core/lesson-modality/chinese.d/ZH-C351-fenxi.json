@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C351-fenxi",
+    "language": "chinese",
+    "chapter": 351,
+    "sequence": 27250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c242f411b9c349e1"
+  },
+  "findings": []
+}

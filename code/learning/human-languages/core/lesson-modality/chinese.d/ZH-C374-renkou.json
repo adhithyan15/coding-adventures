@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C374-renkou",
+    "language": "chinese",
+    "chapter": 374,
+    "sequence": 29000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c97d118c656473cc"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C448-shiqu",
+    "language": "chinese",
+    "chapter": 448,
+    "sequence": 33950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f44df290ff4dac99"
+  },
+  "findings": []
+}

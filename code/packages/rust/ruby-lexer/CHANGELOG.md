@@ -2,6 +2,177 @@
 
 All notable changes to the `coding-adventures-ruby-lexer` crate will be documented in this file.
 
+## Unreleased — linear lexing and a source budget (#18814); whitespace after a heredoc (#18820)
+
+- The heredoc body loop borrows the tag instead of cloning it once per body line, which cost tag-length × lines (a 250 KB tag over 548k empty lines took about 3.7 s). Timing regression `long_heredoc_tag_over_many_lines_lexes_in_linear_time` (#18814 re-review).
+
+### Fixed
+
+- **Every token-fusion pass is linear.**  `fuse_range_ops`,
+  `fuse_radix_integers`, the three sweeps of `fuse_float_literals`,
+  `fuse_right_shifts`, `fuse_compound_assigns`, `fuse_lambda_arrow`,
+  `fuse_numeric_suffixes` and `fuse_safe_nav` folded each pair with
+  `Vec::remove`, shifting the rest of the token vector every time:
+  O(tokens × fusions).  80 000 lines of `a&.b` or `x = 2r` (~400 KB) took
+  about 153 s.  They now share one engine, `fuse_adjacent`, which compacts
+  the vector in place with a read and a write cursor (each token read once
+  and moved at most once) and keeps the whitespace flags in step.  The
+  output is unchanged token for token.  Debug-build timings through
+  `tokenize_ruby_for_version`, lines of `a&.b`:
+
+  | lines   | before                 | after |
+  |---------|------------------------|-------|
+  | 20 000  | 4.9 s                  | 0.8 s |
+  | 40 000  | 23.3 s                 | 1.3 s |
+  | 80 000  | ~153 s (the issue)     | 2.3 s |
+  | 200 000 | ~10 min (extrapolated) | 5.5 s |
+
+- **Heredoc tags are removed in one sweep** (#18814 security review).
+  `finalize_heredoc` removed each heredoc's tag `Name` with `Vec::remove`
+  as the heredoc closed, so `k` heredocs opened on one line
+  (`foo(<<A, <<A, …)` then `A` ⏎ × k) cost O(k²): 80 000 took 30 s in a
+  release build, a 1 MiB input about 2.5 min.  It now retires the tag, and
+  `remove_retired_heredoc_tags` removes them all with one `Vec::retain` at
+  the end of lexing (`finish`, `drain_tokens`).  150 000 heredocs on one
+  line lex in ~3.8 s in a debug build; the old finalizer did not finish in
+  180 s.  Output unchanged (differential-tested against the old finalizer).
+- **Fusions after a heredoc see the right whitespace (#18820).**  The tag
+  was removed without its entry in the parallel whitespace flags, so after
+  any heredoc every token read the flag of the token before it, and the
+  adjacency-gated fusions misfired: `foo(<<A)` ⏎ `A` ⏎ `x &.y` lexed `&`
+  `.`, `1 ..2` lexed `.` `.`, `x = 1.5` lexed `1` `.` `5`.  The flag is now
+  removed in the same sweep as the tag.  This changes output, to what Ruby
+  lexes: `tests/heredoc_whitespace.rs` checks 15 whitespace-sensitive lines
+  after four heredoc shapes against Ruby 3.3's `Ripper.lex`.
+- **The state machine's step trace no longer grows with the input.**  The
+  engine keeps a copy of every step it takes; `push` now drops it every
+  4 096 steps (`reset`, then `set_current_state` back).  Lexing 1 MiB
+  peaked at ~593 MB; it now peaks at ~146 MB.
+
+### Added
+
+- **`MAX_SOURCE_BYTES` (1 MiB)**, the parser release API's
+  `MAX_TRUSTED_SOURCE_BYTES`.  `RubyLexer::push` holds the running total
+  against it across calls (a refused call changes nothing) and
+  `tokenize_ruby_for_version` checks it before building anything.
+  `tokenize_ruby`, `tokenize_ruby_with_oracle` and `tokenize_ruby_diag`
+  cannot return an error, so they fail closed with
+  `budget_refusal_tokens`: one synthetic token whose `type_name` is
+  `BUDGET_REFUSAL_TYPE_NAME` (`RUBY_LEX_BUDGET_EXCEEDED`) and whose value
+  is the message, then `Eof`.  No grammar matches it, so a parser rejects
+  it; an empty list or a lone `Eof` would have parsed as an empty program.
+  `tokenize_ruby_diag` also adds one `lex-error:` diagnostic naming the
+  budget.
+- **`RubyLexError`**: `Budget { which, limit, actual }` or `Lex(String)`.
+
+### Changed
+
+- `RubyLexer::push` and `tokenize_ruby_for_version` return
+  `Result<_, RubyLexError>` instead of `Result<_, String>`.  `Lex` carries
+  the message they used to return, `Display` prints it unchanged, and
+  `impl From<RubyLexError> for String` keeps `?` working in callers that
+  return `String` errors (`try_create_ruby_parser`).
+
+### Tests
+
+- `differential_tests.rs` keeps the old pass bodies (`reference_passes.rs`,
+  test-only) and compares tokens and whitespace flags after every pipeline
+  step, under all 15 eras, on every string literal in `lib.rs`, every
+  `.rb` file in `code/grammars/ruby/corpus` and `ruby-parser`'s fixtures,
+  and 1 000 seeded fragment soups.  It also checks that dropping the
+  engine trace after every step changes nothing.
+- `linear_time_tests.rs`: one timing regression per fused construct, at
+  200 000 occurrences each, bound 20 s (1–3.5 s in a debug build; the old
+  passes did not finish `a&.b` in 120 s).
+- `tests/linear_time.rs`: the issue's two reproductions end to end, a
+  source of exactly `MAX_SOURCE_BYTES` (lexed, ~6.5 s in debug), one byte
+  past it (refused), UTF-8 byte counting, cumulative `push`, and the
+  infallible entry points' refusal tokens.
+- `batched_heredoc_tag_removal_matches_reference` (old finalizer kept in
+  `reference_passes.rs`), `many_heredocs_on_one_line_lex_in_linear_time`,
+  and `tests/heredoc_whitespace.rs` (#18820, against Ripper).
+
+## Unreleased — a newline or `;` ends a statement before `-`, `+`, `(` and after a lone name or a `rescue` list (#18798)
+
+- A keyword in method-name position (`5.then`, `obj&.do`, `A::begin`) no longer opens a statement, so `x = 5.then foo` ⏎ `bar` keeps `foo` as the call's argument instead of splitting after `then` (#18798 third review).
+
+### Fixed (re-review of #18798)
+
+- **A statement starts after an opener on the same line too.**  Step 4
+  only ended a name or keyword that was first on its line, so `xs.each {
+  |x| foo; bar }`, `wrap { yield; cleanup }`, `{ |x| next; bar }`, `begin
+  foo; bar end`, `loop do foo; bar end`, `-> { foo; bar }`, `[1].each {
+  puts; puts 2 }` and `if c then return; x end` silently read the second
+  statement as the first one's argument.  One predicate,
+  `opens_statement` (`{`, a block's closing `|`, `do`, `then`, `else`,
+  `begin`, `ensure`, `rescue`, a step-2 `;`), now decides for lone names
+  and the line-ending keywords alike.  Test
+  `a_statement_starts_after_an_opener_on_the_same_line`.
+- **`super` and `yield` end an expression**, so a `-`, `+`, `(` or `[`
+  that starts the next line is a new statement (`x = super` ⏎ `-1` read
+  as `super - 1`).  Test `super_and_yield_end_an_expression`.
+
+### Fixed (security review of #18798)
+
+- **A keyword that ends its line ends its argument list.**  `super`,
+  `yield`, `return`, `break` and `next` take a paren-less argument list,
+  and the lone-name rule only covered names: `super` ⏎ `puts "hi"` (the
+  common `initialize` shape) read as `super(puts)` then `"hi"`, and since
+  `;` became a line break, `super; setup` / `yield; foo` / `return; 42`
+  read as `super(setup)` / `yield(foo)` / `return 42`.  Step 4 (now
+  `ends_its_statement`) puts a synthetic `;` after such a keyword too:
+  `super` wherever it ends a line (it can be a value, `x = super`) unless
+  it is a method name (`obj.super`, `def super`, `:super`); the other four
+  only where a statement starts.  Test
+  `a_keyword_ending_its_line_ends_its_argument_list`.
+- **The pass is linear.**  Each synthetic `;` was a `Vec::insert`, so the
+  pass was O(tokens × insertions); `;`-in-block-parameters and
+  closing-bar lookups were O(n × blocks).  The insertions are now spliced
+  in by one rebuild (`insert_statement_ends`), the block-parameter ranges
+  are walked with one pointer, the closing bars are a `HashSet`, and the
+  bar search stops at the first unclosed `|`.  Test
+  `many_statement_ends_lex_in_bounded_time` (200k lines, ~2 s for the whole
+  lex in a debug build).
+
+### Added
+
+- **`mark_statement_ends`**, the lexer's last pass (after every era
+  fusion, so a lambda arrow `->` is never a minus).  It replaces
+  `tag_line_start_brackets` and runs four steps:
+  1. a `;` between statements becomes a `Newline` token (value `;`), so
+     `x = 1; puts x` and `def risky; raise "x"; rescue => e; 1; end` lex
+     as the same programs on several lines (a `;` used to stop the
+     parse).  The `;` that starts block-local names (`do |x; y|`) stays a
+     `Semicolon`;
+  2. a `rescue` line with no `=>` gets a synthetic `;` after its class
+     list, or after a bare `rescue` (a trailing comma continues the list
+     onto the next line);
+  3. a `(`, `-` or `+` that starts a line after a complete expression is
+     re-tagged `( line start` / `- line start` / `+ line start` (type
+     kept), alongside the existing `[ line start`;
+  4. a name alone on its line, where a statement starts, gets a synthetic
+     `;` when the next line could be read as its argument.
+- Constants `LINE_START_LPAREN`, `LINE_START_MINUS`, `LINE_START_PLUS`,
+  `STATEMENT_END`; synthetic tokens carry `TOKEN_SYNTHETIC`.
+- `source_spelling(token)`: what the source wrote for a token (`None` for a
+  synthetic `;`, the bare character for a line-start tag), for tools that
+  compare this lexer with another.
+
+### Changed
+
+- `ends_expression` counts a `Name` token only when it spells an
+  identifier or a sigil variable: the operators the lexer leaves on `Name`
+  tokens (`&&`, `||`, `=>`, `?`, `|`, `->`) do not end an expression, so
+  `x = a &&` ⏎ `-b` is one expression.
+- The `newline_is_significant` test expects the synthetic `;` in `a` ⏎ `b`.
+
+Tests: `paren_and_signs_starting_a_statement_are_retagged`,
+`paren_and_signs_that_continue_an_expression_are_left_alone`,
+`a_name_alone_on_its_line_ends_its_statement`,
+`a_rescue_line_without_a_binding_ends_with_a_semicolon`,
+`a_semicolon_between_statements_is_a_line_break`,
+`source_spelling_undoes_the_tags`.
+
 ## Unreleased — a `[` that starts a line starts a statement (#18778)
 
 ### Changed (re-review of #18778)

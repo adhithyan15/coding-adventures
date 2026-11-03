@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C402-gaotie",
+    "language": "chinese",
+    "chapter": 402,
+    "sequence": 31020,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:97669cad4e91e56b"
+  },
+  "findings": []
+}

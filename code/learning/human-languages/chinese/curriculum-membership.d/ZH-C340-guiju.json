@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C340-guiju",
+  "pathSegment": "ZH-PATH-340-CUSTOM340",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-340-CUSTOM340",
+      "order": 2
+    }
+  ]
+}

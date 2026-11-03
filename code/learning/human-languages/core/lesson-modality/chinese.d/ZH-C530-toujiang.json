@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C530-toujiang",
+    "language": "chinese",
+    "chapter": 530,
+    "sequence": 39860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b13cc852bc2809ac"
+  },
+  "findings": []
+}

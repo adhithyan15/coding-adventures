@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 480,
+  "sourceHash": "fnv1a64:93b84c0cad711666",
+  "lessonIds": [
+    "ZH-C480-touyun",
+    "ZH-C480-fayang",
+    "ZH-C480-liubiti",
+    "ZH-C480-guomin",
+    "ZH-C480-shimian",
+    "ZH-R480-review-476-480"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch480.txt",
+  "json": "chinese/narration/ch480.json",
+  "textHash": "fnv1a64:c16cf6762f675739",
+  "jsonHash": "fnv1a64:19f2459fd8f2a4e5",
+  "findings": []
+}

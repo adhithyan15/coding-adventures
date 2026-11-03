@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C449-fengwei",
+    "language": "chinese",
+    "chapter": 449,
+    "sequence": 34000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:feeb06cd7b59f8f9"
+  },
+  "findings": []
+}

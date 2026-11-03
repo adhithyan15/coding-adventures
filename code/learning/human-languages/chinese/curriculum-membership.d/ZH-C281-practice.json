@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C281-practice",
+  "pathSegment": "ZH-PATH-281-EXAMPLE",
+  "pathOrder": 7,
+  "extensions": [
+    {
+      "id": "ZH-EXT-281-EXAMPLE",
+      "order": 7
+    }
+  ]
+}

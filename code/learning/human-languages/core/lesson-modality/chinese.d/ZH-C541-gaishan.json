@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C541-gaishan",
+    "language": "chinese",
+    "chapter": 541,
+    "sequence": 40410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6a7ce21d480de1d3"
+  },
+  "findings": []
+}
