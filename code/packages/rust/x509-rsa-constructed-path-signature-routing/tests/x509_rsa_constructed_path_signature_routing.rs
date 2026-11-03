@@ -22,9 +22,10 @@ use x509_rsa_algorithm_policy::{
 use x509_rsa_constructed_path_signature_routing::{
     advance_x509_rsa_constructed_path_intermediate_path_length,
     bind_x509_rsa_constructed_path_intermediate_policy,
+    bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
     verify_x509_rsa_constructed_path_policy_signature,
     X509RsaConstructedPathIntermediatePolicyErrorKind,
-    X509RsaConstructedPathSignatureRoutingErrorKind,
+    X509RsaConstructedPathReviewedAnchorErrorKind, X509RsaConstructedPathSignatureRoutingErrorKind,
 };
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_signature_routing::{
@@ -32,6 +33,7 @@ use x509_rsa_signature_routing::{
     X509RsaSignatureVerifier,
 };
 use x509_time::{decode_x509_time, X509Time};
+use x509_webpki_root_anchor_selection::select_reviewed_webpki_root_anchor;
 
 const TARGET_HEX: &str = include_str!(
     "../../x509-rsa-sha256-reviewed-server-link/tests/fixtures/valid_isrgrootx1_r13_precertificate.hex"
@@ -563,5 +565,135 @@ fn rejects_exhausted_path_length_for_non_self_issued_intermediate() {
     assert_eq!(
         error.kind(),
         X509CertificatePathLengthErrorKind::MaximumExceeded
+    );
+}
+
+#[test]
+fn binds_routed_terminal_signature_to_exact_reviewed_anchor() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+
+    let verified = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let bound = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        verified,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .unwrap();
+
+    assert_eq!(
+        bound
+            .verified_terminal_signature()
+            .adjacent_link()
+            .issuer_depth(),
+        1
+    );
+    assert!(std::ptr::eq(
+        bound
+            .verified_terminal_signature()
+            .adjacent_link()
+            .issuer_certificate(),
+        bound.reviewed_anchor().candidate_certificate()
+    ));
+    assert!(std::ptr::eq(
+        bound
+            .verified_terminal_signature()
+            .issuer_role_policy()
+            .certificate(),
+        bound.reviewed_anchor().candidate_certificate()
+    ));
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundX509RsaConstructedPathTerminalToReviewedAnchor"
+    );
+}
+
+#[test]
+fn rejects_routed_nonterminal_signature_as_reviewed_anchor() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let target = decode(&target_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+
+    let verified = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(0).unwrap(),
+        algorithm_policy(&target, &profiles),
+        role_policy(
+            &candidates[0],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[0], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let error = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        verified,
+        select_reviewed_webpki_root_anchor(&candidates[1]).unwrap(),
+    )
+    .expect_err("a nonterminal adjacency must not establish the reviewed terminus");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathReviewedAnchorErrorKind::NonTerminalIssuer
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 RSA constructed-path reviewed-anchor error NonTerminalIssuer"
+    );
+}
+
+#[test]
+fn rejects_byte_equal_detached_reviewed_anchor() {
+    let target_encoded = fixture(TARGET_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let detached_root_encoded = root_encoded.clone();
+    let target = decode(&target_encoded);
+    let detached_root = decode(&detached_root_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let path = constructed_chain(&target, &candidates);
+    let profiles = [profile()];
+    assert_eq!(detached_root.encoded(), candidates[1].encoded());
+
+    let verified = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(1).unwrap(),
+        algorithm_policy(&candidates[0], &profiles),
+        role_policy(
+            &candidates[1],
+            X509CertificateRole::IssuingCertificateAuthority,
+        ),
+        rsa_policy(&candidates[1], &profiles),
+        &[route()],
+        limits(),
+    )
+    .unwrap();
+    let error = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        verified,
+        select_reviewed_webpki_root_anchor(&detached_root).unwrap(),
+    )
+    .expect_err("byte-equal reviewed-root evidence from another decode is detached");
+
+    assert_eq!(
+        error.kind(),
+        X509RsaConstructedPathReviewedAnchorErrorKind::EvidenceMismatch
     );
 }
