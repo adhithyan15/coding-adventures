@@ -178,8 +178,9 @@ text paint. C4 `direction` statements preserve all four Mermaid axes in semantic
 IR and drive structural node placement plus backend-neutral relationship paint. C4
 visible titles, element and deployment text, and relationship details normalize
 Mermaid HTML break variants into line-aware semantic and paint geometry. C4
-bidirectional and backward relationships also preserve their authored endpoint
-arrows through structural layout and backend-neutral PaintInstructions. Core
+bidirectional and backward relationships, including the short `Rel_B` form, also
+preserve their authored endpoint arrows through structural layout and backend-neutral
+PaintInstructions. Core
 `UpdateElementStyle` background, font, and border colors flow through the same
 pipeline for C4 elements and boundaries. Element technology and description
 are distinct in semantic IR, and keyed or positional `UpdateElementStyle`

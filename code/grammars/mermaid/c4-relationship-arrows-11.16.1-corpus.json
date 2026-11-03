@@ -10,6 +10,10 @@
     {
       "name": "backward-relationship",
       "source": "C4Component\nContainer(app, \"Application\")\nComponent(api, \"API\")\nRel_Back(app, api, \"Uses\")"
+    },
+    {
+      "name": "short-backward-relationship",
+      "source": "C4Component\nContainer(app, \"Application\")\nComponent(api, \"API\")\nRel_B(app, api, \"Uses\")"
     }
   ]
 }
