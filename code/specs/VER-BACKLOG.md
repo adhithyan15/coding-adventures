@@ -38,7 +38,7 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | Priority / ID | Work | State / prerequisite and acceptance |
 |---|---|---|
 | P0 / VER-P003 | TF01 Rust L0 bootstrap | #18807 open; current-head CI, security review and actual merge |
-| P1 / VER-P004 | Rust CT01 corpus through L0 | selected, ready-local; P003; every case, fixed-array API, fresh output, error mapping, logical work fields, regeneration/build selection |
+| P1 / VER-P004 | Rust CT01 corpus through L0 | draft #18849, waiting P003; local checks pass; every case, fixed-array API, fresh output, error mapping, logical work fields, regeneration/build selection |
 | P1 / VER-P005 | Warrant v0 specification | waiting P004; VER04 syntax/types/bindings and negative examples |
 | P1 / VER-P006 | Warrant grammar/generated lexer/parser | waiting P005; positive/negative corpus and drift gate |
 | P1 / VER-P007 | Warrant type checker/Rust bindings | waiting P006; missing exports, wrong types and vacuous bindings reject |
@@ -98,13 +98,22 @@ can progress independently once their prerequisites are available.
 - A dependent-branch replay printed partial-clone fetch errors but completed;
   the requested blob's local bytes hashed to the expected SHA. Diagnose repeat
   occurrences separately; preserve committed work and validate the replay.
+- CI filters PRs to main. Draft #18849 targets #18807's branch to keep its diff
+  focused and uses no hosted CI yet. After P003 merges, retarget to main, check
+  the exact diff/head, mark ready and require hosted CI before auto-merge. Never
+  merge the dependent PR into the bootstrap feature branch.
+- Low-priority tooling follow-up: investigate a Go cached test invocation that
+  remained active after package PASS output. A fresh `go test -count=1
+  -timeout=2m ./...` on the final branch terminated successfully in about 31 s
+  for the main package, with all internal packages passing. Disabling test
+  caching is a local validation workaround; the root cause is not established.
 
 P004 local evidence: all 21 CT01 records and five negative adapter checks pass;
 18 existing unit tests and six optimized-IR tests pass; the CT01 Python suites
 pass 16 tests; Clippy and Ruff pass; focused Go repository-input tests pass.
 Direct LLVM reporting over the instrumented run covers 145/145 ct-compare source
-lines. The full Go suite passed on the initial integration tree; it is rerun on
-the focused dependent branch before publication. Hosted CI remains separate.
+lines. The full Go suite passed on the initial integration tree and on the
+focused dependent branch with `-count=1 -timeout=2m`. Hosted CI remains separate.
 Bootstrap's exact head passed a fresh security sub-agent
 review; its existing auto-merge remains waiting for CI.
 
@@ -113,4 +122,5 @@ falsify stale transport/work/results; execute all real public operations through
 L0; observe length-error panics and mutate fresh selection output; check logical
 work fields; register corpus/reference build inputs and regeneration on both
 platforms; update package/pilot/quirk docs; run Rust/Python/Go checks and security
-review; publish after P003's merge is verified.
+review; publish a dependent draft, then retarget/mark ready after P003's merge is
+verified. Reprioritize again after P004's actual merge before selecting P005.
