@@ -43,8 +43,11 @@ must also resolve at or before chapter 275. Chapters 276–277 re-teach related
 grammar at the B1 seam under separate B1-required C276/C277 extensions and
 the B1 `SPINE-NARRATE-EVENTS` path; C278–C279 complete that connected-story
 capability. The derived A2 lesson slice excludes every C276/C277 lesson, so the
-seam cannot be used to bless A2 evidence. Its two timed mock bundles
-and every later-rung mock bundle remain backlog.
+seam cannot be used to bless A2 evidence. The task shape now also has two distinct
+timed learner papers, separate keys and examiner scripts, a shared rung-owned
+rubric, and fail-closed manifests covering all eleven published A2 parts. These
+remain source-bounded project forms, not external certification or learner
+attainment evidence. Every later-rung mock bundle remains backlog.
 
 ## Progress
 

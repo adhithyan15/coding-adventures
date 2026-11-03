@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "language": "marathi",
+  "level": "A2",
+  "mockId": "a2-mock-1",
+  "sections": [
+    { "skill": "reading", "minutes": 30, "partIds": ["a2-reading-notices-and-correspondence", "a2-reading-connected-everyday-text-one", "a2-reading-connected-everyday-text-two"] },
+    { "skill": "listening", "minutes": 25, "partIds": ["a2-listening-announcements", "a2-listening-everyday-conversations", "a2-listening-connected-account"] },
+    { "skill": "writing", "minutes": 30, "partIds": ["a2-writing-functional-response", "a2-writing-connected-message-or-description"] },
+    { "skill": "speaking", "minutes": 12, "partIds": ["a2-speaking-personal-interview", "a2-speaking-prepared-account", "a2-speaking-information-exchange-role-play"] }
+  ]
+}
