@@ -9,7 +9,7 @@ class TestCtCompare < Minitest::Test
   def test_ct_eq_matches_only_identical_byte_strings
     assert CT.ct_eq("", "")
     assert CT.ct_eq("abc".b, "abc".b)
-    assert CT.ct_eq(("\x00".b * 32), ("\x00".b * 32))
+    assert CT.ct_eq("\x00".b * 32, "\x00".b * 32)
     refute CT.ct_eq("abc".b, "abd".b)
     refute CT.ct_eq("abc".b, "abc ".b)
     refute CT.ct_eq("".b, "a".b)
