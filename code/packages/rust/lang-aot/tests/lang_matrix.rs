@@ -9970,15 +9970,17 @@ fn main() { out(1, VALUE); }\n",
     //   • Clr — the same story with `System.String::Concat(string, string)`.
     // The two **static** columns gain a genuine runtime-operand path in this cell — their
     // `str_concat` was literal-fold-only before, so both now route a non-foldable concat
-    // to the runtime helper `__twig_str_concat(a, b)` (in `twig_runtime.c`), which reads
-    // both `[i64 len][bytes]` headers and returns a handle to a fresh joined block:
+    // to the runtime helper `__twig_str_concat(a, b, max)` (in `twig_runtime.c`), which
+    // reads both `[i64 len][bytes]` headers and returns a handle to a fresh joined block
+    // (LANG83 PR5a added `max`, the module's string ceiling: past it the helper raises
+    // `Trap.Overflow` before allocating):
     //   • NativeAot — twig-aot keeps the both-literal fold, but emits `call_builtin
-    //     "str_concat"` (2-arg / returns-i64) when an operand isn't foldable; the
+    //     "str_concat"` (3-arg with the ceiling / returns-i64) when an operand isn't foldable; the
     //     aarch64/x86_64 backends add `str_concat` to `V1_BUILTINS` (same shape as
     //     `str_eq`, so NO new codegen — the handles ride x0/x1 | RDI/RSI, result in
     //     x0/RAX). aarch64 run-verified locally; x86_64 on CI.
     //   • Llvm — `iir-to-llvm` keeps the literal fold, but lowers a runtime concat to
-    //     `%r = call i64 @__twig_str_concat(i64 a, i64 b)` against the AOT archive symbol
+    //     `%r = call i64 @__twig_str_concat(i64 a, i64 b, i64 max)` against the AOT archive symbol
     //     (str→i64 handle, E4d-2b), storing the result as a runtime string. Via clang.
     //   • Wasm — no libc and no host helper: the concat happens entirely *in* wasm.
     //     `iir-to-wasm` bump-allocates a `[i32 len][bytes]` block from `__array_bump`,

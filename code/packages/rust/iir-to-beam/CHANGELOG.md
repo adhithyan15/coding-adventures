@@ -1,5 +1,10 @@
 # Changelog — iir-to-beam
 
+## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused at compile time
+
+- `validate_for_beam` (and so `lower_iir_to_beam` and the codegen registry) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.
+- Test `a_literal_past_the_module_ceiling_is_refused_at_compile_time` (fails without the check).
+
 ## Unreleased — LANG83 PR5a — strings fail closed
 
 - `str_index` guards `is_integer`, `idx >= 0` and `idx < length(src)` before `lists:nth`, and raises `erlang:error('Trap.Bounds')` on failure. Before, `lists:nth` failed with `function_clause`, which names no kind.

@@ -1,5 +1,21 @@
 # Changelog — iir-linker
 
+## Unreleased — LANG83 PR5a follow-up (#18800) — the string ceiling survives linking
+
+### Fixed
+
+- **Linking dropped the string ceiling.**  `merge_modules` built the merged
+  module with `str_max_bytes: None`, the registry ceiling (2³⁰ − 64 bytes), so
+  linking a module that lowered its ceiling (LANG83 PR5a: a frontend budget,
+  or the conformance suite's 16) silently raised it again.  The merged module
+  now gets the smallest `str_max_bytes` of its inputs (new
+  `merged_str_max_bytes`); `None` only when no input sets one.  The raw values
+  are compared, so a malformed value above `STR_MAX_BYTES` survives only when
+  nothing is tighter, and validation still refuses it.
+- Tests `the_merged_module_keeps_the_smallest_string_ceiling` and
+  `a_linked_ceiling_survives_the_wire_format` (with `interpreter-ir`'s new
+  1.2 wire format).  Both fail without the fix.
+
 ## Unreleased — #18432 — private means private; renaming never panics
 
 ### Fixed

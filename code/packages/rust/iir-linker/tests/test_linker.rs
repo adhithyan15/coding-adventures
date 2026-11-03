@@ -824,3 +824,48 @@ fn crafted_export_aliases_cannot_panic_the_renamer() {
     names.dedup();
     assert_eq!(names.len(), merged.functions.len());
 }
+
+// ---------------------------------------------------------------------------
+// LANG83 PR5a follow-up (#18800): the string ceiling survives linking
+// ---------------------------------------------------------------------------
+
+/// The linked program runs under the tightest ceiling any of its modules was
+/// compiled for; `None` (the registry ceiling) is the loosest. Before, the
+/// merged module always had `None`.
+#[test]
+fn the_merged_module_keeps_the_smallest_string_ceiling() {
+    let link_with = |math: Option<u32>, app: Option<u32>| {
+        let mut m = math_module();
+        m.str_max_bytes = math;
+        let mut a = app_module_importing_add();
+        a.str_max_bytes = app;
+        link(&[m, a]).unwrap().str_max_bytes
+    };
+    assert_eq!(link_with(None, None), None);
+    assert_eq!(link_with(Some(16), None), Some(16));
+    assert_eq!(link_with(None, Some(16)), Some(16));
+    assert_eq!(link_with(Some(64), Some(16)), Some(16));
+    assert_eq!(link_with(Some(16), Some(64)), Some(16));
+    assert_eq!(link_with(Some(0), Some(64)), Some(0));
+    // A malformed ceiling above STR_MAX_BYTES is kept only when nothing is
+    // tighter, so the linked module is still refused by its validation.
+    let malformed = interpreter_ir::STR_MAX_BYTES + 1;
+    assert_eq!(link_with(Some(malformed), None), Some(malformed));
+    assert_eq!(link_with(Some(malformed), Some(16)), Some(16));
+    let mut lone = app_module_importing_add();
+    lone.imports.clear();
+    lone.functions[0] = make_fn("main", vec![], "void");
+    lone.str_max_bytes = Some(malformed);
+    let merged = link(&[lone]).unwrap();
+    assert!(merged.validate().iter().any(|e| e.starts_with("StrMaxBytes")));
+}
+
+/// The ceiling also survives a link → serialise → deserialise round trip.
+#[test]
+fn a_linked_ceiling_survives_the_wire_format() {
+    use interpreter_ir::serialise::{deserialise, serialise};
+    let mut a = app_module_importing_add();
+    a.str_max_bytes = Some(16);
+    let merged = link(&[math_module(), a]).unwrap();
+    assert_eq!(deserialise(&serialise(&merged)).unwrap().str_max_bytes, Some(16));
+}

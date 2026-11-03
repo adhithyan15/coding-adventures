@@ -178,6 +178,9 @@ pub fn lower_typed_scalars_to_cil(
     module: &IIRModule,
     _config: &IIRClrConfig,
 ) -> Result<CILProgramArtifact, IIRClrError> {
+    // LANG83 PR5a: the module's string ceiling, before anything is lowered
+    // (#18800); this path does not run `validate_iir_for_clr`.
+    crate::validate::check_str_ceiling(module)?;
     if module.functions.len() > 0xFFFFFF {
         return Err(invalid("<module>", "too many MethodDef rows"));
     }

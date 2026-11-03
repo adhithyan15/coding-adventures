@@ -161,3 +161,19 @@ module's string ceiling (`IIRModule::str_ceiling`) raises `Trap.Overflow`:
 ```text
 (string-ref "ABC" 3)   =>  Err(RunError::Trap { kind: "Trap.Bounds" })   // "trap: Trap.Bounds"
 ```
+
+The `dynval-runtime` string builtins follow the same contract (#18800):
+`call_builtin "string-ref"` / `"substring"` out of range raise `Trap.Bounds`,
+and `"string-append"` past the module's ceiling raises `Trap.Overflow`, on
+every path that calls a builtin (`call_builtin`, and a builtin closure through
+`apply_closure`, `call_closure` or `map` / `filter` / `fold-left` /
+`fold-right`); `"make-string"` gets the module's ceiling too. A module
+whose `str_const` is longer than its ceiling is refused before it runs
+(`RunError::InvalidModule`), as on vm-core and every compiled column. So a
+Twig expression fails the same way whether the compiler emitted the op or
+the builtin call:
+
+```text
+(fold-left string-append "" (list "abc" "de"))   ; str_max_bytes = Some(4)
+  =>  Err(RunError::Trap { kind: "Trap.Overflow" })
+```

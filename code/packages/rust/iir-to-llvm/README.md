@@ -188,7 +188,10 @@ different since LANG83 PR5a: a folded out-of-range `str_index` / `str_slice`
 calls the module's `@__iir_trap` with `Trap.Bounds`, which flushes stdout and
 names the kind, and the runtime path's `twig_runtime.c` helpers do the same
 through `__twig_trap`. `@__twig_str_concat` takes the module's string ceiling
-as a third argument and raises `Trap.Overflow` past it.) The element type
+as a third argument and raises `Trap.Overflow` past it. `validate_for_llvm`
+refuses a `str_const` longer than the ceiling (`StrTooLong`) and a
+`str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through
+`IIRModule::str_ceiling_errors` (#18800).) The element type
 (`i64`/`double`/`i32`/`float`) comes from the op's `type_hint`; the index is always
 `i64`.
 

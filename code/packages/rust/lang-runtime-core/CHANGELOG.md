@@ -1,5 +1,11 @@
 # Changelog — lang-runtime-core
 
+## Unreleased — LANG83 PR5a follow-up (#18800) — `RuntimeError::Trap`
+
+### Added
+
+- `RuntimeError::Trap { kind: String }`: a builtin hit a LANG83 standard trap (`Trap.Bounds`, `Trap.Overflow`, …), not a type mismatch. It is the shared-runtime twin of vm-core's `VMError::Trap` and twig-vm's `RunError::Trap`, displays as `trap: <kind>`, and lets `dynval-runtime`'s string builtins fail the way the LANG83 string ops do. Appended after the existing variants, so no discriminant moves. Test `trap_displays_like_the_vms_traps`.
+
 ## [0.1.0] — 2026-04-29
 
 ### Added

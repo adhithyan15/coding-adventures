@@ -1,5 +1,12 @@
 # Changelog — interpreter-ir
 
+## Unreleased — LANG83 PR5a follow-ups (#18800) — the ceiling is checked on every column and kept on the wire
+
+- **New `IIRModule::str_ceiling_errors()`**: the two LANG83 PR5a ceiling checks (`StrMaxBytes`, `StrTooLong`) on their own. `validate()` now calls it, so its output is unchanged. Every column calls it too, where it already refuses a module: before #18800 nothing on the way to a backend called `validate()`, so a `str_const` longer than the module's ceiling compiled and ran on every column. The columns call only these checks, because `validate()`'s other checks (duplicate names, the entry point) are not every column's contract.
+- Test `str_ceiling_errors_is_the_ceiling_part_of_validate`, and a doc example.
+- **`str_max_bytes` is on the wire** (item 2). `serialise` writes format **1.2** when the field is `Some`: after the imports section, tag `0x12` and the raw `u32` (a malformed value above `STR_MAX_BYTES` round-trips as itself, so the reader still refuses it). A module whose field is `None` is written as 1.1, byte for byte as before, so no existing serialised module or digest changes (LANG84's `release_classes.csv` hashes serialised IIR). `deserialise` accepts 1.0, 1.1 and 1.2; a 1.2 stream without its ceiling section, or with another tag there, is an error. Before, a round trip reset the field to `None`, which silently raised a lowered ceiling to `STR_MAX_BYTES`.
+- Tests `str_max_bytes_round_trips_as_version_1_2`, `no_ceiling_is_written_byte_for_byte_as_version_1_1`, `a_version_1_2_stream_without_its_ceiling_is_an_error`, and 1.3 in `unsupported_version_returns_error`.
+
 ## Unreleased — LANG83 PR5a — strings fail closed
 
 - **`STR_MAX_BYTES` and `IIRModule::str_max_bytes`.** A string is at most `STR_MAX_BYTES` = 2³⁰ − 64 bytes, the largest round value below .NET's `System.String` limit. A module may lower it with the new `str_max_bytes: Option<u32>` field (`None` = the registry value); `IIRModule::str_ceiling()` returns the effective value, clamped to `STR_MAX_BYTES`. `IIRModule::new` sets `None`. The field is not on the binary wire format, like `release`: a deserialised module uses the registry value.

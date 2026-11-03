@@ -1498,6 +1498,59 @@ fn a_literal_concat_past_the_ceiling_is_a_runtime_call_with_the_ceiling() {
     assert!(ll.contains(", i64 16)\n"), "the ceiling is the third argument:\n{ll}");
 }
 
+/// #18800 item 4: the literal pre-pass (`collect_string_literals`) stops at
+/// the ceiling too. It used to intern every join, so the 17-byte value the
+/// lowering refused to fold was still emitted as a `[17 x i8]` constant, and a
+/// chain of `d = d ++ d` doubled in the compiler: twenty doublings of 8 bytes
+/// emitted about 16 MiB of constants for a program that traps at the second
+/// concat.
+#[test]
+fn a_literal_join_past_the_ceiling_is_not_interned() {
+    let ll = lower(&concat_to_17(Some(16)));
+    assert!(ll.contains("[16 x i8]"), "the 16-byte join still folds:\n{ll}");
+    assert!(!ll.contains("[17 x i8]"), "the 17-byte join was interned:\n{ll}");
+    // Under the registry ceiling it is folded and interned, as before.
+    assert!(lower(&concat_to_17(None)).contains("[17 x i8]"));
+
+    let mut body = vec![IIRInstr::new("str_const", Some("d0".into()), vec![Operand::Str("01234567".into())], "str")];
+    for k in 0..20 {
+        let (src, dst) = (format!("d{k}"), format!("d{}", k + 1));
+        body.push(IIRInstr::new("str_concat", Some(dst), vec![Operand::Var(src.clone()), Operand::Var(src)], "str"));
+    }
+    body.push(IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("d20".into())], "i64"));
+    body.push(IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"));
+    let mut m = module_with(IIRFunction::new("main", vec![], "i64", body));
+    m.str_max_bytes = Some(16);
+    let ll = lower(&m);
+    assert!(ll.len() < 64 * 1024, "{} bytes of LLVM IR", ll.len());
+    // d1 folds; d2..d20 are run-time concats, each passed the ceiling.
+    assert_eq!(ll.matches("call i64 @__twig_str_concat(").count(), 19, "{ll}");
+}
+
+/// #18800 item 1: `validate_for_llvm` (and so `lower_iir_to_llvm`) refuses a
+/// literal longer than the module's ceiling, and a ceiling above the
+/// registry's. Before, both lowered.
+#[test]
+fn a_literal_past_the_module_ceiling_is_refused_at_compile_time() {
+    let literal = |len: usize, ceiling: Option<u32>| {
+        let mut m = module_with(IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("z".repeat(len))], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        m.str_max_bytes = ceiling;
+        m
+    };
+    let refused = |m: &IIRModule| match lower_iir_to_llvm(m, &IIRLlvmConfig::default()) {
+        Err(IIRLlvmError::ValidationFailed(errors)) => errors,
+        other => panic!("expected a validation failure, got {other:?}"),
+    };
+    assert!(refused(&literal(17, Some(16))).iter().any(|e| e.starts_with("StrTooLong")));
+    assert!(refused(&literal(0, Some(interpreter_ir::STR_MAX_BYTES + 1))).iter().any(|e| e.starts_with("StrMaxBytes")));
+    assert!(validate_for_llvm(&literal(16, Some(16))).is_empty());
+    lower(&literal(16, Some(16)));
+}
+
 #[test]
 fn e4_string_literal_cmp_folds_to_integer_return() {
     let f = IIRFunction::new(
@@ -2863,7 +2916,8 @@ fn input_str_lowers_to_twig_input_str_call() {
 
 /// E4-dyn: `str_concat` over two RUNTIME string operands (here two `input_str`
 /// handles — neither is a compile-time literal) lowers to a call to the AOT helper
-/// `@__twig_str_concat(i64, i64)`, which reads both `[i64 len][bytes]` headers and
+/// `@__twig_str_concat(i64, i64, i64)` (the third argument is the module's string
+/// ceiling, LANG83 PR5a), which reads both `[i64 len][bytes]` headers and
 /// returns a handle to a fresh joined block. The extern must be declared, and the
 /// runtime result must feed a runtime `str_len` (header read) without folding.
 #[test]
@@ -4048,4 +4102,32 @@ fn only_the_entry_point_has_external_linkage() {
 
     let lib = lower(&module(None));
     assert!(!lib.contains("define internal"), "a library module keeps external linkage:\n{lib}");
+}
+
+/// #18800 security review, the WASM fail-open's reproducer on LLVM:
+/// `d = str_const "x" [bool]`, then `d = a ++ a` past a ceiling of 8, then
+/// `str_len d`. The concat must be the run-time call (which traps), and the
+/// length must be read from `d`'s header at run time, never folded from the
+/// stale "x" (1) or from the 16-byte join. (LLVM's validator already refuses a
+/// `str_const` whose hint is not `"str"`, so only that spelling reaches the
+/// lowering; the others are pinned as refusals.)
+#[test]
+fn a_rewritten_string_variable_never_reads_its_stale_literal() {
+    for hint in ["bool", "void", "str"] {
+        let mut m = module_with(IIRFunction::new("main", vec![], "i64", vec![
+            IIRInstr::new("str_const", Some("d".into()), vec![Operand::Str("x".into())], hint),
+            IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("abcdefgh".into())], "str"),
+            IIRInstr::new("str_concat", Some("d".into()), vec![Operand::Var("a".into()), Operand::Var("a".into())], "str"),
+            IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("d".into())], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]));
+        m.str_max_bytes = Some(8);
+        if hint != "str" {
+            assert!(matches!(lower_iir_to_llvm(&m, &IIRLlvmConfig::default()), Err(IIRLlvmError::ValidationFailed(_))));
+            continue;
+        }
+        let ll = lower(&m);
+        assert!(ll.contains("call i64 @__twig_str_concat("), "{hint}: the concat is a run-time call:\n{ll}");
+        assert!(!ll.contains("ret i64 1\n") && !ll.contains("ret i64 16\n"), "{hint}: a folded length:\n{ll}");
+    }
 }
