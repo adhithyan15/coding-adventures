@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W493-jiao-instruct",
+    "language": "chinese",
+    "chapter": 493,
+    "sequence": 37375,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:1aacdb861a3c76a3",
+    "detachableSegments": [
+      "Script — the top of lǎo over zǐ, then four strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

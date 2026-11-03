@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C340-chuantong",
+    "language": "chinese",
+    "chapter": 340,
+    "sequence": 26130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2bdaef6188627dbb"
+  },
+  "findings": []
+}

@@ -5,10 +5,12 @@
 # build-tool feeds each BUILD line to its own `sh -c`, so real multi-line logic
 # lives here in a sibling script.
 #
-# It proves two things, on every compiler present on this machine:
+# It proves three things, on every compiler present on this machine:
 #   1. POSITIVE — the conforming C and C++ fixtures compile *and run* cleanly
 #      under the strict flags.
-#   2. NEGATIVE — the non-conforming fixtures (which use a GNU statement
+#   2. FALSIFIABLE — every iso_test.h check reports failure when it should
+#      (selftest/falsifiable.*), including ISO_CHECK_EQ_DBL on NaN.
+#   3. NEGATIVE — the non-conforming fixtures (which use a GNU statement
 #      expression) are REJECTED. This is the harness testing itself: if a
 #      compiler accepted the extension, the strict flags would not be enforcing
 #      ISO conformance and the self-test fails.
@@ -37,6 +39,15 @@ iso_build_and_run c conforming selftest/conforming.c || rc=1
 
 echo "== positive: conforming C++ =="
 iso_build_and_run cpp conforming selftest/conforming.cpp || rc=1
+
+# ── 1b. Falsifiable: every check must be able to FAIL ───────────────────────
+# Each fixture runs the checks on values they must reject and exits 0 only when
+# exactly those checks failed. A check that cannot fail guards nothing.
+echo "== falsifiable: every iso_test.h check can fail (C) =="
+iso_build_and_run c falsifiable selftest/falsifiable.c || rc=1
+
+echo "== falsifiable: every iso_test.h check can fail (C++) =="
+iso_build_and_run cpp falsifiable selftest/falsifiable.cpp || rc=1
 
 # ── 2. Negative: non-conforming fixtures must be rejected everywhere ─────────
 echo "== negative: non-conforming C must be rejected =="

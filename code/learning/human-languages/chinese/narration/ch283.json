@@ -1,0 +1,1419 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 283,
+  "title": "Which Way?",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:f26f4f12bdd01255",
+  "lessons": [
+    {
+      "id": "ZH-C283-zenme",
+      "sequence": 21380,
+      "title": "怎么 (zěnme) — how",
+      "headword": "怎么",
+      "romanization": "zěnme",
+      "gloss": "how; in what way",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:903673a51dfab55f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on the word you ask a stranger with."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 你应该去看医生 — nǐ yīnggāi qù kàn yīshēng — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 你应该去看医生 — *nǐ yīnggāi qù kàn yīshēng* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zěnmeyàng, how is it — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zěnmeyàng*, how is it — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zěnme bàn, what should I do — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zěnme bàn*, what should I do — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 怎么",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "怎么 — zěnme — \"how; in what way\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这个字怎么写 zhège zì zěnme xiě — How do you write this character?"
+            },
+            {
+              "kind": "speech",
+              "text": "汉语怎么说 Hànyǔ zěnme shuō — How do you say it in Chinese?"
+            },
+            {
+              "kind": "speech",
+              "text": "You have said it inside zěnmeyàng and zěnme bàn; here it stands alone, before a verb. The next lesson puts the first character in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "怎么 (zěnme) is built from 怎 (zěn) 'how' and the ending 么 of 什么. No dictionary we use records an older form of either, so its history is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "怎么 (zěnme) goes right before the verb it asks about: 怎么写, 怎么说."
+            },
+            {
+              "kind": "speech",
+              "text": "The answer shows the way, or gives it: 这么写, written like this."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zěnme",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zěnme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zěnme, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zěnme*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "这个字怎么写 — zhège zì zěnme xiě — How do you write this character?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 这个字怎么写 — *zhège zì zěnme xiě* — How do you write this character?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "汉语怎么说 — Hànyǔ zěnme shuō — How do you say it in Chinese?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 汉语怎么说 — *Hànyǔ zěnme shuō* — How do you say it in Chinese?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zěnmeyàng, then 怎么 (zěnme): how is it, then how",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zěnmeyàng*, then 怎么: how is it, then how]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 怎么 (zěnme) mean? (\"How\".) Where does it go? (Right before the verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W283-zen",
+      "sequence": 21390,
+      "title": "怎 (zěn) — the right of 作, then 心",
+      "headword": "怎",
+      "romanization": "zěn",
+      "gloss": "怎 — the right of 作, then 心",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:848e194cf64bc2ea",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the right of 作, then 心",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the right of 作, then 心 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zěnme — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zěnme* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "作 心."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — zuò, xīn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *zuò*, *xīn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the right of 作, then 心",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "怎 (zěn)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you write both already."
+            },
+            {
+              "kind": "speech",
+              "text": "The right of 作, five strokes, here on top: a short left-falling stroke; a horizontal from it to the right; a long vertical down from the horizontal; then two short horizontals to its right, the upper one first."
+            },
+            {
+              "kind": "speech",
+              "text": "心, four strokes, at the foot: the left dot, the curve along the foot that hooks up, the middle dot, the right dot."
+            },
+            {
+              "kind": "speech",
+              "text": "5 + 4 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "怎 (zěn), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 怎, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 怎 (zěn)? (Nine.) Where have you written its top? (On the right of 作.) What is at the foot? (心.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 怎 (zěn), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C283-zenme-zou",
+      "sequence": 21400,
+      "title": "去…怎么走 (qù … zěnme zǒu) — how do I get there?",
+      "headword": "去…怎么走",
+      "romanization": "qù … zěnme zǒu",
+      "gloss": "去, the place, then 怎么走: asking the way",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b5b333d3e5bba7be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word you wrote last, and a verb you have said for a long time."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "怎么, aloud — zěnme",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 怎么, aloud — *zěnme*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zǒu, to walk — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zǒu*, to walk — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 火车站 — huǒchēzhàn, the station — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 火车站 — *huǒchēzhàn*, the station — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 去 … 怎么走, asking the way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "去, the place, then 怎么走 asks the way there."
+            },
+            {
+              "kind": "speech",
+              "text": "去火车站怎么走 qù huǒchēzhàn zěnme zǒu — How do I get to the station? 请问 去书店怎么走 qǐngwèn, qù shūdiàn zěnme zǒu — Excuse me, how do I get to the bookshop?"
+            },
+            {
+              "kind": "speech",
+              "text": "走 is the zǒu you know, to walk; the next lesson puts it in your hand. 请问 in front makes the question polite."
+            },
+            {
+              "kind": "speech",
+              "text": "The answer shows the way: yìzhí zǒu, straight on; dào lùkǒu zuǒ guǎi, turn left at the crossing. zuǒ is the zuǒ of zuǒbian; yòu, the yòu of yòubian, turns you right."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "去火车站怎么走 — qù huǒchēzhàn zěnme zǒu — How do I get to the station?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 去火车站怎么走 — *qù huǒchēzhàn zěnme zǒu* — How do I get to the station?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "请问 去书店怎么走 — qǐngwèn, qù shūdiàn zěnme zǒu — Excuse me, how do I get to the bookshop?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 请问 去书店怎么走 — *qǐngwèn, qù shūdiàn zěnme zǒu* — Excuse me, how do I get to the bookshop?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yìzhí zǒu, dào lùkǒu yòu guǎi — Straight on, and turn right at the crossing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yìzhí zǒu, dào lùkǒu yòu guǎi* — Straight on, and turn right at the crossing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ask the way to a place in your own town",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: ask the way to a place in your own town]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How do you ask the way to the station? (去火车站怎么走.) What does yìzhí zǒu tell you? (Straight on.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C283-zenme-zou-station",
+              "prompt": "How do you ask the way to the station, in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-ZENME-ZOU-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "去火车站怎么走",
+                "qù huǒchēzhàn zěnme zǒu",
+                "qu huochezhan zenme zou",
+                "请问去火车站怎么走"
+              ],
+              "feedback": {
+                "correct": "去火车站怎么走: 去, the place, then 怎么走.",
+                "incorrect": "去火车站怎么走. The place comes after 去, and 怎么走 closes it."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W283-zou",
+      "sequence": 21410,
+      "title": "走 (zǒu) — 土, then four strokes along the foot",
+      "headword": "走",
+      "romanization": "zǒu",
+      "gloss": "走 — 土, then four strokes along the foot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8bb333300012a505",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 土, then four strokes along the foot",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 土, then four strokes along the foot and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The question first, then the character it was waiting for."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 去火车站怎么走 — qù huǒchēzhàn zěnme zǒu — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 去火车站怎么走 — *qù huǒchēzhàn zěnme zǒu* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "在 正."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — zài, zhèng",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *zài*, *zhèng*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 土, then four strokes along the foot",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "走 (zǒu)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you write the first already."
+            },
+            {
+              "kind": "speech",
+              "text": "土, three strokes, on top, as at the lower right of 在: a short horizontal, a vertical down through it, and a longer horizontal."
+            },
+            {
+              "kind": "speech",
+              "text": "The lower piece, four strokes: a short vertical; a short horizontal to its right, the way the lower part of 正 begins; a left-falling stroke to the lower left; and last the long sweep along the foot to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 4 = seven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "走 (zǒu), all seven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 走, all seven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 走 (zǒu)? (Seven.) Where have you written its top? (At the lower right of 在.) Which stroke comes last? (The long sweep along the foot.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 走 (zǒu), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C283-wang",
+      "sequence": 21420,
+      "title": "wǎng — towards",
+      "headword": "wǎng",
+      "romanization": "wǎng",
+      "gloss": "towards; in the direction of",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:102b571ba80797c8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: the question, and the two sides of the street."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "去火车站怎么走, aloud — qù huǒchēzhàn zěnme zǒu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 去火车站怎么走, aloud — *qù huǒchēzhàn zěnme zǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuǒbian, the left — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuǒbian*, the left — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yòubian, the right — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yòubian*, the right — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: wǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wǎng — \"towards; in the direction of\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǎng qián zǒu — Go straight ahead."
+            },
+            {
+              "kind": "speech",
+              "text": "dào lùkǒu wǎng zuǒ guǎi — At the crossing, turn left."
+            },
+            {
+              "kind": "speech",
+              "text": "Its character comes later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wǎng is inherited from Middle Chinese hjwangX (Guangyun, in Baxter's transcription), glossed 'to go' and 'to go to'; its use as 'towards' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wǎng comes before a direction, and the verb follows: wǎng qián zǒu, wǎng zuǒ guǎi, wǎng yòu guǎi."
+            },
+            {
+              "kind": "speech",
+              "text": "qián is the 前 of 前边: ahead."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎng qián zǒu — Go straight ahead.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎng qián zǒu* — Go straight ahead.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dào lùkǒu wǎng zuǒ guǎi — At the crossing, turn left.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dào lùkǒu wǎng zuǒ guǎi* — At the crossing, turn left.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǎng yòu guǎi: turn right",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǎng yòu guǎi*: turn right]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wǎng mean? (\"Towards\".) What comes after it? (A direction, then the verb.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C283-zai-again",
+      "sequence": 21430,
+      "title": "再 (zài) — again",
+      "headword": "再",
+      "romanization": "zài",
+      "gloss": "again (still to come); once more",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c1932427a10da160",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, and a goodbye you have said from the first chapters."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǎng qián zǒu, straight ahead — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǎng qián zǒu*, straight ahead — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 再见 — zàijiàn, goodbye — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 再见 — *zàijiàn*, goodbye — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 再",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "再 — zài — \"again; once more\", for what is still to come."
+            },
+            {
+              "kind": "speech",
+              "text": "我明天再来 wǒ míngtiān zài lái — I'll come again tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "qǐng zài shuō yí cì — Please say it once more."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the 再 (zài) of 再见: see you again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "再 (zài) is inherited from Middle Chinese tsojH (Guangyun, in Baxter's transcription), glossed 'twice; a second time'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "再 (zài) goes before the verb, after the person, and it looks forward: the again has not happened yet."
+            },
+            {
+              "kind": "speech",
+              "text": "It is not the 在 of 我在家: the same sound, a different word, a different character."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我明天再来 — wǒ míngtiān zài lái — I'll come again tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我明天再来 — *wǒ míngtiān zài lái* — I'll come again tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐng zài shuō yí cì — Please say it once more.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐng zài shuō yí cì* — Please say it once more.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 再见, then 我明天再来",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 再见, then 我明天再来]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 再 (zài) mean? (\"Again\", still to come.) Which 在 is it not? (The 在 of place, 我在家.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C283-luguo",
+      "sequence": 21440,
+      "title": "路过 (lùguò) — to pass by",
+      "headword": "路过",
+      "romanization": "lùguò",
+      "gloss": "to pass by (on the way somewhere)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:abb71b50ad6772f8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then two characters you write."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我明天再来, aloud — wǒ míngtiān zài lái",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我明天再来, aloud — *wǒ míngtiān zài lái*]"
+            },
+            {
+              "kind": "speech",
+              "text": "路 过."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — lù, guò",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *lù*, *guò*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 路过",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "路过 — lùguò — \"to pass by\", on the way somewhere else."
+            },
+            {
+              "kind": "speech",
+              "text": "我每天路过学校 wǒ měitiān lùguò xuéxiào — I go past the school every day."
+            },
+            {
+              "kind": "speech",
+              "text": "我路过你家 wǒ lùguò nǐ jiā — I'm going past your house."
+            },
+            {
+              "kind": "speech",
+              "text": "Both characters are ones you write."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "路过 (lùguò) is built from 路 'road' and 过 'to pass', both inherited from Middle Chinese, luH and kwaH (Guangyun, in Baxter's transcription), which glosses the first 'a road' and the second, among other senses, 'to go beyond'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "路过 (lùguò) is passing a place on your way somewhere else: you do not stop there. 去 is going there."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a verb, and the place follows it: 路过学校."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lùguò",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lùguò*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lùguò, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lùguò*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我每天路过学校 — wǒ měitiān lùguò xuéxiào — I go past the school every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我每天路过学校 — *wǒ měitiān lùguò xuéxiào* — I go past the school every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我路过你家 — wǒ lùguò nǐ jiā — I'm going past your house.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我路过你家 — *wǒ lùguò nǐ jiā* — I'm going past your house.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 路, then 过, then 路过 (lùguò)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 路, then 过, then 路过]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 路过 (lùguò) mean? (\"To pass by\".) Do you stop at the place? (No: it is on the way.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C283-practice",
+      "sequence": 21450,
+      "title": "去书店怎么走 (qù shūdiàn zěnme zǒu)",
+      "headword": "去书店怎么走",
+      "romanization": "qù shūdiàn zěnme zǒu",
+      "gloss": "a traveller asks the way to a bookshop, asks again, and follows the directions",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:193be0db03712435",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with a stranger asking the way."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 路过 — lùguò — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 路过 — *lùguò* — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 再 — zài, again — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 再 — *zài*, again — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say wǎng, towards — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *wǎng*, towards — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 请问 去书店怎么走 qǐngwèn, qù shūdiàn zěnme zǒu — Excuse me, how do I get to the bookshop? B: wǎng qián zǒu — Go straight ahead. B: dào lùkǒu wǎng yòu guǎi — Turn right at the crossing. A: duìbuqǐ, qǐng zài shuō yí cì — Sorry, could you say that again? B: wǎng qián zǒu, dào lùkǒu wǎng yòu guǎi — Straight ahead, then right at the crossing. A: yuǎn ma — Is it far? B: bù yuǎn, wǒ měitiān lùguò — Not far. I go past it every day. A: 谢谢 再见 xièxie, zàijiàn — Thank you. Goodbye."
+            },
+            {
+              "kind": "speech",
+              "text": "Directions run in the order you walk them, and the person is left out: wǎng qián zǒu, then dào lùkǒu wǎng yòu guǎi. Asking again is qǐng zài shuō yí cì."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C283-practice-turn",
+              "prompt": "At the crossing, which way do you turn?",
+              "assesses": [
+                "ZH-PERFORMANCE-DIRECTIONS-01",
+                "ZH-LEX-C283-WANG-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "right",
+                "to the right",
+                "yòu",
+                "you",
+                "wǎng yòu guǎi",
+                "turn right",
+                "right turn"
+              ],
+              "feedback": {
+                "correct": "Right: wǎng yòu guǎi.",
+                "incorrect": "B says dào lùkǒu wǎng yòu guǎi: right at the crossing."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — asking the way, and following it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A question, three answers, and a way to hear them twice:"
+            },
+            {
+              "kind": "speech",
+              "text": "去火车站怎么走 qù huǒchēzhàn zěnme zǒu — the question."
+            },
+            {
+              "kind": "speech",
+              "text": "wǎng qián zǒu — straight ahead."
+            },
+            {
+              "kind": "speech",
+              "text": "dào lùkǒu wǎng zuǒ guǎi — left at the crossing."
+            },
+            {
+              "kind": "speech",
+              "text": "我每天路过 wǒ měitiān lùguò — I pass it every day."
+            },
+            {
+              "kind": "speech",
+              "text": "qǐng zài shuō yí cì — once more, please."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Qù xuéxiào zěnme zǒu?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Give the way from your door to the nearest shop, in three steps."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "怎么走",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 怎么走]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "去书店怎么走 — qù shūdiàn zěnme zǒu — How do I get to the bookshop?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 去书店怎么走 — *qù shūdiàn zěnme zǒu* — How do I get to the bookshop?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǎng qián zǒu, dào lùkǒu wǎng yòu guǎi — Straight ahead, then right at the crossing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǎng qián zǒu, dào lùkǒu wǎng yòu guǎi* — Straight ahead, then right at the crossing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "去火车站怎么走",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 去火车站怎么走]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask the way to the bookshop. (去书店怎么走 (qù shūdiàn zěnme zǒu).) Say go straight ahead. (wǎng qián zǒu.) Ask someone to say it again. (qǐng zài shuō yí cì.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

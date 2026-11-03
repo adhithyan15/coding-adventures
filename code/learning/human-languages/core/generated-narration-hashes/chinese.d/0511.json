@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 511,
+  "sourceHash": "fnv1a64:5431ce2bafcf9abe",
+  "lessonIds": [
+    "ZH-C511-qinren",
+    "ZH-W511-qin-kin",
+    "ZH-C511-fuqin",
+    "ZH-C511-muqin",
+    "ZH-C511-qinsheng",
+    "ZH-C511-qinzi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch511.txt",
+  "json": "chinese/narration/ch511.json",
+  "textHash": "fnv1a64:0f3f7050bc40068f",
+  "jsonHash": "fnv1a64:bcdd2c0f073b7f26",
+  "findings": []
+}

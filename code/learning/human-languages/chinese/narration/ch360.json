@@ -1,0 +1,876 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 360,
+  "title": "No Need",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:8d0350229e4f0278",
+  "lessons": [
+    {
+      "id": "ZH-C360-gonggong",
+      "sequence": 27720,
+      "title": "gōnggòng — public; shared by everyone",
+      "headword": "gōnggòng",
+      "romanization": "gōnggòng",
+      "gloss": "public; shared by everyone",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:204f5a16b549e2b7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to put a limit on, then the Mandarin for morality."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gōnggòng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gōnggòng — \"public; shared by everyone\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhèr yǒu gōnggòng cèsuǒ ma — Is there a public toilet here?"
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gōnggòng is built from 公 and gòng, both inherited from Middle Chinese, kuwng and gjowngH (Guangyun, in Baxter's transcription), which glosses the first 'shared' and 'upright', and the second 'together' and 'all'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōnggòng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōnggòng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōnggòng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōnggòng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèr yǒu gōnggòng cèsuǒ ma — Is there a public toilet here?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèr yǒu gōnggòng cèsuǒ ma* — Is there a public toilet here?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to put a limit on, then the Mandarin for morality, then say gōnggòng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to put a limit on, then the Mandarin for morality, then say *gōnggòng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gōnggòng mean? (\"Public; shared by everyone\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C360-biyao",
+      "sequence": 27730,
+      "title": "必要 (bìyào) — necessary",
+      "headword": "必要",
+      "romanization": "bìyào",
+      "gloss": "necessary",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e63c21488a26b708",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for morality, then the Mandarin for shared by everyone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 必要",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "必要 — bìyào — \"necessary\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我觉得没有必要问这个问题 wǒ juéde méiyǒu bìyào wèn zhège wèntí — I don't think there's any need to ask that."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 必 (bì) — five strokes: a dot on the left, the long curve along the foot that hooks up, as in 心, a dot on top, a long left-falling stroke down through the curve, and a dot on the right. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "必要 (bìyào) is built from bì and 要 'to need', both inherited from Middle Chinese, pjit and 'jiewH (Guangyun, in Baxter's transcription), which glosses the first 'certain' and 'so', and the second 'to bind'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bìyào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bìyào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bìyào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bìyào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ juéde méiyǒu bìyào wèn zhège wèntí — I don't think there's any need to ask that.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ juéde méiyǒu bìyào wèn zhège wèntí* — I don't think there's any need to ask that.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for morality, then the Mandarin for shared by everyone, then say bìyào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for morality, then the Mandarin for shared by everyone, then say *bìyào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 必要 (bìyào) mean? (\"Necessary\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W360-bi-must",
+      "sequence": 27735,
+      "title": "必 (bì) — the strokes of the heart, with a sweep through them",
+      "headword": "必",
+      "romanization": "bì",
+      "gloss": "必 — a dot, the curve of 心, a dot, a long sweep and a dot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:149b7694cae27a27",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the strokes of the heart, with a sweep through them",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the strokes of the heart, with a sweep through them and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say bìyào — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *bìyào* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "心 要."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — xīn, yào",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *xīn*, *yào*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the strokes of the heart, with a sweep through them",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "必 (bì)."
+            },
+            {
+              "kind": "speech",
+              "text": "One piece, five strokes. It looks like 心 crossed by a long sweep; the order is its own."
+            },
+            {
+              "kind": "speech",
+              "text": "A dot on the left, falling down to the left."
+            },
+            {
+              "kind": "speech",
+              "text": "The long curve along the foot, sweeping right and hooking up, as in 心."
+            },
+            {
+              "kind": "speech",
+              "text": "A dot on top, falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "A long left-falling stroke from the top right down through the curve to the bottom left. Only then:"
+            },
+            {
+              "kind": "speech",
+              "text": "the dot on the right, last."
+            },
+            {
+              "kind": "speech",
+              "text": "Five strokes, and the sweep comes before the last dot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "必 (bì), all five, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 必, all five, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 必 (bì)? (Five.) Which character you know has the same curve? (心.) What comes right before the last dot? (The long left-falling stroke.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 必 (bì), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C360-bubi",
+      "sequence": 27740,
+      "title": "不必 (búbì) — need not; there's no need to",
+      "headword": "不必",
+      "romanization": "búbì",
+      "gloss": "need not; there's no need to",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4744cd3fe6dc6f3f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for shared by everyone, then the Mandarin for necessary."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 不必",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不必 — búbì — \"need not; there's no need to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "你不必说对不起你没有错 nǐ búbì shuō duìbuqǐ nǐ méiyǒu cuò — You needn't apologize; you did nothing wrong."
+            },
+            {
+              "kind": "speech",
+              "text": "The tone of bù changes here: before a falling tone it is said bú, and the spelling writes the change."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不必 (búbì) is built from 不 'not' and 必 (bì) 'surely', both inherited from Middle Chinese, pjut and pjit (Guangyun, in Baxter's transcription), which glosses the second 'certain' and 'so'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "búbì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *búbì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "búbì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *búbì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ búbì shuō duìbuqǐ nǐ méiyǒu cuò — You needn't apologize; you did nothing wrong.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ búbì shuō duìbuqǐ nǐ méiyǒu cuò* — You needn't apologize; you did nothing wrong.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for shared by everyone, then the Mandarin for necessary, then say búbì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for shared by everyone, then the Mandarin for necessary, then say *búbì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 不必 (búbì) mean? (\"Need not; there's no need to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C360-changhe",
+      "sequence": 27750,
+      "title": "chǎnghé — occasion; setting",
+      "headword": "chǎnghé",
+      "romanization": "chǎnghé",
+      "gloss": "occasion; setting",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f114e4f8adeab4a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for necessary, then the Mandarin for there's no need to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chǎnghé",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chǎnghé — \"occasion; setting\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nǐ yīnggāi kàn chǎnghé shuōhuà — You should suit what you say to the occasion."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chǎnghé is built from chǎng and hé, both inherited from Middle Chinese, drjang and hop (Guangyun, in Baxter's transcription), which glosses the first 'a place of offering' and 'a threshing floor', and the second 'to join'. Middle Chinese drjang would regularly give cháng; the dipping tone of chǎng is irregular."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chǎnghé",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chǎnghé*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chǎnghé, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chǎnghé*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nǐ yīnggāi kàn chǎnghé shuōhuà — You should suit what you say to the occasion.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nǐ yīnggāi kàn chǎnghé shuōhuà* — You should suit what you say to the occasion.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for necessary, then the Mandarin for there's no need to, then say chǎnghé again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for necessary, then the Mandarin for there's no need to, then say *chǎnghé* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chǎnghé mean? (\"Occasion; setting\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C360-chadui",
+      "sequence": 27760,
+      "title": "chāduì — to jump the queue",
+      "headword": "chāduì",
+      "romanization": "chāduì",
+      "gloss": "to jump the queue",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b67f545e285d8ead",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for there's no need to, then the Mandarin for the occasion you are in."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chāduì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chāduì — \"to jump the queue\"."
+            },
+            {
+              "kind": "speech",
+              "text": "dàjiā dōu zài páiduì nǐ bù yīnggāi chāduì — Everyone's queuing; you shouldn't push in."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chāduì is built from chā and duì, both inherited from Middle Chinese, tsrheap and dwojH (Guangyun, in Baxter's transcription), which glosses the first 'to thrust in' and the second 'a troop'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāduì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāduì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chāduì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chāduì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàjiā dōu zài páiduì nǐ bù yīnggāi chāduì — Everyone's queuing; you shouldn't push in.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàjiā dōu zài páiduì nǐ bù yīnggāi chāduì* — Everyone's queuing; you shouldn't push in.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for there's no need to, then the Mandarin for the occasion you are in, then say chāduì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for there's no need to, then the Mandarin for the occasion you are in, then say *chāduì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chāduì mean? (\"To jump the queue\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

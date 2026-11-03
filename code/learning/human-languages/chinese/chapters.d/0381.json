@@ -1,0 +1,20 @@
+{
+  "chapter": 381,
+  "title": "The Whole Family",
+  "label": "ch:zh-the-whole-family",
+  "canDo": "I can talk about sorting rubbish, the whole family, recycling, the whole country and feeling safe.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C381-anquangan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 381: I can talk about sorting rubbish, the whole family, recycling, the whole country and feeling safe.",
+    "assesses": [
+      "ZH-LEX-C381-FAMILY381-03",
+      "ZH-LEX-C381-FAMILY381-04",
+      "ZH-LEX-C381-FAMILY381-05",
+      "ZH-SCRIPT-QUAN-WHOLE-01"
+    ]
+  }
+}

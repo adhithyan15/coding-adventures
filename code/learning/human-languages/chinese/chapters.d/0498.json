@@ -1,0 +1,20 @@
+{
+  "chapter": 498,
+  "title": "On the Pitch",
+  "label": "ch:zh-on-the-pitch",
+  "canDo": "I can talk about PE, a pitch, the ball, the goalmouth and scoring a goal.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C498-jinqiu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 498: I can talk about PE, a pitch, the ball, the goalmouth and scoring a goal.",
+    "assesses": [
+      "ZH-LEX-C498-PITCH498-03",
+      "ZH-LEX-C498-PITCH498-04",
+      "ZH-LEX-C498-PITCH498-05",
+      "ZH-SCRIPT-QIU-BALL-01"
+    ]
+  }
+}

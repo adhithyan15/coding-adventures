@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 505,
+  "sourceHash": "fnv1a64:2edcf69db7188f3b",
+  "lessonIds": [
+    "ZH-C505-wudao",
+    "ZH-C505-wuhui",
+    "ZH-W505-wu-dance",
+    "ZH-C505-wuban",
+    "ZH-C505-wutai",
+    "ZH-C505-pailian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch505.txt",
+  "json": "chinese/narration/ch505.json",
+  "textHash": "fnv1a64:9083324eaea1f3b4",
+  "jsonHash": "fnv1a64:3f1ad0ea4f10eb54",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 292,
+  "title": "On the Radio",
+  "label": "ch:zh-on-the-radio",
+  "canDo": "I can talk about broadcasts and live shows, viewers and listeners, and what someone published.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C292-fabiao",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 292: I can talk about broadcasts and live shows, viewers and listeners, and what someone published.",
+    "assesses": [
+      "ZH-LEX-C292-RADIO292-03",
+      "ZH-LEX-C292-RADIO292-04",
+      "ZH-LEX-C292-RADIO292-05"
+    ]
+  }
+}

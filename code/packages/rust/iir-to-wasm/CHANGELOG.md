@@ -1,5 +1,13 @@
 # Changelog — iir-to-wasm
 
+## Unreleased — LANG83 PR5a — strings fail closed
+
+- An out-of-range `str_index` or `str_slice` raises `Trap.Bounds` through `i32.const 1; call $env.__trap; unreachable`, on both the literal and the runtime path, instead of a bare `unreachable` that named no kind.
+- `str_concat` checks the module's string ceiling (`IIRModule::str_ceiling`, carried in `Lang83Imports::str_ceiling`) before it allocates: `u64(len a) + u64(len b) >u ceiling` raises `Trap.Overflow` (`env.__trap(5)`). A literal concat folded past the ceiling compiles to the same trap.
+- A module that uses `str_index`, `str_slice` or `str_concat` now imports `env.__trap`, so every host that runs one must provide it. The crate's string tests share a host that does (`tests/common/mod.rs`).
+- Verification item 2 of the PR5a plan: `str_slice` already checked each `i64` offset against the length *before* `i32.wrap_i64`, so `[2³², 2³² + 3)` never read `[0, 3)`; the check only lacked the kind. `str_index` compares the full `i64` (`i64.ge_u`) too.
+- New `tests/lang83_pr5a.rs`: every out-of-range edge (−1, `len`, `i64::MAX`, `i64::MIN`, 2³², 2³² + 1) in an opaque (parameter) and a literal form, and the ceiling (16 traps at 17 bytes; 17 and the registry ceiling do not).
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: WebAssembly holds dynamic values structurally (WasmGC structs and `i31ref`s, through `lang-aot`'s structural lowering) and links no tagged-word runtime.

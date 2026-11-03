@@ -1,0 +1,19 @@
+{
+  "chapter": 319,
+  "title": "Calls and Confidence",
+  "label": "ch:zh-calls-and-confidence",
+  "canDo": "I can say I will call back, talk about calls coming in, keep in touch by letter and say I have confidence.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C319-huafei",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 319: I can say I will call back, talk about calls coming in, keep in touch by letter and say I have confidence.",
+    "assesses": [
+      "ZH-LEX-C319-CALL319-03",
+      "ZH-LEX-C319-CALL319-04",
+      "ZH-LEX-C319-CALL319-05"
+    ]
+  }
+}

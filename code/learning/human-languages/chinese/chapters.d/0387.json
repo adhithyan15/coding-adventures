@@ -1,0 +1,19 @@
+{
+  "chapter": 387,
+  "title": "Money In, Money Out",
+  "label": "ch:zh-money-in-money-out",
+  "canDo": "I can talk about income, savings, bills, shopping online and a budget.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C387-yusuan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 387: I can talk about income, savings, bills, shopping online and a budget.",
+    "assesses": [
+      "ZH-LEX-C387-MONEY387-03",
+      "ZH-LEX-C387-MONEY387-04",
+      "ZH-LEX-C387-MONEY387-05"
+    ]
+  }
+}

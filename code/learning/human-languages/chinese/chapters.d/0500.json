@@ -1,0 +1,20 @@
+{
+  "chapter": 500,
+  "title": "Match Day",
+  "label": "ch:zh-match-day",
+  "canDo": "I can talk about winning, a match, a final, the score and taking the field.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C500-shangchang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 500: I can talk about winning, a match, a final, the score and taking the field.",
+    "assesses": [
+      "ZH-LEX-C500-MATCH500-03",
+      "ZH-LEX-C500-MATCH500-04",
+      "ZH-LEX-C500-MATCH500-05",
+      "ZH-SCRIPT-SAI-MATCH-01"
+    ]
+  }
+}

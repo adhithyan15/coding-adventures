@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W365-ke-can",
+    "language": "chinese",
+    "chapter": 365,
+    "sequence": 27995,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:778044832837c11d",
+    "detachableSegments": [
+      "Script — a bar, a mouth and a hook"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

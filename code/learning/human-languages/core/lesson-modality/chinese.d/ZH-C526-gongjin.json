@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C526-gongjin",
+    "language": "chinese",
+    "chapter": 526,
+    "sequence": 39630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cb10be5fa2790137"
+  },
+  "findings": []
+}

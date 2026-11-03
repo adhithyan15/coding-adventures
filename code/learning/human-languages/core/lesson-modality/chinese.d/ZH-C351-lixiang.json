@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C351-lixiang",
+    "language": "chinese",
+    "chapter": 351,
+    "sequence": 27280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e7b364645fe39a6"
+  },
+  "findings": []
+}

@@ -1,8 +1,4 @@
 {
-  "omits": [
-    "OPINION-I-THINK",
-    "MODAL-SHOULD",
-    "EXPLANATION-GIVE"
-  ],
+  "omits": [],
   "relocates": {}
 }

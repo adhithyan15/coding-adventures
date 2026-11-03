@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W479-xie-blood",
+    "language": "chinese",
+    "chapter": 479,
+    "sequence": 36095,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:835f705f258b4f5c",
+    "detachableSegments": [
+      "Script — one short stroke over a dish"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

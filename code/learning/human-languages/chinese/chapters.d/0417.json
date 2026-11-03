@@ -1,0 +1,19 @@
+{
+  "chapter": 417,
+  "title": "Customs",
+  "label": "ch:zh-customs",
+  "canDo": "I can go through customs, come into and leave a country, declare things and buy duty-free.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C417-mianshui",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 417: I can go through customs, come into and leave a country, declare things and buy duty-free.",
+    "assesses": [
+      "ZH-LEX-C417-CUSTOMS417-03",
+      "ZH-LEX-C417-CUSTOMS417-04",
+      "ZH-LEX-C417-CUSTOMS417-05"
+    ]
+  }
+}

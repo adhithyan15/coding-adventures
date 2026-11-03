@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C282-yinggai",
+  "pathSegment": "ZH-PATH-282-SHOULD",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-282-SHOULD",
+      "order": 2
+    }
+  ]
+}

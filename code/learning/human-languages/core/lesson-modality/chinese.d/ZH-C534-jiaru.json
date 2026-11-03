@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C534-jiaru",
+    "language": "chinese",
+    "chapter": 534,
+    "sequence": 40050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0309f68847ec16be"
+  },
+  "findings": []
+}

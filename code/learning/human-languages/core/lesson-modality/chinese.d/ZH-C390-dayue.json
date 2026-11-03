@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C390-dayue",
+    "language": "chinese",
+    "chapter": 390,
+    "sequence": 29860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:3eb9113b9a6e7fb2"
+  },
+  "findings": []
+}

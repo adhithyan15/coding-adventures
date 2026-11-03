@@ -1,0 +1,21 @@
+{
+  "chapter": 541,
+  "title": "If It Weren't for You",
+  "label": "ch:zh-if-it-weren-t-for-you",
+  "canDo": "I can say if it weren't for, thanks to, things will improve, what the main reason is, and either this or that.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-R541-review-final-541",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 541: I can say if it weren't for, thanks to, things will improve, what the main reason is, and either this or that.",
+    "assesses": [
+      "ZH-LEX-C541-FINAL541-01",
+      "ZH-LEX-C541-FINAL541-02",
+      "ZH-LEX-C541-FINAL541-03",
+      "ZH-LEX-C541-FINAL541-04",
+      "ZH-LEX-C541-FINAL541-05"
+    ]
+  }
+}

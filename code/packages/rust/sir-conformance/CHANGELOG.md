@@ -4,6 +4,58 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18798)
+
+- Re-review follow-up: 3 more programs — statements after a block opener
+  on one line (`{ |x| foo; bar }`, `do |x| foo; bar end`, `{ |x| puts;
+  puts 2 }`), `then` after a condition, and a `-`/`[` line after
+  `x = super`.
+- Security review follow-up: 5 more programs — `super` ending its line,
+  `super; setup` and `x = super` ⏎ `puts x`, `yield` ending its line,
+  a bare `puts` before a modifier `if`, and a `rescue` binding the clause
+  reassigns (Rust and JavaScript refused or threw).  `return`/`break`/
+  `next` ending a line are covered by the frontend tests only: no backend
+  runs a `return`/`break`/`next` builtin yet (#18798).
+- `tests/ruby_sir_gaps.rs` gains 10 Ruby programs, each checked against
+  real `ruby` and run on all six backends: a line starting with `-`, `+`
+  or `(` (after an assignment, a name and `;`), an operator ending a line
+  and a leading-dot chain, a lone name before a `(` line, a bare `puts`,
+  `unless`/`until`/`!` (Go and Rust panicked `unknown builtin: not`),
+  `rescue Klass` ⏎ next line, a method-level `rescue`'s value, `;` between
+  statements, and a store into an outer local inside `begin`/`rescue`
+  (rustc refused it).
+
+### Added (#18778)
+
+- Review follow-up: `tests/ruby_sir_gaps.rs` gains `for`-body locals
+  visible after the loop, and ranges with non-literal and Float ends
+  (`1..2.5` runs 1 and 2).  A Hash's `each` with a one-parameter block is
+  NOT in the corpus: only the Ruby backend gives the block the
+  `[key, value]` pair; the others crash, and C prints nothing (#18798).
+- **`tests/ruby_sir_gaps.rs`.**  22 Ruby programs, each checked against
+  real `ruby`, and 2 Python programs, checked against CPython, run on all
+  six backends: `for` (arrays, `...`/`..` ranges, zero trips, in a method,
+  nested loops sharing a variable, a body ending in an `if`), a `while`
+  body ending in `puts`, `rescue => e`, `f() + f` at the start of a
+  statement / in a block / before a modifier `if`, bare method names (at
+  top level, in a method, in a block, and an outer local beating a method),
+  `each` over an array and a hash and in a method, a `[` that starts a line
+  after an assignment and after a call, and Python classes named `dog`,
+  `animal` and `SirCldog` (spelled like `dog`'s renamed Ruby constant).  A
+  `REFUSED` table lists the cells that must be refused at compile time (the
+  C and Ruby backends do not run `e.message` yet); a listed cell that runs
+  fails the test, and so does an unlisted refusal.
+- `tests/local_shadows_function.rs` gains a Ruby `for` loop variable named
+  like a method (`for f in [1, 2]`), now that the frontend has `for`.
+
+### Removed
+
+- The two `KNOWN_GAPS` entries in `tests/python_statement_forms.rs`
+  (`py_param_copy_spelled_like_a_hoisted_method` and
+  `py_hoisted_method_then_param_copy` on Ruby): the Ruby backend now
+  defines a class named `__param_a`, and the stale-entry check reported
+  both cells as passing.  The table stays, empty, for the next gap.
+
 ### Fixed
 
 - **Each run's files live in a private scratch directory (#18788 security

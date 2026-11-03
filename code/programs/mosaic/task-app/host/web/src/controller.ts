@@ -870,13 +870,23 @@ export function makeController(engine: any, init: ControllerInit = {}) {
   // needs. Scoped to the active project only, same boundary labelsByName()
   // uses (task names, like project/label names, aren't unique
   // workspace-wide — see code/specs/task-app-notes-ui-v1.md's addendum).
+  //
+  // The key is the name lowercased by `taskNameKey()`, the one rule both
+  // hosts share (backlog 6e2; task-app-notes-ui-v1.md addendum v1.4 — see
+  // `taskNameKey` at the bottom of this file). Two tasks whose names
+  // lowercase alike are a tie, and the FIRST wins: `Object.values` walks the
+  // tasks in the engine's ascending-id order (the workspace JSON is a
+  // serialised BTreeMap, and ids like "t3" are not array indices, so JS keeps
+  // that order), which is the order task-mosaic-app's `find` walks. Letting a
+  // later `set` overwrite, as this used to, picked the last task instead.
   const tasksByName = (): Map<string, string> => {
     const ws = engine.workspace().data;
     const activeId = engine.activeProject().data as string;
     const map = (ws.projects?.[activeId]?.tasks ?? {}) as Record<string, any>;
     const out = new Map<string, string>();
     for (const t of Object.values(map) as any[]) {
-      out.set(String(t.name ?? "").toLowerCase(), t.id as string);
+      const key = taskNameKey(String(t.name ?? ""));
+      if (!out.has(key)) out.set(key, t.id as string);
     }
     return out;
   };
@@ -1638,10 +1648,15 @@ export function makeController(engine: any, init: ControllerInit = {}) {
           // rejected — same discipline as the Sheet Labels column's
           // write(), so a typo can't silently attach to nothing or drop an
           // existing attachment.
-          const typedName = noteTaskDraft.trim();
+          //
+          // Trimmed of Unicode White_Space, not with `.trim()`: that is
+          // Rust's `str::trim`, and `.trim()` differs from it (it strips
+          // U+FEFF and keeps U+0085), so the same typed name could attach
+          // here and be refused natively (6e2).
+          const typedName = trimWhiteSpace(noteTaskDraft);
           let attachedTask: string | null = null;
           if (typedName) {
-            const taskId = tasksByName().get(typedName.toLowerCase());
+            const taskId = tasksByName().get(taskNameKey(typedName));
             if (!taskId) {
               // Refused where the person can see it, with the draft kept
               // exactly as typed so the name can be corrected (E5). This
@@ -1910,4 +1925,66 @@ export function makeController(engine: any, init: ControllerInit = {}) {
       }
     },
   };
+}
+
+// ── Matching a typed task name (backlog 6e2; task-app-notes-ui-v1.md v1.4) ──
+//
+// The Notes editor's "Attach to task" field holds a task's NAME; Save turns
+// it back into an id. task-mosaic-app does the same natively, and the two
+// hosts must give the same answer for every input. Before 6e2 they did not:
+// the native adapter compared with Rust's ASCII-only `eq_ignore_ascii_case`,
+// so "écrire" attached to the task "Écrire" here and was refused there.
+//
+//   step  what                                  here                 Rust
+//   1     trim the typed text (White_Space)     trimWhiteSpace       str::trim
+//   2     blank -> no attachment                !typedName           is_empty
+//   3     lowercase both names                  taskNameKey          to_lowercase
+//   4     equal lowercased strings match        Map lookup           ==
+//   5     a tie -> the first task by id         first `set` wins     BTreeMap find
+//
+// `toLowerCase()` and Rust's `to_lowercase()` are both Unicode's default
+// full lowercasing — locale-independent, `İ` -> "i\u0307", and a word-final
+// capital sigma becomes `ς` — and agree on every shared case. It is NOT
+// case folding ("Straße" and "STRASSE" do not match), names are NOT
+// Unicode-normalized (NFC "É" and NFD "E\u0301" do not match: Rust's std
+// cannot normalize, and normalizing here alone would break parity), and it
+// must never be `toLocaleLowerCase()`, which a Turkish locale changes.
+// The cases both hosts run are
+// `code/programs/mosaic/task-app/fixtures/task-name-matching-v1.json`.
+
+/** The comparison key for a task name: Unicode default lowercasing. */
+export function taskNameKey(name: string): string {
+  return name.toLowerCase();
+}
+
+/**
+ * Trim Unicode `White_Space` from both ends — exactly Rust's `str::trim`.
+ *
+ *   char     .trim()   this   str::trim
+ *   U+0085   kept      cut    cut
+ *   U+FEFF   cut       kept   kept
+ *
+ * Every other character the two trim alike.
+ *
+ * Why a loop and not `text.replace(/^\p{White_Space}+|\p{White_Space}+$/gu, "")`:
+ * the second alternative is anchored only at its end, so the regex engine
+ * tries it from every position inside a run of spaces in the middle of the
+ * text, matches the rest of the run, fails at `$`, and moves on. That is
+ * quadratic in the run's length: a name like "a" + 100,000 spaces + "a"
+ * froze Save for about 9.5 s. Walking inward from each end looks at every
+ * character at most once, so the cost is linear whatever the text holds.
+ *
+ * Testing one UTF-16 code unit at a time is exact here: every `White_Space`
+ * code point is in the Basic Multilingual Plane (the highest is U+3000), so
+ * none is ever split across a surrogate pair, and a lone surrogate half is
+ * never `White_Space`, so the walk stops at it.
+ */
+const WHITE_SPACE_UNIT = /^\p{White_Space}$/u;
+
+export function trimWhiteSpace(text: string): string {
+  let start = 0;
+  let end = text.length;
+  while (start < end && WHITE_SPACE_UNIT.test(text[start])) start++;
+  while (end > start && WHITE_SPACE_UNIT.test(text[end - 1])) end--;
+  return text.slice(start, end);
 }

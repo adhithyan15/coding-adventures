@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:305ca4651ee8fcfa",
+  "lessonIds": [
+    "ZH-C343-yueguang",
+    "ZH-C343-duonian",
+    "ZH-C343-xinzhong",
+    "ZH-C343-zhufu",
+    "ZH-C343-fenxiang"
+  ],
+  "tex": "chinese/book/chapters/ch343-far-from-home.tex"
+}

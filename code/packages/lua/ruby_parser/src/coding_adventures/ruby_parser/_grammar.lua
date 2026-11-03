@@ -26,6 +26,7 @@ local function parser_grammar()
         { type="rule_reference", name="unless_statement", is_token=false },
         { type="rule_reference", name="while_statement", is_token=false },
         { type="rule_reference", name="until_statement", is_token=false },
+        { type="rule_reference", name="for_statement", is_token=false },
         { type="rule_reference", name="case_statement", is_token=false },
         { type="rule_reference", name="begin_statement", is_token=false },
         { type="rule_reference", name="return_statement", is_token=false },
@@ -43,7 +44,27 @@ local function parser_grammar()
         { type="rule_reference", name="assignment", is_token=false },
         { type="rule_reference", name="defined_expression", is_token=false },
         { type="rule_reference", name="method_with_block", is_token=false },
-        { type="rule_reference", name="method_call", is_token=false },
+        { type="sequence", elements={
+          { type="rule_reference", name="method_call", is_token=false },
+          { type="negative_lookahead", element={ type="literal", value="+" } },
+          { type="negative_lookahead", element={ type="literal", value="-" } },
+          { type="negative_lookahead", element={ type="rule_reference", name="STAR", is_token=true } },
+          { type="negative_lookahead", element={ type="rule_reference", name="SLASH", is_token=true } },
+          { type="negative_lookahead", element={ type="literal", value="<<" } },
+          { type="negative_lookahead", element={ type="literal", value="==" } },
+          { type="negative_lookahead", element={ type="literal", value="!=" } },
+          { type="negative_lookahead", element={ type="literal", value="<=" } },
+          { type="negative_lookahead", element={ type="literal", value=">=" } },
+          { type="negative_lookahead", element={ type="literal", value="<" } },
+          { type="negative_lookahead", element={ type="literal", value=">" } },
+          { type="negative_lookahead", element={ type="literal", value="&&" } },
+          { type="negative_lookahead", element={ type="literal", value="||" } },
+          { type="negative_lookahead", element={ type="literal", value="and" } },
+          { type="negative_lookahead", element={ type="literal", value="or" } },
+          { type="negative_lookahead", element={ type="literal", value="..." } },
+          { type="negative_lookahead", element={ type="literal", value=".." } },
+          { type="negative_lookahead", element={ type="literal", value="?" } },
+        } },
         { type="rule_reference", name="method_call_no_paren", is_token=false },
         { type="rule_reference", name="expression_stmt", is_token=false },
       } },
@@ -66,7 +87,7 @@ local function parser_grammar()
             { type="rule_reference", name="expression", is_token=false },
           } } },
       } },
-      line_number=71,
+      line_number=87,
     },
     {
       name="mlhs_target",
@@ -74,7 +95,7 @@ local function parser_grammar()
         { type="optional", element={ type="literal", value="*" } },
         { type="rule_reference", name="NAME", is_token=true },
       } },
-      line_number=72,
+      line_number=88,
     },
     {
       name="modifier_statement",
@@ -82,7 +103,27 @@ local function parser_grammar()
         { type="group", element={ type="alternation", choices={
             { type="rule_reference", name="assignment", is_token=false },
             { type="rule_reference", name="method_call_no_paren", is_token=false },
-            { type="rule_reference", name="method_call", is_token=false },
+            { type="sequence", elements={
+              { type="rule_reference", name="method_call", is_token=false },
+              { type="negative_lookahead", element={ type="literal", value="+" } },
+              { type="negative_lookahead", element={ type="literal", value="-" } },
+              { type="negative_lookahead", element={ type="rule_reference", name="STAR", is_token=true } },
+              { type="negative_lookahead", element={ type="rule_reference", name="SLASH", is_token=true } },
+              { type="negative_lookahead", element={ type="literal", value="<<" } },
+              { type="negative_lookahead", element={ type="literal", value="==" } },
+              { type="negative_lookahead", element={ type="literal", value="!=" } },
+              { type="negative_lookahead", element={ type="literal", value="<=" } },
+              { type="negative_lookahead", element={ type="literal", value=">=" } },
+              { type="negative_lookahead", element={ type="literal", value="<" } },
+              { type="negative_lookahead", element={ type="literal", value=">" } },
+              { type="negative_lookahead", element={ type="literal", value="&&" } },
+              { type="negative_lookahead", element={ type="literal", value="||" } },
+              { type="negative_lookahead", element={ type="literal", value="and" } },
+              { type="negative_lookahead", element={ type="literal", value="or" } },
+              { type="negative_lookahead", element={ type="literal", value="..." } },
+              { type="negative_lookahead", element={ type="literal", value=".." } },
+              { type="negative_lookahead", element={ type="literal", value="?" } },
+            } },
             { type="rule_reference", name="expression_stmt", is_token=false },
           } } },
         { type="group", element={ type="alternation", choices={
@@ -93,7 +134,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="expression", is_token=false },
       } },
-      line_number=108,
+      line_number=124,
     },
     {
       name="def_statement",
@@ -102,6 +143,7 @@ local function parser_grammar()
         { type="optional", element={ type="rule_reference", name="def_receiver", is_token=false } },
         { type="rule_reference", name="NAME", is_token=true },
         { type="optional", element={ type="sequence", elements={
+            { type="negative_lookahead", element={ type="literal", value="( line start" } },
             { type="rule_reference", name="LPAREN", is_token=true },
             { type="optional", element={ type="rule_reference", name="params", is_token=false } },
             { type="rule_reference", name="RPAREN", is_token=true },
@@ -116,7 +158,7 @@ local function parser_grammar()
         { type="optional", element={ type="rule_reference", name="ensure_clause", is_token=false } },
         { type="literal", value="end" },
       } },
-      line_number=132,
+      line_number=148,
     },
     {
       name="def_receiver",
@@ -124,7 +166,7 @@ local function parser_grammar()
         { type="rule_reference", name="singleton_receiver", is_token=false },
         { type="literal", value="." },
       } },
-      line_number=138,
+      line_number=154,
     },
     {
       name="endless_def_statement",
@@ -140,7 +182,7 @@ local function parser_grammar()
         { type="rule_reference", name="EQUALS", is_token=true },
         { type="rule_reference", name="expression", is_token=false },
       } },
-      line_number=147,
+      line_number=163,
     },
     {
       name="class_statement",
@@ -169,7 +211,7 @@ local function parser_grammar()
           { type="literal", value="end" },
         } },
       } },
-      line_number=168,
+      line_number=184,
     },
     {
       name="singleton_receiver",
@@ -177,7 +219,7 @@ local function parser_grammar()
         { type="literal", value="self" },
         { type="rule_reference", name="NAME", is_token=true },
       } },
-      line_number=170,
+      line_number=186,
     },
     {
       name="module_statement",
@@ -190,7 +232,7 @@ local function parser_grammar()
           } } },
         { type="literal", value="end" },
       } },
-      line_number=171,
+      line_number=187,
     },
     {
       name="method_with_block",
@@ -200,6 +242,7 @@ local function parser_grammar()
             { type="rule_reference", name="KEYWORD", is_token=true },
           } } },
         { type="optional", element={ type="sequence", elements={
+            { type="negative_lookahead", element={ type="literal", value="( line start" } },
             { type="rule_reference", name="LPAREN", is_token=true },
             { type="optional", element={ type="sequence", elements={
                 { type="rule_reference", name="expression", is_token=false },
@@ -212,7 +255,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="block", is_token=false },
       } },
-      line_number=173,
+      line_number=189,
     },
     {
       name="block",
@@ -220,7 +263,7 @@ local function parser_grammar()
         { type="rule_reference", name="do_block", is_token=false },
         { type="rule_reference", name="brace_block", is_token=false },
       } },
-      line_number=174,
+      line_number=190,
     },
     {
       name="do_block",
@@ -233,7 +276,7 @@ local function parser_grammar()
           } } },
         { type="literal", value="end" },
       } },
-      line_number=175,
+      line_number=191,
     },
     {
       name="brace_block",
@@ -243,7 +286,7 @@ local function parser_grammar()
         { type="repetition", element={ type="rule_reference", name="statement", is_token=false } },
         { type="rule_reference", name="RBRACE", is_token=true },
       } },
-      line_number=176,
+      line_number=192,
     },
     {
       name="block_params",
@@ -264,41 +307,50 @@ local function parser_grammar()
           } } },
         { type="literal", value="|" },
       } },
-      line_number=186,
+      line_number=202,
     },
     {
       name="return_statement",
       body={ type="sequence", elements={
         { type="literal", value="return" },
-        { type="optional", element={ type="rule_reference", name="expression", is_token=false } },
+        { type="group", element={ type="alternation", choices={
+            { type="literal", value=";" },
+            { type="optional", element={ type="rule_reference", name="expression", is_token=false } },
+          } } },
       } },
-      line_number=188,
+      line_number=209,
     },
     {
       name="break_statement",
       body={ type="sequence", elements={
         { type="literal", value="break" },
-        { type="optional", element={ type="rule_reference", name="expression", is_token=false } },
+        { type="group", element={ type="alternation", choices={
+            { type="literal", value=";" },
+            { type="optional", element={ type="rule_reference", name="expression", is_token=false } },
+          } } },
       } },
-      line_number=189,
+      line_number=210,
     },
     {
       name="next_statement",
       body={ type="sequence", elements={
         { type="literal", value="next" },
-        { type="optional", element={ type="rule_reference", name="expression", is_token=false } },
+        { type="group", element={ type="alternation", choices={
+            { type="literal", value=";" },
+            { type="optional", element={ type="rule_reference", name="expression", is_token=false } },
+          } } },
       } },
-      line_number=190,
+      line_number=211,
     },
     {
       name="redo_statement",
       body={ type="literal", value="redo" },
-      line_number=194,
+      line_number=215,
     },
     {
       name="retry_statement",
       body={ type="literal", value="retry" },
-      line_number=198,
+      line_number=219,
     },
     {
       name="alias_statement",
@@ -307,7 +359,7 @@ local function parser_grammar()
         { type="rule_reference", name="NAME", is_token=true },
         { type="rule_reference", name="NAME", is_token=true },
       } },
-      line_number=209,
+      line_number=230,
     },
     {
       name="undef_statement",
@@ -315,15 +367,18 @@ local function parser_grammar()
         { type="literal", value="undef" },
         { type="rule_reference", name="NAME", is_token=true },
       } },
-      line_number=221,
+      line_number=242,
     },
     {
       name="yield_statement",
       body={ type="sequence", elements={
         { type="literal", value="yield" },
-        { type="optional", element={ type="rule_reference", name="yield_args", is_token=false } },
+        { type="group", element={ type="alternation", choices={
+            { type="literal", value=";" },
+            { type="optional", element={ type="rule_reference", name="yield_args", is_token=false } },
+          } } },
       } },
-      line_number=243,
+      line_number=264,
     },
     {
       name="yield_args",
@@ -347,7 +402,7 @@ local function parser_grammar()
             } } },
         } },
       } },
-      line_number=244,
+      line_number=265,
     },
     {
       name="super_args",
@@ -371,7 +426,7 @@ local function parser_grammar()
             } } },
         } },
       } },
-      line_number=271,
+      line_number=292,
     },
     {
       name="params",
@@ -385,7 +440,7 @@ local function parser_grammar()
             } } },
         } },
       } },
-      line_number=300,
+      line_number=321,
     },
     {
       name="param",
@@ -406,13 +461,14 @@ local function parser_grammar()
             } },
           } } },
       } },
-      line_number=345,
+      line_number=366,
     },
     {
       name="if_statement",
       body={ type="sequence", elements={
         { type="literal", value="if" },
         { type="rule_reference", name="expression", is_token=false },
+        { type="optional", element={ type="literal", value="then" } },
         { type="repetition", element={ type="sequence", elements={
             { type="negative_lookahead", element={ type="literal", value="else" } },
             { type="negative_lookahead", element={ type="literal", value="elsif" } },
@@ -423,13 +479,14 @@ local function parser_grammar()
         { type="optional", element={ type="rule_reference", name="else_clause", is_token=false } },
         { type="literal", value="end" },
       } },
-      line_number=346,
+      line_number=370,
     },
     {
       name="elsif_clause",
       body={ type="sequence", elements={
         { type="literal", value="elsif" },
         { type="rule_reference", name="expression", is_token=false },
+        { type="optional", element={ type="literal", value="then" } },
         { type="repetition", element={ type="sequence", elements={
             { type="negative_lookahead", element={ type="literal", value="else" } },
             { type="negative_lookahead", element={ type="literal", value="elsif" } },
@@ -437,7 +494,7 @@ local function parser_grammar()
             { type="rule_reference", name="statement", is_token=false },
           } } },
       } },
-      line_number=347,
+      line_number=371,
     },
     {
       name="else_clause",
@@ -448,13 +505,14 @@ local function parser_grammar()
             { type="rule_reference", name="statement", is_token=false },
           } } },
       } },
-      line_number=348,
+      line_number=372,
     },
     {
       name="unless_statement",
       body={ type="sequence", elements={
         { type="literal", value="unless" },
         { type="rule_reference", name="expression", is_token=false },
+        { type="optional", element={ type="literal", value="then" } },
         { type="repetition", element={ type="sequence", elements={
             { type="negative_lookahead", element={ type="literal", value="else" } },
             { type="negative_lookahead", element={ type="literal", value="end" } },
@@ -463,7 +521,7 @@ local function parser_grammar()
         { type="optional", element={ type="rule_reference", name="else_clause", is_token=false } },
         { type="literal", value="end" },
       } },
-      line_number=349,
+      line_number=373,
     },
     {
       name="while_statement",
@@ -476,7 +534,7 @@ local function parser_grammar()
           } } },
         { type="literal", value="end" },
       } },
-      line_number=350,
+      line_number=374,
     },
     {
       name="until_statement",
@@ -489,7 +547,23 @@ local function parser_grammar()
           } } },
         { type="literal", value="end" },
       } },
-      line_number=351,
+      line_number=375,
+    },
+    {
+      name="for_statement",
+      body={ type="sequence", elements={
+        { type="literal", value="for" },
+        { type="rule_reference", name="NAME", is_token=true },
+        { type="literal", value="in" },
+        { type="rule_reference", name="expression", is_token=false },
+        { type="optional", element={ type="literal", value="do" } },
+        { type="repetition", element={ type="sequence", elements={
+            { type="negative_lookahead", element={ type="literal", value="end" } },
+            { type="rule_reference", name="statement", is_token=false },
+          } } },
+        { type="literal", value="end" },
+      } },
+      line_number=383,
     },
     {
       name="case_statement",
@@ -503,7 +577,7 @@ local function parser_grammar()
         { type="optional", element={ type="rule_reference", name="else_clause", is_token=false } },
         { type="literal", value="end" },
       } },
-      line_number=374,
+      line_number=406,
     },
     {
       name="when_clause",
@@ -514,6 +588,7 @@ local function parser_grammar()
             { type="rule_reference", name="COMMA", is_token=true },
             { type="rule_reference", name="expression", is_token=false },
           } } },
+        { type="optional", element={ type="literal", value="then" } },
         { type="repetition", element={ type="sequence", elements={
             { type="negative_lookahead", element={ type="literal", value="when" } },
             { type="negative_lookahead", element={ type="literal", value="in" } },
@@ -522,13 +597,14 @@ local function parser_grammar()
             { type="rule_reference", name="statement", is_token=false },
           } } },
       } },
-      line_number=375,
+      line_number=407,
     },
     {
       name="in_clause",
       body={ type="sequence", elements={
         { type="literal", value="in" },
         { type="rule_reference", name="pattern", is_token=false },
+        { type="optional", element={ type="literal", value="then" } },
         { type="repetition", element={ type="sequence", elements={
             { type="negative_lookahead", element={ type="literal", value="when" } },
             { type="negative_lookahead", element={ type="literal", value="in" } },
@@ -537,7 +613,7 @@ local function parser_grammar()
             { type="rule_reference", name="statement", is_token=false },
           } } },
       } },
-      line_number=397,
+      line_number=429,
     },
     {
       name="pattern",
@@ -549,7 +625,7 @@ local function parser_grammar()
         { type="rule_reference", name="literal_pattern", is_token=false },
         { type="rule_reference", name="binding_pattern", is_token=false },
       } },
-      line_number=398,
+      line_number=430,
     },
     {
       name="literal_pattern",
@@ -559,12 +635,12 @@ local function parser_grammar()
         { type="rule_reference", name="symbol_literal", is_token=false },
         { type="rule_reference", name="KEYWORD", is_token=true },
       } },
-      line_number=399,
+      line_number=431,
     },
     {
       name="binding_pattern",
       body={ type="rule_reference", name="NAME", is_token=true },
-      line_number=400,
+      line_number=432,
     },
     {
       name="array_pattern",
@@ -585,7 +661,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="RBRACKET", is_token=true },
       } },
-      line_number=401,
+      line_number=433,
     },
     {
       name="hash_pattern",
@@ -600,7 +676,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="RBRACE", is_token=true },
       } },
-      line_number=402,
+      line_number=434,
     },
     {
       name="hash_pattern_pair",
@@ -609,7 +685,7 @@ local function parser_grammar()
         { type="rule_reference", name="COLON", is_token=true },
         { type="optional", element={ type="rule_reference", name="pattern", is_token=false } },
       } },
-      line_number=403,
+      line_number=435,
     },
     {
       name="splat_pattern",
@@ -617,7 +693,7 @@ local function parser_grammar()
         { type="literal", value="*" },
         { type="optional", element={ type="rule_reference", name="NAME", is_token=true } },
       } },
-      line_number=410,
+      line_number=442,
     },
     {
       name="pin_pattern",
@@ -625,7 +701,7 @@ local function parser_grammar()
         { type="literal", value="^" },
         { type="rule_reference", name="NAME", is_token=true },
       } },
-      line_number=415,
+      line_number=447,
     },
     {
       name="class_pattern",
@@ -641,7 +717,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="RPAREN", is_token=true },
       } },
-      line_number=421,
+      line_number=453,
     },
     {
       name="begin_statement",
@@ -657,16 +733,28 @@ local function parser_grammar()
         { type="optional", element={ type="rule_reference", name="ensure_clause", is_token=false } },
         { type="literal", value="end" },
       } },
-      line_number=442,
+      line_number=474,
     },
     {
       name="rescue_clause",
       body={ type="sequence", elements={
         { type="literal", value="rescue" },
-        { type="optional", element={ type="sequence", elements={
-            { type="rule_reference", name="exception_list", is_token=false },
-            { type="literal", value="=>" },
-            { type="rule_reference", name="NAME", is_token=true },
+        { type="optional", element={ type="alternation", choices={
+            { type="sequence", elements={
+              { type="literal", value="=>" },
+              { type="rule_reference", name="NAME", is_token=true },
+            } },
+            { type="sequence", elements={
+              { type="rule_reference", name="exception_list", is_token=false },
+              { type="group", element={ type="alternation", choices={
+                  { type="sequence", elements={
+                    { type="literal", value="=>" },
+                    { type="rule_reference", name="NAME", is_token=true },
+                  } },
+                  { type="literal", value=";" },
+                } } },
+            } },
+            { type="literal", value=";" },
           } } },
         { type="repetition", element={ type="sequence", elements={
             { type="negative_lookahead", element={ type="literal", value="rescue" } },
@@ -675,7 +763,7 @@ local function parser_grammar()
             { type="rule_reference", name="statement", is_token=false },
           } } },
       } },
-      line_number=451,
+      line_number=494,
     },
     {
       name="exception_list",
@@ -686,7 +774,7 @@ local function parser_grammar()
             { type="rule_reference", name="NAME", is_token=true },
           } } },
       } },
-      line_number=452,
+      line_number=495,
     },
     {
       name="ensure_clause",
@@ -697,7 +785,7 @@ local function parser_grammar()
             { type="rule_reference", name="statement", is_token=false },
           } } },
       } },
-      line_number=453,
+      line_number=496,
     },
     {
       name="index_write_receiver_postfix",
@@ -706,7 +794,7 @@ local function parser_grammar()
         { type="rule_reference", name="scope_resolution", is_token=false },
         { type="rule_reference", name="index_suffix", is_token=false },
       } },
-      line_number=506,
+      line_number=549,
     },
     {
       name="index_assignment",
@@ -720,7 +808,7 @@ local function parser_grammar()
         { type="rule_reference", name="EQUALS", is_token=true },
         { type="rule_reference", name="expression", is_token=false },
       } },
-      line_number=507,
+      line_number=550,
     },
     {
       name="assignment",
@@ -744,7 +832,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="expression", is_token=false },
       } },
-      line_number=508,
+      line_number=551,
     },
     {
       name="rightward_assignment",
@@ -753,7 +841,7 @@ local function parser_grammar()
         { type="literal", value="=>" },
         { type="rule_reference", name="NAME", is_token=true },
       } },
-      line_number=527,
+      line_number=570,
     },
     {
       name="method_call",
@@ -765,6 +853,7 @@ local function parser_grammar()
               { type="rule_reference", name="KEYWORD", is_token=true },
             } },
           } } },
+        { type="negative_lookahead", element={ type="literal", value="( line start" } },
         { type="rule_reference", name="LPAREN", is_token=true },
         { type="optional", element={ type="sequence", elements={
             { type="rule_reference", name="call_arg", is_token=false },
@@ -776,7 +865,7 @@ local function parser_grammar()
         { type="rule_reference", name="RPAREN", is_token=true },
         { type="repetition", element={ type="rule_reference", name="dot_call", is_token=false } },
       } },
-      line_number=544,
+      line_number=591,
     },
     {
       name="dot_call",
@@ -787,6 +876,7 @@ local function parser_grammar()
             { type="rule_reference", name="KEYWORD", is_token=true },
           } } },
         { type="optional", element={ type="sequence", elements={
+            { type="negative_lookahead", element={ type="literal", value="( line start" } },
             { type="rule_reference", name="LPAREN", is_token=true },
             { type="optional", element={ type="sequence", elements={
                 { type="rule_reference", name="call_arg", is_token=false },
@@ -799,7 +889,7 @@ local function parser_grammar()
           } } },
         { type="optional", element={ type="rule_reference", name="block", is_token=false } },
       } },
-      line_number=545,
+      line_number=592,
     },
     {
       name="scope_resolution",
@@ -810,7 +900,7 @@ local function parser_grammar()
             { type="rule_reference", name="KEYWORD", is_token=true },
           } } },
       } },
-      line_number=553,
+      line_number=600,
     },
     {
       name="call_arg",
@@ -829,7 +919,7 @@ local function parser_grammar()
           { type="rule_reference", name="expression", is_token=false },
         } },
       } },
-      line_number=608,
+      line_number=655,
     },
     {
       name="method_call_no_paren",
@@ -849,23 +939,30 @@ local function parser_grammar()
         { type="negative_lookahead", element={ type="literal", value="&&" } },
         { type="negative_lookahead", element={ type="literal", value="||" } },
         { type="negative_lookahead", element={ type="literal", value="<<" } },
+        { type="negative_lookahead", element={ type="literal", value="[ line start" } },
+        { type="negative_lookahead", element={ type="literal", value="( line start" } },
+        { type="negative_lookahead", element={ type="literal", value="- line start" } },
+        { type="negative_lookahead", element={ type="literal", value="+ line start" } },
         { type="rule_reference", name="expression", is_token=false },
         { type="repetition", element={ type="sequence", elements={
             { type="rule_reference", name="COMMA", is_token=true },
             { type="rule_reference", name="expression", is_token=false },
           } } },
       } },
-      line_number=656,
+      line_number=709,
     },
     {
       name="expression_stmt",
-      body={ type="rule_reference", name="expression", is_token=false },
-      line_number=659,
+      body={ type="sequence", elements={
+        { type="rule_reference", name="expression", is_token=false },
+        { type="optional", element={ type="literal", value=";" } },
+      } },
+      line_number=713,
     },
     {
       name="expression",
       body={ type="rule_reference", name="ternary", is_token=false },
-      line_number=766,
+      line_number=820,
     },
     {
       name="ternary",
@@ -878,7 +975,7 @@ local function parser_grammar()
             { type="rule_reference", name="expression", is_token=false },
           } } },
       } },
-      line_number=767,
+      line_number=821,
     },
     {
       name="range",
@@ -901,7 +998,7 @@ local function parser_grammar()
             } } },
         } },
       } },
-      line_number=768,
+      line_number=822,
     },
     {
       name="logical_or",
@@ -915,7 +1012,7 @@ local function parser_grammar()
             { type="rule_reference", name="logical_and", is_token=false },
           } } },
       } },
-      line_number=769,
+      line_number=823,
     },
     {
       name="logical_and",
@@ -929,7 +1026,7 @@ local function parser_grammar()
             { type="rule_reference", name="logical_not", is_token=false },
           } } },
       } },
-      line_number=770,
+      line_number=824,
     },
     {
       name="logical_not",
@@ -940,7 +1037,7 @@ local function parser_grammar()
             } } } },
         { type="rule_reference", name="comparison", is_token=false },
       } },
-      line_number=777,
+      line_number=831,
     },
     {
       name="comparison",
@@ -958,7 +1055,7 @@ local function parser_grammar()
             { type="rule_reference", name="shift", is_token=false },
           } } },
       } },
-      line_number=793,
+      line_number=847,
     },
     {
       name="shift",
@@ -969,13 +1066,15 @@ local function parser_grammar()
             { type="rule_reference", name="sum", is_token=false },
           } } },
       } },
-      line_number=794,
+      line_number=848,
     },
     {
       name="sum",
       body={ type="sequence", elements={
         { type="rule_reference", name="term", is_token=false },
         { type="repetition", element={ type="sequence", elements={
+            { type="negative_lookahead", element={ type="literal", value="- line start" } },
+            { type="negative_lookahead", element={ type="literal", value="+ line start" } },
             { type="group", element={ type="alternation", choices={
                 { type="rule_reference", name="PLUS", is_token=true },
                 { type="rule_reference", name="MINUS", is_token=true },
@@ -983,7 +1082,7 @@ local function parser_grammar()
             { type="rule_reference", name="term", is_token=false },
           } } },
       } },
-      line_number=795,
+      line_number=853,
     },
     {
       name="term",
@@ -997,24 +1096,28 @@ local function parser_grammar()
             { type="rule_reference", name="factor", is_token=false },
           } } },
       } },
-      line_number=796,
+      line_number=854,
     },
     {
       name="super_expr",
       body={ type="sequence", elements={
         { type="literal", value="super" },
-        { type="optional", element={ type="rule_reference", name="super_args", is_token=false } },
+        { type="group", element={ type="alternation", choices={
+            { type="literal", value=";" },
+            { type="optional", element={ type="rule_reference", name="super_args", is_token=false } },
+          } } },
       } },
-      line_number=865,
+      line_number=926,
     },
     {
       name="index_suffix",
       body={ type="sequence", elements={
+        { type="negative_lookahead", element={ type="literal", value="[ line start" } },
         { type="rule_reference", name="LBRACKET", is_token=true },
         { type="rule_reference", name="expression", is_token=false },
         { type="rule_reference", name="RBRACKET", is_token=true },
       } },
-      line_number=877,
+      line_number=954,
     },
     {
       name="factor",
@@ -1037,6 +1140,10 @@ local function parser_grammar()
                 { type="negative_lookahead", element={ type="literal", value="then" } },
                 { type="negative_lookahead", element={ type="literal", value="in" } },
                 { type="negative_lookahead", element={ type="literal", value="do" } },
+                { type="negative_lookahead", element={ type="literal", value="if_modifier" } },
+                { type="negative_lookahead", element={ type="literal", value="unless_modifier" } },
+                { type="negative_lookahead", element={ type="literal", value="while_modifier" } },
+                { type="negative_lookahead", element={ type="literal", value="until_modifier" } },
                 { type="rule_reference", name="KEYWORD", is_token=true },
               } } },
             { type="rule_reference", name="symbol_literal", is_token=false },
@@ -1048,6 +1155,7 @@ local function parser_grammar()
               { type="rule_reference", name="RPAREN", is_token=true },
             } },
             { type="rule_reference", name="unary_minus", is_token=false },
+            { type="rule_reference", name="unary_plus", is_token=false },
           } } },
         { type="repetition", element={ type="alternation", choices={
             { type="rule_reference", name="dot_call", is_token=false },
@@ -1055,7 +1163,7 @@ local function parser_grammar()
             { type="rule_reference", name="index_suffix", is_token=false },
           } } },
       } },
-      line_number=878,
+      line_number=958,
     },
     {
       name="lambda_literal",
@@ -1068,7 +1176,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="block", is_token=false },
       } },
-      line_number=897,
+      line_number=977,
     },
     {
       name="unary_minus",
@@ -1076,7 +1184,15 @@ local function parser_grammar()
         { type="rule_reference", name="MINUS", is_token=true },
         { type="rule_reference", name="factor", is_token=false },
       } },
-      line_number=898,
+      line_number=978,
+    },
+    {
+      name="unary_plus",
+      body={ type="sequence", elements={
+        { type="literal", value="+ line start" },
+        { type="rule_reference", name="factor", is_token=false },
+      } },
+      line_number=985,
     },
     {
       name="defined_expression",
@@ -1084,7 +1200,7 @@ local function parser_grammar()
         { type="literal", value="defined?" },
         { type="rule_reference", name="factor", is_token=false },
       } },
-      line_number=909,
+      line_number=996,
     },
     {
       name="symbol_literal",
@@ -1096,7 +1212,7 @@ local function parser_grammar()
             { type="rule_reference", name="STRING", is_token=true },
           } } },
       } },
-      line_number=916,
+      line_number=1003,
     },
     {
       name="array_literal",
@@ -1111,7 +1227,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="RBRACKET", is_token=true },
       } },
-      line_number=917,
+      line_number=1004,
     },
     {
       name="hash_literal",
@@ -1126,7 +1242,7 @@ local function parser_grammar()
           } } },
         { type="rule_reference", name="RBRACE", is_token=true },
       } },
-      line_number=918,
+      line_number=1005,
     },
     {
       name="hash_entry",
@@ -1146,7 +1262,7 @@ local function parser_grammar()
           { type="rule_reference", name="expression", is_token=false },
         } },
       } },
-      line_number=919,
+      line_number=1006,
     },
   }
   g.version = 0

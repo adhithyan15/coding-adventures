@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |spec|
   spec.name          = "coding_adventures_ct_compare"
-  spec.version       = "0.2.0"
+  spec.version       = "0.3.0"
   spec.authors       = ["Adhithya Rajasekaran"]
   spec.summary       = "Constant-time comparison helpers for byte strings and unsigned counters"
   spec.homepage      = "https://github.com/adhithyan15/coding-adventures"

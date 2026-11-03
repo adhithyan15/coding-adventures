@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 528,
+  "title": "By Chance",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f960b0b5a4932d10",
+  "lessons": [
+    {
+      "id": "ZH-C528-pengqiao",
+      "sequence": 39720,
+      "title": "pèngqiǎo — as luck would have it; coincidentally",
+      "headword": "pèngqiǎo",
+      "romanization": "pèngqiǎo",
+      "gloss": "as luck would have it; coincidentally",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5cdda796a6ff275b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a favourable deal, then the Mandarin for a checked pattern."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pèngqiǎo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pèngqiǎo — \"as luck would have it; coincidentally\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yàoshi pèngqiǎo lùguò jiù lái wǒ jiā zuòzuò — If you happen to be passing, come round to my place."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pèngqiǎo is built from pèng 'to bump into' and qiǎo. No dictionary we use records an older form of the first, so its history is not settled. The second is inherited from Middle Chinese khaewX (Guangyun, in Baxter's transcription), glossed 'fine' and 'skilful'; the sense 'by coincidence' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pèngqiǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pèngqiǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pèngqiǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pèngqiǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi pèngqiǎo lùguò jiù lái wǒ jiā zuòzuò — If you happen to be passing, come round to my place.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi pèngqiǎo lùguò jiù lái wǒ jiā zuòzuò* — If you happen to be passing, come round to my place.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a favourable deal, then the Mandarin for a checked pattern, then say pèngqiǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a favourable deal, then the Mandarin for a checked pattern, then say *pèngqiǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pèngqiǎo mean? (\"As luck would have it; coincidentally\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C528-budebu",
+      "sequence": 39730,
+      "title": "不得不 (bùdébù) — to be obliged to; cannot help but",
+      "headword": "不得不",
+      "romanization": "bùdébù",
+      "gloss": "to be obliged to; cannot help but",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c0e062e507fcafe0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a checked pattern, then the Mandarin for as luck would have it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 不得不",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不得不 — bùdébù — \"to be obliged to; cannot help but\"."
+            },
+            {
+              "kind": "speech",
+              "text": "如果明天下雨我们就不得不改期 rúguǒ míngtiān xiàyǔ wǒmen jiù bùdébù gǎiqī — If it rains tomorrow, we'll have to change the date."
+            },
+            {
+              "kind": "speech",
+              "text": "Tone: the first 不 keeps its falling tone before dé; the second is said bú before a falling tone (bùdébú qù) and bù before the others."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "不得不 (bùdébù) is built from 不 'not', 得 'to get' and 不 again, all inherited from Middle Chinese, pjut, tok and pjut (Guangyun, in Baxter's transcription): may not not do it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bùdébù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bùdébù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bùdébù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bùdébù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ míngtiān xiàyǔ wǒmen jiù bùdébù gǎiqī — If it rains tomorrow, we'll have to change the date.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ míngtiān xiàyǔ wǒmen jiù bùdébù gǎiqī* — If it rains tomorrow, we'll have to change the date.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a checked pattern, then the Mandarin for as luck would have it, then say bùdébù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a checked pattern, then the Mandarin for as luck would have it, then say *bùdébù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 不得不 (bùdébù) mean? (\"To be obliged to; cannot help but\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C528-chouqian",
+      "sequence": 39740,
+      "title": "chōuqiān — to draw lots",
+      "headword": "chōuqiān",
+      "romanization": "chōuqiān",
+      "gloss": "to draw lots",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36e2d3cfc41346e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for as luck would have it, then the Mandarin for to be obliged to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chōuqiān",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chōuqiān — \"to draw lots\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yàoshi dàjiā dōu xiǎng qù wǒmen jiù chōuqiān — If everyone wants to go, let's draw lots."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chōuqiān is built from chōu 'to pull out' and qiān, both inherited from Middle Chinese, trhjuw and tshjem (Guangyun, in Baxter's transcription), which glosses the first 'to draw out' and the second, after an older dictionary, 'a test' and 'pointed'; the slip that is drawn is not named there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōuqiān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōuqiān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chōuqiān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chōuqiān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi dàjiā dōu xiǎng qù wǒmen jiù chōuqiān — If everyone wants to go, let's draw lots.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi dàjiā dōu xiǎng qù wǒmen jiù chōuqiān* — If everyone wants to go, let's draw lots.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for as luck would have it, then the Mandarin for to be obliged to, then say chōuqiān again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for as luck would have it, then the Mandarin for to be obliged to, then say *chōuqiān* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chōuqiān mean? (\"To draw lots\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C528-dadu",
+      "sequence": 39750,
+      "title": "dǎdǔ — to make a bet",
+      "headword": "dǎdǔ",
+      "romanization": "dǎdǔ",
+      "gloss": "to make a bet",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f9e4ee9ed5b8e591",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to be obliged to, then the Mandarin for to draw lots."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dǎdǔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dǎdǔ — \"to make a bet\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ gēn nǐ dǎdǔ tā míngtiān bú huì lái — I bet you he won't come tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: dǎ is said with a rising tone before dǔ, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dǎdǔ is built from 打 and dǔ 'to gamble', both inherited from Middle Chinese, taengX and tuX (Guangyun, in Baxter's transcription), which glosses the first 'to strike' and the second as gambling for play. The vowel of dǎ is not the regular outcome of taengX."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dǎdǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dǎdǔ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dǎdǔ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dǎdǔ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ gēn nǐ dǎdǔ tā míngtiān bú huì lái — I bet you he won't come tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ gēn nǐ dǎdǔ tā míngtiān bú huì lái* — I bet you he won't come tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to be obliged to, then the Mandarin for to draw lots, then say dǎdǔ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to be obliged to, then the Mandarin for to draw lots, then say *dǎdǔ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dǎdǔ mean? (\"To make a bet\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C528-ouran",
+      "sequence": 39760,
+      "title": "ǒurán — accidental; happening by chance",
+      "headword": "ǒurán",
+      "romanization": "ǒurán",
+      "gloss": "accidental; happening by chance",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4c9ffe3c528aad6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to draw lots, then the Mandarin for to make a bet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ǒurán",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ǒurán — \"accidental; happening by chance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ zhǐ fāshēng yí cì kěnéng shì ǒurán — If it only happens once, it may be chance."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ǒurán is built from ǒu and 然 'so', both inherited from Middle Chinese, nguwH and nyen (Guangyun, in Baxter's transcription). The dictionary glosses nguwH 'unexpected', and lists a rising-tone reading, nguwX, glossed 'a pair'; the rising tone of ǒu matches that other reading."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ǒurán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ǒurán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ǒurán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ǒurán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ zhǐ fāshēng yí cì kěnéng shì ǒurán — If it only happens once, it may be chance.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ zhǐ fāshēng yí cì kěnéng shì ǒurán* — If it only happens once, it may be chance.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to draw lots, then the Mandarin for to make a bet, then say ǒurán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to draw lots, then the Mandarin for to make a bet, then say *ǒurán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ǒurán mean? (\"Accidental; happening by chance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C417-shenbao",
+  "pathSegment": "ZH-PATH-417-CUSTOMS417",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-417-CUSTOMS417",
+      "order": 3
+    }
+  ]
+}

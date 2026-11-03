@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 531,
+  "sourceHash": "fnv1a64:30f404881cc28bfc",
+  "lessonIds": [
+    "ZH-C531-tuoxian",
+    "ZH-C531-jihu",
+    "ZH-C531-jiaoxing",
+    "ZH-C531-buxing",
+    "ZH-C531-shishou",
+    "ZH-R531-review-526-531"
+  ],
+  "tex": "chinese/book/chapters/ch531-a-lucky-escape.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C302-shuangbaotai",
+  "pathSegment": "ZH-PATH-302-BIRTH302",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-302-BIRTH302",
+      "order": 5
+    }
+  ]
+}

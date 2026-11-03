@@ -1,0 +1,845 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 519,
+  "title": "Out in Nature",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:3ed9b7b75c93c36c",
+  "lessons": [
+    {
+      "id": "ZH-C519-chunguang",
+      "sequence": 39250,
+      "title": "春光 (chūnguāng) — the beauty of spring; spring sunshine",
+      "headword": "春光",
+      "romanization": "chūnguāng",
+      "gloss": "the beauty of spring; spring sunshine",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f33d02586eedfca3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to put up an umbrella, then the Mandarin for a thick fog."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 春光",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "春光 — chūnguāng — \"the beauty of spring; spring sunshine\"."
+            },
+            {
+              "kind": "speech",
+              "text": "春光最好的时候树都开花了 chūnguāng zuì hǎo de shíhou shù dōu kāihuā le — When spring is at its loveliest, the trees are all in blossom."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "春光 (chūnguāng) is built from chūn 'spring' and 光 'light', both inherited from Middle Chinese, tsyhwin and kwang (Guangyun, in Baxter's transcription), which glosses the first, after an older book, as the head of the four seasons, when all things come out."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūnguāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūnguāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūnguāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūnguāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chūnguāng zuì hǎo de shíhou shù dōu kāihuā le — When spring is at its loveliest, the trees are all in blossom.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chūnguāng zuì hǎo de shíhou shù dōu kāihuā le* — When spring is at its loveliest, the trees are all in blossom.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to put up an umbrella, then the Mandarin for a thick fog, then say chūnguāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to put up an umbrella, then the Mandarin for a thick fog, then say *chūnguāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 春光 (chūnguāng) mean? (\"The beauty of spring; spring sunshine\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C519-qingchen",
+      "sequence": 39260,
+      "title": "qīngchén — early in the morning; at daybreak",
+      "headword": "qīngchén",
+      "romanization": "qīngchén",
+      "gloss": "early in the morning; at daybreak",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c48cd2dddf05439",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a thick fog, then the Mandarin for the beauty of spring."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: qīngchén",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qīngchén — \"early in the morning; at daybreak\"."
+            },
+            {
+              "kind": "speech",
+              "text": "fùqīn měitiān qīngchén qù gōngyuán pǎobù — My father goes running in the park early every morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "qīngchén is built from qīng 'clear' and chén 'dawn', both inherited from Middle Chinese, tshjeng and dzyin (Guangyun, in Baxter's transcription), which glosses the first 'clear, still' and the second 'early' and 'bright'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīngchén",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīngchén*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qīngchén, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qīngchén*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fùqīn měitiān qīngchén qù gōngyuán pǎobù — My father goes running in the park early every morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fùqīn měitiān qīngchén qù gōngyuán pǎobù* — My father goes running in the park early every morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a thick fog, then the Mandarin for the beauty of spring, then say qīngchén again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a thick fog, then the Mandarin for the beauty of spring, then say *qīngchén* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does qīngchén mean? (\"Early in the morning; at daybreak\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C519-sijiruchun",
+      "sequence": 39270,
+      "title": "四季如春 (sìjì rú chūn) — mild like spring all year round (of a place)",
+      "headword": "四季如春",
+      "romanization": "sìjì rú chūn",
+      "gloss": "mild like spring all year round (of a place)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6620dab786d3d3fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the beauty of spring, then the Mandarin for early in the morning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 四季如春",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "四季如春 — sìjì rú chūn — \"mild like spring all year round (of a place)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这儿四季如春我最喜欢这儿的阳光 zhèr sìjì rú chūn wǒ zuì xǐhuan zhèr de yángguāng — It's like spring here all year round, and the sunshine is what I love most."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "四季如春 (sìjì rú chūn) is built from 四季 'the four seasons', 如 'like' and 春 'spring', all inherited from Middle Chinese, sijH, kjwijH, nyo and tsyhwin (Guangyun, in Baxter's transcription), which glosses 如 'to resemble' and the last, after an older book, as the head of the four seasons: every season like the spring."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sìjì rú chūn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sìjì rú chūn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sìjì rú chūn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sìjì rú chūn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèr sìjì rú chūn wǒ zuì xǐhuan zhèr de yángguāng — It's like spring here all year round, and the sunshine is what I love most.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèr sìjì rú chūn wǒ zuì xǐhuan zhèr de yángguāng* — It's like spring here all year round, and the sunshine is what I love most.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the beauty of spring, then the Mandarin for early in the morning, then say sìjì rú chūn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the beauty of spring, then the Mandarin for early in the morning, then say *sìjì rú chūn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 四季如春 (sìjì rú chūn) mean? (\"Mild like spring all year round (of a place)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C519-xuejing",
+      "sequence": 39280,
+      "title": "xuějǐng — a snowy landscape",
+      "headword": "xuějǐng",
+      "romanization": "xuějǐng",
+      "gloss": "a snowy landscape",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0cdb850d5c2a70a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for early in the morning, then the Mandarin for like spring all year round."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xuějǐng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xuějǐng — \"a snowy landscape\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ méi kàn guo zhème hǎokàn de xuějǐng — I've never seen such a lovely snowy landscape."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: xuě is said with a rising tone before jǐng, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xuějǐng is built from 雪 'snow' and jǐng 'a view', both inherited from Middle Chinese, sjwet and kjaengX (Guangyun, in Baxter's transcription), which glosses the first, after an older book, as rain that has set, and the second 'bright' and 'an image'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xuějǐng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xuějǐng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xuějǐng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xuějǐng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ méi kàn guo zhème hǎokàn de xuějǐng — I've never seen such a lovely snowy landscape.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ méi kàn guo zhème hǎokàn de xuějǐng* — I've never seen such a lovely snowy landscape.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for early in the morning, then the Mandarin for like spring all year round, then say xuějǐng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for early in the morning, then the Mandarin for like spring all year round, then say *xuějǐng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xuějǐng mean? (\"A snowy landscape\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C519-chengliang",
+      "sequence": 39290,
+      "title": "chéngliáng — to sit in the cool (out of the sun)",
+      "headword": "chéngliáng",
+      "romanization": "chéngliáng",
+      "gloss": "to sit in the cool (out of the sun)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d87eb898a7a52f44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for like spring all year round, then the Mandarin for a snowy landscape."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: chéngliáng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chéngliáng — \"to sit in the cool (out of the sun)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "xiàtiān de wǎnshang dàjiā dōu zài wàibian chéngliáng — On summer evenings everyone sits outside in the cool."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "chéngliáng is built from chéng 'to ride on' and liáng 'cool', both inherited from Middle Chinese, zying and ljang (Guangyun, in Baxter's transcription), which glosses the first 'to drive' and 'to mount' and the second 'thin' and 'cold': to take the cool air."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngliáng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngliáng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngliáng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngliáng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiàtiān de wǎnshang dàjiā dōu zài wàibian chéngliáng — On summer evenings everyone sits outside in the cool.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiàtiān de wǎnshang dàjiā dōu zài wàibian chéngliáng* — On summer evenings everyone sits outside in the cool.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for like spring all year round, then the Mandarin for a snowy landscape, then say chéngliáng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for like spring all year round, then the Mandarin for a snowy landscape, then say *chéngliáng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does chéngliáng mean? (\"To sit in the cool (out of the sun)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R519-review-514-519",
+      "sequence": 39300,
+      "title": "Looking back: from When the Weather Turns to Out in Nature",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from When the Weather Turns to Out in Nature",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b6597510ba205c5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for a flash of lightning and to get caught in the rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a flash of lightning, to get caught in the rain, a thunderstorm, to be frozen stiff, to melt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a flash of lightning, to get caught in the rain, a thunderstorm, to be frozen stiff, to melt]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bitterly cold, the four seasons, the rainy season, to escape the summer heat, to bring in the harvest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bitterly cold, the four seasons, the rainy season, to escape the summer heat, to bring in the harvest]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fallen leaves, a tree, a fruit tree, the woods, to ripen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: fallen leaves, a tree, a fruit tree, the woods, to ripen]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get light at dawn, light from the sun, to give off light, starlight, twilight",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get light at dawn, light from the sun, to give off light, starlight, twilight]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "clear and cloudless, sunshine, solar power, to put up an umbrella, a thick fog",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: clear and cloudless, sunshine, solar power, to put up an umbrella, a thick fog]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the beauty of spring, early in the morning, like spring all year round, a snowy landscape, to sit in the cool",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the beauty of spring, early in the morning, like spring all year round, a snowy landscape, to sit in the cool]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "季 树 光 阳 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 季 树 光 阳 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A flash of lightning? (shǎndiàn.) To get caught in the rain? (línyǔ.) A thunderstorm? (léiyǔ.) To be frozen stiff? (dòngjiāng.) To melt? (rónghuà.) Bitterly cold? (hánlěng.) The four seasons? (四季, sìjì.) The rainy season? (雨季, yǔjì.) To escape the summer heat? (bìshǔ.) To bring in the harvest? (shōuhuò.) Fallen leaves? (luòyè.) A tree? (树, shù.) A fruit tree? (果树, guǒshù.) The woods? (shùlín.) To ripen? (chéngshú.) To get light at dawn? (tiānliàng.) Light from the sun? (光, guāng.) To give off light? (发光, fāguāng.) Starlight? (星光, xīngguāng.) Twilight? (huánghūn.) Clear and cloudless? (qínglǎng.) Sunshine? (阳光, yángguāng.) Solar power? (太阳能, tàiyángnéng.) To put up an umbrella? (dǎsǎn.) A thick fog? (dàwù.) The beauty of spring? (春光, chūnguāng.) Early in the morning? (qīngchén.) Like spring all year round? (四季如春, sìjì rú chūn.) A snowy landscape? (xuějǐng.) To sit in the cool? (chéngliáng.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

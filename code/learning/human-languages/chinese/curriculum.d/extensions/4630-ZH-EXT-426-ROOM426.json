@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-426-ROOM426",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for a standard room, hear that a hotel is full, find an inn, ask about stars and pay the bill.",
+  "prerequisites": []
+}

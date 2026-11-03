@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C441-jiaoqu",
+    "language": "chinese",
+    "chapter": 441,
+    "sequence": 33560,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb757e67ba7d9f08"
+  },
+  "findings": []
+}

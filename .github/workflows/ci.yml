@@ -3624,6 +3624,17 @@ jobs:
     defaults:
       run:
         shell: bash
+    # Line tables only, not full debuginfo, for every Cargo build in this job.
+    # Panics and backtraces still name file and line; what goes is the
+    # variable and type information only a debugger reads, and that is most of
+    # a debug binary's size. Some ubuntu-latest runners have a 72G root disk
+    # with ~20G free after the reclaim step, and building lang-aot's ~50
+    # statically linked test binaries with full debuginfo needs 20-26G of
+    # target/, so PR #18787 died with "No space left on device" and then an
+    # `ld` Bus error. Nothing here reads a Rust binary's own debuginfo:
+    # native-debug-info and aot-debug write DWARF for generated code.
+    env:
+      CARGO_PROFILE_DEV_DEBUG: line-tables-only
 
     steps:
       - name: Checkout
@@ -4521,6 +4532,14 @@ jobs:
           sudo rm -rf /opt/hostedtoolcache/CodeQL || true
           echo "Disk after cleanup:"
           df -h /
+          # Most ubuntu-latest runners have a 145G root disk; some have 72G
+          # (/dev/mapper/cow-root) and keep only ~20G free here, which a
+          # large Rust affected set can fill (#18787). Flag them so a later
+          # ENOSPC is read as a runner-size problem, not a code one.
+          free_kb="$(df -Pk / | awk 'NR == 2 { print $4 }')"
+          if [ "${free_kb:-0}" -lt $((40 * 1024 * 1024)) ]; then
+            echo "::warning title=Small Linux runner disk::Only $((free_kb / 1024 / 1024))G free on / after cleanup: $(df -h / | awk 'NR == 2 { print $1 ", " $2 " total" }')"
+          fi
           # What the image still carries, largest first, so the next reclaim
           # can be chosen from evidence rather than guessed (#17652).
           sudo du -xsh /opt/hostedtoolcache/* /usr/local/lib/* /usr/share/* /opt/* 2>/dev/null | sort -rh | head -20 || true
@@ -5642,6 +5661,16 @@ jobs:
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
+          # The same disk-watch as the full build below, so a PR build that
+          # runs out of disk says what filled it while it still can (#18787).
+          # Windows is left out: its PR builds have not run out of disk, and
+          # this step runs there for only a few languages.
+          if [ "$RUNNER_OS" != "Windows" ]; then
+            code/scripts/ci/disk-watch.sh report "before PR build"
+            code/scripts/ci/disk-watch.sh watch 300 &
+            disk_watch_pid=$!
+            trap 'kill "$disk_watch_pid" 2>/dev/null || true; code/scripts/ci/disk-watch.sh report "after PR build"' EXIT
+          fi
           # No worker-count override: the executor serializes OCaml packages on its
           # global:opam-switch lock and runs everything else in parallel.
           PLAN_FLAG=""

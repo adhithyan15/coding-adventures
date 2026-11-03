@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:778ca7f4db8b5a78",
+  "lessonIds": [
+    "ZH-C355-xiejue",
+    "ZH-C355-haoyi",
+    "ZH-C355-ken",
+    "ZH-C355-fouren",
+    "ZH-C355-dangmian"
+  ],
+  "tex": "chinese/book/chapters/ch355-thanks-but-no.tex"
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 397,
+  "sourceHash": "fnv1a64:d054a8ee6eda4b7f",
+  "lessonIds": [
+    "ZH-C397-fanggezi",
+    "ZH-C397-nandao",
+    "ZH-W397-nan-hard",
+    "ZH-C397-nande",
+    "ZH-C397-weinan",
+    "ZH-C397-jiekou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch397.txt",
+  "json": "chinese/narration/ch397.json",
+  "textHash": "fnv1a64:3ed4d46aba545204",
+  "jsonHash": "fnv1a64:aa4932735a81bbca",
+  "findings": []
+}

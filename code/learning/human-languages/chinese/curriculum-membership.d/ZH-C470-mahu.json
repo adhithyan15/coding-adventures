@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C470-mahu",
+  "pathSegment": "ZH-PATH-470-FAULTS470",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-470-FAULTS470",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 462,
+  "sourceHash": "fnv1a64:641b0d9fc7807d4b",
+  "lessonIds": [
+    "ZH-C462-jingxi",
+    "ZH-C462-yixiangbudao",
+    "ZH-C462-hen",
+    "ZH-C462-sixin",
+    "ZH-C462-bianxin"
+  ],
+  "tex": "chinese/book/chapters/ch462-surprises.tex"
+}

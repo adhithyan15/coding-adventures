@@ -168,6 +168,7 @@ const CONDITIONALLY_SUPPORTED_OPS: &[&str] = &["alloc", "field_load", "field_sto
 ///     exports: vec![],
 ///     imports: vec![],
 ///     release: None,
+///     str_max_bytes: None,
 /// };
 /// assert!(validate_for_jvm(&module).is_empty());
 /// ```
@@ -499,6 +500,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -512,6 +514,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let errs = validate_for_jvm(&module);
         assert!(!errs.is_empty(), "should reject empty module");

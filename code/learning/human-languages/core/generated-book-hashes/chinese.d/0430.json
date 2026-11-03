@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 430,
+  "sourceHash": "fnv1a64:933452a66eb18eee",
+  "lessonIds": [
+    "ZH-C430-guanguang",
+    "ZH-C430-guji",
+    "ZH-C430-jingqu",
+    "ZH-C430-zipai",
+    "ZH-C430-wangji"
+  ],
+  "tex": "chinese/book/chapters/ch430-seeing-the-sights.tex"
+}

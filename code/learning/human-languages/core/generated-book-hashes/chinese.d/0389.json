@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:c04f28034f5ddf4c",
+  "lessonIds": [
+    "ZH-C389-beiyong",
+    "ZH-C389-jieyue",
+    "ZH-C389-fengxian",
+    "ZH-C389-yifang",
+    "ZH-C389-daoqi"
+  ],
+  "tex": "chinese/book/chapters/ch389-in-case.tex"
+}

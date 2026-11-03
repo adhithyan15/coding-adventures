@@ -1,0 +1,721 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 514,
+  "title": "When the Weather Turns",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:300a1602b1d88de5",
+  "lessons": [
+    {
+      "id": "ZH-C514-shandian",
+      "sequence": 39000,
+      "title": "shǎndiàn — lightning",
+      "headword": "shǎndiàn",
+      "romanization": "shǎndiàn",
+      "gloss": "lightning",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:89b19075787bfed8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to struggle, then the Mandarin for with one's own hands."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shǎndiàn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shǎndiàn — \"lightning\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zuì pà dǎléi hé shǎndiàn — Thunder and lightning are what I'm most afraid of."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shǎndiàn is built from shǎn and diàn 'lightning', both inherited from Middle Chinese, syemX and denH (Guangyun, in Baxter's transcription). The dictionary glosses the first as the look of something coming out of a door, and explains the second as the flash when yin and yang clash; the sense 'to flash' is not given for the first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǎndiàn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǎndiàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shǎndiàn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shǎndiàn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zuì pà dǎléi hé shǎndiàn — Thunder and lightning are what I'm most afraid of.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zuì pà dǎléi hé shǎndiàn* — Thunder and lightning are what I'm most afraid of.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to struggle, then the Mandarin for with one's own hands, then say shǎndiàn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to struggle, then the Mandarin for with one's own hands, then say *shǎndiàn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shǎndiàn mean? (\"Lightning\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C514-linyu",
+      "sequence": 39010,
+      "title": "línyǔ — to get caught in the rain",
+      "headword": "línyǔ",
+      "romanization": "línyǔ",
+      "gloss": "to get caught in the rain",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e3eea2ba5ae0d7d4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for with one's own hands, then the Mandarin for a flash of lightning."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: línyǔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "línyǔ — \"to get caught in the rain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zuótiān línyǔ yǐhòu wǒ gǎnjué hěn lěng — After I got caught in the rain yesterday, I felt cold."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "línyǔ is built from lín 'to pour on' and 雨 'rain', both inherited from Middle Chinese, lim and hjuX (Guangyun, in Baxter's transcription), which glosses the first as pouring water over something: to be poured on by the rain."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "línyǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *línyǔ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "línyǔ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *línyǔ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zuótiān línyǔ yǐhòu wǒ gǎnjué hěn lěng — After I got caught in the rain yesterday, I felt cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zuótiān línyǔ yǐhòu wǒ gǎnjué hěn lěng* — After I got caught in the rain yesterday, I felt cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for with one's own hands, then the Mandarin for a flash of lightning, then say línyǔ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for with one's own hands, then the Mandarin for a flash of lightning, then say *línyǔ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does línyǔ mean? (\"To get caught in the rain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C514-leiyu",
+      "sequence": 39020,
+      "title": "léiyǔ — thunderstorm",
+      "headword": "léiyǔ",
+      "romanization": "léiyǔ",
+      "gloss": "thunderstorm",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9cd4f3bd612fd212",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a flash of lightning, then the Mandarin for to get caught in the rain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: léiyǔ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "léiyǔ — \"thunderstorm\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wàipó shuō jīntiān wǎnshang yǒu léiyǔ — Grandma says there'll be a thunderstorm tonight."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "léiyǔ is built from léi 'thunder' and 雨 'rain', both inherited from Middle Chinese, lwoj and hjuX (Guangyun, in Baxter's transcription), which explains the first, after an older book, as yin and yang striking each other."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "léiyǔ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *léiyǔ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "léiyǔ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *léiyǔ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wàipó shuō jīntiān wǎnshang yǒu léiyǔ — Grandma says there'll be a thunderstorm tonight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wàipó shuō jīntiān wǎnshang yǒu léiyǔ* — Grandma says there'll be a thunderstorm tonight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a flash of lightning, then the Mandarin for to get caught in the rain, then say léiyǔ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a flash of lightning, then the Mandarin for to get caught in the rain, then say *léiyǔ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does léiyǔ mean? (\"Thunderstorm\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C514-dongjiang",
+      "sequence": 39030,
+      "title": "dòngjiāng — to be frozen stiff",
+      "headword": "dòngjiāng",
+      "romanization": "dòngjiāng",
+      "gloss": "to be frozen stiff",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fa87b02c2f6eba0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to get caught in the rain, then the Mandarin for a thunderstorm."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dòngjiāng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dòngjiāng — \"to be frozen stiff\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ děng le yí ge xiǎoshí shǒu dōu dòngjiāng le — I waited an hour, and my hands were frozen stiff."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dòngjiāng is built from dòng 'to freeze' and jiāng 'stiff', both inherited from Middle Chinese, tuwngH and kjang (Guangyun, in Baxter's transcription), which glosses the first 'ice, freezing' and the second as falling over flat."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dòngjiāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dòngjiāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dòngjiāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dòngjiāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ děng le yí ge xiǎoshí shǒu dōu dòngjiāng le — I waited an hour, and my hands were frozen stiff.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ děng le yí ge xiǎoshí shǒu dōu dòngjiāng le* — I waited an hour, and my hands were frozen stiff.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to get caught in the rain, then the Mandarin for a thunderstorm, then say dòngjiāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to get caught in the rain, then the Mandarin for a thunderstorm, then say *dòngjiāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dòngjiāng mean? (\"To be frozen stiff\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C514-ronghua",
+      "sequence": 39040,
+      "title": "rónghuà — to melt; to thaw",
+      "headword": "rónghuà",
+      "romanization": "rónghuà",
+      "gloss": "to melt; to thaw",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:180e23ab3e777acb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a thunderstorm, then the Mandarin for to be frozen stiff."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: rónghuà",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rónghuà — \"to melt; to thaw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tiānqì nuǎnhuo le xuěrén dōu rónghuà le — It turned warm, and the snowmen all melted."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "rónghuà is built from róng and huà 'to change', both inherited from Middle Chinese, yuwng and xwaeH (Guangyun, in Baxter's transcription). The dictionary glosses the first 'harmonious' and 'bright' and, after an older book, as steam rising from a cooking pot; the second it glosses 'to change, to transform'. How the pair came to mean melting is usually explained as warmth changing a thing, but it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rónghuà",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rónghuà*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rónghuà, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rónghuà*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tiānqì nuǎnhuo le xuěrén dōu rónghuà le — It turned warm, and the snowmen all melted.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tiānqì nuǎnhuo le xuěrén dōu rónghuà le* — It turned warm, and the snowmen all melted.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a thunderstorm, then the Mandarin for to be frozen stiff, then say rónghuà again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a thunderstorm, then the Mandarin for to be frozen stiff, then say *rónghuà* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rónghuà mean? (\"To melt; to thaw\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

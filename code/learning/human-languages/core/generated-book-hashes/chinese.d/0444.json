@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 444,
+  "sourceHash": "fnv1a64:38717844544206af",
+  "lessonIds": [
+    "ZH-C444-qianshui",
+    "ZH-C444-dao",
+    "ZH-W444-dao-island",
+    "ZH-C444-bandao",
+    "ZH-C444-dengta",
+    "ZH-C444-fangshaishuang"
+  ],
+  "tex": "chinese/book/chapters/ch444-an-island.tex"
+}

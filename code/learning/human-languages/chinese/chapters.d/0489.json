@@ -1,0 +1,19 @@
+{
+  "chapter": 489,
+  "title": "On the Staff",
+  "label": "ch:zh-on-the-staff",
+  "canDo": "I can talk about changing employers, the staff, full-time jobs, posts and promotion.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C489-shengzhi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 489: I can talk about changing employers, the staff, full-time jobs, posts and promotion.",
+    "assesses": [
+      "ZH-LEX-C489-STAFF489-03",
+      "ZH-LEX-C489-STAFF489-04",
+      "ZH-LEX-C489-STAFF489-05"
+    ]
+  }
+}

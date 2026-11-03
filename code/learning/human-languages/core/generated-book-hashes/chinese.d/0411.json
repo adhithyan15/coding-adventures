@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 411,
+  "sourceHash": "fnv1a64:29b4003a0a63a28e",
+  "lessonIds": [
+    "ZH-C411-matou",
+    "ZH-C411-chuanzhang",
+    "ZH-W411-chuan-boat",
+    "ZH-C411-kaichuan",
+    "ZH-C411-duchuan",
+    "ZH-C411-jiushengyi"
+  ],
+  "tex": "chinese/book/chapters/ch411-on-the-water.tex"
+}

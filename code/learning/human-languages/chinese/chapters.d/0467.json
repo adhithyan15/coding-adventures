@@ -1,0 +1,19 @@
+{
+  "chapter": 467,
+  "title": "What Kind of Person",
+  "label": "ch:zh-what-kind-of-person",
+  "canDo": "I can talk about someone's temper, personality and nature, and say someone is cheerful or lively.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C467-huopo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 467: I can talk about someone's temper, personality and nature, and say someone is cheerful or lively.",
+    "assesses": [
+      "ZH-LEX-C467-PERSON467-03",
+      "ZH-LEX-C467-PERSON467-04",
+      "ZH-LEX-C467-PERSON467-05"
+    ]
+  }
+}

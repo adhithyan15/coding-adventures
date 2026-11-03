@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 440,
+  "sourceHash": "fnv1a64:f22b4d612e09a8ab",
+  "lessonIds": [
+    "ZH-C440-ganji",
+    "ZH-C440-shancun",
+    "ZH-W440-cun-village",
+    "ZH-C440-cunzhang",
+    "ZH-C440-cunmin",
+    "ZH-C440-jiesu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch440.txt",
+  "json": "chinese/narration/ch440.json",
+  "textHash": "fnv1a64:5ba8710101d61df1",
+  "jsonHash": "fnv1a64:e756ccc808161ccb",
+  "findings": []
+}

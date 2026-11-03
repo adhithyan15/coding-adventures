@@ -1,0 +1,19 @@
+{
+  "chapter": 534,
+  "title": "I'd Rather",
+  "label": "ch:zh-i-d-rather",
+  "canDo": "I can say I'd rather, that I'll do what I can, suppose something, give my word and wish someone all the best.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C534-wanshiruyi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 534: I can say I'd rather, that I'll do what I can, suppose something, give my word and wish someone all the best.",
+    "assesses": [
+      "ZH-LEX-C534-RATHER534-03",
+      "ZH-LEX-C534-RATHER534-04",
+      "ZH-LEX-C534-RATHER534-05"
+    ]
+  }
+}

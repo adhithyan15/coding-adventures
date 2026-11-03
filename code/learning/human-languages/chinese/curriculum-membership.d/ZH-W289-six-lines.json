@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W289-six-lines",
+  "pathSegment": "ZH-PATH-289-IFTIME",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-289-IFTIME",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:994b8fadb18e5ba1",
+  "lessonIds": [
+    "ZH-C305-tanlianai",
+    "ZH-C305-qiuhun",
+    "ZH-C305-dinghun",
+    "ZH-C305-xishi",
+    "ZH-C305-xinlang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch305.txt",
+  "json": "chinese/narration/ch305.json",
+  "textHash": "fnv1a64:2e6bacc444b8f718",
+  "jsonHash": "fnv1a64:6dccf8289602fe82",
+  "findings": []
+}

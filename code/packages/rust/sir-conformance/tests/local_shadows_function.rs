@@ -32,10 +32,11 @@
 //! test re-checks it against `ruby` when one is on `PATH`.
 //!
 //! The Ruby frontend cannot yet spell every kind of variable (it has no
-//! `for` loop and no closure literal this harness can run everywhere), so
-//! the second half of this file builds SIR **by hand** for the rest: a `for`
-//! range variable, a `for each` variable, a closure capture, and a keyword
-//! parameter, each named like the module's function `f`.
+//! closure literal this harness can run everywhere), so the second half of
+//! this file builds SIR **by hand** for the rest: a `for` range variable, a
+//! `for each` variable, a closure capture, and a keyword parameter, each
+//! named like the module's function `f`.  (Since #18778 the frontend has a
+//! `for` loop, so a Ruby `for` variable named `f` is a program above too.)
 
 use std::io::Write;
 use std::process::{Command, Stdio};
@@ -71,6 +72,14 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "rb_rescue_binding_named_like_a_method",
         "def f\n  40\nend\nbegin\n  raise \"boom\"\nrescue StandardError => f\n  puts f()\nend\n",
         "40",
+    ),
+    // A `for` loop variable named like a method (#18778): the loop iterates
+    // a fresh variable and stores it into the local `f`, which keeps the
+    // last item.  (40 + 1) + (40 + 2) = 83.
+    (
+        "rb_for_variable_named_like_a_method",
+        "def f\n  40\nend\nt = 0\nfor f in [1, 2]\n  t = t + f() + f\nend\nputs t\nputs f\n",
+        "83\n2",
     ),
     // The method is also called *recursively* from a body whose parameter
     // spells its name: the call inside must still reach the method.

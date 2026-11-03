@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C528-chouqian",
+    "language": "chinese",
+    "chapter": 528,
+    "sequence": 39740,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:36e2d3cfc41346e7"
+  },
+  "findings": []
+}

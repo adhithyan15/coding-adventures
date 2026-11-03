@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C379-loudao",
+    "language": "chinese",
+    "chapter": 379,
+    "sequence": 29250,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d60ad649cedf01f1"
+  },
+  "findings": []
+}

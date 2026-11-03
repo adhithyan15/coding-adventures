@@ -298,21 +298,12 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
 /// *fail*: once its bug is fixed, the run test reports the entry as stale,
 /// so it cannot outlive the bug and hide a later regression.
 const KNOWN_GAPS: &[(&str, Target, &str)] = &[
-    // The #18771 programs need a class named `__param_a` (the parameter
-    // copies are `__param_<name>_<N>`, so only such a class can collide).
-    // The Ruby backend emits a class as `Object.const_set(:<name>, …)`,
-    // and a Ruby constant must start with an upper-case letter:
-    // `wrong constant name __param_a (NameError)`.
-    (
-        "py_param_copy_spelled_like_a_hoisted_method",
-        Target::Ruby,
-        "the Ruby backend cannot define a class whose name is not a Ruby constant",
-    ),
-    (
-        "py_hoisted_method_then_param_copy",
-        Target::Ruby,
-        "the Ruby backend cannot define a class whose name is not a Ruby constant",
-    ),
+    // Empty.  The two #18771 programs were listed here for Ruby: they need a
+    // class named `__param_a`, which the Ruby backend emitted as
+    // `Object.const_set(:__param_a, …)` and Ruby refused (`wrong constant
+    // name`).  The backend now renames such a class to a valid constant
+    // (#18778), so both cells run, and the stale-entry check below made
+    // their entries come out.
 ];
 
 /// CPython's stdout for `source` (trailing newlines trimmed), or `None` when

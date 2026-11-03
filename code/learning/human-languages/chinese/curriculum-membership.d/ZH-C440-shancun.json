@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C440-shancun",
+  "pathSegment": "ZH-PATH-440-HILLS440",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-440-HILLS440",
+      "order": 1
+    }
+  ]
+}

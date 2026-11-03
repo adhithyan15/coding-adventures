@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C286-duration",
+  "pathSegment": "ZH-PATH-286-FELT",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-286-FELT",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C528-dadu",
+    "language": "chinese",
+    "chapter": 528,
+    "sequence": 39750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9e4ee9ed5b8e591"
+  },
+  "findings": []
+}

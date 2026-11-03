@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W431-you-tour",
+    "language": "chinese",
+    "chapter": 431,
+    "sequence": 33065,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:48e84a6913e04a12",
+    "detachableSegments": [
+      "Script — the water piece, a middle piece, then 子"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

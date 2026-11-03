@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:2ec6a95486142c94",
+  "lessonIds": [
+    "ZH-C408-zhanpai",
+    "ZH-C408-gongjiao",
+    "ZH-W408-jiao-cross",
+    "ZH-C408-toubi",
+    "ZH-C408-keche",
+    "ZH-C408-qidian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch408.txt",
+  "json": "chinese/narration/ch408.json",
+  "textHash": "fnv1a64:1ba31cb54199784c",
+  "jsonHash": "fnv1a64:c7a04b077c1e84fd",
+  "findings": []
+}

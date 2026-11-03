@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W334-hong-red",
+    "language": "chinese",
+    "chapter": 334,
+    "sequence": 25835,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3a949d6e17122d52",
+    "detachableSegments": [
+      "Script — the silk piece, then 工"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

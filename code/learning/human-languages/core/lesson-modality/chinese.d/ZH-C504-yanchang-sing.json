@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C504-yanchang-sing",
+    "language": "chinese",
+    "chapter": 504,
+    "sequence": 37970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4cc8f8780baee865"
+  },
+  "findings": []
+}

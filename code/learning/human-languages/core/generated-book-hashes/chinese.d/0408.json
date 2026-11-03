@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 408,
+  "sourceHash": "fnv1a64:01393a6765f628ef",
+  "lessonIds": [
+    "ZH-C408-zhanpai",
+    "ZH-C408-gongjiao",
+    "ZH-W408-jiao-cross",
+    "ZH-C408-toubi",
+    "ZH-C408-keche",
+    "ZH-C408-qidian"
+  ],
+  "tex": "chinese/book/chapters/ch408-by-bus.tex"
+}

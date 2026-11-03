@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C523-maijia-buyer",
+    "language": "chinese",
+    "chapter": 523,
+    "sequence": 39490,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1f9bb24b728be04b"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C367-liaojie",
+    "language": "chinese",
+    "chapter": 367,
+    "sequence": 28090,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8bfbccfa7e2f1cf"
+  },
+  "findings": []
+}

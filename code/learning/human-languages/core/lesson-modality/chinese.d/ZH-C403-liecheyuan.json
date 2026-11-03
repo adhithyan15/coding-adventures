@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C403-liecheyuan",
+    "language": "chinese",
+    "chapter": 403,
+    "sequence": 31080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ad95372c4fbbbb42"
+  },
+  "findings": []
+}

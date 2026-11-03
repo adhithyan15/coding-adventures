@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C482-jizhen",
+    "language": "chinese",
+    "chapter": 482,
+    "sequence": 36240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:406c3a7f78462941"
+  },
+  "findings": []
+}

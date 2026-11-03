@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:03fd186bb1f54634",
+  "lessonIds": [
+    "ZH-C321-lishi",
+    "ZH-C321-guren",
+    "ZH-W321-gu-ancient",
+    "ZH-C321-gushu",
+    "ZH-C321-gulao",
+    "ZH-C321-wenzi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch321.txt",
+  "json": "chinese/narration/ch321.json",
+  "textHash": "fnv1a64:c026790a33c0899a",
+  "jsonHash": "fnv1a64:adf6b54c0c81d213",
+  "findings": []
+}

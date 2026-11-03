@@ -1,0 +1,22 @@
+{
+  "chapter": 463,
+  "title": "Scared",
+  "label": "ch:zh-scared",
+  "canDo": "I can say someone is timid, that something is frightening, ask someone not to scare me and talk about nightmares.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R463-review-458-463",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 463: I can say someone is timid, that something is frightening, ask someone not to scare me and talk about nightmares.",
+    "assesses": [
+      "ZH-LEX-C463-FEAR463-01",
+      "ZH-LEX-C463-FEAR463-02",
+      "ZH-LEX-C463-FEAR463-03",
+      "ZH-LEX-C463-FEAR463-04",
+      "ZH-LEX-C463-FEAR463-05",
+      "ZH-SCRIPT-PA-FEAR-01"
+    ]
+  }
+}

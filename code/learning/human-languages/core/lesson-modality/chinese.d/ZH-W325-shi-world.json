@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W325-shi-world",
+    "language": "chinese",
+    "chapter": 325,
+    "sequence": 25375,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:efd8037cd773eba9",
+    "detachableSegments": [
+      "Script — a long bar and two verticals"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

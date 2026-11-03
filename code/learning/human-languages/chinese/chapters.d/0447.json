@@ -1,0 +1,21 @@
+{
+  "chapter": 447,
+  "title": "On Foot",
+  "label": "ch:zh-on-foot",
+  "canDo": "I can talk about walking, the Great Wall, a pedestrian street, going the long way round and the pavement.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-R447-review-442-447",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 447: I can talk about walking, the Great Wall, a pedestrian street, going the long way round and the pavement.",
+    "assesses": [
+      "ZH-LEX-C447-WALK447-01",
+      "ZH-LEX-C447-WALK447-02",
+      "ZH-LEX-C447-WALK447-03",
+      "ZH-LEX-C447-WALK447-04",
+      "ZH-LEX-C447-WALK447-05"
+    ]
+  }
+}

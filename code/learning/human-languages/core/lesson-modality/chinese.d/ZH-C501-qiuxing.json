@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C501-qiuxing",
+    "language": "chinese",
+    "chapter": 501,
+    "sequence": 37810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:742eb3448a25ce8f"
+  },
+  "findings": []
+}

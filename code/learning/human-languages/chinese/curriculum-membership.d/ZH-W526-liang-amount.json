@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W526-liang-amount",
+  "pathSegment": "ZH-PATH-526-WEIGHT526",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-526-WEIGHT526",
+      "order": 3
+    }
+  ]
+}

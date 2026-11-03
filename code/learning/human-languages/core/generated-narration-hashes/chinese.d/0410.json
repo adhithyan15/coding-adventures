@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 410,
+  "sourceHash": "fnv1a64:6debabfaa5e2de9d",
+  "lessonIds": [
+    "ZH-C410-changtu",
+    "ZH-C410-chefei",
+    "ZH-C410-tongguo",
+    "ZH-C410-kaitong",
+    "ZH-C410-shanglu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch410.txt",
+  "json": "chinese/narration/ch410.json",
+  "textHash": "fnv1a64:3d9a84d490d36dc8",
+  "jsonHash": "fnv1a64:2abc09788a127160",
+  "findings": []
+}

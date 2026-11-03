@@ -50,6 +50,7 @@ fn run_eq(l: &str, r: &str) -> i64 {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).expect("lowering failed");
     let bytes = encode_module(&wasm).expect("encoding failed");

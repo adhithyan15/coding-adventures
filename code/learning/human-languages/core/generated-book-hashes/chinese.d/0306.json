@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 306,
+  "sourceHash": "fnv1a64:8b83aa880364ec8c",
+  "lessonIds": [
+    "ZH-C306-xinniang",
+    "ZH-C306-jingguo",
+    "ZH-W306-jing-pass",
+    "ZH-C306-xinren",
+    "ZH-C306-juxing",
+    "ZH-C306-xitang"
+  ],
+  "tex": "chinese/book/chapters/ch306-the-wedding.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C500-bifen",
+  "pathSegment": "ZH-PATH-500-MATCH500",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-500-MATCH500",
+      "order": 4
+    }
+  ]
+}

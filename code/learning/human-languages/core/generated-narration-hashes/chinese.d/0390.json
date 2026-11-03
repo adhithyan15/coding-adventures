@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:6bb16eb16a6423e8",
+  "lessonIds": [
+    "ZH-C390-queding",
+    "ZH-C390-yueding",
+    "ZH-W390-ding-settle",
+    "ZH-C390-dingqi",
+    "ZH-C390-ruqi",
+    "ZH-C390-dayue"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch390.txt",
+  "json": "chinese/narration/ch390.json",
+  "textHash": "fnv1a64:35ca91a3ff76090f",
+  "jsonHash": "fnv1a64:3584f419c2fe12f2",
+  "findings": []
+}

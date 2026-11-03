@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W409-tong-through",
+    "language": "chinese",
+    "chapter": 409,
+    "sequence": 31375,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:7276ebce38594433",
+    "detachableSegments": [
+      "Script — the right piece first, then the walking piece under it"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

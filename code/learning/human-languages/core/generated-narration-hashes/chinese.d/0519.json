@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 519,
+  "sourceHash": "fnv1a64:3ed9b7b75c93c36c",
+  "lessonIds": [
+    "ZH-C519-chunguang",
+    "ZH-C519-qingchen",
+    "ZH-C519-sijiruchun",
+    "ZH-C519-xuejing",
+    "ZH-C519-chengliang",
+    "ZH-R519-review-514-519"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch519.txt",
+  "json": "chinese/narration/ch519.json",
+  "textHash": "fnv1a64:e0f477bbd52afdef",
+  "jsonHash": "fnv1a64:2296ec3b1ccc349f",
+  "findings": []
+}

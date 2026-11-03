@@ -1,0 +1,21 @@
+{
+  "chapter": 368,
+  "title": "Keep Going",
+  "label": "ch:zh-keep-going",
+  "canDo": "I can say at least, name a bad habit, encourage someone and help them choose.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R368-review-364-368",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 368: I can say at least, name a bad habit, encourage someone and help them choose.",
+    "assesses": [
+      "ZH-LEX-C368-KEEPGOING368-01",
+      "ZH-LEX-C368-KEEPGOING368-02",
+      "ZH-LEX-C368-KEEPGOING368-03",
+      "ZH-LEX-C368-KEEPGOING368-04",
+      "ZH-LEX-C368-KEEPGOING368-05"
+    ]
+  }
+}

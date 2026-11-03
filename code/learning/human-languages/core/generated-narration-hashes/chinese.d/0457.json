@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 457,
+  "sourceHash": "fnv1a64:3eb31a6d663fe1b0",
+  "lessonIds": [
+    "ZH-C457-laojia",
+    "ZH-C457-baituo",
+    "ZH-C457-duoxie",
+    "ZH-C457-ganji-grateful",
+    "ZH-C457-fangfa",
+    "ZH-R457-review-453-457",
+    "ZH-R457-review-final-457"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch457.txt",
+  "json": "chinese/narration/ch457.json",
+  "textHash": "fnv1a64:a8fcffa61dba99ec",
+  "jsonHash": "fnv1a64:f7411fe505cdaff0",
+  "findings": []
+}

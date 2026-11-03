@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W330-wang-king",
+    "language": "chinese",
+    "chapter": 330,
+    "sequence": 25635,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4d848f331e246eec",
+    "detachableSegments": [
+      "Script — two bars, a vertical, a long bar"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

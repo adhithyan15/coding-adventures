@@ -1,5 +1,18 @@
 # Changelog — twig-vm
 
+## Unreleased — LANG83 PR5a: string failures are registered traps
+
+### Added
+
+- `RunError::Trap { kind }`, a LANG83 registered trap (the twin of `vm-core`'s `VMError::Trap`); it displays as `trap: <kind>`. `RunError` is `#[non_exhaustive]`, so this is not a breaking change.
+
+### Fixed
+
+- An out-of-range `str_index` or `str_slice` raises `RunError::Trap { kind: "Trap.Bounds" }`. It was an untyped `Runtime(TypeError("… out of bounds …"))` that named no kind. The index is converted with `usize::try_from` before it is compared, so `2^32 + 1` is out of range, never byte 1.
+- `str_concat` raises `Trap.Overflow` when the result would exceed the module's string ceiling (`IIRModule::str_ceiling`), checked before the result is built. twig-vm had no ceiling.
+- A `str_slice` range that splits a UTF-8 character is still a `TypeError`, as in `vm-core`, until LANG83 PR5b.
+- Tests: `e4_str_index_out_of_range_is_trap_bounds` (including the Twig source `(string-ref "ABC" 3)`), `e4_str_concat_past_the_module_ceiling_is_trap_overflow`, and `str_slice_rejects_a_bad_range`, which now requires the kind and adds the 2^32 edge. All three fail on main.
+
 ## Unreleased — #18453: `str_cmp`, `str_slice`; `and` / `or` inside a lambda
 
 ### Fixed

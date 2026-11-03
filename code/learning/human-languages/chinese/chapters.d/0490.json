@@ -1,0 +1,19 @@
+{
+  "chapter": 490,
+  "title": "Pressure at Work",
+  "label": "ch:zh-pressure-at-work",
+  "canDo": "I can talk about managing, working together, night shifts, hard work and being fired.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C490-kaichu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 490: I can talk about managing, working together, night shifts, hard work and being fired.",
+    "assesses": [
+      "ZH-LEX-C490-PRESSURE490-03",
+      "ZH-LEX-C490-PRESSURE490-04",
+      "ZH-LEX-C490-PRESSURE490-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C313-zhuangxiu",
+    "language": "chinese",
+    "chapter": 313,
+    "sequence": 24190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c47ae84d009b2006"
+  },
+  "findings": []
+}

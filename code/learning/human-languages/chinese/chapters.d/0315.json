@@ -1,0 +1,19 @@
+{
+  "chapter": 315,
+  "title": "Once Again",
+  "label": "ch:zh-once-again",
+  "canDo": "I can say something happened again, that I feel at home now, and that some things are as before.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C315-rengran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 315: I can say something happened again, that I feel at home now, and that some things are as before.",
+    "assesses": [
+      "ZH-LEX-C315-AGAIN315-03",
+      "ZH-LEX-C315-AGAIN315-04",
+      "ZH-LEX-C315-AGAIN315-05"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W537-yuan-origin",
+    "language": "chinese",
+    "chapter": 537,
+    "sequence": 40205,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:12afb25b3f46a8d8",
+    "detachableSegments": [
+      "Script — the cliff over 白 and 小"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

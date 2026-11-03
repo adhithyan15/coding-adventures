@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 392,
+  "sourceHash": "fnv1a64:3328fefe07c26d43",
+  "lessonIds": [
+    "ZH-C392-gai",
+    "ZH-W392-gai-alter",
+    "ZH-C392-gaiqi",
+    "ZH-C392-gaibian",
+    "ZH-C392-gaiming",
+    "ZH-C392-gaikou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 1,
+  "text": "chinese/narration/ch392.txt",
+  "json": "chinese/narration/ch392.json",
+  "textHash": "fnv1a64:e8b3855c5bbb9bb4",
+  "jsonHash": "fnv1a64:5e292a8c9190ee67",
+  "findings": []
+}

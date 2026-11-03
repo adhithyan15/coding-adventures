@@ -1,0 +1,19 @@
+{
+  "chapter": 421,
+  "title": "On the Expressway",
+  "label": "ch:zh-on-the-expressway",
+  "canDo": "I can talk about main roads and the expressway, the speed of a car, toll gates and speeding.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C421-chaosu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 421: I can talk about main roads and the expressway, the speed of a car, toll gates and speeding.",
+    "assesses": [
+      "ZH-LEX-C421-EXPRESS421-03",
+      "ZH-LEX-C421-EXPRESS421-04",
+      "ZH-LEX-C421-EXPRESS421-05"
+    ]
+  }
+}

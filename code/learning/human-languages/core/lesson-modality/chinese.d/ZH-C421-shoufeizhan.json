@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C421-shoufeizhan",
+    "language": "chinese",
+    "chapter": 421,
+    "sequence": 32010,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b1f06502f214fcfd"
+  },
+  "findings": []
+}

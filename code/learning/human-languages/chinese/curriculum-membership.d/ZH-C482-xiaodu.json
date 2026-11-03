@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C482-xiaodu",
+  "pathSegment": "ZH-PATH-482-TREAT482",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-482-TREAT482",
+      "order": 3
+    }
+  ]
+}

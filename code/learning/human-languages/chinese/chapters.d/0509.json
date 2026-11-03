@@ -1,0 +1,19 @@
+{
+  "chapter": 509,
+  "title": "Parents",
+  "label": "ch:zh-parents",
+  "canDo": "I can talk about who runs the household, my parents, mothers and daughters, my mother tongue and stepmothers.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C509-houma",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 509: I can talk about who runs the household, my parents, mothers and daughters, my mother tongue and stepmothers.",
+    "assesses": [
+      "ZH-LEX-C509-PARENTS509-03",
+      "ZH-LEX-C509-PARENTS509-04",
+      "ZH-LEX-C509-PARENTS509-05"
+    ]
+  }
+}

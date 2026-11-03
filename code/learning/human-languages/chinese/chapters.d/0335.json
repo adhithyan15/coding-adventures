@@ -1,0 +1,21 @@
+{
+  "chapter": 335,
+  "title": "Lanterns and Riddles",
+  "label": "ch:zh-lanterns-and-riddles",
+  "canDo": "I can talk about the Lantern Festival, lanterns, riddles and firecrackers, and say I guessed.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R335-review-330-335",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can talk about the Lantern Festival, lanterns, riddles and firecrackers, and say I guessed.",
+    "assesses": [
+      "ZH-LEX-C335-LANTERN335-01",
+      "ZH-LEX-C335-LANTERN335-02",
+      "ZH-LEX-C335-LANTERN335-03",
+      "ZH-LEX-C335-LANTERN335-04",
+      "ZH-LEX-C335-LANTERN335-05"
+    ]
+  }
+}

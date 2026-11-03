@@ -1,0 +1,20 @@
+{
+  "chapter": 332,
+  "title": "Ghost Stories",
+  "label": "ch:zh-ghost-stories",
+  "canDo": "I can talk about courage, ghosts and a haunted house, curse my luck and talk about the world of the living.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C332-renjian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 332: I can talk about courage, ghosts and a haunted house, curse my luck and talk about the world of the living.",
+    "assesses": [
+      "ZH-LEX-C332-GHOST332-03",
+      "ZH-LEX-C332-GHOST332-04",
+      "ZH-LEX-C332-GHOST332-05",
+      "ZH-SCRIPT-GUI-GHOST-01"
+    ]
+  }
+}

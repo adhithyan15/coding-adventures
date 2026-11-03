@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 342,
+  "sourceHash": "fnv1a64:9bfe09f3cfc1d438",
+  "lessonIds": [
+    "ZH-C342-shangyue",
+    "ZH-C342-zhongqiu",
+    "ZH-W342-qiu-autumn",
+    "ZH-C342-qijian",
+    "ZH-C342-guihua",
+    "ZH-C342-jiaxiang"
+  ],
+  "tex": "chinese/book/chapters/ch342-mid-autumn.tex"
+}

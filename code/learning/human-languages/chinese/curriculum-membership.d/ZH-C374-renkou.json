@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C374-renkou",
+  "pathSegment": "ZH-PATH-374-SOCIETY374",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "ZH-EXT-374-SOCIETY374",
+      "order": 0
+    }
+  ]
+}

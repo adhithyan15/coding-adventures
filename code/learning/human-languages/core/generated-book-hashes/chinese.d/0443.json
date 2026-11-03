@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:8a387cfc20b385d5",
+  "lessonIds": [
+    "ZH-C443-qingche",
+    "ZH-C443-baohu",
+    "ZH-W443-hu-guard",
+    "ZH-C443-baohuqu",
+    "ZH-C443-husong",
+    "ZH-C443-buyu"
+  ],
+  "tex": "chinese/book/chapters/ch443-keeping-it-clean.tex"
+}

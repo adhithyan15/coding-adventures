@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C512-mingxiao",
+  "pathSegment": "ZH-PATH-512-DREAMS512",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-512-DREAMS512",
+      "order": 4
+    }
+  ]
+}

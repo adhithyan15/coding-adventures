@@ -1,0 +1,19 @@
+{
+  "chapter": 468,
+  "title": "Good Points",
+  "label": "ch:zh-good-points",
+  "canDo": "I can say someone is kind-hearted, good-natured, strong, hard-working or considerate.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C468-titie",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 468: I can say someone is kind-hearted, good-natured, strong, hard-working or considerate.",
+    "assesses": [
+      "ZH-LEX-C468-GOOD468-03",
+      "ZH-LEX-C468-GOOD468-04",
+      "ZH-LEX-C468-GOOD468-05"
+    ]
+  }
+}

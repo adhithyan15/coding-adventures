@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C467-huopo",
+  "pathSegment": "ZH-PATH-467-PERSON467",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-467-PERSON467",
+      "order": 5
+    }
+  ]
+}

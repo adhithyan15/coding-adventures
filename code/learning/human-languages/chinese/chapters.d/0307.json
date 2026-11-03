@@ -1,0 +1,21 @@
+{
+  "chapter": 307,
+  "title": "Marrying and Parting",
+  "label": "ch:zh-marrying-and-parting",
+  "canDo": "I can talk about a honeymoon, breaking up, divorce and marrying again.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R307-review-302-307",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can talk about a honeymoon, breaking up, divorce and marrying again.",
+    "assesses": [
+      "ZH-LEX-C307-SPLIT307-01",
+      "ZH-LEX-C307-SPLIT307-02",
+      "ZH-LEX-C307-SPLIT307-03",
+      "ZH-LEX-C307-SPLIT307-04",
+      "ZH-LEX-C307-SPLIT307-05"
+    ]
+  }
+}

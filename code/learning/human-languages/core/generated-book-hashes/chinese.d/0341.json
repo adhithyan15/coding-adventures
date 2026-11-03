@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:ac25a545d0a826cd",
+  "lessonIds": [
+    "ZH-C341-dousha",
+    "ZH-C341-yuebing",
+    "ZH-W341-bing-cake",
+    "ZH-C341-xianr",
+    "ZH-C341-pinchang",
+    "ZH-C341-shengyi"
+  ],
+  "tex": "chinese/book/chapters/ch341-mooncakes.tex"
+}

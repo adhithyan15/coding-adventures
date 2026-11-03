@@ -33,18 +33,24 @@ adapter/test hooks. All fifteen implementations are conformant with the
 portable v1 contract, including the Java, Kotlin, and Dart pure geometry ports.
 A pending target may name only its planned
 conformance test and known divergences; promotion fields are rejected. A conformant target must
-name an executed package test, carry the exact raw `cases.json` SHA-256, bind a
-reachable tested revision, match the checked-out canonical package tree,
-and name the durable adoption PR. The only post-verification drift the tree
-check admits is a dependency lockfile refresh (`package-lock.json`,
-`Cargo.lock`, and the other files in the test's `DEPENDENCY_LOCK_FILES`), so
-repo-wide security bumps do not need a re-verification round trip; any other
-change, including a dependency range in a manifest, requires re-verifying the
-lane and repointing its evidence. Revision and PR evidence are checked against
-the durable backlog owner. The verified revision must be an ancestor of the
-checked-out commit, so a local-only pre-squash PR object cannot satisfy the
-repository gate when the durable GitHub history cannot resolve it. A conformant
-target must use the canonical
+name an executed package test, carry the exact raw `cases.json` SHA-256, bind
+the tested package tree, and name the durable adoption PR.
+
+`package_tree` is the evidence: the Git tree ID of the package root whose lane
+tests passed. Tree IDs are content-addressed, so a squash merge of the same
+bytes reproduces the same tree object and the evidence survives the merge. The
+checked-out package tree must equal `package_tree`. The only drift admitted is
+a dependency lockfile refresh (`package-lock.json`, `Cargo.lock`, and the other
+files in the test's `DEPENDENCY_LOCK_FILES`), so repo-wide security bumps do
+not need a re-verification round trip. Any other change, including a BUILD
+recipe, a CHANGELOG entry, or a dependency range in a manifest, must re-run the
+lane's tests and set `package_tree` to the new tree in the same PR.
+
+`verified_revision` records which commit was verified. When git can resolve
+it, its package tree must equal `package_tree`. When a squash merge has
+discarded it, that alone is not a failure. Revision and PR evidence are checked
+against the durable backlog owner: `verified_revision` must equal the owner
+item's `implementation_revision`. A conformant target must use the canonical
 language/package root and have no remaining divergence. Package evidence paths
 must remain inside that root and be tracked in the adoption commit.
 

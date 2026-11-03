@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C328-long",
+    "language": "chinese",
+    "chapter": 328,
+    "sequence": 25540,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:30a4c9709a453997"
+  },
+  "findings": []
+}

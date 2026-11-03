@@ -1,0 +1,19 @@
+{
+  "chapter": 420,
+  "title": "Parking",
+  "label": "ch:zh-parking",
+  "canDo": "I can talk about a driving licence, traffic lanes, parking spaces, reversing and breaking the rules.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C420-weizhang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 420: I can talk about a driving licence, traffic lanes, parking spaces, reversing and breaking the rules.",
+    "assesses": [
+      "ZH-LEX-C420-PARK420-03",
+      "ZH-LEX-C420-PARK420-04",
+      "ZH-LEX-C420-PARK420-05"
+    ]
+  }
+}

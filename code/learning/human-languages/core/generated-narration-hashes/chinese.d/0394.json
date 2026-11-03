@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 394,
+  "sourceHash": "fnv1a64:78ae60249698cb54",
+  "lessonIds": [
+    "ZH-C394-chenggong",
+    "ZH-C394-shibai",
+    "ZH-C394-maoxian",
+    "ZH-C394-baifei",
+    "ZH-C394-bubian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch394.txt",
+  "json": "chinese/narration/ch394.json",
+  "textHash": "fnv1a64:2e8e485fb0e3f6dd",
+  "jsonHash": "fnv1a64:69d74722d4ce10ec",
+  "findings": []
+}

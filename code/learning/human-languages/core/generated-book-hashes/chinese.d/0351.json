@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 351,
+  "sourceHash": "fnv1a64:755907fad1695bfa",
+  "lessonIds": [
+    "ZH-C351-fenxi",
+    "ZH-C351-youli",
+    "ZH-W351-li-reason",
+    "ZH-C351-jiangli",
+    "ZH-C351-lixiang",
+    "ZH-C351-xinli",
+    "ZH-R351-review-346-351"
+  ],
+  "tex": "chinese/book/chapters/ch351-that-makes-sense.tex"
+}

@@ -37,6 +37,7 @@ fn single(f: IIRFunction) -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 

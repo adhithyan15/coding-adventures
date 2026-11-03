@@ -1,0 +1,19 @@
+{
+  "chapter": 414,
+  "title": "In the Cabin",
+  "label": "ch:zh-in-the-cabin",
+  "canDo": "I can talk about the cabin crew, a window seat, economy class, feeling sick and the seat belt.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C414-anquandai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 414: I can talk about the cabin crew, a window seat, economy class, feeling sick and the seat belt.",
+    "assesses": [
+      "ZH-LEX-C414-CABIN414-03",
+      "ZH-LEX-C414-CABIN414-04",
+      "ZH-LEX-C414-CABIN414-05"
+    ]
+  }
+}

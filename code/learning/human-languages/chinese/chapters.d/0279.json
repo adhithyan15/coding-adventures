@@ -1,0 +1,24 @@
+{
+  "chapter": 279,
+  "title": "The Next Day",
+  "label": "ch:zh-the-next-day",
+  "canDo": "I can say what was going on when something happened, and follow a short story.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C279-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying what was going on when something happened with …的时候 and 正在, suddenly, all at once and the next day, and reading a story of thirteen lines, built on two new written characters: 第 and 突.",
+    "assesses": [
+      "ZH-LEX-C279-DIERTIAN-01",
+      "ZH-SCRIPT-DI-01",
+      "ZH-GRAMMAR-DE-SHIHOU-01",
+      "ZH-LEX-C279-TURAN-01",
+      "ZH-SCRIPT-TU-01",
+      "ZH-LEX-C279-YIXIAZI-01",
+      "ZH-SKILL-READ-STORY-01",
+      "ZH-PERFORMANCE-THATDAY-01"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C298-jiuhuo",
+  "pathSegment": "ZH-PATH-298-FIRE298",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-298-FIRE298",
+      "order": 1
+    }
+  ]
+}

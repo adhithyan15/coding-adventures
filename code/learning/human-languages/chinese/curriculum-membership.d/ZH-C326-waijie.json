@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C326-waijie",
+  "pathSegment": "ZH-PATH-326-WORLD326",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-326-WORLD326",
+      "order": 3
+    }
+  ]
+}

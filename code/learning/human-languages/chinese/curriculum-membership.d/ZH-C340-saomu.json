@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C340-saomu",
+  "pathSegment": "ZH-PATH-340-CUSTOM340",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-340-CUSTOM340",
+      "order": 4
+    }
+  ]
+}

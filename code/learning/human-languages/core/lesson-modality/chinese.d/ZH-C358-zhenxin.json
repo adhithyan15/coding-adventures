@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C358-zhenxin",
+    "language": "chinese",
+    "chapter": 358,
+    "sequence": 27640,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed23662d0d491d87"
+  },
+  "findings": []
+}

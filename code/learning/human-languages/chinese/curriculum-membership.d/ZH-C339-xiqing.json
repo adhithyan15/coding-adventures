@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C339-xiqing",
+  "pathSegment": "ZH-PATH-339-NATION339",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-339-NATION339",
+      "order": 4
+    }
+  ]
+}

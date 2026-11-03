@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 398,
+  "sourceHash": "fnv1a64:3b91fef8cd58b4c9",
+  "lessonIds": [
+    "ZH-C398-taidu",
+    "ZH-C398-qubie",
+    "ZH-C398-diqu",
+    "ZH-C398-xiancheng",
+    "ZH-C398-qujueyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch398.txt",
+  "json": "chinese/narration/ch398.json",
+  "textHash": "fnv1a64:c848f1bc38e10750",
+  "jsonHash": "fnv1a64:6c74b4b6942edc67",
+  "findings": []
+}

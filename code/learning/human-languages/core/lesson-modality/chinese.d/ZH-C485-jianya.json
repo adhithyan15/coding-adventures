@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C485-jianya",
+    "language": "chinese",
+    "chapter": 485,
+    "sequence": 36430,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:470f41d1677b2791"
+  },
+  "findings": []
+}

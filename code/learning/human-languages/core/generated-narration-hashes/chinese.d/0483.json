@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 483,
+  "sourceHash": "fnv1a64:a2684f0d2fdccf34",
+  "lessonIds": [
+    "ZH-C483-haozhuan",
+    "ZH-C483-kangfu",
+    "ZH-C483-yingyang",
+    "ZH-C483-baojian",
+    "ZH-C483-manxing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch483.txt",
+  "json": "chinese/narration/ch483.json",
+  "textHash": "fnv1a64:4fe1284c441a5252",
+  "jsonHash": "fnv1a64:6857dc31e5e0908e",
+  "findings": []
+}

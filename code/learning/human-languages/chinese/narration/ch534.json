@@ -1,0 +1,713 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 534,
+  "title": "I'd Rather",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c4c5346177f70bee",
+  "lessons": [
+    {
+      "id": "ZH-C534-ningke",
+      "sequence": 40030,
+      "title": "nìngkě — would rather",
+      "headword": "nìngkě",
+      "romanization": "nìngkě",
+      "gloss": "would rather",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07d23b8b02af0c79",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to give up all hope, then the Mandarin for may your wishes all come true."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: nìngkě",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nìngkě — \"would rather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ nìngkě zǒulù yě bù xiǎng děng chē — I'd rather walk than wait for the bus."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "nìngkě is built from nìng and 可 'may', both inherited from Middle Chinese, neng and khaX (Guangyun, in Baxter's transcription). The dictionary glosses the first 'calm' and, after an older dictionary, as a word of wishing. The falling tone of nìng is not the regular outcome of neng, which gives níng."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nìngkě",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nìngkě*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nìngkě, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nìngkě*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ nìngkě zǒulù yě bù xiǎng děng chē — I'd rather walk than wait for the bus.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ nìngkě zǒulù yě bù xiǎng děng chē* — I'd rather walk than wait for the bus.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to give up all hope, then the Mandarin for may your wishes all come true, then say nìngkě again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to give up all hope, then the Mandarin for may your wishes all come true, then say *nìngkě* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does nìngkě mean? (\"Would rather\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C534-jinliang",
+      "sequence": 40040,
+      "title": "jǐnliàng — as far as one can",
+      "headword": "jǐnliàng",
+      "romanization": "jǐnliàng",
+      "gloss": "as far as one can",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb3b34fb3972ee83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for may your wishes all come true, then the Mandarin for would rather."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jǐnliàng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jǐnliàng — \"as far as one can\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ nǐ yǒu wèntí wǒ huì jǐnliàng bāng nǐ — If you have a problem, I'll do what I can to help."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jǐnliàng is built from jǐn 'to the full' and 量 'an amount'. No dictionary we use records an older form of jǐn as this word writes it, so its history is not settled. 量 is inherited from Middle Chinese ljangH (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jǐnliàng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jǐnliàng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jǐnliàng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jǐnliàng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ nǐ yǒu wèntí wǒ huì jǐnliàng bāng nǐ — If you have a problem, I'll do what I can to help.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ nǐ yǒu wèntí wǒ huì jǐnliàng bāng nǐ* — If you have a problem, I'll do what I can to help.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for may your wishes all come true, then the Mandarin for would rather, then say jǐnliàng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for may your wishes all come true, then the Mandarin for would rather, then say *jǐnliàng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jǐnliàng mean? (\"As far as one can\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C534-jiaru",
+      "sequence": 40050,
+      "title": "假如 (jiǎrú) — supposing that",
+      "headword": "假如",
+      "romanization": "jiǎrú",
+      "gloss": "supposing that",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0309f68847ec16be",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for would rather, then the Mandarin for as far as one can."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 假如",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "假如 — jiǎrú — \"supposing that\"."
+            },
+            {
+              "kind": "speech",
+              "text": "假如明天下雨我们就不去了 jiǎrú míngtiān xiàyǔ wǒmen jiù bú qù le — Supposing it rains tomorrow, we won't go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "假如 (jiǎrú) is built from 假 jiǎ and 如 'like', both inherited from Middle Chinese, kaeX and nyo (Guangyun, in Baxter's transcription), which glosses the first 'to borrow', 'false' and 'for the time being': a borrowed case."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiǎrú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiǎrú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiǎrú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiǎrú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiǎrú míngtiān xiàyǔ wǒmen jiù bú qù le — Supposing it rains tomorrow, we won't go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiǎrú míngtiān xiàyǔ wǒmen jiù bú qù le* — Supposing it rains tomorrow, we won't go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for would rather, then the Mandarin for as far as one can, then say jiǎrú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for would rather, then the Mandarin for as far as one can, then say *jiǎrú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 假如 (jiǎrú) mean? (\"Supposing that\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C534-xunuo",
+      "sequence": 40060,
+      "title": "xǔnuò — to give one's word; to pledge",
+      "headword": "xǔnuò",
+      "romanization": "xǔnuò",
+      "gloss": "to give one's word; to pledge",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:08f9161faaa0192d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for as far as one can, then the Mandarin for supposing that."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xǔnuò",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xǔnuò — \"to give one's word; to pledge\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ nǐ xǔnuò le jiù yídìng yào zuò dào — If you've given your word, you must keep it."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xǔnuò is built from xǔ 'to allow' and nuò 'to say yes', both inherited from Middle Chinese, xjoX and nak (Guangyun, in Baxter's transcription), which glosses the first 'to permit' and the second, after an older dictionary, 'to answer'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xǔnuò",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xǔnuò*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xǔnuò, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xǔnuò*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ nǐ xǔnuò le jiù yídìng yào zuò dào — If you've given your word, you must keep it.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ nǐ xǔnuò le jiù yídìng yào zuò dào* — If you've given your word, you must keep it.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for as far as one can, then the Mandarin for supposing that, then say xǔnuò again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for as far as one can, then the Mandarin for supposing that, then say *xǔnuò* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xǔnuò mean? (\"To give one's word; to pledge\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C534-wanshiruyi",
+      "sequence": 40070,
+      "title": "万事如意 (wànshì rúyì) — may all go as you wish",
+      "headword": "万事如意",
+      "romanization": "wànshì rúyì",
+      "gloss": "may all go as you wish",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f91e24ec89c9403a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for supposing that, then the Mandarin for to give one's word."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 万事如意",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "万事如意 — wànshì rúyì — \"may all go as you wish\"."
+            },
+            {
+              "kind": "speech",
+              "text": "希望你万事如意 xīwàng nǐ wànshì rúyì — I hope everything goes well for you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "万事如意 (wànshì rúyì) is built from 万 'ten thousand', 事 'a matter', 如 'like' and 意 'what one means', all inherited from Middle Chinese, mjonH, dzriH, nyo and 'iH (Guangyun, in Baxter's transcription): every matter as you would have it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wànshì rúyì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wànshì rúyì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wànshì rúyì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wànshì rúyì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīwàng nǐ wànshì rúyì — I hope everything goes well for you.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīwàng nǐ wànshì rúyì* — I hope everything goes well for you.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for supposing that, then the Mandarin for to give one's word, then say wànshì rúyì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for supposing that, then the Mandarin for to give one's word, then say *wànshì rúyì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 万事如意 (wànshì rúyì) mean? (\"May all go as you wish\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

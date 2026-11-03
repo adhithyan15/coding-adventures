@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W469-wen-warm",
+    "language": "chinese",
+    "chapter": 469,
+    "sequence": 35575,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:8c743f2b931b0e35",
+    "detachableSegments": [
+      "Script — the water piece, then 日 over a dish"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

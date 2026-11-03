@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C299-jijiu",
+    "language": "chinese",
+    "chapter": 299,
+    "sequence": 23480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:de56545c3a7511f2"
+  },
+  "findings": []
+}

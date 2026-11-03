@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C341-yuebing",
+  "pathSegment": "ZH-PATH-341-MOONCAKE341",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-341-MOONCAKE341",
+      "order": 1
+    }
+  ]
+}

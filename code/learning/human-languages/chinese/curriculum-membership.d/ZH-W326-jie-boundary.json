@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W326-jie-boundary",
+  "pathSegment": "ZH-PATH-326-WORLD326",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-326-WORLD326",
+      "order": 2
+    }
+  ]
+}

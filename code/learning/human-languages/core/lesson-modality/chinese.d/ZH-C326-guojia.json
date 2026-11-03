@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C326-guojia",
+    "language": "chinese",
+    "chapter": 326,
+    "sequence": 25410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c25da9fa97d39e5e"
+  },
+  "findings": []
+}

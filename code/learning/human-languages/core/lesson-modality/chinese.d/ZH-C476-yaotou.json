@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C476-yaotou",
+    "language": "chinese",
+    "chapter": 476,
+    "sequence": 35960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:9b52fa780f0eb1f3"
+  },
+  "findings": []
+}

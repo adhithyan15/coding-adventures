@@ -1,0 +1,20 @@
+{
+  "chapter": 330,
+  "title": "The King's Son",
+  "label": "ch:zh-the-king-s-son",
+  "canDo": "I can talk about a king, a queen, a prince and a kingdom, and say someone took over from a parent.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C330-wangguo",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 330: I can talk about a king, a queen, a prince and a kingdom, and say someone took over from a parent.",
+    "assesses": [
+      "ZH-LEX-C330-KING330-03",
+      "ZH-LEX-C330-KING330-04",
+      "ZH-LEX-C330-KING330-05",
+      "ZH-SCRIPT-WANG-KING-01"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-399-ONLYIF399",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-399-ONLYIF399"
+  ],
+  "after": []
+}

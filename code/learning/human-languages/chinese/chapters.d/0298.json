@@ -1,0 +1,19 @@
+{
+  "chapter": 298,
+  "title": "A Fire",
+  "label": "ch:zh-a-fire",
+  "canDo": "I can talk about a fire, the firefighters and someone shouting for help.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C298-jiuming",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 298: I can talk about a fire, the firefighters and someone shouting for help.",
+    "assesses": [
+      "ZH-LEX-C298-FIRE298-03",
+      "ZH-LEX-C298-FIRE298-04",
+      "ZH-LEX-C298-FIRE298-05"
+    ]
+  }
+}

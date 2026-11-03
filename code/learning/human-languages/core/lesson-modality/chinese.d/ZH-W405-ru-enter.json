@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W405-ru-enter",
+    "language": "chinese",
+    "chapter": 405,
+    "sequence": 31165,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:250b337fb9b94860",
+    "detachableSegments": [
+      "Script — two strokes, the right one on top"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C311-jiaojing",
+    "language": "chinese",
+    "chapter": 311,
+    "sequence": 24120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8b14e5d302b14238"
+  },
+  "findings": []
+}

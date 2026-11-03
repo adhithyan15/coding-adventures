@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-418-CHECKIN418",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can check in for a flight, go through the formalities, say flights are grounded and a bag is too heavy.",
+  "prerequisites": []
+}

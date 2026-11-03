@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:5eb20c1d80232158",
+  "lessonIds": [
+    "ZH-C450-haixian",
+    "ZH-C450-tedian",
+    "ZH-W450-te-special",
+    "ZH-C450-teyi",
+    "ZH-C450-zhengzong",
+    "ZH-C450-zhaopaicai"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch450.txt",
+  "json": "chinese/narration/ch450.json",
+  "textHash": "fnv1a64:a48ea1df1d4725a4",
+  "jsonHash": "fnv1a64:bedd2d968a15c813",
+  "findings": []
+}

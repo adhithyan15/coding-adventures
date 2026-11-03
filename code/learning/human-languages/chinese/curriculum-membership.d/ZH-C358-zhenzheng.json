@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C358-zhenzheng",
+  "pathSegment": "ZH-PATH-358-MANNERS358",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-358-MANNERS358",
+      "order": 1
+    }
+  ]
+}

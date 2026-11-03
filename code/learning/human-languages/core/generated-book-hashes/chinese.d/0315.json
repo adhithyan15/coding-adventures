@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:7382f18d1524973d",
+  "lessonIds": [
+    "ZH-C315-jianjian",
+    "ZH-C315-you",
+    "ZH-W315-you-again",
+    "ZH-C315-zizai",
+    "ZH-C315-jingran",
+    "ZH-C315-rengran"
+  ],
+  "tex": "chinese/book/chapters/ch315-once-again.tex"
+}

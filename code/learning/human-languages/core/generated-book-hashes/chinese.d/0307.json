@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 307,
+  "sourceHash": "fnv1a64:2faa4700e1997330",
+  "lessonIds": [
+    "ZH-C307-fenshou",
+    "ZH-C307-lihun",
+    "ZH-C307-zaihun",
+    "ZH-C307-miyue",
+    "ZH-C307-hunsha",
+    "ZH-R307-review-302-307"
+  ],
+  "tex": "chinese/book/chapters/ch307-marrying-and-parting.tex"
+}

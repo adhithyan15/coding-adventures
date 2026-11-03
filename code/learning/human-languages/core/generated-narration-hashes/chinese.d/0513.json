@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 513,
+  "sourceHash": "fnv1a64:81ae52f8edacc9d2",
+  "lessonIds": [
+    "ZH-C513-chuangye",
+    "ZH-C513-dadao",
+    "ZH-C513-zhengqu",
+    "ZH-C513-fendou",
+    "ZH-C513-qinshou",
+    "ZH-R513-review-509-513",
+    "ZH-R513-review-final-513"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch513.txt",
+  "json": "chinese/narration/ch513.json",
+  "textHash": "fnv1a64:a22345beb59fdc1a",
+  "jsonHash": "fnv1a64:6e123006e757df35",
+  "findings": []
+}

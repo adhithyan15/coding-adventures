@@ -157,19 +157,40 @@ host never overwrites a taken name. Three rules follow:
    `EISDIR` on Windows, so a host that skipped only on `EEXIST` would switch
    saving off on Windows where POSIX moves on. The host looks at the name
    again (without following a link) instead.
+4. A name the host cannot inspect is **not** taken. When the look itself
+   fails (the file system reports an error other than "nothing is there"),
+   the host stops, switches saving off, and reports that error together with
+   the name it could not inspect. It never skips to the next name: the same
+   fault usually affects all ten, so counting it as "taken" would walk every
+   name and then report "All 10 quarantine names are taken", which is false
+   and points the user at files that do not exist.
+5. A failed attempt never uses up a name, so failures cannot pile up into all
+   ten. The exclusive step creates the name and writes through the handle it
+   created, in one step, and when a later step fails the host removes exactly
+   what *this attempt* created (the empty placeholder, or a partial copy
+   written through that handle) and nothing else. In particular a host never
+   claims a name with an operation that can half-succeed into a second name
+   for the live file: `File.Copy(..., overwrite: false)` can leave a partial
+   copy behind on POSIX, and .NET's no-replace `File.Move` is `link(2)` then
+   `unlink(2)` there, which can leave the quarantine name as a hard link to
+   the live file. Either leftover then reads as "taken" on every later try.
 
 The exclusive step per host:
 
 | Host | Exclusive step |
 |------|----------------|
-| WinUI | `File.Move(..., overwrite: false)`: `MoveFileEx` without `MOVEFILE_REPLACE_EXISTING` on Windows, where it ships |
-| Flutter, Qt, Compose, SwiftUI | claim the name with an exclusive create (`O_CREAT \| O_EXCL`, Windows `CREATE_NEW`), then rename onto that empty placeholder, an atomic replace whose only victim is the placeholder the host just made |
+| Flutter, Qt, Compose, SwiftUI, WinUI | claim the name with an exclusive create (`O_CREAT \| O_EXCL`, Windows `CREATE_NEW`), then rename onto that empty placeholder, an atomic replace whose only victim is the placeholder the host just made |
+| Engram WinUI (copies, keeping the live file) | `FileStream` with `FileMode.CreateNew` claims the name, and the rejected bytes are copied through that same handle; a failed copy deletes only that file |
 
-The four claim-first hosts cannot use a plain move. `dart:io`'s rename
+The claim-first hosts cannot use a plain move. `dart:io`'s rename
 replaces its target. `QFile::rename` falls back to a truncating copy. The
 JDK's `Files.move` without `REPLACE_EXISTING`, and Foundation's
 `FileManager.moveItem`, check and then call `rename(2)` on POSIX, which
-replaces whatever appeared in between. A state file the Qt host cannot open
+replaces whatever appeared in between. .NET's `File.Move(..., overwrite:
+false)` is atomic on Windows but is `link(2)` then `unlink(2)` on POSIX
+(rule 5), so WinUI claims first too and then moves with `overwrite: true`
+(`MoveFileEx` with `MOVEFILE_REPLACE_EXISTING`, or `rename(2)`) onto its own
+placeholder. A state file the Qt host cannot open
 at all is quarantined the same way. On a fresh state directory the first
 quarantine is still exactly `mosaic-state.v1.json.corrupt`.
 

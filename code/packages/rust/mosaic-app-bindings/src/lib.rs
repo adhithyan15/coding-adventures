@@ -2208,7 +2208,8 @@ mod tests {
     /// |         | `ATOMIC_MOVE` onto the placeholder             |
     /// | SwiftUI | `open(O_CREAT \| O_EXCL)` claims the name,     |
     /// |         | then rename(2) onto the placeholder            |
-    /// | XAML    | `File.Move(..., overwrite: false)`             |
+    /// | XAML    | `FileMode.CreateNew` claims the name, then     |
+    /// |         | `File.Move(..., overwrite: true)` onto it      |
     /// | Flutter | `createSync(exclusive: true)` claims the name  |
     /// | Qt      | `NewOnly` claims the name, then an atomic      |
     /// |         | `std::filesystem::rename` onto the placeholder |
@@ -2295,17 +2296,21 @@ mod tests {
                     "for (var index = 0; index < MaxQuarantinedStates; index++)",
                     "private const int MaxQuarantinedStates = 10;",
                 ],
-                skip: "if (QuarantineNameTaken(candidate)) continue;",
-                no_replace: "File.Move(path, candidate, overwrite: false);",
-                rescan: "if (QuarantineNameTaken(candidate)) continue;",
+                skip: "if (QuarantineNameTaken(candidate, out var unreadable)) continue;",
+                no_replace: "new FileStream(candidate, FileMode.CreateNew, FileAccess.Write, FileShare.None).Dispose();",
+                rescan: "if (QuarantineNameTaken(candidate, out unreadable)) continue;",
                 disable: "persistenceDisabled = true;",
                 guard: [
                     "private void PersistSnapshot()",
                     "if (persistenceDisabled) return;",
                 ],
+                // `overwrite: false` is link(2) then unlink(2) on POSIX, which
+                // can fail halfway and leave the name as a hard link to the
+                // live file, burning a name per attempt.
                 retired: &[
                     "if (File.Exists(corrupt)) File.Delete(corrupt);",
                     "File.Move(path, corrupt)",
+                    "File.Move(path, candidate, overwrite: false);",
                 ],
             },
             Quarantine {
@@ -2400,6 +2405,53 @@ mod tests {
                 "{host}: a disabled save must say so in the warning"
             );
         }
+    }
+
+    /// The XAML host's two ways of burning every quarantine name without
+    /// anything being there (`code/specs/task-app-local-data-operations-v1.md`,
+    /// quarantine rules 4 and 5). `tests/xaml_effect_completion.rs` runs
+    /// both; this pins the shape that makes them hold.
+    ///
+    /// | defect                              | was                       | now                                   |
+    /// |-------------------------------------|---------------------------|---------------------------------------|
+    /// | a name it cannot inspect            | `return true` ("taken")   | stop, "Could not inspect <name>: ..." |
+    /// | a move that fails after its claim   | n/a: link(2) + unlink(2)  | the empty placeholder is removed      |
+    #[test]
+    fn the_xaml_quarantine_never_burns_a_name_on_a_failure() {
+        let source = xaml_runtime_binding_for_application("Example.Tasks", "com.example.tasks");
+        let start = source
+            .find("private static string? MovePersistedStateAside(string path)")
+            .expect("the move");
+        let end = source[start..]
+            .find("private void PersistSnapshot()")
+            .map(|end| start + end)
+            .expect("the save after it");
+        let quarantine = &source[start..end];
+        // An inspection error is returned, never skipped, at both looks.
+        for look in [
+            "if (QuarantineNameTaken(candidate, out var unreadable)) continue;\n                if (unreadable is not null) return unreadable;",
+            "if (QuarantineNameTaken(candidate, out unreadable)) continue;\n                    if (unreadable is not null) return unreadable;",
+        ] {
+            assert!(quarantine.contains(look), "missing {look}");
+        }
+        assert!(quarantine.contains(
+            "unreadable = $\"Could not inspect {candidate}: {error.Message.TrimEnd('.')}\";\n                return false;"
+        ));
+        assert!(
+            !quarantine.contains("return true;"),
+            "an uninspectable name must not count as taken"
+        );
+        // Claim, then move onto the claim; a failed move removes only an
+        // empty placeholder, and reports.
+        let claim = quarantine.find("FileMode.CreateNew").unwrap();
+        let moved = quarantine
+            .find("File.Move(path, candidate, overwrite: true);")
+            .expect("the move onto the claim");
+        assert!(claim < moved, "the name is claimed before the move");
+        assert!(quarantine[moved..].contains("RemoveEmptyClaim(candidate);"));
+        assert!(quarantine.contains(
+            "if (claim.Exists && claim.LinkTarget is null && claim.Length == 0) claim.Delete();"
+        ));
     }
 
     /// UI89 §2.1: a static runtime is a linked binary target the loader

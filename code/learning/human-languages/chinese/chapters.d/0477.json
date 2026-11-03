@@ -1,0 +1,19 @@
+{
+  "chapter": 477,
+  "title": "Inside the Body",
+  "label": "ch:zh-inside-the-body",
+  "canDo": "I can talk about the heart, bones and the brain, my stomach and my appetite.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C477-weikou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 477: I can talk about the heart, bones and the brain, my stomach and my appetite.",
+    "assesses": [
+      "ZH-LEX-C477-INSIDE477-03",
+      "ZH-LEX-C477-INSIDE477-04",
+      "ZH-LEX-C477-INSIDE477-05"
+    ]
+  }
+}
