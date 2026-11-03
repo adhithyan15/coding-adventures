@@ -107,31 +107,11 @@ public sealed class Lcg
     }
 
     /// <summary>
-    /// Return a long uniformly drawn from [min, max] inclusive.
-    ///
-    /// Rejection sampling eliminates modulo bias. Naïve (value % range) skews
-    /// the result when 2^32 is not divisible by range because some outputs are
-    /// reachable by more raw values than others.
-    ///
-    /// The threshold trick: discard any draw that falls in the partial bucket
-    /// at the bottom of the range. The threshold is (-range) % range mod 2^32.
-    /// Expected extra draws: less than 2 for all range sizes.
+    /// Return a uniform long in [min, max] inclusive, by the rejection sampling
+    /// of <see cref="RngRange.IntInRange"/>. Throws
+    /// <see cref="ArgumentOutOfRangeException"/> if min &gt; max, before any draw.
     /// </summary>
-    public long NextIntInRange(long min, long max)
-    {
-        if (min > max)
-            throw new ArgumentOutOfRangeException(nameof(min), $"NextIntInRange requires min <= max, got {min} > {max}");
-        ulong rangeSize = (ulong)(max - min + 1);
-        ulong threshold = (ulong)(-(long)rangeSize) % rangeSize;
-        while (true)
-        {
-            ulong r = (ulong)NextU32();
-            if (r >= threshold)
-            {
-                return min + (long)(r % rangeSize);
-            }
-        }
-    }
+    public long NextIntInRange(long min, long max) => RngRange.IntInRange(NextU32, min, max);
 }
 
 // ── Xorshift64 ────────────────────────────────────────────────────────────────
@@ -200,22 +180,12 @@ public sealed class Xorshift64
         return (double)NextU32() / RngConstants.FloatDiv;
     }
 
-    /// <summary>Return a long in [min, max] inclusive via rejection sampling.</summary>
-    public long NextIntInRange(long min, long max)
-    {
-        if (min > max)
-            throw new ArgumentOutOfRangeException(nameof(min), $"NextIntInRange requires min <= max, got {min} > {max}");
-        ulong rangeSize = (ulong)(max - min + 1);
-        ulong threshold = (ulong)(-(long)rangeSize) % rangeSize;
-        while (true)
-        {
-            ulong r = (ulong)NextU32();
-            if (r >= threshold)
-            {
-                return min + (long)(r % rangeSize);
-            }
-        }
-    }
+    /// <summary>
+    /// Return a uniform long in [min, max] inclusive, by the rejection sampling
+    /// of <see cref="RngRange.IntInRange"/>. Throws
+    /// <see cref="ArgumentOutOfRangeException"/> if min &gt; max, before any draw.
+    /// </summary>
+    public long NextIntInRange(long min, long max) => RngRange.IntInRange(NextU32, min, max);
 }
 
 // ── PCG32 ─────────────────────────────────────────────────────────────────────
@@ -297,20 +267,69 @@ public sealed class Pcg32
         return (double)NextU32() / RngConstants.FloatDiv;
     }
 
-    /// <summary>Return a long in [min, max] inclusive via rejection sampling.</summary>
-    public long NextIntInRange(long min, long max)
+    /// <summary>
+    /// Return a uniform long in [min, max] inclusive, by the rejection sampling
+    /// of <see cref="RngRange.IntInRange"/>. Throws
+    /// <see cref="ArgumentOutOfRangeException"/> if min &gt; max, before any draw.
+    /// </summary>
+    public long NextIntInRange(long min, long max) => RngRange.IntInRange(NextU32, min, max);
+}
+
+// ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ────────────────────
+
+/// <summary>
+/// The rejection sampling every generator's <c>NextIntInRange</c> shares,
+/// identical in every language of the repository.
+/// </summary>
+/// <remarks>
+/// <para>
+/// <c>span = max - min + 1</c> lies between 1 and 2^64. Taking <c>r % span</c>
+/// of a raw draw over-samples small offsets whenever the number of possible
+/// draws is not a multiple of span; rejecting the <c>threshold</c> lowest draws
+/// removes exactly the excess. Three regimes, chosen by span alone:
+/// </para>
+/// <code>
+///   span &lt;= 2^32    draw 32 bits,  threshold = (2^32 - span) mod span
+///   span &lt;  2^64    draw 64 bits,  threshold = (2^64 - span) mod span
+///   span == 2^64    the whole long domain: every ulong is a valid offset
+/// </code>
+/// <para>
+/// All arithmetic is <c>unchecked</c> ulong, which wraps: the whole domain's
+/// span, 2^64, wraps to 0, and <c>min + offset</c> wraps back into [min, max].
+/// v1 took the threshold modulo 2^64 while drawing 32 bits: biased, never more
+/// than 2^32 - 1 above min, a division by zero for the whole domain, and for
+/// spans such as 2^63 + 1 every draw was rejected, so it never returned.
+/// </para>
+/// </remarks>
+internal static class RngRange
+{
+    internal static long IntInRange(Func<uint> next32, long min, long max)
     {
         if (min > max)
             throw new ArgumentOutOfRangeException(nameof(min), $"NextIntInRange requires min <= max, got {min} > {max}");
-        ulong rangeSize = (ulong)(max - min + 1);
-        ulong threshold = (ulong)(-(long)rangeSize) % rangeSize;
-        while (true)
+        unchecked
         {
-            ulong r = (ulong)NextU32();
-            if (r >= threshold)
+            ulong span = (ulong)max - (ulong)min + 1UL; // 2^64 wraps to 0
+            const ulong TwoTo32 = 1UL << 32;
+            ulong Next64() => ((ulong)next32() << 32) | next32();
+            ulong r;
+            if (span == 0)
             {
-                return min + (long)(r % rangeSize);
+                r = Next64();
             }
+            else if (span <= TwoTo32)
+            {
+                ulong threshold = (TwoTo32 - span) % span;
+                do { r = next32(); } while (r < threshold);
+                r %= span;
+            }
+            else
+            {
+                ulong threshold = (0UL - span) % span; // (2^64 - span) mod span
+                do { r = Next64(); } while (r < threshold);
+                r %= span;
+            }
+            return (long)((ulong)min + r);
         }
     }
 }

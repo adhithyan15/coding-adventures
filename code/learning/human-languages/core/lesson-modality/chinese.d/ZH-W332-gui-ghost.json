@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W332-gui-ghost",
+    "language": "chinese",
+    "chapter": 332,
+    "sequence": 25735,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:316208d068dae8a5",
+    "detachableSegments": [
+      "Script — a box with long legs"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

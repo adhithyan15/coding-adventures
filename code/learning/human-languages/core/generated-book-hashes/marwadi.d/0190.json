@@ -1,0 +1,15 @@
+{
+  "language": "marwadi",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:8047307d94ea85e6",
+  "lessonIds": [
+    "MW-C190-dhoti",
+    "MW-C190-jamo",
+    "MW-C190-posak",
+    "MW-C190-rumal",
+    "MW-C190-gahno",
+    "MW-R190-review-185-190",
+    "MW-R190-review-final-190"
+  ],
+  "tex": "marwadi/book/chapters/ch190-clothes-and-jewels.tex"
+}

@@ -2,6 +2,170 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [Unreleased]
+
+### Added (#18798)
+
+- Re-review follow-up: 3 more programs — statements after a block opener
+  on one line (`{ |x| foo; bar }`, `do |x| foo; bar end`, `{ |x| puts;
+  puts 2 }`), `then` after a condition, and a `-`/`[` line after
+  `x = super`.
+- Security review follow-up: 5 more programs — `super` ending its line,
+  `super; setup` and `x = super` ⏎ `puts x`, `yield` ending its line,
+  a bare `puts` before a modifier `if`, and a `rescue` binding the clause
+  reassigns (Rust and JavaScript refused or threw).  `return`/`break`/
+  `next` ending a line are covered by the frontend tests only: no backend
+  runs a `return`/`break`/`next` builtin yet (#18798).
+- `tests/ruby_sir_gaps.rs` gains 10 Ruby programs, each checked against
+  real `ruby` and run on all six backends: a line starting with `-`, `+`
+  or `(` (after an assignment, a name and `;`), an operator ending a line
+  and a leading-dot chain, a lone name before a `(` line, a bare `puts`,
+  `unless`/`until`/`!` (Go and Rust panicked `unknown builtin: not`),
+  `rescue Klass` ⏎ next line, a method-level `rescue`'s value, `;` between
+  statements, and a store into an outer local inside `begin`/`rescue`
+  (rustc refused it).
+
+### Added (#18778)
+
+- Review follow-up: `tests/ruby_sir_gaps.rs` gains `for`-body locals
+  visible after the loop, and ranges with non-literal and Float ends
+  (`1..2.5` runs 1 and 2).  A Hash's `each` with a one-parameter block is
+  NOT in the corpus: only the Ruby backend gives the block the
+  `[key, value]` pair; the others crash, and C prints nothing (#18798).
+- **`tests/ruby_sir_gaps.rs`.**  22 Ruby programs, each checked against
+  real `ruby`, and 2 Python programs, checked against CPython, run on all
+  six backends: `for` (arrays, `...`/`..` ranges, zero trips, in a method,
+  nested loops sharing a variable, a body ending in an `if`), a `while`
+  body ending in `puts`, `rescue => e`, `f() + f` at the start of a
+  statement / in a block / before a modifier `if`, bare method names (at
+  top level, in a method, in a block, and an outer local beating a method),
+  `each` over an array and a hash and in a method, a `[` that starts a line
+  after an assignment and after a call, and Python classes named `dog`,
+  `animal` and `SirCldog` (spelled like `dog`'s renamed Ruby constant).  A
+  `REFUSED` table lists the cells that must be refused at compile time (the
+  C and Ruby backends do not run `e.message` yet); a listed cell that runs
+  fails the test, and so does an unlisted refusal.
+- `tests/local_shadows_function.rs` gains a Ruby `for` loop variable named
+  like a method (`for f in [1, 2]`), now that the frontend has `for`.
+
+### Removed
+
+- The two `KNOWN_GAPS` entries in `tests/python_statement_forms.rs`
+  (`py_param_copy_spelled_like_a_hoisted_method` and
+  `py_hoisted_method_then_param_copy` on Ruby): the Ruby backend now
+  defines a class named `__param_a`, and the stale-entry check reported
+  both cells as passing.  The table stays, empty, for the next gap.
+
+### Fixed
+
+- **Each run's files live in a private scratch directory (#18788 security
+  review).**  `temp_path` named files `<program>_<target>_<pid>_<n>` directly
+  in the shared system temp directory: unique, but predictable, so any other
+  process on the host could create, replace or symlink a name before the
+  harness wrote it.  Every `run_*` function now makes a fresh
+  `sir_test_scratch::Scratch` (random name, created atomically, mode `0700`
+  on Unix, removed on drop), `temp_path` names files inside it, and files
+  are created with `write_new` (`create_new`).  The `TempFile` guards stay.
+  New unit test `temp_paths_live_in_the_runs_private_directory`.
+- **`run_go` uses a Go build cache nothing else deletes.**  `go run` read
+  standard-library export data from the shared `~/.cache/go-build`, and a
+  `go clean -cache` elsewhere turned into a spurious
+  `# command-line-arguments` compile error (the root cause of the
+  `semantic-ir-to-go` `twig_pairs_and_closures.rs` flake).  It now runs
+  `sir_test_scratch::go_command()`, whose `GOCACHE` is under the cargo
+  target directory.
+
+### Added
+
+- **Globals and constants in `tests/local_shadows_function.rs`.**  Two
+  hand-built modules -- a module global named like a function, and a local
+  named like a global read in the same function -- run on every backend
+  (JavaScript under `node` used to print a `SyntaxError` and 80).  A new
+  test, `constants_named_like_methods_print_rubys_output`, runs two Ruby
+  programs with a constant spelled like a method (`F = 2; F() + F`, and a
+  raised class `Boom` beside `def Boom`) against real `ruby`; backends that
+  refuse a constant *assignment* (JavaScript, Go, Rust) skip the first.
+
+- **Temp files are unique per call (#18485).**  `temp_path` named a run's
+  source and binary after the program, the target and the process id.
+  Tests in one test binary share the process id and run on parallel
+  threads, so two tests compiling the same program for the same target
+  overwrote or deleted each other's files (`--test arithmetic` failed this
+  way once).  The name now ends in a process-wide atomic counter.  Unit
+  tests `temp_paths_are_unique_within_one_process` and
+  `temp_paths_are_unique_across_threads`.
+- **Temp files are removed on every path.**  `run_python` returned
+  `Skipped` when the `sir-runtime-*` packages were missing *after* writing
+  its `.py`, and left it behind.  Every `run_*` function now holds its
+  source and binary in a `TempFile` guard that deletes them on drop, and
+  `run_python` looks for the runtimes before writing anything.  Unit test
+  `a_temp_file_guard_removes_its_file_on_every_path`.
+
+### Added
+
+- **`tests/local_shadows_function.rs` (#18485).**  A variable named like a
+  function must not shadow it.  Five Ruby programs (a `main` local, a method
+  local, a parameter, a `rescue` binding, and a recursive method whose
+  parameter spells its own name) are checked against real `ruby` and run
+  on all six backends; four hand-built SIR modules cover what the Ruby
+  frontend cannot spell yet (a `for` range variable, a `for each`
+  variable, a closure capture and a keyword parameter).  Python,
+  JavaScript, Go and Rust failed every one; C and Ruby already named their
+  functions `sir_fn_<name>`.
+- **Two #18771 programs in `tests/python_statement_forms.rs`**: a
+  parameter copy and a hoisted method that the frontend used to give the
+  same name, in both orders, checked against CPython.  The new
+  `KNOWN_GAPS` table marks their Ruby cells, which fail for an unrelated
+  reason (the Ruby backend cannot define a class named `__param_a`, which
+  is not a Ruby constant); a gap cell that starts passing fails the test so
+  its entry is removed.
+
+## [0.29.0] - Python statement forms (#18482)
+
+Adds `tests/python_statement_forms.rs`: 33 Python programs covering the
+statement forms `python-to-semantic-ir` 0.13.0 fixed, each run on Python,
+JavaScript, Go, Rust, C and Ruby and compared with CPython's output:
+
+- augmented assignment (`+= -= *= /=`, on ints, floats and strings, on a
+  parameter in a loop, on `self.n` in a method);
+- annotated assignment, with and without a value;
+- chained assignment, including a shared list and a subscript target;
+- a parameter assigned in a loop or an `if`, and then captured;
+- a `for` over an already-bound variable, including a zero-trip loop;
+- falling off the end of a function, a call or `print` just before a tail
+  `return`, and one-line bodies;
+- a user `def main`, called and used as a value, and a variable spelled
+  like its escaped name;
+- `pass` everywhere, an expression statement last in a loop body, a loop
+  body that assigns its own loop variable, and an inner loop that rebinds
+  the outer loop's variable;
+- `self.n += self.bump()` where `bump` changes `self.n`, which tells the
+  evaluation order apart (CPython: 6);
+- two code-running arguments of one method call (`c.pair(c.get(),
+  c.bump())`, CPython 1005, #18768), a constructor and a method call with
+  a compound argument, an indirect call whose callee and argument both
+  print, and a local spelled `__lambda_0`.
+
+A backend that *refuses* one of these programs ("does not yet accept")
+counts as a failure here, not a skip: after the first ordering fix the C
+backend refused the compound-argument method call, and the skip hid it.
+
+`programs_lower_and_validate` checks every program passes the validator.
+`programs_print_cpythons_output_on_every_backend` first checks each
+expectation against a real `python3` (when present), then runs every
+`(program, backend)` cell and reports all the cells that disagree at once.
+
+Against `python-to-semantic-ir` 0.12.0, every program fails on at least
+four of the six backends, by printing the wrong value or not lowering.
+The six programs added after the security review fail against the first
+commit of this change (and its backends): `pass` was refused; the C
+backend printed 105 for the evaluation-order program; JavaScript printed
+`10` once for the loop-variable program, Rust refused it, and C and Ruby
+printed nothing for any loop whose last statement was a `print`.
+(Rebinding a parameter or loop variable happened to work on the Python
+and Ruby backends, whose emitted code has no block scope.)  `while` loops carry a guard counter so
+the old endless-loop lowering fails instead of hanging.
+
 ## [0.28.0] - Python closures that name themselves or each other (#18468)
 
 Adds `tests/python_nested_closures.rs`: six Python programs whose nested

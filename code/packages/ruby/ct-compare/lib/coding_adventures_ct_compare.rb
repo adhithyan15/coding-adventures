@@ -65,8 +65,16 @@ module CodingAdventures
     # reader moving between them is not left wondering what the difference is.
     def ct_eq_fixed(left, right) = ct_eq(left, right)
 
-    # Select +left+ when +choice+ is true, otherwise +right+, without branching
-    # on +choice+.
+    # Select +left+ when +choice+ is 1, otherwise +right+ (when it is 0),
+    # without branching on +choice+.
+    #
+    # Why an Integer and not true/false: Ruby has no branch-free way to turn a
+    # boolean into a number. Every conversion is a branch on the secret bit
+    # (+choice ? 0xFF : 0x00+), which CT01 forbids. Even the old validation
+    # leaked it: +[true, false].include?(choice)+ stops at its first match, so
+    # it did one comparison for +true+ and two for +false+. The bit is
+    # therefore an Integer that must be exactly 0 or 1, as Go's
+    # +crypto/subtle+ does.
     #
     # The trick is arithmetic rather than control flow: a mask of all-ones or
     # all-zeros turns the selection into XOR, so both inputs are read and the
@@ -83,16 +91,17 @@ module CodingAdventures
         raise ArgumentError, "ct_select_bytes requires equal-length byte strings"
       end
 
-      # Reject non-boolean choice rather than leaning on Ruby truthiness. In
-      # Ruby `0` is truthy and would select LEFT; in Python it is falsy and
-      # selects RIGHT. A call site ported from another language passing 0/1
-      # would silently take the opposite branch -- which, in a constant-time
-      # select, means the wrong key. Elixir guards with is_boolean; so do we.
-      unless [true, false].include?(choice)
-        raise ArgumentError, "ct_select_bytes requires choice to be true or false"
+      # Only an Integer 0 or 1 is a valid choice. The type check is public; the
+      # range check clears bit 0 and tests for zero, a single computation whose
+      # result is the same for both valid values, so a valid call takes the
+      # same path whichever bit is secret. (true/false are rejected: they are
+      # not Integers.)
+      unless choice.is_a?(Integer) && (choice & ~1).zero?
+        raise ArgumentError, "ct_select_bytes requires choice to be 0 or 1"
       end
 
-      mask = choice ? 0xFF : 0x00
+      # 0 -> -0 & 0xFF = 0x00 (right);  1 -> -1 & 0xFF = 0xFF (left)
+      mask = -choice & 0xFF
       output = +"".b
       index = 0
       while index < left_bytes.bytesize
@@ -116,6 +125,47 @@ module CodingAdventures
       difference = (left ^ right) & U64_MAX
       folded = (difference | (-difference & U64_MAX)) >> 63
       folded.zero?
+    end
+
+    # -- Bit-returning equality (CT01, "How a lane receives the selection bit")
+    #
+    # ct_select_bytes takes its selection bit as an Integer, because every way
+    # Ruby has of turning true/false into 1/0 is an if, a ?: or a lookup. A
+    # caller holding only ct_eq's boolean would need exactly that branch, so
+    # each equality also returns the bit itself, computed from the difference
+    # accumulator with arithmetic only. Ruby's >> on a negative Integer is an
+    # arithmetic shift, so for an accumulator in 0..255:
+    #
+    #   acc = 0          (0 - 1) >> 8 = -1,  -1 & 1 = 1   (equal)
+    #   acc = 1 .. 255   (acc - 1) >> 8 = 0,  0 & 1 = 0   (different)
+    #
+    # Use it as ct_select_bytes(a, b, ct_eq_bit(x, y)).
+
+    # 1 when the byte strings are equal, else 0. A length mismatch is 0 and
+    # reads neither input; lengths are public.
+    def ct_eq_bit(left, right)
+      left_bytes = as_bytes(left)
+      right_bytes = as_bytes(right)
+      return 0 unless left_bytes.bytesize == right_bytes.bytesize
+
+      accumulator = 0
+      index = 0
+      while index < left_bytes.bytesize
+        accumulator |= left_bytes.getbyte(index) ^ right_bytes.getbyte(index)
+        index += 1
+      end
+      ((accumulator - 1) >> 8) & 1
+    end
+
+    # Fixed-size companion to ct_eq_bit (an alias, as ct_eq_fixed is).
+    def ct_eq_fixed_bit(left, right) = ct_eq_bit(left, right)
+
+    # 1 when the two unsigned 64-bit values are equal, else 0. The difference
+    # lies in 0..2^64-1, so subtracting 1 is negative exactly when it was 0.
+    def ct_eq_u64_bit(left, right)
+      validate_u64!(left, "left")
+      validate_u64!(right, "right")
+      ((((left ^ right) & U64_MAX) - 1) >> 64) & 1
     end
 
     def as_bytes(value)

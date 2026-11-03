@@ -322,6 +322,24 @@ convenience.
   for deciding whether to abort or skip ahead.
 - **Determinism**: the same input + version + oracle always
   produces the same token stream.  Property tests verify this.
+- **Source budget** (#18814): the lexer refuses more than
+  `MAX_SOURCE_BYTES` = 1 MiB (the parser release API's
+  `MAX_TRUSTED_SOURCE_BYTES`) before lexing any of it, with the typed
+  `RubyLexError::Budget { which, limit, actual }` from `RubyLexer::push`
+  and `tokenize_ruby_for_version`.  The wrappers that cannot return an
+  error fail closed: a synthetic `RUBY_LEX_BUDGET_EXCEEDED` token and
+  `Eof`, which no grammar accepts (never an empty list, which would read
+  as an empty program).  Never a panic.
+- **Linear post-passes** (#18814): every token-stream post-pass (the era
+  fusions, the statement-end marking, and removing heredoc tag names) is
+  one sweep over the tokens.  A pass that folds, inserts or removes tokens
+  builds or compacts the vector once; it never calls `Vec::remove` /
+  `Vec::insert` per token, which made the fusions quadratic (80 000 lines
+  of `a&.b` took ~153 s) and heredoc finalization quadratic in the number
+  of heredocs on a line.
+- **Parallel arrays stay parallel** (#18820): `whitespace_before_token[i]`
+  belongs to `tokens[i]`; any removal takes both, or every later
+  adjacency check reads the wrong token's whitespace.
 - **Performance budget**: ~10 µs per KB of typical Ruby source on
   a 2024 laptop.  This isn't a real number yet — to be tightened
   after Phase 1 benchmarks.

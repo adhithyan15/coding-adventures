@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased — Measurements write into a private scratch directory (#18788 security review)
+
+`temp_path` named a measurement's source and binary
+`sir_bench_<program>_<target>_<pid>_<n>` directly in the shared system temp
+directory: unique, but predictable, so another process could create,
+replace or symlink the name first.  `measure` now makes a fresh
+`sir_test_scratch::Scratch` (random name, created atomically, mode `0700` on
+Unix, removed on drop) and writes the source with `create_new`.  The
+`TempFile` guards stay.  The Go build cache is left alone here: `sir-bench`
+is a benchmark people run, not a test, and its compile timings should
+reflect the user's own cache.
+
+## Unreleased — Unique temp files, removed on every path (#18485 follow-up)
+
+`temp_path` named a measurement's source and binary from the program, the
+target and the process id only, so two measurements of one program in one
+process (parallel test threads) shared files. It now adds a process-wide
+atomic counter, as `sir-conformance` does. The files are held by a
+`TempFile` guard that deletes them on drop, so every early return of
+`measure` (a failed write, a failed compile, a failed run) cleans up; a
+failed compile used to leave the binary path behind.
+
 ## 0.1.1 — fix: Linux link failure benchmarking the C target
 
 The C-target compile step didn't link `-lm`. Harmless until

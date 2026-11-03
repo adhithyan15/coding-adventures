@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 287,
+  "sourceHash": "fnv1a64:6e531e6b4b68610d",
+  "lessonIds": [
+    "PA-C287-bund",
+    "PA-C287-bhijjna",
+    "PA-C287-harh",
+    "PA-C287-tapakna",
+    "PA-C287-chikkar",
+    "PA-R287-review-281-287"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch287.txt",
+  "json": "punjabi/narration/ch287.json",
+  "textHash": "fnv1a64:deb19ffe2332b40a",
+  "jsonHash": "fnv1a64:f140e3bf2ceae30a",
+  "findings": []
+}

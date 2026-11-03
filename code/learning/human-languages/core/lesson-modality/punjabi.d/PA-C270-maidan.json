@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C270-maidan",
+    "language": "punjabi",
+    "chapter": 270,
+    "sequence": 15910,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:321852b8509846ff"
+  },
+  "findings": []
+}

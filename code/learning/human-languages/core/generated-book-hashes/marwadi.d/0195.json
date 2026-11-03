@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 195,
+  "sourceHash": "fnv1a64:36d419ec15378b30",
+  "lessonIds": [
+    "MW-C195-baink",
+    "MW-C195-khato",
+    "MW-C195-karaj",
+    "MW-C195-baki",
+    "MW-C195-bachno"
+  ],
+  "tex": "marwadi/book/chapters/ch195-at-the-bank.tex"
+}

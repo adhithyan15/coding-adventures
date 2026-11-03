@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 341,
+  "title": "Mooncakes",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:4eb5c451c306ca33",
+  "lessons": [
+    {
+      "id": "ZH-C341-dousha",
+      "sequence": 26190,
+      "title": "dòushā — sweet bean paste",
+      "headword": "dòushā",
+      "romanization": "dòushā",
+      "gloss": "sweet bean paste",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f459fe56ef48fa01",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a solar term of the year, then the Mandarin for to tend the family graves."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dòushā",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dòushā — \"sweet bean paste\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhège miànbāo lǐ yǒu dòushā — There's bean paste in this bun."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dòushā is built from dòu 'beans' and shā 'sand', both inherited from Middle Chinese, duwH and srae (Guangyun, in Baxter's transcription), which glosses the first 'beans' and the second 'grit scattered by water'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dòushā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dòushā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dòushā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dòushā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège miànbāo lǐ yǒu dòushā — There's bean paste in this bun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège miànbāo lǐ yǒu dòushā* — There's bean paste in this bun.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a solar term of the year, then the Mandarin for to tend the family graves, then say dòushā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a solar term of the year, then the Mandarin for to tend the family graves, then say *dòushā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dòushā mean? (\"Sweet bean paste\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C341-yuebing",
+      "sequence": 26200,
+      "title": "月饼 (yuèbǐng) — mooncake",
+      "headword": "月饼",
+      "romanization": "yuèbǐng",
+      "gloss": "mooncake",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ca590c14b58ff920",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to tend the family graves, then the Mandarin for sweet bean paste."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 月饼",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "月饼 — yuèbǐng — \"mooncake\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我买了两个月饼 wǒ mǎi le liǎng ge yuèbǐng — I bought two mooncakes."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 饼 (bǐng) — nine strokes: on the left the food piece of 饭, three strokes; on the right two short strokes, two bars, and two strokes down. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "月饼 (yuèbǐng) is built from 月 'the moon' and 饼 (bǐng) 'a cake', both inherited from Middle Chinese, ngjwot and pjiengX (Guangyun, in Baxter's transcription), which gives the second only its reading."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuèbǐng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuèbǐng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yuèbǐng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yuèbǐng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ mǎi le liǎng ge yuèbǐng — I bought two mooncakes.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ mǎi le liǎng ge yuèbǐng* — I bought two mooncakes.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to tend the family graves, then the Mandarin for sweet bean paste, then say yuèbǐng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to tend the family graves, then the Mandarin for sweet bean paste, then say *yuèbǐng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 月饼 (yuèbǐng) mean? (\"Mooncake\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W341-bing-cake",
+      "sequence": 26205,
+      "title": "饼 (bǐng) — the food piece, then two bars and two legs",
+      "headword": "饼",
+      "romanization": "bǐng",
+      "gloss": "饼 — the food piece of 饭, then two dots, two bars and two downstrokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b91aa55afc0c4ad7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the food piece, then two bars and two legs",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the food piece, then two bars and two legs and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say yuèbǐng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *yuèbǐng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "饭 月."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — fàn, yuè",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *fàn*, *yuè*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the food piece, then two bars and two legs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "饼 (bǐng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, the food piece, three strokes, as in 饭: a stroke falling to the left, a short bar that turns down to the left, then a vertical that flicks up to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, six strokes. Two short strokes on top, the left one a dot, the right one falling to the left. Two bars, the lower one longer. Then a stroke down the left that falls away to the left, and a vertical down the right."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 6 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "饼 (bǐng), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 饼, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 饼 (bǐng)? (Nine.) Where have you met the left piece? (On the left of 饭.) How many bars on the right? (Two.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 饼 (bǐng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C341-xianr",
+      "sequence": 26210,
+      "title": "xiànr — filling",
+      "headword": "xiànr",
+      "romanization": "xiànr",
+      "gloss": "filling",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0dce926c0eb29097",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for sweet bean paste, then the Mandarin for a mooncake."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: xiànr",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiànr — \"filling\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhège yuèbǐng de xiànr shì dòushā — This mooncake has a bean-paste filling."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "xiànr No dictionary we use records an older form, so its history is not settled. The ending r is the 儿 of 一会儿."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiànr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiànr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xiànr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xiànr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège yuèbǐng de xiànr shì dòushā — This mooncake has a bean-paste filling.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège yuèbǐng de xiànr shì dòushā* — This mooncake has a bean-paste filling.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for sweet bean paste, then the Mandarin for a mooncake, then say xiànr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for sweet bean paste, then the Mandarin for a mooncake, then say *xiànr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does xiànr mean? (\"Filling\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C341-pinchang",
+      "sequence": 26220,
+      "title": "pǐncháng — to taste; to sample",
+      "headword": "pǐncháng",
+      "romanization": "pǐncháng",
+      "gloss": "to taste; to sample",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6ffcc09e09c6de0d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a mooncake, then the Mandarin for the filling of a dumpling."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pǐncháng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pǐncháng — \"to taste; to sample\"."
+            },
+            {
+              "kind": "speech",
+              "text": "dàjiā dōu pǐncháng le wǒ zuò de yuèbǐng — Everyone tasted the mooncakes I made."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pǐncháng is built from pǐn and cháng, both inherited from Middle Chinese, phimX and dzyang (Guangyun, in Baxter's transcription), which glosses the first 'a rank' and 'a kind', and the second 'to try' and, quoting an older dictionary, 'to taste with the mouth'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pǐncháng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pǐncháng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pǐncháng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pǐncháng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàjiā dōu pǐncháng le wǒ zuò de yuèbǐng — Everyone tasted the mooncakes I made.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàjiā dōu pǐncháng le wǒ zuò de yuèbǐng* — Everyone tasted the mooncakes I made.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a mooncake, then the Mandarin for the filling of a dumpling, then say pǐncháng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a mooncake, then the Mandarin for the filling of a dumpling, then say *pǐncháng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pǐncháng mean? (\"To taste; to sample\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C341-shengyi",
+      "sequence": 26230,
+      "title": "生意 (shēngyi) — business; trade",
+      "headword": "生意",
+      "romanization": "shēngyi",
+      "gloss": "business; trade",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96f7fe09dfa5a91b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the filling of a dumpling, then the Mandarin for to taste food with care."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 生意",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "生意 — shēngyi — \"business; trade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "每年这个时候月饼的生意最好 měinián zhège shíhou yuèbǐng de shēngyi zuì hǎo — Every year at this time the mooncake trade is at its best."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "生意 (shēngyi) is built from 生 'life' and 意 'intent', both inherited from Middle Chinese, srjaeng and 'iH (Guangyun, in Baxter's transcription), which glosses the first 'to grow' and the second 'the will'. How the pair came to mean business is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for telling what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēngyi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēngyi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shēngyi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shēngyi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "měinián zhège shíhou yuèbǐng de shēngyi zuì hǎo — Every year at this time the mooncake trade is at its best.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *měinián zhège shíhou yuèbǐng de shēngyi zuì hǎo* — Every year at this time the mooncake trade is at its best.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the filling of a dumpling, then the Mandarin for to taste food with care, then say shēngyi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the filling of a dumpling, then the Mandarin for to taste food with care, then say *shēngyi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 生意 (shēngyi) mean? (\"Business; trade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

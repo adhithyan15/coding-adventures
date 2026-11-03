@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 186,
+  "sourceHash": "fnv1a64:a83bfabbbfb09086",
+  "lessonIds": [
+    "MW-C186-dhakkan",
+    "MW-C186-kudo",
+    "MW-C186-pidho",
+    "MW-C186-pato",
+    "MW-C186-palang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch186.txt",
+  "json": "marwadi/narration/ch186.json",
+  "textHash": "fnv1a64:8a081a7d8281d711",
+  "jsonHash": "fnv1a64:a4d353991fe37025",
+  "findings": []
+}

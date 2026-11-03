@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C342-sapshat",
+    "language": "punjabi",
+    "chapter": 342,
+    "sequence": 21280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fdccfa5e9ca7596e"
+  },
+  "findings": []
+}

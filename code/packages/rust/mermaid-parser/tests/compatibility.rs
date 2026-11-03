@@ -45,6 +45,14 @@ const C4_RELATIONSHIP_ARROWS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-relationship-arrows-11.16.1-visual-corpus.json"
 ));
+const C4_RELATIONSHIP_REDECLARATIONS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-redeclarations-11.16.1-corpus.json"
+));
+const C4_RELATIONSHIP_REDECLARATIONS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-relationship-redeclarations-11.16.1-visual-corpus.json"
+));
 const C4_DIRECTED_RELATIONSHIPS_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-directed-relationships-11.16.1-corpus.json"
@@ -2652,6 +2660,28 @@ fn pinned_c4_relationship_arrows_reach_semantic_ir() {
     .expect("C4 Rel_Back fixture must parse");
     assert!(backward.relationships[0].start_arrow);
     assert!(!backward.relationships[0].end_arrow);
+}
+
+#[test]
+fn pinned_c4_relationship_redeclarations_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_RELATIONSHIP_REDECLARATIONS_CORPUS).unwrap();
+    let visual: Value =
+        serde_json::from_str(C4_RELATIONSHIP_REDECLARATIONS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram =
+        parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.relationships.len(), 1);
+    let relationship = &diagram.relationships[0];
+    assert_eq!(relationship.label.as_deref(), Some("Synchronizes"));
+    assert!(relationship.start_arrow && relationship.end_arrow);
+    assert_eq!(relationship.label_offset_x, 14.0);
+    assert_eq!(relationship.style.as_ref().unwrap().stroke.as_deref(), Some("#b91c1c"));
+    let diagram_ir::StructuralRelationshipMetadata::C4(metadata) =
+        relationship.metadata.as_ref().unwrap();
+    assert_eq!(metadata.technology.as_deref(), Some("gRPC"));
+    assert_eq!(metadata.description.as_deref(), Some("Latest exchange"));
 }
 
 #[test]

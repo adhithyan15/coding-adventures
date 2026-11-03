@@ -24,7 +24,6 @@
 //! Gated on `go version`: a missing toolchain logs a skip rather than
 //! reddening the build (mirrors `compile_and_run_coll_methods.rs`).
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
@@ -285,7 +284,7 @@ fn send_zero_arg_method_raises_argument_error_not_native_panic() {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -293,11 +292,12 @@ fn go_available() -> bool {
 }
 
 fn run_go(source: &str, tag: &str) -> std::process::Output {
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_m6_{tag}_{nonce}.go"));
-    std::fs::write(&src_path, source).expect("write temp source");
-    let out = Command::new("go")
+    sir_test_scratch::write_new(&src_path, source).expect("write temp source");
+    let out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&src_path)
         .output()
@@ -370,4 +370,15 @@ fn unknown_send_fails_cleanly() {
         stderr.contains("undefined method") && stderr.contains("bogus_xyz"),
         "expected a controlled undefined-method panic; stderr:\n{stderr}"
     );
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

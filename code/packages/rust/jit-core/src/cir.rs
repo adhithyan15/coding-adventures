@@ -303,6 +303,11 @@ impl CIRInstr {
             // LANG83 PR4: the overflow-checked ops trap `Trap.Overflow`, so an
             // unused checked add is still observable and must survive DCE.
             | "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf"
+            // LANG83 PR5a: an out-of-range `str_index` / `str_slice` traps
+            // `Trap.Bounds`, and a `str_concat` past the string ceiling traps
+            // `Trap.Overflow`. The read is observable through its trap even
+            // when its result is never used, so DCE must keep it.
+            | "str_index" | "str_slice" | "str_concat"
         )
     }
 }
@@ -381,7 +386,9 @@ mod tests {
     fn is_pure_side_effect_ops() {
         for op in &["call_runtime", "call", "ret_void", "jmp", "label", "type_assert", "io_out",
                     "trap", "i64_div_floor", "i64_mod_floor",
-                    "i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf"] {
+                    "i64_add_ovf", "i64_sub_ovf", "i64_mul_ovf", "i64_neg_ovf",
+                    // LANG83 PR5a: the string ops that may trap.
+                    "str_index", "str_slice", "str_concat"] {
             let i = CIRInstr::new(*op, None::<&str>, vec![], "void");
             assert!(!i.is_pure(), "expected impure: {op}");
         }

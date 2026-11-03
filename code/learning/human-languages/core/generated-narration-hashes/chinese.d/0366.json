@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 366,
+  "sourceHash": "fnv1a64:c3312b491191b44c",
+  "lessonIds": [
+    "ZH-C366-bimian",
+    "ZH-C366-dangxin",
+    "ZH-C366-jianchi",
+    "ZH-C366-fangqi",
+    "ZH-C366-zhide"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch366.txt",
+  "json": "chinese/narration/ch366.json",
+  "textHash": "fnv1a64:4f91e8c7aaa6ad7e",
+  "jsonHash": "fnv1a64:288c51ada69c0261",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:169bf32be552b17b",
+  "lessonIds": [
+    "PA-C358-visha",
+    "PA-C358-ganit",
+    "PA-C358-vigian",
+    "PA-C358-itihas",
+    "PA-C358-parhauna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch358.txt",
+  "json": "punjabi/narration/ch358.json",
+  "textHash": "fnv1a64:c0e4b51df8c83d65",
+  "jsonHash": "fnv1a64:d50a218be801a3b2",
+  "findings": []
+}

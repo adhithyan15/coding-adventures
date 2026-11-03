@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 303,
+  "sourceHash": "fnv1a64:32a53a9109068d9c",
+  "lessonIds": [
+    "PA-C303-nahir",
+    "PA-C303-khuh",
+    "PA-C303-sinjna",
+    "PA-C303-kisan",
+    "PA-C303-halat"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch303.txt",
+  "json": "punjabi/narration/ch303.json",
+  "textHash": "fnv1a64:0f672d95e054cc70",
+  "jsonHash": "fnv1a64:20864ba38c63ba53",
+  "findings": []
+}

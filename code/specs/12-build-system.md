@@ -147,6 +147,31 @@ The build system parses language-specific metadata files to discover inter-packa
 
 Dependencies on external packages (not in the monorepo) are silently ignored.
 
+A Rust (or, in the Go tool, WASM) package's edges come from `path` entries in
+every Cargo table that links into or builds the crate: `[dependencies]`,
+`[build-dependencies]` (and the legacy `build_dependencies`), and the same
+tables under `[target.<cfg>.…]` for every cfg, as a union over all targets
+because CI builds on several hosts. Entries are read both as inline tables
+(`name = { path = "..." }`, whose arrays may continue onto later lines) and as
+`[<table>.<name>]` sub-tables with a `path = "..."` key; a quoted `package`
+field renames the dependency. A field or sub-table key may be bare or quoted
+(`"path" = "..."` is the `path` key, as Cargo reads it). Before
+2026-11-01 only the top-level `[dependencies]` table was read, so a change to
+a build or target-specific dependency rebuilt and re-tested none of its
+dependents: `paint-metal`, `paint-vm-cairo` and `paint-vm-direct2d` under the
+barcode crates, the sandbox crates under the chief-of-staff launchers, and
+`grammar-tools` under the lexers' and parsers' build scripts were all missed.
+`[dev-dependencies]` in every form are not edges; they are test triggers (see
+below). The exact line-reading procedure, including the out-of-scope TOML
+shapes, is the cross-implementation contract in `build-tool-conformance.md`.
+That procedure is lenient, so in the Go tool the strict test-trigger reader
+below also screens these link tables of every Rust and WASM package and stops
+the plan on any shape the procedure does not model. The edge reader carries
+its own limits (a manifest that is not a regular file or exceeds 1 MiB, or one
+entry continuing past 256 lines or 64 KiB, stops the plan), because it runs
+before that reader. A dependency that resolves to the package itself is a
+`DEPENDENCY_SELF_EDGE` error, never a self-loop.
+
 Mosaic is a domain language, not an implementation lane, so only the Go
 reference tool resolves it (the conformance contract does not require the
 other build-tool implementations to). Only the keys of the root
@@ -203,6 +228,35 @@ Git or acquiring process, environment, or network authority. OCaml remains an
 emerging lane until its promotion gates pass and is therefore not in this
 fifteen-lane denominator.
 
+Haskell packages carry one platform-routing rule. GHC 9.4.8's macOS bindist
+hardcodes a Command Line Tools SDK sysroot; when the runner's default developer
+directory is an older Xcode beside newer Command Line Tools, that Xcode linker
+cannot read the CLT SDK's `arm64e.x1` stubs and every link fails. Cabal builds
+a package's whole local project in the one process the package root's BUILD
+line starts, so fixing a dependency's BUILD never protects the root that
+selected it. Every BUILD line a `haskell` package runs on macOS (the file
+Darwin resolves: `BUILD_mac`, then `BUILD_mac_and_linux`, then `BUILD`) must
+therefore select `DEVELOPER_DIR=/Library/Developer/CommandLineTools` behind a
+`[ "$(uname -s)" = Darwin ]` check, in one of two accepted shapes:
+
+```sh
+# Prefix: export inside this line's own `sh -c`, then the unchanged command.
+if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; cabal test all
+# Inline: the assignment scoped to the Darwin branch's Cabal command.
+if [ "$(uname -s)" = Darwin ]; then DEVELOPER_DIR=/Library/Developer/CommandLineTools cabal test all; else cabal test all; fi
+```
+
+Both scope the selection to that line's process tree (each line is its own
+`sh -c`), leave other platforms' inherited environment untouched, never call
+`xcode-select`, and keep the package command's exit status as the line's exit
+status. A line consisting only of the `BUILD_TOOL_UNSUPPORTED` protocol record
+or of a bare `echo` launches no toolchain and is exempt. Comment lines never
+satisfy the rule. `--validate-build-files` rejects a missing selection and
+names the file and the governing lesson
+(`lessons.d/ghc-must-select-the-linker-matching-its-hardcoded-macos-sdk.md`).
+This rule is implemented by the Go reference tool; it has no neutral
+conformance fixture yet.
+
 Tracked dependency artifacts are a separate validation boundary. The closed
 `tracked_artifact_absence` snapshot supplies bounded path and entry-kind
 records as inert data and declares the exact Unicode `17.0.0` data version.
@@ -249,7 +303,8 @@ plan if the consumer is missing from discovery.
 
 A Cargo `[dev-dependencies]` entry links a crate into another crate's tests,
 never its library, so it is not a build-graph edge (the
-`resolution/rust-field-aware` conformance case pins that). It must still
+`resolution/rust-field-aware` conformance case pins that, while pinning
+build and target-specific dependencies as edges). It must still
 re-run the dependent's tests: every Mosaic package and app is tested by a
 Cargo smoke harness whose only in-repository dependencies are dev-dependencies
 on the Mosaic compilers and artifact builder, so without this a change to a
@@ -289,10 +344,18 @@ Unicode-normalization-aliased spelling of the path can move or drop the
 trigger. The target is:
 
 - a discovered package root: that package is a trigger. The chain does not
-  end there, because the build graph records only a Rust or WASM package's
-  top-level `[dependencies]`: its target-specific and build dependencies, and
-  any `Cargo.toml` at the root of another language's package (a native
-  extension), would otherwise be invisible;
+  end there. The build graph does record a Rust or WASM package's
+  `[dependencies]`, `[build-dependencies]` and target forms, so when every
+  link of that package resolves to another package, following it only
+  re-derives what the one-hop rule already reaches through `AffectedNodes`.
+  The graph cannot see the rest, though. It has no node for a crate that is
+  not a package root (a nested or orphan crate, which may itself be reached
+  only through a dev-dependency), so nothing such a crate links is a graph
+  edge. It reads another language's package through that language's manifest,
+  so a `Cargo.toml` at its root (a native extension) contributes no edge. And
+  it resolves entries by Cargo name, where triggers resolve by path. Following
+  every target keeps all three cases covered without depending on which of
+  them applies;
 - any other crate: if it lies inside a discovered package (another package,
   or the dependent itself), that package is a trigger, since prefix matching
   attributes changes there to it. If no package covers it, it must be listed
@@ -364,8 +427,28 @@ outside it:
   unique (Cargo ignores `Package`, so it must not be read as a rename), with a
   one-line string, boolean or array-of-strings value; nested inline tables,
   trailing commas, escapes and `workspace = true` are refused;
+- for a Rust or WASM package, a write into a graph-edge table
+  (`[dependencies]`, `[build-dependencies]`, `[build_dependencies]` and their
+  `[target.<cfg>.…]` forms) in a shape the lenient edge reader does not
+  model. Accepted: `[D]` and `[target.<cfg>.D]` holding one-segment keys whose
+  value is a one-line string or an inline table (which may continue onto
+  later lines) whose fields are all `key = value` with one-segment keys; and
+  `[D.<name>]` and `[target.<cfg>.D.<name>]` sub-tables holding one-segment
+  keys with one-line values. Refused: dotted keys there or anywhere else that
+  reach such a table (`a.path = ...` in `[build-dependencies]`,
+  `build-dependencies.a.path = ...` at the root, `dependencies.a = ...` under
+  `[target.<cfg>]`), inline tables that spell one
+  (`build-dependencies = { ... }` under `[target.<cfg>]`, `target = { ... }`),
+  deeper headers and arrays of tables (`[dependencies.a.features]`,
+  `[[dependencies]]`), any other value (an array, a number), a value that
+  spans lines in a sub-table, any backslash in such a table's values, and
+  workspace inheritance (`a = { workspace = true }`, or a `workspace` key in
+  a sub-table): Cargo takes that entry's path from the workspace root's
+  `[workspace.dependencies]`, which the edge reader never opens;
 - a manifest that is not a regular file or exceeds 1 MiB, or one entry
-  continuing past 256 lines or 64 KiB.
+  continuing past 256 lines or 64 KiB. The file is opened once, and the open
+  handle must be the very regular file the size check saw (`os.SameFile`),
+  so a symlink swapped in between is refused rather than followed.
 
 A leading UTF-8 byte-order mark is stripped, as TOML allows.
 

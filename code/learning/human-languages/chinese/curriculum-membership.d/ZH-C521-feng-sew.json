@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C521-feng-sew",
+  "pathSegment": "ZH-PATH-521-CHORES521",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-521-CHORES521",
+      "order": 1
+    }
+  ]
+}

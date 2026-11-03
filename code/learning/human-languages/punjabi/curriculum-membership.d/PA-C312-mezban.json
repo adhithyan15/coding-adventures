@@ -1,0 +1,11 @@
+{
+  "id": "PA-C312-mezban",
+  "pathSegment": "PA-PATH-312-VISIT312",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-312-VISIT312",
+      "order": 3
+    }
+  ]
+}

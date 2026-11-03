@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W353-dao-way",
+  "pathSegment": "ZH-PATH-353-POINT353",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-353-POINT353",
+      "order": 2
+    }
+  ]
+}

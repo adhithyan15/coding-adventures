@@ -15,9 +15,9 @@ use std::error::Error;
 use std::fmt;
 use task_core::checklists::{ChecklistOutlineRow, ChecklistSummary, MAX_CHECKLIST_ITEMS};
 use task_core::{
-    ChecklistId, Constraint, Date, Decision, DependencyKind, DependencyLink, Duration, Label,
-    LabelId, LinkId, Note, NoteId, Priority, ProjectComplexity, ProjectId, RunStatus, TaskId,
-    Workspace, WorkspaceId,
+    task_name_fits, ChecklistId, Constraint, Date, Decision, DependencyKind, DependencyLink,
+    Duration, Label, LabelId, LinkId, Note, NoteId, Priority, ProjectComplexity, ProjectId,
+    RunStatus, TaskId, Workspace, WorkspaceId, MAX_TASK_NAME_CHARS,
 };
 
 const SNAPSHOT_SCHEMA: &str = "task-mosaic-app/state";
@@ -27,7 +27,40 @@ const PROJECT_START: Date = Date(20_458); // 2026-01-05, a Monday.
 /// The longest a Checklists composer (a checklist's or an item's name) may
 /// grow. Longer input is refused as it is typed, so no draft can grow the
 /// state file without bound (task-app-checklists-view-v1.md, "Bounds").
-const MAX_CHECKLIST_TEXT_CHARS: usize = 512;
+/// Each composer names a task (a checklist's root, or an item), so this IS
+/// the task-name limit, not a number that merely happens to agree with it.
+const MAX_CHECKLIST_TEXT_CHARS: usize = MAX_TASK_NAME_CHARS;
+
+// ── Task-name caps (6e4) ────────────────────────────────────────────────────
+//
+// task-core refuses a task name past `MAX_TASK_NAME_CHARS` (512 Unicode
+// scalar values; task-app-data-model.md, "Task names are bounded"). That is
+// the backstop. This adapter applies the same number earlier, wherever a
+// person types a task name, so the refusal is one they can see:
+//
+//   field                     slot                 past the cap
+//   Add Task composer         new-task-name        refused as typed
+//   edit-task field           edit-task-name       refused as typed
+//   Sheet Name cell           sheet-edit-content   refused as typed (column 0)
+//   note "Attach to task"     note-task-value      refused as typed
+//   Add / Save, draft over    *-task-name-error    TASK_NAME_TOO_LONG shown
+//
+// "Refused as typed" is the note-title rule, through the same
+// `capped_draft_payload`: the event fails, `dispatch` rolls back, and the
+// field shows its last value again. An over-cap draft can still shrink, so a
+// name stored before the cap (which loads whole) can be edited down. The
+// last row is reachable only through a restored draft: `new_task_name` is in
+// the snapshot, and a draft restored over the cap is kept whole, as a note's
+// is, rather than cleared.
+
+/// What the composer's error slot says when Add or Save meets a name past
+/// [`MAX_TASK_NAME_CHARS`].
+const TASK_NAME_TOO_LONG: &str = "Task names can be at most 512 characters.";
+
+/// A draft's size in the task-name unit: Unicode scalar values.
+fn scalar_count(text: &str) -> usize {
+    text.chars().count()
+}
 
 // ── Note draft caps (E5) ────────────────────────────────────────────────────
 //
@@ -1603,7 +1636,12 @@ impl TaskMosaicApp {
         }
         match normalized_name.as_str() {
             "newTaskNameChange" => {
-                self.state.new_task_name = text_payload(event, "value")?;
+                self.state.new_task_name = capped_draft_payload(
+                    event,
+                    &self.state.new_task_name,
+                    scalar_count,
+                    MAX_TASK_NAME_CHARS,
+                )?;
                 if !self.state.new_task_name.trim().is_empty() {
                     self.state.new_task_name_error.clear();
                 }
@@ -1621,7 +1659,12 @@ impl TaskMosaicApp {
                 }
             }
             "editTaskNameChange" => {
-                self.state.edit_task_name = text_payload(event, "value")?;
+                self.state.edit_task_name = capped_draft_payload(
+                    event,
+                    &self.state.edit_task_name,
+                    scalar_count,
+                    MAX_TASK_NAME_CHARS,
+                )?;
                 if !self.state.edit_task_name.trim().is_empty() {
                     self.state.edit_task_name_error.clear();
                 }
@@ -1652,13 +1695,22 @@ impl TaskMosaicApp {
                     MAX_NOTE_BODY_BYTES,
                 )?
             }
-            "noteTaskNameChange" => self.state.note_task_name = text_payload(event, "value")?,
+            "noteTaskNameChange" => {
+                self.state.note_task_name = capped_draft_payload(
+                    event,
+                    &self.state.note_task_name,
+                    scalar_count,
+                    MAX_TASK_NAME_CHARS,
+                )?
+            }
             "sheetFilterChange" => self.state.sheet_filter_text = text_payload(event, "value")?,
             "sheetSortFieldChange" => {
                 self.state.sheet_sort_field = text_payload(event, "value")?;
                 self.state.sheet_sort_open = false;
             }
-            "sheetFormulaChange" => self.state.sheet_edit_content = text_payload(event, "value")?,
+            "sheetFormulaChange" => {
+                self.state.sheet_edit_content = self.sheet_edit_payload(event)?
+            }
             "toggleTheme" => self.state.dark_theme = !self.state.dark_theme,
             "showList" => self.state.view = ViewMode::List,
             "showBoard" => self.state.view = ViewMode::Board,
@@ -1712,7 +1764,10 @@ impl TaskMosaicApp {
             "sheetNavigate" => {
                 self.navigate_sheet(index_payload(event, "row")?, index_payload(event, "col")?)
             }
-            "sheetEditCommit" => self.commit_sheet(text_payload(event, "value")?),
+            "sheetEditCommit" => {
+                let value = self.sheet_edit_payload(event)?;
+                self.commit_sheet(value)
+            }
             "addLabel" => return self.add_label(),
             "calendarEventDropped" => self.move_calendar_event(event)?,
             "selectNote" => self.select_note(index_payload(event, "index")?),
@@ -1749,6 +1804,11 @@ impl TaskMosaicApp {
         let name = self.state.new_task_name.trim().to_string();
         if name.is_empty() {
             self.state.new_task_name_error = "Enter a task name.".to_string();
+            return Ok(self.update());
+        }
+        // Only a draft restored over the cap gets here; typing cannot grow one.
+        if !task_name_fits(&name) {
+            self.state.new_task_name_error = TASK_NAME_TOO_LONG.to_string();
             return Ok(self.update());
         }
         self.state.new_task_name_error.clear();
@@ -1857,6 +1917,17 @@ impl TaskMosaicApp {
         let name = self.state.edit_task_name.trim().to_string();
         if name.is_empty() {
             self.state.edit_task_name_error = "Enter a task name.".to_string();
+            return Ok(self.update());
+        }
+        // task-core's rename rule, checked here so the refusal is visible: past
+        // the cap is allowed only for a name no longer than the stored one.
+        let stored = self
+            .active_project()
+            .tasks
+            .get(&id)
+            .map_or(0, |task| scalar_count(&task.name));
+        if !task_name_fits(&name) && scalar_count(&name) > stored {
+            self.state.edit_task_name_error = TASK_NAME_TOO_LONG.to_string();
             return Ok(self.update());
         }
         self.state.edit_task_name_error.clear();
@@ -2045,6 +2116,22 @@ impl TaskMosaicApp {
         }
     }
 
+    /// The Sheet's formula-bar text, capped as a task name while the edit is
+    /// in the Name column (column 0, as `sheet_rows` lays it out). Other
+    /// columns hold a date, a priority or label names, and take it as it is.
+    fn sheet_edit_payload(&self, event: &Event) -> Result<String, TaskAppError> {
+        if self.state.sheet_edit_col == 0 {
+            capped_draft_payload(
+                event,
+                &self.state.sheet_edit_content,
+                scalar_count,
+                MAX_TASK_NAME_CHARS,
+            )
+        } else {
+            text_payload(event, "value")
+        }
+    }
+
     fn clear_sheet_edit(&mut self) {
         self.state.sheet_edit_row = -1;
         self.state.sheet_edit_col = -1;
@@ -2121,8 +2208,8 @@ impl TaskMosaicApp {
 
     /// Commit the note draft, or refuse it and say why.
     ///
-    /// The typed task name resolves against the active project's tasks
-    /// (case-insensitive, exact). The outcomes:
+    /// The typed task name resolves against the active project's tasks by
+    /// [`task_named`] (Unicode lowercasing, exact; see there). The outcomes:
     ///
     ///   task field        match?   result
     ///   blank             —        saved, unattached
@@ -2138,19 +2225,13 @@ impl TaskMosaicApp {
         let Some(id) = self.state.selected_note_id.clone() else {
             return Ok(self.update());
         };
-        let attached = if self.state.note_task_name.trim().is_empty() {
+        let typed = self.state.note_task_name.trim();
+        let attached = if typed.is_empty() {
             None
         } else {
-            self.active_project()
-                .tasks
-                .values()
-                .find(|task| {
-                    task.name
-                        .eq_ignore_ascii_case(self.state.note_task_name.trim())
-                })
-                .map(|task| task.id.clone())
+            task_named(self.active_project(), typed)
         };
-        if !self.state.note_task_name.trim().is_empty() && attached.is_none() {
+        if !typed.is_empty() && attached.is_none() {
             self.state.note_error = NOTE_TASK_NOT_FOUND.to_string();
             return Ok(self.announced_update(NOTE_TASK_NOT_FOUND));
         }
@@ -2264,9 +2345,11 @@ fn bounded_text_payload(event: &Event, field: &'static str) -> Result<String, Ta
     Ok(value)
 }
 
-/// A note-draft edit, refused when it would leave the draft past `max`.
+/// A draft edit, refused when it would leave the draft past `max`: a note's
+/// title and body, and every field a task name is typed into (6e4).
 ///
-/// `measure` is the cap's unit (characters for a title, bytes for a body).
+/// `measure` is the cap's unit (characters for a title or a task name, bytes
+/// for a body).
 /// The rule, with `new` the edited text and `old` the draft it replaces:
 ///
 ///   measure(new) <= max              kept (the normal case)
@@ -2278,6 +2361,10 @@ fn bounded_text_payload(event: &Event, field: &'static str) -> Result<String, Ta
 /// Refused means `InvalidPayload`, which `dispatch` turns into a rollback,
 /// so the draft keeps its last value and the field shows it again — what
 /// Journal does with an over-long entry (task-app-notes-ui-v1.md, v1.2).
+///
+/// For a task name, "a note saved before the caps" is a task named before
+/// them, whose whole name the edit field, the Sheet cell or a note's
+/// attach field may load (task-app-data-model.md, "Task names are bounded").
 fn capped_draft_payload(
     event: &Event,
     current: &str,
@@ -2334,6 +2421,57 @@ fn item_count_label(items: usize) -> String {
         1 => "1 item".to_string(),
         n => format!("{n} items"),
     }
+}
+
+// ── Matching a typed task name (task-app-notes-ui-v1.md, addendum v1.4) ──
+//
+// The Notes editor's "Attach to task" field holds a task's NAME, which Save
+// turns back into the task's id. The web host does the same in
+// `controller.ts`, and the two must agree on every input: a note that
+// attaches on one platform and is refused on the other is the bug this
+// rule exists to prevent (backlog 6e2; this used `eq_ignore_ascii_case`,
+// which folds only A-Z, while the web lowercased all of Unicode).
+//
+// The rule, applied by `save_note` and `task_named`:
+//
+//   step  what                                  Rust              JavaScript
+//   1     trim the typed text (White_Space)     str::trim         \p{White_Space} regex
+//   2     blank -> no attachment                is_empty          !typed
+//   3     lowercase both names                  str::to_lowercase toLowerCase
+//   4     equal lowercased strings match        ==                Map lookup
+//   5     a tie -> the first task by id         BTreeMap order    first-set wins
+//
+// Lowercasing is Unicode's default full mapping: locale-independent, one
+// character may become several (`İ` -> `i` + U+0307), and Greek capital
+// sigma becomes final `ς` at the end of a word. It is NOT case folding, so
+// a few pairs a person might expect to match do not:
+//
+//   task       typed      result    why
+//   Écrire     écrire     attaches  É lowercases to é
+//   ΣΑΣ        σας        attaches  the last Σ becomes final ς
+//   ΣΑΣ        σασ        refused   σ is not ς (folding would equate them)
+//   Straße     STRASSE    refused   ß lowercases to itself (folding: ss)
+//   İstanbul   istanbul   refused   İ lowercases to i + U+0307
+//
+// Nor are names Unicode-normalized: É as U+00C9 and as E + U+0301 are
+// different names. `std` has no normalization and this crate takes no
+// dependency for it; normalizing on one host only would break the parity.
+// The shared cases are `programs/mosaic/task-app/fixtures/
+// task-name-matching-v1.json`, run by a test here and by the web host's.
+
+/// The task in `project` whose name matches `typed`, by the rule above.
+///
+/// `typed` is expected already trimmed and non-empty; `save_note` handles
+/// the blank case, which means "no attachment" rather than "no match".
+/// `project.tasks` is a `BTreeMap` keyed by id, so `find` returns the
+/// first matching task in ascending id order, which is step 5's tie rule.
+fn task_named(project: &task_core::ProjectState, typed: &str) -> Option<TaskId> {
+    let wanted = typed.to_lowercase();
+    project
+        .tasks
+        .values()
+        .find(|task| task.name.to_lowercase() == wanted)
+        .map(|task| task.id.clone())
 }
 
 /// RecordList draws a row's title as its button: never let it be empty.
@@ -3932,6 +4070,402 @@ mod tests {
         let notes = &app.active_project().notes;
         assert_eq!(notes.len(), 1);
         assert!(notes.values().next().unwrap().attached_task.is_none());
+    }
+
+    // ── Matching the typed task name (6e2; addendum v1.4) ─────────────────
+
+    /// One case of the shared task-name vectors. The web host's
+    /// `__tests__/notes.test.ts` reads the same file into the same shape.
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct TaskNameCase {
+        name: String,
+        tasks: Vec<String>,
+        typed: String,
+        /// Index into `tasks` of the task the note attaches to; `None`
+        /// means the Save is refused.
+        attaches_to: Option<usize>,
+    }
+
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct TaskNameVectors {
+        schema_version: u32,
+        cases: Vec<TaskNameCase>,
+    }
+
+    /// Every shared case, end to end: add the tasks, type the name, press
+    /// Save, and check where the note went. Before 6e2 the accented,
+    /// Greek, German, Kelvin and trim cases that attach were all refused
+    /// here (ASCII-only `eq_ignore_ascii_case`), while the web attached
+    /// them.
+    #[test]
+    fn typed_task_names_match_by_the_shared_vectors() {
+        let vectors: TaskNameVectors = serde_json::from_str(include_str!(
+            "../../../../programs/mosaic/task-app/fixtures/task-name-matching-v1.json"
+        ))
+        .expect("valid task-name vectors");
+        assert_eq!(vectors.schema_version, 1);
+        assert!(!vectors.cases.is_empty());
+
+        for case in vectors.cases {
+            let mut app = TaskMosaicApp::with_clock(fixed_clock);
+            app.start(context()).unwrap();
+            // The ids each task got, in the order the case lists them.
+            let mut ids: Vec<TaskId> = Vec::new();
+            for task in &case.tasks {
+                let before: BTreeSet<TaskId> = app.active_project().tasks.keys().cloned().collect();
+                send(&mut app, "newTaskNameChange", json!({ "value": task }));
+                send(&mut app, "addTask", json!({}));
+                let added: Vec<TaskId> = app
+                    .active_project()
+                    .tasks
+                    .keys()
+                    .filter(|id| !before.contains(*id))
+                    .cloned()
+                    .collect();
+                assert_eq!(added.len(), 1, "{}: one task per addTask", case.name);
+                ids.push(added[0].clone());
+            }
+            // The tie rule is "first by id"; the vectors say "first listed".
+            // They agree only while ids ascend in creation order, so pin it.
+            assert!(
+                ids.windows(2).all(|w| w[0] < w[1]),
+                "{}: ids ascend",
+                case.name
+            );
+
+            send(&mut app, "showNotes", json!({}));
+            send(&mut app, "newNote", json!({}));
+            send(
+                &mut app,
+                "noteTaskNameChange",
+                json!({ "value": case.typed }),
+            );
+            let props = send(&mut app, "saveNote", json!({}));
+
+            let notes = &app.active_project().notes;
+            match case.attaches_to {
+                Some(index) => {
+                    assert_eq!(props["note-error"], "", "{}: not refused", case.name);
+                    assert_eq!(notes.len(), 1, "{}: saved", case.name);
+                    let note = notes.values().next().unwrap();
+                    assert_eq!(
+                        note.attached_task.as_ref(),
+                        Some(&ids[index]),
+                        "{}: attached to task {index}",
+                        case.name
+                    );
+                }
+                None => {
+                    assert_eq!(
+                        props["note-error"], NOTE_TASK_NOT_FOUND,
+                        "{}: refused",
+                        case.name
+                    );
+                    assert!(notes.is_empty(), "{}: nothing written", case.name);
+                }
+            }
+        }
+    }
+
+    // ── the task-name limit (6e4) ──────────────────────────────────────────
+
+    /// One case of `fixtures/task-name-limit-v1.json`. The web host's
+    /// `__tests__/task-name-limit.test.ts` reads the same file.
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct TaskNameLimitCase {
+        name: String,
+        #[serde(default)]
+        prefix: String,
+        repeat: String,
+        count: usize,
+        suffix: String,
+        accepted: bool,
+    }
+
+    impl TaskNameLimitCase {
+        fn typed(&self) -> String {
+            format!(
+                "{}{}{}",
+                self.prefix,
+                self.repeat.repeat(self.count),
+                self.suffix
+            )
+        }
+    }
+
+    #[derive(Debug, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct TaskNameLimitVectors {
+        schema_version: u32,
+        max_chars: usize,
+        cases: Vec<TaskNameLimitCase>,
+    }
+
+    fn task_name_limit_vectors() -> TaskNameLimitVectors {
+        serde_json::from_str(include_str!(
+            "../../../../programs/mosaic/task-app/fixtures/task-name-limit-v1.json"
+        ))
+        .expect("valid task-name limit vectors")
+    }
+
+    /// The number is task-core's, and the fixture's, and every cap that
+    /// names a task here is that one number.
+    #[test]
+    fn the_task_name_limit_is_the_shared_one() {
+        let vectors = task_name_limit_vectors();
+        assert_eq!(vectors.schema_version, 1);
+        assert_eq!(MAX_TASK_NAME_CHARS, vectors.max_chars);
+        assert_eq!(MAX_CHECKLIST_TEXT_CHARS, MAX_TASK_NAME_CHARS);
+        assert!(TASK_NAME_TOO_LONG.contains(&MAX_TASK_NAME_CHARS.to_string()));
+    }
+
+    /// Every shared case, end to end through the Add Task composer: type,
+    /// press Add, and check the task landed with the trimmed name, or that
+    /// the edit was refused and Add wrote nothing.
+    #[test]
+    fn task_names_are_capped_by_the_shared_vectors() {
+        let vectors = task_name_limit_vectors();
+        assert!(!vectors.cases.is_empty());
+        for case in &vectors.cases {
+            let typed = case.typed();
+            let mut app = TaskMosaicApp::with_clock(fixed_clock);
+            app.start(context()).unwrap();
+            let before = app.active_project().tasks.len();
+            let change = app.dispatch(event(1, "newTaskNameChange", json!({ "value": typed })));
+            assert_eq!(change.is_ok(), case.accepted, "{}: the edit", case.name);
+            let props = send(&mut app, "addTask", json!({}));
+            let tasks = &app.active_project().tasks;
+            if case.accepted {
+                assert_eq!(tasks.len(), before + 1, "{}: added", case.name);
+                assert!(
+                    tasks.values().any(|task| task.name == typed.trim()),
+                    "{}: named as typed, trimmed",
+                    case.name
+                );
+            } else {
+                assert_eq!(props["new-task-name"], "", "{}: draft kept", case.name);
+                assert_eq!(tasks.len(), before, "{}: nothing written", case.name);
+            }
+        }
+    }
+
+    /// The edit field takes the cap as typed, and a rename at the cap lands.
+    #[test]
+    fn the_edit_task_field_is_capped_as_typed() {
+        let mut app = notes_app(); // one task, "Groceries"
+        send(&mut app, "showList", json!({}));
+        send(&mut app, "editTask", json!({ "index": 0 }));
+        let at_cap = "😀".repeat(MAX_TASK_NAME_CHARS);
+        send(&mut app, "editTaskNameChange", json!({ "value": at_cap }));
+        let over = format!("{at_cap}x");
+        assert_eq!(
+            app.dispatch(event(1, "editTaskNameChange", json!({ "value": over })))
+                .unwrap_err(),
+            TaskAppError::InvalidPayload {
+                event: "onEditTaskNameChange".to_string(),
+                field: "value",
+            }
+        );
+        assert_eq!(app.update().props["edit-task-name"], at_cap);
+        send(&mut app, "saveTaskEdit", json!({}));
+        assert!(app
+            .active_project()
+            .tasks
+            .values()
+            .any(|task| task.name == at_cap));
+    }
+
+    /// The Sheet's formula bar is capped only while it edits a name.
+    #[test]
+    fn the_sheet_name_cell_is_capped_and_other_cells_are_not() {
+        let mut app = notes_app();
+        send(&mut app, "showSheet", json!({}));
+        send(&mut app, "sheetNavigate", json!({ "row": 0, "col": 0 }));
+        let over = "x".repeat(MAX_TASK_NAME_CHARS + 1);
+        assert!(app
+            .dispatch(event(1, "sheetFormulaChange", json!({ "value": over })))
+            .is_err());
+        assert_eq!(app.update().props["sheet-edit-content"], "Groceries");
+        // A commit past the cap is refused too, and the edit stays open.
+        assert!(app
+            .dispatch(event(1, "sheetEditCommit", json!({ "value": over })))
+            .is_err());
+        assert_eq!(app.state.sheet_edit_col, 0);
+        assert!(app
+            .active_project()
+            .tasks
+            .values()
+            .all(|task| task.name == "Groceries"));
+        // At the cap, the rename lands.
+        let at_cap = "x".repeat(MAX_TASK_NAME_CHARS);
+        send(&mut app, "sheetEditCommit", json!({ "value": at_cap }));
+        assert!(app
+            .active_project()
+            .tasks
+            .values()
+            .any(|task| task.name == at_cap));
+
+        // The Deadline cell (column 2) is not a name: its draft is not capped.
+        send(&mut app, "sheetNavigate", json!({ "row": 0, "col": 2 }));
+        send(&mut app, "sheetFormulaChange", json!({ "value": over }));
+        assert_eq!(app.update().props["sheet-edit-content"], over);
+    }
+
+    /// The note's attach field takes the task-name cap (notes-ui v1.5).
+    #[test]
+    fn the_note_attach_field_is_capped_as_typed() {
+        let mut app = notes_app();
+        let at_cap = "é".repeat(MAX_TASK_NAME_CHARS);
+        send(&mut app, "noteTaskNameChange", json!({ "value": at_cap }));
+        assert!(app
+            .dispatch(event(
+                1,
+                "noteTaskNameChange",
+                json!({ "value": format!("{at_cap}é") })
+            ))
+            .is_err());
+        assert_eq!(app.update().props["note-task-value"], at_cap);
+    }
+
+    /// A composer draft restored over the cap is kept whole, as a note's
+    /// is; Add then says why it will not add it, and the draft can shrink.
+    #[test]
+    fn a_restored_over_cap_draft_is_kept_and_add_says_why() {
+        let mut app = TaskMosaicApp::with_clock(fixed_clock);
+        app.start(context()).unwrap();
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut state: Value = serde_json::from_slice(&snapshot.bytes).unwrap();
+        let big = "x".repeat(MAX_TASK_NAME_CHARS + 10);
+        state["newTaskName"] = json!(big);
+        let mut restored = TaskMosaicApp::with_clock(fixed_clock);
+        let props = restored
+            .restore(Snapshot {
+                bytes: serde_json::to_vec(&state).unwrap(),
+                ..snapshot
+            })
+            .unwrap()
+            .props;
+        assert_eq!(props["new-task-name"], big, "restored whole");
+
+        let before = restored.active_project().tasks.len();
+        let props = send(&mut restored, "addTask", json!({}));
+        assert_eq!(props["new-task-name-error"], TASK_NAME_TOO_LONG);
+        assert_eq!(props["new-task-name"], big, "draft kept");
+        assert_eq!(restored.active_project().tasks.len(), before);
+
+        // Shrinking is allowed, still over the cap; growing is not.
+        let shorter = &big[..big.len() - 1];
+        send(
+            &mut restored,
+            "newTaskNameChange",
+            json!({ "value": shorter }),
+        );
+        assert!(restored
+            .dispatch(event(1, "newTaskNameChange", json!({ "value": big })))
+            .is_err());
+        // Once within the cap, Add works and the error is gone.
+        let fits = &big[..MAX_TASK_NAME_CHARS];
+        send(&mut restored, "newTaskNameChange", json!({ "value": fits }));
+        let props = send(&mut restored, "addTask", json!({}));
+        assert_eq!(props["new-task-name-error"], "");
+        assert_eq!(restored.active_project().tasks.len(), before + 1);
+    }
+
+    /// A task named before the cap loads whole, renders whole, can be edited
+    /// down while still over it, and still takes a note.
+    #[test]
+    fn a_task_stored_over_the_cap_loads_whole_and_can_only_shrink() {
+        let mut app = notes_app();
+        let legacy = "L".repeat(MAX_TASK_NAME_CHARS + 10);
+        let id = app.active_project().tasks.keys().next().unwrap().clone();
+        app.active_project_mut().tasks.get_mut(&id).unwrap().name = legacy.clone();
+        let snapshot = app.snapshot().unwrap().unwrap();
+        let mut app = TaskMosaicApp::with_clock(fixed_clock);
+        app.restore(snapshot).unwrap();
+        assert_eq!(app.active_project().tasks[&id].name, legacy, "not cut");
+
+        // A note attached to it before the cap. Opening the note loads the
+        // whole name into the attach field (an over-cap value may arrive
+        // that way, though it can never be typed), and Save still finds it.
+        app.active_project_mut().upsert_note(Note {
+            id: NoteId::from_raw("legacy-note"),
+            title: "Old".to_string(),
+            body: String::new(),
+            attached_task: Some(id.clone()),
+        });
+        send(&mut app, "showNotes", json!({}));
+        let props = send(&mut app, "selectNote", json!({ "index": 0 }));
+        assert_eq!(props["note-task-value"], legacy, "loaded whole");
+        let props = send(&mut app, "saveNote", json!({}));
+        assert_eq!(props["note-error"], "", "the whole name still matches");
+
+        // Edit it down, still over the cap: kept.
+        send(&mut app, "showList", json!({}));
+        send(&mut app, "editTask", json!({ "index": 0 }));
+        let shorter = &legacy[..legacy.len() - 1];
+        send(&mut app, "editTaskNameChange", json!({ "value": shorter }));
+        let props = send(&mut app, "saveTaskEdit", json!({}));
+        assert_eq!(props["edit-task-name-error"], "");
+        assert_eq!(app.active_project().tasks[&id].name, shorter);
+
+        // A Save that would grow it (only a draft set behind the field's
+        // back can be longer) is refused with the visible reason.
+        send(&mut app, "editTask", json!({ "index": 0 }));
+        app.state.edit_task_name = legacy.clone();
+        let props = send(&mut app, "saveTaskEdit", json!({}));
+        assert_eq!(props["edit-task-name-error"], TASK_NAME_TOO_LONG);
+        assert_eq!(app.active_project().tasks[&id].name, shorter);
+    }
+
+    /// The two standard-library calls the rule is built on, pinned on the
+    /// edge cases where lowercasing is easy to get wrong. The web host's
+    /// `notes.test.ts` asserts the same outputs for `toLowerCase()` and its
+    /// `trimWhiteSpace`, so a change in either platform shows up on both.
+    #[test]
+    fn lowercasing_and_trimming_agree_with_the_web_host() {
+        assert_eq!("ΣΑΣ".to_lowercase(), "σας"); // word-final sigma
+        assert_eq!("ΑΣ'Β".to_lowercase(), "ασ'β"); // ' is case-ignorable
+        assert_eq!("İ".to_lowercase(), "i\u{0307}"); // one char becomes two
+        assert_eq!("ẞ".to_lowercase(), "ß");
+        assert_eq!("ß".to_lowercase(), "ß"); // not "ss": no folding
+        assert_eq!("Ǆ".to_lowercase(), "ǆ");
+        assert_eq!("ǅ".to_lowercase(), "ǆ");
+        assert_eq!("\u{212A}".to_lowercase(), "k"); // KELVIN SIGN
+
+        assert_eq!(" \t\u{00A0}Groceries\u{3000}\n".trim(), "Groceries");
+        assert_eq!("Groceries\u{0085}".trim(), "Groceries");
+        assert_eq!("\u{FEFF}Groceries".trim(), "\u{FEFF}Groceries");
+        assert_eq!("Gro ceries".trim(), "Gro ceries");
+        assert_eq!("   ".trim(), "");
+    }
+
+    /// The tie rule directly, without going through events: of two tasks
+    /// whose names lowercase alike, the lower id wins, whichever was typed
+    /// exactly and whichever was inserted first.
+    #[test]
+    fn task_named_breaks_a_tie_by_ascending_id() {
+        let mut app = TaskMosaicApp::with_clock(fixed_clock);
+        app.start(context()).unwrap();
+        let project_id = app.state.active_project.clone();
+        for (id, name) in [("task-b", "ÉCRIRE"), ("task-a", "écrire")] {
+            app.state
+                .workspace
+                .create_task(&project_id, TaskId::from_raw(id), name.to_string(), None)
+                .unwrap();
+        }
+        let project = app.active_project();
+        assert_eq!(
+            task_named(project, "ÉCRIRE"),
+            Some(TaskId::from_raw("task-a"))
+        );
+        assert_eq!(
+            task_named(project, "Écrire"),
+            Some(TaskId::from_raw("task-a"))
+        );
+        assert_eq!(task_named(project, "ecrire"), None);
     }
 
     // ── Notes 0.3.0 on RecordList and DraftEditor (E3) ────────────────────

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C301-balad",
+  "pathSegment": "PA-PATH-301-PLOUGH301",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-301-PLOUGH301",
+      "order": 1
+    }
+  ]
+}

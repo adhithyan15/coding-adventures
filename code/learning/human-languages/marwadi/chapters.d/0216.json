@@ -1,0 +1,19 @@
+{
+  "chapter": 216,
+  "title": "Setting Out",
+  "label": "ch:mw-setting-out",
+  "canDo": "I can say when I will set out and how far I will go.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "MW-C216-dero",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 216: I can say when I will set out and how far I will go.",
+    "assesses": [
+      "MW-LEX-C216-OUT216-03",
+      "MW-LEX-C216-OUT216-04",
+      "MW-LEX-C216-OUT216-05"
+    ]
+  }
+}

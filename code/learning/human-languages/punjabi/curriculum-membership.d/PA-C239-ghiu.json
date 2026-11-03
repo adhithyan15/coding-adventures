@@ -1,0 +1,11 @@
+{
+  "id": "PA-C239-ghiu",
+  "pathSegment": "PA-PATH-239-KAM239",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-239-KAM239",
+      "order": 4
+    }
+  ]
+}

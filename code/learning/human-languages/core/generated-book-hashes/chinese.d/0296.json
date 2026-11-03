@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:613459451e140fb1",
+  "lessonIds": [
+    "ZH-C296-yiwai",
+    "ZH-C296-chehuo",
+    "ZH-C296-shache",
+    "ZH-C296-xinshou",
+    "ZH-C296-peiqian"
+  ],
+  "tex": "chinese/book/chapters/ch296-a-crash.tex"
+}

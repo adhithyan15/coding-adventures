@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 349,
+  "sourceHash": "fnv1a64:36b897cb9eaf5e42",
+  "lessonIds": [
+    "ZH-C349-kandai",
+    "ZH-C349-xiangfa",
+    "ZH-W349-fa-rule",
+    "ZH-C349-shuofa",
+    "ZH-C349-zuofa",
+    "ZH-C349-zhuzhang"
+  ],
+  "tex": "chinese/book/chapters/ch349-ways-of-seeing.tex"
+}

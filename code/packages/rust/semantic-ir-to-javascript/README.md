@@ -76,6 +76,22 @@ function would bind `undefined`.
 JavaScript/Node globals the runtime uses (`Map`, `Math`, `console`, …),
 which a hoisted user `function` would otherwise replace for the whole file
 (SIR10 "Generated names", issue #18466).
+A *variable* whose SIR name is also the name of one of the module's
+functions is emitted as `_$sir_esc_l<sanitize_ident(name)>` (`var_ident`),
+so it cannot shadow the function: SIR keeps the two namespaces apart, and
+Ruby's `def f; 40; end; f = 2; f() + f` is 42 (issue #18485). Functions keep
+their names, because callers append code that calls them.
+
+The same holds for SIR's other two namespaces.  A module global spelled like
+a function is `_$sir_esc_g<name>` (`global_ident`; `let f = null;` beside
+`function f` was a `SyntaxError`), a variable spelled like a global is
+renamed like one spelled like a function (a local hid the global from a
+`Global` read in the same function), and a constant spelled like a function
+or a global is `_$sir_esc_c<name>` (`const_ident`).  A `Global` reference to
+a name that is only a function keeps the function's spelling, which is how
+code reaches a function's handle.  A module that *assigns* a constant
+(`FOO = 4`) is refused with `UnsupportedFeature`: constants are accepted only
+as names, such as the class of `raise Foo`.
 
 | Accepted (v0 + SIR16 + E1 + O3 + MX4) | Rejected (deferred / unsupported)  |
 |---------------------------------|------------------------------------------|

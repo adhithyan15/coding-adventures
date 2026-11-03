@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C255-chhapna",
+    "language": "punjabi",
+    "chapter": 255,
+    "sequence": 15140,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b8ff960e168f3389"
+  },
+  "findings": []
+}

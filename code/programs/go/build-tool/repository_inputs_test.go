@@ -43,6 +43,57 @@ func TestIsMosaicRepositorySource(t *testing.T) {
 	}
 }
 
+func TestRngCorpusSelectsEveryFixedLane(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "python/rng", Language: "python"},
+		{Name: "rust/rng", Language: "rust"},
+		{Name: "go/rng", Language: "go"},
+		{Name: "c/rng", Language: "c"},
+		{Name: "cpp/rng", Language: "cpp"},
+		{Name: "swift/rng", Language: "swift"},
+		{Name: "typescript/rng", Language: "typescript"},
+		{Name: "java/rng", Language: "java"},
+		{Name: "kotlin/rng", Language: "kotlin"},
+		{Name: "csharp/rng", Language: "csharp"},
+		{Name: "fsharp/rng", Language: "fsharp"},
+		{Name: "dart/rng", Language: "dart"},
+		{Name: "ruby/rng", Language: "ruby"},
+		{Name: "elixir/rng", Language: "elixir"},
+		{Name: "lua/rng", Language: "lua"},
+		{Name: "perl/rng", Language: "perl"},
+		{Name: "haskell/rng", Language: "haskell"},
+	}
+	corpus := []string{"code/specs/fixtures/rng-v1/cases.json"}
+	got, err := repositoryInputConsumersForChange(corpus, packages, "all")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := map[string]bool{
+		"python/rng": true, "rust/rng": true, "go/rng": true,
+		"c/rng": true, "cpp/rng": true, "swift/rng": true,
+		"typescript/rng": true, "java/rng": true, "kotlin/rng": true,
+		"csharp/rng": true, "fsharp/rng": true, "dart/rng": true,
+		"ruby/rng": true, "elixir/rng": true, "lua/rng": true,
+		"perl/rng": true, "haskell/rng": true,
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("got %v, want %v", got, want)
+	}
+	if got, _ := repositoryInputConsumersForChange(corpus, packages, "rust"); !reflect.DeepEqual(got, map[string]bool{"rust/rng": true}) {
+		t.Fatalf("rust-only run selected %v", got)
+	}
+	for path, want := range map[string]bool{
+		"code/specs/fixtures/rng-v1/cases.json":  true,
+		"code/specs/fixtures/rng-v10/cases.json": false,
+		"code/specs/fixtures/rng-v1":             false,
+		"code/specs/rng.md":                      false,
+	} {
+		if isRngCorpus(path) != want {
+			t.Errorf("isRngCorpus(%q) != %v", path, want)
+		}
+	}
+}
+
 func TestRepositoryInputConsumersForChange(t *testing.T) {
 	packages := []discovery.Package{
 		{Name: "rust/mosaic-package-resolver", Language: "rust"},

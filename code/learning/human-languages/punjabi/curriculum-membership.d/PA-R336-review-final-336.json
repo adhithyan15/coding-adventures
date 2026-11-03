@@ -1,0 +1,11 @@
+{
+  "id": "PA-R336-review-final-336",
+  "pathSegment": "PA-PATH-336-TRADE336",
+  "pathOrder": 6,
+  "extensions": [
+    {
+      "id": "PA-EXT-336-TRADE336",
+      "order": 6
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 327,
+  "sourceHash": "fnv1a64:322ac7b1f48a0194",
+  "lessonIds": [
+    "ZH-C327-mingren",
+    "ZH-C327-yingxiong",
+    "ZH-C327-huangdi",
+    "ZH-C327-dazhang",
+    "ZH-C327-zhanzheng"
+  ],
+  "tex": "chinese/book/chapters/ch327-heroes-and-emperors.tex"
+}

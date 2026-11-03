@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C265-koh",
+    "language": "punjabi",
+    "chapter": 265,
+    "sequence": 15650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5111b233bad450aa"
+  },
+  "findings": []
+}

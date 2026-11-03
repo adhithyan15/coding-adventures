@@ -1,0 +1,11 @@
+{
+  "id": "MW-C282-mala",
+  "pathSegment": "MW-PATH-282-CHARKHO282",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-282-CHARKHO282",
+      "order": 3
+    }
+  ]
+}

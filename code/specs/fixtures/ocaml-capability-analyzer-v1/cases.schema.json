@@ -29,7 +29,7 @@
         "expected_capabilities": {
           "type": "array",
           "uniqueItems": true,
-          "items": { "type": "string", "pattern": "^(fs|net|proc|env|ffi|time|stdin|stdout):[a-z]+:\\*$" }
+          "items": { "type": "string", "pattern": "^(fs|net|proc|env|ffi|time|stdin|stdout|rand|thread|ui):[a-z]+:\\*$" }
         },
         "expected_banned": {
           "type": "array",

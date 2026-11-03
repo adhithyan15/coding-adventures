@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C517-huanghun",
+    "language": "chinese",
+    "chapter": 517,
+    "sequence": 39190,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:92f48e1278834ed7"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C518-qinglang",
+    "language": "chinese",
+    "chapter": 518,
+    "sequence": 39200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cadf198bc5a5f349"
+  },
+  "findings": []
+}

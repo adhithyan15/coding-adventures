@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 325,
+  "sourceHash": "fnv1a64:83bf0b7b92360d7b",
+  "lessonIds": [
+    "ZH-C325-jiangshu",
+    "ZH-C325-qushi",
+    "ZH-W325-shi-world",
+    "ZH-C325-houdai",
+    "ZH-C325-shidai",
+    "ZH-C325-xiangnian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch325.txt",
+  "json": "chinese/narration/ch325.json",
+  "textHash": "fnv1a64:ad56d93b757a5dfe",
+  "jsonHash": "fnv1a64:c10096feaab9bf05",
+  "findings": []
+}

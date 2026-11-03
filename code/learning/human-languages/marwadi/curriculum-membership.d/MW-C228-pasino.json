@@ -1,0 +1,11 @@
+{
+  "id": "MW-C228-pasino",
+  "pathSegment": "MW-PATH-228-HEAT228",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-228-HEAT228",
+      "order": 2
+    }
+  ]
+}

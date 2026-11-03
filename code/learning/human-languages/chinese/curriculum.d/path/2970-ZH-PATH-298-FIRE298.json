@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-298-FIRE298",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-298-FIRE298"
+  ],
+  "after": []
+}

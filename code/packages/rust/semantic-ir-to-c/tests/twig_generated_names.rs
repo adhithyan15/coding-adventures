@@ -70,10 +70,11 @@ fn run_module(module: &Module, label: &str, tag: &str) -> Option<Output> {
     };
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
     let stem = format!("sirc_twig_gn_{tag}_{}_{n}", std::process::id());
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+    let dir = scratch.path();
     let cpath: PathBuf = dir.join(format!("{stem}.c"));
     let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-    std::fs::write(&cpath, &artifact.source).expect("write .c");
+    sir_test_scratch::write_new(&cpath, &artifact.source).expect("write .c");
     let built = Command::new(&cc)
         .args(["-std=c99", "-o"])
         .arg(&exe)

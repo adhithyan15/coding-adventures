@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-195-BANK195",
+  "spine_node": "SPINE-READ-PRACTICAL-TEXTS",
+  "before": [],
+  "inline": [
+    "MW-EXT-195-BANK195"
+  ],
+  "after": []
+}

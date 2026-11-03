@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C490-hezuo",
+    "language": "chinese",
+    "chapter": 490,
+    "sequence": 37210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:633ea10f757367e1"
+  },
+  "findings": []
+}

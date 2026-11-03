@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:f4e58aa572b6767a",
+  "lessonIds": [
+    "PA-C292-sillha",
+    "PA-C292-khushak",
+    "PA-C292-nami",
+    "PA-C292-sukkna",
+    "PA-C292-simmna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch292.txt",
+  "json": "punjabi/narration/ch292.json",
+  "textHash": "fnv1a64:6de8b13e9130c286",
+  "jsonHash": "fnv1a64:ce36039c7c5198b6",
+  "findings": []
+}

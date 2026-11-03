@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-225-PACK225",
+  "spine_node": "SPINE-TALK-ABOUT-FUTURE",
+  "before": [],
+  "inline": [
+    "MW-EXT-225-PACK225"
+  ],
+  "after": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 393,
+  "sourceHash": "fnv1a64:49ae176a2f73c52a",
+  "lessonIds": [
+    "ZH-C393-zhufu",
+    "ZH-C393-qianwan",
+    "ZH-W393-wan-myriad",
+    "ZH-C393-wanneng",
+    "ZH-C393-suishi",
+    "ZH-C393-shunli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch393.txt",
+  "json": "chinese/narration/ch393.json",
+  "textHash": "fnv1a64:4c8848c65a6b6779",
+  "jsonHash": "fnv1a64:968ceaf497873775",
+  "findings": []
+}

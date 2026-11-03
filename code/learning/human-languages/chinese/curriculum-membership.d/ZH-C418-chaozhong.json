@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C418-chaozhong",
+  "pathSegment": "ZH-PATH-418-CHECKIN418",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-418-CHECKIN418",
+      "order": 5
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C334-hongbao",
+  "pathSegment": "ZH-PATH-334-REDENV334",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-334-REDENV334",
+      "order": 1
+    }
+  ]
+}

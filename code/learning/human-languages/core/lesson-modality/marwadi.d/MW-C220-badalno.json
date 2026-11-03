@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C220-badalno",
+    "language": "marwadi",
+    "chapter": 220,
+    "sequence": 15230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5b0bcb1e0f3f6502"
+  },
+  "findings": []
+}

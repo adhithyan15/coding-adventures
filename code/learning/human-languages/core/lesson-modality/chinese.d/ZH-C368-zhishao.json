@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C368-zhishao",
+    "language": "chinese",
+    "chapter": 368,
+    "sequence": 28130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:38e47471f5318644"
+  },
+  "findings": []
+}

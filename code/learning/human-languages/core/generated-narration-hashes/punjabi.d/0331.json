@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:c18cb37ee9a5d3ca",
+  "lessonIds": [
+    "PA-C331-chacha",
+    "PA-C331-taia",
+    "PA-C331-mama",
+    "PA-C331-masi",
+    "PA-C331-masar"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch331.txt",
+  "json": "punjabi/narration/ch331.json",
+  "textHash": "fnv1a64:a3fd8bd1d5043475",
+  "jsonHash": "fnv1a64:bc1e9f38f90b470e",
+  "findings": []
+}

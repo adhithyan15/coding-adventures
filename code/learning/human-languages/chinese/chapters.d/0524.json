@@ -1,0 +1,19 @@
+{
+  "chapter": 524,
+  "title": "Half Price",
+  "label": "ch:zh-half-price",
+  "canDo": "I can talk about paying the bill, half price, the asking price, offering less and the cost of living.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C524-wujia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 524: I can talk about paying the bill, half price, the asking price, offering less and the cost of living.",
+    "assesses": [
+      "ZH-LEX-C524-PRICE524-03",
+      "ZH-LEX-C524-PRICE524-04",
+      "ZH-LEX-C524-PRICE524-05"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C498-qiumen",
+  "pathSegment": "ZH-PATH-498-PITCH498",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-498-PITCH498",
+      "order": 3
+    }
+  ]
+}

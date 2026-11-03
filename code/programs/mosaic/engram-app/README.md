@@ -36,6 +36,10 @@ editing, and save/delete/cancel controls.
   `pkg::mosaic-pkg-session-progress::SessionProgress`, and
   `pkg::mosaic-pkg-review-card::ReviewCard`, plus
   `pkg::mosaic-pkg-review-actions::ReviewActions`.
+- The Add/Edit screen's `NoteEditor` (0.2.0) edits the focused field in a
+  body-only `DraftEditor`, the editor Journal also uses. The field is
+  multi-line, and Ctrl+Enter (Cmd+Enter on macOS) saves the note, as Anki's
+  Add dialog does (`mosaic-editor-convergence-audit-v1.md` §8).
 - `EngramApp.touch.mll` is the touch/mobile layout variant of the same
   product shell, keeping the `EngramApp.mil` interface and component mounts
   unchanged while stacking the header and navigation for narrow viewports.
@@ -126,7 +130,10 @@ editing, and save/delete/cancel controls.
   `.corrupt.1` … `.corrupt.9` (on the web, `localStorage` keys starting with
   `engram.snapshot.v1.corrupt`), and never replaces an earlier one. If the
   copy fails or all ten are taken, the host saves nothing for the rest of the
-  session, so a snapshot is never overwritten.
+  session, so a snapshot is never overwritten. A failed copy never uses a
+  name up: the XAML host claims the name with `FileMode.CreateNew`, writes
+  through that handle, and deletes only that file if the write fails. A name
+  it cannot even inspect is reported as that error, not counted as taken.
 - Smoke tests now assert the generated Qt, SwiftUI, and XAML project shells
   expose the same Engram host contract slots, collection events, card-browser
   events, rating events, and Anki-style review action events as the shared Rust

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C536-mengjian",
+    "language": "chinese",
+    "chapter": 536,
+    "sequence": 40160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7255f674fc2c0bed"
+  },
+  "findings": []
+}

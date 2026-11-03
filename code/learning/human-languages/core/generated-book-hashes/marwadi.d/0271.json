@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 271,
+  "sourceHash": "fnv1a64:99751e742befbda7",
+  "lessonIds": [
+    "MW-C271-kharo",
+    "MW-C271-galat",
+    "MW-C271-sabut",
+    "MW-C271-sakhi",
+    "MW-C271-kasam"
+  ],
+  "tex": "marwadi/book/chapters/ch271-right-or-wrong.tex"
+}

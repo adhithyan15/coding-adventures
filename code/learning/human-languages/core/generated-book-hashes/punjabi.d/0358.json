@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 358,
+  "sourceHash": "fnv1a64:beba0ccf04723623",
+  "lessonIds": [
+    "PA-C358-visha",
+    "PA-C358-ganit",
+    "PA-C358-vigian",
+    "PA-C358-itihas",
+    "PA-C358-parhauna"
+  ],
+  "tex": "punjabi/book/chapters/ch358-what-we-study.tex"
+}

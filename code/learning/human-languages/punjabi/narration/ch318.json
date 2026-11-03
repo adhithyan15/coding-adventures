@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 318,
+  "title": "A Day of Mishaps",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:4d2ce8f81d308c91",
+  "lessons": [
+    {
+      "id": "PA-C318-uddna",
+      "sequence": 19460,
+      "title": "ਉੱਡਣਾ (uḍḍṇā) — to fly",
+      "headword": "ਉੱਡਣਾ",
+      "romanization": "uḍḍṇā",
+      "gloss": "to fly",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f0333c83633bd95b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to regret, then the Punjabi for to spend time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਉੱਡਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉੱਡਣਾ — uḍḍṇā — \"to fly\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਤੇਜ਼ ਹਵਾ ਵਿੱਚ ਮੇਰੀ ਟੋਪੀ ਉੱਡੀ। tez havā vich merī ṭopī uḍḍī. My cap blew away in the strong wind."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਪੰਛੀ ਰੁੱਖ ਤੋਂ ਉੱਡਿਆ, oh panchhī rukkh ton uḍḍiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉੱਡਣਾ (uḍḍṇā) is inherited from Sanskrit uḍḍīyate, \"flies up\"; CDIAL lists Punjabi uḍḍṇā, \"flies\", under it (CDIAL 1697)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḍḍṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḍḍṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uḍḍṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uḍḍṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tez havā vich merī ṭopī uḍḍī. — My cap blew away in the strong wind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tez havā vich merī ṭopī uḍḍī.* — My cap blew away in the strong wind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to regret, then the Punjabi for to spend time, then say uḍḍṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to regret, then the Punjabi for to spend time, then say *uḍḍṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਉੱਡਣਾ (uḍḍṇā) mean? (\"To fly\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C318-phuttna",
+      "sequence": 19470,
+      "title": "ਫੁੱਟਣਾ (phuṭṭṇā) — to burst",
+      "headword": "ਫੁੱਟਣਾ",
+      "romanization": "phuṭṭṇā",
+      "gloss": "to burst",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f5d04a0ad683852d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to spend time, then the Punjabi for to fly."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਫੁੱਟਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫੁੱਟਣਾ — phuṭṭṇā — \"to burst\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਰਮੀ ਵਿੱਚ ਮੇਰੀ ਬੋਤਲ ਫੁੱਟੀ। garmī vich merī botal phuṭṭī. My bottle burst in the heat."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਘੜਾ ਫੁੱਟਿਆ, oh ghaṛā phuṭṭiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫੁੱਟਣਾ (phuṭṭṇā) is inherited from a reconstructed sphuṭyati, \"is burst open\"; CDIAL lists Punjabi phuṭṭṇā, \"to burst\", under it (CDIAL 13845)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phuṭṭṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phuṭṭṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "phuṭṭṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *phuṭṭṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "garmī vich merī botal phuṭṭī. — My bottle burst in the heat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *garmī vich merī botal phuṭṭī.* — My bottle burst in the heat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to spend time, then the Punjabi for to fly, then say phuṭṭṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to spend time, then the Punjabi for to fly, then say *phuṭṭṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਫੁੱਟਣਾ (phuṭṭṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਫੁੱਟਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਫੁੱਟਣਾ (phuṭṭṇā) mean? (\"To burst\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C318-takkar",
+      "sequence": 19480,
+      "title": "ਟੱਕਰ (ṭakkar) — a collision",
+      "headword": "ਟੱਕਰ",
+      "romanization": "ṭakkar",
+      "gloss": "a collision",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07def55128fbf34b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to fly, then the Punjabi for to burst."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਟੱਕਰ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟੱਕਰ — ṭakkar — \"a collision\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪੁਲ ਉੱਤੇ ਦੋ ਗੱਡੀਆਂ ਦੀ ਟੱਕਰ ਹੋਈ। pul utte do gaḍḍīāṁ dī ṭakkar hoī. Two cars crashed into each other on the bridge."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਟੱਕਰ (ṭakkar) is inherited from Sanskrit ṭakkarā, \"a blow on the head\"; CDIAL lists Punjabi ṭakkar, \"pushing, knocking\", under it (CDIAL 5424)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakkar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakkar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ṭakkar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ṭakkar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pul utte do gaḍḍīāṁ dī ṭakkar hoī. — Two cars crashed into each other on the bridge.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pul utte do gaḍḍīāṁ dī ṭakkar hoī.* — Two cars crashed into each other on the bridge.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to fly, then the Punjabi for to burst, then say ṭakkar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to fly, then the Punjabi for to burst, then say *ṭakkar* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਟੱਕਰ (ṭakkar) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਟੱਕਰ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਟੱਕਰ (ṭakkar) mean? (\"A collision\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C318-dubbna",
+      "sequence": 19490,
+      "title": "ਡੁੱਬਣਾ (ḍubbṇā) — to sink",
+      "headword": "ਡੁੱਬਣਾ",
+      "romanization": "ḍubbṇā",
+      "gloss": "to sink",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8618427ab96e77ac",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to burst, then the Punjabi for a collision."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਡੁੱਬਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡੁੱਬਣਾ — ḍubbṇā — \"to sink\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਸ ਦਿਨ ਝੀਲ ਵਿੱਚ ਇੱਕ ਕਿਸ਼ਤੀ ਡੁੱਬੀ। us din jhīl vich ikk kishtī ḍubbī. That day a boat sank in the lake."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਪੱਥਰ ਪਾਣੀ ਵਿੱਚ ਡੁੱਬਿਆ, oh patthar pāṇī vich ḍubbiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਡੁੱਬਣਾ (ḍubbṇā) is inherited from a reconstructed ḍubb, \"sink\"; CDIAL lists Punjabi ḍubbṇā, \"to sink\", under it (CDIAL 5561)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍubbṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍubbṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍubbṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍubbṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "us din jhīl vich ikk kishtī ḍubbī. — That day a boat sank in the lake.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *us din jhīl vich ikk kishtī ḍubbī.* — That day a boat sank in the lake.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to burst, then the Punjabi for a collision, then say ḍubbṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to burst, then the Punjabi for a collision, then say *ḍubbṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਡੁੱਬਣਾ (ḍubbṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਡੁੱਬਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਡੁੱਬਣਾ (ḍubbṇā) mean? (\"To sink\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C318-malah",
+      "sequence": 19500,
+      "title": "ਮਲਾਹ (malāh) — a boatman",
+      "headword": "ਮਲਾਹ",
+      "romanization": "malāh",
+      "gloss": "a boatman",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:15f1971d246eea76",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a collision, then the Punjabi for to sink."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਲਾਹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਲਾਹ — malāh — \"a boatman\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮਲਾਹ ਕਿਨਾਰੇ ਤੱਕ ਤਰਿਆ। malāh kināre tak tariā. The boatman swam to the shore."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਲਾਹ (malāh) is a loan, usually traced through Persian to Arabic mallāḥ, \"a sailor\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what happened."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malāh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malāh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malāh, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malāh*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "malāh kināre tak tariā. — The boatman swam to the shore.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *malāh kināre tak tariā.* — The boatman swam to the shore.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a collision, then the Punjabi for to sink, then say malāh again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a collision, then the Punjabi for to sink, then say *malāh* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਲਾਹ (malāh) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਲਾਹ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਲਾਹ (malāh) mean? (\"A boatman\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

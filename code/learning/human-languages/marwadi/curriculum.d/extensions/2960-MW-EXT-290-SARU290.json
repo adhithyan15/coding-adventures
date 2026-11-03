@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-290-SARU290",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say when work starts and when it is finished.",
+  "prerequisites": []
+}

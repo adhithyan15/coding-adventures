@@ -138,7 +138,8 @@ local function main()
     print("Resolving dependencies...")
     local resolution_ok, graph = pcall(Resolver.resolve_dependencies, packages)
     if not resolution_ok then
-        if Resolver.is_metadata_encoding_error(graph) then
+        if Resolver.is_metadata_encoding_error(graph)
+            or Resolver.is_dependency_self_edge_error(graph) then
             io.stderr:write(tostring(graph) .. "\n")
             os.exit(2)
         end

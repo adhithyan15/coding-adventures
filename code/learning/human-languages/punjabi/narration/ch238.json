@@ -1,0 +1,885 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 238,
+  "title": "Kneading the Dough",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:c466a824c75435cd",
+  "lessons": [
+    {
+      "id": "PA-C238-ata",
+      "sequence": 13660,
+      "title": "ਆਟਾ (āṭā) — flour",
+      "headword": "ਆਟਾ",
+      "romanization": "āṭā",
+      "gloss": "flour",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b0b2b42799f8fc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a churning pot, then the Punjabi for a churning stick."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਆਟਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਆਟਾ — āṭā — \"flour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਆਟਾ ਡੱਬੇ ਵਿੱਚ ਹੈ। āṭā ḍabbe vich hai. The flour is in the box."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਆਟਾ (āṭā) is inherited from a reconstructed ārta, \"flour\"; CDIAL lists Punjabi āṭṭā, \"flour\" (CDIAL 1338)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭā ḍabbe vich hai. — The flour is in the box.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭā ḍabbe vich hai.* — The flour is in the box.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a churning pot, then the Punjabi for a churning stick, then say āṭā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a churning pot, then the Punjabi for a churning stick, then say *āṭā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਆਟਾ (āṭā) mean? (\"Flour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C238-parat",
+      "sequence": 13670,
+      "title": "ਪਰਾਤ (parāt) — a kneading tray",
+      "headword": "ਪਰਾਤ",
+      "romanization": "parāt",
+      "gloss": "a kneading tray",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a41528642767d1e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a churning stick, then the Punjabi for flour."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਰਾਤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰਾਤ — parāt — \"a kneading tray\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਪਰਾਤ ਵਿੱਚ ਆਟਾ ਹੈ। parāt vich āṭā hai. There is flour in the kneading tray."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰਾਤ (parāt) is inherited from Sanskrit pātra, \"drinking vessel, dish\"; CDIAL lists Punjabi parāt, \"large wooden kneading vessel\" (CDIAL 8055)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāt",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāt, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāt*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parāt vich āṭā hai. — There is flour in the kneading tray.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parāt vich āṭā hai.* — There is flour in the kneading tray.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a churning stick, then the Punjabi for flour, then say parāt again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a churning stick, then the Punjabi for flour, then say *parāt* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਰਾਤ (parāt) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਰਾਤ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਰਾਤ (parāt) mean? (\"A kneading tray\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C238-gunnhna",
+      "sequence": 13680,
+      "title": "ਗੁੰਨ੍ਹਣਾ (gunnhṇā) — to knead",
+      "headword": "ਗੁੰਨ੍ਹਣਾ",
+      "romanization": "gunnhṇā",
+      "gloss": "to knead",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:70375ba33f094def",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for flour, then the Punjabi for a kneading tray."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਗੁੰਨ੍ਹਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੁੰਨ੍ਹਣਾ — gunnhṇā — \"to knead\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਪਰਾਤ ਵਿੱਚ ਆਟਾ ਗੁੰਨ੍ਹਦੀ ਹਾਂ। maiṁ parāt vich āṭā gunnhdī hāṁ. I knead the flour in the tray."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਆਟਾ ਗੁੰਨ੍ਹਿਆ, maiṁ āṭā gunnhiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗੁੰਨ੍ਹਣਾ (gunnhṇā) is inherited from Sanskrit guphati, \"strings together\"; CDIAL lists Punjabi gunnhṇā, \"to braid, knead\" (CDIAL 4205)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gunnhṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gunnhṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gunnhṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gunnhṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ parāt vich āṭā gunnhdī hāṁ. — I knead the flour in the tray.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ parāt vich āṭā gunnhdī hāṁ.* — I knead the flour in the tray.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for flour, then the Punjabi for a kneading tray, then say gunnhṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for flour, then the Punjabi for a kneading tray, then say *gunnhṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗੁੰਨ੍ਹਣਾ (gunnhṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗੁੰਨ੍ਹਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਗੁੰਨ੍ਹਣਾ (gunnhṇā) mean? (\"To knead\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C238-pera",
+      "sequence": 13690,
+      "title": "ਪੇੜਾ (peṛā) — a ball of dough",
+      "headword": "ਪੇੜਾ",
+      "romanization": "peṛā",
+      "gloss": "a ball of dough",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7f783ed9b1814bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a kneading tray, then the Punjabi for to knead."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪੇੜਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੇੜਾ — peṛā — \"a ball of dough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਆਟੇ ਦਾ ਪੇੜਾ ਬਣਾਉਂਦੀ ਹਾਂ। maiṁ āṭe dā peṛā baṇāundī hāṁ. I make a ball of dough."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪੇੜਾ (peṛā) is inherited from a reconstructed pēḍa, \"lump\"; CDIAL lists Punjabi peṛā, \"lump\" (CDIAL 8377)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṛā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṛā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "peṛā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *peṛā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ āṭe dā peṛā baṇāundī hāṁ. — I make a ball of dough.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ āṭe dā peṛā baṇāundī hāṁ.* — I make a ball of dough.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a kneading tray, then the Punjabi for to knead, then say peṛā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a kneading tray, then the Punjabi for to knead, then say *peṛā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪੇੜਾ (peṛā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪੇੜਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪੇੜਾ (peṛā) mean? (\"A ball of dough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C238-velna",
+      "sequence": 13700,
+      "title": "ਵੇਲਣਾ (velṇā) — to roll out (dough)",
+      "headword": "ਵੇਲਣਾ",
+      "romanization": "velṇā",
+      "gloss": "to roll out (dough)",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:317f01afd2fef2e2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to knead, then the Punjabi for a ball of dough."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵੇਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੇਲਣਾ — velṇā — \"to roll out (dough)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਪੇੜਾ ਪਤਲਾ ਵੇਲਦੀ ਹਾਂ। maiṁ peṛā patlā veldī hāṁ. I roll the ball of dough out thin."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਰੋਟੀ ਵੇਲੀ, maiṁ roṭī velī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੇਲਣਾ (velṇā) is inherited from Sanskrit vēllayati, \"causes to shake, kneads\"; CDIAL lists Punjabi velṇā, \"to roll out\" (CDIAL 12121)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "velṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *velṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ peṛā patlā veldī hāṁ. — I roll the ball of dough out thin.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ peṛā patlā veldī hāṁ.* — I roll the ball of dough out thin.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to knead, then the Punjabi for a ball of dough, then say velṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to knead, then the Punjabi for a ball of dough, then say *velṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵੇਲਣਾ (velṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵੇਲਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵੇਲਣਾ (velṇā) mean? (\"To roll out (dough)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R238-review-232-238",
+      "sequence": 13710,
+      "title": "Looking back: from Putting Things Away to Kneading the Dough",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Putting Things Away to Kneading the Dough",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36ef159fe19fbd3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for to arrange neatly and to gather up."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to arrange neatly, to gather up, memory, to come unstitched, to stuff",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to arrange neatly, to gather up, memory, to come unstitched, to stuff]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rest, a cotton rug, to spread out, a thick cotton sheet, a fan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: rest, a cotton rug, to spread out, a thick cotton sheet, a fan]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sleep (noun), an oil lamp, to burn, to put out, a wooden bed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sleep (noun), an oil lamp, to burn, to put out, a wooden bed]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sweep, to dust, a floor cloth, mud plaster, to plaster",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sweep, to dust, a floor cloth, mud plaster, to plaster]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to scrub, to rinse, to tip out, a small water pot, a deep bowl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to scrub, to rinse, to tip out, a small water pot, a deep bowl]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to boil, to boil down, yoghurt, a churning pot, a churning stick",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to boil, to boil down, yoghurt, a churning pot, a churning stick]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "flour, a kneading tray, to knead, a ball of dough, to roll out",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: flour, a kneading tray, to knead, a ball of dough, to roll out]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To arrange neatly? (ਸਜਾਉਣਾ, sajāuṇā.) To gather up? (ਸਮੇਟਣਾ, sameṭṇā.) Memory? (ਯਾਦ, yād.) To come unstitched? (ਉੱਧੜਨਾ, uddhaṛnā.) To stuff? (ਤੁੰਨਣਾ, tunnṇā.) Rest? (ਆਰਾਮ, ārām.) A cotton rug? (ਦਰੀ, darī.) To spread out? (ਵਿਛਾਉਣਾ, vichhāuṇā.) A thick cotton sheet? (ਖੇਸ, khes.) A fan? (ਪੱਖਾ, pakkhā.) Sleep (noun)? (ਨੀਂਦ, nīnd.) An oil lamp? (ਦੀਵਾ, dīvā.) To burn? (ਬਲਣਾ, balṇā.) To put out? (ਬੁਝਾਉਣਾ, bujhāuṇā.) A wooden bed? (ਪਲੰਘ, palaṅgh.) To sweep? (ਬੁਹਾਰਨਾ, buhārnā.) To dust? (ਝਾੜਨਾ, jhāṛnā.) A floor cloth? (ਪੋਚਾ, pochā.) Mud plaster? (ਗਾਰਾ, gārā.) To plaster? (ਲਿੱਪਣਾ, lippṇā.) To scrub? (ਮਾਂਜਣਾ, mānjṇā.) To rinse? (ਹੰਘਾਲਣਾ, haṅghālṇā.) To tip out? (ਉਲੱਦਣਾ, uladdṇā.) A small water pot? (ਲੋਟਾ, loṭā.) A deep bowl? (ਕਟੋਰਾ, kaṭorā.) To boil? (ਉਬਾਲਣਾ, ubālṇā.) To boil down? (ਔਟਣਾ, auṭṇā.) Yoghurt? (ਦਹੀਂ, dahīṁ.) A churning pot? (ਚਾਟੀ, chāṭī.) A churning stick? (ਮਧਾਣੀ, madhāṇī.) Flour? (ਆਟਾ, āṭā.) A kneading tray? (ਪਰਾਤ, parāt.) To knead? (ਗੁੰਨ੍ਹਣਾ, gunnhṇā.) A ball of dough? (ਪੇੜਾ, peṛā.) To roll out? (ਵੇਲਣਾ, velṇā.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

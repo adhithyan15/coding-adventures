@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C222-ki-nahin-future",
+    "language": "punjabi",
+    "chapter": 222,
+    "sequence": 12210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a0db1d3aa0b5dcd"
+  },
+  "findings": []
+}

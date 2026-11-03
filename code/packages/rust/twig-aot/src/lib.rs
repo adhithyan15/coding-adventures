@@ -99,6 +99,16 @@ const GC_INIT_STACKMAPS: &str = "__gc_init_stackmaps";
 /// generated `__gc_init_stackmaps` calls it once per user function; resolved by the
 /// system linker from the embedded `libgc_core_capi.a` (an external `BL`).
 const GC_REGISTER_STACKMAP: &str = "__gc_register_stackmap";
+/// The GC runtime's **global-root** registration entry (gc-core-capi, #18765). The
+/// generated `__gc_init_stackmaps` calls it once, before any stack map, with the
+/// address of the module's globals block and its slot count, so every collection
+/// treats each global slot as a precise root (marked, and rewritten when a
+/// compaction moves its object). Skipped for a module with no globals.
+const GC_REGISTER_GLOBAL_ROOTS: &str = "__gc_register_global_roots";
+/// The data symbol every packager defines for the module's global slots (slot `k`
+/// at byte `8·k`) — the target of `global_load` / `global_store` relocations, and
+/// of the one [`GC_REGISTER_GLOBAL_ROOTS`] argument that needs relocating.
+const TWIG_GLOBALS: &str = "_twig_globals";
 
 /// One `ADR` in `__gc_init_stackmaps` that must be patched to a user function's
 /// runtime address (`func_start`, the first argument of [`GC_REGISTER_STACKMAP`]).
@@ -196,6 +206,12 @@ fn build_gc_wrapper(user_entry: &str) -> Result<(Vec<u8>, Vec<Reloc>), AotError>
 /// ```text
 ///   __gc_init_stackmaps:
 ///       stp x29,x30,[sp,#-16]! ; mov x29,sp
+///       ; ── only if the module has globals (#18765) ──
+///       adrp x0, _twig_globals@PAGE  ; x0 = &_twig_globals   (ARM64_RELOC_PAGE21)
+///       add  x0, x0, _twig_globals@PAGEOFF                   (ARM64_RELOC_PAGEOFF12)
+///       mov  x1, #<global count>
+///       bl   __gc_register_global_roots
+///       mov  x1, #<global count> ; cmp x0, x1 ; b.eq 1f ; udf #0xdead ; 1:
 ///       ; ── per function F with records ──
 ///       adr  x0, F                   ; x0 = func_start   (patched in pass 2)
 ///       mov  x1, #<F byte length>    ; x1 = func_len
@@ -221,20 +237,52 @@ fn build_gc_wrapper(user_entry: &str) -> Result<(Vec<u8>, Vec<Reloc>), AotError>
 /// needs no relocation. The registry copies the slot data into owned storage, so the
 /// arrays need not outlive the call.
 ///
-/// Returns the function bytes, the external `BL __gc_register_stackmap` relocations
-/// (patched by the system linker), and the [`FuncAddrReloc`]s pass 2 resolves.
+/// **The globals block** (#18765). A module's globals live in `_twig_globals`, a
+/// data section that no stack map names and no stack scan reaches, so before any
+/// stack map the init hands the whole block to `__gc_register_global_roots`. Its
+/// address is the one argument that cannot be a compile-time constant or an
+/// init-internal `adr`: it is materialised with the same `ADRP`+`ADD` pair, and the
+/// same [`GlobalWordReloc`] (→ `ARM64_RELOC_PAGE21`/`PAGEOFF12` against
+/// `_twig_globals`), that every `global_load` uses, so `ld` resolves it exactly as it
+/// resolves the program's own global accesses. (The page-alignment hazard
+/// [`FuncAddrReloc`] avoids does not apply: these bytes carry real `ld` relocations,
+/// so `ld` computes the page from the final layout.)
+///
+/// Returns the function bytes, the external `BL` relocations (patched by the
+/// system linker), the [`FuncAddrReloc`]s pass 2 resolves, and the globals
+/// block's [`GlobalWordReloc`] (empty when `n_global_slots == 0`).
 #[allow(clippy::type_complexity)]
 fn build_gc_init_stackmaps(
     fn_maps: &[FnStackMap],
-) -> Result<(Vec<u8>, Vec<Reloc>, Vec<FuncAddrReloc>), AotError> {
+    n_global_slots: usize,
+) -> Result<(Vec<u8>, Vec<Reloc>, Vec<FuncAddrReloc>, Vec<GlobalWordReloc>), AotError> {
     let mut a = Assembler::new();
     let mut faddr: Vec<FuncAddrReloc> = Vec::new();
+    let mut glob: Vec<GlobalWordReloc> = Vec::new();
     // Data-pool contents, bound after the epilogue: (label, words).
     let mut pool: Vec<(LabelId, Vec<u32>)> = Vec::new();
 
     // Prologue — a real frame; the body makes calls (each `bl` clobbers lr).
     a.stp_pre(Reg::Fp, Reg::Lr, Reg::Sp, -16).map_err(gc_asm_err)?;
     a.add_imm(Reg::Fp, Reg::Sp, 0).map_err(gc_asm_err)?; // mov x29, sp
+
+    // The globals block, registered as precise roots before anything can collect.
+    if n_global_slots > 0 {
+        let adrp_word = a.adrp_placeholder(Reg::X0); //   x0 = page(&_twig_globals)
+        let add_word = a.len_words();
+        a.add_imm(Reg::X0, Reg::X0, 0).map_err(gc_asm_err)?; // + pageoff
+        glob.push(GlobalWordReloc { adrp_word, add_word });
+        a.mov_imm64(Reg::X1, n_global_slots as u64); //   count
+        a.bl_external(GC_REGISTER_GLOBAL_ROOTS);
+        // A refused registration would leave every global unrooted for the whole run:
+        // trap instead (`x0` must come back equal to the count).
+        a.mov_imm64(Reg::X1, n_global_slots as u64);
+        a.cmp(Reg::X0, Reg::X1);
+        let registered = a.create_label();
+        a.b_cond(aarch64_encoder::Cond::Eq, registered);
+        a.udf(0xDEAD);
+        a.bind(registered).map_err(gc_asm_err)?;
+    }
 
     for fm in fn_maps {
         if fm.records.is_empty() {
@@ -290,7 +338,7 @@ fn build_gc_init_stackmaps(
     }
 
     let relocs = std::mem::take(&mut a.external_relocs);
-    Ok((a.finish().map_err(gc_asm_err)?, relocs, faddr))
+    Ok((a.finish().map_err(gc_asm_err)?, relocs, faddr, glob))
 }
 use aot_core::infer::infer_types;
 use aot_core::link::{entry_point_offset, link};
@@ -414,6 +462,19 @@ pub enum AotError {
         /// Arguments the call passes.
         got: usize,
     },
+    /// A direct `call` names a runtime symbol (`__twig_*`, `__gc_*`, or a
+    /// `__dyn_*` that no lowering pass generated) that is not a function of
+    /// the module. The backends would emit a plain call to the symbol and the
+    /// system linker would bind it to the runtime, so the module could call a
+    /// runtime helper with arguments of its own choosing — e.g.
+    /// `__twig_str_concat(a, b, max)` with a `max` above the module's string
+    /// ceiling (LANG83 PR5a security review).
+    RuntimeSymbolCall {
+        /// Function containing the call.
+        caller: String,
+        /// The runtime symbol it names.
+        callee: String,
+    },
 }
 
 impl std::fmt::Display for AotError {
@@ -430,6 +491,11 @@ impl std::fmt::Display for AotError {
             AotError::CallArityMismatch { caller, callee, expected, got } => write!(
                 f,
                 "'{caller}' calls '{callee}' with {got} argument(s); it declares {expected}"
+            ),
+            AotError::RuntimeSymbolCall { caller, callee } => write!(
+                f,
+                "'{caller}' calls the runtime symbol '{callee}' directly; runtime helpers are \
+                 reached only through the operations and builtins the compiler lowers"
             ),
             AotError::RefinementViolations(errs) => {
                 write!(f, "{} refinement violation(s):", errs.len())?;
@@ -535,8 +601,10 @@ pub fn compile_module_macos_arm64_object_with_mode(
 
 /// Returns raw ARM64 machine code bytes and a function-name→byte-offset map.
 ///
-/// Uses the standard untyped prep pipeline (pre-lower + i64 normalization +
-/// type propagation + default-any-to-i64).  The resulting bytes are a flat
+/// Uses the standard untyped prep pipeline (pre-lower + type propagation with
+/// dynamic params read as `i64` + default-any-to-i64; the params themselves stay
+/// `any`, so they remain GC roots — see [`specialisation_view`]).  The resulting
+/// bytes are a flat
 /// code section with no Mach-O wrapping — suitable for in-process execution
 /// via [`call_arm64_function_in_process`].
 ///
@@ -555,19 +623,26 @@ pub fn compile_module_to_arm64_bytes(
 }
 
 /// Like [`compile_module_to_arm64_bytes`] but uses the caller-supplied type
-/// annotations instead of defaulting every untyped param to `i64`.
+/// annotations for the params the caller has typed.
 ///
 /// The caller is responsible for having:
 /// 1. Run `pre_lower_aot_builtins_on_module` (or equivalent).
 /// 2. Run a type-inference pass (e.g. `iir-type-checker::infer_and_check`).
-/// 3. Set any remaining `"any"` params to a concrete type (e.g. `"i64"`).
+/// 3. Typed every param it *knows* is a plain integer (e.g. `(x : int)` →
+///    `"i64"`). **Leave every other param `"any"`** — do not retype it to
+///    `"i64"` to get signed comparisons. An `i64` param is "never a reference"
+///    to the backend's GC stack map, so a param that can hold a pair or closure
+///    would lose its root and go stale under a compacting collection (#18492).
+///    This function already reads `any` params as `i64` for typing.
 ///
-/// This function then runs `propagate_aot_types` (seeded from the caller's
-/// type annotations), `default_any_to_i64` to fill in any gaps and
-/// `sign_word_comparisons` to compare integer words signed.  Params the caller
-/// typed keep that type; only params still `"any"` become `i64`.  Either way
-/// arithmetic and comparisons are emitted with signed `i64` semantics —
-/// correct for negative numbers.
+/// This function then runs `propagate_aot_types` (seeded from the params, with
+/// `any` / `polymorphic` ones read as `i64`), `default_any_to_i64` to fill in
+/// any gaps and `sign_word_comparisons` to compare integer words signed, and
+/// specialises a [`specialisation_view`] in which the dynamic params are `i64`
+/// while the backend still sees them as `any`. Params the caller typed keep that
+/// type. So arithmetic and comparisons are emitted with signed `i64` semantics —
+/// correct for negative numbers — and every param that may hold a heap word
+/// stays a root.
 ///
 /// ## Why propagation is still needed
 ///
@@ -580,18 +655,23 @@ pub fn compile_module_to_arm64_bytes(
 pub fn compile_typed_module_to_arm64_bytes(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>), AotError> {
+    // This entry skips `prepare_module_for_aot`, so it runs that step's
+    // string-ceiling check itself (#18800).
+    check_str_ceiling(module)?;
     let mut module = module.clone();
     for func in &mut module.functions {
         pre_lower_aot_builtins(func);
-        // Promote any params still marked "any" or "polymorphic" to "i64".
+        // Params still marked "any" or "polymorphic" are *read* as "i64" — by
+        // `propagate_aot_types` here and by the `specialisation_view` the
+        // compile step specialises — but keep their declared type so the
+        // backend's GC stack map still names them as roots (#18492).
         //
         // The caller may have already set some params to "i64" from source-level
-        // annotations (e.g. `(x : int)`).  `normalize_params_to_i64` only touches
-        // params that are STILL "any" — so caller-set types are never overwritten.
-        // This ensures that unannotated functions (no param_refinements) also get
+        // annotations (e.g. `(x : int)`); those are never overwritten. This
+        // ensures that unannotated functions (no param_refinements) also get
         // signed-integer semantics, matching Twig's semantic model.
-        normalize_params_to_i64(func);
-        // Propagate types seeded from the (now-concrete) params.
+        //
+        // Propagate types seeded from the params.
         // This fills in instructions like `sub dest, param, const` that
         // iir-type-checker missed because it doesn't seed from func.params.
         propagate_aot_types(func);
@@ -1121,6 +1201,37 @@ struct FuncAddrRelocX86 {
     target: String,
 }
 
+/// After `call __gc_register_global_roots`: `ud2` unless `rax` (the slots it
+/// accepted) equals `n`. A refused registration would leave every global unrooted
+/// for the whole run, so the image stops at start-up instead.
+///
+/// ```text
+///   mov rcx, n ; cmp rax, rcx ; je ok ; ud2 ; ok:
+/// ```
+fn emit_trap_unless_rax_is(a: &mut x86_64_encoder::Assembler, n: usize) -> Result<(), AotError> {
+    use x86_64_encoder::{Cond, Reg};
+    a.mov_r64_imm64(Reg::Rcx, n as u64);
+    a.cmp(Reg::Rax, Reg::Rcx);
+    let ok = a.create_label();
+    a.jcc(Cond::E, ok);
+    a.ud2();
+    a.bind(ok).map_err(gc_asm_err_x86)
+}
+
+/// Refuse, at compile time, a module with more globals than the runtime will root
+/// (`gc_core_capi::MAX_GLOBAL_ROOT_SLOTS`, 2²⁴): `__gc_register_global_roots` would
+/// reject the block and every global would run unrooted. (AArch64 already stops at
+/// 4 096 globals, the reach of its `LDR` offset; x86-64 has no such limit.)
+fn check_global_root_capacity(n_global_slots: usize) -> Result<(), AotError> {
+    if n_global_slots as u64 > gc_core_capi::MAX_GLOBAL_ROOT_SLOTS as u64 {
+        return Err(AotError::Compile(format!(
+            "{n_global_slots} globals exceed the {} the GC runtime can root",
+            gc_core_capi::MAX_GLOBAL_ROOT_SLOTS
+        )));
+    }
+    Ok(())
+}
+
 /// Map an [`x86_64_encoder::EncodeError`] to an [`AotError`].
 fn gc_asm_err_x86(e: x86_64_encoder::EncodeError) -> AotError {
     AotError::Linker { status: None, stderr: format!("twig-aot: x86_64 GC init codegen: {e:?}") }
@@ -1145,6 +1256,11 @@ fn call_return_offsets_x86_64(relocs: &[x86_64_encoder::ExternalReloc]) -> Vec<u
 /// ```text
 ///   __gc_init_stackmaps:
 ///       push rbp ; mov rbp, rsp
+///       ; ── only if the module has globals (#18765) ──
+///       lea  rdi, [rip + _twig_globals]   ; PcRel32 reloc, like every global_load
+///       mov  rsi, <global count>
+///       call __gc_register_global_roots
+///       mov  rcx, <global count> ; cmp rax, rcx ; je 1f ; ud2 ; 1:   ; refused → trap
 ///       ; ── per function F with records (System V) ──
 ///       lea  rdi, [rip + F]          ; func_start   (patched in pass 2b)
 ///       mov  rsi, <F byte length>    ; func_len
@@ -1165,18 +1281,30 @@ fn call_return_offsets_x86_64(relocs: &[x86_64_encoder::ExternalReloc]) -> Vec<u
 /// 16). Everything but `func_start` is a compile-time constant; the three arrays live in
 /// a pool after the final `ret` (never executed), addressed by `RIP`-relative `lea`
 /// resolved at `finish()`. The registry copies the slots, so the pool need not outlive
-/// the call.
+/// the call. The globals block's address (#18765) is the one argument the system
+/// linker relocates: a `PcRel32` against `_twig_globals`, the same reloc a
+/// `global_load` emits.
 #[allow(clippy::type_complexity)]
 fn build_gc_init_stackmaps_x86_64(
     fn_maps: &[FnStackMap],
+    n_global_slots: usize,
 ) -> Result<(Vec<u8>, Vec<x86_64_encoder::ExternalReloc>, Vec<FuncAddrRelocX86>), AotError> {
-    use x86_64_encoder::{Assembler, LabelId, Reg};
+    use x86_64_encoder::{Assembler, ExternalRelocKind, LabelId, Reg};
     let mut a = Assembler::new();
     let mut faddr: Vec<FuncAddrRelocX86> = Vec::new();
     let mut pool: Vec<(LabelId, Vec<u32>)> = Vec::new();
 
     a.push(Reg::Rbp);
     a.mov_r64_r64(Reg::Rbp, Reg::Rsp);
+
+    // The globals block, registered as precise roots (#18765). `rsp` is 16-aligned
+    // here (after `push rbp`), as the call requires.
+    if n_global_slots > 0 {
+        a.lea_rip_rel(Reg::Rdi, TWIG_GLOBALS, ExternalRelocKind::PcRel32); // base
+        a.mov_r64_imm64(Reg::Rsi, n_global_slots as u64); //                  count
+        a.call_rel32(GC_REGISTER_GLOBAL_ROOTS, ExternalRelocKind::PltRel32);
+        emit_trap_unless_rax_is(&mut a, n_global_slots)?;
+    }
 
     for fm in fn_maps {
         if fm.records.is_empty() {
@@ -1264,17 +1392,38 @@ fn build_gc_init_stackmaps_x86_64(
 /// args are placed with `mov [rsp+disp], rax` (an `rsp`-based store, which the encoder
 /// emits with the required SIB byte) rather than SysV's `push`, because MsX64 must not
 /// disturb the shadow space below them.
+///
+/// The globals block (#18765) is registered first, MsX64-style:
+///
+/// ```text
+///   sub  rsp, 32                       ; shadow space; rsp stays 16-aligned
+///   lea  rcx, [rip + _twig_globals]    ; arg1 base   (PcRel32, like a global_load)
+///   mov  rdx, <global count>           ; arg2 count
+///   call __gc_register_global_roots
+///   mov  rcx, <global count> ; cmp rax, rcx ; je 1f ; ud2 ; 1:   ; refused → trap
+///   add  rsp, 32
+/// ```
 #[allow(clippy::type_complexity)]
 fn build_gc_init_stackmaps_x86_64_msx64(
     fn_maps: &[FnStackMap],
+    n_global_slots: usize,
 ) -> Result<(Vec<u8>, Vec<x86_64_encoder::ExternalReloc>, Vec<FuncAddrRelocX86>), AotError> {
-    use x86_64_encoder::{Assembler, LabelId, Reg};
+    use x86_64_encoder::{Assembler, ExternalRelocKind, LabelId, Reg};
     let mut a = Assembler::new();
     let mut faddr: Vec<FuncAddrRelocX86> = Vec::new();
     let mut pool: Vec<(LabelId, Vec<u32>)> = Vec::new();
 
     a.push(Reg::Rbp);
     a.mov_r64_r64(Reg::Rbp, Reg::Rsp);
+
+    if n_global_slots > 0 {
+        a.sub_imm32(Reg::Rsp, 32); // shadow space for the callee
+        a.lea_rip_rel(Reg::Rcx, TWIG_GLOBALS, ExternalRelocKind::PcRel32); // arg1 base
+        a.mov_r64_imm64(Reg::Rdx, n_global_slots as u64); //                  arg2 count
+        a.call_rel32(GC_REGISTER_GLOBAL_ROOTS, ExternalRelocKind::PltRel32);
+        emit_trap_unless_rax_is(&mut a, n_global_slots)?;
+        a.add_imm32(Reg::Rsp, 32);
+    }
 
     for fm in fn_maps {
         if fm.records.is_empty() {
@@ -1483,6 +1632,83 @@ fn check_no_aot_registers(module: &IIRModule) -> Result<(), AotError> {
     Ok(())
 }
 
+/// Refuse a module whose string literals do not fit its string ceiling
+/// (LANG83 PR5a, #18800), before any lowering.
+///
+/// The check is `interpreter-ir`'s [`IIRModule::str_ceiling_errors`], the same
+/// one every other column's validator runs, so the native columns refuse
+/// exactly the modules the others do:
+///
+/// | the module …                                         | error          |
+/// |------------------------------------------------------|----------------|
+/// | has a `str_const` longer than `str_ceiling()`        | `StrTooLong`   |
+/// | sets `str_max_bytes` above `STR_MAX_BYTES`           | `StrMaxBytes`  |
+///
+/// Before #18800 nothing on the native path asked: `lower_string_literals_for_aot`
+/// baked any literal into an `alloc_bytes` block, so a 17-byte literal in a
+/// module whose ceiling is 16 compiled and ran, although no `str_concat` could
+/// ever have built it.
+///
+/// # Errors
+///
+/// [`AotError::Compile`] listing every violation.
+fn check_str_ceiling(module: &IIRModule) -> Result<(), AotError> {
+    let errors = module.str_ceiling_errors();
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(AotError::Compile(errors.join("; ")))
+    }
+}
+
+/// Refuse any direct `call` to a runtime symbol that is not a function of the
+/// module, before any native code is generated (LANG83 PR5a security review).
+///
+/// The backends lower `call f, args…` to a `call`/`bl` of the symbol `f`.
+/// When `f` is not a module function, the link step leaves the call to the
+/// system linker, which binds it to whatever defines `f`, the runtime
+/// included. [`check_program_function_names`] stops a module from *defining*
+/// a runtime name, but not from *calling* one, so without this check a module
+/// could reach any runtime helper with arguments of its own choosing:
+///
+/// ```text
+/// call __twig_str_concat, a, b, 9223372036854775807
+///   ⇒ the string ceiling the lowering passes as `max` is the program's
+/// call __gc_register_stackmap, …  /  call __twig_trap, 99
+///   ⇒ collector and runtime internals with forged arguments
+/// ```
+///
+/// Every runtime helper a program may use is reached through an operation or
+/// a `call_builtin` row the compiler lowers, which fixes its arguments (the
+/// string lowering supplies `max` itself). So the rule is the whole
+/// [`is_runtime_symbol`] namespace, not only the string helpers.
+///
+/// Where it runs: in the compile step, after `prepare_module_for_aot`, so it
+/// also sees what the lowering passes added. That is safe because no pass
+/// emits a direct call to a runtime symbol: the passes call only functions
+/// they add to the module (`__dyn_list_*`, `__dyn_call_closure`, the
+/// `__lisp_*` rules), which are module functions here, and
+/// `PASS_GENERATED_DYN_HELPERS` keeps those names out of `is_runtime_symbol`
+/// anyway. The frontends reserve all of these prefixes in source (Twig's
+/// `reserved_names`), so only hand-built or foreign IIR can trip it.
+///
+/// # Errors
+///
+/// [`AotError::RuntimeSymbolCall`] naming the caller and the symbol.
+fn check_no_direct_runtime_calls(module: &IIRModule) -> Result<(), AotError> {
+    let defined: std::collections::HashSet<&str> = module.functions.iter().map(|f| f.name.as_str()).collect();
+    for caller in &module.functions {
+        for instr in caller.instructions.iter().filter(|i| i.op == "call") {
+            if let Some(Operand::Var(callee)) = instr.srcs.first() {
+                if is_runtime_symbol(callee) && !defined.contains(callee.as_str()) {
+                    return Err(AotError::RuntimeSymbolCall { caller: caller.name.clone(), callee: callee.clone() });
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 /// Refuse any direct `call` whose argument count differs from the callee's
 /// declared parameter count, before any native code is generated.
 ///
@@ -1521,14 +1747,221 @@ fn check_direct_call_arities(module: &IIRModule) -> Result<(), AotError> {
     Ok(())
 }
 
+/// The machine scalar types whose slots can **never** hold a GC reference — the
+/// same deny-list the x86-64 and AArch64 backends apply (`is_definitely_not_ref`
+/// in each, private there). Everything else (`any`, `str`, `ref<…>`, …) is a
+/// potential root. Kept in step by hand; [`root_heap_word_copies`] only needs it
+/// to recognise which CIR types the backends already treat as roots.
+fn is_machine_scalar(ty: &str) -> bool {
+    matches!(
+        ty,
+        "u4" | "u8" | "u16" | "u32" | "u64" | "i8" | "i16" | "i32" | "i64" | "f32" | "f64"
+            | "bool" | "void"
+    )
+}
+
+/// Runtime helpers reached through `call_builtin` whose result is a **fresh
+/// gc-core block** — so the result is a heap reference whatever CIR type the
+/// specialiser gave it (#18766). Checked against the runtime sources:
+///
+/// | builtin        | runtime entry                         | allocates with                         |
+/// |----------------|---------------------------------------|----------------------------------------|
+/// | `alloc_bytes`  | `__twig_alloc_bytes`                  | `__gc_alloc_kind(n, blob_kind)`        |
+/// | `str_concat`   | `__twig_str_concat`                   | `__twig_alloc_bytes(total + 8)`        |
+/// | `str_slice`    | `__twig_str_slice`                    | `__twig_alloc_bytes(n + 8)`            |
+/// | `input_str`    | `__twig_input_str`                    | `__twig_alloc_bytes(8 + len)`          |
+/// | `dyn_pair_new` | `__dyn_pair_new` (`dynval_runtime.c`) | `__gc_alloc_kind(16, cons_kind)`, tagged |
+///
+/// `str_index`, `str_len`, `str_eq` and `str_cmp` return integers and are not
+/// listed. Nor is the raw `gc_alloc` builtin (`__twig_gc_alloc`), deliberately: no
+/// compiler on this path emits it, and the precise-GC smoke differentials use a
+/// `gc_alloc` result typed `i64` as their *non-reference look-alike* — a block
+/// whose address sits in a slot the program declares to be an integer, which a
+/// precise collection must reclaim. Its type is the caller's statement; the
+/// helpers above are called by lowerings that type a live handle `i64` only
+/// because the byte ops around it treat it as an address.
+const GC_ALLOCATING_BUILTINS: &[&str] =
+    &["alloc_bytes", "str_concat", "str_slice", "input_str", "dyn_pair_new"];
+
+/// Does `instr` produce a fresh GC block? The `alloc_bytes` / `alloc_array` /
+/// `alloc_ref_array` ops (lowered to `__twig_alloc_bytes` or, for an array of
+/// references, `__twig_alloc_ref_array_bytes`) and the [`GC_ALLOCATING_BUILTINS`].
+fn allocates_gc_block(instr: &jit_core::cir::CIRInstr) -> bool {
+    match instr.op.as_str() {
+        "alloc_bytes" | "alloc_array" | "alloc_ref_array" => true,
+        "call_builtin" => matches!(
+            instr.srcs.first(),
+            Some(jit_core::cir::CIROperand::Var(name)) if GC_ALLOCATING_BUILTINS.contains(&name.as_str())
+        ),
+        _ => false,
+    }
+}
+
+/// Give every **copy of a possible heap word** a root type in the CIR, so the
+/// backend's stack map names its slot (#18492, follow-up), starting from every
+/// **GC allocation**, whatever type it was given (#18766).
+///
+/// ## Step 0: allocations are references (#18766)
+///
+/// A string buffer is built by `alloc_bytes`, which the string lowering types
+/// `i64` (a pointer is "an integer" to the byte-store ops around it). But the
+/// buffer is a gc-core block (`__gc_alloc_kind(n, blob_kind)`), and `i64` tells
+/// the backend "never a reference": the buffer's slot, and every `mov` alias of it
+/// (the string variable itself), were left out of the stack map. The conservative
+/// scan does not cover for that — in a frame that has a stack map the walker
+/// trusts the map and scans nothing else — so a precise or compacting collection
+/// freed the buffer, and `string-length` read whatever reused the cell.
+/// The same holds for any allocation the specialiser typed `i64` (a `call_builtin
+/// "dyn_pair_new"` whose destination is also written by an integer `const` takes
+/// the integer's type from `infer_types`, which keys types by variable name).
+/// So every instruction that [`allocates_gc_block`] and carries a machine-scalar
+/// type gets `ty = "any"` first; the rule below then roots its copies. No backend
+/// reads `ty` on these instructions except for the stack map (`alloc_array`'s
+/// element width is fixed at 8 and read from `array_get` / `array_set`, never
+/// from here), so the code bytes do not change.
+///
+/// ## Step 1: copies (#18492 follow-up)
+///
+/// [`specialisation_view`] keeps a dynamic *parameter* a root, but Twig also
+/// copies values into locals with `mov`: a `let` binding, each arm of an `if`
+/// writing the join variable, a chain of `let`s. Type propagation types such a
+/// `mov` from its source — `i64` when the source is a dynamic param — and
+/// `default_any_to_i64` types any `mov` it could not resolve (for example a copy
+/// of a recursive call's result) `i64`. The specialiser then emits `mov_i64`
+/// with `ty = "i64"`, the backend leaves the slot out of the stack map, and a
+/// compacting collection rewrites the original while the copy keeps pointing at
+/// the freed cell:
+///
+/// ```text
+///   f(p):  q = mov_i64 p        ; ty i64 → q's slot not a root
+///          call w4              ; compaction moves the pair, rewrites p's slot
+///          dyn_pair_first q     ; reads the freed from-space copy
+/// ```
+///
+/// The rule: a variable **may hold a heap word** if
+///
+/// 1. it is a parameter whose declared type is not a machine scalar (a dynamic
+///    `any` / `polymorphic` param, or a `ref<…>`), or
+/// 2. some CIR instruction defining it already has a root type (a `call` /
+///    `call_builtin` result, a `field_load`, a `global_load`, …), or
+/// 3. some `mov_*` copies it from a variable that may hold a heap word —
+///    iterated to a fixed point, so chains and loops are covered.
+///
+/// Every `mov_*` defining such a variable whose `ty` is a 64-bit integer gets
+/// `ty = "any"`. Only `ty` changes, never `op`: the backends pick the
+/// instruction from the mnemonic (`mov_i64`) and read `ty` only for the stack map
+/// (and for `array_get` / `array_set` element widths, which this never touches),
+/// so the machine code is byte-for-byte the same. Arithmetic results stay
+/// scalar: a `sub_i64` of a param is an integer, not a copy.
+///
+/// | CIR                         | before          | after          |
+/// |-----------------------------|-----------------|----------------|
+/// | `q = mov_i64 p` (`p : any`) | `ty i64`, no root | `ty any`, root |
+/// | `x = mov_i64 _r4` (`_r4` a call result) | `ty i64`, no root | `ty any`, root |
+/// | `n2 = sub_i64 n, 1`         | `ty i64`        | unchanged      |
+/// | `k = mov_i64 _n3` (`_n3` a literal only) | `ty i64` | unchanged |
+///
+/// Like the parameter rule, this accepts the known imprecision that a root slot
+/// may hold a plain integer (see `AOT00-T1-stackmap-emission.md` §4).
+fn root_heap_word_copies(declared_params: &[(String, String)], cir: &mut [jit_core::cir::CIRInstr]) {
+    // Step 0 (#18766): a fresh GC block is a reference, whatever the specialiser
+    // inferred for it.
+    for instr in cir.iter_mut() {
+        if instr.dest.is_some() && allocates_gc_block(instr) && is_machine_scalar(&instr.ty) {
+            instr.ty = "any".to_string();
+        }
+    }
+    let mut may_hold_heap: HashSet<String> = declared_params
+        .iter()
+        .filter(|(_, ty)| !is_machine_scalar(ty))
+        .map(|(name, _)| name.clone())
+        .collect();
+    for instr in cir.iter() {
+        if let Some(dest) = &instr.dest {
+            if !is_machine_scalar(&instr.ty) {
+                may_hold_heap.insert(dest.clone());
+            }
+        }
+    }
+    let copies_heap_word = |instr: &jit_core::cir::CIRInstr, set: &HashSet<String>| {
+        instr.op.starts_with("mov")
+            && instr
+                .srcs
+                .iter()
+                .any(|s| matches!(s, jit_core::cir::CIROperand::Var(v) if set.contains(v)))
+    };
+    // Fixed point: a copy of a copy is a copy. Each round adds at least one
+    // variable or stops, so it ends after at most |variables| rounds.
+    loop {
+        let before = may_hold_heap.len();
+        for instr in cir.iter() {
+            if let Some(dest) = &instr.dest {
+                if copies_heap_word(instr, &may_hold_heap) {
+                    may_hold_heap.insert(dest.clone());
+                }
+            }
+        }
+        if may_hold_heap.len() == before {
+            break;
+        }
+    }
+    for instr in cir.iter_mut() {
+        let Some(dest) = &instr.dest else { continue };
+        if instr.op.starts_with("mov")
+            && matches!(instr.ty.as_str(), "i64" | "u64")
+            && may_hold_heap.contains(dest)
+        {
+            instr.ty = "any".to_string();
+        }
+    }
+}
+
+/// Compile one prepared `IIRFunction` with the x86-64 backend, returning its bytes,
+/// its call relocations and its GC stack-map records — `(pc_offset, rbp-relative
+/// reference slots)` per safepoint, the shape `__gc_init_stackmaps` registers.
+///
+/// Typing and GC roots come from two different views of the params (#18492):
+///
+/// | consumer                    | sees param `p : any` as | because                          |
+/// |-----------------------------|-------------------------|----------------------------------|
+/// | `infer_types`/`aot_specialise` | `i64` ([`specialisation_view`]) | Twig ints are signed 64-bit words |
+/// | the backend's stack map     | `any` (declared)        | the word may be a heap reference |
+///
+/// So the machine code is exactly what the `i64` typing produces, and the slot the
+/// prologue spills `p` into is still named at every safepoint — a precise
+/// collection keeps `p`'s object alive and a compacting one rewrites the slot when
+/// it moves the object.
+#[allow(clippy::type_complexity)]
+fn compile_one_x86_64(
+    fn_: &IIRFunction,
+    abi: X86_64Abi,
+    global_slots: &HashMap<String, usize>,
+) -> Result<(Vec<u8>, Vec<x86_64_encoder::ExternalReloc>, Vec<(u32, Vec<i32>)>), AotError> {
+    let typed = specialisation_view(fn_);
+    let inferred = infer_types(&typed);
+    let mut cir = aot_specialise(&typed, Some(&inferred));
+    root_heap_word_copies(&fn_.params, &mut cir);
+    let ctx = FunctionContext {
+        name: &fn_.name,
+        params: &fn_.params,
+        return_type: &fn_.return_type,
+    };
+    let (bytes, relocs, stack_map) = x86_64_compile_with_stackmap(&ctx, &cir, abi, global_slots)
+        .map_err(|_| AotError::BackendRefused { function: fn_.name.clone() })?;
+    let records = stack_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+    Ok((bytes, relocs, records))
+}
+
 #[allow(clippy::type_complexity)]
 fn compile_module_x86_64_to_text(
     module: &IIRModule,
     abi: X86_64Abi,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<X86RelocRecord>), AotError> {
     check_program_function_names(module)?;
+    check_no_direct_runtime_calls(module)?;
     check_direct_call_arities(module)?;
     let global_slots = collect_global_slots(module);
+    check_global_root_capacity(global_slots.len())?;
 
     // Pass 1: compile each function with the x86_64 backend.
     let mut fn_results: Vec<(String, Vec<u8>, Vec<x86_64_encoder::ExternalReloc>)> =
@@ -1538,17 +1971,7 @@ fn compile_module_x86_64_to_text(
     // both ABIs — SysV and MsX64 both do real registration now, PR-x3/PR-x6).
     let mut fn_maps: Vec<FnStackMap> = Vec::with_capacity(module.functions.len());
     for fn_ in &module.functions {
-        let ctx = FunctionContext {
-            name: &fn_.name,
-            params: &fn_.params,
-            return_type: &fn_.return_type,
-        };
-        let inferred = infer_types(fn_);
-        let cir = aot_specialise(fn_, Some(&inferred));
-        let (bytes, relocs, stack_map) =
-            x86_64_compile_with_stackmap(&ctx, &cir, abi, &global_slots)
-                .map_err(|_| AotError::BackendRefused { function: fn_.name.clone() })?;
-        let records = stack_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+        let (bytes, relocs, records) = compile_one_x86_64(fn_, abi, &global_slots)?;
         fn_maps.push(FnStackMap { name: fn_.name.clone(), len: bytes.len(), records });
         fn_results.push((fn_.name.clone(), bytes, relocs));
     }
@@ -1600,8 +2023,10 @@ fn compile_module_x86_64_to_text(
             records: wrapper_records,
         });
         match abi {
-            X86_64Abi::SysV => build_gc_init_stackmaps_x86_64(&fn_maps)?,
-            X86_64Abi::MsX64 => build_gc_init_stackmaps_x86_64_msx64(&fn_maps)?,
+            X86_64Abi::SysV => build_gc_init_stackmaps_x86_64(&fn_maps, global_slots.len())?,
+            X86_64Abi::MsX64 => {
+                build_gc_init_stackmaps_x86_64_msx64(&fn_maps, global_slots.len())?
+            }
         }
     };
     fn_results.push((GC_INIT_STACKMAPS.to_string(), init_bytes, init_relocs));
@@ -2240,14 +2665,33 @@ fn find_windows_linker() -> Option<WinLinker> {
 //    `mov n`, etc.  This happens at the IIR level so that type propagation can
 //    see the named ops and infer concrete types.
 //
-//  Step 2 — Normalise param types.
-//    The Twig IR compiler declares every param as `"any"`.  We promote them to
-//    `"i64"` — Twig integers are semantically signed 64-bit values, so using
-//    the signed default ensures that comparisons (e.g. `cmp_lt`) emit signed
-//    ARM64 condition codes (`B.LT`) rather than unsigned ones (`B.CC`), which
-//    matters for programs that test against negative numbers.  `infer_types`
-//    (from `aot-core`) seeds its environment from `func.params`, so this is
-//    the right place to override the "any" sentinel.
+//  Step 2 — Read dynamic params as `i64` for typing (but keep them roots).
+//    The Twig IR compiler declares every param as `"any"`.  Type propagation
+//    and the specialiser read them as `"i64"` — Twig integers are semantically
+//    signed 64-bit values, so using the signed default ensures that
+//    comparisons (e.g. `cmp_lt`) emit signed ARM64 condition codes (`B.LT`)
+//    rather than unsigned ones (`B.CC`), which matters for programs that test
+//    against negative numbers.  `infer_types` (from `aot-core`) seeds its
+//    environment from `func.params`, so the specialiser is handed a
+//    [`specialisation_view`] whose dynamic params say `"i64"`.
+//
+//    The prepared module itself keeps the declared `"any"` (#18492).  An
+//    `any` param is a 64-bit *tagged word*: an integer for arithmetic, but
+//    just as often a pair, a closure or a string — a heap reference.  The
+//    native backends build each function's GC stack map from the param types
+//    in its `FunctionContext`, and they treat `i64` as "can never be a
+//    reference".  Retyping the param in place therefore dropped it from every
+//    stack map, and a moving collection relocated the object it named without
+//    rewriting the param's frame slot: the callee then read the freed
+//    from-space copy.  So the *typing* sees `i64` and the *stack map* sees
+//    `any`:
+//
+//    ```text
+//                        param `p` declared "any"
+//                       /                         \
+//      specialisation_view (i64)          FunctionContext.params (any)
+//      → typed CIR: cmp_lt_i64, sub_i64…  → stack map: p's slot is a root
+//    ```
 //
 //  Step 3 — Propagate and default types.
 //    A lightweight fixed-point pass populates `type_hint` on every instruction
@@ -2267,8 +2711,53 @@ const AOT_BUILTIN_MAP: &[(&str, &str)] = &[
     ("not", "not"),  ("_move", "mov"),
 ];
 
-/// Step 1: lower `call_builtin "<op>"` instructions to named IIR ops.
+/// Is an `array<T>` element type a GC reference — a heap handle the collector must
+/// trace through the array, not an inline scalar? The same set `iir-to-llvm`'s
+/// `elem_is_gc_reference` uses: `str` (BASIC `A$`), `any`, `ref<any>`, `symbol` and
+/// any `ref<Lispy…>`.
+fn array_elem_is_gc_reference(elem: &str) -> bool {
+    matches!(elem, "str" | "any" | "ref<any>" | "symbol") || elem.starts_with("ref<Lispy")
+}
+
+/// Choose the allocator of every `alloc_array` while its element type is still
+/// known.
+///
+/// The native backends lower `alloc_array` to `__twig_alloc_bytes`, a **no-reference
+/// blob** kind: the collector never looks inside it. That is right for `i64` / `f64`
+/// elements and wrong for reference elements. In a BASIC `DIM A$(n)` each element is
+/// a string handle; a string reachable only through the array was invisible to every
+/// collection and freed while the array still held its handle. Each later `A$(i)`
+/// read is then a use-after-free.
+///
+/// The element type is in the IIR `type_hint` (`array<str>`), but `aot_specialise`
+/// erases `array<T>` to `any` before a backend sees it. So this rewrites, at the IIR
+/// level, an `alloc_array` of reference elements to the op `alloc_ref_array`, which
+/// both native backends lower to `__twig_alloc_ref_array_bytes`. That allocator's
+/// kind traces every word past the 8-byte length header (`__gc_register_ref_array_kind(
+/// NULL, 0, 8)`), so the strings are marked, and compaction moves them and rewrites
+/// the elements. Tracing is sound for these arrays because every element word is a
+/// handle or the zero the allocator fills with. A scalar array keeps the blob kind,
+/// where an element that looked like an address would otherwise be rewritten by
+/// compaction (see `__twig_alloc_ref_array_bytes` in `twig_runtime.c`).
+fn select_ref_array_allocator(func: &mut IIRFunction) {
+    for instr in &mut func.instructions {
+        if instr.op != "alloc_array" {
+            continue;
+        }
+        let elem = instr
+            .type_hint
+            .strip_prefix("array<")
+            .and_then(|rest| rest.strip_suffix('>'));
+        if elem.is_some_and(array_elem_is_gc_reference) {
+            instr.op = "alloc_ref_array".to_string();
+        }
+    }
+}
+
+/// Step 1: lower `call_builtin "<op>"` instructions to named IIR ops, and pick the
+/// tracing allocator for arrays of references ([`select_ref_array_allocator`]).
 fn pre_lower_aot_builtins(func: &mut IIRFunction) {
+    select_ref_array_allocator(func);
     let old = std::mem::take(&mut func.instructions);
     func.instructions = old.into_iter().map(|instr| {
         if instr.op != "call_builtin" { return instr; }
@@ -2284,6 +2773,18 @@ fn pre_lower_aot_builtins(func: &mut IIRFunction) {
     }).collect();
 }
 
+/// Is `ty` a dynamic param type — one the Twig IR compiler leaves undecided?
+///
+/// | declared type      | dynamic? | typed as | GC root?                      |
+/// |--------------------|----------|----------|-------------------------------|
+/// | `any`              | yes      | `i64`    | yes — may hold a heap word    |
+/// | `polymorphic`      | yes      | `i64`    | yes — may hold a heap word    |
+/// | `i64` (annotated)  | no       | `i64`    | no — a plain integer          |
+/// | `ref<any>`         | no       | `ref<any>` | yes (already a reference)   |
+fn is_dynamic_param_type(ty: &str) -> bool {
+    ty == "any" || ty == "polymorphic"
+}
+
 /// Step 2: promote `"any"` / `"polymorphic"` param types to `"i64"`.
 ///
 /// Twig integers are semantically signed 64-bit values.  Using `i64` as the
@@ -2292,11 +2793,43 @@ fn pre_lower_aot_builtins(func: &mut IIRFunction) {
 /// This matters for any program that compares against negative numbers — e.g.
 /// `(if (< x 0) …)` — where unsigned semantics would treat `-5` as a huge
 /// positive number and take the wrong branch.
+///
+/// **Only ever applied to a copy** — the [`specialisation_view`] handed to
+/// `infer_types` / `aot_specialise`. The prepared module keeps the declared
+/// `any`, because the backends derive the GC stack map from the param types,
+/// and an `i64` param is never a root (#18492; see the Step 2 notes above).
 fn normalize_params_to_i64(func: &mut IIRFunction) {
     for (_, ty) in &mut func.params {
-        if ty == "any" || ty == "polymorphic" {
+        if is_dynamic_param_type(ty) {
             *ty = "i64".to_string();
         }
+    }
+}
+
+/// The view of `func` that **type inference and the specialiser** see: the same
+/// function with every dynamic param (`any` / `polymorphic`) read as `i64`
+/// ([`normalize_params_to_i64`]). Borrowed unchanged when there is nothing to
+/// retype, so a fully-typed function costs no clone.
+///
+/// The caller still builds the backend's `FunctionContext` from the
+/// **original** `func.params`, so a dynamic param stays a GC root:
+///
+/// ```text
+///   let typed = specialisation_view(fn_);           // p : i64
+///   let cir   = aot_specialise(&typed, …);          // cmp_lt_i64 p, …
+///   let ctx   = FunctionContext { params: &fn_.params, … };  // p : any → root
+/// ```
+///
+/// Before #18492 the param was retyped in place, the stack map never named its
+/// slot, and a compacting collection left the callee holding a pointer to the
+/// freed from-space copy of its argument.
+fn specialisation_view(func: &IIRFunction) -> std::borrow::Cow<'_, IIRFunction> {
+    if func.params.iter().any(|(_, ty)| is_dynamic_param_type(ty)) {
+        let mut typed = func.clone();
+        normalize_params_to_i64(&mut typed);
+        std::borrow::Cow::Owned(typed)
+    } else {
+        std::borrow::Cow::Borrowed(func)
     }
 }
 
@@ -2323,15 +2856,17 @@ fn normalize_params_to_i64(func: &mut IIRFunction) {
 /// right condition code in each case.  The boolean result value
 /// (0 or 1 stored to the dest register) is the same either way.
 ///
-/// Runs in a loop until stable.  Function params (already "i64" or a typed hint)
-/// seed the environment together with already-typed instructions.
+/// Runs in a loop until stable.  Function params seed the environment together
+/// with already-typed instructions: a typed param with its own type, a dynamic
+/// one (`any` / `polymorphic`) as `"i64"` — exactly what the
+/// [`specialisation_view`] will tell the specialiser, without retyping the param
+/// itself (which would drop it from the GC stack map, #18492).
 fn propagate_aot_types(func: &mut IIRFunction) {
     // Build initial env from params + any already-typed instructions.
     let mut env: HashMap<String, String> = HashMap::new();
     for (name, ty) in &func.params {
-        if ty != "any" && ty != "polymorphic" {
-            env.insert(name.clone(), ty.clone());
-        }
+        let seed = if is_dynamic_param_type(ty) { "i64" } else { ty.as_str() };
+        env.insert(name.clone(), seed.to_string());
     }
     for instr in &func.instructions {
         if let Some(dest) = &instr.dest {
@@ -2865,11 +3400,18 @@ fn push_aot_string_literal(
         vec![Operand::Int(n.saturating_add(8))],
         "i64",
     ));
+    // The block is a gc-core allocation, so the register holding its handle
+    // must be a GC root. LANG83 PR5a found it typed `i64`: the backends' stack
+    // maps (`is_gc_root_ty`) skip a machine-scalar slot, so a precise or
+    // compacting collection could not see a live literal string, and the
+    // `mov dest = buf` alias inherited the same blind spot. Typed `str`, the
+    // buffer is a root, and `root_heap_word_copies` makes every `mov` copy of
+    // it one too. Only the type changes: `alloc_bytes` lowers to the same call.
     lowered.push(IIRInstr::new(
         "alloc_bytes",
         Some(buf_var.clone()),
         vec![Operand::Var(tlen_var)],
-        "i64",
+        "str",
     ));
     // write the 8-byte length header at field index 0 (byte offset 0)
     lowered.push(IIRInstr::new(
@@ -2926,15 +3468,37 @@ fn push_aot_string_literal(
 /// `collect_runtime_str_vars` exactly (same basic-block rule): a `label` starts
 /// a new block, and a terminator (`jmp`/`jmp_if_false`/`jmp_if_true`/`ret`/
 /// `ret_void`) ends one.  A str reassigned twice *straight-line* stays in one
-/// block and keeps the literal fast path — the linear tracking is right there.
+/// block, so it is not in this set; it still loses the literal fast path, because
+/// `lower_string_literals_for_aot` registers no literal for a multiply-defined
+/// destination at all (the same rule as its integer table).
 ///
 /// The native buffer built by `push_aot_string_literal` already has the
 /// `[i64 len][bytes]` layout and the var's stack slot already holds the
 /// buffer's address (a runtime handle) via `mov dest = buf`, so no backend
 /// change is needed — dropping the `strings` registration is the whole fix, and
 /// it applies to both the aarch64 and x86_64 backends at once.
+///
+/// **Every definition counts, not only the `str`-hinted ones.** A variable a
+/// `str_const` writes in one block and a `call` hinted `any` writes in another is
+/// just as branch-selected; counting only `str` definitions left it on the
+/// literal fast path, and when the `call` arm was emitted first the literal
+/// reached the join. So a variable is runtime when it has at least one `str`
+/// definition and its definitions, of any type, span two or more blocks.
+///
+/// **A parameter is a definition in the entry block.** `(define (f s c) (begin (if c
+/// (let ((s "hello")) 0) 0) (print s)))` writes `s` with a `str_const` only in the `c`
+/// arm; on the other path `s` still holds the argument. Counting only instructions,
+/// `s` looked single-block, so its literal (and a length register defined only in the
+/// `c` arm) reached `print s`: with `c` false that printed a garbage length.
 fn collect_runtime_str_vars_for_aot(func: &IIRFunction) -> HashSet<String> {
-    let mut str_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
+    let mut def_blocks: HashMap<&str, HashSet<usize>> = HashMap::new();
+    let mut has_str_def: HashSet<&str> = HashSet::new();
+    for (name, ty) in &func.params {
+        def_blocks.entry(name.as_str()).or_default().insert(0);
+        if ty == "str" {
+            has_str_def.insert(name.as_str());
+        }
+    }
     let mut block: usize = 0;
     for instr in &func.instructions {
         let op = instr.op.as_str();
@@ -2942,22 +3506,41 @@ fn collect_runtime_str_vars_for_aot(func: &IIRFunction) -> HashSet<String> {
             block += 1;
         }
         if let Some(dest) = &instr.dest {
+            def_blocks.entry(dest.as_str()).or_default().insert(block);
             if instr.type_hint == "str" {
-                str_blocks.entry(dest.as_str()).or_default().insert(block);
+                has_str_def.insert(dest.as_str());
             }
         }
         if matches!(op, "jmp" | "jmp_if_false" | "jmp_if_true" | "ret" | "ret_void") {
             block += 1;
         }
     }
-    str_blocks
+    def_blocks
         .into_iter()
-        .filter(|(_, blocks)| blocks.len() >= 2)
+        .filter(|(name, blocks)| blocks.len() >= 2 && has_str_def.contains(name))
         .map(|(name, _)| name.to_string())
         .collect()
 }
 
-fn lower_string_literals_for_aot(func: &mut IIRFunction) {
+/// The IIR `trap` instruction for a registered kind (LANG83). The native
+/// backends lower it to `mov edi/w0, id; call/bl __twig_trap; ud2/udf`, and
+/// `__twig_trap` flushes stdout before naming the kind on stderr.
+fn aot_trap(kind: &str) -> IIRInstr {
+    IIRInstr::new("trap", None, vec![Operand::Str(kind.into())], "void")
+}
+
+/// Lower the E4 string ops of `func` for the native backends.
+///
+/// `ceiling` is the module's string ceiling (`IIRModule::str_ceiling`,
+/// LANG83 PR5a). It reaches the runtime as the third argument of
+/// `__twig_str_concat`, and it stops a compile-time concat fold that would
+/// build a longer literal.
+///
+/// LANG83 PR5a: a fold never turns a failing op into a value. A folded
+/// `str_index` or `str_slice` that is out of range compiles to
+/// `trap "Trap.Bounds"`; a concat fold past the ceiling is not taken, so the
+/// runtime helper raises `Trap.Overflow`.
+fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
     // E4-dyn (E4d-4): variables whose string value is chosen by control flow.
     // These are kept OUT of the compile-time `strings` map so their length is
     // read at run time from the buffer header, not folded to a (possibly wrong)
@@ -3004,6 +3587,45 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             }
             prev_loc = old_map.get(in_idx).copied().unwrap_or(SourceLoc::SYNTHETIC);
         }
+        // A compile-time fact about a register dies the moment anything else
+        // writes that register. The four ops that may *produce* a string fact
+        // decide for themselves (after reading their sources, which may be the
+        // destination); every other write — a `call`, an `add`, a `const`, a
+        // `str_len` — erases the destination's literal here. Without this a
+        // `call` that overwrote a literal register left the literal behind, and a
+        // later `str_len` folded the old length. (The integer table needs no such
+        // step: it only ever holds single-definition registers.)
+        if !matches!(instr.op.as_str(), "mov" | "str_const" | "str_concat" | "str_slice") {
+            if let Some(dest) = &instr.dest {
+                strings.remove(dest);
+            }
+        }
+        // LANG83 PR5a: a hand-written `call_builtin "str_concat", a, b` (the
+        // runtime-call form, which `twig-aot`'s own tests and embedders build
+        // directly, and which this pass also emits for the `str_concat` op)
+        // reaches `__twig_str_concat(a, b, max)`, so it gets the module's
+        // ceiling as its third argument here. It stays a run-time call: no
+        // fold, so it still allocates its own block. A third operand a caller
+        // supplied is replaced, never trusted, so no module can raise its own
+        // ceiling. Any other arity is left for the backend to refuse.
+        if instr.op == "call_builtin"
+            && matches!(instr.srcs.first(), Some(Operand::Var(name)) if name == "str_concat")
+            && matches!(instr.srcs.len(), 3 | 4)
+        {
+            let max_var = format!("__aot_strmax{next}");
+            next += 1;
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(max_var.clone()),
+                vec![Operand::Int(i64::from(ceiling))],
+                "i64",
+            ));
+            let mut call = instr;
+            call.srcs.truncate(3);
+            call.srcs.push(Operand::Var(max_var));
+            lowered.push(call);
+            continue;
+        }
         if instr.op == "const" {
             if let (Some(dest), Some(Operand::Int(value))) =
                 (instr.dest.as_ref(), instr.srcs.first())
@@ -3035,11 +3657,17 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                         ints.remove(dest);
                     }
                 }
+                // The literal passes on only to a SINGLE-definition destination,
+                // exactly as the integer fact above. A destination written more
+                // than once — the join of an `if` that `mov`s a different literal
+                // in each arm — would otherwise take whichever arm is emitted
+                // last, and `str_len` / `print_str` would fold that arm's length
+                // on every path (`(if c "hello!!" "x")` folded to 1).
                 match strings.get(src).cloned() {
-                    Some(string) => {
+                    Some(string) if !mutable_vars.contains(dest.as_str()) => {
                         strings.insert(dest.clone(), string);
                     }
-                    None => {
+                    _ => {
                         strings.remove(dest);
                     }
                 }
@@ -3109,7 +3737,11 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             // paths (reading the length header at run time) rather than baking in
             // one branch's last-written literal — which would print the wrong
             // length whenever the branches' strings differ in length.
-            if !runtime_str_vars.contains(&dest) {
+            // Never register a literal for a destination with more than one
+            // definition (a parameter counts as one): the fact would describe only
+            // this write, and `len_var` is defined only on this path. A reassigned
+            // string reads its length at run time instead.
+            if !runtime_str_vars.contains(&dest) && !mutable_vars.contains(dest.as_str()) {
                 strings.insert(dest.clone(), (dest, len_var, lit));
             }
             continue;
@@ -3132,7 +3764,10 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             // literal (so downstream `str_len`/`str_index` keep folding).
             if let (Some(ll), Some(rl)) = (&left_lit, &right_lit) {
                 let literal = format!("{ll}{rl}");
-                if is_printable_ascii_str(&literal) {
+                // LANG83 PR5a: a fold past the ceiling would build a string the
+                // module may not hold. Leave it to the runtime helper, which
+                // raises `Trap.Overflow` before it allocates anything.
+                if is_printable_ascii_str(&literal) && literal.len() <= ceiling as usize {
                     let (buf_var, len_var, lit) =
                         push_aot_string_literal(&mut lowered, &mut next, literal);
                     lowered.push(IIRInstr::new(
@@ -3148,7 +3783,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     // `print_string(s+8, len)` then read an UNINITIALISED
                     // register as the length. Measured: 4 MB of process memory
                     // (heap pointers, stack addresses) written to stdout.
-                    if runtime_str_vars.contains(&dest) {
+                    if runtime_str_vars.contains(&dest) || mutable_vars.contains(dest.as_str()) {
                         strings.remove(&dest);
                     } else {
                         strings.insert(dest.clone(), (dest, len_var, lit));
@@ -3158,9 +3793,11 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             }
             // E4-dyn runtime path: at least one operand is a runtime string handle (an
             // `INPUT` result, a call result, a branch-selected string) with no compile-
-            // time literal — or the joined literal isn't printable ASCII. Delegate to
-            // `__twig_str_concat(a, b)`, which reads both `[i64 len][bytes]` headers and
-            // returns a fresh block handle. `dest` is deliberately NOT recorded in
+            // time literal — or the joined literal isn't printable ASCII, or is longer than
+            // the module's string ceiling. Delegate to `__twig_str_concat(a, b, max)`,
+            // which reads both `[i64 len][bytes]` headers, raises `Trap.Overflow` when the
+            // join would exceed `max` (LANG83 PR5a: the ceiling, appended below), and
+            // otherwise returns a fresh block handle. `dest` is deliberately NOT recorded in
             // `strings` — but NOT recording it is not enough when `dest` was
             // already in there. ALGOL's `s := pick(1)` lowers to `str_const s =
             // ""` (the declaration) and then `str_concat s = _t3 ++ ""`, so a
@@ -3176,6 +3813,17 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             strings.remove(&dest);
             // so downstream `print_str`/`str_len` take their runtime
             // header-reading paths rather than folding a length that isn't known.
+            //
+            // LANG83 PR5a: the ceiling is the helper's third argument,
+            // materialised as an `i64` immediate in a fresh register.
+            let max_var = format!("__aot_strmax{next}");
+            next += 1;
+            lowered.push(IIRInstr::new(
+                "const",
+                Some(max_var.clone()),
+                vec![Operand::Int(i64::from(ceiling))],
+                "i64",
+            ));
             lowered.push(IIRInstr::new(
                 "call_builtin",
                 Some(dest),
@@ -3183,6 +3831,7 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     Operand::Var("str_concat".into()),
                     Operand::Var(left.clone()),
                     Operand::Var(right.clone()),
+                    Operand::Var(max_var),
                 ],
                 &instr.type_hint,
             ));
@@ -3208,7 +3857,11 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
             strings.remove(&dest);
             if let Some(((_, _, literal), (start, end))) = known {
                 let folded = if start < 0 || end < start || end as usize > literal.len() {
-                    lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
+                    // LANG83 PR5a: the registered trap, which flushes output
+                    // first (an argument-less `type_assert` was a bare `ud2`).
+                    // `dest` is still bound to an empty literal, so code after
+                    // the trap — unreachable — keeps a well-formed register.
+                    lowered.push(aot_trap(interpreter_ir::exception_kind::TRAP_BOUNDS));
                     Some(String::new())
                 } else {
                     String::from_utf8(literal.as_bytes()[start as usize..end as usize].to_vec())
@@ -3221,9 +3874,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                     lowered.push(IIRInstr::new(
                         "mov", Some(dest.clone()), vec![Operand::Var(buf_var)], "i64",
                     ));
-                    // A branch-selected destination cannot inherit one arm's
-                    // literal length: other paths carry a different buffer.
-                    if !runtime_str_vars.contains(&dest) {
+                    // A branch-selected or reassigned destination cannot inherit
+                    // one write's literal length: other paths carry a different buffer.
+                    if !runtime_str_vars.contains(&dest) && !mutable_vars.contains(dest.as_str()) {
                         strings.insert(dest.clone(), (dest, len_var, lit));
                     }
                     continue;
@@ -3305,7 +3958,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction) {
                 .and_then(|idx| literal.as_bytes().get(idx))
                 .copied()
             else {
-                lowered.push(IIRInstr::new("type_assert", None, vec![], "void"));
+                // LANG83 PR5a: a folded out-of-range read is `Trap.Bounds`
+                // through `__twig_trap`, never a value and never a bare `ud2`.
+                lowered.push(aot_trap(interpreter_ir::exception_kind::TRAP_BOUNDS));
                 lowered.push(IIRInstr::new(
                     "const",
                     Some(dest),
@@ -3534,12 +4189,19 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 ///     functions with many folded string comparisons, keeping the aarch64 stack
 ///     frame within the 504-byte stp/ldp limit.
 ///  1. `pre_lower_aot_builtins` — lowers `call_builtin "+"` → `add`, etc.
-///  2. `normalize_params_to_i64` — promotes untyped params to `i64`.
+///  2. dynamic params are *read* as `i64` (`propagate_aot_types` seeds them so,
+///     and the compile step specialises a [`specialisation_view`]) but keep
+///     their declared `any`, so they stay GC roots (#18492).
 ///  3. `propagate_aot_types` — fixed-point type propagation.
 ///  4. `default_any_to_i64` — defaults unresolved arithmetic types to `i64`.
 ///  5. `sign_word_comparisons` — retypes a `"bool"`-hinted comparison over
 ///     integer words `"i64"`, so it compares signed (#18483).
 fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
+    // First, on the module exactly as the caller built it: the string
+    // lowering below turns every `str_const` into `alloc_bytes` +
+    // `store_byte`, after which a literal is no longer visible as one.
+    check_str_ceiling(module)?;
+
     // Before anything adds registers of its own: the string lowering below
     // names its registers `__aot_…`, so the module may not already use one.
     check_no_aot_registers(module)?;
@@ -3606,8 +4268,11 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
     // `V1_BUILTINS` dispatches to `bl/call __dyn_box_int` / `__dyn_unbox_int`.
     lower_box_unbox_to_runtime_calls(module);
 
+    // LANG83 PR5a: the module's string ceiling, read before the functions
+    // are borrowed mutably below.
+    let str_ceiling = module.str_ceiling();
     for func in &mut module.functions {
-        lower_string_literals_for_aot(func);
+        lower_string_literals_for_aot(func, str_ceiling);
         // Phase 0b: remove dead name-register `const` instructions.
         // `lower_global_io` leaves `const %n = Var("x")` in place even after
         // the `global_set`/`global_get` that consumed it is rewritten.
@@ -3615,7 +4280,10 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
         strip_dead_string_consts(func);
         strip_dead_aot_string_allocs(func);
         pre_lower_aot_builtins(func);
-        normalize_params_to_i64(func);
+        // Step 2 deliberately does NOT retype the params in place: dynamic
+        // params are read as `i64` by `propagate_aot_types` and by the
+        // `specialisation_view` the compile step specialises, but stay `any`
+        // here so the backend stack map keeps them as GC roots (#18492).
         propagate_aot_types(func);
         default_any_to_i64(func);
         sign_word_comparisons(func);
@@ -3630,14 +4298,15 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
 /// Run the per-function AOT pipeline and link into a single text section.
 ///
 /// Clones `module`, runs the full AOT preparation pipeline (builtin
-/// pre-lowering, `i64` param normalisation, type propagation, default-any and
-/// signed word comparisons), and then delegates to [`compile_module_to_text_raw`] for the actual
-/// two-pass compile + link.
+/// pre-lowering, type propagation with dynamic params read as `i64`,
+/// default-any-to-i64 and signed word comparisons), and then delegates to
+/// [`compile_module_to_text_raw`] for the actual two-pass compile + link.
 ///
-/// This is the "untyped" path: params the frontend left `"any"` and the
-/// arithmetic and comparisons over them are treated as signed `i64`, which is
-/// what a Twig integer is (#18483).  [`compile_typed_module_to_arm64_bytes`]
-/// is the path that keeps a caller's own param annotations.
+/// This is the untyped path: params the frontend left `any` are typed `i64` for
+/// arithmetic and comparisons (signed, which is what a Twig integer is, #18483),
+/// through a [`specialisation_view`], while staying `any` — GC roots — for the
+/// backend's stack map (#18492). Callers that supply their own param types use
+/// [`compile_typed_module_to_arm64_bytes`].
 #[allow(clippy::type_complexity)] // cohesive compiled-module tuple; see compile_module_x86_64_to_text
 fn compile_module_to_text(
     module: &IIRModule,
@@ -3646,7 +4315,7 @@ fn compile_module_to_text(
     // `prepare_module_for_aot` runs four passes (LANG39 adds step 0):
     //   0. `lower_global_io` — `call_builtin "global_set/get"` → `global_store/load`
     //   1. `call_builtin "+"` → `add`, etc.   (see `pre_lower_aot_builtins`)
-    //   2. param types "any" → "i64"           (see `normalize_params_to_i64`)
+    //   2. param types "any" read as "i64"     (see `specialisation_view`)
     //   3. propagate + default remaining "any" (see `propagate_aot_types` /
     //                                            `default_any_to_i64`)
     //   4. integer-word compares → signed i64  (see `sign_word_comparisons`)
@@ -3722,10 +4391,12 @@ fn compile_module_to_text_raw(
     module: &IIRModule,
 ) -> Result<(Vec<u8>, HashMap<String, usize>, usize, Vec<GlobalByteReloc>, Vec<ExternBranchReloc>), AotError> {
     check_program_function_names(module)?;
+    check_no_direct_runtime_calls(module)?;
     check_direct_call_arities(module)?;
     // ── Collect global names (LANG39) ─────────────────────────────────────────
     let global_slots = collect_global_slots(module);
     let n_global_slots = global_slots.len();
+    check_global_root_capacity(n_global_slots)?;
 
     // ── Pass 1: compile all functions, collecting cross-function + global relocs ─
     // Each entry: (fn_name, per-function bytes, ExternalRelocs, GlobalWordRelocs)
@@ -3798,8 +4469,11 @@ fn compile_module_to_text_raw(
         records: wrapper_records,
     });
 
-    let (init_bytes, init_relocs, fn_addr_relocs) = build_gc_init_stackmaps(&fn_maps)?;
-    fn_results.push((GC_INIT_STACKMAPS.to_string(), init_bytes, init_relocs, Vec::new()));
+    // The init also registers the globals block (#18765); its ADRP+ADD reloc rides in
+    // the init's own GlobalWordReloc list, lifted to byte relocs below like any other.
+    let (init_bytes, init_relocs, fn_addr_relocs, init_glob_relocs) =
+        build_gc_init_stackmaps(&fn_maps, n_global_slots)?;
+    fn_results.push((GC_INIT_STACKMAPS.to_string(), init_bytes, init_relocs, init_glob_relocs));
     fn_results.push((GC_AOT_ENTRY.to_string(), wrapper_bytes, wrapper_relocs, Vec::new()));
 
     // ── LANG41: external symbols are resolved by the system linker ───────────
@@ -3991,8 +4665,12 @@ fn compile_one_with_globals(
     fn_: &IIRFunction,
     global_slots: &HashMap<String, usize>,
 ) -> Option<(Vec<u8>, Vec<Reloc>, Vec<GlobalWordReloc>, Vec<(u32, Vec<i32>)>)> {
-    let inferred = infer_types(fn_);
-    let cir = aot_specialise(fn_, Some(&inferred));
+    // Typed view for the specialiser; declared params for the stack map (#18492).
+    let typed = specialisation_view(fn_);
+    let inferred = infer_types(&typed);
+    let mut cir = aot_specialise(&typed, Some(&inferred));
+    // ...and local copies of heap words keep a root type too (#18492 follow-up).
+    root_heap_word_copies(&fn_.params, &mut cir);
     let ctx = FunctionContext {
         name:        &fn_.name,
         params:      &fn_.params,
@@ -4341,7 +5019,7 @@ mod tests {
             FnStackMap { name: "leaf".into(), len: 8, records: vec![] }, // skipped
             FnStackMap { name: "g".into(), len: 16, records: vec![(4, vec![])] },
         ];
-        let (bytes, relocs, faddr) = build_gc_init_stackmaps_x86_64(&maps).expect("codegen");
+        let (bytes, relocs, faddr) = build_gc_init_stackmaps_x86_64(&maps, 0).expect("codegen");
         assert_eq!(
             relocs.iter().filter(|r| r.symbol == GC_REGISTER_STACKMAP).count(),
             2,
@@ -4366,7 +5044,7 @@ mod tests {
             FnStackMap { name: "g".into(), len: 16, records: vec![(4, vec![])] },
         ];
         let (bytes, relocs, faddr) =
-            build_gc_init_stackmaps_x86_64_msx64(&maps).expect("codegen");
+            build_gc_init_stackmaps_x86_64_msx64(&maps, 0).expect("codegen");
 
         // Same registration set as SysV: one call + one func_start LEA per fn with records.
         assert_eq!(
@@ -4528,7 +5206,8 @@ mod tests {
             // One safepoint, no ref slots (slots_flat empty → x7 = NULL).
             FnStackMap { name: "g".into(), len: 16, records: vec![(4, vec![])] },
         ];
-        let (bytes, relocs, faddr) = build_gc_init_stackmaps(&maps).expect("codegen");
+        let (bytes, relocs, faddr, glob) = build_gc_init_stackmaps(&maps, 0).expect("codegen");
+        assert!(glob.is_empty(), "no globals, no globals-block reloc");
 
         // One register call + one func_start reloc per function WITH records (f, g).
         assert_eq!(
@@ -4551,8 +5230,8 @@ mod tests {
     /// callable init: prologue + epilogue + `RET`, no register calls, no relocs.
     #[test]
     fn gc_init_with_no_records_is_a_bare_frame() {
-        let (bytes, relocs, faddr) = build_gc_init_stackmaps(&[]).expect("codegen");
-        assert!(relocs.is_empty() && faddr.is_empty());
+        let (bytes, relocs, faddr, glob) = build_gc_init_stackmaps(&[], 0).expect("codegen");
+        assert!(relocs.is_empty() && faddr.is_empty() && glob.is_empty());
         // stp / mov / ldp / ret = 4 instructions.
         assert_eq!(bytes.len(), 16);
         assert_eq!(&bytes[bytes.len() - 4..], 0xD65F03C0u32.to_le_bytes(), "ends in RET");
@@ -4770,7 +5449,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_const" && i.op != "print_str"),
@@ -4808,7 +5487,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let len_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n"));
         assert!(
@@ -4840,7 +5519,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
         assert!(
@@ -4853,6 +5532,304 @@ mod tests {
             "native lowering should remove folded str_index: {:?}",
             f.instructions
         );
+    }
+
+    /// LANG83 PR5a: a folded `str_slice` whose bounds are out of range compiles
+    /// to `trap "Trap.Bounds"`.
+    #[test]
+    fn string_literal_slice_out_of_bounds_lowers_to_trap_bounds() {
+        let mut f = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ABC".into())], "str"),
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(2)], "i64"),
+                IIRInstr::new("const", Some("b".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("str_slice", Some("t".into()), vec![
+                    Operand::Var("s".into()), Operand::Var("a".into()), Operand::Var("b".into()),
+                ], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("t".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        assert!(
+            f.instructions.iter().any(|i| i.op == "trap" && i.srcs == vec![Operand::Str("Trap.Bounds".into())]),
+            "{:?}",
+            f.instructions
+        );
+        assert!(f.instructions.iter().all(|i| i.op != "type_assert"), "{:?}", f.instructions);
+    }
+
+    /// `s = "01234567" ++ "01234567"` (16 bytes), then `s ++ "x"` (17).
+    fn concat_two_literals_then_one_more() -> IIRFunction {
+        IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("01234567".into())], "str"),
+                IIRInstr::new("str_concat", Some("b".into()), vec![Operand::Var("a".into()), Operand::Var("a".into())], "str"),
+                IIRInstr::new("str_const", Some("x".into()), vec![Operand::Str("x".into())], "str"),
+                IIRInstr::new("str_concat", Some("c".into()), vec![Operand::Var("b".into()), Operand::Var("x".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("c".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        )
+    }
+
+    /// LANG83 PR5a: a literal concat fold stops at the module's ceiling. Under
+    /// the registry ceiling both concats fold; under a ceiling of 16 the second
+    /// is left to `__twig_str_concat`, whose third argument is the ceiling.
+    #[test]
+    fn a_concat_fold_past_the_ceiling_becomes_a_runtime_call_with_the_ceiling() {
+        let mut f = concat_two_literals_then_one_more();
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        assert!(f.instructions.iter().all(|i| i.op != "call_builtin"), "{:?}", f.instructions);
+
+        let mut f = concat_two_literals_then_one_more();
+        lower_string_literals_for_aot(&mut f, 16);
+        let calls: Vec<&IIRInstr> = f.instructions.iter().filter(|i| i.op == "call_builtin").collect();
+        assert_eq!(calls.len(), 1, "only the 17-byte concat reaches the runtime: {:?}", f.instructions);
+        let call = calls[0];
+        assert_eq!(call.dest.as_deref(), Some("c"));
+        assert_eq!(call.srcs.len(), 4, "name, a, b, ceiling: {call:?}");
+        assert_eq!(call.srcs[0], Operand::Var("str_concat".into()));
+        let Operand::Var(max_var) = &call.srcs[3] else { panic!("{call:?}") };
+        let max = f.instructions.iter().find(|i| i.dest.as_deref() == Some(max_var.as_str())).expect("ceiling const");
+        assert_eq!((max.op.as_str(), &max.srcs), ("const", &vec![Operand::Int(16)]));
+    }
+
+    /// `main` with literals `a`, `b`, a `their_max` const, then
+    /// `call_builtin <srcs…> -> c`, `str_len c`, `ret`.
+    fn concat_call_builtin(srcs: Vec<Operand>) -> IIRFunction {
+        IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+                IIRInstr::new("str_const", Some("b".into()), vec![Operand::Str("CDE".into())], "str"),
+                IIRInstr::new("const", Some("their_max".into()), vec![Operand::Int(i64::MAX)], "i64"),
+                IIRInstr::new("call_builtin", Some("c".into()), srcs, "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("c".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        )
+    }
+
+    fn concat_srcs(extra: &[Operand]) -> Vec<Operand> {
+        let mut srcs = vec![Operand::Var("str_concat".into()), Operand::Var("a".into()), Operand::Var("b".into())];
+        srcs.extend_from_slice(extra);
+        srcs
+    }
+
+    /// The ceiling `call_builtin "str_concat" … -> c` received in `f`, after
+    /// checking the shape: the call stays a run-time call, its first three
+    /// operands are untouched, and its fourth is a register defined exactly
+    /// once, by a `const`, before the call.
+    fn ceiling_passed_to_c(f: &IIRFunction) -> i64 {
+        let at = f
+            .instructions
+            .iter()
+            .position(|i| i.op == "call_builtin" && i.dest.as_deref() == Some("c"))
+            .unwrap_or_else(|| panic!("the call stays a run-time call: {:?}", f.instructions));
+        let call = &f.instructions[at];
+        assert_eq!(call.srcs.len(), 4, "name, a, b, ceiling: {call:?}");
+        assert_eq!(&call.srcs[..3], &concat_srcs(&[])[..], "the name and both strings are unchanged");
+        let Operand::Var(max_var) = &call.srcs[3] else { panic!("the ceiling is a register: {call:?}") };
+        let defs: Vec<usize> = f
+            .instructions
+            .iter()
+            .enumerate()
+            .filter(|(_, i)| i.dest.as_deref() == Some(max_var.as_str()))
+            .map(|(k, _)| k)
+            .collect();
+        assert_eq!(defs.len(), 1, "{max_var} is defined exactly once: {:?}", f.instructions);
+        assert!(defs[0] < at, "{max_var} is defined before the call");
+        let def = &f.instructions[defs[0]];
+        assert_eq!(def.op, "const");
+        let [Operand::Int(max)] = def.srcs.as_slice() else { panic!("{def:?}") };
+        *max
+    }
+
+    /// LANG83 PR5a: the hand-written runtime-call form `call_builtin
+    /// "str_concat", a, b` gets the module's ceiling as its third argument
+    /// (before, it reached the 3-argument builtin row with 2 and the backend
+    /// refused the function). A third operand a caller supplied, a register
+    /// or an immediate, is replaced by the module's ceiling and never
+    /// trusted. Any other arity passes through untouched, for the backend's
+    /// arity check to refuse. Not folded: it still allocates.
+    #[test]
+    fn a_call_builtin_str_concat_gets_the_module_ceiling() {
+        for extra in [vec![], vec![Operand::Var("their_max".into())], vec![Operand::Int(i64::MAX)]] {
+            let mut f = concat_call_builtin(concat_srcs(&extra));
+            lower_string_literals_for_aot(&mut f, 16);
+            assert_eq!(ceiling_passed_to_c(&f), 16, "{extra:?}");
+        }
+        // One string operand, or more than three: untouched (no ceiling const
+        // is added, and the operands are as written).
+        for srcs in [
+            vec![Operand::Var("str_concat".into()), Operand::Var("a".into())],
+            concat_srcs(&[Operand::Int(1), Operand::Int(2)]),
+            concat_srcs(&[Operand::Int(1), Operand::Int(2), Operand::Int(3)]),
+        ] {
+            let mut f = concat_call_builtin(srcs.clone());
+            lower_string_literals_for_aot(&mut f, 16);
+            let call = f.instructions.iter().find(|i| i.dest.as_deref() == Some("c")).unwrap();
+            assert_eq!((call.op.as_str(), &call.srcs), ("call_builtin", &srcs), "passes through");
+            assert!(
+                f.instructions.iter().all(|i| !i.dest.as_deref().is_some_and(|d| d.starts_with("__aot_strmax"))),
+                "no ceiling is added for {srcs:?}"
+            );
+        }
+    }
+
+    /// The ceiling comes from the module through `prepare_module_for_aot`:
+    /// a lowered `str_max_bytes` is passed as is, and `None` is the registry
+    /// ceiling. One above `STR_MAX_BYTES` is malformed IR: until #18800 it was
+    /// clamped here by `str_ceiling()`; now `prepare_module_for_aot` refuses
+    /// it before any lowering (`StrMaxBytes`), as every other column does.
+    /// The lowering still reads `str_ceiling()`, so the clamp remains for a
+    /// caller that lowers an unvalidated module directly.
+    #[test]
+    fn a_call_builtin_str_concat_gets_the_clamped_module_ceiling() {
+        for (set, want) in [(Some(5), 5), (None, i64::from(interpreter_ir::STR_MAX_BYTES))] {
+            let mut module = IIRModule::new("m", "iir");
+            module.add_or_replace(concat_call_builtin(concat_srcs(&[Operand::Int(i64::MAX)])));
+            module.str_max_bytes = set;
+            prepare_module_for_aot(&mut module).unwrap();
+            assert_eq!(ceiling_passed_to_c(&module.functions[0]), want, "{set:?}");
+        }
+        let mut module = IIRModule::new("m", "iir");
+        module.add_or_replace(concat_call_builtin(concat_srcs(&[Operand::Int(i64::MAX)])));
+        module.str_max_bytes = Some(u32::MAX);
+        match prepare_module_for_aot(&mut module) {
+            Err(AotError::Compile(msg)) => assert!(msg.starts_with("StrMaxBytes"), "{msg}"),
+            other => panic!("expected a StrMaxBytes refusal, got {other:?}"),
+        }
+        let mut f = module.functions[0].clone();
+        lower_string_literals_for_aot(&mut f, module.str_ceiling());
+        assert_eq!(ceiling_passed_to_c(&f), i64::from(interpreter_ir::STR_MAX_BYTES), "clamped");
+    }
+
+    /// #18800 security review: the WASM fail-open's reproducer on the native
+    /// columns. `d = str_const "x"` (any hint), then `d = a ++ a` past a
+    /// ceiling of 8, then `str_len d`: the concat must be the run-time call
+    /// with the ceiling, and `str_len d` must not fold to the stale literal's
+    /// length (1) or the join's (16).
+    #[test]
+    fn a_rewritten_string_variable_never_reads_its_stale_literal() {
+        for hint in ["bool", "void", "str"] {
+            let mut module = IIRModule::new("m", "iir");
+            module.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+                IIRInstr::new("str_const", Some("d".into()), vec![Operand::Str("x".into())], hint),
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("abcdefgh".into())], "str"),
+                IIRInstr::new("str_concat", Some("d".into()), vec![Operand::Var("a".into()), Operand::Var("a".into())], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("d".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ]));
+            module.str_max_bytes = Some(8);
+            prepare_module_for_aot(&mut module).unwrap();
+            let f = &module.functions[0];
+            let concat = f.instructions.iter().find(|i| i.dest.as_deref() == Some("d") && i.op == "call_builtin");
+            assert!(
+                concat.is_some_and(|i| matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "str_concat")),
+                "{hint}: the concat is a run-time call: {:?}",
+                f.instructions
+            );
+            let n = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n")).expect("n is defined");
+            assert!(
+                !(n.op == "const" && matches!(n.srcs.first(), Some(Operand::Int(1 | 16)))),
+                "{hint}: str_len d was folded: {n:?}"
+            );
+        }
+    }
+
+    /// #18800 item 1: every native entry point refuses a `str_const` longer
+    /// than the module's ceiling before it lowers anything. Before, the
+    /// literal was baked into an `alloc_bytes` block and the module compiled
+    /// on both backends, although no `str_concat` could have built it.
+    #[test]
+    fn a_literal_past_the_module_ceiling_is_refused_on_every_native_entry() {
+        let module = |len: usize| {
+            let mut m = IIRModule::new("m", "iir");
+            m.add_or_replace(IIRFunction::new("main", vec![], "i64", vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("z".repeat(len))], "str"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ]));
+            m.str_max_bytes = Some(16);
+            m
+        };
+        let refused = |r: Result<(), AotError>, entry: &str| match r {
+            Err(AotError::Compile(msg)) => assert!(msg.starts_with("StrTooLong"), "{entry}: {msg}"),
+            other => panic!("{entry}: expected a StrTooLong refusal, got {other:?}"),
+        };
+        let long = module(17);
+        refused(compile_module_linux_x86_64_object(&long).map(drop), "linux x86-64");
+        refused(compile_module_windows_x86_64_object(&long).map(drop), "windows x86-64");
+        refused(compile_module_macos_arm64_object(&long).map(drop), "macos arm64 object");
+        refused(compile_module_to_arm64_bytes(&long).map(drop), "arm64 bytes");
+        refused(compile_typed_module_to_arm64_bytes(&long).map(drop), "typed arm64 bytes");
+        // At the ceiling the module compiles.
+        compile_module_linux_x86_64_object(&module(16)).expect("16 bytes fit a ceiling of 16");
+        compile_module_to_arm64_bytes(&module(16)).expect("16 bytes fit a ceiling of 16");
+    }
+
+    /// LANG83 PR5a security review: a direct `call` of a runtime symbol is
+    /// refused on both native backends, so a module cannot reach
+    /// `__twig_str_concat` with a ceiling of its own (nor any other runtime
+    /// helper with forged arguments). Before the fix both compiled the call
+    /// and left it to the system linker.
+    #[test]
+    fn a_direct_call_of_a_runtime_symbol_is_refused_on_both_native_backends() {
+        let mut module = IIRModule::new("m", "iir");
+        module.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("a".into()), vec![Operand::Str("AB".into())], "str"),
+                IIRInstr::new("const", Some("huge".into()), vec![Operand::Int(i64::MAX)], "i64"),
+                IIRInstr::new(
+                    "call",
+                    Some("c".into()),
+                    vec![
+                        Operand::Var("__twig_str_concat".into()),
+                        Operand::Var("a".into()),
+                        Operand::Var("a".into()),
+                        Operand::Var("huge".into()),
+                    ],
+                    "str",
+                ),
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+            ],
+        ));
+        module.entry_point = Some("main".into());
+        let refused = |r: Result<(), AotError>, backend: &str| match r {
+            Err(AotError::RuntimeSymbolCall { caller, callee }) => {
+                assert_eq!((caller.as_str(), callee.as_str()), ("main", "__twig_str_concat"), "{backend}");
+            }
+            other => panic!("{backend}: expected RuntimeSymbolCall, got {other:?}"),
+        };
+        refused(compile_module_linux_x86_64_object(&module).map(drop), "x86-64 (SysV)");
+        refused(compile_module_windows_x86_64_object(&module).map(drop), "x86-64 (MsX64)");
+        refused(compile_module_to_arm64_bytes(&module).map(drop), "AArch64");
+        for symbol in ["__twig_trap", "__gc_register_stackmap", "__dyn_pair_first"] {
+            let mut m = module.clone();
+            for i in &mut m.functions[0].instructions {
+                if i.op == "call" {
+                    i.srcs[0] = Operand::Var(symbol.into());
+                }
+            }
+            assert!(
+                matches!(compile_module_linux_x86_64_object(&m), Err(AotError::RuntimeSymbolCall { .. })),
+                "{symbol}"
+            );
+        }
     }
 
     #[test]
@@ -4872,13 +5849,16 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
+        // LANG83 PR5a: the registered `Trap.Bounds`, through `__twig_trap`
+        // (which flushes stdout), not an argument-less `type_assert` (`ud2`).
         assert!(
-            f.instructions.iter().any(|i| i.op == "type_assert"),
-            "out-of-bounds str_index should lower to an unconditional native trap: {:?}",
+            f.instructions.iter().any(|i| i.op == "trap" && i.srcs == vec![Operand::Str("Trap.Bounds".into())]),
+            "out-of-bounds str_index should lower to trap Trap.Bounds: {:?}",
             f.instructions
         );
+        assert!(f.instructions.iter().all(|i| i.op != "type_assert"), "{:?}", f.instructions);
         let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
         assert!(
             matches!(byte_const, Some(i) if i.op == "const" && i.srcs == vec![Operand::Int(0)]),
@@ -4905,7 +5885,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
         assert!(
@@ -4946,7 +5926,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let byte_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("b"));
         assert!(
@@ -4974,7 +5954,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let len_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("n"));
         assert!(
@@ -5025,7 +6005,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let byte_const = f
             .instructions
@@ -5062,7 +6042,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let eq_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("ok"));
         assert!(
@@ -5094,7 +6074,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         let cmp_const = f.instructions.iter().find(|i| i.dest.as_deref() == Some("ord"));
         assert!(
@@ -5435,7 +6415,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_len"),
@@ -5472,7 +6452,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_eq"),
@@ -5512,7 +6492,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|instr| instr.op != "str_cmp"),
@@ -5549,7 +6529,7 @@ mod tests {
                 Operand::Var("one".into())], "i64"),
             IIRInstr::new("jmp", None, vec![Operand::Var("top".into())], "void"),
         ]);
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         assert!(f.instructions.iter().any(|i| i.op == "call_builtin"
             && i.dest.as_deref() == Some("c")
             && i.srcs.first() == Some(&Operand::Var("str_index".into()))));
@@ -5570,7 +6550,7 @@ mod tests {
                 IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
             ],
         );
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         assert!(f.instructions.iter().any(|i| i.op == "call_builtin"
             && i.dest.as_deref() == Some("s")
             && i.srcs.first() == Some(&Operand::Var("str_slice".into()))));
@@ -5582,7 +6562,8 @@ mod tests {
     fn runtime_str_concat_lowers_to_call_builtin_str_concat() {
         // `str_concat` where at least one operand is a runtime string (a function
         // parameter here — not in the `strings` literal map) must lower to
-        // `call_builtin "str_concat" a b → dest`, delegating to `__twig_str_concat`.
+        // `call_builtin "str_concat" a b max → dest` (LANG83 PR5a: `max` is the
+        // module's string ceiling), delegating to `__twig_str_concat(a, b, max)`.
         let mut f = IIRFunction::new(
             "join",
             vec![("a".into(), "str".into()), ("b".into(), "str".into())],
@@ -5596,7 +6577,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_concat"),
@@ -5637,7 +6618,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
             f.instructions.iter().all(|i| i.op != "str_concat"),
@@ -5667,7 +6648,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         // Must allocate 2 + 8 = 10 bytes.
         let alloc = f.instructions.iter().find(|i| i.op == "alloc_bytes").expect("alloc_bytes");
@@ -5741,7 +6722,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         // Both branches still build their `[i64 len][bytes]` heap buffers.
         assert_eq!(
@@ -5772,12 +6753,112 @@ mod tests {
         );
     }
 
-    /// A string reassigned twice *straight-line* (one basic block) is NOT
-    /// promoted: the last-writer-wins literal tracking is exactly right, so
-    /// `print_str` keeps the static-length fast path and emits no runtime
-    /// `field_load`. Mirrors the E4d-2/E4d-3 "straight-line not promoted" rule.
+    /// `str_len` of `s` reads the length header at run time: it was not folded
+    /// to a `const`.
+    fn reads_length_at_runtime(f: &IIRFunction, var: &str) -> bool {
+        f.instructions.iter().any(|i| {
+            i.op == "field_load"
+                && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == var)
+                && matches!(i.srcs.get(1), Some(Operand::Int(0)))
+        })
+    }
+
+    /// The Twig shape of an `if` choosing between two literals: each arm puts its
+    /// literal in its own register and `mov`s it into the join `s`. A `mov` used to
+    /// copy the arm's literal into `s` although `s` has two definitions, so the
+    /// arm emitted last ("x") won and `str_len s` folded to 1 on every path. Now a
+    /// `mov` passes a literal on only to a single-definition destination, exactly
+    /// as the integer table already did.
     #[test]
-    fn straight_line_reassignment_keeps_static_length() {
+    fn mov_into_a_branch_joined_string_does_not_fold_one_arms_length() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![("c".into(), "any".into())],
+            "i64",
+            vec![
+                IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var("c".into()), Operand::Var("Lelse".into())], "void"),
+                IIRInstr::new("str_const", Some("t1".into()), vec![Operand::Str("hello!!".into())], "str"),
+                IIRInstr::new("mov", Some("s".into()), vec![Operand::Var("t1".into())], "str"),
+                IIRInstr::new("jmp", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("Lelse".into())], "void"),
+                IIRInstr::new("str_const", Some("t2".into()), vec![Operand::Str("x".into())], "str"),
+                IIRInstr::new("mov", Some("s".into()), vec![Operand::Var("t2".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        assert!(
+            reads_length_at_runtime(&f, "s"),
+            "the join's length must be read at run time: {:?}",
+            f.instructions
+        );
+        assert!(
+            !f.instructions.iter().any(|i| i.dest.as_deref() == Some("n") && i.op == "const"),
+            "str_len s must not fold to one arm's length: {:?}",
+            f.instructions
+        );
+    }
+
+    /// The same multiple-definition hole in the literal-producing ops: a string
+    /// variable written by `str_const` in one block and by some other instruction
+    /// (here a `call` hinted `any`) in another. The runtime-string rule counted
+    /// only `str`-hinted definitions, so `s` looked single-block and kept the
+    /// literal fast path; and the `call`, which is not a string op, did not erase
+    /// the fact. With the `call` arm emitted first, the literal reached the join.
+    #[test]
+    fn a_non_string_definition_in_another_block_disables_the_literal_fold() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![("c".into(), "any".into())],
+            "i64",
+            vec![
+                IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var("c".into()), Operand::Var("Llit".into())], "void"),
+                IIRInstr::new("call", Some("s".into()), vec![Operand::Var("g".into())], "any"),
+                IIRInstr::new("jmp", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("Llit".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hello!!".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        assert!(reads_length_at_runtime(&f, "s"), "{:?}", f.instructions);
+    }
+
+    /// Straight-line: a literal followed by a non-string write of the same
+    /// register. The write must erase the literal fact ("a compile-time fact about
+    /// a register dies the moment anything else writes that register").
+    #[test]
+    fn a_non_string_write_erases_the_literal_fact() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("ab".into())], "str"),
+                IIRInstr::new("call", Some("s".into()), vec![Operand::Var("g".into())], "any"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        assert!(reads_length_at_runtime(&f, "s"), "{:?}", f.instructions);
+    }
+
+    /// A string reassigned twice *straight-line* (one basic block) is not in the
+    /// branch-selected set, but it is multiply defined, so no literal is registered
+    /// for it and `print_str` reads the length at run time. (It used to keep the
+    /// static-length fast path; linear tracking happened to be right in one block, but
+    /// the same unguarded registration let a parameter overwritten in one branch keep
+    /// a literal whose length register exists only on that branch. One rule for
+    /// strings and integers: a fact needs a single definition.)
+    #[test]
+    fn straight_line_reassignment_reads_length_at_runtime() {
         let mut f = IIRFunction::new(
             "main",
             vec![],
@@ -5791,14 +6872,45 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
 
         assert!(
-            !f.instructions.iter().any(|i| i.op == "field_load"),
-            "a straight-line reassignment keeps the static-length fast path (no \
-             runtime field_load): {:?}",
+            reads_length_at_runtime(&f, "s"),
+            "a reassigned string reads its length at run time: {:?}",
             f.instructions
         );
+    }
+
+    /// A parameter overwritten by a literal in one branch (the Twig
+    /// `(if c (let ((s "hello")) 0) 0) (print s)` shape): on the other path `s` is still
+    /// the argument, so neither `str_len s` nor `print_str s` may use the literal or its
+    /// length register (defined only in the `c` arm).
+    #[test]
+    fn a_parameter_overwritten_in_one_branch_keeps_no_literal() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![("s".into(), "str".into()), ("c".into(), "any".into())],
+            "i64",
+            vec![
+                IIRInstr::new("jmp_if_false", None,
+                    vec![Operand::Var("c".into()), Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hello".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("Ldone".into())], "void"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("s".into())], "void"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        assert!(collect_runtime_str_vars_for_aot(&f).contains("s"), "a param is an entry def");
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
+        let loads = f
+            .instructions
+            .iter()
+            .filter(|i| {
+                i.op == "field_load" && matches!(i.srcs.first(), Some(Operand::Var(v)) if v == "s")
+            })
+            .count();
+        assert_eq!(loads, 2, "print_str and str_len both read s's header: {:?}", f.instructions);
     }
 
     /// Regression: a branch-selected string (E4d-4 promoted var) has ONE alias
@@ -5830,7 +6942,7 @@ mod tests {
             ],
         );
 
-        lower_string_literals_for_aot(&mut f);
+        lower_string_literals_for_aot(&mut f, interpreter_ir::STR_MAX_BYTES);
         strip_dead_aot_string_allocs(&mut f);
 
         // Both branch buffers must survive — neither is dead when `s` is live.
@@ -5937,7 +7049,7 @@ mod tests {
             SourceLoc { line: 4, column: 1 },
         ];
 
-        lower_string_literals_for_aot(&mut func);
+        lower_string_literals_for_aot(&mut func, interpreter_ir::STR_MAX_BYTES);
         assert_eq!(
             func.source_map.len(),
             func.instructions.len(),
@@ -5980,7 +7092,7 @@ mod tests {
             ],
         );
         assert!(func.source_map.is_empty());
-        lower_string_literals_for_aot(&mut func);
+        lower_string_literals_for_aot(&mut func, interpreter_ir::STR_MAX_BYTES);
         strip_dead_string_consts(&mut func);
         strip_dead_aot_string_allocs(&mut func);
         assert!(func.source_map.is_empty(), "no map in, no map out");
@@ -6122,5 +7234,560 @@ mod tests {
                 "{target}: {err:?}"
             );
         }
+    }
+}
+
+
+// ── #18492: dynamic (`any`) params stay GC roots ──────────────────────────────
+//
+// These run on every host (no linker, no executable): they compile a prepared
+// module function by function, exactly as the two native paths do, and compare
+// the stack maps against what the pre-fix pipeline produced — the same function
+// with its params retyped `any` → `i64` in place. The end-to-end proof (a real
+// compacting collection inside the callee) lives in `tests/gc_param_roots.rs`.
+#[cfg(test)]
+mod gc_param_root_tests {
+    use super::*;
+
+    /// A callee whose only parameter is the sole reference to a pair, read after a
+    /// call (a safepoint) that may collect.
+    const SRC: &str = "\
+(define (churn) (list 1 2 3 4))
+(define (f p) (begin (churn) (car p)))
+(f (cons 7 8))
+";
+
+    fn prepared() -> IIRModule {
+        let mut module = twig_ir_compiler::compile_source(SRC, "gc_param_roots").unwrap();
+        prepare_module_for_aot(&mut module).unwrap();
+        module
+    }
+
+    fn func<'m>(module: &'m IIRModule, name: &str) -> &'m IIRFunction {
+        module.functions.iter().find(|f| f.name == name).unwrap()
+    }
+
+    /// The function as the pre-#18492 pipeline left it: dynamic params retyped in
+    /// place, so the backend's `FunctionContext` said `i64`.
+    fn retyped_in_place(f: &IIRFunction) -> IIRFunction {
+        let mut old = f.clone();
+        normalize_params_to_i64(&mut old);
+        old
+    }
+
+    /// Every slot named by a stack map, across all its safepoints.
+    fn all_slots(records: &[(u32, Vec<i32>)]) -> HashSet<i32> {
+        records.iter().flat_map(|(_, s)| s.iter().copied()).collect()
+    }
+
+    #[test]
+    fn prepared_module_keeps_declared_any_params() {
+        let module = prepared();
+        assert_eq!(func(&module, "f").params, vec![("p".to_string(), "any".to_string())]);
+    }
+
+    #[test]
+    fn specialisation_view_reads_dynamic_params_as_i64_and_borrows_typed_ones() {
+        let module = prepared();
+        let f = func(&module, "f");
+        let view = specialisation_view(f);
+        assert!(matches!(view, std::borrow::Cow::Owned(_)), "f has a dynamic param to retype");
+        assert_eq!(view.params, vec![("p".to_string(), "i64".to_string())]);
+        let shape = |f: &IIRFunction| -> Vec<String> {
+            f.instructions.iter().map(|i| format!("{:?} {} {:?} {}", i.dest, i.op, i.srcs, i.type_hint)).collect()
+        };
+        assert_eq!(shape(&view), shape(f), "only the params differ");
+
+        let typed = IIRFunction::new("g", vec![("n".into(), "i64".into())], "i64", vec![]);
+        assert!(matches!(specialisation_view(&typed), std::borrow::Cow::Borrowed(_)));
+        assert!(is_dynamic_param_type("any") && is_dynamic_param_type("polymorphic"));
+        assert!(!is_dynamic_param_type("i64") && !is_dynamic_param_type("ref<any>"));
+    }
+
+    /// x86-64 (SysV and Win64): the machine code is byte-for-byte what the `i64`
+    /// typing produced before the fix, and the stack map names exactly one more
+    /// slot — the one the prologue spills `p` into, `[rbp - 8]` (param 0 gets
+    /// frame slot 0) — at every safepoint.
+    #[test]
+    fn x86_64_dynamic_param_slot_is_named_at_every_safepoint() {
+        let module = prepared();
+        let globals = collect_global_slots(&module);
+        let f = func(&module, "f");
+        for abi in [X86_64Abi::SysV, X86_64Abi::MsX64] {
+            let (bytes, _, records) = compile_one_x86_64(f, abi, &globals).unwrap();
+            let (old_bytes, _, old_records) =
+                compile_one_x86_64(&retyped_in_place(f), abi, &globals).unwrap();
+            assert_eq!(bytes, old_bytes, "{abi:?}: the fix changes no instruction");
+            assert!(!records.is_empty(), "{abi:?}: f has safepoints");
+            for (pc, slots) in &records {
+                assert!(slots.contains(&-8), "{abi:?}: p's slot [rbp-8] is a root at pc {pc}");
+            }
+            for (_, slots) in &old_records {
+                assert!(!slots.contains(&-8), "{abi:?}: the pre-fix map left p unrooted");
+            }
+            let added: Vec<i32> =
+                all_slots(&records).difference(&all_slots(&old_records)).copied().collect();
+            assert_eq!(added, vec![-8], "{abi:?}: only p's slot is new");
+        }
+    }
+
+    /// AArch64: same contract on the other native backend — identical code, and
+    /// exactly one more root slot (p's) named at every safepoint.
+    #[test]
+    fn aarch64_dynamic_param_slot_is_named_at_every_safepoint() {
+        let module = prepared();
+        let globals = collect_global_slots(&module);
+        let f = func(&module, "f");
+        let (bytes, _, _, records) = compile_one_with_globals(f, &globals).unwrap();
+        let (old_bytes, _, _, old_records) =
+            compile_one_with_globals(&retyped_in_place(f), &globals).unwrap();
+        assert_eq!(bytes, old_bytes, "the fix changes no instruction");
+        let added: Vec<i32> =
+            all_slots(&records).difference(&all_slots(&old_records)).copied().collect();
+        assert_eq!(added.len(), 1, "exactly p's slot is new, got {added:?}");
+        assert!(!records.is_empty());
+        for (pc, slots) in &records {
+            assert!(slots.contains(&added[0]), "p's slot is a root at pc {pc}");
+        }
+    }
+
+    // ── LANG83 PR5a: a literal string's handle is a GC root ─────────────────
+
+    /// LANG83 PR5a, the native half of "is a `str` slot still a reference after
+    /// the specialiser?". A runtime string (`str_concat`, a call's result)
+    /// always was. A *literal* was not: its block's handle lived in
+    /// `alloc_bytes buf : i64` and `mov keep = buf : i64`, both machine
+    /// scalars, so no stack-map record named either slot and a precise or
+    /// compacting collection could not see the live block. Now the buffer is
+    /// typed `str` and its alias becomes `any` through `root_heap_word_copies`,
+    /// on both native compile paths.
+    #[test]
+    fn a_literal_strings_handle_registers_are_gc_roots_after_specialisation() {
+        let mut module = IIRModule::new("str_roots", "iir");
+        module.add_or_replace(IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new("str_const", Some("keep".into()), vec![Operand::Str("KEEP".into())], "str"),
+                IIRInstr::new("call_builtin", Some("freed".into()), vec![Operand::Var("gc_collect_precise".into())], "i64"),
+                IIRInstr::new("print_str", None, vec![Operand::Var("keep".into())], "void"),
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+            ],
+        ));
+        prepare_module_for_aot(&mut module).unwrap();
+        let f = func(&module, "main");
+        let typed = specialisation_view(f);
+        let inferred = infer_types(&typed);
+        let mut cir = aot_specialise(&typed, Some(&inferred));
+        root_heap_word_copies(&f.params, &mut cir);
+        let buf = cir
+            .iter()
+            .find(|i| i.op == "alloc_bytes")
+            .and_then(|i| i.dest.clone())
+            .expect("the literal is materialised by alloc_bytes");
+        for name in [buf.as_str(), "keep"] {
+            let tys = ty_of(&cir, name);
+            assert!(!tys.is_empty(), "{name} is defined");
+            for ty in tys {
+                assert!(
+                    !matches!(ty, "i64" | "u64" | "i32" | "u32" | "i16" | "u16" | "i8" | "u8" | "bool" | "f64" | "f32" | "void"),
+                    "{name} holds a gc-core block handle, so its slot must be a root, but its CIR type is {ty:?}: {cir:?}"
+                );
+            }
+        }
+        // And the x86-64 stack map really names a slot at the collection's
+        // safepoint (before the fix main had no root-typed slot at all).
+        let ctx = FunctionContext { name: &f.name, params: &f.params, return_type: &f.return_type };
+        let (_, _, records) =
+            x86_64_compile_with_stackmap(&ctx, &cir, X86_64Abi::SysV, &collect_global_slots(&module)).unwrap();
+        assert!(records.iter().any(|r| !r.slots.is_empty()), "no stack-map record names a root: {records:?}");
+    }
+
+    // ── Follow-up: copies of heap words (`root_heap_word_copies`) ────────────
+
+    use jit_core::cir::{CIRInstr, CIROperand};
+
+    fn cir(op: &str, dest: Option<&str>, srcs: &[&str], ty: &str) -> CIRInstr {
+        let srcs = srcs.iter().map(|s| CIROperand::Var((*s).to_string())).collect();
+        CIRInstr::new(op, dest.map(str::to_string), srcs, ty)
+    }
+
+    fn ty_of<'c>(cir: &'c [CIRInstr], dest: &str) -> Vec<&'c str> {
+        cir.iter().filter(|i| i.dest.as_deref() == Some(dest)).map(|i| i.ty.as_str()).collect()
+    }
+
+    /// The rule on hand-built CIR: copies (and copies of copies) of a dynamic
+    /// param or of a root-typed result become `any`; arithmetic, literal-only
+    /// copies and a typed `i64` param's copies stay scalar; no `op` changes.
+    #[test]
+    fn heap_word_copies_get_a_root_type_and_nothing_else_does() {
+        let params = vec![
+            ("p".to_string(), "any".to_string()),
+            ("n".to_string(), "i64".to_string()),
+        ];
+        let mut code = vec![
+            cir("mov_i64", Some("q"), &["p"], "i64"),          // let copy of a param
+            cir("mov_i64", Some("a"), &["q"], "i64"),          // copy chain
+            cir("mov_i64", Some("b"), &["a"], "i64"),
+            cir("call", Some("r"), &["mk"], "any"),            // call result (root already)
+            cir("mov_i64", Some("x"), &["r"], "i64"),          // its copy
+            cir("const_i64", Some("k"), &[], "i64"),
+            cir("mov_i64", Some("j"), &["k"], "i64"),          // join: literal arm…
+            cir("mov_i64", Some("j"), &["p"], "i64"),          // …and param arm
+            cir("mov_i64", Some("lit"), &["k"], "i64"),        // literal-only copy
+            cir("sub_i64", Some("d"), &["p", "k"], "i64"),     // arithmetic on a param
+            cir("mov_i64", Some("m"), &["n"], "i64"),          // copy of a typed i64 param
+            cir("mov_bool", Some("t"), &["p"], "bool"),        // a narrow copy is left alone
+        ];
+        let ops_before: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        root_heap_word_copies(&params, &mut code);
+        for v in ["q", "a", "b", "x"] {
+            assert_eq!(ty_of(&code, v), ["any"], "{v} copies a heap word");
+        }
+        assert_eq!(ty_of(&code, "j"), ["any", "any"], "both arms of a join that may hold p");
+        for v in ["lit", "d", "m"] {
+            assert_eq!(ty_of(&code, v), ["i64"], "{v} never holds a heap word");
+        }
+        assert_eq!(ty_of(&code, "t"), ["bool"]);
+        assert_eq!(ty_of(&code, "r"), ["any"]);
+        let ops_after: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        assert_eq!(ops_before, ops_after, "only `ty` changes, never the mnemonic");
+    }
+
+    /// The copy shapes end to end through both native compile paths: the code
+    /// bytes equal those of the un-rooted CIR, and the copy's slot is now named at
+    /// every safepoint (the stack map gains slots, and every record holds them).
+    #[test]
+    fn heap_word_copy_slots_are_roots_on_both_native_backends_with_identical_code() {
+        let shapes = [
+            "(define (w4) (list 1 2))\n(define (f p) (let ((q p)) (begin (w4) (car q))))\n(f (cons 7 8))\n",
+            "(define (w4) (list 1 2))\n(define (f p) (let ((a p)) (let ((b a)) (begin (w4) (car b)))))\n(f (cons 7 8))\n",
+            "(define (w4) (list 1 2))\n(define (f p n) (if (pair? n) (let ((x (f p 0))) (begin (w4) (car x))) p))\n(f (cons 7 8) (cons 1 1))\n",
+            "(define (w4) (list 1 2))\n(define (f p c) (let ((x (if (pair? c) p 0))) (begin (w4) (car x))))\n(f (cons 7 8) (cons 1 1))\n",
+        ];
+        for src in shapes {
+            let mut module = twig_ir_compiler::compile_source(src, "gc_copy_roots").unwrap();
+            prepare_module_for_aot(&mut module).unwrap();
+            let globals = collect_global_slots(&module);
+            let f = func(&module, "f");
+            let typed = specialisation_view(f);
+            let inferred = infer_types(&typed);
+            let raw = aot_specialise(&typed, Some(&inferred));
+            let ctx = FunctionContext { name: &f.name, params: &f.params, return_type: &f.return_type };
+
+            // x86-64: production path vs. the same CIR without the copy rule.
+            let (bytes, _, records) = compile_one_x86_64(f, X86_64Abi::SysV, &globals).unwrap();
+            let (old_bytes, _, old_map) =
+                x86_64_compile_with_stackmap(&ctx, &raw, X86_64Abi::SysV, &globals).unwrap();
+            let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+            assert_eq!(bytes, old_bytes, "{src}: x86-64 code unchanged");
+            let added: Vec<i32> = all_slots(&records).difference(&all_slots(&old)).copied().collect();
+            assert!(!added.is_empty(), "{src}: x86-64 copy slot(s) newly rooted");
+            for (pc, slots) in &records {
+                assert!(added.iter().all(|a| slots.contains(a)), "{src}: x86-64 pc {pc}");
+            }
+
+            // AArch64: same comparison.
+            let (bytes, _, _, records) = compile_one_with_globals(f, &globals).unwrap();
+            let (old_bytes, _, _, old_map) =
+                compile_with_globals_and_stackmap(&ctx, &raw, &globals).unwrap();
+            let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+            assert_eq!(bytes, old_bytes, "{src}: aarch64 code unchanged");
+            let added: Vec<i32> = all_slots(&records).difference(&all_slots(&old)).copied().collect();
+            assert!(!added.is_empty(), "{src}: aarch64 copy slot(s) newly rooted");
+            for (pc, slots) in &records {
+                assert!(added.iter().all(|a| slots.contains(a)), "{src}: aarch64 pc {pc}");
+            }
+        }
+    }
+
+    /// Closures: a lambda's captured values reach its lifted body as ordinary
+    /// dynamic params, so the same rule roots them. (The body is the function that
+    /// reads `car p`.)
+    #[test]
+    fn captured_value_param_of_a_lambda_body_is_a_root() {
+        let mut module = twig_ir_compiler::compile_source(
+            "(define (g p) (lambda () (begin (list 1 2) (car p))))\n((g (cons 7 8)))\n",
+            "gc_capture_roots",
+        )
+        .unwrap();
+        prepare_module_for_aot(&mut module).unwrap();
+        let globals = collect_global_slots(&module);
+        let body = module
+            .functions
+            .iter()
+            .find(|f| {
+                f.name != "g"
+                    && f.params.iter().any(|(n, _)| n == "p")
+                    && f.instructions.iter().any(|i| {
+                        matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "dyn_pair_first")
+                    })
+            })
+            .expect("the lifted lambda body reads car p");
+        let idx = body.params.iter().position(|(n, _)| n == "p").unwrap();
+        assert_eq!(body.params[idx].1, "any", "the captured value arrives as a dynamic param");
+        let (_, _, records) = compile_one_x86_64(body, X86_64Abi::SysV, &globals).unwrap();
+        // Params take frame slots 0, 1, … in order: slot k lives at [rbp - 8 - 8k].
+        let p_slot = -8 - 8 * idx as i32;
+        assert!(!records.is_empty());
+        for (pc, slots) in &records {
+            assert!(slots.contains(&p_slot), "captured p ([rbp{p_slot}]) is a root at pc {pc}");
+        }
+    }
+}
+
+
+// ── #18765 / #18766: globals and GC allocations are roots ────────────────────
+#[cfg(test)]
+mod gc_global_and_buffer_root_tests {
+    use super::*;
+    use jit_core::cir::{CIRInstr, CIROperand};
+
+    fn cir(op: &str, dest: Option<&str>, srcs: &[&str], ty: &str) -> CIRInstr {
+        let srcs = srcs.iter().map(|s| CIROperand::Var((*s).to_string())).collect();
+        CIRInstr::new(op, dest.map(str::to_string), srcs, ty)
+    }
+
+    fn ty_of<'c>(cir: &'c [CIRInstr], dest: &str) -> Vec<&'c str> {
+        cir.iter().filter(|i| i.dest.as_deref() == Some(dest)).map(|i| i.ty.as_str()).collect()
+    }
+
+    /// Step 0 of `root_heap_word_copies`: every GC allocation gets a root type,
+    /// and the copy rule then roots its aliases; integer helpers and the
+    /// allocation's size operand stay scalar, and no mnemonic changes.
+    #[test]
+    fn gc_allocations_and_their_copies_get_a_root_type() {
+        let mut code = vec![
+            cir("const_i64", Some("n"), &[], "i64"),
+            cir("alloc_bytes", Some("buf"), &["n"], "i64"), //            string buffer
+            cir("mov_i64", Some("s"), &["buf"], "i64"), //               its alias (the str var)
+            cir("alloc_array", Some("arr"), &["n"], "i64"),
+            cir("call_builtin", Some("cat"), &["str_concat", "s", "s"], "i64"),
+            cir("call_builtin", Some("sub"), &["str_slice", "s", "n", "n"], "i64"),
+            cir("call_builtin", Some("line"), &["input_str"], "u64"),
+            cir("call_builtin", Some("raw"), &["alloc_bytes", "n"], "i64"),
+            cir("call_builtin", Some("p"), &["dyn_pair_new", "n", "n"], "i64"),
+            cir("call_builtin", Some("blk"), &["gc_alloc", "n"], "i64"), //    the look-alike
+            cir("call_builtin", Some("len"), &["str_index", "s", "n"], "i64"), // a byte
+            cir("call_builtin", Some("eq"), &["str_eq", "s", "s"], "i64"), //     a flag
+            cir("mov_i64", Some("c"), &["cat"], "i64"),
+        ];
+        let ops_before: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        root_heap_word_copies(&[], &mut code);
+        for v in ["buf", "s", "arr", "cat", "sub", "line", "raw", "p", "c"] {
+            assert_eq!(ty_of(&code, v), ["any"], "{v} holds a GC block");
+        }
+        for v in ["n", "len", "eq", "blk"] {
+            assert_eq!(ty_of(&code, v), ["i64"], "{v} is an integer");
+        }
+        let ops_after: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        assert_eq!(ops_before, ops_after, "only `ty` changes");
+    }
+
+    /// End to end through both native compile paths: a branch-selected string's
+    /// `alloc_bytes` buffers and the string variable are newly rooted at every
+    /// safepoint, and the machine code is byte-for-byte what the un-rooted CIR
+    /// produces (#18766 changes only the stack map).
+    #[test]
+    fn string_buffer_slots_are_roots_on_both_native_backends_with_identical_code() {
+        let mut f = IIRFunction::new(
+            "f",
+            vec![("c".into(), "any".into())],
+            "i64",
+            vec![
+                IIRInstr::new("jmp_if_false", None, vec![Operand::Var("c".into()), Operand::Var("else".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("hello!!".into())], "str"),
+                IIRInstr::new("jmp", None, vec![Operand::Var("end".into())], "void"),
+                IIRInstr::new("label", None, vec![Operand::Var("else".into())], "void"),
+                IIRInstr::new("str_const", Some("s".into()), vec![Operand::Str("x".into())], "str"),
+                IIRInstr::new("label", None, vec![Operand::Var("end".into())], "void"),
+                IIRInstr::new("call", Some("w".into()), vec![Operand::Var("f".into()), Operand::Var("c".into())], "any"),
+                IIRInstr::new("str_len", Some("n".into()), vec![Operand::Var("s".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("n".into())], "i64"),
+            ],
+        );
+        f.source_map.clear();
+        let mut module = IIRModule::new("m", "twig");
+        module.add_or_replace(f);
+        module.entry_point = Some("f".into());
+        prepare_module_for_aot(&mut module).unwrap();
+        let f = module.functions.iter().find(|f| f.name == "f").unwrap();
+        assert!(
+            f.instructions.iter().any(|i| i.op == "alloc_bytes"),
+            "the branch-selected string is a runtime alloc_bytes buffer"
+        );
+        let globals = collect_global_slots(&module);
+        let typed = specialisation_view(f);
+        let inferred = infer_types(&typed);
+        let raw = aot_specialise(&typed, Some(&inferred));
+        let ctx = FunctionContext { name: &f.name, params: &f.params, return_type: &f.return_type };
+        let slots = |records: &[(u32, Vec<i32>)]| -> HashSet<i32> {
+            records.iter().flat_map(|(_, s)| s.iter().copied()).collect()
+        };
+
+        let (bytes, _, records) = compile_one_x86_64(f, X86_64Abi::SysV, &globals).unwrap();
+        let (old_bytes, _, old_map) =
+            x86_64_compile_with_stackmap(&ctx, &raw, X86_64Abi::SysV, &globals).unwrap();
+        let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+        assert_eq!(bytes, old_bytes, "x86-64 code unchanged");
+        let added: Vec<i32> = slots(&records).difference(&slots(&old)).copied().collect();
+        // Two buffers (one per arm) and the string variable `s` must all be
+        // roots. Since LANG83 PR5a the string lowering types a literal's
+        // `alloc_bytes` buffer `str`, so in the *raw* CIR the root slots are
+        // already the param `c`, the call result `w` and both buffers (4);
+        // `root_heap_word_copies` adds exactly one, `s` (whose `mov`s are
+        // `i64`). Before PR5a the raw CIR rooted only `c` and `w`, and this
+        // step added all three.
+        assert_eq!(slots(&old).len(), 4, "x86-64: raw CIR roots c, w and both buffers, got {:?}", slots(&old));
+        assert_eq!(added.len(), 1, "x86-64: exactly s is newly rooted, got {added:?}");
+        assert_eq!(slots(&records).len(), 5, "x86-64: c, w, both buffers and s, got {:?}", slots(&records));
+        for (pc, s) in &records {
+            assert!(added.iter().all(|a| s.contains(a)), "x86-64 pc {pc}");
+        }
+
+        let (bytes, _, _, records) = compile_one_with_globals(f, &globals).unwrap();
+        let (old_bytes, _, _, old_map) =
+            compile_with_globals_and_stackmap(&ctx, &raw, &globals).unwrap();
+        let old: Vec<(u32, Vec<i32>)> = old_map.into_iter().map(|r| (r.pc_offset, r.slots)).collect();
+        assert_eq!(bytes, old_bytes, "aarch64 code unchanged");
+        let added: Vec<i32> = slots(&records).difference(&slots(&old)).copied().collect();
+        assert_eq!(slots(&old).len(), 4, "aarch64: raw CIR roots c, w and both buffers, got {:?}", slots(&old));
+        assert_eq!(added.len(), 1, "aarch64: exactly s is newly rooted, got {added:?}");
+        assert_eq!(slots(&records).len(), 5, "aarch64: c, w, both buffers and s, got {:?}", slots(&records));
+    }
+
+    fn one_map() -> Vec<FnStackMap> {
+        vec![FnStackMap { name: "f".into(), len: 64, records: vec![(8, vec![-16])] }]
+    }
+
+    /// AArch64 init with globals: `adrp x0` + `add x0, x0` (one `GlobalWordReloc`,
+    /// the same reloc pair a `global_load` emits) + `mov x1, #n` + one
+    /// `bl __gc_register_global_roots`, ahead of the stack-map registrations.
+    #[test]
+    fn aarch64_init_registers_the_globals_block() {
+        let (bytes, relocs, _, glob) = build_gc_init_stackmaps(&one_map(), 3).expect("codegen");
+        assert_eq!(glob.len(), 1, "one ADRP+ADD pair for &_twig_globals");
+        let word = |i: usize| u32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+        let (adrp, add) = (word(glob[0].adrp_word), word(glob[0].add_word));
+        assert_eq!(adrp & 0x9F00_0000, 0x9000_0000, "ADRP");
+        assert_eq!(adrp & 0x1F, 0, "into x0");
+        assert_eq!(add & 0xFF80_0000, 0x9100_0000, "ADD (immediate, 64-bit)");
+        assert_eq!(add & 0x3FF, 0, "x0 = x0 + pageoff");
+        let calls: Vec<&str> = relocs.iter().map(|r| r.symbol.as_str()).collect();
+        assert_eq!(calls, [GC_REGISTER_GLOBAL_ROOTS, GC_REGISTER_STACKMAP], "globals first");
+        // A refused registration traps: `cmp x0, x1` then `b.eq` over a `udf #0xdead`.
+        let bl = relocs[0].word_idx;
+        let after: Vec<u32> = (bl + 1..bl + 8).map(word).collect();
+        assert!(after.iter().any(|&w| w & 0xFF00_001F == 0x5400_0000), "b.eq after the call");
+        assert!(after.contains(&0x0000_DEAD), "udf #0xdead traps a refused registration");
+
+        let (_, relocs, _, glob) = build_gc_init_stackmaps(&one_map(), 0).expect("codegen");
+        assert!(glob.is_empty());
+        assert!(relocs.iter().all(|r| r.symbol != GC_REGISTER_GLOBAL_ROOTS), "no globals, no call");
+    }
+
+    /// x86-64 init with globals, both ABIs: a `PcRel32` against `_twig_globals`
+    /// (as a `global_load` emits) loaded into the first argument register, and one
+    /// call to `__gc_register_global_roots` before the stack-map registrations. Win64
+    /// brackets it with a 32-byte shadow-space reservation.
+    #[test]
+    fn x86_64_init_registers_the_globals_block_on_both_abis() {
+        use x86_64_encoder::ExternalRelocKind;
+        for abi in [X86_64Abi::SysV, X86_64Abi::MsX64] {
+            let build = |n| match abi {
+                X86_64Abi::SysV => build_gc_init_stackmaps_x86_64(&one_map(), n),
+                X86_64Abi::MsX64 => build_gc_init_stackmaps_x86_64_msx64(&one_map(), n),
+            };
+            let (bytes, relocs, _) = build(3).expect("codegen");
+            let order: Vec<(&str, ExternalRelocKind)> =
+                relocs.iter().map(|r| (r.symbol.as_str(), r.kind)).collect();
+            assert_eq!(
+                order,
+                [
+                    (TWIG_GLOBALS, ExternalRelocKind::PcRel32),
+                    (GC_REGISTER_GLOBAL_ROOTS, ExternalRelocKind::PltRel32),
+                    (GC_REGISTER_STACKMAP, ExternalRelocKind::PltRel32),
+                ],
+                "{abi:?}"
+            );
+            // The LEA's ModRM picks the first argument register: rdi (SysV) / rcx (Win64).
+            // `lea r64, [rip+disp32]` = 48 8D <modrm> with modrm = 00 reg 101.
+            let lea = relocs[0].patch_offset - 3;
+            assert_eq!(&bytes[lea..lea + 2], [0x48, 0x8D], "{abi:?}: lea");
+            let reg = (bytes[lea + 2] >> 3) & 7;
+            let want = if abi == X86_64Abi::SysV { 7 } else { 1 }; // rdi / rcx
+            assert_eq!(reg, want, "{abi:?}: base goes in the first argument register");
+            // `call` ; `mov rcx, n` ; `cmp rax, rcx` (48 39 C8) ; `je` ; `ud2` (0F 0B).
+            let call_end = relocs[1].patch_offset + 4;
+            let tail = &bytes[call_end..call_end + 24];
+            assert!(tail.windows(3).any(|w| w == [0x48, 0x39, 0xC8]), "{abi:?}: cmp rax, rcx");
+            assert!(tail.windows(2).any(|w| w == [0x0F, 0x0B]), "{abi:?}: ud2 on refusal");
+            if abi == X86_64Abi::MsX64 {
+                // `sub rsp, 32` = 48 81 EC 20 ; `add rsp, 32` = 48 81 C4 20
+                assert!(bytes.windows(4).any(|w| w == [0x48, 0x81, 0xEC, 0x20]), "shadow space");
+                assert!(bytes.windows(4).any(|w| w == [0x48, 0x81, 0xC4, 0x20]), "released");
+            }
+            let (_, relocs, _) = build(0).expect("codegen");
+            assert!(
+                relocs.iter().all(|r| r.symbol != GC_REGISTER_GLOBAL_ROOTS && r.symbol != TWIG_GLOBALS),
+                "{abi:?}: no globals, no registration"
+            );
+        }
+    }
+
+    /// The macOS object for a program with a global puts `_twig_globals` on an 8-byte
+    /// boundary. Here the code is 0x114 bytes (≡ 4 mod 8). The block used to sit right
+    /// after it, and `ld64` kept it 4 bytes off an 8-byte boundary. The runtime then
+    /// refused to register it, and the init's registration check trapped (the macOS
+    /// `lang_matrix` failure of #18790).
+    #[test]
+    fn macos_object_puts_twig_globals_on_an_8_byte_boundary() {
+        let obj = compile_macos_arm64_object("(define (f) g) (define g 42) (f)", "m").unwrap();
+        // __data section_64: after mach_header_64 (32), LC_SEGMENT_64 (72), __text (80).
+        let sect = 32 + 72 + 80;
+        let text_size =
+            u64::from_le_bytes(obj[32 + 72 + 40..32 + 72 + 48].try_into().unwrap());
+        let addr = u64::from_le_bytes(obj[sect + 32..sect + 40].try_into().unwrap());
+        assert_eq!(addr % 8, 0, "__data at {addr:#x} (text {text_size:#x}) is not 8-aligned");
+        // LC_SYMTAB follows LC_BUILD_VERSION (24); symoff is its third word.
+        let symtab_cmd = 32 + 72 + 160 + 24;
+        let symoff =
+            u32::from_le_bytes(obj[symtab_cmd + 8..symtab_cmd + 12].try_into().unwrap()) as usize;
+        let n_value =
+            u64::from_le_bytes(obj[symoff + 16 + 8..symoff + 32].try_into().unwrap());
+        assert_eq!(n_value, addr, "_twig_globals is the start of the aligned __data");
+    }
+
+    /// A module with more globals than the runtime will root is refused at compile
+    /// time rather than run with every global unrooted.
+    #[test]
+    fn more_globals_than_the_runtime_roots_is_a_compile_error() {
+        let max = gc_core_capi::MAX_GLOBAL_ROOT_SLOTS as usize;
+        assert!(check_global_root_capacity(max).is_ok());
+        let err = check_global_root_capacity(max + 1).unwrap_err();
+        assert!(matches!(&err, AotError::Compile(m) if m.contains("globals exceed")), "{err:?}");
+    }
+
+    /// Whole x86-64 module: a program with a global hands the packager a
+    /// `_twig_globals` reloc and a `__gc_register_global_roots` call from
+    /// `__gc_init_stackmaps`; a program without one does not.
+    #[test]
+    fn x86_64_module_with_globals_registers_them_at_start_up() {
+        let count = |src: &str| {
+            let mut module = twig_ir_compiler::compile_source(src, "globals").unwrap();
+            prepare_module_for_aot(&mut module).unwrap();
+            let (_, offsets, _, relocs) =
+                compile_module_x86_64_to_text(&module, X86_64Abi::SysV).unwrap();
+            let init = offsets[GC_INIT_STACKMAPS];
+            relocs
+                .iter()
+                .filter(|r| r.symbol == GC_REGISTER_GLOBAL_ROOTS)
+                .inspect(|r| assert!(r.patch_offset as usize > init, "called from the init"))
+                .count()
+        };
+        assert_eq!(count("(define g (cons 7 8))\n(define (f) (car g))\n(f)\n"), 1);
+        assert_eq!(count("(define (f) (car (cons 7 8)))\n(f)\n"), 0);
     }
 }

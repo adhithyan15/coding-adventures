@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 347,
+  "sourceHash": "fnv1a64:7c01af689dded95e",
+  "lessonIds": [
+    "ZH-C347-zhuyi",
+    "ZH-C347-yisi",
+    "ZH-W347-si-think",
+    "ZH-C347-sikao",
+    "ZH-C347-yiyi",
+    "ZH-C347-tihui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch347.txt",
+  "json": "chinese/narration/ch347.json",
+  "textHash": "fnv1a64:35f676e710166bfe",
+  "jsonHash": "fnv1a64:39e386898b6dc1da",
+  "findings": []
+}

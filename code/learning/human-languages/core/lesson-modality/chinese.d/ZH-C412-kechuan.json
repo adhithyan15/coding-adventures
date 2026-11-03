@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C412-kechuan",
+    "language": "chinese",
+    "chapter": 412,
+    "sequence": 31550,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e7cd77c018809604"
+  },
+  "findings": []
+}

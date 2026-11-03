@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C370-guanjian",
+  "pathSegment": "ZH-PATH-370-KEY370",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-370-KEY370",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:2c33bd6daac95627",
+  "lessonIds": [
+    "ZH-C346-kaolu",
+    "ZH-C346-guandian",
+    "ZH-C346-ganxiang",
+    "ZH-C346-yiwei",
+    "ZH-C346-guji"
+  ],
+  "tex": "chinese/book/chapters/ch346-thinking-it-over.tex"
+}

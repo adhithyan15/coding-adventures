@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 343,
+  "sourceHash": "fnv1a64:a66ed47ee1a90646",
+  "lessonIds": [
+    "ZH-C343-yueguang",
+    "ZH-C343-duonian",
+    "ZH-C343-xinzhong",
+    "ZH-C343-zhufu",
+    "ZH-C343-fenxiang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch343.txt",
+  "json": "chinese/narration/ch343.json",
+  "textHash": "fnv1a64:f5141942b027d87e",
+  "jsonHash": "fnv1a64:bd5c6a38fa57178d",
+  "findings": []
+}

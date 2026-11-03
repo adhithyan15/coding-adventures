@@ -1,0 +1,19 @@
+{
+  "chapter": 314,
+  "title": "A Baby in the House",
+  "label": "ch:pa-a2-a-baby-in-the-house",
+  "canDo": "I can give the news of a new baby.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C314-dohta",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 314: I can give the news of a new baby.",
+    "assesses": [
+      "PA-LEX-C314-BABY314-03",
+      "PA-LEX-C314-BABY314-04",
+      "PA-LEX-C314-BABY314-05"
+    ]
+  }
+}

@@ -102,6 +102,30 @@ The resolver tests consume the language-neutral `resolution/lua-utf8` and
 `resolution/lua-invalid-utf8` fixtures, require the exact success edge set,
 and verify that diagnostics never expose the checkout root.
 
+## Rust dependency resolution
+
+Rust resolution reads path entries from every Cargo table that is compiled
+into the crate: `[dependencies]`, `[build-dependencies]` (and the legacy
+`build_dependencies`), and the same tables under `[target.<cfg>.…]` for any
+cfg, quoted or a bare triple, as a union over all targets. Entries count both
+as inline tables (`name = { path = "..." }`, whose arrays may continue onto
+later lines) and as `[dependencies.name]` sub-tables with a `path = "..."`
+key. A `package = "..."` rename is authoritative. The crate name is matched,
+ASCII-lowercased, against each Rust package's directory name and declared
+`[package]` `name`; a WASM wrapper is known only by its declared name, so its
+own dependency on the Rust crate it wraps is not a self-edge. Dev-dependencies
+in every form, `[patch]`, `[replace]`, `[workspace]`, package metadata,
+features, comments, and registry-only dependencies never create edges. Field
+and sub-table keys may be bare or quoted (`"path" = "..."`), continuation
+lines are joined in linear time, and a dependency that resolves to the package
+itself is a `DEPENDENCY_SELF_EDGE` error (exit status 2). The
+reader works on UTF-8 bytes (a Swift `Character` would treat CRLF as one
+grapheme) and is the line procedure of the Rust paragraph of
+`code/specs/build-tool-conformance.md`; the shared
+`resolution/rust-field-aware` fixture pins it, and the reader returns the same
+dependency names as the Go reference reader for all 1,650 tracked
+`Cargo.toml` files (checked 2026-11-01).
+
 ## Discovery identity safety
 
 Package discovery classifies the exact bucket immediately below `packages` or

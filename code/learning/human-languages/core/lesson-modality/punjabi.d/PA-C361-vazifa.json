@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C361-vazifa",
+    "language": "punjabi",
+    "chapter": 361,
+    "sequence": 22260,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5371782a92cda8d9"
+  },
+  "findings": []
+}

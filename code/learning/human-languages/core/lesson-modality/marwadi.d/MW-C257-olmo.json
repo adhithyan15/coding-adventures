@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C257-olmo",
+    "language": "marwadi",
+    "chapter": 257,
+    "sequence": 17860,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6feba492f124a73d"
+  },
+  "findings": []
+}

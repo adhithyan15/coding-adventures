@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C213-ghatavno",
+    "language": "marwadi",
+    "chapter": 213,
+    "sequence": 14150,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a7f06301b655fdf"
+  },
+  "findings": []
+}

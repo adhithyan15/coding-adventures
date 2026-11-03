@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C313-dingju",
+    "language": "chinese",
+    "chapter": 313,
+    "sequence": 24210,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:98d06d76b0986b15"
+  },
+  "findings": []
+}

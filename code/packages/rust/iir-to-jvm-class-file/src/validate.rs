@@ -152,6 +152,9 @@ const CONDITIONALLY_SUPPORTED_OPS: &[&str] = &["alloc", "field_load", "field_sto
 ///
 /// 5. **UnsupportedOp** — see [`UNSUPPORTED_OPS`].
 ///
+/// 6. **StrTooLong / StrMaxBytes** (LANG83 PR5a, #18800) — the module's string
+///    ceiling, through the shared `IIRModule::str_ceiling_errors`.
+///
 /// # Example
 ///
 /// ```
@@ -168,6 +171,7 @@ const CONDITIONALLY_SUPPORTED_OPS: &[&str] = &["alloc", "field_load", "field_sto
 ///     exports: vec![],
 ///     imports: vec![],
 ///     release: None,
+///     str_max_bytes: None,
 /// };
 /// assert!(validate_for_jvm(&module).is_empty());
 /// ```
@@ -183,6 +187,17 @@ pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
         // Return early — the per-function checks below would be vacuous.
         return errors;
     }
+
+    // ── LANG83 PR5a: the module's string ceiling (#18800) ───────────────────
+    //
+    // A `str_const` longer than the module's ceiling (`StrTooLong`), or a
+    // ceiling above the registry's (`StrMaxBytes`), is malformed IR: no
+    // column could hold the literal, and `str_concat` is the only op allowed
+    // to find an over-long string at run time.  `IIRModule::validate` knew
+    // this, but nothing on the way to a backend called it, so every column
+    // compiled such a module.  The shared check lives in `interpreter-ir`, so
+    // every column refuses exactly the same modules.
+    errors.extend(module.str_ceiling_errors());
 
     for func in &module.functions {
         // ── Check 2: EmptyFunction ───────────────────────────────────────────
@@ -499,6 +514,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -512,6 +528,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let errs = validate_for_jvm(&module);
         assert!(!errs.is_empty(), "should reject empty module");

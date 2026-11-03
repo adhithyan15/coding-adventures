@@ -4,14 +4,40 @@ All notable changes to the `task-app` web program are documented here.
 
 ## [Unreleased]
 
+Entries added after `task-app-v0.5.16` accumulate here until the next version is
+cut.
+
+### Added
+
+- Task names are capped at 512 characters on every host (backlog 6e4).
+  Nothing limited a task's name before, so a pasted or restored
+  multi-megabyte one was stored, re-rendered and lowercased on every note
+  Save's lookup. task-core now refuses a longer name, and both hosts refuse
+  one as it is typed into Add Task, the edit field, the Sheet's Name cell or
+  a note's *Attach to task* field, the way a note title's cap already works.
+  Characters are Unicode scalar values on both hosts, so 512 emoji fit on the
+  web as they do natively. A task named before the cap still loads whole and
+  can be shortened, never lengthened (`code/specs/task-app-data-model.md`,
+  "Task names are bounded"). New `fixtures/task-name-limit-v1.json` holds the
+  boundary cases, run by both `task-mosaic-app` and the web host.
+
+### Fixed
+
+- A note's *Attach to task* name now finds the same task on every host
+  (backlog 6e2). The native adapter compared names ASCII-only, so "écrire"
+  attached to "Écrire" on the web and was refused natively; both hosts now
+  lowercase with Unicode's default mapping, trim Unicode `White_Space`, and
+  give a tie to the first task by id (`code/specs/task-app-notes-ui-v1.md`,
+  addendum v1.4). New `fixtures/task-name-matching-v1.json` holds the cases,
+  run by both `task-mosaic-app` and the web host.
+
+## [0.5.16] - 2026-10-30
+
 ### Fixed
 
 - Preserve the Board card drop target's authored 9-pixel spacing on Qt
   (#18563). Lower its static column-flex declarations, removing three verified
   drops (80 to 77); keep unsupported values and state overrides explicit.
-
-Entries added after `task-app-v0.5.15` accumulate here until the next version is
-cut.
 
 ## [0.5.15] - 2026-10-29
 

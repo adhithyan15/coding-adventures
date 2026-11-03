@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:708ecdf65488b71e",
+  "lessonIds": [
+    "PA-C360-imtihan",
+    "PA-C360-pepar",
+    "PA-C360-ank",
+    "PA-C360-natija",
+    "PA-C360-pas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch360.txt",
+  "json": "punjabi/narration/ch360.json",
+  "textHash": "fnv1a64:d554827245892bd5",
+  "jsonHash": "fnv1a64:3ab1f2e532b716aa",
+  "findings": []
+}

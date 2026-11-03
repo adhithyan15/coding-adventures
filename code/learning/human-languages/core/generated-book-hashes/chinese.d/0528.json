@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 528,
+  "sourceHash": "fnv1a64:575497dbce57eb00",
+  "lessonIds": [
+    "ZH-C528-pengqiao",
+    "ZH-C528-budebu",
+    "ZH-C528-chouqian",
+    "ZH-C528-dadu",
+    "ZH-C528-ouran"
+  ],
+  "tex": "chinese/book/chapters/ch528-by-chance.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C251-doi",
+  "pathSegment": "PA-PATH-251-GHR251",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-251-GHR251",
+      "order": 0
+    }
+  ]
+}

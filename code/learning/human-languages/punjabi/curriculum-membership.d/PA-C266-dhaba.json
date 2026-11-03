@@ -1,0 +1,11 @@
+{
+  "id": "PA-C266-dhaba",
+  "pathSegment": "PA-PATH-266-TOWN266",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-266-TOWN266",
+      "order": 3
+    }
+  ]
+}

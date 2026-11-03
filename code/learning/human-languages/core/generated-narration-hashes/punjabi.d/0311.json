@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 311,
+  "sourceHash": "fnv1a64:e857bfc7c67dd2d3",
+  "lessonIds": [
+    "PA-C311-bhalna",
+    "PA-C311-chor",
+    "PA-C311-nassna",
+    "PA-C311-khohna",
+    "PA-C311-nuksan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch311.txt",
+  "json": "punjabi/narration/ch311.json",
+  "textHash": "fnv1a64:32a7c87c7bc23c98",
+  "jsonHash": "fnv1a64:1e8c09f81960cd63",
+  "findings": []
+}

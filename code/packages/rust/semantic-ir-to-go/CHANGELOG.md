@@ -1,5 +1,91 @@
 # Changelog
 
+## Unreleased — `not` is a builtin (#18798)
+
+Every Ruby `unless`, `until` and `!x` lowers to `BuiltinCall("not", [x])`,
+which had no arm in the emitter and no case in `_sir_call_builtin_by_name`,
+so it panicked `unknown builtin: not`.  The emitter now inlines
+`Value(!_sir_truthy(x))` (a real `bool`, SIR truthiness: only `nil` and
+`false` are falsy), and the runtime dispatch has a `"not"` case for a
+first-class reference.  Test `emit_not_builtin_negates_by_truthiness`; the
+end-to-end check is `sir-conformance`'s `rb_unless_until_and_bang`.
+
+## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
+
+### The Go tests use a build cache nothing else deletes (root cause of a flake)
+
+`tests/twig_pairs_and_closures.rs` failed twice in one run with a Go
+"compile error" and then passed fifteen reruns.  The cause was not the
+program: `go run` compiles against standard-library export data in the build
+cache (`~/.cache/go-build`, shared by every Go command on the machine), and a
+`go clean -cache` from another session deleted entries between the go
+command finding them and the compiler or linker opening them:
+
+```text
+# command-line-arguments
+.../link: cannot open file $GOCACHE/06/067a…-d: no such file or directory
+```
+
+Running the test binary while a loop cleans the cache it uses fails 9 runs
+out of 9.  Every `go` these tests run now comes from
+`sir_test_scratch::go_command()`, whose `GOCACHE` is
+`<target>/<profile>/sir-go-build-cache`: safe for any number of concurrent
+`go` processes, and known to nothing outside this checkout's tests.  The
+same stress (three copies at `--test-threads=16`, the cache under the test
+environment's `GOCACHE` cleaned every 2.5 s) now passes 24 runs out of 24.
+
+### Constants and the renamed `main` (follow-ups to #18485)
+
+From the security review of #18788.  Nothing to rename here, now pinned by
+tests: a constant is never a Go identifier (the `raise` class operand, the
+only constant this backend accepts, is emitted as its name *string*, and
+every other constant use is refused before emit), so a constant spelled like
+a function cannot shadow it; and no user name can spell `_sir_user_main`,
+the renamed SIR `main`, because `sanitize_ident` reserves every `_sir…` name
+(#18466).
+
+### Test temp files live in a private scratch directory
+
+The execution tests wrote each emitted program to a predictable name
+(`<program>_<pid>_<counter>`) directly in the shared system temp directory.
+Unique among this checkout's tests, but not private: any other process on
+the host could create that name first, replace it, or plant a symlink there
+(and beside a `.py` file, a module `python3` would import from the script's
+own directory).  Each test call now writes into a fresh
+[`sir-test-scratch`](../sir-test-scratch) directory -- random name, created
+atomically, mode `0700` on Unix, removed with its contents when the test
+returns or panics -- and creates its files with `create_new`, so an existing
+file is an error rather than reused.  The existing removal guards stay.
+
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 25 test files now carries a
+per-call `unique_suffix()` (process id plus a per-file atomic counter), the
+scheme `sir-conformance`'s `temp_path` uses. Test-only; no emitted code
+changes.
+
+## Unreleased — A variable never shadows a function of the same name (#18485)
+
+SIR keeps functions and variables in separate namespaces, and Ruby relies on
+it: `def f; 40; end; f = 2; puts f() + f` prints 42. This backend emitted
+the local as `f` next to the function `f`, so the local shadowed the
+function and the call did not compile (`invalid operation: cannot call
+non-function f`). A *variable* (local, parameter, capture, loop variable,
+`rescue` binding) whose SIR name is also a function's name is now emitted
+through `var_ident` as `sir_esc_l` + `sanitize_ident(name)`; every other
+variable, and every function, keeps its spelling. This is the rule the
+JavaScript, TypeScript and Python backends need (callers append code that
+calls their emitted functions by name), so all five backends share it. The
+new `l` tag sits beside `sanitize_ident`'s `v` and `e`, so the renamed form
+can equal no other identifier. New unit tests
+`a_local_named_like_a_function_is_renamed_and_the_function_is_not` and
+`var_ident_renames_exactly_the_names_of_functions`; `sir-conformance`'s
+`tests/local_shadows_function.rs` runs the end-to-end proof.
+
 ## Unreleased — The runtime's and imports' names are reserved (issue #18466)
 
 The emitted file is one `package main`: the inlined runtime, its imports

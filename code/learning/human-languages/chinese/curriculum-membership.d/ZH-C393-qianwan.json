@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C393-qianwan",
+  "pathSegment": "ZH-PATH-393-BESURE393",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-393-BESURE393",
+      "order": 1
+    }
+  ]
+}

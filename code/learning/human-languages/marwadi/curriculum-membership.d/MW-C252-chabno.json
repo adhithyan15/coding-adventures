@@ -1,0 +1,11 @@
+{
+  "id": "MW-C252-chabno",
+  "pathSegment": "MW-PATH-252-HAD252",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-252-HAD252",
+      "order": 3
+    }
+  ]
+}

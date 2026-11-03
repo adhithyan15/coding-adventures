@@ -6,6 +6,26 @@ All notable changes to `task-core` are documented here.
 
 ### Added
 
+- **A task name is at most 512 Unicode scalar values** (backlog 6e4; spec
+  `task-app-data-model.md`, "Task names are bounded"). Nothing limited a
+  name before, so a pasted or restored multi-megabyte one was stored,
+  re-rendered and lowercased on every lookup.
+  - New `MAX_TASK_NAME_CHARS` (512, the note-title and Checklists-composer
+    number) and `task_name_fits`, which counts `str::chars` and stops one
+    past the cap, so measuring a huge paste costs 513 steps. Both are
+    re-exported at the crate root.
+  - `create_task` (and so `Workspace::create_task`) and
+    `create_checklist_template` (its root task carries the checklist's name)
+    refuse a longer name with `OpError::Invalid("task name too long")`,
+    writing nothing.
+  - `rename_task` refuses a longer name only when it is also longer than the
+    task's current name: a name stored before the cap may be renamed down
+    towards it, never grown past it.
+  - Nothing stored is cut: deserialization measures nothing, and
+    `instantiate_checklist` copies an over-cap template name whole.
+  - Tests cover the cap, cap + 1 and both in two-byte and astral characters,
+    scalars versus grapheme clusters, the shrink-only rename, an over-cap
+    snapshot round trip, and both checklist paths.
 - `ChecklistSummary.items` (C3a, #14018): the item count, both branches,
   never the root. It is counted from `checklists()`'s single outline index,
   so a library never re-walks the project per template.

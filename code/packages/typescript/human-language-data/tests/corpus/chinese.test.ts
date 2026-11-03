@@ -39,9 +39,11 @@ it("proves both Chinese A1 writing stages, controlled composition first", () => 
   // composition must be the earlier evidence.
   const a1 = chinese.validEvidence.filter((entry) =>
     entry.stage === "controlled-composition" || entry.stage === "timed-assessment-production");
+  // The B1 core's one controlled line (chapter 281) comes later still.
   expect(a1.map((entry) => [entry.lessonId, entry.stage])).toEqual([
     ["ZH-W97-my-own-line", "controlled-composition"],
     ["ZH-W98-with-a-clock", "timed-assessment-production"],
+    ["ZH-W281-one-reason", "controlled-composition"],
   ]);
 });
 
@@ -53,10 +55,31 @@ it("proves the Chinese A2 writing stage after the A1 composition", () => {
   // come after the controlled composition it builds on (ZH-W97-my-own-line).
   const composed = chinese.validEvidence.filter((entry) =>
     entry.stage === "controlled-composition" || entry.stage === "connected-composition");
+  // The B1 core (chapters 278-289) adds three more, after the reply: one
+  // controlled line with a reason (chapter 281), a four-line note to a hotel desk
+  // (chapter 285) and six connected lines to a friend (chapter 289).
   expect(composed.map((entry) => [entry.lessonId, entry.stage])).toEqual([
     ["ZH-W97-my-own-line", "controlled-composition"],
     ["ZH-W157-reply", "connected-composition"],
+    ["ZH-W281-one-reason", "controlled-composition"],
+    ["ZH-W285-a-note", "connected-composition"],
+    ["ZH-W289-six-lines", "connected-composition"],
   ]);
+});
+
+it("lays the Chinese B1 compositions after the A2 reply", () => {
+  // assessment-policy.json requires no new writing stage at B1, so the B1 core
+  // climbs the ladder it has: one controlled line answering why (因为 … 所以 …),
+  // then a four-line note for a named reader (the hotel desk), then six lines
+  // to a friend that tell a trip in order and end on advice. Each comes after
+  // the reply that proved connected composition at A2.
+  const chinese = languageWritingStages("chinese");
+  const ids = chinese.validEvidence.map((entry) => entry.lessonId);
+  const reply = ids.indexOf("ZH-W157-reply");
+  expect(reply).toBeGreaterThanOrEqual(0);
+  const b1 = ["ZH-W281-one-reason", "ZH-W285-a-note", "ZH-W289-six-lines"].map((id) => ids.indexOf(id));
+  expect(b1.every((index) => index > reply)).toBe(true);
+  expect([...b1].sort((a, b) => a - b)).toEqual(b1);
 });
 
 it("keeps the Chinese timed lesson inside five minutes on its own clock", () => {

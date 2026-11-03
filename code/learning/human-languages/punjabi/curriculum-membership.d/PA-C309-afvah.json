@@ -1,0 +1,11 @@
+{
+  "id": "PA-C309-afvah",
+  "pathSegment": "PA-PATH-309-NEWS309",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-309-NEWS309",
+      "order": 2
+    }
+  ]
+}

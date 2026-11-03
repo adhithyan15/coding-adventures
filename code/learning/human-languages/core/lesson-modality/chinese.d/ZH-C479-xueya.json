@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C479-xueya",
+    "language": "chinese",
+    "chapter": 479,
+    "sequence": 36120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a62f5af4d4e66867"
+  },
+  "findings": []
+}

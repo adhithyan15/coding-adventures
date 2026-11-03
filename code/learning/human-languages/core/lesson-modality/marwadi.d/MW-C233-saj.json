@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C233-saj",
+    "language": "marwadi",
+    "chapter": 233,
+    "sequence": 15890,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac3bb6e292ec49c9"
+  },
+  "findings": []
+}

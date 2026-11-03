@@ -23,6 +23,154 @@ fn run(instrs: Vec<IIRInstr>, ret_ty: &str) -> Result<Option<Value>, vm_core::er
     vm.execute(&mut module, "main", &[])
 }
 
+fn run_with_ceiling(
+    instrs: Vec<IIRInstr>,
+    ret_ty: &str,
+    ceiling: Option<u32>,
+) -> Result<Option<Value>, vm_core::errors::VMError> {
+    let f = IIRFunction::new("main", vec![], ret_ty, instrs);
+    let mut module = IIRModule::new("e4", "e4");
+    module.str_max_bytes = ceiling;
+    module.add_or_replace(f);
+    let mut vm = VMCore::new();
+    vm.execute(&mut module, "main", &[])
+}
+
+fn assert_trap(err: vm_core::errors::VMError, kind: &str) {
+    assert!(
+        matches!(&err, vm_core::errors::VMError::Trap { kind: k } if k == kind),
+        "expected VMError::Trap {{ kind: {kind:?} }}, got {err:?}"
+    );
+}
+
+fn assert_bounds_trap(err: vm_core::errors::VMError) {
+    assert_trap(err, "Trap.Bounds");
+}
+
+/// `str_index s, i` on "ABC" with `i` from a `const`.
+fn index_abc(i: i64) -> Vec<IIRInstr> {
+    vec![
+        ins("str_const", Some("s"), vec![Operand::Str("ABC".into())], "str"),
+        ins("const", Some("i"), vec![Operand::Int(i)], "i64"),
+        ins("str_index", Some("b"), vec![Operand::Var("s".into()), Operand::Var("i".into())], "i64"),
+        ins("ret", None, vec![Operand::Var("b".into())], "i64"),
+    ]
+}
+
+/// `str_slice s, a, b` on "ABC", returning the slice's length.
+fn slice_abc(a: i64, b: i64) -> Vec<IIRInstr> {
+    vec![
+        ins("str_const", Some("s"), vec![Operand::Str("ABC".into())], "str"),
+        ins("const", Some("a"), vec![Operand::Int(a)], "i64"),
+        ins("const", Some("b"), vec![Operand::Int(b)], "i64"),
+        ins(
+            "str_slice",
+            Some("t"),
+            vec![Operand::Var("s".into()), Operand::Var("a".into()), Operand::Var("b".into())],
+            "str",
+        ),
+        ins("str_len", Some("n"), vec![Operand::Var("t".into())], "i64"),
+        ins("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]
+}
+
+/// LANG83 PR5a: every out-of-range index is `Trap.Bounds`, including the
+/// values that only a full 64-bit check sees (`2³² + 1` narrows to 1).
+#[test]
+fn str_index_out_of_range_is_trap_bounds_for_every_edge() {
+    for i in [-1, 3, i64::MAX, i64::MIN, (1 << 32) + 1] {
+        assert_bounds_trap(run(index_abc(i), "i64").unwrap_err());
+    }
+    assert_eq!(run(index_abc(0), "i64").unwrap(), Some(Value::Int(65)));
+    assert_eq!(run(index_abc(2), "i64").unwrap(), Some(Value::Int(67)));
+}
+
+#[test]
+fn str_slice_out_of_range_is_trap_bounds_for_every_edge() {
+    for (a, b) in [(-1, 2), (2, 1), (0, 4), (1 << 32, (1 << 32) + 3), (i64::MIN, 0), (0, i64::MAX)] {
+        assert_bounds_trap(run(slice_abc(a, b), "i64").unwrap_err());
+    }
+    for (a, b, n) in [(0, 0, 0), (3, 3, 0), (0, 3, 3), (1, 2, 1)] {
+        assert_eq!(run(slice_abc(a, b), "i64").unwrap(), Some(Value::Int(n)), "[{a}, {b})");
+    }
+}
+
+/// `str_concat` of two 8-byte strings, then of that and one more byte, under
+/// a module ceiling of 16.
+fn concat_to_17() -> Vec<IIRInstr> {
+    vec![
+        ins("str_const", Some("a"), vec![Operand::Str("01234567".into())], "str"),
+        ins("str_concat", Some("b"), vec![Operand::Var("a".into()), Operand::Var("a".into())], "str"),
+        ins("str_len", Some("n"), vec![Operand::Var("b".into())], "i64"),
+        ins("str_const", Some("x"), vec![Operand::Str("x".into())], "str"),
+        ins("str_concat", Some("c"), vec![Operand::Var("b".into()), Operand::Var("x".into())], "str"),
+        ins("ret", None, vec![Operand::Var("n".into())], "i64"),
+    ]
+}
+
+/// LANG83 PR5a (owner decision Q2): past the module's string ceiling,
+/// `str_concat` raises `Trap.Overflow`; exactly at the ceiling it succeeds.
+#[test]
+fn str_concat_past_the_module_ceiling_is_trap_overflow() {
+    assert_trap(run_with_ceiling(concat_to_17(), "i64", Some(16)).unwrap_err(), "Trap.Overflow");
+    // A ceiling of 17 admits the same program.
+    assert_eq!(run_with_ceiling(concat_to_17(), "i64", Some(17)).unwrap(), Some(Value::Int(16)));
+    // So does the registry ceiling (no `str_max_bytes`).
+    assert_eq!(run_with_ceiling(concat_to_17(), "i64", None).unwrap(), Some(Value::Int(16)));
+}
+
+/// #18800 item 1: a `str_const` longer than the module's ceiling is refused
+/// when the module is loaded — no instruction runs, so nothing is printed —
+/// and so is a ceiling above `STR_MAX_BYTES`. Both are the errors every
+/// compiled column refuses the module with. Before, the VM ran the module and
+/// `str_len` returned 17 under a ceiling of 16.
+#[test]
+fn a_literal_past_the_module_ceiling_is_refused_at_load() {
+    let printed = Arc::new(Mutex::new(Vec::<String>::new()));
+    let literal = |len: usize| {
+        vec![
+            ins("const", Some("c"), vec![Operand::Int(65)], "i64"),
+            ins("call_builtin", Some("u"), vec![Operand::Var("putchar".into()), Operand::Var("c".into())], "void"),
+            ins("str_const", Some("s"), vec![Operand::Str("z".repeat(len))], "str"),
+            ins("str_len", Some("n"), vec![Operand::Var("s".into())], "i64"),
+            ins("ret", None, vec![Operand::Var("n".into())], "i64"),
+        ]
+    };
+    let run_printing = |instrs: Vec<IIRInstr>, ceiling: Option<u32>| {
+        let mut module = IIRModule::new("e4", "e4");
+        module.str_max_bytes = ceiling;
+        module.add_or_replace(IIRFunction::new("main", vec![], "i64", instrs));
+        let mut vm = VMCore::new();
+        let sink = Arc::clone(&printed);
+        vm.builtins_mut().register("putchar", move |args| {
+            sink.lock().unwrap().push(format!("{args:?}"));
+            Ok(Value::Null)
+        });
+        vm.execute(&mut module, "main", &[])
+    };
+    for (instrs, ceiling, kind) in [
+        (literal(17), Some(16), "StrTooLong"),
+        (literal(0), Some(interpreter_ir::STR_MAX_BYTES + 1), "StrMaxBytes"),
+    ] {
+        match run_printing(instrs, ceiling) {
+            Err(vm_core::errors::VMError::InvalidModule { errors }) => {
+                assert!(errors.iter().any(|e| e.starts_with(kind)), "{errors:?}");
+            }
+            other => panic!("expected InvalidModule ({kind}), got {other:?}"),
+        }
+        assert!(printed.lock().unwrap().is_empty(), "an instruction ran before the refusal");
+    }
+    // At the ceiling the module runs (and prints).
+    assert_eq!(run_printing(literal(16), Some(16)).unwrap(), Some(Value::Int(16)));
+    assert_eq!(printed.lock().unwrap().len(), 1);
+    // `execute_traced` runs the same load-time check.
+    let mut module = IIRModule::new("e4", "e4");
+    module.str_max_bytes = Some(16);
+    module.add_or_replace(IIRFunction::new("main", vec![], "i64", literal(17)));
+    let err = VMCore::new().execute_traced(&mut module, "main", &[]).unwrap_err();
+    assert!(matches!(err, vm_core::errors::VMError::InvalidModule { .. }), "{err:?}");
+}
+
 #[test]
 fn str_len_counts_bytes() {
     let result = run(
@@ -120,7 +268,8 @@ fn str_slice_traps_out_of_bounds() {
         "str",
     )
     .unwrap_err();
-    assert!(err.to_string().contains("str_slice"));
+    // LANG83 PR5a: a registered trap, not an untyped `VMError::Custom`.
+    assert_bounds_trap(err);
 }
 
 #[test]
@@ -150,7 +299,7 @@ fn str_index_traps_out_of_bounds() {
         "i64",
     )
     .unwrap_err();
-    assert!(err.to_string().contains("str_index"));
+    assert_bounds_trap(err);
 }
 
 #[test]

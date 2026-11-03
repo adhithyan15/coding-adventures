@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 332,
+  "sourceHash": "fnv1a64:24ce3aa6c3268f0a",
+  "lessonIds": [
+    "ZH-C332-danzi",
+    "ZH-C332-gui",
+    "ZH-W332-gui-ghost",
+    "ZH-C332-naogui",
+    "ZH-C332-jiangui",
+    "ZH-C332-renjian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch332.txt",
+  "json": "chinese/narration/ch332.json",
+  "textHash": "fnv1a64:4b8211b2e94ca47e",
+  "jsonHash": "fnv1a64:c8003e43e2e72234",
+  "findings": []
+}

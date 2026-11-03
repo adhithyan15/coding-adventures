@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C360-pas",
+    "language": "punjabi",
+    "chapter": 360,
+    "sequence": 22220,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f366ec4b4fed9b9f"
+  },
+  "findings": []
+}

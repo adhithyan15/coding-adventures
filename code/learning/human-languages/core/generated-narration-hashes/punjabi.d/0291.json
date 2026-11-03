@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:cc1318580a9a9b07",
+  "lessonIds": [
+    "PA-C291-thandha",
+    "PA-C291-niggha",
+    "PA-C291-tatta",
+    "PA-C291-kosa",
+    "PA-C291-thaarna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch291.txt",
+  "json": "punjabi/narration/ch291.json",
+  "textHash": "fnv1a64:569c52d0881594ee",
+  "jsonHash": "fnv1a64:25d4b4f291ac6ea6",
+  "findings": []
+}

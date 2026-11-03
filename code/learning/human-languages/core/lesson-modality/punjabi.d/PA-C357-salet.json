@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C357-salet",
+    "language": "punjabi",
+    "chapter": 357,
+    "sequence": 22050,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d47894921b5da190"
+  },
+  "findings": []
+}

@@ -49,7 +49,7 @@ Standard opcodes (handled by `vm-core`):
 | Flat memory / I/O | `load_mem store_mem io_in io_out` |
 | Calls | `call call_builtin` |
 | Type system | `cast type_assert` |
-| Strings | `str_const str_len str_index str_concat str_slice str_eq str_cmp print_str` |
+| Strings | `str_const str_len str_index str_concat str_slice str_eq str_cmp print_str` (LANG83 PR5a: `str_index`/`str_slice` trap `Trap.Bounds`, `str_concat` traps `Trap.Overflow` past the string ceiling; all three are side-effecting) |
 | Exceptions (AOT00 T2, inert — no backend lowers these yet) | `throw catch landingpad` |
 | Float math (ALGOL AL8) | `f64_sqrt f64_sin f64_cos f64_ln f64_exp f64_atan f64_tan f64_pow` |
 | Conversions (LANG-FULL E8) | `int_to_real real_to_int_trunc real_to_int_floor` |
@@ -67,6 +67,29 @@ integer id (1–7). Every kind names a condition, not a language's exception cla
 a compiler maps JavaScript's `ReferenceError` or Python's `NameError` onto
 `Trap.Unbound` (id 7, called `Trap.ReferenceError` before LANG83 PR7d, which also
 retired the never-used `LANGUAGE_TRAP_KINDS` table).
+
+
+## The string ceiling (LANG83 PR5a)
+
+A string is at most `STR_MAX_BYTES` = 2³⁰ − 64 bytes, the largest round value
+below .NET's `System.String` limit. A module may lower it:
+
+```rust
+use interpreter_ir::{IIRModule, STR_MAX_BYTES};
+let mut module = IIRModule::new("m", "iir");
+assert_eq!(module.str_ceiling(), STR_MAX_BYTES); // `str_max_bytes: None`
+module.str_max_bytes = Some(16);                  // e.g. a frontend budget, or a test
+assert_eq!(module.str_ceiling(), 16);
+```
+
+Every backend reads `str_ceiling()` and makes `str_concat` raise
+`Trap.Overflow` rather than build a longer string. `str_ceiling_errors()`
+reports a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`) and a
+`str_const` longer than the ceiling (`StrTooLong`); `validate()` includes
+those errors, and every column calls `str_ceiling_errors()` itself before it
+compiles or runs a module (#18800), so an over-long literal is refused
+everywhere, never run. Unlike `release`, the field is part of the binary
+wire format (format 1.2, written only when it is `Some`, #18800).
 
 ## The standard operation registry (LANG83)
 
@@ -176,8 +199,13 @@ let bytes = serialise(&module);
 let module2 = deserialise(&bytes).unwrap();
 ```
 
-Format: `b"IIR\0"` magic, `u16` version `1.0`, little-endian.  Profiling fields
-are **not** serialised (they are runtime-only state).
+Format: `b"IIR\0"` magic, then a major and a minor version byte, little-endian.
+The writer uses the oldest version that can hold the module: **1.1** (functions,
+exports, imports) unless the module lowers its string ceiling, and **1.2** (1.1
+plus a `0x12` section holding `str_max_bytes`) when it does (#18800). So a module
+without a ceiling serialises byte for byte as before. The reader accepts 1.0,
+1.1 and 1.2. Profiling fields and `release` are **not** serialised (they are
+runtime-only state and provenance).
 
 ---
 

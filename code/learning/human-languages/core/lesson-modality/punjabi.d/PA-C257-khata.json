@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C257-khata",
+    "language": "punjabi",
+    "chapter": 257,
+    "sequence": 15200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:967b3f4c613cef5a"
+  },
+  "findings": []
+}

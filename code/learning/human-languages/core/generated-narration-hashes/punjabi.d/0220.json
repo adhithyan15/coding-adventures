@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:8f9ecd20e17ec0ca",
+  "lessonIds": [
+    "PA-C220-ne-return",
+    "PA-C220-aman-ne",
+    "PA-C220-us-ne",
+    "PA-C220-ne-review",
+    "PA-C220-lia-ditta",
+    "PA-C220-ki-past",
+    "PA-C220-payoff"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch220.txt",
+  "json": "punjabi/narration/ch220.json",
+  "textHash": "fnv1a64:a04e605e84e63365",
+  "jsonHash": "fnv1a64:4ea1b2e1cb67e67b",
+  "findings": []
+}

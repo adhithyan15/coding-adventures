@@ -1,0 +1,23 @@
+{
+  "chapter": 288,
+  "title": "If It Rains",
+  "label": "ch:zh-if-it-rains",
+  "canDo": "I can say what will happen if something else does.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C288-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying what will happen if something else does with 要是 … 就 … and … 的话, and what it depends on with 看, built on one new written character: 就.",
+    "assesses": [
+      "ZH-LEX-C288-JIU-01",
+      "ZH-SCRIPT-JIU-01",
+      "ZH-LEX-C288-YAOSHI-01",
+      "ZH-GRAMMAR-YAOSHI-JIU-01",
+      "ZH-LEX-C288-DEHUA-01",
+      "ZH-GRAMMAR-KAN-DEPENDS-01",
+      "ZH-PERFORMANCE-IF-01"
+    ]
+  }
+}

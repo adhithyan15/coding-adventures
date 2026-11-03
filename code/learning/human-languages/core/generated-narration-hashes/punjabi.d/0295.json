@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 295,
+  "sourceHash": "fnv1a64:d0df402c85382b32",
+  "lessonIds": [
+    "PA-C295-tarer",
+    "PA-C295-phatna",
+    "PA-C295-khokhla",
+    "PA-C295-khadd",
+    "PA-C295-galna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch295.txt",
+  "json": "punjabi/narration/ch295.json",
+  "textHash": "fnv1a64:6e18398624923d59",
+  "jsonHash": "fnv1a64:575858a8ff6dce58",
+  "findings": []
+}

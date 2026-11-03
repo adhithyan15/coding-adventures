@@ -1,0 +1,885 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 266,
+  "title": "Around the Town",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:5f49515431b74b73",
+  "lessons": [
+    {
+      "id": "PA-C266-mahalla",
+      "sequence": 15660,
+      "title": "ਮਹੱਲਾ (mahallā) — a neighbourhood; a quarter of a town",
+      "headword": "ਮਹੱਲਾ",
+      "romanization": "mahallā",
+      "gloss": "a neighbourhood; a quarter of a town",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0d7af3290e18306d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for the distance to travel, then the Punjabi for a kos."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਹੱਲਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਹੱਲਾ — mahallā — \"a neighbourhood; a quarter of a town\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਾਡਾ ਮਹੱਲਾ ਬਹੁਤ ਸ਼ਾਂਤ ਹੈ। sāḍā mahallā bahut shā̃t hai. Our neighbourhood is very calm."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਹੱਲਾ (mahallā) is a loan, usually traced through Persian to Arabic mahalla, \"a quarter of a town\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahallā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahallā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mahallā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mahallā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāḍā mahallā bahut shā̃t hai. — Our neighbourhood is very calm.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāḍā mahallā bahut shā̃t hai.* — Our neighbourhood is very calm.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for the distance to travel, then the Punjabi for a kos, then say mahallā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for the distance to travel, then the Punjabi for a kos, then say *mahallā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਹੱਲਾ (mahallā) mean? (\"A neighbourhood; a quarter of a town\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C266-kasba",
+      "sequence": 15670,
+      "title": "ਕਸਬਾ (kasbā) — a small town",
+      "headword": "ਕਸਬਾ",
+      "romanization": "kasbā",
+      "gloss": "a small town",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:01fb4b0691314056",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a kos, then the Punjabi for a neighbourhood."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਸਬਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਸਬਾ — kasbā — \"a small town\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਦੋਸਤ ਇੱਕ ਛੋਟੇ ਕਸਬੇ ਵਿੱਚ ਰਹਿੰਦਾ ਹੈ। merā dost ikk chhoṭe kasbe vich rahindā hai. My friend lives in a small town."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਸਬਾ (kasbā) is a loan, usually traced through Persian to Arabic qasaba, \"a town\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasbā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasbā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kasbā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kasbā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā dost ikk chhoṭe kasbe vich rahindā hai. — My friend lives in a small town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā dost ikk chhoṭe kasbe vich rahindā hai.* — My friend lives in a small town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a kos, then the Punjabi for a neighbourhood, then say kasbā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a kos, then the Punjabi for a neighbourhood, then say *kasbā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਸਬਾ (kasbā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਸਬਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਸਬਾ (kasbā) mean? (\"A small town\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C266-hatti",
+      "sequence": 15680,
+      "title": "ਹੱਟੀ (haṭṭī) — a small shop",
+      "headword": "ਹੱਟੀ",
+      "romanization": "haṭṭī",
+      "gloss": "a small shop",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ab30890d54a4615a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a neighbourhood, then the Punjabi for a small town."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਹੱਟੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੱਟੀ — haṭṭī — \"a small shop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਲੀ ਵਿੱਚ ਇੱਕ ਹੱਟੀ ਹੈ ਅਤੇ ਉੱਥੇ ਦੁੱਧ ਮਿਲਦਾ ਹੈ। galī vich ikk haṭṭī hai ate utthe dudh mildā hai. There is a little shop in the lane, and you can get milk there."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਹੱਟੀ (haṭṭī) is inherited from Sanskrit haṭṭa, \"market, fair\", beside haṭṭī, \"petty market\"; CDIAL lists Punjabi haṭṭ, \"shop\", under it (CDIAL 13944)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṭṭī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṭṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "haṭṭī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *haṭṭī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "galī vich ikk haṭṭī hai ate utthe dudh mildā hai. — There is a little shop in the lane, and you can get milk there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *galī vich ikk haṭṭī hai ate utthe dudh mildā hai.* — There is a little shop in the lane, and you can get milk there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a neighbourhood, then the Punjabi for a small town, then say haṭṭī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a neighbourhood, then the Punjabi for a small town, then say *haṭṭī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਹੱਟੀ (haṭṭī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਹੱਟੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਹੱਟੀ (haṭṭī) mean? (\"A small shop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C266-dhaba",
+      "sequence": 15690,
+      "title": "ਢਾਬਾ (ḍhābā) — a roadside eatery",
+      "headword": "ਢਾਬਾ",
+      "romanization": "ḍhābā",
+      "gloss": "a roadside eatery",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f204fd503ec54e58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a small town, then the Punjabi for a small shop."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਢਾਬਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢਾਬਾ — ḍhābā — \"a roadside eatery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਸੀਂ ਸੜਕ ਦੇ ਨੇੜੇ ਢਾਬੇ ਉੱਤੇ ਖਾਣਾ ਖਾਂਦੇ ਹਾਂ। asīṁ saṛak de neṛe ḍhābe utte khāṇā khānde hāṁ. We eat at a roadside eatery near the road."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਢਾਬਾ (ḍhābā) has no settled source: the Punjabi origin remains unknown in the sources used here."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhābā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhābā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḍhābā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḍhābā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asīṁ saṛak de neṛe ḍhābe utte khāṇā khānde hāṁ. — We eat at a roadside eatery near the road.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asīṁ saṛak de neṛe ḍhābe utte khāṇā khānde hāṁ.* — We eat at a roadside eatery near the road.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a small town, then the Punjabi for a small shop, then say ḍhābā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a small town, then the Punjabi for a small shop, then say *ḍhābā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਢਾਬਾ (ḍhābā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਢਾਬਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਢਾਬਾ (ḍhābā) mean? (\"A roadside eatery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C266-imarat",
+      "sequence": 15700,
+      "title": "ਇਮਾਰਤ (imārat) — a building",
+      "headword": "ਇਮਾਰਤ",
+      "romanization": "imārat",
+      "gloss": "a building",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de8c55600ee6826f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a small shop, then the Punjabi for a roadside eatery."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਇਮਾਰਤ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਮਾਰਤ — imārat — \"a building\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੈਂਕ ਇੱਕ ਵੱਡੀ ਇਮਾਰਤ ਵਿੱਚ ਹੈ। baiṅk ikk vaḍḍī imārat vich hai. The bank is in a big building."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਇਮਾਰਤ (imārat) is a loan, usually traced through Persian to Arabic imāra, \"a building\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imārat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imārat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "imārat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *imārat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baiṅk ikk vaḍḍī imārat vich hai. — The bank is in a big building.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baiṅk ikk vaḍḍī imārat vich hai.* — The bank is in a big building.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a small shop, then the Punjabi for a roadside eatery, then say imārat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a small shop, then the Punjabi for a roadside eatery, then say *imārat* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਇਮਾਰਤ (imārat) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਇਮਾਰਤ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਇਮਾਰਤ (imārat) mean? (\"A building\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R266-review-260-266",
+      "sequence": 15710,
+      "title": "Looking back: from Quarter Past and Half Past to Around the Town",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Quarter Past and Half Past to Around the Town",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e4f589d9c8249e7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi for plus a quarter and plus a half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plus a quarter, plus a half, less a quarter, one and a half, two and a half",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: plus a quarter, plus a half, less a quarter, one and a half, two and a half]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "half, a railway platform, to halt, to set off, departing",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: half, a railway platform, to halt, to set off, departing]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a fee, a fare, a fine, a receipt, to pay off",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a fee, a fare, a fine, a receipt, to pay off]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a bend in the road, to turn, a side, right-hand, left-hand",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a bend in the road, to turn, a side, right-hand, left-hand]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "across, to pass through, a big gate, a pole, a corner",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: across, to pass through, a big gate, a pole, a corner]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "on this side, farther off, in the middle, the distance to travel, a kos",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: on this side, farther off, in the middle, the distance to travel, a kos]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a neighbourhood, a small town, a small shop, a roadside eatery, a building",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a neighbourhood, a small town, a small shop, a roadside eatery, a building]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Plus a quarter? (ਸਵਾ, savā.) Plus a half? (ਸਾਢੇ, sāḍhe.) Less a quarter? (ਪੌਣੇ, pauṇe.) One and a half? (ਡੇਢ, ḍeḍh.) Two and a half? (ਢਾਈ, ḍhāī.) Half? (ਅੱਧਾ, addhā.) A railway platform? (ਪਲੇਟਫ਼ਾਰਮ, paleṭfāram.) To halt? (ਠਹਿਰਨਾ, ṭhahirnā.) To set off? (ਚੱਲਣਾ, challṇā.) Departing? (ਰਵਾਨਾ, ravānā.) A fee? (ਫ਼ੀਸ, fīs.) A fare? (ਕਿਰਾਇਆ, kirāiā.) A fine? (ਜੁਰਮਾਨਾ, jurmānā.) A receipt? (ਰਸੀਦ, rasīd.) To pay off? (ਚੁਕਾਉਣਾ, chukāuṇā.) A bend in the road? (ਮੋੜ, moṛ.) To turn? (ਮੁੜਨਾ, muṛnā.) A side? (ਪਾਸਾ, pāsā.) Right-hand? (ਸੱਜਾ, sajjā.) Left-hand? (ਖੱਬਾ, khabbā.) Across? (ਪਾਰ, pār.) To pass through? (ਲੰਘਣਾ, laṅghṇā.) A big gate? (ਫਾਟਕ, phāṭak.) A pole? (ਖੰਭਾ, khambhā.) A corner? (ਕੋਨਾ, konā.) On this side? (ਉਰੇ, ure.) Farther off? (ਪਰੇ, pare.) In the middle? (ਵਿਚਕਾਰ, vichkār.) The distance to travel? (ਵਾਟ, vāṭ.) A kos? (ਕੋਹ, koh.) A neighbourhood? (ਮਹੱਲਾ, mahallā.) A small town? (ਕਸਬਾ, kasbā.) A small shop? (ਹੱਟੀ, haṭṭī.) A roadside eatery? (ਢਾਬਾ, ḍhābā.) A building? (ਇਮਾਰਤ, imārat.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

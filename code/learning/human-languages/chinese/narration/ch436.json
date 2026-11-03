@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 436,
+  "title": "North and South",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:4eddbc10ee3b12c4",
+  "lessons": [
+    {
+      "id": "ZH-C436-dixing",
+      "sequence": 33310,
+      "title": "dìxíng — terrain; lie of the land",
+      "headword": "dìxíng",
+      "romanization": "dìxíng",
+      "gloss": "terrain; lie of the land",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:984d611dcf5896a1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for spectacular, then the Mandarin for to come down a mountain."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: dìxíng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dìxíng — \"terrain; lie of the land\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhège dìqū de dìxíng hěn tèbié — The land in this region has an unusual shape."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dìxíng is built from 地 'the earth' and xíng 'a shape', both inherited from Middle Chinese, dijH and heng (Guangyun, in Baxter's transcription), which glosses the second as the look of a thing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dìxíng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dìxíng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dìxíng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dìxíng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhège dìqū de dìxíng hěn tèbié — The land in this region has an unusual shape.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhège dìqū de dìxíng hěn tèbié* — The land in this region has an unusual shape.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for spectacular, then the Mandarin for to come down a mountain, then say dìxíng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for spectacular, then the Mandarin for to come down a mountain, then say *dìxíng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does dìxíng mean? (\"Terrain; lie of the land\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C436-nanfang",
+      "sequence": 33320,
+      "title": "南方 (nánfāng) — the south of the country; southern China",
+      "headword": "南方",
+      "romanization": "nánfāng",
+      "gloss": "the south of the country; southern China",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:14ddf6131e0f9388",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to come down a mountain, then the Mandarin for the lie of the land."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 南方",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "南方 — nánfāng — \"the south of the country; southern China\"."
+            },
+            {
+              "kind": "speech",
+              "text": "dōngtiān wǒmen zuò huǒchē qù nánfāng — In winter we take the train down south."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 方 (fāng) — four strokes: a dot, a long bar, a stroke that turns down and hooks, and a long stroke falling to the left. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "南方 (nánfāng) is built from 南 'south' and 方 (fāng) 'a quarter', both inherited from Middle Chinese, nom and pjang (Guangyun, in Baxter's transcription), which glosses the second as the four quarters of the world."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nánfāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nánfāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nánfāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nánfāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dōngtiān wǒmen zuò huǒchē qù nánfāng — In winter we take the train down south.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dōngtiān wǒmen zuò huǒchē qù nánfāng* — In winter we take the train down south.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to come down a mountain, then the Mandarin for the lie of the land, then say nánfāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to come down a mountain, then the Mandarin for the lie of the land, then say *nánfāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 南方 (nánfāng) mean? (\"The south of the country; southern China\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W436-fang-side",
+      "sequence": 33325,
+      "title": "方 (fāng) — a dot over a bar, a hook and a long stroke",
+      "headword": "方",
+      "romanization": "fāng",
+      "gloss": "方 — a dot, a bar, a hook and a long stroke falling to the left",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:080c40764265bf7b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a dot over a bar, a hook and a long stroke",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a dot over a bar, a hook and a long stroke and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say nánfāng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *nánfāng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "南 万."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — nán, wàn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *nán*, *wàn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a dot over a bar, a hook and a long stroke",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "方 (fāng)."
+            },
+            {
+              "kind": "speech",
+              "text": "One piece, four strokes. Count the strokes this time: there is only one piece."
+            },
+            {
+              "kind": "speech",
+              "text": "A dot on top, in the middle."
+            },
+            {
+              "kind": "speech",
+              "text": "A long bar under it."
+            },
+            {
+              "kind": "speech",
+              "text": "From under the bar, a stroke that runs a little to the right, turns down and hooks to the left at the foot. Then a long stroke falling to the left, also from under the bar. These last two are made as in 万."
+            },
+            {
+              "kind": "speech",
+              "text": "1 + 1 + 2 = four."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "方 (fāng), all four, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 方, all four, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 方 (fāng)? (Four.) What comes first? (A dot.) Which stroke hooks? (The third: it runs right, turns down and hooks.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 方 (fāng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C436-beifang",
+      "sequence": 33330,
+      "title": "北方 (běifāng) — the north of the country; northern China",
+      "headword": "北方",
+      "romanization": "běifāng",
+      "gloss": "the north of the country; northern China",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd9b92388c2144a3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the lie of the land, then the Mandarin for the south of the country."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 北方",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "北方 — běifāng — \"the north of the country; northern China\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zhù zài běifāng dōngtiān hěn lěng — I live in the north, where the winters are cold."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "北方 (běifāng) is built from 北 'north' and 方 (fāng) 'a quarter', both inherited from Middle Chinese, pok and pjang (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "běifāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *běifāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "běifāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *běifāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zhù zài běifāng dōngtiān hěn lěng — I live in the north, where the winters are cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zhù zài běifāng dōngtiān hěn lěng* — I live in the north, where the winters are cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the lie of the land, then the Mandarin for the south of the country, then say běifāng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the lie of the land, then the Mandarin for the south of the country, then say *běifāng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 北方 (běifāng) mean? (\"The north of the country; northern China\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C436-fangyan",
+      "sequence": 33340,
+      "title": "fāngyán — dialect",
+      "headword": "fāngyán",
+      "romanization": "fāngyán",
+      "gloss": "dialect",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:82085aaac64bbdfd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the south of the country, then the Mandarin for the north of the country."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fāngyán",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fāngyán — \"dialect\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhèr de rén shuō fāngyán wǒ tīng bu dǒng — People here speak a dialect I can't understand."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fāngyán is built from 方 (fāng) 'a region' and yán 'speech', both inherited from Middle Chinese, pjang and ngjon (Guangyun, in Baxter's transcription), which glosses the second 'speech'. The Guangyun itself quotes an old book called the Fangyan, a record of the speech of the regions."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāngyán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāngyán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāngyán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāngyán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèr de rén shuō fāngyán wǒ tīng bu dǒng — People here speak a dialect I can't understand.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèr de rén shuō fāngyán wǒ tīng bu dǒng* — People here speak a dialect I can't understand.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the south of the country, then the Mandarin for the north of the country, then say fāngyán again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the south of the country, then the Mandarin for the north of the country, then say *fāngyán* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fāngyán mean? (\"Dialect\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C436-kouyin",
+      "sequence": 33350,
+      "title": "口音 (kǒuyīn) — accent",
+      "headword": "口音",
+      "romanization": "kǒuyīn",
+      "gloss": "accent",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b8f73dc8b9299b47",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the north of the country, then the Mandarin for a regional dialect."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 口音",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "口音 — kǒuyīn — \"accent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他说话有南方口音 tā shuōhuà yǒu nánfāng kǒuyīn — He speaks with a southern accent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "口音 (kǒuyīn) is built from 口 'the mouth' and 音 'a sound', both inherited from Middle Chinese, khuwX and 'im (Guangyun, in Baxter's transcription), which glosses the second 'a sound'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for getting around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǒuyīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǒuyīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǒuyīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǒuyīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shuōhuà yǒu nánfāng kǒuyīn — He speaks with a southern accent.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shuōhuà yǒu nánfāng kǒuyīn* — He speaks with a southern accent.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the north of the country, then the Mandarin for a regional dialect, then say kǒuyīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the north of the country, then the Mandarin for a regional dialect, then say *kǒuyīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 口音 (kǒuyīn) mean? (\"Accent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

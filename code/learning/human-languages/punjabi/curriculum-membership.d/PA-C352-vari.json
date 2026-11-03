@@ -1,0 +1,11 @@
+{
+  "id": "PA-C352-vari",
+  "pathSegment": "PA-PATH-352-BOARD352",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-352-BOARD352",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 217,
+  "sourceHash": "fnv1a64:459df64dcc0c5a2b",
+  "lessonIds": [
+    "PA-C217-came-return",
+    "PA-C217-aaia",
+    "PA-C217-aaia-review",
+    "PA-C217-aurat",
+    "PA-C217-au",
+    "PA-C217-who-came",
+    "PA-C217-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch217-who-came.tex"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-505-DANCE505",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-505-DANCE505"
+  ],
+  "after": []
+}

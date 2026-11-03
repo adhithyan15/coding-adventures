@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-216-A2-GIA",
+  "stage": "A2",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say where someone went, yesterday or earlier, with gia, gai or gae agreeing with them.",
+  "prerequisites": [
+    "PA-EXT-215-A2-POLAR-HABITUAL"
+  ]
+}

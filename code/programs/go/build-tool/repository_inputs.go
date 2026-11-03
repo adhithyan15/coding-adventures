@@ -87,6 +87,118 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "Mosaic manifests and sources under code/",
 		matches:  isMosaicRepositorySource,
 	},
+	{
+		name:     "python/rng",
+		language: "python",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "rust/rng",
+		language: "rust",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "go/rng",
+		language: "go",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "c/rng",
+		language: "c",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "cpp/rng",
+		language: "cpp",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "swift/rng",
+		language: "swift",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "typescript/rng",
+		language: "typescript",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "java/rng",
+		language: "java",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "kotlin/rng",
+		language: "kotlin",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "csharp/rng",
+		language: "csharp",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "fsharp/rng",
+		language: "fsharp",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "dart/rng",
+		language: "dart",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "ruby/rng",
+		language: "ruby",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "elixir/rng",
+		language: "elixir",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "lua/rng",
+		language: "lua",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "perl/rng",
+		language: "perl",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+	{
+		name:     "haskell/rng",
+		language: "haskell",
+		inputs:   "the shared rng conformance corpus",
+		matches:  isRngCorpus,
+	},
+}
+
+// isRngCorpus reports whether a changed path is in the shared rng corpus,
+// which every rng lane's tests read (Rust embeds it with include_str!).
+//
+//	code/specs/fixtures/rng-v1/cases.json     → true
+//	code/specs/fixtures/rng-v10/cases.json    → false
+//	code/specs/rng.md                         → false (prose; the corpus pins behaviour)
+func isRngCorpus(changed string) bool {
+	return strings.HasPrefix(changed, "code/specs/fixtures/rng-v1/")
 }
 
 // isMosaicRepositorySource reports whether a changed path is one the Mosaic

@@ -15,5 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.Rng.fsproj" />
     <Compile Include="RngTests.fs" />
+    <Compile Include="ConformanceTests.fs" />
   </ItemGroup>
 </Project>

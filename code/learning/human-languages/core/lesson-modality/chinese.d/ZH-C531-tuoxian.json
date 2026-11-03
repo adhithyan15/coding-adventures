@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C531-tuoxian",
+    "language": "chinese",
+    "chapter": 531,
+    "sequence": 39870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f8c06a317bba62cf"
+  },
+  "findings": []
+}

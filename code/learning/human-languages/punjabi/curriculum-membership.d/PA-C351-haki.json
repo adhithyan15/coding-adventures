@@ -1,0 +1,11 @@
+{
+  "id": "PA-C351-haki",
+  "pathSegment": "PA-PATH-351-BALL351",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-351-BALL351",
+      "order": 1
+    }
+  ]
+}

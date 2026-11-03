@@ -1,5 +1,102 @@
 # Changelog
 
+## Unreleased — a `rescue` binding the clause reassigns (#18798)
+
+`rescue => e` ⏎ `e = 5` failed: the binding was always `const`
+(`Assignment to constant variable` at run time).  It is now `let`, like every
+other binding.  Test `emit_try_catch_emits_rescue_matches_else_chain` (updated expectation); end-to-end, `sir-conformance`'s
+`rb_rescue_binding_reassigned_in_the_clause`.
+
+## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
+
+### Globals and constants never collide with functions; a constant assignment is refused, not a panic
+
+Follow-up to #18485, from the security review of #18788.  SIR names a
+function, a module global, a function's variable and a constant in four
+separate namespaces; JavaScript has one.  #18788 kept variables apart from
+functions.  Still colliding:
+
+| SIR                              | emitted                                 | result                                    |
+|----------------------------------|-----------------------------------------|-------------------------------------------|
+| global `f` and function `f`      | `let f = null;` and `function f()`      | `SyntaxError: Identifier 'f' has already been declared` |
+| local `x` and global `x`         | `let x = 40` inside the function        | the `Global` read saw the local: 80, not 42 |
+| constant `F` and function `F`    | a read of `F`                           | quietly read the function                 |
+
+Each kind now moves when something outranks it (functions never move,
+because callers call them by name): a global spelled like a function becomes
+`_$sir_esc_g<name>` (`global_ident`), a variable spelled like a function or
+a global `_$sir_esc_l<name>` (`var_ident`), and a constant spelled like
+either `_$sir_esc_c<name>` (`const_ident`).  The three tags differ from each
+other and from `sanitize_ident`'s `v`/`e`, so the map stays one-to-one.  A
+`Global` reference to a name that is only a function keeps the function's
+spelling (how this backend hands out a function's handle).
+
+A validated module that *assigns* a constant (`FOO = 4`) reached the
+emitter's "deferred `Assign` scope" panic; `compile` now refuses it with
+`UnsupportedFeature`, as the Go and Rust backends do.
+
+Tests: emit-level unit tests for each case and for the refusal (each fails
+on the previous emitter), and `sir-conformance`'s
+`tests/local_shadows_function.rs` runs a global named like a function and a
+local named like a global under `node`.
+
+### Test temp files live in a private scratch directory
+
+The execution tests wrote each emitted program to a predictable name
+(`<program>_<pid>_<counter>`) directly in the shared system temp directory.
+Unique among this checkout's tests, but not private: any other process on
+the host could create that name first, replace it, or plant a symlink there
+(and beside a `.py` file, a module `python3` would import from the script's
+own directory).  Each test call now writes into a fresh
+[`sir-test-scratch`](../sir-test-scratch) directory -- random name, created
+atomically, mode `0700` on Unix, removed with its contents when the test
+returns or panics -- and creates its files with `create_new`, so an existing
+file is an error rather than reused.  The existing removal guards stay.
+
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 11 test files now carries a
+per-call `unique_suffix()` (process id plus a per-file atomic counter), the
+scheme `sir-conformance`'s `temp_path` uses. Test-only; no emitted code
+changes.
+
+## Unreleased — A variable never shadows a function of the same name (#18485)
+
+SIR keeps functions and variables in separate namespaces, and Ruby relies on
+it: `def f; 40; end; f = 2; puts f() + f` prints 42. This backend emitted
+the local as `f` next to the function `f`, so the local shadowed the
+function and the call failed with `TypeError: f is not a function`. A
+*variable* (local, parameter, capture, loop variable, `rescue` binding)
+whose SIR name is also a function's name is now emitted through `var_ident`
+as `_$sir_esc_l` + `sanitize_ident(name)`; every other variable, and every
+function, keeps its spelling, because callers append code that calls the
+emitted functions by name. The new `l` tag sits beside `sanitize_ident`'s
+`v` and `e`, so the renamed form can equal no other identifier. New unit
+tests `a_local_named_like_a_function_is_renamed_and_the_function_is_not` and
+`var_ident_renames_exactly_the_names_of_functions`; `sir-conformance`'s
+`tests/local_shadows_function.rs` runs the end-to-end proof. Module globals
+keep their spelling (`scoped_ident`): they are module-level bindings like
+the functions, and a `Global` reference is how a hand-built module reaches a
+function's handle (`run_with_node.rs`'s
+`runtime_rejects_constructor_gadget`).
+
+## Unreleased — `ForRange` counts with a hidden counter (#18482 review)
+
+`ForRange` used its own variable as the counter (`i = i + step`), so a
+body that assigned the variable changed the iteration count:
+`for i in range(3): i += 10` printed `10` once instead of `10 11 12`, and
+an inner loop that stored into an outer loop's variable ended the outer
+loop early.  Python's `for` over a bound variable, and `+=`, made this
+reachable from ordinary code.  The loop now counts with `__sir_i_<id>` and
+binds `let var = __sir_i_<id>;` at the top of each iteration, matching the
+C, Go, Rust and Ruby backends.  The ForRange unit test pins the new shape,
+and `emit_for_range_counts_with_a_hidden_counter` checks the increment
+never reads the variable.
+
 ## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
 
 - **`sanitize_ident` escapes the names the emitter binds around user code**:

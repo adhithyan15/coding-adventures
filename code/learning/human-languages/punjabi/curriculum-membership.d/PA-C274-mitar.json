@@ -1,0 +1,11 @@
+{
+  "id": "PA-C274-mitar",
+  "pathSegment": "PA-PATH-274-SIZE274",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-274-SIZE274",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W309-tou-steal",
+    "language": "chinese",
+    "chapter": 309,
+    "sequence": 23995,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:062a669cef7bd7b0",
+    "detachableSegments": [
+      "Script — the person piece, then a roof over 月 and two posts"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

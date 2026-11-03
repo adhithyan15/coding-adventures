@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C372-yongyi",
+    "language": "chinese",
+    "chapter": 372,
+    "sequence": 28370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:af7b33f43c8832b3"
+  },
+  "findings": []
+}

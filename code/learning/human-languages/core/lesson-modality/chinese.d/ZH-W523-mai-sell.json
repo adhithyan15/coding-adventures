@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W523-mai-sell",
+    "language": "chinese",
+    "chapter": 523,
+    "sequence": 39475,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:db404932f099b45b",
+    "detachableSegments": [
+      "Script — 十 on top, then 买 under it"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

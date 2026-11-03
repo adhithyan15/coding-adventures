@@ -1,0 +1,11 @@
+{
+  "id": "PA-C291-kosa",
+  "pathSegment": "PA-PATH-291-WARM291",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-291-WARM291",
+      "order": 3
+    }
+  ]
+}

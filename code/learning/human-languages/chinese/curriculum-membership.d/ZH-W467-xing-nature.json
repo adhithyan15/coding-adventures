@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W467-xing-nature",
+  "pathSegment": "ZH-PATH-467-PERSON467",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-467-PERSON467",
+      "order": 2
+    }
+  ]
+}

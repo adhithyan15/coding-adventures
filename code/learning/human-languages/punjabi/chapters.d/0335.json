@@ -1,0 +1,19 @@
+{
+  "chapter": 335,
+  "title": "Gold and Iron",
+  "label": "ch:pa-a2-gold-and-iron",
+  "canDo": "I can name the people who work with metal.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-C335-misatri",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 335: I can name the people who work with metal.",
+    "assesses": [
+      "PA-LEX-C335-METAL335-03",
+      "PA-LEX-C335-METAL335-04",
+      "PA-LEX-C335-METAL335-05"
+    ]
+  }
+}

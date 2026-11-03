@@ -1,0 +1,11 @@
+{
+  "id": "PA-C354-rani",
+  "pathSegment": "PA-PATH-354-STORY354",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-354-STORY354",
+      "order": 3
+    }
+  ]
+}

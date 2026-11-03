@@ -2,6 +2,90 @@
 
 All notable changes to the `coding-adventures-ruby-parser` crate will be documented in this file.
 
+## Unreleased — the legacy path inherits the lexer's source budget (#18814)
+
+- `try_create_ruby_parser` now refuses a source past `ruby-lexer`'s
+  `MAX_SOURCE_BYTES` (1 MiB) with the lexer's budget message, through the
+  lexer's new `From<RubyLexError> for String`; no code change here.  Test
+  `try_create_ruby_parser_refuses_source_past_the_lexer_budget`.
+- Test `budget_refusal_tokens_fail_to_parse`: the refusal that
+  `tokenize_ruby` returns for an oversized source does not parse (a lone
+  `Eof` does, as the empty program), so the infallible lexer wrappers fail
+  closed.
+
+## Unreleased — statement ends before `-`, `+`, `(`, after a lone name and a `rescue` list (#18798)
+
+### Fixed (re-review of #18798)
+
+- Regenerated: `if`, `elsif`, `unless`, `when` and `in` take an optional
+  `then` after the condition (`if c then x end`, `when 1 then foo; bar`);
+  `then` was read as a keyword-led call of the next statement.  Test
+  `test_parse_then_after_a_condition`.
+
+### Fixed (security review of #18798)
+
+- Regenerated: `super_expr`, `yield_statement`, `return_statement`,
+  `break_statement` and `next_statement` take the lexer's synthetic `;` in
+  place of their argument list (`"super" ( ";" | [ super_args ] )`), and
+  `factor`'s bare-KEYWORD alternative refuses the trailing-modifier
+  keywords, so `puts if c` is no longer `puts(if_modifier)` then `c`.
+  Test `test_parse_a_keyword_ending_its_line_takes_no_arguments`.
+
+### Changed
+
+- Regenerated from `ruby.grammar`, which now:
+  - refuses `( line start` before every argument list (`method_call`,
+    `dot_call`, `method_with_block`, a `def` header), and `- line start` /
+    `+ line start` as binary operators in `sum`; a paren-less call's first
+    argument refuses all three;
+  - checks `!"+" !"-"` by value after a statement-level `method_call`, so
+    a tagged sign on the next line (still a PLUS/MINUS token) does not
+    stop `f(1).g` ⏎ `-1` from being the whole call;
+  - adds `unary_plus = "+ line start" factor` (only the tagged token, so
+    `super + 1` stays a sum);
+  - lets `expression_stmt` end with a `;`, and `rescue_clause` take
+    `exception_list ";"` or a bare `";"`.
+- `tests/r0_differential.rs` compares the hand-written lexer through
+  `source_spelling`, so its new tags and synthetic `;` tokens are not
+  reported as lexing differences.
+
+Tests: `test_parse_sign_or_paren_on_a_new_line_starts_a_new_statement`,
+`test_parse_a_lone_name_is_a_whole_statement`,
+`test_parse_rescue_class_list_ends_at_the_line_break`.
+
+## Unreleased — `for`, `rescue => e`, `f() + f`, line-start `[` (#18778)
+
+### Changed (re-review of #18778)
+
+- Regenerated after a comment change in `ruby.grammar` (line numbers only):
+  the comment on `index_suffix` now says that only the Rust grammar parser
+  keeps a `String` token from matching the `[ line start` literal.
+
+### Changed (review of #18778)
+
+- Regenerated for the tag's new value, `[ line start`, which no Ruby name
+  can spell.  Test `test_parse_locals_spelled_like_the_lexer_tags`: a local
+  named `lbracket_line_start` (refused by the first tag) and one named
+  `if_modifier` (only ever matched positively, after a complete
+  expression, so it was never affected) both parse.
+
+### Changed
+
+- `src/_grammar.rs` (the `legacy` module) regenerated from
+  `code/grammars/ruby/ruby.grammar`, which gained:
+  - `for_statement = "for" NAME "in" expression [ "do" ] { !"end" statement } "end"`;
+  - `rescue_clause` takes `rescue => e` with no class (its `=>`
+    alternative first, since `=>` lexes as a `Name`);
+  - a `method_call` statement (and a `method_call` before a modifier) must
+    not be followed by a binary operator, so `f() + f` parses as one
+    expression at the start of a statement and inside a block body;
+  - `index_suffix` and `method_call_no_paren`'s first argument refuse a
+    `[` that `ruby-lexer` re-tagged `[ line start`.
+- Tests: `test_parse_for_loop_with_and_without_do`,
+  `test_parse_rescue_arrow_without_an_exception_class`,
+  `test_parse_call_plus_name_as_a_statement`,
+  `test_parse_bracket_on_a_new_line_starts_a_new_statement`.
+
 ## Unreleased — LANG84 R1b: `=begin`/`=end`, `__END__`, fail closed
 
 ### Changed

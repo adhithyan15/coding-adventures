@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C431-youchuan",
+    "language": "chinese",
+    "chapter": 431,
+    "sequence": 33070,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8297ca6ec96d1e88"
+  },
+  "findings": []
+}

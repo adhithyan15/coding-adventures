@@ -24,7 +24,6 @@
 //! discovery, host-tool skips).  A missing `go` toolchain logs a skip
 //! rather than reddening the build.
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
@@ -140,7 +139,7 @@ fn cyclic_module() -> Module {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -159,16 +158,17 @@ fn cyclic_seq_compiles_runs_and_terminates() {
 
     // 2. Write the source to a unique temp file.  `go run` requires a
     //    `.go` extension.
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_cyclic_{nonce}.go"));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     // 3. Compile + run with `go run`.  The whole point of the guard: this
     //    must *terminate*.  A stack-overflow would surface as a non-success
     //    exit status (or, for an infinite loop, the harness would hang) —
     //    so a clean exit is itself the assertion.
-    let run_out = Command::new("go")
+    let run_out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&src_path)
         .output()
@@ -206,4 +206,15 @@ fn cyclic_seq_compiles_runs_and_terminates() {
 
     // 5. Best-effort cleanup (ignore errors — temp dir is ephemeral).
     let _ = std::fs::remove_file(&src_path);
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

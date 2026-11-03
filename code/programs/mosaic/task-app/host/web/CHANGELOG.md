@@ -4,6 +4,51 @@ All notable changes to the `task-app-web` host are documented here.
 
 ## [0.1.0] - Unreleased
 
+### Added — task names are capped at 512 scalars, counted as natively (6e4)
+
+Every field a task name is typed into now refuses an edit past
+`TASK_NAME_MAX_CHARS` (512) as it is typed, through the note title's
+`draftFits`: `newTaskNameChange`, `editTaskNameChange`, `noteTaskNameChange`,
+and `sheetFormulaChange` / `sheetEditCommit` while the Sheet edits the Name
+column (a refused commit leaves the edit open, as the native rollback does).
+An over-cap value may still shrink, so a task named before the cap, which
+loads whole, can be edited down. `saveTaskEdit` refuses a grown over-cap name
+with `TASK_NAME_TOO_LONG` in `editTaskNameError`, and `addTask` does the same
+in `newTaskNameError` for parity with the native adapter's restored draft
+(drafts are not persisted here, so typing cannot reach it). `addTask` and
+`saveTaskEdit` now also check the engine's result: task-core refuses an
+over-cap name itself, and `addTask` used to go on to set a duration and link
+a dependency for a task that was never created.
+
+The unit is the Unicode scalar value, as Rust's `str::chars`: the new
+exported `scalarCount` counts code points (a surrogate pair is one, a lone
+surrogate one) in a code-unit loop that can stop one past a limit, and
+`taskNameFits` uses it. `String.length` would count 😀 twice and refuse 512
+emoji that the native host accepts. `CHECKLIST_TEXT_MAX` is now defined as
+`TASK_NAME_MAX_CHARS`, which it always equalled. The new
+`__tests__/task-name-limit.test.ts` runs every case of TaskApp's new
+`fixtures/task-name-limit-v1.json` against the real engine, which the native
+adapter runs too, plus the edit field, the Sheet cell, the attach field, the
+engine's own refusal and a legacy over-cap task.
+
+### Fixed — a note's task name matches as task-mosaic-app matches it (6e2)
+
+The *Attach to task* name already matched with `toLowerCase()`, and
+task-mosaic-app now matches with Rust's `to_lowercase()`, the same Unicode
+default lowercasing (`task-app-notes-ui-v1.md`, addendum v1.4). Two smaller
+differences between the hosts are closed here too. `tasksByName()` let the
+last of two tasks whose names lowercase alike win; the first, in the
+engine's ascending-id order, now wins, as natively. And the typed name was
+trimmed with `.trim()`, which strips U+FEFF and keeps U+0085, unlike Rust's
+`str::trim`; it is now trimmed of Unicode `White_Space` by the new exported
+`trimWhiteSpace`. The new `taskNameKey` is the lowercasing, in one place.
+`trimWhiteSpace` walks inward from each end instead of using a
+`^\s+|\s+$`-style regex, which backtracks quadratically on a long run of
+inner spaces (100,000 spaces froze Save for about 9.5 s); a test pins that a
+200,000-space name trims in under a second.
+`__tests__/notes.test.ts` runs every case of TaskApp's new
+`fixtures/task-name-matching-v1.json`, which the native adapter runs too.
+
 ### Changed — Notes 0.3.0 rows, and Delete only for a saved note (E3)
 
 `noteRows()` builds the toolkit RecordList's six-field rows, `[id, "",

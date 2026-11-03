@@ -1,0 +1,19 @@
+{
+  "chapter": 265,
+  "title": "This Side and That",
+  "label": "ch:pa-a2-this-side-and-that",
+  "canDo": "I can say how near or far a place is.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C265-koh",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 265: I can say how near or far a place is.",
+    "assesses": [
+      "PA-LEX-C265-SIDE265-03",
+      "PA-LEX-C265-SIDE265-04",
+      "PA-LEX-C265-SIDE265-05"
+    ]
+  }
+}

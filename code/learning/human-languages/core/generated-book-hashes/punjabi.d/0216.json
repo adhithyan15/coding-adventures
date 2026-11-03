@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 216,
+  "sourceHash": "fnv1a64:9b59fa48c95c36f5",
+  "lessonIds": [
+    "PA-C216-gae-return",
+    "PA-C216-gia-gai",
+    "PA-C216-gia-review",
+    "PA-C216-kall",
+    "PA-C216-where-did-they-go",
+    "PA-C216-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch216-where-did-they-go.tex"
+}

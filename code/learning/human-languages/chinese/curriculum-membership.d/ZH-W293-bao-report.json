@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W293-bao-report",
+  "pathSegment": "ZH-PATH-293-PAPER293",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-293-PAPER293",
+      "order": 2
+    }
+  ]
+}

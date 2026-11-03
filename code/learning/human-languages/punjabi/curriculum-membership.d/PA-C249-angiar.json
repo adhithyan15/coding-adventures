@@ -1,0 +1,11 @@
+{
+  "id": "PA-C249-angiar",
+  "pathSegment": "PA-PATH-249-GHR249",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-249-GHR249",
+      "order": 4
+    }
+  ]
+}

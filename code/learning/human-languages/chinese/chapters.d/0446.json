@@ -1,0 +1,20 @@
+{
+  "chapter": 446,
+  "title": "The Old Town",
+  "label": "ch:zh-the-old-town",
+  "canDo": "I can talk about old lanes, a walled town, an ancient town, its walls and moving to the city for work.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C446-jincheng",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 446: I can talk about old lanes, a walled town, an ancient town, its walls and moving to the city for work.",
+    "assesses": [
+      "ZH-LEX-C446-OLDTOWN446-03",
+      "ZH-LEX-C446-OLDTOWN446-04",
+      "ZH-LEX-C446-OLDTOWN446-05",
+      "ZH-SCRIPT-CHENG-TOWN-01"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 526,
+  "sourceHash": "fnv1a64:756dfd30cb30a0ba",
+  "lessonIds": [
+    "ZH-C526-cheng-weigh",
+    "ZH-C526-gongjin",
+    "ZH-C526-zhongliang",
+    "ZH-W526-liang-amount",
+    "ZH-C526-daliang",
+    "ZH-C526-shaoliang"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch526.txt",
+  "json": "chinese/narration/ch526.json",
+  "textHash": "fnv1a64:87eea3fe9220a137",
+  "jsonHash": "fnv1a64:aa6e420416571c58",
+  "findings": []
+}

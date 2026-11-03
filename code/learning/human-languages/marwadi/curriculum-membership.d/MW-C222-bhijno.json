@@ -1,0 +1,11 @@
+{
+  "id": "MW-C222-bhijno",
+  "pathSegment": "MW-PATH-222-COLD222",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-222-COLD222",
+      "order": 1
+    }
+  ]
+}

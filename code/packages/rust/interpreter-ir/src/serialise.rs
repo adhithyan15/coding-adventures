@@ -2,7 +2,33 @@
 //!
 //! # Wire format (little-endian throughout)
 //!
-//! ## Version 1.1 (LANG33 — current)
+//! ## Version 1.2 (LANG83 PR5a follow-up, #18800 — a lowered string ceiling)
+//!
+//! Version 1.1 followed by one more section, written **only** when the
+//! module sets `str_max_bytes`:
+//!
+//! ```text
+//!     1 byte   tag         0x12 = string-ceiling section
+//!     4 bytes  str_max_bytes  (u32)
+//! ```
+//!
+//! A module whose `str_max_bytes` is `None` (the registry ceiling — every
+//! module a frontend emits today) is written as **1.1, byte for byte as
+//! before**. That keeps every existing serialised module, and every digest of
+//! one (LANG84's `release_classes.csv` hashes serialised IIR), unchanged. The
+//! writer picks the oldest version that can say what the module says:
+//!
+//! | `str_max_bytes` | version written | trailing sections            |
+//! |-----------------|-----------------|------------------------------|
+//! | `None`          | 1.1             | exports, imports             |
+//! | `Some(n)`       | 1.2             | exports, imports, ceiling `n` |
+//!
+//! Why the ceiling must be on the wire at all: it is part of the program's
+//! meaning. A module compiled under a ceiling of 16 traps `Trap.Overflow` on
+//! a 17-byte `str_concat`; dropping the field on a round trip (as 1.1 did)
+//! silently raised it to `STR_MAX_BYTES`.
+//!
+//! ## Version 1.1 (LANG33)
 //!
 //! ```text
 //! Header (magic + version):
@@ -78,11 +104,16 @@ const VERSION_MAJOR: u8 = 1;
 /// LANG33 bumped the minor version from 0 to 1 to add exports/imports sections.
 /// The deserialiser accepts both 1.0 (legacy) and 1.1 (current).
 const VERSION_MINOR: u8 = 1;
+/// The version written for a module with a lowered string ceiling (#18800).
+/// The deserialiser accepts 1.0, 1.1 and 1.2.
+const VERSION_MINOR_STR_CEILING: u8 = 2;
 
 /// Tag byte marking the start of the exports section (LANG33).
 const TAG_EXPORTS: u8 = 0x10;
 /// Tag byte marking the start of the imports section (LANG33).
 const TAG_IMPORTS: u8 = 0x11;
+/// Tag byte marking the string-ceiling section (LANG83 PR5a, version 1.2).
+const TAG_STR_CEILING: u8 = 0x12;
 
 /// Maximum number of functions/instructions to pre-allocate during
 /// deserialisation.  The actual count comes from the untrusted wire; capping
@@ -139,7 +170,9 @@ pub fn serialise(module: &IIRModule) -> Vec<u8> {
     let mut buf = Vec::new();
     buf.extend_from_slice(MAGIC);
     write_u8(&mut buf, VERSION_MAJOR);
-    write_u8(&mut buf, VERSION_MINOR);
+    // 1.2 only when there is a ceiling to record; otherwise exactly 1.1.
+    let minor = if module.str_max_bytes.is_some() { VERSION_MINOR_STR_CEILING } else { VERSION_MINOR };
+    write_u8(&mut buf, minor);
     write_u32_le(&mut buf, module.functions.len().try_into()
         .expect("function count exceeds u32::MAX — cannot serialise"));
     write_str(&mut buf, &module.name);
@@ -167,6 +200,15 @@ pub fn serialise(module: &IIRModule) -> Vec<u8> {
         .expect("imports count exceeds u32::MAX — cannot serialise"));
     for import in &module.imports {
         serialise_import(&mut buf, import);
+    }
+
+    // ── LANG83 PR5a: string-ceiling section (version 1.2 only) ─────────────
+    // The raw field, not `str_ceiling()`: a malformed value above
+    // `STR_MAX_BYTES` round-trips as itself, so the reader's `validate` (and
+    // every column's ceiling check) still sees and refuses it.
+    if let Some(max) = module.str_max_bytes {
+        write_u8(&mut buf, TAG_STR_CEILING);
+        write_u32_le(&mut buf, max);
     }
 
     buf
@@ -354,14 +396,16 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
 
     let major = r.u8()?;
     let minor = r.u8()?;
-    // Accept 1.0 (legacy — no exports/imports) and 1.1 (LANG33 — with exports/imports).
+    // Accept 1.0 (legacy — no exports/imports), 1.1 (LANG33 — with
+    // exports/imports) and 1.2 (1.1 plus the string ceiling, #18800).
     // Any other version is rejected.
-    if major != VERSION_MAJOR || minor > VERSION_MINOR {
+    if major != VERSION_MAJOR || minor > VERSION_MINOR_STR_CEILING {
         return Err(DeserialiseError(format!(
-            "unsupported version {major}.{minor} (supported: 1.0, 1.1)"
+            "unsupported version {major}.{minor} (supported: 1.0, 1.1, 1.2)"
         )));
     }
     let has_lang33 = minor >= 1;
+    let has_str_ceiling = minor >= VERSION_MINOR_STR_CEILING;
 
     let fn_count = r.u32_le()? as usize;
     let name = r.str_()?;
@@ -387,6 +431,21 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
         (Vec::new(), Vec::new())
     };
 
+    // ── LANG83 PR5a: the string ceiling (version 1.2) ───────────────────────
+    // A 1.2 stream *must* carry the section: a truncated one is an error, not
+    // a module silently back on the registry ceiling.
+    let str_max_bytes = if has_str_ceiling {
+        let tag = r.u8()?;
+        if tag != TAG_STR_CEILING {
+            return Err(DeserialiseError(format!(
+                "expected string-ceiling tag 0x{TAG_STR_CEILING:02x}, got 0x{tag:02x}"
+            )));
+        }
+        Some(r.u32_le()?)
+    } else {
+        None
+    };
+
     Ok(IIRModule {
         name,
         functions,
@@ -396,6 +455,9 @@ pub fn deserialise(data: &[u8]) -> Result<IIRModule, DeserialiseError> {
         imports,
         // The release ID is not on the wire (see `IIRModule::release`).
         release: None,
+        // The string ceiling is, from 1.2 (#18800); before, `None` = the
+        // registry's.
+        str_max_bytes,
     })
 }
 
@@ -558,6 +620,68 @@ mod tests {
         let with = serialise(&m);
         assert_eq!(with, without);
         assert_eq!(deserialise(&with).unwrap().release, None);
+    }
+
+    /// #18800 item 2: the string ceiling round-trips. Before, `deserialise`
+    /// always returned `None`, so a module compiled under a ceiling of 16 came
+    /// back under the registry's 2³⁰ − 64. A malformed value above
+    /// `STR_MAX_BYTES` round-trips as itself, so the reader still refuses it.
+    #[test]
+    fn str_max_bytes_round_trips_as_version_1_2() {
+        for max in [0, 16, crate::STR_MAX_BYTES, crate::STR_MAX_BYTES + 1, u32::MAX] {
+            let mut m = make_module();
+            m.str_max_bytes = Some(max);
+            let bytes = serialise(&m);
+            assert_eq!((bytes[4], bytes[5]), (1, 2), "a ceiling is written as 1.2");
+            // The section is the last thing written: tag 0x12, then the u32.
+            let tail = &bytes[bytes.len() - 5..];
+            assert_eq!(tail[0], TAG_STR_CEILING);
+            assert_eq!(u32::from_le_bytes(tail[1..].try_into().unwrap()), max);
+            let back = deserialise(&bytes).unwrap();
+            assert_eq!(back.str_max_bytes, Some(max));
+            assert_eq!(back.str_ceiling(), m.str_ceiling());
+        }
+    }
+
+    /// Without a ceiling the bytes are exactly the 1.1 format, so every
+    /// existing serialised module, and every digest of one (LANG84's
+    /// `release_classes.csv`), is unchanged.
+    #[test]
+    fn no_ceiling_is_written_byte_for_byte_as_version_1_1() {
+        let m = make_module();
+        let bytes = serialise(&m);
+        assert_eq!((bytes[4], bytes[5]), (1, 1));
+        // Ends with the two LANG33 sections, both empty: no ceiling section.
+        assert_eq!(&bytes[bytes.len() - 10..], &[TAG_EXPORTS, 0, 0, 0, 0, TAG_IMPORTS, 0, 0, 0, 0]);
+        assert_eq!(deserialise(&bytes).unwrap().str_max_bytes, None);
+        // The ceiling adds exactly its section and the version byte.
+        let mut with = m.clone();
+        with.str_max_bytes = Some(16);
+        let with = serialise(&with);
+        assert_eq!(with.len(), bytes.len() + 5);
+        assert_eq!(&with[6..bytes.len()], &bytes[6..]);
+    }
+
+    /// A 1.2 stream must carry the section: one cut short, or with another
+    /// tag where the section belongs, is an error — never a module quietly
+    /// back on the registry ceiling.
+    #[test]
+    fn a_version_1_2_stream_without_its_ceiling_is_an_error() {
+        let mut m = make_module();
+        m.str_max_bytes = Some(16);
+        let bytes = serialise(&m);
+        let cut = &bytes[..bytes.len() - 5];
+        assert!(deserialise(cut).unwrap_err().0.contains("unexpected end of data"));
+        let mut wrong_tag = bytes.clone();
+        let at = wrong_tag.len() - 5;
+        wrong_tag[at] = 0x13;
+        assert!(deserialise(&wrong_tag).unwrap_err().0.contains("string-ceiling tag"));
+        let short = &bytes[..bytes.len() - 2];
+        assert!(deserialise(short).is_err());
+        // A 1.1 header on the same bytes reads the module without a ceiling.
+        let mut as_1_1 = cut.to_vec();
+        as_1_1[5] = 1;
+        assert_eq!(deserialise(&as_1_1).unwrap().str_max_bytes, None);
     }
 
     #[test]
@@ -845,5 +969,8 @@ mod tests {
         bytes[5] = 9;
         let err = deserialise(&bytes).unwrap_err();
         assert!(err.0.contains("unsupported version"));
+        // 1.3 is not known either.
+        bytes[5] = 3;
+        assert!(deserialise(&bytes).unwrap_err().0.contains("supported: 1.0, 1.1, 1.2"));
     }
 }

@@ -611,12 +611,17 @@ mod tests {
         // direction-aware so a negative step would still terminate.
         assert!(a.source.contains("const __sir_stop_0: number = (3) as number;"), "got:\n{}", a.source);
         assert!(a.source.contains("const __sir_step_0: number = (1) as number;"), "got:\n{}", a.source);
+        // The loop counts with a hidden counter and binds `i` from it each
+        // iteration, so the body cannot change the iteration count (#18482).
+        assert!(a.source.contains("let __sir_i_0: number = (0) as number;"), "got:\n{}", a.source);
         assert!(
-            a.source.contains("__sir_step_0 >= 0 ? (i as number) < __sir_stop_0 : (i as number) > __sir_stop_0"),
+            a.source.contains("__sir_step_0 >= 0 ? __sir_i_0 < __sir_stop_0 : __sir_i_0 > __sir_stop_0"),
             "got:\n{}",
             a.source
         );
-        assert!(a.source.contains("i = (i as number) + __sir_step_0;"), "got:\n{}", a.source);
+        assert!(a.source.contains("let i: __Sir.Val = __sir_i_0;"), "got:\n{}", a.source);
+        assert!(a.source.contains("__sir_i_0 = __sir_i_0 + __sir_step_0;"), "got:\n{}", a.source);
+        assert!(!a.source.contains("i = (i as number) +"), "got:\n{}", a.source);
     }
 
     #[test]
@@ -881,6 +886,20 @@ mod tests {
         assert!(src.contains("const e: __Sir.Val = __exc;"), "got:\n{}", src);
         assert!(src.contains("throw __exc;"), "got:\n{}", src);
         assert!(src.contains("finally {"), "got:\n{}", src);
+    }
+
+    #[test]
+    fn rescue_binding_that_the_clause_reassigns_is_let_ts() {
+        // #18798 — `rescue => e` ⏎ `e = 5`: the binding was always `const`,
+        // so the reassignment did not compile.  It is `let` when the clause
+        // stores into it, `const` otherwise.
+        let module = ruby_to_semantic_ir::compile_source(
+            "begin\n  raise \"q\"\nrescue => e\n  e = 5\n  puts e\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let src = compile(&module).expect("compile to ts").source;
+        assert!(src.contains("let e: __Sir.Val = __exc;"), "got:\n{}", src);
     }
 
     #[test]

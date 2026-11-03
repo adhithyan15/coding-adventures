@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 443,
+  "sourceHash": "fnv1a64:df6573c5ef1ebbf4",
+  "lessonIds": [
+    "ZH-C443-qingche",
+    "ZH-C443-baohu",
+    "ZH-W443-hu-guard",
+    "ZH-C443-baohuqu",
+    "ZH-C443-husong",
+    "ZH-C443-buyu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch443.txt",
+  "json": "chinese/narration/ch443.json",
+  "textHash": "fnv1a64:27d04d2250889435",
+  "jsonHash": "fnv1a64:953a1e4290f38258",
+  "findings": []
+}

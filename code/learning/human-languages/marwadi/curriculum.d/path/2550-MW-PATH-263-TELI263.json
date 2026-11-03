@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-263-TELI263",
+  "spine_node": "SPINE-EXCHANGE-NAMES",
+  "before": [],
+  "inline": [
+    "MW-EXT-263-TELI263"
+  ],
+  "after": []
+}

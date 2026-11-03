@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 449,
+  "sourceHash": "fnv1a64:75e543f1447c3fd4",
+  "lessonIds": [
+    "ZH-C449-yeshi",
+    "ZH-C449-kouwei",
+    "ZH-W449-wei-taste",
+    "ZH-C449-fengwei",
+    "ZH-C449-qingdan",
+    "ZH-C449-youni"
+  ],
+  "tex": "chinese/book/chapters/ch449-tastes.tex"
+}

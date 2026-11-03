@@ -1,0 +1,11 @@
+{
+  "id": "PA-C271-purab",
+  "pathSegment": "PA-PATH-271-COMPASS271",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-271-COMPASS271",
+      "order": 2
+    }
+  ]
+}

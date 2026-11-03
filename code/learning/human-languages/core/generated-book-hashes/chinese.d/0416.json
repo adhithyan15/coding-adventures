@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 416,
+  "sourceHash": "fnv1a64:bedee84a7041451d",
+  "lessonIds": [
+    "ZH-C416-yanwu",
+    "ZH-C416-chang",
+    "ZH-W416-chang-ground",
+    "ZH-C416-wuji",
+    "ZH-C416-zhuanji",
+    "ZH-C416-feixing"
+  ],
+  "tex": "chinese/book/chapters/ch416-a-storm.tex"
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C381-fenlei",
+    "language": "chinese",
+    "chapter": 381,
+    "sequence": 29360,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b3758f1fa5048e25"
+  },
+  "findings": []
+}

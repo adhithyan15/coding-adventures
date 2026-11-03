@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C469-zhengjing",
+    "language": "chinese",
+    "chapter": 469,
+    "sequence": 35580,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:d9e72e4376b4cb48"
+  },
+  "findings": []
+}

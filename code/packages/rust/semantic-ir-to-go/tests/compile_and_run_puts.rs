@@ -20,7 +20,6 @@
 //! Gates on `go` being available; logs a skip rather than failing when the
 //! toolchain is absent (mirrors `compile_and_run_loops.rs`).
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
@@ -147,7 +146,7 @@ fn cyclic_module() -> Module {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -163,12 +162,13 @@ fn puts_compiles_and_matches_ruby_output() {
 
     let artifact = compile(&demo_module()).expect("module should compile to Go source");
 
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_puts_{nonce}.go"));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
-    let run_out = Command::new("go")
+    let run_out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&src_path)
         .output()
@@ -209,12 +209,13 @@ fn puts_cyclic_array_terminates() {
 
     let artifact = compile(&cyclic_module()).expect("cyclic module should compile to Go source");
 
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_puts_cyclic_{nonce}.go"));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
-    let run_out = Command::new("go")
+    let run_out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&src_path)
         .output()
@@ -235,4 +236,15 @@ fn puts_cyclic_array_terminates() {
         normalised, "[...]\n",
         "unexpected cyclic puts output; full stdout (escaped): {stdout:?}"
     );
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

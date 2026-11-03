@@ -32,17 +32,21 @@ fn run_ruby(src: &str) -> Option<String> {
     let cc = find_cc()?;
     let module = ruby_to_semantic_ir::compile_source(src, "prog").expect("ruby lowering");
     let art = semantic_ir_to_c::compile(&module).expect("C compile (no panic)");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+    let dir = scratch.path();
     // Hash the full source (not just its length — the sibling test files' `len()`
     // scheme collides whenever two same-length sources run as parallel test
     // threads in the same process, each clobbering the other's temp file).
     use std::hash::{Hash, Hasher};
     let mut hasher = std::collections::hash_map::DefaultHasher::new();
     src.hash(&mut hasher);
-    let stem = format!("sirc_arrm_{}_{}", std::process::id(), hasher.finish());
+    // The hash alone still collides when two tests compile the SAME
+    // source, so the stem also carries a per-call `unique_suffix()` (#18485).
+    let stem = format!("sirc_arrm_{}_{}", unique_suffix(), hasher.finish());
     let cpath = dir.join(format!("{stem}.c"));
     let exe = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-    std::fs::write(&cpath, &art.source).expect("write .c");
+    let _cleanup = RemoveOnDrop([cpath.clone(), exe.clone()]);
+    sir_test_scratch::write_new(&cpath, &art.source).expect("write .c");
     let out = Command::new(&cc)
         .args(["-std=c99", "-Wall", "-o"])
         .arg(&exe)
@@ -195,12 +199,14 @@ mod cyclic {
     fn run(module: &Module) -> Option<String> {
         let cc = super::find_cc()?;
         let artifact = semantic_ir_to_c::compile(module).expect("C backend compile (no panic)");
-        let dir = std::env::temp_dir();
+        let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+        let dir = scratch.path();
         let n = COUNTER.fetch_add(1, Ordering::Relaxed);
         let stem = format!("sirc_arrm_cyc_{}_{}", std::process::id(), n);
         let cpath: PathBuf = dir.join(format!("{stem}.c"));
         let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-        std::fs::write(&cpath, &artifact.source).expect("write .c");
+        let _cleanup = crate::RemoveOnDrop([cpath.clone(), exe.clone()]);
+        sir_test_scratch::write_new(&cpath, &artifact.source).expect("write .c");
         let out = Command::new(&cc)
             .args(["-std=c99", "-Wall", "-o"])
             .arg(&exe)
@@ -314,6 +320,31 @@ mod cyclic {
         match run(&cyclic_flatten_module(&[0, 1])) {
             Some(out) => assert_eq!(out, "ok\n"),
             None => eprintln!("skip: no cc"),
+        }
+    }
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
+}
+
+/// Deletes a run's `.c` file and executable when the helper returns or
+/// panics.  Each call names its files uniquely (see `unique_suffix` or the
+/// counter above), so without this they would pile up in the temp directory,
+/// one pair per test run.
+struct RemoveOnDrop([std::path::PathBuf; 2]);
+
+impl Drop for RemoveOnDrop {
+    fn drop(&mut self) {
+        for path in &self.0 {
+            let _ = std::fs::remove_file(path);
         }
     }
 }

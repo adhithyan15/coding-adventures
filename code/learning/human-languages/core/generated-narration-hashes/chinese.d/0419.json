@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 419,
+  "sourceHash": "fnv1a64:8fa901dfdb67df8d",
+  "lessonIds": [
+    "ZH-C419-jieji",
+    "ZH-C419-duihuan",
+    "ZH-C419-waibi",
+    "ZH-C419-guoji",
+    "ZH-C419-guonei",
+    "ZH-R419-review-414-419"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch419.txt",
+  "json": "chinese/narration/ch419.json",
+  "textHash": "fnv1a64:dfd57c50d95e2ee3",
+  "jsonHash": "fnv1a64:31c2de8c98b7481e",
+  "findings": []
+}

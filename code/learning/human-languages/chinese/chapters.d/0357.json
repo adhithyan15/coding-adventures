@@ -1,0 +1,21 @@
+{
+  "chapter": 357,
+  "title": "Owning Up",
+  "label": "ch:zh-owning-up",
+  "canDo": "I can say someone admits they were wrong, and talk about tone, angry words, blame and praise.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R357-review-352-357",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 357: I can say someone admits they were wrong, and talk about tone, angry words, blame and praise.",
+    "assesses": [
+      "ZH-LEX-C357-SORRY357-01",
+      "ZH-LEX-C357-SORRY357-02",
+      "ZH-LEX-C357-SORRY357-03",
+      "ZH-LEX-C357-SORRY357-04",
+      "ZH-LEX-C357-SORRY357-05"
+    ]
+  }
+}

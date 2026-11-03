@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 292,
+  "sourceHash": "fnv1a64:ca70a893f3153a37",
+  "lessonIds": [
+    "PA-C292-sillha",
+    "PA-C292-khushak",
+    "PA-C292-nami",
+    "PA-C292-sukkna",
+    "PA-C292-simmna"
+  ],
+  "tex": "punjabi/book/chapters/ch292-damp-and-dry.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:50d7750608ae7b67",
+  "lessonIds": [
+    "PA-C297-mulaim",
+    "PA-C297-barik",
+    "PA-C297-kula",
+    "PA-C297-khundha",
+    "PA-C297-chubhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch297.txt",
+  "json": "punjabi/narration/ch297.json",
+  "textHash": "fnv1a64:88be546510e1a893",
+  "jsonHash": "fnv1a64:ab2b3363444fe7dc",
+  "findings": []
+}

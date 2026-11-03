@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 500,
+  "sourceHash": "fnv1a64:4a8cf35055409110",
+  "lessonIds": [
+    "ZH-C500-huosheng",
+    "ZH-C500-qiusai",
+    "ZH-W500-sai-match",
+    "ZH-C500-juesai",
+    "ZH-C500-bifen",
+    "ZH-C500-shangchang"
+  ],
+  "tex": "chinese/book/chapters/ch500-match-day.tex"
+}

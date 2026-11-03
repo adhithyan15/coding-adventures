@@ -1,0 +1,19 @@
+{
+  "chapter": 440,
+  "title": "A Mountain Village",
+  "label": "ch:zh-a-mountain-village",
+  "canDo": "I can talk about market day, a mountain village, its head and its villagers, and staying with a family.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C440-jiesu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 440: I can talk about market day, a mountain village, its head and its villagers, and staying with a family.",
+    "assesses": [
+      "ZH-LEX-C440-HILLS440-03",
+      "ZH-LEX-C440-HILLS440-04",
+      "ZH-LEX-C440-HILLS440-05"
+    ]
+  }
+}

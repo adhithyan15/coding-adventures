@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 450,
+  "sourceHash": "fnv1a64:e80396ea043013d5",
+  "lessonIds": [
+    "ZH-C450-haixian",
+    "ZH-C450-tedian",
+    "ZH-W450-te-special",
+    "ZH-C450-teyi",
+    "ZH-C450-zhengzong",
+    "ZH-C450-zhaopaicai"
+  ],
+  "tex": "chinese/book/chapters/ch450-local-food.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 462,
+  "title": "Surprises",
+  "label": "ch:zh-surprises",
+  "canDo": "I can talk about a lovely surprise, something unexpected, hating someone, giving up hope and falling out of love.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C462-bianxin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 462: I can talk about a lovely surprise, something unexpected, hating someone, giving up hope and falling out of love.",
+    "assesses": [
+      "ZH-LEX-C462-SURPRISE462-03",
+      "ZH-LEX-C462-SURPRISE462-04",
+      "ZH-LEX-C462-SURPRISE462-05"
+    ]
+  }
+}

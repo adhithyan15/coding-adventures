@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C318-zhuangao",
+    "language": "chinese",
+    "chapter": 318,
+    "sequence": 25040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ce0d6af6dbe55f49"
+  },
+  "findings": []
+}

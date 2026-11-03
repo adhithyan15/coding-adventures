@@ -1,0 +1,11 @@
+{
+  "id": "PA-C242-bhunnna",
+  "pathSegment": "PA-PATH-242-KAM242",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-242-KAM242",
+      "order": 1
+    }
+  ]
+}

@@ -51,15 +51,21 @@ fn find_cc() -> Option<String> {
 
 static COUNTER: AtomicU32 = AtomicU32::new(0);
 
-fn compile_and_link(module: &Module) -> Option<(PathBuf, String)> {
+/// Compile and link `module`; returns the executable, the emitted C source,
+/// and the private scratch directory both live in.  The caller keeps the
+/// [`sir_test_scratch::Scratch`] alive while it runs the executable:
+/// dropping it removes the directory.
+fn compile_and_link(module: &Module) -> Option<(sir_test_scratch::Scratch, PathBuf, String)> {
     let cc = find_cc()?;
     let artifact = semantic_ir_to_c::compile(module).expect("C backend compile (no panic)");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+    let dir = scratch.path();
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
     let stem = format!("sirc_symbolic_{}_{}", std::process::id(), n);
     let cpath: PathBuf = dir.join(format!("{stem}.c"));
+    let _c_cleanup = RemoveOnDrop(cpath.clone());
     let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-    std::fs::File::create(&cpath)
+    sir_test_scratch::create_new(&cpath)
         .and_then(|mut f| f.write_all(artifact.source.as_bytes()))
         .expect("write .c");
     let out = Command::new(&cc)
@@ -75,11 +81,12 @@ fn compile_and_link(module: &Module) -> Option<(PathBuf, String)> {
         String::from_utf8_lossy(&out.stderr),
         artifact.source
     );
-    Some((exe, artifact.source))
+    Some((scratch, exe, artifact.source))
 }
 
 fn run(module: &Module) -> Option<(String, bool, String)> {
-    let (exe, _src) = compile_and_link(module)?;
+    let (_scratch, exe, _src) = compile_and_link(module)?;
+    let _exe_cleanup = RemoveOnDrop(exe.clone());
     let r = Command::new(&exe).output().expect("run");
     Some((
         String::from_utf8_lossy(&r.stdout).replace("\r\n", "\n"),
@@ -351,5 +358,18 @@ fn apply_rule_on_a_non_rule_is_rejected_cleanly_at_runtime() {
             );
         }
         None => eprintln!("skip: no cc"),
+    }
+}
+
+/// Deletes a temp file when dropped, however the test returns or panics.
+/// [`compile_and_link`] drops the `.c` as soon as it has linked, and each
+/// caller holds one of these for the executable it runs.  Each call names
+/// its files uniquely (the counter above), so without this they would pile
+/// up in the temp directory, one pair per test run.
+struct RemoveOnDrop(PathBuf);
+
+impl Drop for RemoveOnDrop {
+    fn drop(&mut self) {
+        let _ = std::fs::remove_file(&self.0);
     }
 }

@@ -181,7 +181,10 @@ arrows through structural layout and backend-neutral PaintInstructions. Core
 pipeline for C4 elements and boundaries. Element technology and description
 are distinct in semantic IR, and keyed or positional `UpdateElementStyle`
 technology overrides replace the rendered technology without losing the
-description. C4 relationship technology and description are preserved in typed
+description. Repeated C4 relationships with the same endpoint pair update the
+existing semantic relationship, including its arrow and detail metadata, while
+retaining prior `UpdateRelStyle` paint and label offsets. C4 relationship
+technology and description are preserved in typed
 semantic metadata, while relationship technology joins the visible label through
 layout and backend-neutral PaintInstructions. C4 diagram subtypes are preserved
 in semantic configuration and PaintScene metadata. `C4Dynamic` relationships

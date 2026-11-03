@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C327-hanjhu",
+    "language": "punjabi",
+    "chapter": 327,
+    "sequence": 19960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:66cb5a51e009abe9"
+  },
+  "findings": []
+}

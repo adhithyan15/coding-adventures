@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 274,
+  "sourceHash": "fnv1a64:5d1d0927b8bf5842",
+  "lessonIds": [
+    "MW-C274-takliph",
+    "MW-C274-pukar",
+    "MW-C274-saharo",
+    "MW-C274-daya",
+    "MW-C274-bhikh"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch274.txt",
+  "json": "marwadi/narration/ch274.json",
+  "textHash": "fnv1a64:c0c881100b8ec5d0",
+  "jsonHash": "fnv1a64:68d92a00f445f939",
+  "findings": []
+}

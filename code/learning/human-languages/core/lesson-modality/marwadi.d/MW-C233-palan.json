@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C233-palan",
+    "language": "marwadi",
+    "chapter": 233,
+    "sequence": 15870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a57d61f9fbd1f75f"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 431,
+  "sourceHash": "fnv1a64:2100702c11e775d2",
+  "lessonIds": [
+    "ZH-C431-jieshuo",
+    "ZH-C431-chunyou",
+    "ZH-W431-you-tour",
+    "ZH-C431-youchuan",
+    "ZH-C431-duo",
+    "ZH-C431-heying"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch431.txt",
+  "json": "chinese/narration/ch431.json",
+  "textHash": "fnv1a64:ec50c919ee03f979",
+  "jsonHash": "fnv1a64:1d82f24623e747ac",
+  "findings": []
+}

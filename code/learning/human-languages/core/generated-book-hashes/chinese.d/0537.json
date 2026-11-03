@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 537,
+  "sourceHash": "fnv1a64:72fe3742c8773e05",
+  "lessonIds": [
+    "ZH-C537-qiyin",
+    "ZH-C537-yuanlai",
+    "ZH-W537-yuan-origin",
+    "ZH-C537-daozhi",
+    "ZH-C537-zaocheng",
+    "ZH-C537-xiaoguo"
+  ],
+  "tex": "chinese/book/chapters/ch537-as-it-turns-out.tex"
+}

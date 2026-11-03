@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 235,
+  "sourceHash": "fnv1a64:cb1d219e1777cd43",
+  "lessonIds": [
+    "PA-C235-buharna",
+    "PA-C235-jharna",
+    "PA-C235-pocha",
+    "PA-C235-gara",
+    "PA-C235-lippna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch235.txt",
+  "json": "punjabi/narration/ch235.json",
+  "textHash": "fnv1a64:464e0b0c591ed3c7",
+  "jsonHash": "fnv1a64:4e335e5afaafeb7f",
+  "findings": []
+}

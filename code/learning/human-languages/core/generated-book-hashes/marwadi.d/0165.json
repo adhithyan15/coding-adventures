@@ -1,0 +1,12 @@
+{
+  "language": "marwadi",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:76582bb08d20c4ff",
+  "lessonIds": [
+    "MW-C165-mistri",
+    "MW-C165-repair-note",
+    "MW-R165-first-pass-plans-and-notices",
+    "MW-R165-second-pass-the-whole-core"
+  ],
+  "tex": "marwadi/book/chapters/ch165-a-note-about-a-repair.tex"
+}

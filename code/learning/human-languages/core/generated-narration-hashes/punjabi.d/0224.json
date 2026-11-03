@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 224,
+  "sourceHash": "fnv1a64:2f470acb2ba2d118",
+  "lessonIds": [
+    "PA-C224-message-return",
+    "PA-C224-message",
+    "PA-C224-message-questions",
+    "PA-R224-first-pass-saying-no-and-asking",
+    "PA-R224-second-pass-past-and-future"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 1,
+  "text": "punjabi/narration/ch224.txt",
+  "json": "punjabi/narration/ch224.json",
+  "textHash": "fnv1a64:167f93c0d3ad3c7a",
+  "jsonHash": "fnv1a64:093702dc4faa9bc0",
+  "findings": []
+}

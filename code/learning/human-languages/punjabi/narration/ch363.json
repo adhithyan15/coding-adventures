@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 363,
+  "title": "At Work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bc9870121b7a69ea",
+  "lessons": [
+    {
+      "id": "PA-C363-koshish",
+      "sequence": 22330,
+      "title": "ਕੋਸ਼ਿਸ਼ (koshish) — an effort; a try",
+      "headword": "ਕੋਸ਼ਿਸ਼",
+      "romanization": "koshish",
+      "gloss": "an effort; a try",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:defb9edc650f5b3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to carve, then the Punjabi for to try out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕੋਸ਼ਿਸ਼",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੋਸ਼ਿਸ਼ — koshish — \"an effort; a try\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਹਰ ਰੋਜ਼ ਕੋਸ਼ਿਸ਼ ਕਰਦਾ ਹਾਂ। maiṁ har roz koshish kardā hāṁ. I make an effort every day."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੋਸ਼ਿਸ਼ (koshish) is a loan, usually traced to Persian kōshish, \"effort\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koshish",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koshish*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koshish, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koshish*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ har roz koshish kardā hāṁ. — I make an effort every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ har roz koshish kardā hāṁ.* — I make an effort every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to carve, then the Punjabi for to try out, then say koshish again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to carve, then the Punjabi for to try out, then say *koshish* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕੋਸ਼ਿਸ਼ (koshish) mean? (\"An effort; a try\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C363-usarna",
+      "sequence": 22340,
+      "title": "ਉਸਾਰਨਾ (usārnā) — to put up a building; to build",
+      "headword": "ਉਸਾਰਨਾ",
+      "romanization": "usārnā",
+      "gloss": "to put up a building; to build",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32eca83f7557433c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to try out, then the Punjabi for an effort."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਉਸਾਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਸਾਰਨਾ — usārnā — \"to put up a building; to build\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਪਿਤਾ ਪਿੰਡ ਵਿੱਚ ਘਰ ਉਸਾਰਦਾ ਹੈ। merā pitā piṇḍ vich ghar usārdā hai. My father builds houses in the village."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਇੱਕ ਕਮਰਾ ਉਸਾਰਿਆ, maiṁ ikk kamrā usāriā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਉਸਾਰਨਾ (usārnā) is the transitive partner of ussarṇā, \"to rise (of a building)\", which goes back to Sanskrit útsarati, \"hastens away\", with a sense \"rises\" that CDIAL infers; CDIAL lists Punjabi ussarṇā under it (CDIAL 1874), but not the transitive form itself."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "usārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *usārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā pitā piṇḍ vich ghar usārdā hai. — My father builds houses in the village.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā pitā piṇḍ vich ghar usārdā hai.* — My father builds houses in the village.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to try out, then the Punjabi for an effort, then say usārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to try out, then the Punjabi for an effort, then say *usārnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਉਸਾਰਨਾ (usārnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਉਸਾਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਉਸਾਰਨਾ (usārnā) mean? (\"To put up a building; to build\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C363-nibhauna",
+      "sequence": 22350,
+      "title": "ਨਿਭਾਉਣਾ (nibhāuṇā) — to carry out a duty; to keep a promise",
+      "headword": "ਨਿਭਾਉਣਾ",
+      "romanization": "nibhāuṇā",
+      "gloss": "to carry out a duty; to keep a promise",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:185c58d1d867449b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for an effort, then the Punjabi for to put up a building."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਨਿਭਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਿਭਾਉਣਾ — nibhāuṇā — \"to carry out a duty; to keep a promise\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਹ ਹਮੇਸ਼ਾ ਆਪਣਾ ਵਾਅਦਾ ਨਿਭਾਉਂਦਾ ਹੈ। oh hameshā āpṇā vāadā nibhāundā hai. He always keeps his promise."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਆਪਣਾ ਵਾਅਦਾ ਨਿਭਾਇਆ, maiṁ āpṇā vāadā nibhāiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਿਭਾਉਣਾ (nibhāuṇā) is inherited from Sanskrit nirvahati, \"leads out of, accomplishes\"; CDIAL lists Punjabi nibhāuṇā, \"to accomplish\", under it (CDIAL 7397)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nibhāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nibhāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nibhāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nibhāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "oh hameshā āpṇā vāadā nibhāundā hai. — He always keeps his promise.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *oh hameshā āpṇā vāadā nibhāundā hai.* — He always keeps his promise.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for an effort, then the Punjabi for to put up a building, then say nibhāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for an effort, then the Punjabi for to put up a building, then say *nibhāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਨਿਭਾਉਣਾ (nibhāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਨਿਭਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਨਿਭਾਉਣਾ (nibhāuṇā) mean? (\"To carry out a duty; to keep a promise\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C363-samvarna",
+      "sequence": 22360,
+      "title": "ਸੰਵਾਰਨਾ (saṁvārnā) — to tidy up; to set in order",
+      "headword": "ਸੰਵਾਰਨਾ",
+      "romanization": "saṁvārnā",
+      "gloss": "to tidy up; to set in order",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0db3bed50c33f978",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to put up a building, then the Punjabi for to carry out a duty."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਸੰਵਾਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੰਵਾਰਨਾ — saṁvārnā — \"to tidy up; to set in order\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਸਵੇਰੇ ਦੁਕਾਨ ਸੰਵਾਰਦਾ ਹਾਂ। maiṁ savere dukān saṁvārdā hāṁ. I set the shop in order in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਕਮਰਾ ਸੰਵਾਰਿਆ, maiṁ kamrā saṁvāriā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਸੰਵਾਰਨਾ (saṁvārnā) is inherited from a reconstructed śodhakāra, \"making clean\"; CDIAL lists Punjabi savārṇā, \"to adorn, improve, prepare, adjust\", under it (CDIAL 12628); the spelling with the nasal is not listed there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvārnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvārnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "saṁvārnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *saṁvārnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ savere dukān saṁvārdā hāṁ. — I set the shop in order in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ savere dukān saṁvārdā hāṁ.* — I set the shop in order in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to put up a building, then the Punjabi for to carry out a duty, then say saṁvārnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to put up a building, then the Punjabi for to carry out a duty, then say *saṁvārnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਸੰਵਾਰਨਾ (saṁvārnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਸੰਵਾਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਸੰਵਾਰਨਾ (saṁvārnā) mean? (\"To tidy up; to set in order\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C363-tarakki",
+      "sequence": 22370,
+      "title": "ਤਰੱਕੀ (tarakkī) — a promotion; progress",
+      "headword": "ਤਰੱਕੀ",
+      "romanization": "tarakkī",
+      "gloss": "a promotion; progress",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:434809dd593a3cc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to carry out a duty, then the Punjabi for to set in order."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤਰੱਕੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਰੱਕੀ — tarakkī — \"a promotion; progress\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰੇ ਪਿਤਾ ਨੂੰ ਦਫ਼ਤਰ ਵਿੱਚ ਤਰੱਕੀ ਮਿਲੀ। mere pitā nū̃ daftar vich tarakkī milī. My father got a promotion at the office."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤਰੱਕੀ (tarakkī) is a loan, usually traced through Persian to Arabic taraqqī, \"rising\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarakkī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarakkī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tarakkī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tarakkī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mere pitā nū̃ daftar vich tarakkī milī. — My father got a promotion at the office.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mere pitā nū̃ daftar vich tarakkī milī.* — My father got a promotion at the office.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to carry out a duty, then the Punjabi for to set in order, then say tarakkī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to carry out a duty, then the Punjabi for to set in order, then say *tarakkī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤਰੱਕੀ (tarakkī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤਰੱਕੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤਰੱਕੀ (tarakkī) mean? (\"A promotion; progress\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

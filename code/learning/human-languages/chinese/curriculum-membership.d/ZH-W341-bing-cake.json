@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W341-bing-cake",
+  "pathSegment": "ZH-PATH-341-MOONCAKE341",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-341-MOONCAKE341",
+      "order": 2
+    }
+  ]
+}

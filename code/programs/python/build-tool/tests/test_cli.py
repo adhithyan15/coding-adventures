@@ -143,6 +143,29 @@ class TestMainCli:
         assert "test-0.1.0-1.rockspec" in captured.err
         assert str(tmp_path) not in captured.err
 
+    def test_cargo_self_edge_fails_closed(self, tmp_path, capsys):
+        pkg_dir = tmp_path / "code" / "packages" / "rust" / "app"
+        pkg_dir.mkdir(parents=True)
+        (pkg_dir / "BUILD").write_text('echo "hi"\n', encoding="utf-8")
+        (pkg_dir / "Cargo.toml").write_text(
+            '[package]\nname = "app"\n\n[dependencies]\napp = { path = "." }\n',
+            encoding="utf-8",
+        )
+
+        exit_code = main([
+            "--root", str(tmp_path),
+            "--language", "rust",
+            "--dry-run",
+        ])
+
+        captured = capsys.readouterr()
+        assert exit_code == 2
+        assert (
+            "DEPENDENCY_SELF_EDGE: package=rust/app "
+            "manifest=code/packages/rust/app/Cargo.toml dependency=rust/app"
+        ) in captured.err
+        assert str(tmp_path) not in captured.err
+
     def test_no_packages_found(self, tmp_path):
         """Test when no packages match the language filter."""
         code_dir = tmp_path / "code"

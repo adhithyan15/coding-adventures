@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C324-chakkar",
+    "language": "punjabi",
+    "chapter": 324,
+    "sequence": 19810,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:49a4a73cb8746ef9"
+  },
+  "findings": []
+}

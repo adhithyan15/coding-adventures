@@ -1,0 +1,11 @@
+{
+  "id": "MW-C164-tai",
+  "pathSegment": "MW-PATH-164-NOTICE",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-164-NOTICE",
+      "order": 2
+    }
+  ]
+}

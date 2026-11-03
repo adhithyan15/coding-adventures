@@ -7,7 +7,8 @@ shortest round-trip float output (PR6a, see "PR6a — shortest round-trip float
 output") and non-trapping IEEE `f64` arithmetic with `f64_signbit` (PR6c, see
 "PR6c — IEEE f64 arithmetic and the sign bit") under LANG78. PR7 (planned,
 see "PR7 — language neutrality") removes every language-specific op, builtin
-and trap kind.
+and trap kind. PR5 (planned, see "PR5 — runtime strings") makes the byte-string
+family mean the same thing on all nine backends and adds `i64_to_str`.
 
 ## Why this exists
 
@@ -103,7 +104,8 @@ family that prefix dispatches.
 (`introduced_by: "LANG83 PR1b"`; the shared `NOT_YET_LOWERED_PR1B` reason is
 no longer used by any backend). `PR4` = registered *and* lowered by every
 backend in the same slice (`introduced_by: "LANG83 PR4"`). `PR6a` = the same,
-for the float-output slice (`introduced_by: "LANG83 PR6a"`). `PR6c` = registered in one
+for the float-output slice (`introduced_by: "LANG83 PR6a"`). `PR5a`–`PR5e` = planned
+string slices (see "PR5 — runtime strings"). `PR6c` = registered in one
 slice and lowered by every backend whose floats are IEEE-754 binary64; BEAM
 declares the arithmetic `Refused` (see "PR6c"). `Later` = planned; enters the
 registry before any frontend emits it. `Unregistered` = exists in IIR today but
@@ -131,7 +133,8 @@ does not gate it).
 | Conversions | `int_to_real` | Op | Exists | Exact `i64 → f64`. |
 | | `real_to_int_trunc` `real_to_int_floor` | Op | Exists | Non-finite or out-of-range → `Trap.ConvRange`. |
 | | `f64_class` `f64_digits` `f64_exp10` | Op | PR7b | Class (`0` zero, `1` finite, `2` infinite, `3` NaN), shortest round-trip significand and leading-digit exponent. Each compiler builds its language's layout from these; see "PR7 — language neutrality". Lowered on all nine backends (BEAM: classes 0 and 1 only, its floats being finite). |
-| | `i64_to_str`, `f64_to_str_py` `_js` `_rb` `_pl` | Op | Later | **Withdrawn by PR7** (`i64_to_str` stays): a layout is a language rule, so it belongs in a compiler-emitted helper. One op per *layout*, not a flags operand; every backend uses one internal shortest-digits core. The oracle is host `python3` / `node`. Rust `format!("{:e}")` gives the same digit *length* but rounds an exact tie up, not to even (see "PR6a"). |
+| | `i64_to_str` | Op | PR5c | `i64 → str`: decimal, `-` for a negative value, no padding, ASCII only. Planned for PR6b; moved to PR5c because every first string subset needs it (see "PR5 — runtime strings"). |
+| | `f64_to_str_py` `_js` `_rb` `_pl` | Op | Later | **Withdrawn by PR7**: a layout is a language rule, so it belongs in a compiler-emitted helper (since PR5, one that builds a `str` from `f64_digits`, `i64_to_str`, `str_slice` and `str_concat`). One op per *layout*, not a flags operand; every backend uses one internal shortest-digits core. The oracle is host `python3` / `node`. Rust `format!("{:e}")` gives the same digit *length* but rounds an exact tie up, not to even (see "PR6a"). |
 | Output | `print_i64` | Builtin | Exists | Decimal value **plus `\n`**. Kept: BASIC, Oct, ALGOL and Ruby `puts` depend on it. |
 | | `putchar` | Builtin | Exists | Low byte of the argument. |
 | | `print_str` | Op | Exists | String bytes, no newline. |
@@ -139,7 +142,8 @@ does not gate it).
 | | `write_f64_py` | Builtin | PR6a | **Removed in PR7e** (language-specific). Python `repr(float)` (= `str` = what `print` writes), **no** newline: shortest round-trip digits; fixed notation when the decimal exponent `e` satisfies `-4 <= e < 16`, else `d.ddde±XX` (at least two exponent digits); integral values keep `.0`; `-0.0`, `inf`, `-inf`, `nan`. |
 | | `write_f64_js` | Builtin | PR6a | **Removed in PR7e** (language-specific). JavaScript `Number.prototype.toString()` (what `console.log` writes for a number), **no** newline: the same digits; fixed when `-7 < e < 21`, else `d.ddde±X` (no padding); integral values print bare (`1`, not `1.0`); `-0` → `0`, `Infinity`, `-Infinity`, `NaN`. |
 | | `write_f64_rb` | Builtin | Later | **Withdrawn by PR7**: the Ruby compiler emits a helper. Ruby `Float#to_s` (fixed when `-4 <= e < 16`, `1.0e+16` style otherwise). |
-| Strings | `str_const` `str_len` `str_index` `str_slice` `str_concat` `str_eq` `str_cmp` | Op | Exists | LANG-FULL E4 byte strings; `str_index`/`str_slice` out of range → `Trap.Bounds`. |
+| Strings | `str_const` `str_len` `str_index` `str_slice` `str_concat` `str_eq` `str_cmp` | Op | Exists | LANG-FULL E4 byte strings; `str_index`/`str_slice` out of range → `Trap.Bounds`. Declared `Lowered` on eight columns. Since PR5a every column reports `Trap.Bounds` (and `str_concat` `Trap.Overflow` past the string ceiling); three are not yet byte-exact (PR5b), and PR5d lowers them on the JIT (see "PR5 — runtime strings"). |
+| | `str_from_byte`, `str_builder_*`, `str_to_i64` | Op | Later | Defined in "PR5 — runtime strings" ("Not in the family, and why"); each enters with the first frontend that needs it. |
 | Errors | `trap` | Op | PR1b | Terminator; no dest; `srcs = [Str(kind)]` with `kind` from the closed table below. |
 | | `trap_msg` | Op | Later | `trap` plus a `str` message. |
 | | `throw` `catch` `landingpad` | Op | Unregistered | AOT00 T2; defined, lowered by no backend. Once exceptions land, `trap k` is sugar for an uncaught `throw k`. |
@@ -162,6 +166,13 @@ already depend on some of those behaviours:
 Rather than silently change those programs, LANG83 adds new ops whose edges are
 *defined* and identical everywhere. `i64_div_trunc` (Later) is the defined twin
 of `div`.
+
+A language that needs defined edges before `i64_div_trunc` exists writes them
+itself. Twig on the VM and JIT columns does (#18470): `iir-builtin-lowering::
+vm_lisp` puts a `Trap.DivZero` check and a `Trap.Overflow` check for
+`MIN / -1` in front of every `div` and `mod` in a Twig module, typed or from a
+dynamic `/` / `quotient` / `remainder` / `modulo`, matching twig-vm. vm-core's
+own `div` / `mod` keep the legacy edges in the table.
 
 ### Trap semantics
 
@@ -212,7 +223,7 @@ tell a LANG83 trap from another error checks the atom against the closed table.
 | `Trap.Null` | 2 | `unbox` of null |
 | `Trap.DivZero` | 3 | integer division by zero |
 | `Trap.ConvRange` | 4 | `real_to_int_*` of a non-finite / out-of-range value |
-| `Trap.Overflow` | 5 | `i64_div_floor` `MIN / -1`; the PR4 `i64_*_ovf` family |
+| `Trap.Overflow` | 5 | `i64_div_floor` `MIN / -1`; the PR4 `i64_*_ovf` family; `str_concat` past the string ceiling (PR5a) |
 | `Trap.User` | 6 | a frontend's explicit abort (`die`, `raise` without a class, …) |
 | `Trap.Unbound` | 7 | reading a name that is not bound yet or at all (JavaScript's `ReferenceError`, Python's `NameError`; LANG84 phase 6e). Named `Trap.ReferenceError` until **PR7d renamed it**, same id. |
 
@@ -428,12 +439,17 @@ fail. This was checked by mutation.
   `i64_neg_ovf`), registered and lowered on all nine backends in one slice;
   see "PR4 — the overflow family". `i64_div_trunc` / `i64_mod_trunc` stay
   `Later`.
-- **PR5 — strings. PR6 — floats + Python/JavaScript formatting.** PR6 is
+- **PR5 — runtime strings** (PR5a landed; PR5b–PR5e planned): the E4 byte-string family
+  fails closed with registered traps and a size ceiling (5a), is byte-exact on
+  every column (5b), gains `i64_to_str` (5c), compiles on the JIT (5d), and is
+  a binary on BEAM (5e). It unblocks LANG84 Perl 4d, Python 7d, JavaScript 6f
+  and Ruby `rb-str-puts`. See "PR5 — runtime strings".
+- **PR6 — floats + Python/JavaScript formatting.** PR6 is
   split: **PR6a** (`write_f64_py`, `write_f64_js` and each backend's
   shortest-digits core; see "PR6a — shortest round-trip float output") and
-  **PR6b** (`f64_div_floor`, `f64_mod_floor`, `f64_is_nan`, `i64_to_str` and
-  the `f64_to_str_*` string-producing family, which needs PR5's runtime
-  strings on every backend).
+  **PR6b** (`f64_div_floor`, `f64_mod_floor`; `f64_is_nan` is superseded by
+  PR7's `f64_class`, `i64_to_str` moved to PR5c, and the `f64_to_str_*`
+  family was withdrawn by PR7).
 - **PR6c — IEEE `f64` arithmetic and the sign bit** (`f64_add`, `f64_sub`,
   `f64_mul`, `f64_div`, `f64_neg`, `f64_signbit`), the prerequisite for
   LANG84 JavaScript 6e (`console.log(-0)` prints `-0`; `1/0` prints
@@ -638,6 +654,702 @@ as PR2 (Ruby). Five Python rows are the first matrix rows whose kind is
 Each one checks the stdout before the trap and the kind on every column.
 Locally, native, LLVM, WASM, JVM, VM and JIT reported the right kind for
 all of them. CLR and BEAM run in CI.
+
+## PR5 — runtime strings
+
+**Status:** PR5a landed (2026-11-02; see "What PR5a landed"); PR5b–PR5e
+planned. PR5 makes LANG-FULL E4's byte
+strings a registry family that means the same thing on all nine columns, and
+adds one op, `i64_to_str`. It unblocks the first string subsets of four
+frontends: Perl 4d, Python 7d, JavaScript 6f and Ruby `rb-str-puts` (LANG84).
+
+PR5 adds almost no vocabulary. The seven `str_*` ops and `print_str` have been
+in the registry since PR1a (`introduced_by: "LANG-FULL E4"`). Eight columns
+declare them `Lowered`; the JIT declares them `Refused(INTERPRETER_TIER_ONLY)`.
+E4 and E4-dyn (`lang-full-e4-strings.md`, `lang-full-e4-dyn-strings.md`)
+brought them to runtime operands on seven backends, BEAM came later, and BASIC,
+ALGOL, COBOL and Twig rows use them on every column. What is missing is the
+*contract*. The registry says an out-of-range `str_index` raises
+`Trap.Bounds`, and no column reports that kind. The registry says a string is
+bytes, and three columns hold UTF-16 or require valid UTF-8. A dynamic-language
+frontend cannot build on that. Its first program prints `"héllo"`, and its
+second indexes past the end.
+
+### What a string is in the IIR
+
+A `str` value is an **immutable sequence of bytes** whose length lies between 0
+and the module's string ceiling (below). The IIR gives the bytes no encoding:
+`str_len` counts bytes, `str_index` reads one byte (0–255), and `print_str`
+writes the bytes unchanged. Every frontend in the repository stores its text as
+UTF-8. A string literal is the UTF-8 encoding of its `Operand::Str`.
+
+Characters (code points, UTF-16 units, graphemes) are a **language's rule**.
+So, by PR7, they belong to the compiler, which emits them as module code over
+the byte ops. The same five source characters show why no single character
+op could serve all four languages:
+
+| Program (UTF-8 source) | Bytes | Python `len` | JavaScript `.length` | Ruby `.length` | Perl `length` (no `use utf8`) |
+| --- | --- | --- | --- | --- | --- |
+| `"héllo"` | `68 C3 A9 6C 6C 6F` | 5 | 5 | 5 | 6 |
+| `"😀"` (U+1F600) | `F0 9F 98 80` | 1 | 2 | 1 | 4 |
+| `"a😀b"` | 6 bytes | 3 | 4 | 3 | 6 |
+
+All four languages print the same bytes for each of these strings, so
+`print_str` serves them all. (CPython must be told to write UTF-8 to a pipe
+with `PYTHONIOENCODING=utf-8` when it is used as an oracle.) Python and Ruby
+count code points, JavaScript counts UTF-16 code units, and Perl counts bytes.
+Each count is a short loop over `str_index` that the compiler emits (see "What
+a compiler writes itself").
+
+Ordering is similar. For well-formed UTF-8, unsigned byte order *is* code-point
+order (a property of the encoding), so `str_cmp` gives Python's, Ruby's and
+Perl's `<` on strings. JavaScript compares UTF-16 units, which order U+E000–U+FFFF
+above every supplementary character (`"￿" < "😀"` is `false` in JavaScript
+and the code-point order says `true`). A JavaScript slice that compares
+strings emits its own comparison helper. No backend learns that rule.
+
+### Audit (main at 80f49073e5)
+
+What each column does today, for the parts of the contract PR5 settles:
+
+| Column | `str` value | Literals accepted | `str_index` / `str_slice` out of range | `i64` index narrowed? | Bytes 0x80–0xFF on output |
+| --- | --- | --- | --- | --- | --- |
+| native x86-64 / AArch64 | `[i64 len][bytes]` gc-core blob (`__twig_alloc_bytes`) | printable ASCII, `\t` `\n` `\r` (`twig-aot` `is_printable_ascii_str`) | runtime helpers `__twig_str_index` / `__twig_str_slice` call `abort()`: no flush, no kind; a folded literal index lowers to an always-failing `type_assert` | no | `fwrite`, transparent |
+| LLVM | same layout; literals are `private` `{i64, [N x i8]}` constants | printable ASCII (`is_printable_ascii_str`) | literal path `@llvm.trap` (SIGILL, no flush); runtime path the C helpers' `abort()` | no | transparent |
+| WASM | `[i32 len][bytes]` in linear memory, bump-allocated, never freed | ASCII (`validate.rs`) | bare `unreachable`, an untyped WASM trap | slice offsets are `i32.wrap`ped; to be audited | `env.__print_str`, transparent |
+| JVM | `java.lang.String` | printable ASCII (`checked_jvm_string_literal`) | `StringIndexOutOfBoundsException` from `charAt` / `substring`: no flush, no kind | **yes**: `l2i`, so `str_index s, 4294967297` reads `s[1]` | `PrintStream.print(String)` encodes with the platform charset |
+| CLR | `System.String` | printable ASCII (`il_text.rs`) | `IndexOutOfRangeException` / `ArgumentOutOfRangeException` | **yes**: narrowed to `int32` the same way | `Console.Write` encodes with the console encoding (UTF-8 on CI), so `putchar 0xFF` already writes `C3 BF` |
+| BEAM | Erlang list of bytes (two heap words per byte; `length` and `lists:nth` are O(n)) | printable ASCII (`validate.rs`) | `str_slice`: `erlang:error(badarg)`; `str_index`: `function_clause` from `lists:nth` | no | `io:put_chars` under the harness's latin1 `standard_io`, transparent |
+| VM | `Value::Str(String)`: must be valid UTF-8, cloned on every read | any UTF-8 | `VMError::Custom("… out of bounds …")` | no | transparent |
+| JIT | every string op `Refused(INTERPRETER_TIER_ONLY)` | — | — | — | — |
+
+Three more gaps sit outside the backends:
+
+- `interpreter_ir::opcodes::has_side_effects` does not list `str_index` or
+  `str_slice`, although both may trap. Dead-code elimination may delete an
+  unused out-of-range read, and with it the trap.
+- In `op_conformance`, every string case uses literals a backend can fold, and
+  none of them traps. Output is compared through `String::from_utf8_lossy` and
+  `trim()`, so a stray `0xA9` and a stray `0xFF` both read as U+FFFD. A
+  trailing newline disappears too.
+- `lang_matrix`'s Twig row `(string-ref "ABC" 3)` is a data-less
+  `Expect::Trap`. It passes on every column because every column fails
+  *somehow*, which is the point the PR2 matrix port left open.
+
+The vm-core slice is worth a closer look. `str_slice "é", 1, 2` is the byte
+`A9`, a valid IIR string. vm-core refuses it with "range does not preserve
+UTF-8 boundaries", because a Rust `String` cannot hold it. The reference
+interpreter disagrees with the byte contract it documents.
+
+### The op family
+
+Nine operations. Eight exist; PR5 re-specifies them so the definition is the
+same everywhere. One is new.
+
+| Op | Operands → result | Semantics | Traps | Why it is a primitive |
+| --- | --- | --- | --- | --- |
+| `str_const` | literal → `str` | the UTF-8 bytes of `Operand::Str` | — (a literal over the ceiling is a compile-time refusal) | Every backend stores constant data its own way (rodata, data segment, constant pool, literal table). |
+| `str_len s` | `str` → `i64` | the byte count | — | O(1) on every representation. No other op can compute it. |
+| `str_index s, i` | `str, i64` → `i64` | byte `i`, zero-extended (0–255) | `Trap.Bounds` unless `0 ≤ i < len` | The only way to read a byte. A frontend's character rules are loops over it. |
+| `str_slice s, a, b` | `str, i64, i64` → `str` | a fresh string of bytes `[a, b)` | `Trap.Bounds` unless `0 ≤ a ≤ b ≤ len` | Produces a string, so it needs allocation, which no other op exposes. O(1) on BEAM (sub-binary), O(b − a) elsewhere. |
+| `str_concat a, b` | `str, str` → `str` | a fresh string: the bytes of `a`, then those of `b` | `Trap.Overflow` if `len a + len b` exceeds the ceiling | Allocation again. |
+| `str_eq a, b` | `str, str` → `i64` | `1` if the byte sequences are identical, else `0` | — | One definition (`memcmp == 0`). Every backend has an O(n) native routine. As a `str_index` loop it would be n bounds-checked reads. |
+| `str_cmp a, b` | `str, str` → `i64` | `-1` / `0` / `1`: unsigned lexicographic byte order, a proper prefix first | — | One definition (`memcmp`, then lengths). Unsigned order is code-point order for UTF-8. |
+| `print_str s` | `str` → — | write the bytes, unchanged, to the ordered output stream | — | The byte sink, sibling of `putchar`. |
+| `i64_to_str n` | `i64` → `str` | **new (PR5c).** The decimal form: `-` for a negative value, then digits with no leading zero, no `+`, no grouping, ASCII only. `0` is `"0"`; `i64::MIN` is `"-9223372036854775808"` (20 bytes) | — | One definition that every language uses for its integers (Python `str`, Ruby `to_s`, Perl stringification, JavaScript for safe integers). Every host has it natively (`snprintf`, `Long.toString`, `integer_to_binary`). Compiler code would need a byte-append op the family does not have. |
+
+`i64_to_str` was planned for PR6b. It moves to PR5 because it is the one
+number-to-string conversion with a universal definition, and every first string
+subset needs it. Float-to-string stays a compiler helper (PR7): the layout
+helpers PR7c built print digits with `putchar`, and their string-producing
+twins build the same layout with `i64_to_str`, `str_slice` and `str_concat`
+(below). PR6b keeps only `f64_div_floor` and `f64_mod_floor`.
+
+The names stay. `str` is not a dispatch prefix (no native or JIT arm matches
+`str_`), the names are type-first, and renaming them to `bytes_*` would touch
+BASIC, ALGOL, COBOL, Twig and seven backends for no change in meaning. The
+vocabulary table's `str` *means* a byte string.
+
+**Not in the family, and why.** Each is `Later`. It enters the registry, with
+a declaration from every backend, when the first frontend slice needs it:
+
+| Candidate | Definition it would have | Why not now |
+| --- | --- | --- |
+| `str_from_byte b` | a one-byte string; `Trap.Bounds` unless `0 ≤ b ≤ 255` | No first subset builds a string byte by byte. Every escape is decoded at compile time, and digits come from `i64_to_str`. It is the first candidate for a frontend that needs `chr` / `String.fromCharCode` / `Integer#chr`. |
+| a byte-append builder (`str_builder_new`, `_push_byte`, `_push_str`, `_finish`) | a mutable, growable byte buffer that is never shared until finished | It is the only mutable value the family would have, which means new aliasing rules for every backend. Concatenation serves straight-line subsets. It belongs with the first frontend whose loops build strings (`+=` in a loop, `"".join`, Ruby `<<`), where `str_concat` would be quadratic. |
+| `str_to_i64` | parse a decimal integer | Each language's parse is a rule (Perl `"3abc"` is 3 with a warning, Python `int("3abc")` raises, JavaScript `Number("3abc")` is NaN). The neutral primitive underneath is not settled. |
+| code points, UTF-16 units, case mapping, search, hashing | — | Language rules or library code: compiler-emitted helpers over `str_index`. |
+
+### What a compiler writes itself
+
+The helpers below are compiler-emitted module functions, under the PR7 rules:
+not shared, standing in for no op, built from registry ops only, and named in
+the compiler's reserved namespace. They use `cmp_*` and `add` rather than
+bitwise masks, because `and`/`or`/`shr` are unregistered and the generic JIT
+lowers none of them. For a byte `b`, "`b` continues a UTF-8 sequence" is
+`128 ≤ b < 192`, with no `b & 0xC0`.
+
+```text
+fn count_code_points(s):          # Python len, Ruby length
+    n = str_len s; i = 0; c = 0
+    while i < n:
+        b = str_index s, i
+        if not (b >= 128 and b < 192): c = c + 1     # a byte that starts a character
+        i = i + 1
+    return c
+
+fn count_utf16_units(s):          # JavaScript .length
+    … as above, and one more for each b >= 240       # a 4-byte sequence is a surrogate pair
+
+fn write_line(s):                 # Ruby puts: newline only if s does not end in one
+    print_str s
+    n = str_len s
+    if n == 0 or str_index(s, n - 1) != 10: putchar 10
+```
+
+Every index the helpers pass is in range by construction, so they never trap.
+A frontend that slices by character uses the same walk to turn a character
+offset into a byte offset.
+
+Number-to-string for each language's numbers:
+
+| Language | Integer | Float |
+| --- | --- | --- |
+| Perl (`.`, stringification) | `i64_to_str` | — (no floats in 4d) |
+| Ruby (`#{n}`, `to_s`) | `i64_to_str` | — (no floats in `rb-int-puts`; `Float#to_s` is a later helper, as PR7 planned) |
+| Python (`str(n)`, f-string fields) | `i64_to_str` | `__py_float_to_str(x) -> str`: PR7c-py's `repr` layout, built as a string |
+| JavaScript (`"a" + n`) | — (every Number is a float) | `__js_number_to_string(x) -> str`: PR7c-js's layout, built as a string |
+
+The string-building layout is the printing layout with each `putchar` run
+replaced by a piece of string. `D`'s digits come from `i64_to_str D`. A
+decimal point goes in with two `str_slice`s and a `str_concat` of `"."`. A run
+of `k` zeros is `str_slice` of a zeros literal, which is bounded: JavaScript's
+fixed notation needs at most 20, and Python's at most 15. `"e"`, the sign and
+the exponent are `str_concat` of literals and `i64_to_str`. Each compiler then
+prints a number as `print_str` of that string. One layout then serves both
+printing and concatenation, and the PR6a 90-value table checks both through the
+existing `lang_matrix` rows.
+
+### Bounds, traps and the ceiling
+
+**Bounds are checked on the full `i64` before any narrowing.** The predicate is
+`0 ≤ i < len` for `str_index` and `0 ≤ a ≤ b ≤ len` for `str_slice`, evaluated
+on 64-bit values. A backend whose string API takes `int` (JVM, CLR) or whose
+offsets are `i32` (WASM) narrows only after the check has passed, when the
+value is known to fit. One unsigned compare `i <u len` (`i64.ge_u`, `cmp`/`jae`)
+covers both `i < 0` and `i ≥ len`, as the WASM path already does. BEAM tests
+`is_integer` before the range compares, because Erlang orders `1.5` between
+`1` and `2` (lesson *BEAM array indexes need an integer guard before numeric
+bounds checks*).
+
+**Every failure is a registered trap, raised the PR1b way.** Each column
+already has a sequence that flushes output and reports a kind (see "Trap
+semantics"). PR5a routes every string failure through it:
+
+| Column | Today | PR5a |
+| --- | --- | --- |
+| native | `abort()` in `__twig_str_index` / `__twig_str_slice` / `__twig_str_concat` | `__twig_trap(1)` (`Trap.Bounds`) or `__twig_trap(5)` (`Trap.Overflow`); `__twig_trap` already flushes `stdout` |
+| LLVM | `@llvm.trap` (literal path), the runtime's `abort()` | `call @__iir_trap(@__iir_trap_msg.1, …); unreachable`; the runtime path inherits the native fix |
+| WASM | `unreachable` | `i32.const 1; call $env.__trap; unreachable` |
+| JVM | `StringIndexOutOfBoundsException` | `lcmp` guards, then the shared sequence: flush `System.out`, `throw new RuntimeException("Trap.Bounds")` |
+| CLR | `IndexOutOfRangeException` / `ArgumentOutOfRangeException` | `int64` guards, then flush `Console.Out` and `throw new System.Exception("Trap.Bounds")` |
+| BEAM | `badarg` / `function_clause` | `erlang:error('Trap.Bounds')` |
+| VM | `VMError::Custom` | `VMError::Trap { kind: "Trap.Bounds" }` |
+| JIT | (refused) | error slot `trap: Trap.Bounds`, drained by `JITCore` (PR5d) |
+
+`__twig_str_len`, `__twig_str_eq` and `__twig_str_cmp` keep treating a null or
+negative-length handle as the empty string. Validated IR cannot produce one,
+so this guards against compiler bugs and is not part of the contract (an open
+question below).
+
+**The ceiling.** A string is at most `STR_MAX_BYTES` = 2³⁰ − 64 =
+1 073 741 760 bytes. That is the largest round value below the tightest host
+limit: a .NET `System.String` holds at most `0x3FFFFFDF` (1 073 741 791)
+UTF-16 units. It also stays far from the JVM's array limit (just under 2³¹),
+WASM's `i32` length header and 4 GiB memory, and `i64` overflow in any length
+sum. A module may lower it: `IIRModule.str_max_bytes: Option<u32>`, where
+`None` means `STR_MAX_BYTES` and a larger value is malformed IR. A frontend
+sets it from its `FrontendBudgets` (LANG84 C5), and `op_conformance` sets it to
+16 so that it can test the trap without allocating a gigabyte on nine columns.
+(A field on the shared struct means updating every struct literal; the lesson
+*a PR that adds a field to a shared struct literal breaks…* applies, so it
+lands with a constructor default.)
+
+`str_concat` is the only op that can exceed it. `str_slice` never grows a
+string, `i64_to_str` writes at most 20 bytes, and a `str_const` over the
+ceiling is refused when the module is validated. The check comes before the
+allocation (`len a > max − len b`, which cannot overflow) and raises
+`Trap.Overflow`: the result's length does not fit the type's range, the same
+condition the PR4 family names. Running out of host memory below the ceiling
+(the JVM's `OutOfMemoryError`, `memory.grow` returning −1, a failed
+`__gc_alloc_kind`) is outside the contract, like stack exhaustion. It must
+still fail closed, with a non-zero exit and never an overlapping or
+half-written block, but it is not a registered kind.
+
+**Analyses.** `str_index`, `str_slice` and `str_concat` join
+`has_side_effects` and become impure for `CIRInstr::is_pure`, as the floor ops
+did in PR1b, so dead-code elimination keeps an unused trapping read. The
+registry entry for `str_concat` gains `may_trap: [Trap.Overflow]`. Constant
+folding stays an optimisation and may not change behaviour: a fold whose
+operands are out of range must compile to the trap sequence, never to a
+compile-time error and never to a value.
+
+### Representation on each backend
+
+| Column | `str` value | `str_const` | `str_len` / `str_index` | `str_concat` / `str_slice` | `str_eq` / `str_cmp` | `print_str` | `i64_to_str` |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| native x86-64 / AArch64 | pointer to a `[i64 len][bytes]` gc-core block (kind: no interior references) | built by `alloc_bytes` + `store_byte` (`lower_string_literals_for_aot`); any byte | header load / guarded byte load, or the runtime helpers | `__twig_str_concat` / `__twig_str_slice` (fresh block, `memcpy`) | `__twig_str_eq` / `__twig_str_cmp` | `__twig_print_string` (`fwrite`) | new `__twig_i64_to_str` |
+| LLVM | the same handle as `i64` | `private` `{i64, [N x i8]}` constant, bytes as `c"\XX"` escapes | inline header load and guarded byte load | the runtime helpers (links `twig_runtime.c` + `libgc_core_capi.a`) | runtime helpers; literal fast path folds | `__print_str` | declares the runtime's `__twig_i64_to_str` and defines no symbol of that name (the PR7b interposition lesson) |
+| WASM | `i32` offset of `[i32 len][bytes]` in linear memory | data segment, bytes verbatim | `i32.load` header, `i32.load8_u` | bump-allocate + `memory.copy` | in-module `$__str_eq` / `$__str_cmp` | `env.__print_str(ptr, len)` | in-module `$__iir_i64_to_str` (digits of the unsigned magnitude, so `MIN` needs no case) |
+| JVM | `java.lang.String` with **one char per byte** (every char 0–255) | `ldc` of the bytes widened to chars; a literal whose modified UTF-8 exceeds the 65 535-byte constant limit is split into chunks and concatenated | `length()`; guarded `charAt` | guarded `concat` / `substring` | `equals`; `compareTo` + `Integer.signum` (char order 0–255 is unsigned byte order) | synthetic `__iir_print_str`: `getBytes("ISO-8859-1")`, then `System.out.write([BII)V`, the same `PrintStream` as `print(J)` | `Long.toString(J)` (ASCII) |
+| CLR | `System.String`, one char per byte | `ldstr bytearray (…)` (UTF-16LE of each byte), so NUL and 0x80–0xFF need no escape | `get_Length`; guarded `get_Chars` | guarded `String.Concat` / `Substring` | `String.Equals`; `CompareOrdinal` + `Math.Sign` | synthetic `__iir_write_bytes`: `Console.Out.Flush()`, then copy the chars into a `uint8[]` and write them to a cached `Console.OpenStandardOutput()` stream. `putchar` goes through it too | `Int64.ToString(CultureInfo.InvariantCulture)`; the culture matters, because .NET 5+ under ICU writes U+2212 `−` for some cultures (`sv-SE`) |
+| BEAM | a **binary** (PR5e; a byte list until then) | literal-table `BINARY_EXT` | `byte_size/1`; `is_integer` + range guard, then `binary:at/2` | `iolist_to_binary([A \| B])`; `binary_part/3` (O(1) sub-binary) | `is_eq_exact`; `erlang:'<'/2` (binaries order bytewise, a prefix first) | `io:put_chars/1` on the latin1 `standard_io` | `integer_to_binary/1` |
+| VM | `Value::Str(Rc<[u8]>)` (was `String`) | the literal's bytes | `len()`, index | new `Rc` | slice equality / `Ord` on `[u8]` | the `print_str` builtin, same stdout handle | `n.to_string()` |
+| JIT | a second register file of `Rc<[u8]>` (PR5d) | `STR_CONST` from a per-function pool | `STR_LEN`, `STR_INDEX` | `STR_CONCAT`, `STR_SLICE` | `STR_EQ`, `STR_CMP` | `PRINT_STR` to the embedder's sink | `I64_TO_STR` |
+
+**JVM and CLR: why one char per byte, not `byte[]`.** Both hosts' string APIs
+compute the byte semantics exactly when every char is below 256. `length` is
+the byte count, `charAt` the byte, `substring` and `concat` the byte
+operations, and ordinal comparison of chars 0–255 is unsigned byte order. So
+PR5 changes only what enters a string (literals, `input_str`, which must read
+ISO-8859-1) and what leaves one (`print_str`, `putchar`), and keeps every other
+lowering. `byte[]` was the alternative. It would rewrite every string lowering,
+BASIC's `String[]` arrays and `readLine` on both backends, and on the JVM it
+would need helpers for comparison and slicing that version-49 class files
+cannot get from `java.util.Arrays`. The cost of the invariant is memory on the
+CLR (two bytes per byte). JDK 9+ compact strings already store a Latin-1
+`String` in one byte per char.
+
+**JIT: a second register file.** `GenericCirJit`'s registers hold `i64`, and
+floats ride there as bit patterns (PR6c). An owned string cannot: a handle in
+an integer register would need an arena that only grows while a compiled loop
+concatenates. So the JIT gets a parallel file, `str_regs: Vec<Rc<[u8]>>`,
+indexed by the same register number. A `str` register is the destination of
+`str_const`, `str_concat`, `str_slice` or `i64_to_str`, or a `str` parameter.
+Overwriting one drops the old `Rc`, so a compiled loop holds only its live
+strings. The class rules are PR6c's: a register written as `str` and read as
+anything else refuses the function, and so does the reverse. `PARAM_STR` takes
+a `Value::Str` argument and fails the call closed on any other value.
+`RET_STR` returns one. Traps go through the error slot like every other JIT
+trap. Opcode bytes are chosen in PR5d from the free range.
+
+**GC on the tagged-word columns.** A native or LLVM string block is a gc-core
+allocation of a kind with no interior references, so the collector never scans
+its bytes and may move it. A literal on LLVM is static data, not a block. Every
+collector root is checked against the live-block table, so a literal handle in
+a root is ignored. PR5a pins two rooting facts with a stress case (build and
+drop 10 000 strings while keeping three, with a low collection threshold, then
+print the three and `gc_collection_count`):
+
+- *Native.* A `str` register must be named as a reference in the stack map at
+  every safepoint. `x86_64-backend`'s `is_gc_root_ty` treats every type other
+  than the machine scalars as a possible reference. PR5a checks that `str`
+  still arrives with that type after `aot-core`'s specialiser, and does not
+  arrive as `i64`.
+- *LLVM.* LLVM frames have no stack maps. `__gc_alloc_kind` collects with a
+  conservative scan of the stack and the callee-saved registers, which pins
+  whatever it finds. So the lowering must keep the block's **base** handle live
+  across every call that may allocate, and never only the interior `base + 8`
+  pointer, unless the conservative scan is shown to honour interior pointers.
+
+**Dynamic values (LANG85).** PR5 strings are `Raw(str)` everywhere. A string
+that reaches a `Dyn` position is still a compile-time refusal
+(`ReprError::NoDynamicForm`, LANG85 §2.5). None of the four first subsets
+needs a dynamic string: each compiler types every binding statically (a
+binding is an integer, a float or a string, and rebinding it to another type
+is refused). For LANG85 §11.2 question 2 this spec proposes **tag `100`** for a
+string handle: `block | 4`, which is safe because blocks are 16-aligned. A tag
+test is then enough for `pair?` and the GC, where tag `111` plus a header kind
+check would need a heap read (the PR7f-1 note on `__gc_kind_of`). `dyn_tag`
+would answer 4, and a language's equality would compare two strings with
+`str_eq` after the tag test, in compiler-emitted code. That work is #18428's,
+after PR5. It is **deferred**, not part of PR5a–PR5e.
+
+### Conformance cases
+
+`op_conformance` gains `Expect::StdoutBytes(&'static [u8])`, compared exactly,
+with no lossy decode and no trim, for every case below that writes a byte
+outside printable ASCII. Every op case runs in two forms. In the *literal*
+form the backend may fold it. In the *opaque* form each string reaches the op
+as a parameter of a call-free function `f`, so it cannot be folded and the JIT
+compiles `f`. The case table:
+
+| Case | Expect |
+| --- | --- |
+| UTF-8 literal `"h\u{e9}llo \u{20ac}\u{1d11e}"`: `str_len` (14), `str_index` at 0, 1 (`0xC3`), 2 (`0xA9`) and 13 | `Stdout` |
+| `str_slice "é", 1, 2`, then `print_str`: the lone byte `A9` | `StdoutBytes(b"\xA9")` |
+| bytes `00`, `0A`, `0D`, `7F`, and `80`–`FF` (built by slicing UTF-8 literals) through `print_str`; `putchar 0xFF` | `StdoutBytes` |
+| edges: `str_index` at 0 and `len − 1`; slices `[0,0)`, `[len,len)` and `[0,len)`; concat with `""`; `str_len ""` | `Stdout` |
+| `str_eq` of equal bytes in different objects (one literal, one concatenated); `str_cmp` on `"ab"`/`"abc"`, `"\x7f"`/`"é"` (`-1`: unsigned) and equal strings | `Stdout` |
+| `str_index` at `-1`, `len`, `i64::MAX`, `i64::MIN`, `2³² + 1` (the narrowing hole), each after a print | `StdoutThenTrap(…, "Trap.Bounds")` |
+| `str_slice` with `a < 0`, `b < a`, `b > len`, `a = 2³²`, `b = 2³² + len` | `StdoutThenTrap(…, "Trap.Bounds")` |
+| an unused out-of-range `str_index` (dead-code elimination must keep it) | `StdoutThenTrap` |
+| ceiling 16: concat to exactly 16 bytes, then to 17 | `StdoutThenTrap(…, "Trap.Overflow")` |
+| aliasing: `s = str_concat s, s`; `s = str_slice s, i, j` with `i`/`j` derived from `s` | `Stdout` |
+| ordered stream: `print_str`, `write_i64`, `putchar` and `print_i64` interleaved, without a flush between them | `Stdout` |
+| `i64_to_str` of `0`, `±1`, `9`, `10`, `-10`, `123456789`, `±10¹⁸`, `i64::MAX`, `i64::MIN`, each printed and its `str_len` written | `Stdout` |
+| GC stress (native, LLVM): see "GC on the tagged-word columns" | `Stdout` |
+
+Gates, one per PR: `pr5a_string_failures_are_registered_traps_on_every_column`,
+`pr5b_strings_are_bytes_on_every_column`,
+`pr5c_i64_to_str_is_lowered_on_every_backend`,
+`pr5d_the_jit_compiles_strings` and `pr5e_beam_strings_are_binaries`. Each
+gate pins the support matrix and runs its cases on every executable column
+whose toolchain is present. Locally that means native x86-64, LLVM, WASM, JVM,
+VM and JIT. CLR, BEAM and AArch64 are structural locally (pinned IL, BEAM
+instruction streams, AArch64 words against `aarch64-encoder`) and execute in
+CI, as in every earlier slice. The CLR changes carry the IL stack-depth model
+check, because CoreCLR rejects IL that `ilasm` accepts.
+
+### `lang_matrix` rows
+
+- **Existing rows stay byte-identical.** No BASIC, ALGOL, COBOL or Twig row's
+  output changes. Their programs print ASCII, and their bounds rows move from
+  "fails somehow" to the registered kind. PR5a ports the Twig
+  `(string-ref "ABC" 3)` row to `StdoutThenTrap("", "Trap.Bounds")`, and any
+  COBOL reference-modification or BASIC substring row whose failure is a
+  `str_*` bounds failure does the same.
+- **New rows come with the frontend slices**, one per corpus case on each
+  IIR-identity class representative, as for `rb-int-puts`, `py-int-print` and
+  `es-number-log`. Each row lists all nine columns. A non-ASCII row compares
+  bytes.
+
+| Subset (LANG84) | Example rows (source → stdout) |
+| --- | --- |
+| `pl-str-print` (Perl 4d) | `print "Hello, world\n";` → `Hello, world⏎`; `print "a" . "b" . "\n";`; `my $s = "ab"; print $s . $s, "\n";`; `print length("héllo"), "\n";` → `6`; `print 1 . 2, "\n";` → `12`; `print length(123), "\n";` → `3` |
+| `py-str-print` (Python 7d) | `print("hi")`; `print("a" + "b")`; `print(len("héllo"))` → `5`; `print(len("😀"))` → `1`; `print("😀")` → `F0 9F 98 80 0A`; `print(str(-42) + "!")`; f-strings (7d-2): `print(f"n={1 + 2}")` → `n=3`, `print(f"x={0.1 + 0.2}")` → `x=0.30000000000000004` |
+| `es-string-log` (JavaScript 6f) | `console.log("hi")`; `console.log("a" + "b")`; `console.log("héllo".length)` → `5`; `console.log("😀".length)` → `2`; `console.log("n=" + 1.5)` → `n=1.5`; `console.log("a" + 1 + 2)` → `a12`; `console.log(1 + 2 + "a")` → `3a`; `console.log("x", 1)` → `x 1` |
+| `rb-str-puts` (Ruby) | `puts "hi"`; `puts "a" + "b"`; `puts "line\n"` (one newline); `puts ""` → `⏎`; `puts "héllo".length` → `5`; `puts "n=#{1 + 2}"` → `n=3` |
+
+### PR sequence
+
+Each PR keeps all nine columns green. A column that cannot yet run an op
+declares it `Refused`, and the gates count that as a compile-time refusal,
+never as a pass at run time. None removes anything a frontend still emits.
+
+1. **PR5a — fail closed.** No new op.
+   - `str_index` / `str_slice` / `str_concat` join `has_side_effects` and
+     `is_pure`'s impure set; `str_concat` gains `may_trap: [Trap.Overflow]`.
+   - `STR_MAX_BYTES` and `IIRModule.str_max_bytes`, checked by module
+     validation.
+   - Every column: `Trap.Bounds` / `Trap.Overflow` through its LANG83
+     sequence, with `i64` guards before narrowing on the JVM, CLR and WASM. The
+     native runtime calls `__twig_trap` instead of `abort()`.
+   - `Expect::StdoutBytes`; the opaque form of every existing string case; the
+     trap, ceiling, DCE, aliasing and GC-stress cases; the Twig row's
+     `StdoutThenTrap` port. The JIT stays `Refused`.
+   - Touches `interpreter-ir`, so the local Miri script runs (CLAUDE.md).
+2. **PR5b — bytes, not text.**
+   - Each backend's printable-ASCII literal validator is replaced by a
+     byte-exact encoding: native `store_byte`, LLVM `c"\XX"`, WASM data bytes,
+     JVM widened chars (chunked past the constant-pool limit), CLR
+     `ldstr bytearray`, BEAM bytes.
+   - vm-core's `Value::Str` holds `Rc<[u8]>` (`as_str()` stays for UTF-8
+     callers). Its `str_slice` drops the UTF-8 check.
+   - JVM and CLR adopt one char per byte: `__iir_print_str` /
+     `__iir_write_bytes`, `input_str` read as ISO-8859-1. The CLR `putchar`
+     path is fixed for bytes ≥ 0x80 too.
+   - `Operand::Bytes` (owner decision, Q4): a raw-byte literal operand
+     beside `Operand::Str`, accepted by `str_const` and lowered byte-exactly
+     on every backend. It lives in `interpreter-ir`, so this PR runs the
+     twig-vm Miri script.
+   - The UTF-8 literal, raw-byte literal, lone-byte and byte-table cases.
+3. **PR5c — `i64_to_str`.** Registered (`introduced_by: "LANG83 PR5c"`,
+   family `String`, `i64 → str`, no trap) and lowered on eight columns. The JIT
+   declares it `Refused(INTERPRETER_TIER_ONLY)` like the other string ops, and
+   BEAM uses `integer_to_list/1` until PR5e. Runs the `i64_to_str` table. Adds
+   it to the JVM wide-model evidence (an `i64` operand). Miri applies.
+4. **PR5d — the JIT compiles strings.** The `str` register file, the bytecodes
+   above, `PARAM_STR` / `RET_STR`, and nine `Lowered` rows in place of the
+   `INTERPRETER_TIER_ONLY` refusals. The JIT runner checks that the opaque
+   form's call-free `f` really ran compiled (`exec_count`), as PR7e's runner
+   does for the layout helpers.
+5. **PR5e — BEAM binaries.** `str` becomes a binary, literals go into the
+   literal table, and `byte_size` / `binary:at` / `binary_part` make the
+   frontends' O(n) character loops O(n), not O(n²). Every BEAM producer of
+   `str` (`str_const`, `str_concat`, `str_slice`, `i64_to_str`, `input_str`,
+   `array<str>` elements) changes together. It may land any time after PR5a,
+   and before a frontend claims B on a corpus with long strings.
+
+**Frontend slices it unblocks.** Each one is a LANG84 slice: a new subset in
+`subsets.csv`, a corpus with `.expect` files checked against the host
+interpreter, I and B claims, and `lang_matrix` rows. Each needs PR5a–PR5c. The
+JIT cell is a declared compile-time refusal until PR5d.
+
+| Slice | Subset and constructs | IIR | Grammar prerequisite | Number-to-string |
+| --- | --- | --- | --- | --- |
+| **Perl 4d** `pl-str-print` (first) | `'…'` and `"…"` without interpolation (an unescaped `$` or `@` in `"…"` is refused); escapes `\n \t \\ \" \$ \@` and `\x{…}` up to `7F`; `.`; `print LIST`; `length EXPR`; scalars holding strings. Refused: `use utf8`, numeric use of a string (`"3" + 4`), `x`, `q//`/`qq//` | `str_const`, `str_concat`, `print_str`, `str_len`, `i64_to_str` | the 5.38.0 / 5.38.2 pairs gain `STRING_SQ` / `STRING_DQ` tokens | **yes**: `.` with an integer operand, `length` of an integer; `i64_to_str` only |
+| **Python 7d** `py-str-print` | 7d-1: `'…'`, `"…"` and their escapes (lone surrogates and `\N{…}` refused); `+` on two strings; `len`; `str(int)`; single-argument `print`. 7d-2: f-strings with `{expr}` fields and no format spec | 7d-1: the ops above plus the code-point count helper; 7d-2: `__py_float_to_str` | 7d-1: the pairs gain `STRING`; 7d-2: `FSTRING_START` / `_MIDDLE` / `_END` (E2 for nested braces), in the pairs whose language has f-strings (3.6+), refused by CST shape elsewhere. C1.4 forbids splitting one `STRING` token into fields | 7d-1: `i64_to_str`. 7d-2: `i64_to_str` and the float helper built as a string (PR7c-py's layout) |
+| **JavaScript 6f** `es-string-log` | `'…'` / `"…"` with `\n \t \\ \' \" \xHH \uHHHH \u{…}` (a surrogate pair joins into one code point; a lone surrogate is refused); `+` with at least one string operand, typed statically and left-associative; `.length`; `console.log` of strings and numbers (space-separated). A `%` in a first-argument string when there are two or more arguments is refused, because `util.format` would substitute it | the ops above, the UTF-16 count helper, `__js_number_to_string` | `STRING` is already lexed (today's `Shape::Other` refusal is lifted); no new token | **yes**: every Number is a float, so `"n=" + 1.5` needs the float helper built as a string (PR7c-js's layout) |
+| **Ruby `rb-str-puts`** (last) | `'…'` and `"…"` (R1a), then `#{…}` (R2); `+` on strings; `.length`; `puts` with the trailing-newline rule. Refused: `<<`, bang methods and other mutation; `+` of a string and an Integer (a run-time `TypeError` in Ruby, outside the subset) | the ops above, the code-point count helper, `write_line` | **blocked on the lexer**: R1a is parked until R4 and R6 (LANG84 "R1 is split"), and interpolation is R2 (E2, E4). Non-UTF-8 `coding:` comments must be refused first | **yes**: `#{n}` on an Integer; `i64_to_str` only |
+
+The order follows readiness. Perl's corpus needs only new tokens. Python 7d-1
+and JavaScript 6f need tokens their pairs mostly have, plus one counting
+helper each. Ruby waits for its lexer. Every compiler that emits a helper
+reserves the helper's name in its own namespace and refuses a program that
+defines or calls it, as Twig does since the PR7f-2 security review.
+
+### What PR5a landed
+
+PR5a ("fail closed") is complete on all nine columns. Locally it ran on WASM,
+VM, LLVM, native x86-64 and JVM; CLR and BEAM are compiled and pinned
+structurally, and CI executes them, as for every earlier slice. The JIT still
+refuses every string op (`INTERPRETER_TIER_ONLY`) until PR5d.
+
+| Column | Out-of-range `str_index` / `str_slice` | `str_concat` past the ceiling | Checked before narrowing |
+| --- | --- | --- | --- |
+| native x86-64 / AArch64 | runtime helpers call `__twig_trap(1)`; a folded read compiles to `trap "Trap.Bounds"` (was an argument-less `type_assert`, a bare `ud2`) | `__twig_str_concat(a, b, max)` calls `__twig_trap(5)` before allocating; a literal fold stops at the ceiling; a hand-written `call_builtin "str_concat", a, b` gets the module's ceiling appended (a caller's own third operand is replaced), and a direct `call` of any runtime symbol that is not a module function (`__twig_str_concat` with a forged `max`, `__twig_trap`, `__gc_*`, …) is refused before code generation (`AotError::RuntimeSymbolCall`); LLVM already refuses a call to a function the module does not define | — (64-bit throughout) |
+| LLVM | folded read calls `@__iir_trap(@__iir_trap_msg.1, …)` (was `@llvm.trap`); the runtime path inherits the native helpers | `@__twig_str_concat` takes the ceiling as its third argument | — |
+| WASM | `i32.const 1; call $env.__trap; unreachable` on the literal and the runtime path (was a bare `unreachable`) | `u64(la) + u64(lb) >u ceiling` → `env.__trap(5)`; a folded literal past it compiles to the same trap | `str_slice` already checked each `i64` offset before `i32.wrap_i64` (below) |
+| JVM | `lcmp` guards on the `long` operands, then the shared flush-and-throw sequence | `long(la) + long(lb)` `lcmp` an `ldc2_w` ceiling | **yes**, now: the guards precede the `l2i` |
+| CLR | `blt.un` (`str_index`) / two `bgt.un` (`str_slice`) on `int64`, then flush and throw | `int64` length sum `ble.un` the ceiling | **yes**, now: the guards precede the `conv.i4` |
+| BEAM | `is_integer` then the range guards, `erlang:error('Trap.Bounds')` (was `function_clause` / `badarg`) | `length(A) + length(B)` against the ceiling, `'Trap.Overflow'` | — (integers are unbounded) |
+| VM | `VMError::Trap { kind: "Trap.Bounds" }` | `VMError::Trap { kind: "Trap.Overflow" }`, from `DispatchCtx::str_max_bytes` | — |
+| JIT | refused at compile time (unchanged) | refused | — |
+
+**The ceiling**, in the form proposed (open question 1): `STR_MAX_BYTES` =
+2³⁰ − 64 and `IIRModule.str_max_bytes: Option<u32>`. `IIRModule::new` sets
+`None`, and `IIRModule::str_ceiling()` returns the effective value, clamped to
+`STR_MAX_BYTES` so that a backend lowering an unvalidated module never exceeds
+it. `IIRModule::validate` reports a ceiling above `STR_MAX_BYTES`
+(`StrMaxBytes`) and a `str_const` longer than the ceiling (`StrTooLong`).
+Every one of the workspace's `IIRModule { .. }` literals (151 in code, 22 in
+doc examples) gained `str_max_bytes: None`. The field is not on the binary
+wire format (`serialise`), like `release`: a deserialised module has the
+registry ceiling.
+
+**Analyses.** `str_index`, `str_slice` and `str_concat` are in
+`has_side_effects` and impure for `CIRInstr::is_pure`, and `str_concat`'s
+registry entry has `may_trap: [Trap.Overflow]`. `aot-core` runs `jit-core`'s
+CIR dead-code elimination at opt levels 1 and 2, so the CIR predicate matters
+for the native columns too.
+
+**Conformance.** `op_conformance` has `Expect::StdoutBytes` and
+`StdoutBytesThenTrap`, compared exactly (no lossy decode, no `trim()`), and the
+runners carry raw stdout bytes. The gate
+`pr5a_string_failures_are_registered_traps_on_every_column` pins the support
+matrix and runs 34 cases, each on every executable column whose toolchain is
+present and compiled for CLR and BEAM: every out-of-range edge of the table
+above (−1, `len`, `i64::MAX`, `i64::MIN`, 2³² + 1 for `str_index`; `a < 0`,
+`b < a`, `b > len`, `a = 2³²`, `b = 2³² + len` for `str_slice`) in a literal
+and an opaque form, an unused out-of-range read in both forms, the ceiling-16
+concat in both forms, aliasing (`s = s ++ s`, `s = str_slice s, 1, len − 1`)
+in both forms, and the opaque form of the six E4 string cases. The cases
+print no newline byte, so the exact comparison does not depend on a host's
+text-mode newline translation.
+
+**`lang_matrix`.** The Twig row `(string-ref "ABC" 3)` and the two COBOL
+reference-modification rows whose failure is a `str_slice` bounds failure
+(end past the item width; a zero start) are `StdoutThenTrap("", "Trap.Bounds")`
+on all eight columns they declare. No BASIC row traps on a string bound. The
+LLVM column now links `twig_runtime.c` whenever a module calls
+`@__twig_str_concat`; its standalone substitute no longer defines that symbol.
+
+**The two things to verify.**
+
+1. *Is a native `str` slot still a GC reference after `aot-core`'s
+   specialiser?* Partly, and the gap is fixed. A run-time string
+   (`call_builtin str_concat … : str`, a `str` call result or parameter)
+   reaches the backend typed `str`, so `is_gc_root_ty` names its slot. A
+   *literal* did not: `lower_string_literals_for_aot` materialised it with
+   `alloc_bytes buf : i64` and `mov dest = buf : i64`, two machine scalars,
+   so no stack-map record named either slot, and an explicit
+   `gc_collect_precise` / `gc_collect_compacting` could not see a live
+   literal. The buffer is now typed `str`; `root_heap_word_copies` then roots
+   its `mov` alias. The machine code is unchanged. The allocation-triggered
+   collector scans conservatively and was never affected, and an end-to-end
+   run could not show the bug: the precise walk scans the collector's own
+   frames conservatively, and a stale copy of the handle there kept the block
+   alive. The regression test is therefore the CIR-level check
+   (`twig-aot`'s `a_literal_strings_handle_registers_are_gc_roots_after_specialisation`).
+   #18785 (#18766), which landed on main while PR5a was in review, fixed the
+   same gap from the other side: `root_heap_word_copies` now gives every GC
+   allocation (`alloc_bytes`, `str_concat`, …) a root type. The two fixes
+   agree, so the stack maps are the same either way; the merged tree pins
+   that the raw CIR already roots both literal buffers and that rooting adds
+   only the string variable.
+2. *Does WASM `str_slice` narrow first?* No. For an `i64` offset slot the
+   lowering already compared the full value with the length (`i64.gt_u`)
+   before `i32.wrap_i64`, so `[2³², 2³² + 3)` was rejected, not read as
+   `[0, 3)`. It only lacked the kind. `str_index` compares `i64.ge_u` on the
+   full index. The 2³² cases above pin both.
+
+**Divergences and what remains.**
+
+- The native helpers still `abort()` on a null or negative-length handle
+  (corruption, never validated IR) rather than naming a kind; open question 8
+  is unchanged.
+- The GC-stress case (10 000 strings with a low collection threshold, native
+  and LLVM) is not in PR5a. Native is covered by the root-type test above and
+  `twig-aot/tests/str_gc_roots.rs` (a literal kept across explicit precise and
+  compacting collections). The LLVM fact (the base handle stays live across
+  every allocating call under the conservative scan) is **not yet verified**;
+  it moves to PR5b with the stress case.
+- The "edges" and "ordered stream" rows of the case table are covered only by
+  the opaque `str_index` at `len − 1` and `str_slice` `[len, len)` cases; the
+  rest come with PR5b's byte cases.
+- `twig-vm` is not a matrix column, but it runs the same E4 ops, so PR5a
+  gives it the same contract: `RunError::Trap { kind }` (new), `Trap.Bounds`
+  for an out-of-range `str_index` / `str_slice` (was an untyped `TypeError`),
+  and `Trap.Overflow` past the module's ceiling. A twig-vm integer is a
+  tagged word narrower than `i64`, so its tests use `±2⁴⁰` for the extremes.
+- PR5a touches `interpreter-ir` and `twig-vm` (and, through the
+  struct-literal update, `twig-ir-compiler`), so the local Miri script
+  applies.
+
+### PR5a follow-ups (#18800)
+
+The PR5a security reviews found five gaps. None of them was a fail-open on a
+path a frontend emits today, but each one weakened the string ceiling or the
+trap contract. This section says how each one is closed. Where it changes
+something "What PR5a landed" says, that text is left as it was and this
+section takes precedence.
+
+1. **Every column refuses an over-long literal before the program runs.**
+   `IIRModule::validate()` checked the ceiling, but no backend called it, so a
+   `str_const` longer than the module's `str_max_bytes` compiled everywhere.
+   The two ceiling checks (`StrMaxBytes`, `StrTooLong`) now live in
+   `IIRModule::str_ceiling_errors()`, and `validate()` includes them. Each
+   column calls that method in the place where it already refuses a module:
+
+   | Column | Where | Error |
+   | --- | --- | --- |
+   | WASM, JVM, CLR, BEAM, LLVM | `validate_for_wasm`, `validate_for_jvm`, `validate_iir_for_clr`, `validate_for_beam`, `validate_for_llvm`. The `lower_iir_to_*` entry points and the `iir-codegen-adapters` registry already run them | the backend's `ValidationFailed` / validation list |
+   | native x86-64 / AArch64 | `twig-aot`'s `prepare_module_for_aot` (every module compile), and `compile_typed_module_to_arm64_bytes`, which skips that step | `AotError::Compile` |
+   | VM | `vm-core`'s load-time check, beside the frame-register check, before any instruction runs | `VMError::InvalidModule { errors }` (new) |
+
+   `twig-vm` (not a column, but it runs the same E4 ops) refuses the same
+   modules when a run starts, with `RunError::InvalidModule { errors }`.
+   The columns call only the ceiling checks, not the whole of `validate()`:
+   its other checks (duplicate names, the entry point) are not every column's
+   contract today, and widening them is a separate change. The JIT still
+   refuses every string op.
+2. **The ceiling survives linking and the wire format.** `iir-linker` gives
+   the merged module the smallest `str_max_bytes` of its inputs. `None` means
+   the registry ceiling, so it loses to any `Some`, and all-`None` inputs give
+   `None`. A linked program therefore never runs under a looser ceiling than
+   any of its modules was compiled for. `serialise` writes format **1.2** when
+   `str_max_bytes` is `Some`: after the imports section comes tag `0x12` and
+   the ceiling as a `u32`. A module whose ceiling is `None` is still written as
+   1.1, byte for byte as before, so the LANG84 release-class digests
+   (`release_classes.csv`) do not move. `deserialise` reads 1.0, 1.1 and 1.2.
+   A 1.2 stream without the ceiling section is an error. This replaces "The
+   field is not on the binary wire format" above.
+3. **`dynval-runtime`'s string builtins name LANG83 kinds.**
+   `lang-runtime-core`'s `RuntimeError` gains `Trap { kind }`, the twin of
+   vm-core's `VMError::Trap` and twig-vm's `RunError::Trap`.
+   - `string-ref` with an index that is negative or past the end, and
+     `substring` with `start < 0`, `end < start` or either end past the
+     string, return `Trap.Bounds`. They used to return `TypeError`. An operand
+     of the wrong type is still a `TypeError`.
+   - `string-append` checks `len a > ceiling − len b` before it allocates and
+     returns `Trap.Overflow`. It used to have no ceiling. The context-free
+     builtin uses the registry ceiling (`dynval_runtime::builtins::STR_MAX_BYTES`,
+     equal to `interpreter_ir::STR_MAX_BYTES`), and `string_append_within`
+     takes an explicit one.
+   - `make-string n ch`, the other builtin that grows a string, returns
+     `Trap.Overflow` when `n × len_utf8(ch)` exceeds the ceiling or overflows,
+     checked before it allocates. A code point that is not a Unicode scalar
+     value is a `TypeError`; it used to be truncated to 32 bits.
+     `make_string_within` takes an explicit ceiling.
+   - twig-vm, the VM that runs these builtins on IIR, passes the module's
+     `str_ceiling()` to `string-append` and `make-string` on every path that calls a builtin:
+     `call_builtin`, and a builtin closure called through `apply_closure`,
+     `call_closure` or a higher-order list operation. It turns
+     `RuntimeError::Trap { kind }` into `RunError::Trap { kind }`. So Twig's
+     `(string-ref s 3)` raises `trap: Trap.Bounds` whether it compiles to
+     `str_index` or to the builtin.
+4. **No literal fold past the ceiling on LLVM and WASM.** On both columns a
+   pre-pass works out every foldable string before the lowering runs. That
+   pre-pass joined two literals without checking the ceiling, so a chain of
+   `s = s ++ s` doubled at compile time with no bound. LLVM interned every
+   joined value as a module constant, even one its lowering then refused to
+   fold, and WASM added each one to its data segment. Both pre-passes now stop at the ceiling, as `twig-aot`'s
+   fold does. A join longer than `str_ceiling()` is not folded, its
+   destination is a run-time string, and the run-time concatenation raises
+   `Trap.Overflow`: through `@__twig_str_concat`'s `max` on LLVM, and through
+   the inline length check on WASM. WASM used to fold such a join and emit the
+   trap at the fold site; that site is gone. So the WASM row of the table above
+   now reads "a literal join past the ceiling is not folded; the run-time check
+   raises it". The behaviour does not change: the same bytes are written before
+   the same `Trap.Overflow`.
+
+   The security review of this change found that the WASM fold table is keyed
+   by variable name, and that a concat or slice that was *not* folded left
+   any literal an earlier write had given its destination in the table. With
+   `d = str_const "x"` hinted `"bool"` (which validation accepts), then
+   `d = a ++ a` past the ceiling, `str_len d` folded to 1 and the trap never
+   ran. Three changes close it. A variable written more than once is a
+   run-time string whatever the write's type hint (the analysis used to count
+   only `"str"`-hinted writes). A concat or slice that is not folded removes
+   its destination from the table. And the lowering checks, in release builds
+   too, that a folded concat's literal is exactly its operands' literals
+   joined and within the ceiling; if not, it refuses to compile. The
+   out-of-range literal `str_slice` of such a rewritten variable read the
+   stale literal before PR5a's follow-ups too; it now raises `Trap.Bounds`.
+   LLVM's validator refuses a `str_const` that is not hinted `"str"`, and its
+   lowering tracks literals in program order. twig-aot registers no literal
+   for a destination written twice. So the reproducer folds on neither, and
+   tests pin both.
+5. Comments that still described `__twig_str_concat` with two arguments now
+   name the third, `max`.
+
+The follow-ups touch `interpreter-ir`, `lang-runtime-core`, `dynval-runtime`
+and `twig-vm`, so the per-PR Miri job (`lang-runtime-core`, `dynval-runtime`)
+and the local twig-vm Miri script both apply.
+
+### Owner decisions (2026-11-02)
+
+The owner settled four of the open questions below:
+
+- **Q2, the trap past the ceiling:** reuse `Trap.Overflow`. No new kind is added.
+- **Q3, JVM and CLR:** keep the host `String`, one char per byte, as proposed.
+- **Q4, byte literals:** add `Operand::Bytes` now. A literal can carry any byte
+  sequence, so Perl's `"\xff"` and Python `bytes` literals are exact from the
+  first slice. PR5b introduces the operand (in `interpreter-ir`, so the Miri
+  script applies) and lowers it byte-exactly on every backend next to
+  `Operand::Str`. A `str_const` takes either operand. Perl 4d therefore accepts
+  `\x{80}`–`\x{ff}` without `use utf8`, rather than refusing them.
+- **Q9, vm-core:** `Value::Str` becomes `Rc<[u8]>` in place. Every in-repo
+  caller (the `lang_matrix` harness sinks and the `input_str` closures) is
+  updated in the same PR; there is no parallel `Value::Bytes`.
+
+Questions 1, 5, 6, 7 and 8 stay open and use the proposed answers unless the
+owner says otherwise.
+
+### Open questions
+
+1. **The ceiling's form and value.** A module field `str_max_bytes` (proposed;
+   it makes the trap testable and lets `FrontendBudgets` lower it), a fixed
+   constant, or one setting per backend config? Is 2³⁰ − 64 the right maximum,
+   given the CLR's 0x3FFFFFDF-char limit?
+2. **The trap kind past the ceiling.** Reuse `Trap.Overflow` ("the result does
+   not fit its type", proposed), or add `Trap.Limit`? A new kind would take the
+   next free id, so it must be agreed with LANG85 §11.2's proposed `Trap.Type`.
+3. **JVM and CLR representation.** One char per byte in the host `String`
+   (proposed: small diff, all existing lowerings kept, twice the memory on the
+   CLR), or `byte[]` / `uint8[]` (exact, but rewrites every string lowering and
+   BASIC's arrays on both backends)?
+4. **Byte literals.** `Operand::Str` is a Rust `String`, so a literal can carry
+   only valid UTF-8. Perl's `"\xff"` (no `use utf8`) is the byte `FF`, and
+   Python `bytes` literals will need any byte. Add `Operand::Bytes`, or keep
+   UTF-8 literals and build other bytes with `str_from_byte` once it is
+   registered? Until then, Perl 4d refuses `\x{80}` and above.
+5. **The byte builder.** Register `str_builder_*` with the first frontend
+   whose loops build strings (proposed), or earlier, so that the string-building
+   float layouts are not concatenation chains?
+6. **BEAM binaries.** Switch in PR5e (proposed), or keep byte lists, whose
+   O(n) `str_index` makes every character-count helper quadratic?
+7. **The string tag.** Adopt tag `100` for string handles as the answer to
+   LANG85 §11.2 question 2, for #18428 to implement after PR5, or leave it
+   open?
+8. **Permissive native metadata helpers.** Should `__twig_str_len` / `_eq` /
+   `_cmp` keep treating a null or corrupt handle as `""` (wrong but safe), or
+   trap as `__twig_str_index` does? Validated IR never produces one.
+9. **The vm-core API.** `Value::Str(Rc<[u8]>)` changes a public variant that
+   embedders match on (the `lang_matrix` harness sinks, `input_str`
+   closures). Accept the break, or add a `Value::Bytes` variant beside it and
+   retire `Str` later?
 
 ## PR6a — shortest round-trip float output
 
@@ -1127,7 +1839,7 @@ With helpers, a new language's float output changes no backend at all.
 | --- | --- | --- | --- |
 | `write_f64_py` | `op_registry.rs` (PR6a, Builtin); lowered by all nine backends: `vm_core::float_format::python_repr`, jit-core `CALL_BUILTIN_F64`, `twig_runtime.c` `__twig_write_f64_py`, iir-to-llvm / iir-to-wasm `lang83_f64.rs` / iir-to-jvm-class-file / iir-to-cil-bytecode / iir-to-beam `__iir_write_f64(x, layout)` | python-iir-compiler (release path) | **Language-specific** (Python `repr` layout). Replaced by `f64_class` + `f64_digits` + `f64_exp10` and a compiler-emitted helper (below). *Removed in PR7e* (registry, all nine backends, vm-core's default builtins, the harness sinks). |
 | `write_f64_js` | same, layout 1 | javascript-iir-compiler 0.6 | **Language-specific** (`Number::toString` layout). Same replacement. *Removed in PR7e.* |
-| `write_f64_rb`, `f64_to_str_py` `_js` `_rb` `_pl` | vocabulary table, `Later` | none | **Language-specific by design.** Never registered. Ruby `Float#to_s` uses the same three ops. Perl `%.15g` and Python 2 / 3.0a1 `%.12g` use `f64_digits_prec` (below, `Later`). String-producing formatting becomes a helper that appends to a runtime string once a neutral byte-append string op exists (PR5 family). |
+| `write_f64_rb`, `f64_to_str_py` `_js` `_rb` `_pl` | vocabulary table, `Later` | none | **Language-specific by design.** Never registered. Ruby `Float#to_s` uses the same three ops. Perl `%.15g` and Python 2 / 3.0a1 `%.12g` use `f64_digits_prec` (below, `Later`). String-producing formatting becomes a helper that builds a runtime string from `i64_to_str`, `str_slice` and `str_concat` (see "PR5 — runtime strings"); a byte-append builder stays `Later`. |
 | `Trap.ReferenceError` (id 7) | `exception_kind.rs`, `twig_runtime.c` kind table, this spec | javascript-iir-compiler | **Language-named.** The condition, reading an unbound name, is neutral (Python `NameError`, a Lisp unbound variable). Renamed `Trap.Unbound`, keeping **id 7**, in PR7d. *Landed.* |
 | `LANGUAGE_TRAP_KINDS` (empty) | `exception_kind.rs`, "Trap semantics" above, LANG84 C7.4 | none | **A language-specific mechanism** (`Ruby.ZeroDivisionError`). Retired in PR7d. A compiler maps a language's error onto a neutral kind. A catchable language exception is a value the frontend builds once AOT00 T2 exceptions land; it is never an IIR trap kind. *Landed:* the table, `LANGUAGE_TRAP_KIND_ID_BASE` and `is_registered_trap_kind` are gone. |
 | `py_float_div`, `py_name_error`, `py_print_float`, `py_print_empty`, `py_print_two_floats`, `py_print_three_floats` | `python-iir-compiler/src/lib.rs`, registered on the VM only by the LANG79 pilot's `compile_source` | the LANG79 pilot path | **Language-specific**, unregistered, VM only. Retired in PR7g: the pilot entry points move onto the release path (`f64_div` with a `b == 0` check that traps `Trap.DivZero`; `trap Trap.Unbound`; the PR7b print helper). |
@@ -1681,6 +2393,15 @@ the frontends.
   harnesses register none for these; `jit_lisp`'s McCarthy embedding does,
   and it is not the JIT column. vm-core's `every_standard_op_is_executed`
   pins that `Dynamic` is the one family the VM refuses.
+  *Update (#18470):* the VM now lowers the five primitives that read or make
+  a value's kind — `dyn_tag`, `dyn_is_nil`, `dyn_is_pair`, `dyn_nil`,
+  `dyn_symbol` — as default builtins over its own `Value` kinds (nil is
+  `Null`, a symbol the new `Value::Symbol`, `dyn_symbol` takes the name and
+  interns it), and still refuses `dyn_box_int`, `dyn_unbox_int` and
+  `dyn_pair_new` / `_first` / `_rest`, because its cells are built with
+  `alloc` / `field_*`. `the_vm_lowers_exactly_five_dynamic_primitives` pins
+  the split; `op_conformance`'s `dyn_symbol` case now runs on the VM. The JIT
+  column still refuses all ten.
 - *Nothing a frontend emits changed.* Twig, McCarthy Lisp and the CAS
   frontends still emit `cons` / `car` / `null?` …, which pass
   `check_module_for` ungated and are renamed to the registered names by
@@ -1843,7 +2564,7 @@ PRs rather than landed as one.
 | --- | --- | --- |
 | `lang-aot` LLVM, `twig-aot` native (x86-64 / AArch64), `jit_lisp` | `cons` `car` `cdr` `pair?` `null?` `equal?` `not` `+` … via `lower_heap_builtins_runtime`, `lower_dynamic_arith`, `lower_dyn_repr` | tagged word, `dynval_runtime.c` |
 | `lang-aot` WASM / JVM / CLR / BEAM | the same names via `lower_heap_builtins` (`alloc` / `field_*` / `is_null`), `lower_dyn_repr_structural` (`box` → `i31ref` / object); `pair?`, `not`, `equal?` reach the backend, which lowers them itself (`iir-to-wasm` `lower.rs`, `iir-to-jvm-class-file` `lower.rs`, `iir-to-cil-bytecode` `il_text.rs`, `iir-to-beam`) | structural: GC struct / object / Erlang term; booleans are machine `i32`, nil is a null reference, a symbol is an interned `i31` indistinguishable from an integer |
-| `lang_matrix` VM and JIT columns | `lower_heap_builtins` + `intern_symbols_structural` in the harness | structural (`vm-core` heap cells) |
+| `lang_matrix` VM and JIT columns | `lower_heap_builtins` in the harness, then (#18470, Twig modules) `vm_lisp::lower_lisp_for_vm`, which turns `null?` / `pair?` / `not` / `number?` / `symbol?` / `boolean?` / `list?`, a branch's truthiness and the dynamic division names into IIR over `dyn_tag` / `dyn_is_nil` / `dyn_is_pair` / `dyn_nil` / `dyn_symbol`; `intern_symbols_structural` for other languages | structural (`vm-core` heap cells); nil, booleans and symbols are kinds of their own |
 | `twig-vm` | `call_builtin "+" / "cons" / …` resolved by `dynval-runtime`'s `LispyBinding` (about 50 names, the TW00 / LANG47 / LANG52 surface) | `LispyValue` |
 | `mccarthy-lisp-vm`, `macsyma-vm`, `maple-vm`, `axiom-vm`, `derive-vm`, `reduce-vm`, `wolfram-vm` (maxima has no VM of its own) | their own `resolve_builtin` tables over the source names (`+` → `dynval_runtime::builtins::add`, `cons`, …) | `LispyValue` |
 
@@ -1892,6 +2613,15 @@ PRs rather than landed as one.
 - **PR7f-3b** — `vm-core` lowers the primitives (the VM and JIT columns
   stop needing the harness's structural pass), and `twig-vm` and the seven
   `*-vm` interpreters accept the registry names beside the source names.
+  *Partly landed (#18470):* `vm-core` lowers the five kind primitives, and
+  the VM column's Twig rules are written over them by
+  `iir-builtin-lowering::vm_lisp` (truthiness as `(dyn_tag c | 2) ≠ 3`; `not`,
+  the type predicates and `list?` inline), so no Lisp rule is a VM builtin.
+  The pair primitives, the structural pass's removal and the other
+  interpreters remain. `vm-core` still registers the source names `+` `-`
+  `*` `<` `<=` `>` `>=` `=` `equal?` `pair?` from before; the Twig VM path no
+  longer calls `pair?` (it calls `dyn_is_pair`), and removing the rest is
+  this step's job.
 - **PR7f-3c** — Twig, McCarthy Lisp and the seven CAS compilers call the
   translation library (`lower_heap_builtins_runtime`'s renames,
   `lower_dynamic_arith`, the boxing decision and `lisp_semantics`) before

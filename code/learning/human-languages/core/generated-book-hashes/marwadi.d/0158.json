@@ -1,0 +1,14 @@
+{
+  "language": "marwadi",
+  "chapter": 158,
+  "sourceHash": "fnv1a64:46d56b658da1e8b5",
+  "lessonIds": [
+    "MW-C158-polar",
+    "MW-C158-answer",
+    "MW-C158-kad",
+    "MW-C158-olakhno",
+    "MW-W48-o",
+    "MW-R158-yes-or-no"
+  ],
+  "tex": "marwadi/book/chapters/ch158-yes-or-no.tex"
+}

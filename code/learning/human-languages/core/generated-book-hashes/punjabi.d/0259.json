@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 259,
+  "sourceHash": "fnv1a64:36bd326aeffe0f99",
+  "lessonIds": [
+    "PA-C259-nambar",
+    "PA-C259-ghanti",
+    "PA-C259-vajjna",
+    "PA-C259-avaz",
+    "PA-C259-milauna",
+    "PA-R259-review-253-259"
+  ],
+  "tex": "punjabi/book/chapters/ch259-when-the-phone-rings.tex"
+}

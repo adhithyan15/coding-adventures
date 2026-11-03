@@ -1,0 +1,9 @@
+[package]
+name = "tls13-cipher-suite-offer"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded TLS 1.3 client cipher-suite offer policy"
+license = "MIT"
+
+[dependencies]
+tls13-cipher-suite-policy = { path = "../tls13-cipher-suite-policy" }

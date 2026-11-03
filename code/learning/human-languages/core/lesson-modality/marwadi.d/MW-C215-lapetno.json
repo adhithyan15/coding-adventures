@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C215-lapetno",
+    "language": "marwadi",
+    "chapter": 215,
+    "sequence": 14230,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a115182f882ae1e"
+  },
+  "findings": []
+}

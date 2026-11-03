@@ -1,9 +1,13 @@
 [package]
 name = "constraint-engine"
-version = "0.1.0"
+version = "0.4.0"
 edition = "2021"
-description = "LANG24 PR 24-C — pluggable solver tactics (SAT CDCL + LIA Cooper) for the generic Constraint-VM (consumed by constraint-vm and future tactic extensions)"
+description = "LANG24 PR 24-C — pluggable solver tactics for the generic Constraint-VM: SAT (CDCL, via the cdcl-sat crate), LIA (Cooper) and QF_BV (bit-blasting via bit-blaster, UNSAT certified by drat-check). Consumed by constraint-vm and future tactic extensions."
 
 [dependencies]
 constraint-core = { path = "../constraint-core" }
 constraint-instructions = { path = "../constraint-instructions" }
+cdcl-sat = { path = "../cdcl-sat" }
+bit-blaster = { path = "../bit-blaster" }
+# The trusted kernel: every QF_BV UNSAT is certified before it is reported.
+drat-check = { path = "../drat-check" }

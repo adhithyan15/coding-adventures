@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-284-TICKETS",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ZH-EXT-284-TICKETS"
+  ],
+  "after": []
+}

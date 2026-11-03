@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C501-guanjun",
+    "language": "chinese",
+    "chapter": 501,
+    "sequence": 37780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f41f13e926c9e972"
+  },
+  "findings": []
+}

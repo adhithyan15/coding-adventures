@@ -23,6 +23,9 @@ public enum BuildTool {
         } catch let error as MetadataEncodingError {
             FileHandle.standardError.write(Data((error.localizedDescription + "\n").utf8))
             return 2
+        } catch let error as DependencySelfEdgeError {
+            FileHandle.standardError.write(Data((error.localizedDescription + "\n").utf8))
+            return 2
         } catch let error as DuplicatePackageIdentityError {
             FileHandle.standardError.write(Data((error.localizedDescription + "\n").utf8))
             return 2

@@ -45,12 +45,14 @@ static COUNTER: AtomicU32 = AtomicU32::new(0);
 fn run(module: &Module) -> Option<String> {
     let cc = find_cc()?;
     let artifact = semantic_ir_to_c::compile(module).expect("C backend compile (no panic)");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+    let dir = scratch.path();
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
     let stem = format!("sirc_flt_{}_{}", std::process::id(), n);
     let cpath: PathBuf = dir.join(format!("{stem}.c"));
     let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-    std::fs::File::create(&cpath)
+    let _cleanup = RemoveOnDrop([cpath.clone(), exe.clone()]);
+    sir_test_scratch::create_new(&cpath)
         .and_then(|mut f| f.write_all(artifact.source.as_bytes()))
         .expect("write .c");
     let out = Command::new(&cc)
@@ -220,5 +222,19 @@ fn float_equality_is_value_based() {
     ])) {
         Some(out) => assert_eq!(out, "#t\n#t\n#f\n"),
         None => eprintln!("skip: no cc"),
+    }
+}
+
+/// Deletes a run's `.c` file and executable when the helper returns or
+/// panics.  Each call names its files uniquely (see `unique_suffix` or the
+/// counter above), so without this they would pile up in the temp directory,
+/// one pair per test run.
+struct RemoveOnDrop([std::path::PathBuf; 2]);
+
+impl Drop for RemoveOnDrop {
+    fn drop(&mut self) {
+        for path in &self.0 {
+            let _ = std::fs::remove_file(path);
+        }
     }
 }

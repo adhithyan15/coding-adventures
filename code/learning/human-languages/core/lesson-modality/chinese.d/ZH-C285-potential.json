@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C285-potential",
+    "language": "chinese",
+    "chapter": 285,
+    "sequence": 21600,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f01bfd424e4ba5b6"
+  },
+  "findings": []
+}

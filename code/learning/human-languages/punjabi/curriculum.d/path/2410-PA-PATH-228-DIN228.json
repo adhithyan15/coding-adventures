@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-228-DIN228",
+  "spine_node": "SPINE-SAY-WHAT-I-DO",
+  "before": [],
+  "inline": [
+    "PA-EXT-228-DIN228"
+  ],
+  "after": []
+}

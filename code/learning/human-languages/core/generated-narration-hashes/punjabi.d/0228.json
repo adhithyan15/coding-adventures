@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 228,
+  "sourceHash": "fnv1a64:7bf2af3050dfaf42",
+  "lessonIds": [
+    "PA-C228-nichorna",
+    "PA-C228-sukauna",
+    "PA-C228-tangna",
+    "PA-C228-rassi",
+    "PA-C228-punjhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch228.txt",
+  "json": "punjabi/narration/ch228.json",
+  "textHash": "fnv1a64:d7b09165b8992e6b",
+  "jsonHash": "fnv1a64:3bc825286fa9f9bc",
+  "findings": []
+}

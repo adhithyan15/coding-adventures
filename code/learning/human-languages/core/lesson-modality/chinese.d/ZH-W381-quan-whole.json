@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W381-quan-whole",
+    "language": "chinese",
+    "chapter": 381,
+    "sequence": 29375,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5d57631fc2c66083",
+    "detachableSegments": [
+      "Script — a wide roof, then three bars and a vertical"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 391,
+  "sourceHash": "fnv1a64:606e05a4c03dad43",
+  "lessonIds": [
+    "ZH-C391-richeng",
+    "ZH-C391-linshi",
+    "ZH-C391-laideji",
+    "ZH-C391-ganshang",
+    "ZH-C391-daoshihou",
+    "ZH-R391-review-386-391"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch391.txt",
+  "json": "chinese/narration/ch391.json",
+  "textHash": "fnv1a64:bbf307a640ab8858",
+  "jsonHash": "fnv1a64:7eb0f1110fc0fe7b",
+  "findings": []
+}

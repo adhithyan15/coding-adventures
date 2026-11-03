@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 320,
+  "sourceHash": "fnv1a64:e825ee94b81d860f",
+  "lessonIds": [
+    "PA-C320-daktar",
+    "PA-C320-mariz",
+    "PA-C320-ilaj",
+    "PA-C320-nabaz",
+    "PA-C320-tika"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch320.txt",
+  "json": "punjabi/narration/ch320.json",
+  "textHash": "fnv1a64:f69c1eba9f9a51d3",
+  "jsonHash": "fnv1a64:257d59bf1c8c1f1d",
+  "findings": []
+}

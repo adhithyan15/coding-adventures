@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C529-yunqi",
+  "pathSegment": "ZH-PATH-529-LUCK529",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-529-LUCK529",
+      "order": 1
+    }
+  ]
+}

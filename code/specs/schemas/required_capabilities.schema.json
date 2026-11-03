@@ -18,7 +18,7 @@
     },
     "package": {
       "type": "string",
-      "pattern": "^(csharp|dart|elixir|fsharp|go|haskell|java|kotlin|lua|ocaml|perl|python|ruby|rust|starlark|swift|typescript|wasm)/[a-z0-9][a-z0-9_-]*$",
+      "pattern": "^(c|cpp|csharp|dart|elixir|fsharp|go|haskell|java|kotlin|lua|ocaml|perl|python|ruby|rust|starlark|swift|typescript|wasm)/[a-z0-9][a-z0-9_-]*$",
       "description": "Qualified package name matching the build tool's naming: {language}/{dirname}. Examples: python/logic-gates, ruby/lexer, go/cache, rust/json-value, elixir/json_value, lua/grammar_tools."
     },
     "capabilities": {
@@ -49,7 +49,7 @@
       "properties": {
         "category": {
           "type": "string",
-          "enum": ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout"],
+          "enum": ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout", "rand", "thread", "ui"],
           "description": "The kind of OS resource being accessed."
         },
         "action": {
@@ -60,13 +60,15 @@
             "connect", "listen", "dns",
             "exec", "fork", "signal",
             "call", "load",
-            "sleep"
+            "sleep",
+            "spawn", "message",
+            "event"
           ]
         },
         "target": {
           "type": "string",
           "minLength": 1,
-          "description": "The specific resource being accessed. Format depends on category: fs uses relative/absolute paths with globs (e.g., '../../grammars/*.tokens'), net uses host:port (e.g., 'api.example.com:443'), proc uses command names (e.g., 'git'), env uses variable names (e.g., 'HOME'), ffi uses library names (e.g., 'libssl'). Use '*' for broad access (discouraged)."
+          "description": "The specific resource being accessed. Format depends on category: fs uses relative/absolute paths with globs (e.g., '../../grammars/*.tokens'), net uses host:port (e.g., 'api.example.com:443'), proc uses command names (e.g., 'git'), env uses variable names (e.g., 'HOME'), ffi uses library names (e.g., 'libssl'), thread uses the worker, thread or actor role being spawned or messaged (e.g., 'decode-pool'), ui uses the view or DOM subtree being read, written or listened to (e.g., '#editor'). time, stdin, stdout and rand are not scoped and use '*'. Use '*' for broad access in scoped categories (discouraged)."
         },
         "justification": {
           "type": "string",
@@ -123,6 +125,24 @@
               "properties": {
                 "category": { "const": "stdout" },
                 "action": { "const": "write" }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "rand" },
+                "action": { "const": "read" }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "thread" },
+                "action": { "enum": ["spawn", "message"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "ui" },
+                "action": { "enum": ["read", "write", "event"] }
               }
             }
           ]

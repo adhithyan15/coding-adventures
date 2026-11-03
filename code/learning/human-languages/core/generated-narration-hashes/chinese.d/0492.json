@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:7b3eb79ab05a59e4",
+  "lessonIds": [
+    "ZH-C492-yuwen",
+    "ZH-C492-shuxue",
+    "ZH-C492-dili",
+    "ZH-C492-yingyu",
+    "ZH-C492-zhuanye"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch492.txt",
+  "json": "chinese/narration/ch492.json",
+  "textHash": "fnv1a64:c1cc3269381012d8",
+  "jsonHash": "fnv1a64:2aadc6177cafbccd",
+  "findings": []
+}

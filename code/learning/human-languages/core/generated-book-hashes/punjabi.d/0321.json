@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 321,
+  "sourceHash": "fnv1a64:3303f7783c104ad8",
+  "lessonIds": [
+    "PA-C321-zukam",
+    "PA-C321-khangh",
+    "PA-C321-chhikk",
+    "PA-C321-sah",
+    "PA-C321-nigalna"
+  ],
+  "tex": "punjabi/book/chapters/ch321-a-cough-and-a-cold.tex"
+}

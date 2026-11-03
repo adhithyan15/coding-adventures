@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 355,
+  "sourceHash": "fnv1a64:97a6f9da8c8d0ce7",
+  "lessonIds": [
+    "ZH-C355-xiejue",
+    "ZH-C355-haoyi",
+    "ZH-C355-ken",
+    "ZH-C355-fouren",
+    "ZH-C355-dangmian"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch355.txt",
+  "json": "chinese/narration/ch355.json",
+  "textHash": "fnv1a64:314667d0e11dc28a",
+  "jsonHash": "fnv1a64:2c04fbb060e1d0ac",
+  "findings": []
+}

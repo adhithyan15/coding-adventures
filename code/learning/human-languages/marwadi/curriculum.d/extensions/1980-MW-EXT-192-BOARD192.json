@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-192-BOARD192",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can understand a warning by the road.",
+  "prerequisites": []
+}

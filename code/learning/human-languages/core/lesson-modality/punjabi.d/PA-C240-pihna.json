@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C240-pihna",
+    "language": "punjabi",
+    "chapter": 240,
+    "sequence": 13780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f7a7ac1f47313021"
+  },
+  "findings": []
+}

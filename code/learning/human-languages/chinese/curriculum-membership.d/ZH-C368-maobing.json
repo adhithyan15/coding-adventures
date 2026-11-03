@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C368-maobing",
+  "pathSegment": "ZH-PATH-368-KEEPGOING368",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-368-KEEPGOING368",
+      "order": 1
+    }
+  ]
+}

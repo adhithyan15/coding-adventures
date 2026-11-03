@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C278-laddna",
+    "language": "punjabi",
+    "chapter": 278,
+    "sequence": 16290,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4e7c4f01c0098a6c"
+  },
+  "findings": []
+}

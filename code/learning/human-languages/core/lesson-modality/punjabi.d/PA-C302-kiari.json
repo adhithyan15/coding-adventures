@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C302-kiari",
+    "language": "punjabi",
+    "chapter": 302,
+    "sequence": 18080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c0fe8a85d9764b21"
+  },
+  "findings": []
+}

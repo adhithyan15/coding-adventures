@@ -1,0 +1,19 @@
+{
+  "chapter": 307,
+  "title": "The Buffalo",
+  "label": "ch:pa-a2-the-buffalo",
+  "canDo": "I can talk about the buffalo and its milk.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "PA-C307-charna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 307: I can talk about the buffalo and its milk.",
+    "assesses": [
+      "PA-LEX-C307-BUFF307-03",
+      "PA-LEX-C307-BUFF307-04",
+      "PA-LEX-C307-BUFF307-05"
+    ]
+  }
+}

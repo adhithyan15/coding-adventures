@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C402-huancheng",
+  "pathSegment": "ZH-PATH-402-STATION402",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-402-STATION402",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 219,
+  "title": "I Drank the Tea",
+  "label": "ch:pa-a2-pita",
+  "canDo": "I can say what I drank, ate and took out, with a past form that agrees with the thing.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C219-payoff",
+    "kind": "production",
+    "summary": "Say what you drank and ate with pita / piti and khadha / khadhi, use kaddhna 'to take out', and recognise ddha.",
+    "assesses": [
+      "PA-GRAMMAR-PAST-OBJECT-219",
+      "PA-GRAMMAR-PAST-KHADHA-219",
+      "PA-LEX-KADDHNA-219",
+      "PA-SCRIPT-RECOG-DDHA-219"
+    ]
+  }
+}

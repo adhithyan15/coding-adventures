@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 461,
+  "title": "Love and Kindness",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:118f7567d4b2e1af",
+  "lessons": [
+    {
+      "id": "ZH-C461-peifu",
+      "sequence": 35150,
+      "title": "pèifú — to think highly of; to hold in high regard",
+      "headword": "pèifú",
+      "romanization": "pèifú",
+      "gloss": "to think highly of; to hold in high regard",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8699c9a341734633",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to sympathize with, then the Mandarin for to envy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pèifú",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pèifú — \"to think highly of; to hold in high regard\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zuì pèifú wǒ de lǎoshī — The person I admire most is my teacher."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pèifú is built from pèi 'to wear at the belt' and fú 'to serve', both inherited from Middle Chinese, bwojH and bjuwk (Guangyun, in Baxter's transcription), which glosses the first as jade worn at the belt and the second 'to serve' and 'clothes'. The sense 'to admire' is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pèifú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pèifú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pèifú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pèifú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zuì pèifú wǒ de lǎoshī — The person I admire most is my teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zuì pèifú wǒ de lǎoshī* — The person I admire most is my teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to sympathize with, then the Mandarin for to envy, then say pèifú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to sympathize with, then the Mandarin for to envy, then say *pèifú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pèifú mean? (\"To think highly of; to hold in high regard\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C461-aixin",
+      "sequence": 35160,
+      "title": "爱心 (àixīn) — compassion; love and care for others",
+      "headword": "爱心",
+      "romanization": "àixīn",
+      "gloss": "compassion; love and care for others",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aab7e5e3c12e87ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to envy, then the Mandarin for to hold in high regard."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 爱心",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "爱心 — àixīn — \"compassion; love and care for others\"."
+            },
+            {
+              "kind": "speech",
+              "text": "nàge lùrén hěn yǒu àixīn wǒ hěn gǎnjī tā — That passer-by was so kind, and I'm very grateful to him."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 爱 (ài) — ten strokes in three pieces: at the top a short stroke falling to the left, two dots and a stroke falling to the left, like a hand reaching down; a cover of two strokes, a short stroke down and a bar that turns down with a hook; and under it a bar, a long stroke falling to the left, and 又 yòu. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "爱心 (àixīn) is built from ài 'to love' and 心 'heart', both inherited from Middle Chinese, 'ojH and sim (Guangyun, in Baxter's transcription), which glosses the first 'to cherish'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "àixīn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *àixīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "àixīn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *àixīn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nàge lùrén hěn yǒu àixīn wǒ hěn gǎnjī tā — That passer-by was so kind, and I'm very grateful to him.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nàge lùrén hěn yǒu àixīn wǒ hěn gǎnjī tā* — That passer-by was so kind, and I'm very grateful to him.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to envy, then the Mandarin for to hold in high regard, then say àixīn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to envy, then the Mandarin for to hold in high regard, then say *àixīn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 爱心 (àixīn) mean? (\"Compassion; love and care for others\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W461-ai-love",
+      "sequence": 35165,
+      "title": "爱 (ài) — a hand on top, a cover, and 又 under them",
+      "headword": "爱",
+      "romanization": "ài",
+      "gloss": "爱 — a hand reaching down, a cover, then a bar, a falling stroke and 又",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:483ea45f9ac9c5ab",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — a hand on top, a cover, and 又 under them",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — a hand on top, a cover, and 又 under them and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say àixīn — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *àixīn* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "又 心."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — yòu, xīn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *yòu*, *xīn*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — a hand on top, a cover, and 又 under them",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "爱 (ài)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, top to bottom. Count the pieces, not the strokes."
+            },
+            {
+              "kind": "speech",
+              "text": "The top, four strokes. A short stroke from the right falling to the left, a dot, a second dot, then a short stroke falling to the left on the right: a hand reaching down."
+            },
+            {
+              "kind": "speech",
+              "text": "The cover, two strokes. A short stroke down on the left, then a bar that runs right, turns down and hooks."
+            },
+            {
+              "kind": "speech",
+              "text": "The bottom, four strokes. A bar across, a long stroke falling to the left from above the bar, then 又: a bar that turns into a stroke falling to the left, and a long stroke falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 2 + 4 = ten."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "爱 (ài), all ten, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 爱, all ten, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 爱 (ài) have? (Three: four strokes, two and four.) Which written character ends it? (又.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 爱 (ài), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C461-aiqing",
+      "sequence": 35170,
+      "title": "爱情 (àiqíng) — romantic love; love between a couple",
+      "headword": "爱情",
+      "romanization": "àiqíng",
+      "gloss": "romantic love; love between a couple",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b4c51c47b28aed11",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to hold in high regard, then the Mandarin for love and care for others."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 爱情",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "爱情 — àiqíng — \"romantic love; love between a couple\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè shì wǒ kàn guo de zuì hǎo de àiqíng diànyǐng — This is the best love film I've ever seen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "爱情 (àiqíng) is built from 爱 (ài) 'to love' and 情 'feeling', both inherited from Middle Chinese, 'ojH and dzjeng (Guangyun, in Baxter's transcription), which glosses the first 'to cherish'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "àiqíng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *àiqíng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "àiqíng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *àiqíng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè shì wǒ kàn guo de zuì hǎo de àiqíng diànyǐng — This is the best love film I've ever seen.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè shì wǒ kàn guo de zuì hǎo de àiqíng diànyǐng* — This is the best love film I've ever seen.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to hold in high regard, then the Mandarin for love and care for others, then say àiqíng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to hold in high regard, then the Mandarin for love and care for others, then say *àiqíng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 爱情 (àiqíng) mean? (\"Romantic love; love between a couple\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C461-xinai",
+      "sequence": 35180,
+      "title": "心爱 (xīn'ài) — beloved; treasured",
+      "headword": "心爱",
+      "romanization": "xīn'ài",
+      "gloss": "beloved; treasured",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f67127a640cb6ae4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for love and care for others, then the Mandarin for love between a couple."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 心爱",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "心爱 — xīn'ài — \"beloved; treasured\"."
+            },
+            {
+              "kind": "speech",
+              "text": "这是我最心爱的书 zhè shì wǒ zuì xīn'ài de shū — This is my most treasured book."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "心爱 (xīn'ài) is built from 心 'heart' and 爱 'to love', both inherited from Middle Chinese, sim and 'ojH (Guangyun, in Baxter's transcription), which glosses the second 'to cherish'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīn'ài",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīn'ài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "xīn'ài, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *xīn'ài*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè shì wǒ zuì xīn'ài de shū — This is my most treasured book.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè shì wǒ zuì xīn'ài de shū* — This is my most treasured book.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for love and care for others, then the Mandarin for love between a couple, then say xīn'ài again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for love and care for others, then the Mandarin for love between a couple, then say *xīn'ài* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 心爱 (xīn'ài) mean? (\"Beloved; treasured\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C461-panwang",
+      "sequence": 35190,
+      "title": "pànwàng — to look forward to; to long for",
+      "headword": "pànwàng",
+      "romanization": "pànwàng",
+      "gloss": "to look forward to; to long for",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4c947f37b1e17430",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for love between a couple, then the Mandarin for treasured."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: pànwàng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pànwàng — \"to look forward to; to long for\"."
+            },
+            {
+              "kind": "speech",
+              "text": "háizi dōu pànwàng guònián — All the children are looking forward to the new year."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pànwàng is built from pàn and wàng 'to look toward', both inherited from Middle Chinese, pheanH and mjangH (Guangyun, in Baxter's transcription). The dictionary glosses the first as beautiful eyes and the second 'to look toward', after an older book a person far away hoping to come home; the sense 'to look forward to' for the first is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pànwàng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pànwàng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pànwàng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pànwàng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "háizi dōu pànwàng guònián — All the children are looking forward to the new year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *háizi dōu pànwàng guònián* — All the children are looking forward to the new year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for love between a couple, then the Mandarin for treasured, then say pànwàng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for love between a couple, then the Mandarin for treasured, then say *pànwàng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does pànwàng mean? (\"To look forward to; to long for\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

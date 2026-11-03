@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:5db3af8227346465",
+  "lessonIds": [
+    "MW-C176-dhakno",
+    "MW-C176-badhno",
+    "MW-C176-gath",
+    "MW-C176-sakal",
+    "MW-C176-tagno"
+  ],
+  "tex": "marwadi/book/chapters/ch176-covering-tying-and-hanging.tex"
+}

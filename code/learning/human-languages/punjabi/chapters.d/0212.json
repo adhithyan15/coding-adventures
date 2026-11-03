@@ -1,0 +1,18 @@
+{
+  "chapter": 212,
+  "title": "I Don't Drink Tea",
+  "label": "ch:pa-a2-negate",
+  "canDo": "I can say that I do not do something, and that something is not so, with nahin before the verb.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "PA-C212-payoff",
+    "kind": "production",
+    "summary": "Say what you do not eat, drink or do, and that a place is not open, with nahin before the verb.",
+    "assesses": [
+      "PA-GRAMMAR-NEG-HABITUAL-212",
+      "PA-GRAMMAR-NEG-COPULA-212"
+    ]
+  }
+}

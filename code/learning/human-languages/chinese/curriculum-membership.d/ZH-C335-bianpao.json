@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C335-bianpao",
+  "pathSegment": "ZH-PATH-335-LANTERN335",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-335-LANTERN335",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C359-mihnat",
+  "pathSegment": "PA-PATH-359-STUDY359",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-359-STUDY359",
+      "order": 2
+    }
+  ]
+}

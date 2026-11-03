@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 181,
+  "sourceHash": "fnv1a64:2811213ab7df36ec",
+  "lessonIds": [
+    "MW-C181-jamavno",
+    "MW-C181-bilovno",
+    "MW-C181-mathani",
+    "MW-C181-galno",
+    "MW-C181-khir"
+  ],
+  "tex": "marwadi/book/chapters/ch181-curd-and-butter.tex"
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 227,
+  "sourceHash": "fnv1a64:5c04de83d7737ba6",
+  "lessonIds": [
+    "PA-C227-aukha",
+    "PA-C227-malna",
+    "PA-C227-jhagg",
+    "PA-C227-mail",
+    "PA-C227-tuti"
+  ],
+  "tex": "punjabi/book/chapters/ch227-soap-and-water.tex"
+}

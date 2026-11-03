@@ -76,7 +76,7 @@ class TestLCG < Minitest::Test
     200.times do
       f = g.next_float
       assert f >= 0.0, "float #{f} < 0"
-      assert f < 1.0,  "float #{f} >= 1"
+      assert f < 1.0, "float #{f} >= 1"
     end
   end
 
@@ -95,7 +95,7 @@ class TestLCG < Minitest::Test
   # A wider range must cover all possible values eventually.
   def test_lcg_next_int_in_range_all_values_covered
     g = CodingAdventures::Rng::LCG.new(99)
-    seen = (1..10).each_with_object(Hash.new(0)) do |_, acc|
+    (1..10).each_with_object(Hash.new(0)) do |_, acc|
       acc[g.next_int_in_range(1, 10)] += 1
     end
     # After 1000 draws the chi-squared test would be overkill; just verify the
@@ -131,7 +131,7 @@ class TestXorshift64 < Minitest::Test
   # Seed 0 must be silently replaced with 1 (fixed-point protection).
   def test_xorshift64_seed_zero_replaced_with_one
     g_zero = CodingAdventures::Rng::Xorshift64.new(0)
-    g_one  = CodingAdventures::Rng::Xorshift64.new(1)
+    g_one = CodingAdventures::Rng::Xorshift64.new(1)
     assert_equal g_one.next_u32, g_zero.next_u32
   end
 

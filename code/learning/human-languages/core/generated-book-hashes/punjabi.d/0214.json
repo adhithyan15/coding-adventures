@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 214,
+  "sourceHash": "fnv1a64:b422c88e00a46683",
+  "lessonIds": [
+    "PA-C214-ki-return",
+    "PA-C214-ki-polar",
+    "PA-C214-polar-review",
+    "PA-C214-answers",
+    "PA-C214-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch214-are-you-a-traveller.tex"
+}

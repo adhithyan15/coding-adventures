@@ -1,0 +1,11 @@
+{
+  "id": "MW-C273-chup",
+  "pathSegment": "MW-PATH-273-CHUP273",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "MW-EXT-273-CHUP273",
+      "order": 0
+    }
+  ]
+}

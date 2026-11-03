@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W349-fa-rule",
+  "pathSegment": "ZH-PATH-349-VIEW349",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-349-VIEW349",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 330,
+  "sourceHash": "fnv1a64:d321fc64d70e5102",
+  "lessonIds": [
+    "PA-C330-bharjai",
+    "PA-C330-jija",
+    "PA-C330-nanan",
+    "PA-C330-darani",
+    "PA-C330-jathani"
+  ],
+  "tex": "punjabi/book/chapters/ch330-brothers-and-sisters-spouses.tex"
+}

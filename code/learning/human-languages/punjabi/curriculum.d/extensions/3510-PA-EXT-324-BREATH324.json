@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-324-BREATH324",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I am out of breath and where it hurts.",
+  "prerequisites": []
+}

@@ -42,9 +42,11 @@
 //!   into a misleading "0 ms".
 
 use semantic_ir::Module;
+use sir_test_scratch::{write_new, Scratch};
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant};
 
 pub use ruby_to_semantic_ir::compile_source;
@@ -192,15 +194,36 @@ fn normalise(s: &str) -> String {
     s.replace("\r\n", "\n").trim_end_matches('\n').to_string()
 }
 
-fn temp_path(name: &str, target: Target, ext: &str) -> PathBuf {
-    let mut p = std::env::temp_dir();
-    p.push(format!(
-        "sir_bench_{}_{}_{}{ext}",
+/// A path in `scratch` -- the measurement's private directory -- for its
+/// source or binary: `sir_bench_<program>_<target>_<pid>_<n><ext>`.
+///
+/// The directory is what keeps other processes out: it is created fresh,
+/// with a random name and mode `0700`, and removed with its contents when
+/// the measurement ends (see [`Scratch`]).  Names in the shared temp
+/// directory, unique only by process id and counter, could be created or
+/// symlinked by anything else on the host before the benchmark wrote them.
+/// The name stays unique within the process all the same -- the same scheme
+/// as `sir-conformance`'s `temp_path` (#18485).
+fn temp_path(scratch: &Scratch, name: &str, target: Target, ext: &str) -> PathBuf {
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    let n = NEXT.fetch_add(1, Ordering::Relaxed);
+    scratch.join(&format!(
+        "sir_bench_{}_{}_{}_{n}{ext}",
         name,
         target.tag(),
         std::process::id()
-    ));
-    p
+    ))
+}
+
+/// A temp file deleted when the guard drops, so every early return of
+/// [`measure`] cleans up (a failed write or compile used to leave the binary
+/// path, and any partial output, behind).
+struct TempFile(PathBuf);
+
+impl Drop for TempFile {
+    fn drop(&mut self) {
+        let _ = fs::remove_file(&self.0);
+    }
 }
 
 /// The `PYTHONPATH` the Python backend's emitted code needs (it imports the
@@ -369,18 +392,24 @@ pub fn measure(bench: &Bench, module: &Module, target: Target) -> Sample {
     };
     let emit = emit_start.elapsed();
 
-    let source_path = temp_path(bench.name, target, &ext);
-    let bin_path = temp_path(bench.name, target, if cfg!(windows) { ".exe" } else { ".bin" });
-    if fs::write(&source_path, &source).is_err() {
+    let scratch = Scratch::new("sir_bench_");
+    let source_file = TempFile(temp_path(&scratch, bench.name, target, &ext));
+    let bin_file = TempFile(temp_path(
+        &scratch,
+        bench.name,
+        target,
+        if cfg!(windows) { ".exe" } else { ".bin" },
+    ));
+    let (source_path, bin_path) = (&source_file.0, &bin_file.0);
+    if write_new(source_path, &source).is_err() {
         return Sample::Failed(format!("could not write temp {ext}"));
     }
 
     // 2. Compile (timed) — only for native targets.
     let compile = if target.is_compiled() {
-        match compile_target(target, &source_path, &bin_path) {
+        match compile_target(target, source_path, bin_path) {
             Ok(d) => Some(d),
             Err(e) => {
-                let _ = fs::remove_file(&source_path);
                 // A missing linker/toolchain is a skip; a real error is a fail.
                 return if e.contains("unavailable") || e.contains("linker") {
                     Sample::Skipped(e)
@@ -396,27 +425,23 @@ pub fn measure(bench: &Bench, module: &Module, target: Target) -> Sample {
     // 3. Warm up (discarded) — pages the binary in and absorbs any first-exec
     //    scan, so it can never be mistaken for the program's speed.
     for _ in 0..bench.warmup {
-        let _ = timed_run(run_command(target, &source_path, &bin_path));
+        let _ = timed_run(run_command(target, source_path, bin_path));
     }
 
     // 4. Timed passes → median.
     let mut runs = Vec::with_capacity(bench.iters as usize);
     let mut stdout = String::new();
     for _ in 0..bench.iters.max(1) {
-        match timed_run(run_command(target, &source_path, &bin_path)) {
+        match timed_run(run_command(target, source_path, bin_path)) {
             Ok((d, out)) => {
                 runs.push(d);
                 stdout = out;
             }
             Err(e) => {
-                let _ = fs::remove_file(&source_path);
-                let _ = fs::remove_file(&bin_path);
                 return Sample::Failed(e);
             }
         }
     }
-    let _ = fs::remove_file(&source_path);
-    let _ = fs::remove_file(&bin_path);
 
     Sample::Ran {
         emit,

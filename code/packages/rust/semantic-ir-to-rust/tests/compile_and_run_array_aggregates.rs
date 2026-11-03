@@ -207,14 +207,15 @@ fn array_aggregates_compile_and_run() {
 
     let artifact = compile(&full_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_array_aggregates_{nonce}.rs"));
     let bin_path = dir.join(format!(
         "sir_array_aggregates_{nonce}{}",
         if cfg!(windows) { ".exe" } else { "" }
     ));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -354,14 +355,15 @@ fn array_more_methods_compile_and_run() {
 
     let artifact = compile(&more_methods_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_array_more_{nonce}.rs"));
     let bin_path = dir.join(format!(
         "sir_array_more_{nonce}{}",
         if cfg!(windows) { ".exe" } else { "" }
     ));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -453,14 +455,15 @@ fn take_drop_values_at_compile_and_run() {
 
     let artifact = compile(&take_drop_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_take_drop_{nonce}.rs"));
     let bin_path = dir.join(format!(
         "sir_take_drop_{nonce}{}",
         if cfg!(windows) { ".exe" } else { "" }
     ));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -559,12 +562,13 @@ fn array_each_slice_each_cons_chunk_while_compile_and_run() {
 
     let artifact = compile(&slice_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_arr_slice_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_arr_slice_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -647,12 +651,13 @@ fn array_slice_when_compile_and_run() {
 
     let artifact = compile(&slice_when_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_arr_slicewhen_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_arr_slicewhen_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -739,12 +744,13 @@ fn array_cycle_compile_and_run() {
 
     let artifact = compile(&cycle_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_arr_cycle_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_arr_cycle_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -791,4 +797,15 @@ fn array_cycle_compile_and_run() {
 
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

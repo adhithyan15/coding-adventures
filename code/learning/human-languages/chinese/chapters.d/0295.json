@@ -1,0 +1,22 @@
+{
+  "chapter": 295,
+  "title": "Starting Over",
+  "label": "ch:zh-starting-over",
+  "canDo": "I can say how something was at first, that it began again, and that it happened that same day.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R295-review-290-295",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 295: I can say how something was at first, that it began again, and that it happened that same day.",
+    "assesses": [
+      "ZH-LEX-C295-AGAIN295-01",
+      "ZH-LEX-C295-AGAIN295-02",
+      "ZH-LEX-C295-AGAIN295-03",
+      "ZH-LEX-C295-AGAIN295-04",
+      "ZH-LEX-C295-AGAIN295-05",
+      "ZH-SCRIPT-XIN-NEW-01"
+    ]
+  }
+}

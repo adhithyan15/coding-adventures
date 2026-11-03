@@ -1,0 +1,21 @@
+{
+  "chapter": 172,
+  "title": "Sweeping and Plastering",
+  "label": "ch:mw-sweeping-and-plastering",
+  "canDo": "I can say how the house is swept and the floor plastered.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "MW-R172-review-166-172",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 172: I can say how the house is swept and the floor plastered.",
+    "assesses": [
+      "MW-LEX-C172-JHADU172-01",
+      "MW-LEX-C172-JHADU172-02",
+      "MW-LEX-C172-JHADU172-03",
+      "MW-LEX-C172-JHADU172-04",
+      "MW-LEX-C172-JHADU172-05"
+    ]
+  }
+}

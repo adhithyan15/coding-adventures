@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 201,
+  "sourceHash": "fnv1a64:7f34423fc9036ea3",
+  "lessonIds": [
+    "MW-C201-kot",
+    "MW-C201-mohallo",
+    "MW-C201-thano",
+    "MW-C201-saray",
+    "MW-C201-ghusno"
+  ],
+  "tex": "marwadi/book/chapters/ch201-around-the-old-town.tex"
+}

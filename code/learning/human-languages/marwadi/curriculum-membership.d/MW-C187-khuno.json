@@ -1,0 +1,11 @@
+{
+  "id": "MW-C187-khuno",
+  "pathSegment": "MW-PATH-187-KOTHO187",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "MW-EXT-187-KOTHO187",
+      "order": 3
+    }
+  ]
+}

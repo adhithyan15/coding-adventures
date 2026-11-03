@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 266,
+  "sourceHash": "fnv1a64:5f49515431b74b73",
+  "lessonIds": [
+    "PA-C266-mahalla",
+    "PA-C266-kasba",
+    "PA-C266-hatti",
+    "PA-C266-dhaba",
+    "PA-C266-imarat",
+    "PA-R266-review-260-266"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch266.txt",
+  "json": "punjabi/narration/ch266.json",
+  "textHash": "fnv1a64:32e18ca8d3df62e4",
+  "jsonHash": "fnv1a64:65b08dc237e21b82",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 528,
+  "title": "By Chance",
+  "label": "ch:zh-by-chance",
+  "canDo": "I can say something happens by chance, that I have no choice, and talk about drawing lots and making bets.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C528-ouran",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 528: I can say something happens by chance, that I have no choice, and talk about drawing lots and making bets.",
+    "assesses": [
+      "ZH-LEX-C528-CHANCE528-03",
+      "ZH-LEX-C528-CHANCE528-04",
+      "ZH-LEX-C528-CHANCE528-05"
+    ]
+  }
+}

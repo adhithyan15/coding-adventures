@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:e26f42b1a5629fcf",
+  "lessonIds": [
+    "PA-C335-sona",
+    "PA-C335-suniar",
+    "PA-C335-loha",
+    "PA-C335-gharna",
+    "PA-C335-misatri"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch335.txt",
+  "json": "punjabi/narration/ch335.json",
+  "textHash": "fnv1a64:4cd3c4e363a05483",
+  "jsonHash": "fnv1a64:7fcf0c890d574c29",
+  "findings": []
+}

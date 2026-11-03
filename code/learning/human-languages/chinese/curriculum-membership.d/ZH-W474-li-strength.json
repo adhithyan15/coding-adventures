@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W474-li-strength",
+  "pathSegment": "ZH-PATH-474-STRENGTH474",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-474-STRENGTH474",
+      "order": 2
+    }
+  ]
+}

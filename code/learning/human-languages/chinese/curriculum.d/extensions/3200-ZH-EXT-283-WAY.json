@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-283-WAY",
+  "stage": "B1",
+  "kind": "required",
+  "category": "function",
+  "canDo": "I can ask the way and follow simple directions.",
+  "prerequisites": []
+}

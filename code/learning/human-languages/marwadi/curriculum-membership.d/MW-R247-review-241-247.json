@@ -1,0 +1,11 @@
+{
+  "id": "MW-R247-review-241-247",
+  "pathSegment": "MW-PATH-247-BYAV247",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "MW-EXT-247-BYAV247",
+      "order": 5
+    }
+  ]
+}

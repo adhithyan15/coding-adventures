@@ -1,0 +1,11 @@
+{
+  "id": "PA-C211-tea-every-day",
+  "pathSegment": "PA-PATH-211-A2-VOWEL-STEM",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "PA-EXT-211-A2-VOWEL-STEM",
+      "order": 5
+    }
+  ]
+}

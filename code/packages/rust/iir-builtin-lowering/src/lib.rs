@@ -101,6 +101,7 @@
 //!     exports: vec![],
 //!     imports: vec![],
 //!     release: None,
+//!     str_max_bytes: None,
 //! };
 //!
 //! let errors = lower_builtins(&mut module);
@@ -127,6 +128,10 @@ pub mod immediates;
 // LANG83 PR7f-2: Lisp's truthiness, `not`, `equal?` and exit-code rules,
 // written as compiler-emitted IIR over the registry's dynamic-value primitives.
 pub mod lisp_semantics;
+// #18470 / #18493: the same Lisp rules (truthiness, `not`, the type
+// predicates, `list?`) for the generic VM, over the dynamic-value primitives
+// vm-core lowers on its own value kinds, plus the dynamic division names.
+pub mod vm_lisp;
 // The rule both helper-adding passes (`list_ops`, `closure_heap`) follow: a
 // function already named like their helper must *be* their helper.
 pub mod helper_names;
@@ -181,6 +186,7 @@ pub use closure::lower_closure_builtins;
 pub use dynamic_arith::lower_dynamic_arith;
 pub use dynamic_arith::lower_box_unbox_to_runtime_calls;
 pub use list_ops::lower_list_ops;
+pub use vm_lisp::lower_lisp_for_vm;
 pub use closure_heap::lower_closures_to_heap;
 pub use helper_names::{HelperNameError, PASS_GENERATED_DYN_HELPERS};
 pub use immediates::materialize_immediate_operands;
@@ -297,6 +303,7 @@ pub fn lower_builtins(module: &mut IIRModule) -> Vec<BuiltinLoweringError> {
 ///     exports: vec![],
 ///     imports: vec![],
 ///     release: None,
+///     str_max_bytes: None,
 /// };
 ///
 /// let (lowered, errors) = lower_builtins_cloned(&original);

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C392-gaiming",
+  "pathSegment": "ZH-PATH-392-NEWPLAN392",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-392-NEWPLAN392",
+      "order": 4
+    }
+  ]
+}

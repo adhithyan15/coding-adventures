@@ -212,7 +212,7 @@
       "properties": {
         "category": {
           "type": "string",
-          "enum": ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout"],
+          "enum": ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout", "rand", "thread", "ui"],
           "description": "The kind of OS resource being accessed. Same categories as Spec 13."
         },
         "action": {
@@ -222,14 +222,16 @@
             "connect", "listen", "dns",
             "exec", "fork", "signal",
             "call", "load",
-            "sleep"
+            "sleep",
+            "spawn", "message",
+            "event"
           ],
           "description": "The operation being performed on the resource. Same actions as Spec 13."
         },
         "target": {
           "type": "string",
           "minLength": 1,
-          "description": "The specific resource being accessed. Format depends on category: fs uses paths with globs, net uses host:port, proc uses command names, env uses variable names. Same format as Spec 13."
+          "description": "The specific resource being accessed. Format depends on category: fs uses paths with globs, net uses host:port, proc uses command names, env uses variable names, thread uses worker roles, ui uses view or DOM subtree names; time, stdin, stdout and rand use '*'. Same format as Spec 13."
         },
         "justification": {
           "type": "string",
@@ -286,6 +288,24 @@
               "properties": {
                 "category": { "const": "stdout" },
                 "action": { "const": "write" }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "rand" },
+                "action": { "const": "read" }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "thread" },
+                "action": { "enum": ["spawn", "message"] }
+              }
+            },
+            {
+              "properties": {
+                "category": { "const": "ui" },
+                "action": { "enum": ["read", "write", "event"] }
               }
             }
           ]

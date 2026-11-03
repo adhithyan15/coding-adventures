@@ -1,0 +1,21 @@
+{
+  "chapter": 503,
+  "title": "Art",
+  "label": "ch:zh-art",
+  "canDo": "I can talk about calligraphy, the arts, a work of art, creating one and new year prints.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R503-review-498-503",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 503: I can talk about calligraphy, the arts, a work of art, creating one and new year prints.",
+    "assesses": [
+      "ZH-LEX-C503-ART503-01",
+      "ZH-LEX-C503-ART503-02",
+      "ZH-LEX-C503-ART503-03",
+      "ZH-LEX-C503-ART503-04",
+      "ZH-LEX-C503-ART503-05"
+    ]
+  }
+}

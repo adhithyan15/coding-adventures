@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 448,
+  "sourceHash": "fnv1a64:e42662737e9c0196",
+  "lessonIds": [
+    "ZH-C448-tanwei",
+    "ZH-C448-shichang",
+    "ZH-W448-shi-market",
+    "ZH-C448-shiqu",
+    "ZH-C448-zaoshi",
+    "ZH-C448-baitan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch448.txt",
+  "json": "chinese/narration/ch448.json",
+  "textHash": "fnv1a64:ebf97b6642f29347",
+  "jsonHash": "fnv1a64:bc86e260fe9d2f24",
+  "findings": []
+}

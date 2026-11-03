@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-404-TICKET404",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can find the ticket office, have my ticket checked, pay on board and choose a berth or a seat.",
+  "prerequisites": []
+}

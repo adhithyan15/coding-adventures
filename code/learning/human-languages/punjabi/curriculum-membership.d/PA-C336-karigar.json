@@ -1,0 +1,11 @@
+{
+  "id": "PA-C336-karigar",
+  "pathSegment": "PA-PATH-336-TRADE336",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-336-TRADE336",
+      "order": 0
+    }
+  ]
+}

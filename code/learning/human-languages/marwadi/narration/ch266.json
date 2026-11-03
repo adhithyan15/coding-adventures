@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 266,
+  "title": "Please Come In",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ad27e32e9addcf9c",
+  "lessons": [
+    {
+      "id": "MW-C266-hajar",
+      "sequence": 19000,
+      "title": "हाजर (hājar) — present; at your service",
+      "headword": "हाजर",
+      "romanization": "hājar",
+      "gloss": "present; at your service",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:596ced3c72289038",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for brave, then the Marwadi for crazy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: हाजर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाजर — hājar — \"present; at your service\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं हाजर हूं सा। hū̃ hājar hū̃ sā. I'm here, at your service."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हाजर (hājar) is usually traced, through Persian hāzir, to Arabic ḥāḍir, \"present\". With सा it tells a host or an elder that you are here and ready to help."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājar",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hājar, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hājar*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ hājar hū̃ sā. — I'm here, at your service.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ hājar hū̃ sā.* — I'm here, at your service.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for brave, then the Marwadi for crazy, then say hājar again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for brave, then the Marwadi for crazy, then say *hājar* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does हाजर (hājar) mean? (\"Present; at your service\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C266-hajar-type",
+              "prompt": "Say the Marwadi for 'at your service'.",
+              "assesses": [
+                "MW-LEX-C266-HAJAR266-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "हाजर",
+                "hājar"
+              ],
+              "feedback": {
+                "correct": "Right: हाजर (hājar) is 'present; at your service'.",
+                "incorrect": "'at your service' is हाजर (hājar)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C266-madad",
+      "sequence": 19010,
+      "title": "मदद (madad) — help",
+      "headword": "मदद",
+      "romanization": "madad",
+      "gloss": "help",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c7366352e1749dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for crazy, then the Marwadi for at your service."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मदद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मदद — madad — \"help\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आप म्हारी मदद करो सा। āp mhārī madad karo sā. Please help me."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मदद (madad) is usually traced to Persian madad, \"help\". It is feminine: म्हारी मदद, my help."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "madad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *madad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āp mhārī madad karo sā. — Please help me.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āp mhārī madad karo sā.* — Please help me.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for crazy, then the Marwadi for at your service, then say madad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for crazy, then the Marwadi for at your service, then say *madad* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मदद (madad) mean? (\"Help\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C266-madad-type",
+              "prompt": "Say the Marwadi for 'help'.",
+              "assesses": [
+                "MW-LEX-C266-HAJAR266-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मदद",
+                "madad"
+              ],
+              "feedback": {
+                "correct": "Right: मदद (madad) is 'help'.",
+                "incorrect": "'help' is मदद (madad)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C266-meharbani",
+      "sequence": 19020,
+      "title": "मेहरबानी (meharbānī) — a kindness",
+      "headword": "मेहरबानी",
+      "romanization": "meharbānī",
+      "gloss": "a kindness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb2cb78bd4a9fd39",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for at your service, then the Marwadi for help."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मेहरबानी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेहरबानी — meharbānī — \"a kindness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "घणी मेहरबानी सा! ghaṇī meharbānī sā! That's very kind of you!"
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेहरबानी (meharbānī) is usually traced to Persian mihrbānī, \"kindness\", a noun built on mihrbān, \"kind\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meharbānī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meharbānī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meharbānī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meharbānī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghaṇī meharbānī sā! — That's very kind of you!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghaṇī meharbānī sā!* — That's very kind of you!]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for at your service, then the Marwadi for help, then say meharbānī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for at your service, then the Marwadi for help, then say *meharbānī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मेहरबानी (meharbānī) mean? (\"A kindness\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C266-meharbani-type",
+              "prompt": "Say the Marwadi for 'a kindness'.",
+              "assesses": [
+                "MW-LEX-C266-HAJAR266-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मेहरबानी",
+                "meharbānī"
+              ],
+              "feedback": {
+                "correct": "Right: मेहरबानी (meharbānī) is 'a kindness'.",
+                "incorrect": "'a kindness' is मेहरबानी (meharbānī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C266-araj",
+      "sequence": 19030,
+      "title": "अरज (araj) — a petition",
+      "headword": "अरज",
+      "romanization": "araj",
+      "gloss": "a petition",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f56f82d7cf70eefc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for help, then the Marwadi for a kindness."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: अरज",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अरज — araj — \"a petition\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आप म्हारी अरज सुणो सा। āp mhārī araj suṇo sā. Please hear my petition."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "अरज (araj) is usually traced, through Persian ʿarz, to Arabic ʿarḍ, \"presenting\": a request set before someone. It is feminine: म्हारी अरज."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "araj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *araj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āp mhārī araj suṇo sā. — Please hear my petition.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āp mhārī araj suṇo sā.* — Please hear my petition.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for help, then the Marwadi for a kindness, then say araj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for help, then the Marwadi for a kindness, then say *araj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does अरज (araj) mean? (\"A petition\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C266-araj-type",
+              "prompt": "Say the Marwadi for 'a petition'.",
+              "assesses": [
+                "MW-LEX-C266-HAJAR266-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "अरज",
+                "araj"
+              ],
+              "feedback": {
+                "correct": "Right: अरज (araj) is 'a petition'.",
+                "incorrect": "'a petition' is अरज (araj)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C266-asis",
+      "sequence": 19040,
+      "title": "आसीस (āsīs) — a blessing",
+      "headword": "आसीस",
+      "romanization": "āsīs",
+      "gloss": "a blessing",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07aecdf593c349bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a kindness, then the Marwadi for a petition."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: आसीस",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसीस — āsīs — \"a blessing\"."
+            },
+            {
+              "kind": "speech",
+              "text": "दादी आसीस देवै है। dādī āsīs devai hai. Grandmother gives her blessing."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आसीस (āsīs) goes back to Sanskrit āśis, \"a wish, a prayer; a blessing\" (CDIAL 1457; Monier-Williams). CDIAL gives no Marwari form in this entry, and no other modern form either: the Marwadi word keeps the Sanskrit shape, with स for श. It is feminine, and an elder gives it: आसीस देवै है."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for asking and answering."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsīs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsīs*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āsīs, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āsīs*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dādī āsīs devai hai. — Grandmother gives her blessing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dādī āsīs devai hai.* — Grandmother gives her blessing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a kindness, then the Marwadi for a petition, then say āsīs again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a kindness, then the Marwadi for a petition, then say *āsīs* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does आसीस (āsīs) mean? (\"A blessing\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C266-asis-type",
+              "prompt": "Say the Marwadi for 'a blessing'.",
+              "assesses": [
+                "MW-LEX-C266-HAJAR266-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "आसीस",
+                "āsīs"
+              ],
+              "feedback": {
+                "correct": "Right: आसीस (āsīs) is 'a blessing'.",
+                "incorrect": "'a blessing' is आसीस (āsīs)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

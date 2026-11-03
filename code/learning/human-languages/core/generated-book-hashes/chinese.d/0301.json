@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 301,
+  "sourceHash": "fnv1a64:19cb7e631fc99533",
+  "lessonIds": [
+    "ZH-C301-tao",
+    "ZH-C301-huang",
+    "ZH-C301-fu-help",
+    "ZH-C301-guzhe",
+    "ZH-C301-guoran",
+    "ZH-R301-review-296-301"
+  ],
+  "tex": "chinese/book/chapters/ch301-getting-out.tex"
+}

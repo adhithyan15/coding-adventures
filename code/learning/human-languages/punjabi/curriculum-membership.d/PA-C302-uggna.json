@@ -1,0 +1,11 @@
+{
+  "id": "PA-C302-uggna",
+  "pathSegment": "PA-PATH-302-SOW302",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-302-SOW302",
+      "order": 3
+    }
+  ]
+}

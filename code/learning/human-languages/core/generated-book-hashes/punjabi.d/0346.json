@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 346,
+  "sourceHash": "fnv1a64:44ad03917118b20b",
+  "lessonIds": [
+    "PA-C346-kasur",
+    "PA-C346-lukauna",
+    "PA-C346-ilzam",
+    "PA-C346-majbur",
+    "PA-C346-afsos"
+  ],
+  "tex": "punjabi/book/chapters/ch346-owning-up.tex"
+}

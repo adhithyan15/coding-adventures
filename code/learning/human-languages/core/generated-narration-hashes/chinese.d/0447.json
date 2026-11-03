@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 447,
+  "sourceHash": "fnv1a64:97d744d39a8e8ffd",
+  "lessonIds": [
+    "ZH-C447-buxing",
+    "ZH-C447-changcheng",
+    "ZH-C447-buxingjie",
+    "ZH-C447-raolu",
+    "ZH-C447-renxingdao",
+    "ZH-R447-review-442-447"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch447.txt",
+  "json": "chinese/narration/ch447.json",
+  "textHash": "fnv1a64:3db6e83c9c3e47b0",
+  "jsonHash": "fnv1a64:76214e541afddd21",
+  "findings": []
+}

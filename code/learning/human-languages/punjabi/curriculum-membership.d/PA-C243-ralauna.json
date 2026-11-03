@@ -1,0 +1,11 @@
+{
+  "id": "PA-C243-ralauna",
+  "pathSegment": "PA-PATH-243-KAM243",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-243-KAM243",
+      "order": 2
+    }
+  ]
+}

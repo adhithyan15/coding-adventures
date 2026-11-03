@@ -1,0 +1,19 @@
+{
+  "chapter": 285,
+  "title": "Back Home Again",
+  "label": "ch:pa-a2-back-home-again",
+  "canDo": "I can say when I will come back home.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C285-pahu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 285: I can say when I will come back home.",
+    "assesses": [
+      "PA-LEX-C285-HOME285-03",
+      "PA-LEX-C285-HOME285-04",
+      "PA-LEX-C285-HOME285-05"
+    ]
+  }
+}

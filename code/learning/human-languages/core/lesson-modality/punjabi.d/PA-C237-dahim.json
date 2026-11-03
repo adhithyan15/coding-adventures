@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C237-dahim",
+    "language": "punjabi",
+    "chapter": 237,
+    "sequence": 13630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fac987069f4ee5b2"
+  },
+  "findings": []
+}

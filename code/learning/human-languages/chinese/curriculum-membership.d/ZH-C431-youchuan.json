@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C431-youchuan",
+  "pathSegment": "ZH-PATH-431-OUTING431",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-431-OUTING431",
+      "order": 3
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C222-ki-nahin-future",
+  "pathSegment": "PA-PATH-222-A2-KARANGA",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-222-A2-KARANGA",
+      "order": 4
+    }
+  ]
+}

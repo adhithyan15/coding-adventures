@@ -1,0 +1,19 @@
+{
+  "chapter": 263,
+  "title": "Right, Left and the Bend",
+  "label": "ch:pa-a2-right-left-and-the-bend",
+  "canDo": "I can say which way to turn.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C263-khabba",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 263: I can say which way to turn.",
+    "assesses": [
+      "PA-LEX-C263-TURN263-03",
+      "PA-LEX-C263-TURN263-04",
+      "PA-LEX-C263-TURN263-05"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C365-jianyi",
+    "language": "chinese",
+    "chapter": 365,
+    "sequence": 27980,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:04e1802e33d7ba05"
+  },
+  "findings": []
+}

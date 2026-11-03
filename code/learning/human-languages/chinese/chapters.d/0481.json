@@ -1,0 +1,19 @@
+{
+  "chapter": 481,
+  "title": "Is It Serious?",
+  "label": "ch:zh-is-it-serious",
+  "canDo": "I can ask whether it is serious, talk about a patient's condition, the cause of an illness, infection and viruses.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C481-bingdu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 481: I can ask whether it is serious, talk about a patient's condition, the cause of an illness, infection and viruses.",
+    "assesses": [
+      "ZH-LEX-C481-SERIOUS481-03",
+      "ZH-LEX-C481-SERIOUS481-04",
+      "ZH-LEX-C481-SERIOUS481-05"
+    ]
+  }
+}

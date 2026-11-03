@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C376-aihu",
+    "language": "chinese",
+    "chapter": 376,
+    "sequence": 29120,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:646d22d20dd834c6"
+  },
+  "findings": []
+}

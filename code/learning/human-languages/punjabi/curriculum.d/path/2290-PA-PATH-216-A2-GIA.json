@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-216-A2-GIA",
+  "spine_node": "SPINE-TALK-ABOUT-PAST",
+  "before": [],
+  "inline": [
+    "PA-EXT-216-A2-GIA"
+  ],
+  "after": []
+}

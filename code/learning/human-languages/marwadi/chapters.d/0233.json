@@ -1,0 +1,19 @@
+{
+  "chapter": 233,
+  "title": "Camel Gear",
+  "label": "ch:mw-camel-gear",
+  "canDo": "I can name a camel's saddle, rein, trappings and bells.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C233-ghughro",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 233: I can name a camel's saddle, rein, trappings and bells.",
+    "assesses": [
+      "MW-LEX-C233-GEAR233-03",
+      "MW-LEX-C233-GEAR233-04",
+      "MW-LEX-C233-GEAR233-05"
+    ]
+  }
+}

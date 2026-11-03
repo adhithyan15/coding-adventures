@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 316,
+  "sourceHash": "fnv1a64:a28178ec6936b9b0",
+  "lessonIds": [
+    "PA-C316-larna",
+    "PA-C316-jhagra",
+    "PA-C316-maarna",
+    "PA-C316-galh",
+    "PA-C316-sulha"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch316.txt",
+  "json": "punjabi/narration/ch316.json",
+  "textHash": "fnv1a64:e9877c27cf707f0b",
+  "jsonHash": "fnv1a64:59de6bb1724d3a5b",
+  "findings": []
+}

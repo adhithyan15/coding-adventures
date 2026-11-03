@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C435-zhuangguan",
+  "pathSegment": "ZH-PATH-435-SUMMIT435",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-435-SUMMIT435",
+      "order": 3
+    }
+  ]
+}

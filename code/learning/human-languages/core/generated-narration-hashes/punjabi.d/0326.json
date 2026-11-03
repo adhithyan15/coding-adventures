@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:204412f8d254c0e3",
+  "lessonIds": [
+    "PA-C326-darna",
+    "PA-C326-gussa",
+    "PA-C326-hairan",
+    "PA-C326-fikar",
+    "PA-C326-sharam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch326.txt",
+  "json": "punjabi/narration/ch326.json",
+  "textHash": "fnv1a64:455dd64cfb0ae365",
+  "jsonHash": "fnv1a64:0d1d739d6928e326",
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C335-loha",
+    "language": "punjabi",
+    "chapter": 335,
+    "sequence": 20350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:40a82a1b7dd4f003"
+  },
+  "findings": []
+}

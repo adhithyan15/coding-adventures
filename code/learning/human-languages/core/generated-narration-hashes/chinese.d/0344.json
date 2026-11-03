@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 344,
+  "sourceHash": "fnv1a64:b792ac4afb13fea5",
+  "lessonIds": [
+    "ZH-C344-baocun",
+    "ZH-C344-jiyi",
+    "ZH-C344-wangshi",
+    "ZH-C344-xiangce",
+    "ZH-C344-yongyuan"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 3,
+  "text": "chinese/narration/ch344.txt",
+  "json": "chinese/narration/ch344.json",
+  "textHash": "fnv1a64:3a88b696581c4cfa",
+  "jsonHash": "fnv1a64:5aaa3937560359a3",
+  "findings": []
+}

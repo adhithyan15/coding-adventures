@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C222-karanga",
+    "language": "punjabi",
+    "chapter": 222,
+    "sequence": 12180,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "eyes-or-hands-step"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:15c5b814f7f0874f"
+  },
+  "findings": []
+}

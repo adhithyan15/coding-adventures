@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W375-she-society",
+  "pathSegment": "ZH-PATH-375-HELP375",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-375-HELP375",
+      "order": 2
+    }
+  ]
+}

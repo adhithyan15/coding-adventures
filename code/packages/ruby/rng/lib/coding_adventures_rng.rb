@@ -39,7 +39,7 @@ module CodingAdventures
     # Multiplier: 6364136223846793005
     # Increment:  1442695040888963407  (must be odd for full period)
     LCG_MULTIPLIER = 6_364_136_223_846_793_005
-    LCG_INCREMENT  = 1_442_695_040_888_963_407
+    LCG_INCREMENT = 1_442_695_040_888_963_407
 
     # Bit masks used to emulate unsigned 64-bit and 32-bit overflow.
     MASK64 = 0xFFFF_FFFF_FFFF_FFFF
@@ -103,27 +103,11 @@ module CodingAdventures
         next_u32.to_f / FLOAT_DIV
       end
 
-      # Return a uniform random integer in [min, max] inclusive.
-      #
-      # Naïve modulo is biased when 2^32 is not divisible by range_size:
-      # values in [0, 2^32 mod range_size) would appear one more time than
-      # the rest.  Rejection sampling eliminates this bias.
-      #
-      # Threshold derivation:
-      #   threshold = (-range_size) mod 2^32 mod range_size
-      #
-      # Ruby's % operator is always non-negative (sign follows divisor), so
-      # (-range_size) % (1 << 32) is correct without extra sign handling.
-      # Any draw r < threshold is rejected; the expected number of extra
-      # draws is less than 2 for every possible range_size.
+      # Return a uniform random integer in [min, max] inclusive, by the
+      # rejection sampling of Rng.int_in_range. Raises ArgumentError for
+      # bounds outside the signed 64-bit domain or min > max, before any draw.
       def next_int_in_range(min, max)
-        raise ArgumentError, "next_int_in_range requires min <= max, got #{min} > #{max}" if min > max
-        range_size = (max - min + 1).to_i
-        threshold = (-range_size) % (1 << 32) % range_size
-        loop do
-          r = next_u32
-          return min + (r % range_size) if r >= threshold
-        end
+        Rng.int_in_range(self, min, max)
       end
     end
 
@@ -180,13 +164,7 @@ module CodingAdventures
 
       # Unbiased integer in [min, max] using rejection sampling.
       def next_int_in_range(min, max)
-        raise ArgumentError, "next_int_in_range requires min <= max, got #{min} > #{max}" if min > max
-        range_size = (max - min + 1).to_i
-        threshold = (-range_size) % (1 << 32) % range_size
-        loop do
-          r = next_u32
-          return min + (r % range_size) if r >= threshold
-        end
+        Rng.int_in_range(self, min, max)
       end
     end
 
@@ -230,7 +208,7 @@ module CodingAdventures
 
       # Warm-up initialisation: two LCG advances around the seed injection.
       def initialize(seed)
-        @state     = 0
+        @state = 0
         @increment = PCG_INCREMENT
         # First advance: incorporate the increment before the seed arrives.
         lcg_advance
@@ -268,13 +246,7 @@ module CodingAdventures
 
       # Unbiased integer in [min, max] using rejection sampling.
       def next_int_in_range(min, max)
-        raise ArgumentError, "next_int_in_range requires min <= max, got #{min} > #{max}" if min > max
-        range_size = (max - min + 1).to_i
-        threshold = (-range_size) % (1 << 32) % range_size
-        loop do
-          r = next_u32
-          return min + (r % range_size) if r >= threshold
-        end
+        Rng.int_in_range(self, min, max)
       end
 
       private
@@ -282,6 +254,53 @@ module CodingAdventures
       # One step of the LCG recurrence that drives PCG32's internal state.
       def lcg_advance
         @state = (@state * LCG_MULTIPLIER + @increment) & MASK64
+      end
+    end
+    # ── Bounded draws (spec rng.md, "Rejection Sampling", v2) ────────────────
+    #
+    # A uniform integer in [min, max], drawn from gen.next_u32, identically in
+    # every language of the repository. All three generators share it.
+    #
+    # span = max - min + 1 lies between 1 and 2^64. Taking r % span of a raw
+    # draw over-samples small offsets whenever the number of possible draws is
+    # not a multiple of span; rejecting the `threshold` lowest draws removes
+    # exactly the excess. Three regimes, chosen by span alone:
+    #
+    #   span <= 2^32    draw 32 bits,  threshold = (2^32 - span) mod span
+    #   span <  2^64    draw 64 bits,  threshold = (2^64 - span) mod span
+    #   span == 2^64    the whole signed 64-bit domain: no rejection
+    #
+    # Example, span = 3: 2^32 = 3 * 1431655765 + 1, so threshold = 1.
+    # Rejecting r = 0 leaves 2^32 - 1 draws, an exact multiple of 3.
+    #
+    # Ruby integers are unbounded, but the spec's bounds are signed 64-bit and
+    # every language must agree, so wider bounds raise ArgumentError like
+    # min > max does. v1 drew 32 bits for every span, so a range wider than
+    # 2^32 could never return more than 2^32 - 1 above min.
+    I64_MIN = -(1 << 63)
+    I64_MAX = (1 << 63) - 1
+
+    def self.int_in_range(gen, min, max)
+      unless min.is_a?(Integer) && max.is_a?(Integer) && min.between?(I64_MIN, I64_MAX) && max.between?(I64_MIN, I64_MAX)
+        raise ArgumentError, "next_int_in_range bounds must be signed 64-bit integers, got [#{min}, #{max}]"
+      end
+      raise ArgumentError, "next_int_in_range requires min <= max, got #{min} > #{max}" if min > max
+
+      span = max - min + 1
+      if span <= (1 << 32)
+        threshold = ((1 << 32) - span) % span
+        loop do
+          r = gen.next_u32
+          return min + (r % span) if r >= threshold
+        end
+      elsif span < (1 << 64)
+        threshold = ((1 << 64) - span) % span
+        loop do
+          r = gen.next_u64
+          return min + (r % span) if r >= threshold
+        end
+      else
+        min + gen.next_u64
       end
     end
   end

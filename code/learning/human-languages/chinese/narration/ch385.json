@@ -1,0 +1,848 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 385,
+  "title": "Good Reasons",
+  "drivablePrefix": 3,
+  "sourceHash": "fnv1a64:e4f9716641cadd95",
+  "lessons": [
+    {
+      "id": "ZH-C385-tigao",
+      "sequence": 29560,
+      "title": "tígāo — to push up (a level)",
+      "headword": "tígāo",
+      "romanization": "tígāo",
+      "gloss": "to push up (a level)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:231af7615c0e0a6a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for natural resources, then the Mandarin for to increase (in number)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tígāo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tígāo — \"to push up (a level)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhè jiā fàndiàn tígāo le jiàqián — This restaurant has put its prices up."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tígāo is built from tí 'to carry by the handle' and 高 'high', both inherited from Middle Chinese, dej and kaw (Guangyun, in Baxter's transcription), which glosses the first 'to carry in the hand'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tígāo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tígāo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tígāo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tígāo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhè jiā fàndiàn tígāo le jiàqián — This restaurant has put its prices up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhè jiā fàndiàn tígāo le jiàqián* — This restaurant has put its prices up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for natural resources, then the Mandarin for to increase (in number), then say tígāo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for natural resources, then the Mandarin for to increase (in number), then say *tígāo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tígāo mean? (\"To push up (a level)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C385-bacheng",
+      "sequence": 29570,
+      "title": "八成 (bāchéng) — most likely; eighty per cent",
+      "headword": "八成",
+      "romanization": "bāchéng",
+      "gloss": "most likely; eighty per cent",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e2843591c77c699",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to increase (in number), then the Mandarin for to push up (a level)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 八成",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "八成 — bāchéng — \"most likely; eighty per cent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他八成病了所以没来 tā bāchéng bìng le suǒyǐ méi lái — He's most likely ill, which is why he didn't come."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "八成 (bāchéng) is built from 八 'eight' and 成 'a tenth', both inherited from Middle Chinese, peat and dzyeng (Guangyun, in Baxter's transcription). The dictionary glosses the second 'to complete'; 成 for one part in ten is later and is not given there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāchéng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāchéng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bāchéng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bāchéng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā bāchéng bìng le suǒyǐ méi lái — He's most likely ill, which is why he didn't come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā bāchéng bìng le suǒyǐ méi lái* — He's most likely ill, which is why he didn't come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to increase (in number), then the Mandarin for to push up (a level), then say bāchéng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to increase (in number), then the Mandarin for to push up (a level), then say *bāchéng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 八成 (bāchéng) mean? (\"Most likely; eighty per cent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C385-jieneng",
+      "sequence": 29580,
+      "title": "节能 (jiénéng) — to save energy; energy-saving",
+      "headword": "节能",
+      "romanization": "jiénéng",
+      "gloss": "to save energy; energy-saving",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00831d733e486daa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to push up (a level), then the Mandarin for most likely (eight in ten)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 节能",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "节能 — jiénéng — \"to save energy; energy-saving\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我觉得坐火车比开车节能 wǒ juéde zuò huǒchē bǐ kāichē jiénéng — I think taking the train saves more energy than driving."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "节能 (jiénéng) is built from 节 'to restrain' and 能 'energy', both inherited from Middle Chinese, tset and nong (Guangyun, in Baxter's transcription), which glosses the first 'the joint of a bamboo' and 'to hold back'. The word is modern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiénéng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiénéng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiénéng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiénéng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ juéde zuò huǒchē bǐ kāichē jiénéng — I think taking the train saves more energy than driving.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ juéde zuò huǒchē bǐ kāichē jiénéng* — I think taking the train saves more energy than driving.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to push up (a level), then the Mandarin for most likely (eight in ten), then say jiénéng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to push up (a level), then the Mandarin for most likely (eight in ten), then say *jiénéng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 节能 (jiénéng) mean? (\"To save energy; energy-saving\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C385-zhongshi",
+      "sequence": 29590,
+      "title": "zhòngshì — to attach importance to",
+      "headword": "zhòngshì",
+      "romanization": "zhòngshì",
+      "gloss": "to attach importance to",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:8ef1b0c2a18b0772",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for most likely (eight in ten), then the Mandarin for to save energy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: zhòngshì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhòngshì — \"to attach importance to\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhèngfǔ yīnggāi zhòngshì huánjìng — The government should take the environment seriously."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zhòngshì is built from 重 'heavy' and shì 'to look at', both inherited from Middle Chinese, drjowngX and dzyijH (Guangyun, in Baxter's transcription), which glosses the first 'thick' and 'careful' and the second 'to look'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhòngshì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhòngshì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhòngshì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhòngshì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhèngfǔ yīnggāi zhòngshì huánjìng — The government should take the environment seriously.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhèngfǔ yīnggāi zhòngshì huánjìng* — The government should take the environment seriously.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for most likely (eight in ten), then the Mandarin for to save energy, then say zhòngshì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for most likely (eight in ten), then the Mandarin for to save energy, then say *zhòngshì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does zhòngshì mean? (\"To attach importance to\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C385-fangshi",
+      "sequence": 29600,
+      "title": "fāngshì — a way of doing things; a mode",
+      "headword": "fāngshì",
+      "romanization": "fāngshì",
+      "gloss": "a way of doing things; a mode",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:458787f00de8af68",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to save energy, then the Mandarin for to attach importance to."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fāngshì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fāngshì — \"a way of doing things; a mode\"."
+            },
+            {
+              "kind": "speech",
+              "text": "qí zìxíngchē shì yí ge hěn huánbǎo de fāngshì — Cycling is a very green way to get about."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fāngshì is built from fāng 'a method' and shì 'a pattern', both inherited from Middle Chinese, pjang and syik (Guangyun, in Baxter's transcription), which glosses the first 'square' and 'a method' and the second 'a rule'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāngshì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāngshì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fāngshì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fāngshì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qí zìxíngchē shì yí ge hěn huánbǎo de fāngshì — Cycling is a very green way to get about.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qí zìxíngchē shì yí ge hěn huánbǎo de fāngshì* — Cycling is a very green way to get about.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to save energy, then the Mandarin for to attach importance to, then say fāngshì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to save energy, then the Mandarin for to attach importance to, then say *fāngshì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fāngshì mean? (\"A way of doing things; a mode\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R385-review-380-385",
+      "sequence": 29610,
+      "title": "Looking back: from Clean Air to Good Reasons",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from Clean Air to Good Reasons",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad9e9d4350ddbddb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for the environment and the air we breathe."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the environment, the air we breathe, to pollute, our planet, eco-friendly (good for the environment)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the environment, the air we breathe, to pollute, our planet, eco-friendly (good for the environment)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to sort into kinds, the whole family, to recycle, nationwide, a sense of security",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to sort into kinds, the whole family, to recycle, nationwide, a sense of security]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be on duty, a security guard, a security camera, to guarantee, to patrol",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be on duty, a security guard, a security camera, to guarantee, to patrol]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the electricity bill, to waste, sources of energy, to cut down on, disposable (used once)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the electricity bill, to waste, sources of energy, to cut down on, disposable (used once)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to plant trees, to become, production cost, natural resources, to increase (in number)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to plant trees, to become, production cost, natural resources, to increase (in number)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to push up (a level), most likely (eight in ten), to save energy, to attach importance to, a way of doing things",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to push up (a level), most likely (eight in ten), to save energy, to attach importance to, a way of doing things]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "全 保 成 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 全 保 成 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The environment? (huánjìng.) The air we breathe? (kōngqì.) To pollute? (wūrǎn.) Our planet? (dìqiú.) Eco-friendly (good for the environment)? (huánbǎo.) To sort into kinds? (fēnlèi.) The whole family? (全家, quánjiā.) To recycle? (huíshōu.) Nationwide? (全国, quánguó.) A sense of security? (安全感, ānquángǎn.) To be on duty? (zhíbān.) A security guard? (保安, bǎo'ān.) A security camera? (jiānkòng.) To guarantee? (bǎozhèng.) To patrol? (xúnluó.) The electricity bill? (diànfèi.) To waste? (làngfèi.) Sources of energy? (néngyuán.) To cut down on? (jiǎnshǎo.) Disposable (used once)? (yícìxìng.) To plant trees? (zhòngshù.) To become? (成为, chéngwéi.) Production cost? (成本, chéngběn.) Natural resources? (zīyuán.) To increase (in number)? (zēngjiā.) To push up (a level)? (tígāo.) Most likely (eight in ten)? (八成, bāchéng.) To save energy? (节能, jiénéng.) To attach importance to? (zhòngshì.) A way of doing things? (fāngshì.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

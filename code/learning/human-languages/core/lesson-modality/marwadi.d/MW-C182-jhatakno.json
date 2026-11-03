@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C182-jhatakno",
+    "language": "marwadi",
+    "chapter": 182,
+    "sequence": 11820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:75ed8a5767a1bd5b"
+  },
+  "findings": []
+}

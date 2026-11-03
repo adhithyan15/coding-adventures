@@ -1,0 +1,21 @@
+{
+  "chapter": 441,
+  "title": "Out in the Open",
+  "label": "ch:zh-out-in-the-open",
+  "canDo": "I can talk about the outskirts, the open country, a tent, lighting a fire and a lake made by nature.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-R441-review-436-441",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 441: I can talk about the outskirts, the open country, a tent, lighting a fire and a lake made by nature.",
+    "assesses": [
+      "ZH-LEX-C441-CAMP441-01",
+      "ZH-LEX-C441-CAMP441-02",
+      "ZH-LEX-C441-CAMP441-03",
+      "ZH-LEX-C441-CAMP441-04",
+      "ZH-LEX-C441-CAMP441-05"
+    ]
+  }
+}

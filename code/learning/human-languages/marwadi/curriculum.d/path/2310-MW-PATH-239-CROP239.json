@@ -1,0 +1,9 @@
+{
+  "id": "MW-PATH-239-CROP239",
+  "spine_node": "SPINE-NAME-EVERYDAY-THINGS",
+  "before": [],
+  "inline": [
+    "MW-EXT-239-CROP239"
+  ],
+  "after": []
+}

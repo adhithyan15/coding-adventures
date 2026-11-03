@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C285-path",
+    "language": "marwadi",
+    "chapter": 285,
+    "sequence": 20000,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a2c1c90eb176f653"
+  },
+  "findings": []
+}

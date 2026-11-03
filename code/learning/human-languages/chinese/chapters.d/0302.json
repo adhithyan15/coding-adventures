@@ -1,0 +1,19 @@
+{
+  "chapter": 302,
+  "title": "A Baby on the Way",
+  "label": "ch:zh-a-baby-on-the-way",
+  "canDo": "I can talk about a pregnancy, a newborn, twins, and a life that was saved.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C302-shuangbaotai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 302: I can talk about a pregnancy, a newborn, twins, and a life that was saved.",
+    "assesses": [
+      "ZH-LEX-C302-BIRTH302-03",
+      "ZH-LEX-C302-BIRTH302-04",
+      "ZH-LEX-C302-BIRTH302-05"
+    ]
+  }
+}

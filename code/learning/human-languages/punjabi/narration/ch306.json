@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 306,
+  "title": "Grain and Straw",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:bf1dbfc63e413886",
+  "lessons": [
+    {
+      "id": "PA-C306-chhajj",
+      "sequence": 18280,
+      "title": "ਛੱਜ (chhajj) — a winnowing basket",
+      "headword": "ਛੱਜ",
+      "romanization": "chhajj",
+      "gloss": "a winnowing basket",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2455d49ccd289cf7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to thresh, then the Punjabi for a heap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਛੱਜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛੱਜ — chhajj — \"a winnowing basket\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮਾਤਾ ਜੀ ਛੱਜ ਨਾਲ ਦਾਣੇ ਸਾਫ਼ ਕਰਦੇ ਹਨ। mātā jī chhajj nāl dāṇe sāf karde han. Mother cleans the grain with a winnowing basket."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛੱਜ (chhajj) is inherited from a reconstructed chajja, \"basket\"; CDIAL lists Punjabi chajj, \"winnowing basket\", under it (CDIAL 4964)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhajj",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhajj*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhajj, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhajj*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātā jī chhajj nāl dāṇe sāf karde han. — Mother cleans the grain with a winnowing basket.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātā jī chhajj nāl dāṇe sāf karde han.* — Mother cleans the grain with a winnowing basket.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to thresh, then the Punjabi for a heap, then say chhajj again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to thresh, then the Punjabi for a heap, then say *chhajj* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਛੱਜ (chhajj) mean? (\"A winnowing basket\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C306-chhattna",
+      "sequence": 18290,
+      "title": "ਛੱਟਣਾ (chhaṭṭṇā) — to winnow",
+      "headword": "ਛੱਟਣਾ",
+      "romanization": "chhaṭṭṇā",
+      "gloss": "to winnow",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:39158be969b7d3df",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a heap, then the Punjabi for a winnowing basket."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਛੱਟਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛੱਟਣਾ — chhaṭṭṇā — \"to winnow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਸੀਂ ਹਵਾ ਵਿੱਚ ਦਾਣੇ ਛੱਟਾਂਗੇ। asīṁ havā vich dāṇe chhaṭṭāṅge. We will winnow the grain in the wind."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਦਾਣੇ ਛੱਟੇ, maiṁ dāṇe chhaṭṭe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛੱਟਣਾ (chhaṭṭṇā) is inherited from a reconstructed chaṭṭ, \"scatter\"; CDIAL lists Punjabi chaṭṭṇā, \"to winnow\", under it (CDIAL 4968)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhaṭṭṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhaṭṭṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhaṭṭṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhaṭṭṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "asīṁ havā vich dāṇe chhaṭṭāṅge. — We will winnow the grain in the wind.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *asīṁ havā vich dāṇe chhaṭṭāṅge.* — We will winnow the grain in the wind.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a heap, then the Punjabi for a winnowing basket, then say chhaṭṭṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a heap, then the Punjabi for a winnowing basket, then say *chhaṭṭṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਛੱਟਣਾ (chhaṭṭṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਛੱਟਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਛੱਟਣਾ (chhaṭṭṇā) mean? (\"To winnow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C306-turi",
+      "sequence": 18300,
+      "title": "ਤੂੜੀ (tūṛī) — chopped straw; chaff",
+      "headword": "ਤੂੜੀ",
+      "romanization": "tūṛī",
+      "gloss": "chopped straw; chaff",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b55e6fe5b006ada",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a winnowing basket, then the Punjabi for to winnow."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਤੂੜੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੂੜੀ — tūṛī — \"chopped straw; chaff\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਗਾਂ ਤੂੜੀ ਖਾਂਦੀ ਹੈ। gāṁ tūṛī khāndī hai. The cow eats chopped straw."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਤੂੜੀ (tūṛī) goes back to Sanskrit tuṣa, \"chaff of grain\"; CDIAL lists Punjabi only tuh, \"chaff\", under it; the form tūṛī, \"straw, chaff\", is the one it gives for Lahnda (CDIAL 5892)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūṛī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūṛī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūṛī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gāṁ tūṛī khāndī hai. — The cow eats chopped straw.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gāṁ tūṛī khāndī hai.* — The cow eats chopped straw.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a winnowing basket, then the Punjabi for to winnow, then say tūṛī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a winnowing basket, then the Punjabi for to winnow, then say *tūṛī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਤੂੜੀ (tūṛī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਤੂੜੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਤੂੜੀ (tūṛī) mean? (\"Chopped straw; chaff\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C306-parali",
+      "sequence": 18310,
+      "title": "ਪਰਾਲੀ (parālī) — rice straw",
+      "headword": "ਪਰਾਲੀ",
+      "romanization": "parālī",
+      "gloss": "rice straw",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c1a016bc6971906",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to winnow, then the Punjabi for chopped straw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਪਰਾਲੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰਾਲੀ — parālī — \"rice straw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਿਆਲ ਵਿੱਚ ਅਸੀਂ ਪਰਾਲੀ ਉੱਤੇ ਸੌਂਦੇ ਹਾਂ। siāl vich asīṁ parālī utte saunde hāṁ. In winter we sleep on rice straw."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਪਰਾਲੀ (parālī) is inherited from Sanskrit palāla, \"stalk, straw\"; CDIAL lists Punjabi parālī, \"straw of rice or millet\", under it (CDIAL 7958)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parālī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parālī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "parālī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *parālī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "siāl vich asīṁ parālī utte saunde hāṁ. — In winter we sleep on rice straw.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *siāl vich asīṁ parālī utte saunde hāṁ.* — In winter we sleep on rice straw.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to winnow, then the Punjabi for chopped straw, then say parālī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to winnow, then the Punjabi for chopped straw, then say *parālī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਪਰਾਲੀ (parālī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਪਰਾਲੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਪਰਾਲੀ (parālī) mean? (\"Rice straw\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C306-bori",
+      "sequence": 18320,
+      "title": "ਬੋਰੀ (borī) — a sack",
+      "headword": "ਬੋਰੀ",
+      "romanization": "borī",
+      "gloss": "a sack",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0a5dffc232154c29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for chopped straw, then the Punjabi for rice straw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਬੋਰੀ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੋਰੀ — borī — \"a sack\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇੱਕ ਬੋਰੀ ਵਿੱਚ ਬਹੁਤ ਕਣਕ ਹੁੰਦੀ ਹੈ। ikk borī vich bahut kaṇak hundī hai. A sack holds a lot of wheat."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਬੋਰੀ (borī) is inherited from a reconstructed bōra, \"sacking, sack\"; CDIAL lists Punjabi borī, \"sack, coarse bag\", under it (CDIAL 9320)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "borī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *borī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "borī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *borī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ikk borī vich bahut kaṇak hundī hai. — A sack holds a lot of wheat.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ikk borī vich bahut kaṇak hundī hai.* — A sack holds a lot of wheat.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for chopped straw, then the Punjabi for rice straw, then say borī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for chopped straw, then the Punjabi for rice straw, then say *borī* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਬੋਰੀ (borī) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਬੋਰੀ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਬੋਰੀ (borī) mean? (\"A sack\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

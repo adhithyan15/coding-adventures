@@ -40,12 +40,14 @@ static COUNTER: AtomicU32 = AtomicU32::new(0);
 
 fn compile_and_run(cc: &str, module: &Module) -> String {
     let artifact = semantic_ir_to_c::compile(module).expect("C backend compile (no panic)");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+    let dir = scratch.path();
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
     let stem = format!("sirc_fr_{}_{}", std::process::id(), n);
     let cpath: PathBuf = dir.join(format!("{stem}.c"));
     let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-    std::fs::File::create(&cpath)
+    let _cleanup = RemoveOnDrop([cpath.clone(), exe.clone()]);
+    sir_test_scratch::create_new(&cpath)
         .and_then(|mut f| f.write_all(artifact.source.as_bytes()))
         .expect("write .c");
     let out = Command::new(cc)
@@ -211,12 +213,14 @@ fn for_range_with_unused_counter_compiles_under_werror() {
     };
     let module = loops_module(vec![forrange("i", 0, 3, 1, vec![puts(ilit(7))])]); // body ignores `i`
     let artifact = semantic_ir_to_c::compile(&module).expect("compile");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+    let dir = scratch.path();
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
     let stem = format!("sirc_frwe_{}_{}", std::process::id(), n);
     let cpath: PathBuf = dir.join(format!("{stem}.c"));
     let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-    std::fs::File::create(&cpath)
+    let _cleanup = RemoveOnDrop([cpath.clone(), exe.clone()]);
+    sir_test_scratch::create_new(&cpath)
         .and_then(|mut f| f.write_all(artifact.source.as_bytes()))
         .expect("write .c");
     // `-Werror` only for the unused-variable class, to avoid failing on any
@@ -233,4 +237,18 @@ fn for_range_with_unused_counter_compiles_under_werror() {
         "unused-counter loop must compile under -Werror=unused-variable:\n{}",
         String::from_utf8_lossy(&out.stderr),
     );
+}
+
+/// Deletes a run's `.c` file and executable when the helper returns or
+/// panics.  Each call names its files uniquely (see `unique_suffix` or the
+/// counter above), so without this they would pile up in the temp directory,
+/// one pair per test run.
+struct RemoveOnDrop([std::path::PathBuf; 2]);
+
+impl Drop for RemoveOnDrop {
+    fn drop(&mut self) {
+        for path in &self.0 {
+            let _ = std::fs::remove_file(path);
+        }
+    }
 }

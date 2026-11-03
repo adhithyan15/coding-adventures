@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 291,
+  "sourceHash": "fnv1a64:82637cb5b725f38b",
+  "lessonIds": [
+    "ZH-C291-caifang",
+    "ZH-C291-faming",
+    "ZH-W291-fa-send",
+    "ZH-C291-shijian",
+    "ZH-C291-tufa",
+    "ZH-C291-xuanbu"
+  ],
+  "tex": "chinese/book/chapters/ch291-something-new.tex"
+}

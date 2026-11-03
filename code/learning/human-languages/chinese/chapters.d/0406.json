@@ -1,0 +1,19 @@
+{
+  "chapter": 406,
+  "title": "A Busy Platform",
+  "label": "ch:zh-a-busy-platform",
+  "canDo": "I can say a place is crowded, talk about a round trip, change a booking and talk about cars and racks.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C406-xinglijia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 406: I can say a place is crowded, talk about a round trip, change a booking and talk about cars and racks.",
+    "assesses": [
+      "ZH-LEX-C406-BUSY406-03",
+      "ZH-LEX-C406-BUSY406-04",
+      "ZH-LEX-C406-BUSY406-05"
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 458,
+  "title": "How I Feel",
+  "label": "ch:zh-how-i-feel",
+  "canDo": "I can talk about my mood, feeling for someone, being excited, relaxed or fed up.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C458-fan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 458: I can talk about my mood, feeling for someone, being excited, relaxed or fed up.",
+    "assesses": [
+      "ZH-LEX-C458-MOOD458-03",
+      "ZH-LEX-C458-MOOD458-04",
+      "ZH-LEX-C458-MOOD458-05"
+    ]
+  }
+}

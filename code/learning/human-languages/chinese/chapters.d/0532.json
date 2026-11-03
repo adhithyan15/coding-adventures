@@ -1,0 +1,19 @@
+{
+  "chapter": 532,
+  "title": "Hoping for More",
+  "label": "ch:zh-hoping-for-more",
+  "canDo": "I can say I'm dying for something, that something should happen, what I expect and whom I count on.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C532-zhiwang",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 532: I can say I'm dying for something, that something should happen, what I expect and whom I count on.",
+    "assesses": [
+      "ZH-LEX-C532-HOPE532-03",
+      "ZH-LEX-C532-HOPE532-04",
+      "ZH-LEX-C532-HOPE532-05"
+    ]
+  }
+}

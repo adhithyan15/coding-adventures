@@ -1,0 +1,11 @@
+{
+  "id": "PA-C315-hamla",
+  "pathSegment": "PA-PATH-315-BANDIT315",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-315-BANDIT315",
+      "order": 1
+    }
+  ]
+}

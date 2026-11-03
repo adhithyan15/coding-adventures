@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 288,
+  "sourceHash": "fnv1a64:37c9fd184ad38435",
+  "lessonIds": [
+    "PA-C288-dhupp",
+    "PA-C288-lu",
+    "PA-C288-tapna",
+    "PA-C288-hunal",
+    "PA-C288-soka"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch288.txt",
+  "json": "punjabi/narration/ch288.json",
+  "textHash": "fnv1a64:69fa9c0b544b00b8",
+  "jsonHash": "fnv1a64:48fead22956f344a",
+  "findings": []
+}

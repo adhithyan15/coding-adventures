@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 380,
+  "sourceHash": "fnv1a64:96683a6dc8a13de9",
+  "lessonIds": [
+    "ZH-C380-huanjing",
+    "ZH-C380-kongqi",
+    "ZH-C380-wuran",
+    "ZH-C380-diqiu",
+    "ZH-C380-huanbao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch380.txt",
+  "json": "chinese/narration/ch380.json",
+  "textHash": "fnv1a64:038c70cb1c983458",
+  "jsonHash": "fnv1a64:943923703a8a64f4",
+  "findings": []
+}

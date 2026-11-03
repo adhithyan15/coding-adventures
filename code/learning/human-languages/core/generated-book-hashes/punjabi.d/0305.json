@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:955b482360e91e4e",
+  "lessonIds": [
+    "PA-C305-vadhi",
+    "PA-C305-lunna",
+    "PA-C305-dati",
+    "PA-C305-gahuna",
+    "PA-C305-dher"
+  ],
+  "tex": "punjabi/book/chapters/ch305-harvest.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C492-shuxue",
+  "pathSegment": "ZH-PATH-492-SUBJECTS492",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-492-SUBJECTS492",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "MW-C267-hukam",
+  "pathSegment": "MW-PATH-267-RAJA267",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "MW-EXT-267-RAJA267",
+      "order": 2
+    }
+  ]
+}

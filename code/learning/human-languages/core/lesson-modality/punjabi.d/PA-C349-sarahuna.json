@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C349-sarahuna",
+    "language": "punjabi",
+    "chapter": 349,
+    "sequence": 21650,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:cf0ba95d0dda35a8"
+  },
+  "findings": []
+}

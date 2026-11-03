@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C182-bagharno",
+    "language": "marwadi",
+    "chapter": 182,
+    "sequence": 11850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:22ab61ab025ed48d"
+  },
+  "findings": []
+}

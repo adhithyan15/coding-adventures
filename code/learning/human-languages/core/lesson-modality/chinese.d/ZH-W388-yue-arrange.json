@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W388-yue-arrange",
+    "language": "chinese",
+    "chapter": 388,
+    "sequence": 29735,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:4c8215cc3d3458f1",
+    "detachableSegments": [
+      "Script — the silk piece of 给, then a hook around a dot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

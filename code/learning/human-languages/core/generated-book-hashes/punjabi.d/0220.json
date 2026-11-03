@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 220,
+  "sourceHash": "fnv1a64:da5ab8aa37e5f8c6",
+  "lessonIds": [
+    "PA-C220-ne-return",
+    "PA-C220-aman-ne",
+    "PA-C220-us-ne",
+    "PA-C220-ne-review",
+    "PA-C220-lia-ditta",
+    "PA-C220-ki-past",
+    "PA-C220-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch220-aman-bought-a-book.tex"
+}

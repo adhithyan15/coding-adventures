@@ -90,6 +90,57 @@ never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
   is unchanged; only its implementation moved. See `code/specs/AOT00-T1-precise-gc.md`
   and `code/specs/LANG16-gc-core.md`.
 
+- **Stack maps and dynamic parameters** — each compiled function registers a GC
+  stack map naming the frame slots that may hold heap words. The backends decide
+  that from the types they are handed, and treat `i64` as "never a reference".
+  A Twig parameter is declared `any`: arithmetic reads it as `i64` (signed
+  comparisons), but it is as often a pair or a closure. So the specialiser gets a
+  copy of the function with those params typed `i64` (`specialisation_view`),
+  while the backend gets the declared `any` and keeps the parameter's slot in
+  every stack map. Before #18492 the param was retyped in place, and a compacting
+  collection inside the callee left the parameter pointing at the freed old copy
+  of its argument. The same goes for local copies (`let` bindings, `if` joins,
+  copy chains): `root_heap_word_copies` keeps every `mov` that may copy a heap
+  word typed `any` for the stack map while its mnemonic stays `mov_i64`.
+  `tests/gc_param_roots.rs` reproduces each case end to end.
+
+**Strings fail closed (LANG83 PR5a).** `__twig_str_index` / `__twig_str_slice`
+out of range raise `Trap.Bounds` through `__twig_trap` (stdout flushed, the
+kind on stderr), and `__twig_str_concat(a, b, max)` raises `Trap.Overflow`
+when the result would exceed `max`, the module's string ceiling, which the
+lowering passes as an immediate. A folded out-of-range `str_index` /
+`str_slice` compiles to `trap "Trap.Bounds"`, and a literal concat fold stops
+at the ceiling. Every native entry point first refuses a module whose
+`str_const` is longer than the ceiling, or whose ceiling is above
+`STR_MAX_BYTES` (`AotError::Compile`, through
+`IIRModule::str_ceiling_errors`, #18800). A literal string's `alloc_bytes` handle is typed `str`, so it
+(and its `mov` alias) is a root in the precise stack map, like every run-time
+string.
+
+- **String buffers and other allocations** — `alloc_bytes` (the buffer behind
+  every runtime string) is typed `i64` by the string lowering, but it is a GC
+  block, and in a stack-mapped frame an unnamed slot is invisible to the
+  collector. `root_heap_word_copies` therefore first gives every GC allocation —
+  the `alloc_bytes` / `alloc_array` ops and `call_builtin` of `alloc_bytes`,
+  `str_concat`, `str_slice`, `input_str` and `dyn_pair_new` — a root type, and
+  then roots its copies (#18766). Only `ty` changes; the code bytes do not.
+
+- **Globals** — a top-level `define` that a function reads lives in the
+  `_twig_globals` data block, not on the stack, so no stack map can name it.
+  `__gc_init_stackmaps` therefore registers the whole block with gc-core-capi's
+  `__gc_register_global_roots` before its stack maps, and every collection
+  treats each global slot as a precise root: marked, and rewritten when a
+  compaction moves its object (#18765). `tests/gc_global_and_buffer_roots.rs`
+  reproduces both cases end to end. Design: `code/specs/AOT00-T1-stackmap-emission.md`
+  §4.2. A module with more globals than the runtime can root is refused at compile
+  time, and the init traps if registration is refused.
+
+- **Arrays of references** — an `alloc_array` whose element type is a reference
+  (BASIC `DIM A$(n)`: string handles) is rewritten to `alloc_ref_array` before
+  specialisation erases the element type, and the native backends lower it to
+  `__twig_alloc_ref_array_bytes`, whose heap kind traces every element. Scalar
+  arrays keep the untraced `__twig_alloc_bytes` blob.
+
 LANG-FULL E4 / BA4 literal string output reuses this runtime path: native AOT
 preparation lowers `str_const` + `print_str` to `alloc_bytes`, `store_byte`, and
 `call_builtin "print_string"`, so source-level BASIC `PRINT "HELLO"` runs through

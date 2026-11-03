@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C494-luobang",
+  "pathSegment": "ZH-PATH-494-GAOKAO494",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-494-GAOKAO494",
+      "order": 5
+    }
+  ]
+}

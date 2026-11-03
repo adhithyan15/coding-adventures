@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C211-janda-review",
+    "language": "punjabi",
+    "chapter": 211,
+    "sequence": 11520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:780d6554299fb2a4"
+  },
+  "findings": []
+}

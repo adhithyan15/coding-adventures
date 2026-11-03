@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 484,
+  "sourceHash": "fnv1a64:820181bd1b084290",
+  "lessonIds": [
+    "ZH-C484-yufang",
+    "ZH-C484-jiejiu",
+    "ZH-C484-yangcheng",
+    "ZH-C484-pilao",
+    "ZH-C484-dikangli"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch484.txt",
+  "json": "chinese/narration/ch484.json",
+  "textHash": "fnv1a64:b3ea3f702bea468a",
+  "jsonHash": "fnv1a64:63d7c650cbbf1d9d",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 450,
+  "title": "Local Food",
+  "label": "ch:zh-local-food",
+  "canDo": "I can talk about seafood, what makes the food special, going somewhere on purpose, authentic food and a signature dish.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C450-zhaopaicai",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 450: I can talk about seafood, what makes the food special, going somewhere on purpose, authentic food and a signature dish.",
+    "assesses": [
+      "ZH-LEX-C450-LOCAL450-03",
+      "ZH-LEX-C450-LOCAL450-04",
+      "ZH-LEX-C450-LOCAL450-05"
+    ]
+  }
+}

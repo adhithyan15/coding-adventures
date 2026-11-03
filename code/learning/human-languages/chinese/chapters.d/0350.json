@@ -1,0 +1,19 @@
+{
+  "chapter": 350,
+  "title": "Facts and Grounds",
+  "label": "ch:zh-facts-and-grounds",
+  "canDo": "I can say what the facts are, what a claim rests on and that it is hard to judge.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C350-queshi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 350: I can say what the facts are, what a claim rests on and that it is hard to judge.",
+    "assesses": [
+      "ZH-LEX-C350-FACTS350-03",
+      "ZH-LEX-C350-FACTS350-04",
+      "ZH-LEX-C350-FACTS350-05"
+    ]
+  }
+}

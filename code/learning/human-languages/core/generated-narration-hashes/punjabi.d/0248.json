@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 248,
+  "sourceHash": "fnv1a64:ff64511d02c51cb5",
+  "lessonIds": [
+    "PA-C248-diudhi",
+    "PA-C248-chaukhat",
+    "PA-C248-aral",
+    "PA-C248-sangal",
+    "PA-C248-khunti"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch248.txt",
+  "json": "punjabi/narration/ch248.json",
+  "textHash": "fnv1a64:6a5aa67c0675663e",
+  "jsonHash": "fnv1a64:b753354665361779",
+  "findings": []
+}

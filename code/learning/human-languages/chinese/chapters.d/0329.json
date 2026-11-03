@@ -1,0 +1,21 @@
+{
+  "chapter": 329,
+  "title": "Once upon a Time",
+  "label": "ch:zh-once-upon-a-time",
+  "canDo": "I can talk about fairy tales, a princess and a fairy, say someone vanished, and talk about how a story ends.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R329-review-324-329",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 329: I can talk about fairy tales, a princess and a fairy, say someone vanished, and talk about how a story ends.",
+    "assesses": [
+      "ZH-LEX-C329-TALE329-01",
+      "ZH-LEX-C329-TALE329-02",
+      "ZH-LEX-C329-TALE329-03",
+      "ZH-LEX-C329-TALE329-04",
+      "ZH-LEX-C329-TALE329-05"
+    ]
+  }
+}

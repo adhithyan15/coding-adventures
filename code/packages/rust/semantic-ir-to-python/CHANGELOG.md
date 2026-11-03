@@ -1,5 +1,75 @@
 # Changelog
 
+## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
+
+### A constant named like a function is renamed; only a user callee's keywords are
+
+Follow-ups to #18485, from the security review of #18788.
+
+* **Constants.**  `def F; 40; end; F = 2; puts F() + F` is 42 in Ruby: a
+  constant is its own SIR namespace.  The constant was bound as `F = 2`
+  inside the `def`, which made `F` local to the whole body, so `F()` called
+  the integer.  A constant spelled like a function is now `sir_esc_c<name>`
+  (`const_ident`) at its assignment, its walrus-form assignment and every
+  read.  Globals need no rule: they live in the runtime's store.
+* **Keyword arguments.**  #18788 renamed every keyword argument through
+  `var_ident`, to match a *user* function's renamed keyword parameter.  A
+  keyword passed to the *runtime* names a runtime parameter, which no user
+  function can rename, so it was renamed wrongly
+  (`_sir_oop_call_new("Foo", sir_esc_lf=2)` when the module had a function
+  `f`).  A `DirectCall` now spells its keywords itself
+  (`emit_user_call_args`); every other keyword keeps its own name
+  (`runtime_keyword`, which still escapes a name Python cannot accept).
+* **The renamed `main`.**  SIR's `main` is emitted as `_sir_user_main`.
+  `sanitize_ident` already reserves every `_sir…` name (#18466), so no user
+  function, variable or constant can spell it; a unit test now pins that for
+  all three.
+
+Tests: `a_constant_named_like_a_function_is_renamed_at_assignment_and_read`
+and `only_a_user_callees_keywords_are_renamed` fail on the previous emitter;
+`sir-conformance` runs the Ruby constant program above through `python3`.
+
+### Test temp files live in a private scratch directory
+
+The execution tests wrote each emitted program to a predictable name
+(`<program>_<pid>_<counter>`) directly in the shared system temp directory.
+Unique among this checkout's tests, but not private: any other process on
+the host could create that name first, replace it, or plant a symlink there
+(and beside a `.py` file, a module `python3` would import from the script's
+own directory).  Each test call now writes into a fresh
+[`sir-test-scratch`](../sir-test-scratch) directory -- random name, created
+atomically, mode `0700` on Unix, removed with its contents when the test
+returns or panics -- and creates its files with `create_new`, so an existing
+file is an error rather than reused.  The existing removal guards stay.
+
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 3 test files now carries a
+per-call `unique_suffix()` (process id plus a per-file atomic counter), the
+scheme `sir-conformance`'s `temp_path` uses. Test-only; no emitted code
+changes.
+
+## Unreleased — A variable never shadows a function of the same name (#18485)
+
+SIR keeps functions and variables in separate namespaces, and Ruby relies on
+it: `def f; 40; end; f = 2; puts f() + f` prints 42. This backend emitted
+the local as `f` next to the function `f`, so the local shadowed the
+function and the call failed with `TypeError: 'int' object is not callable`.
+A *variable* (local, parameter, capture, loop variable, `rescue` binding,
+keyword-argument name) whose SIR name is also a function's name is now
+emitted through `var_ident` as `sir_esc_l` + `sanitize_ident(name)`; every
+other variable, and every function, keeps its spelling, because callers
+append code that calls the emitted functions by name. The new `l` tag sits
+beside `sanitize_ident`'s `v` and `e`, so the renamed form can equal no
+other identifier. New unit tests
+`a_local_named_like_a_function_is_renamed_and_the_function_is_not` and
+`var_ident_renames_exactly_the_names_of_functions`; `sir-conformance`'s
+`tests/local_shadows_function.rs` runs the end-to-end proof.
+
 ## Unreleased — Generated names reserved; arity error is `ArgumentError` (issue #18466)
 
 - **`sanitize_ident` escapes the names the emitted module binds or reads**:

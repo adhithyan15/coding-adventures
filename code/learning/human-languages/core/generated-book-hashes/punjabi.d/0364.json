@@ -1,0 +1,15 @@
+{
+  "language": "punjabi",
+  "chapter": 364,
+  "sourceHash": "fnv1a64:c98d1d0a14d712ea",
+  "lessonIds": [
+    "PA-C364-pesha",
+    "PA-C364-karobar",
+    "PA-C364-kamyab",
+    "PA-C364-sanad",
+    "PA-C364-juttna",
+    "PA-R364-review-358-364",
+    "PA-R364-review-final-364"
+  ],
+  "tex": "punjabi/book/chapters/ch364-good-at-my-job.tex"
+}

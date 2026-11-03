@@ -1,0 +1,19 @@
+{
+  "chapter": 353,
+  "title": "Out to Play",
+  "label": "ch:pa-a2-out-to-play",
+  "canDo": "I can say what children like to play outside.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-C353-khidauna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 353: I can say what children like to play outside.",
+    "assesses": [
+      "PA-LEX-C353-PLAY353-03",
+      "PA-LEX-C353-PLAY353-04",
+      "PA-LEX-C353-PLAY353-05"
+    ]
+  }
+}

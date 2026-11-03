@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:307184b43a0970b0",
+  "lessonIds": [
+    "PA-C352-shatranj",
+    "PA-C352-bazi",
+    "PA-C352-vari",
+    "PA-C352-goti",
+    "PA-C352-inam"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch352.txt",
+  "json": "punjabi/narration/ch352.json",
+  "textHash": "fnv1a64:fd9bfa26ba13cf41",
+  "jsonHash": "fnv1a64:a47316d23e98de1e",
+  "findings": []
+}

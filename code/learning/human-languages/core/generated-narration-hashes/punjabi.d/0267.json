@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 267,
+  "sourceHash": "fnv1a64:dd3d463ca1921f1e",
+  "lessonIds": [
+    "PA-C267-thana",
+    "PA-C267-manzil",
+    "PA-C267-dakkhana",
+    "PA-C267-adalat",
+    "PA-C267-thikana"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch267.txt",
+  "json": "punjabi/narration/ch267.json",
+  "textHash": "fnv1a64:d69da64d4b9415d3",
+  "jsonHash": "fnv1a64:81fd553acf68f072",
+  "findings": []
+}

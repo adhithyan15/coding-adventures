@@ -1,5 +1,17 @@
 # Changelog — constraint-core
 
+## Unreleased — 2026-11-02
+
+### Fixed
+
+- **`to_nnf` now pushes negation through `Iff`.** `¬(a ⇔ b)` fell through
+  to the "keep the `Not` wrapper" arm, so the negation stayed around the
+  `And` of `Or`s that `Iff` expands to. `to_cnf` then returned a formula
+  that was not CNF, and `constraint-engine`'s SAT tactic answered `Unknown`
+  on satisfiable or unsatisfiable inputs alike. It now rewrites to the
+  exclusive-or clauses `(a ∨ b) ∧ (¬a ∨ ¬b)`. Found by the VER09
+  differential test of the new CDCL adapter.
+
 ## [0.1.1] — 2026-05-04
 
 Security hardening — algorithmic-complexity DoS guards.  These fixes become

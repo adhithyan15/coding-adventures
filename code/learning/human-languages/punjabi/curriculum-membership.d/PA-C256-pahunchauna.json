@@ -1,0 +1,11 @@
+{
+  "id": "PA-C256-pahunchauna",
+  "pathSegment": "PA-PATH-256-DAK256",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-256-DAK256",
+      "order": 2
+    }
+  ]
+}

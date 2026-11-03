@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 492,
+  "sourceHash": "fnv1a64:0e3cc37f26026ecf",
+  "lessonIds": [
+    "ZH-C492-yuwen",
+    "ZH-C492-shuxue",
+    "ZH-C492-dili",
+    "ZH-C492-yingyu",
+    "ZH-C492-zhuanye"
+  ],
+  "tex": "chinese/book/chapters/ch492-school-subjects.tex"
+}

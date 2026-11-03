@@ -1,0 +1,11 @@
+{
+  "id": "MW-C215-kagad",
+  "pathSegment": "MW-PATH-215-WRAP215",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-215-WRAP215",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 316,
+  "title": "Trouble in the Lane",
+  "label": "ch:pa-a2-trouble-in-the-lane",
+  "canDo": "I can say who quarrelled and how it ended.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C316-sulha",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 316: I can say who quarrelled and how it ended.",
+    "assesses": [
+      "PA-LEX-C316-QUARREL316-03",
+      "PA-LEX-C316-QUARREL316-04",
+      "PA-LEX-C316-QUARREL316-05"
+    ]
+  }
+}

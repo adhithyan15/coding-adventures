@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W279-di",
+    "language": "chinese",
+    "chapter": 279,
+    "sequence": 21090,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6dae5b689c1460d9",
+    "detachableSegments": [
+      "Script — the bamboo piece of 笑, then a five-stroke body"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

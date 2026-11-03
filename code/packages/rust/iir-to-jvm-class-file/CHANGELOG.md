@@ -1,5 +1,16 @@
 # Changelog — iir-to-jvm-class-file
 
+## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused at compile time
+
+- `validate_for_jvm` (and so `lower_iir_to_jvm` and the codegen registry) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.
+- Test `a_literal_past_the_module_ceiling_is_refused_at_compile_time` (fails without the check).
+
+## Unreleased — LANG83 PR5a — strings fail closed, checked before narrowing
+
+- `str_index` and `str_slice` check their bounds on the full `long` operands (`lcmp` guards) **before** the `l2i` that `charAt` / `substring` need, and a failing guard runs the 17-byte LANG83 trap sequence with `Trap.Bounds` (flush `System.out`, throw `RuntimeException("Trap.Bounds")`). Before, the index was narrowed first, so `str_index s, 2^32 + 1` silently read `s[1]`, and an out-of-range index threw `StringIndexOutOfBoundsException` with no flush and no kind.
+- `str_concat` compares `long(a.length()) + long(b.length())` with the module's string ceiling (`IIRModule::str_ceiling`, an `ldc2_w` constant) and raises `Trap.Overflow` past it, before `concat` builds anything.
+- New `tests/lang83_pr5a.rs` pins the guards, their kinds, their order relative to `l2i`, and the ceiling constant. `lang-aot`'s `op_conformance` runs the cases on a real `java` with the verifier on.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: the JVM holds dynamic values as objects (through `lang-aot`'s structural lowering) and links no tagged-word runtime.

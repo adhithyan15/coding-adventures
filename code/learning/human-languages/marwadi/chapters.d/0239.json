@@ -1,0 +1,19 @@
+{
+  "chapter": 239,
+  "title": "Crops",
+  "label": "ch:mw-crops",
+  "canDo": "I can name the crops of the desert farm and say they grow.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-THINGS"
+  ],
+  "payoff": {
+    "lesson": "MW-C239-kupal",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 239: I can name the crops of the desert farm and say they grow.",
+    "assesses": [
+      "MW-LEX-C239-CROP239-03",
+      "MW-LEX-C239-CROP239-04",
+      "MW-LEX-C239-CROP239-05"
+    ]
+  }
+}

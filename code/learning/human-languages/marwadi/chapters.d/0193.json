@@ -1,0 +1,19 @@
+{
+  "chapter": 193,
+  "title": "Rupees and Coins",
+  "label": "ch:mw-rupees-and-coins",
+  "canDo": "I can count out rupees and coins and pay.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "MW-C193-chukavno",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 193: I can count out rupees and coins and pay.",
+    "assesses": [
+      "MW-LEX-C193-MONEY193-03",
+      "MW-LEX-C193-MONEY193-04",
+      "MW-LEX-C193-MONEY193-05"
+    ]
+  }
+}

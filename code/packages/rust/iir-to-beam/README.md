@@ -196,15 +196,16 @@ backend's `str_slice` — see `vm-core::dispatch::handle_str_slice`): an
 in-range `start` with an `end` past the source length silently returns a
 SHORT result instead of raising. The lowering therefore checks all three
 predicates explicitly (`erlang:length/1` via `gc_bif1`, then `is_ge` branches
-reusing the same label-synthesis pattern as `cmp_*`) and calls
-`erlang:error(badarg)` on any violation, before `sublist` ever runs.
-`str_index` lowers `idx` to `lists:nth(idx+1, source)`; unlike `str_slice`'s
-`sublist` gap, `lists:nth`'s own clauses have no case for an index `<= 0` or
-past the list's end, so both out-of-range directions already raise
-`function_clause` on their own — no separate explicit guard is needed, and
-the 0-based-to-1-based `+1` conversion is exactly what makes that native
-failure line up with `str_index`'s documented `idx < 0 || idx >= len` trap
-contract (`vm-core::dispatch::handle_str_index`).
+reusing the same label-synthesis pattern as `cmp_*`), after an
+`is_integer` test on both offsets, and calls `erlang:error('Trap.Bounds')`
+(LANG83 PR5a; it was `badarg`) on any violation, before `sublist` ever runs.
+`str_index` lowers `idx` to `lists:nth(idx+1, source)`, behind the same
+guards: `is_integer`, `idx >= 0`, `idx < length(source)`, failing to
+`erlang:error('Trap.Bounds')`. (`lists:nth` would fail on its own, but with
+`function_clause`, which names no kind.) `str_concat` checks
+`length(A) + length(B)` against the module's string ceiling before `++` and
+raises `'Trap.Overflow'` past it. `validate_for_beam` refuses a `str_const`
+longer than the ceiling, and a ceiling above `STR_MAX_BYTES` (#18800).
 
 A float `const` is now accepted **only** with `type_hint == "f64"` (BEAM03 —
 see the opcode table above and `code/specs/BEAM03-float-lowering.md`); any

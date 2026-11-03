@@ -1,0 +1,21 @@
+{
+  "language": "punjabi",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:cee0e3ae6953d96e",
+  "lessonIds": [
+    "PA-C308-chara",
+    "PA-C308-goha",
+    "PA-C308-vachchha",
+    "PA-C308-sing",
+    "PA-C308-hakkna",
+    "PA-R308-review-302-308",
+    "PA-R308-review-final-308"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "punjabi/narration/ch308.txt",
+  "json": "punjabi/narration/ch308.json",
+  "textHash": "fnv1a64:18632231e104560a",
+  "jsonHash": "fnv1a64:6e71469dcbf2dbc1",
+  "findings": []
+}

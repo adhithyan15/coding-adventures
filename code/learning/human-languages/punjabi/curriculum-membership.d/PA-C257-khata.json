@@ -1,0 +1,11 @@
+{
+  "id": "PA-C257-khata",
+  "pathSegment": "PA-PATH-257-BANK257",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-257-BANK257",
+      "order": 0
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 239,
+  "sourceHash": "fnv1a64:115726ea98db8721",
+  "lessonIds": [
+    "PA-C239-tava",
+    "PA-C239-sekna",
+    "PA-C239-chimta",
+    "PA-C239-dhakkna",
+    "PA-C239-ghiu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch239.txt",
+  "json": "punjabi/narration/ch239.json",
+  "textHash": "fnv1a64:efa043576cc1ff05",
+  "jsonHash": "fnv1a64:d1413ba4e2c70484",
+  "findings": []
+}

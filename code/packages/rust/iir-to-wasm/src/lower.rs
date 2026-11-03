@@ -133,6 +133,7 @@
 //! local.set $dest_local
 //! ```
 
+use interpreter_ir::exception_kind::{TRAP_BOUNDS, TRAP_OVERFLOW};
 use std::cmp::Ordering;
 use std::collections::{HashMap, HashSet};
 
@@ -303,19 +304,36 @@ fn collect_runtime_valued_str_vars(fn_: &IIRFunction) -> HashSet<String> {
         .filter(|(_, ty)| ty == "str")
         .map(|(name, _)| name.as_str())
         .collect();
-    let mut written_strings = HashSet::new();
+    // Every write of every variable, whatever its op and type hint (#18800).
+    let mut writes: HashMap<&str, usize> = HashMap::new();
+    for dest in fn_.instructions.iter().filter_map(|i| i.dest.as_deref()) {
+        *writes.entry(dest).or_default() += 1;
+    }
     for instr in &fn_.instructions {
         let Some(dest) = instr.dest.as_deref() else {
             continue;
         };
-        if instr.type_hint != "str" {
+        // A string producer is recognised by its op as well as its hint:
+        // validation accepts a `str_const` / `str_concat` / `str_slice` whose
+        // `type_hint` is not `"str"` (e.g. `"bool"`), and such a write still
+        // puts a literal in the table.
+        let is_string_producer =
+            instr.type_hint == "str" || matches!(instr.op.as_str(), "str_const" | "str_concat" | "str_slice");
+        if !is_string_producer {
             continue;
         }
         // The literal table is keyed by variable, not instruction position.
         // Two writes in the SAME block are already enough to make its final
         // literal wrong for an earlier read. Use live handles for every write
         // and propagate that representation to downstream consumers.
-        if !written_strings.insert(dest) {
+        //
+        // Every write counts, not only the `"str"`-hinted ones (#18800). This
+        // pass used to count only those, so `d = str_const "x" [bool]` then
+        // `d = str_concat a, a [str]` looked like one write: `d` kept the
+        // literal "x", and when the concat was not folded (because the join
+        // was past the string ceiling) every read of `d` folded to "x" and
+        // the concat's `Trap.Overflow` never ran.
+        if writes.get(dest).copied().unwrap_or(0) > 1 {
             worklist.push(dest);
         }
         // How many leading `srcs` carry the string(s) this op derives its result
@@ -1315,6 +1333,10 @@ struct Lang83Imports {
     /// `lang83_f64.rs`), present when the module uses either op.
     f64_digits: Option<u32>,
     f64_exp10: Option<u32>,
+    /// LANG83 PR5a: the module's string ceiling (`IIRModule::str_ceiling`).
+    /// Not an import, but it travels with them because every site that can
+    /// trap `Trap.Overflow` on a string already receives this struct.
+    str_ceiling: u32,
 }
 
 /// Emit WASM bytes for a single IIR instruction.
@@ -1545,6 +1567,40 @@ fn emit_instr(
             })?;
             let rd = get_reg(dest)?;
             if let Some(lit) = string_literals.get(dest) {
+                // LANG83 PR5a: a fold may not turn a failing op into a value.
+                // `collect_module_features` folds a join only when it fits the
+                // module's string ceiling (#18800); a longer one has no literal
+                // entry and takes the runtime path below, whose length check
+                // raises `Trap.Overflow`. (Until #18800 the join was folded and
+                // this site emitted the trap, with the over-long bytes already in
+                // the data segment.) And `str_const`s past the ceiling never get
+                // here: validation refuses them.
+                //
+                // Always-on check, in release builds too (#18800 security
+                // review): the folded value must be exactly this concat's
+                // two operands' literals joined, and within the ceiling. The
+                // literal table is keyed by variable name, so a bug that left a
+                // stale entry for `dest` would otherwise emit a wrong value
+                // here and skip the op's trap. Refuse to compile instead.
+                let joined = match instr.srcs.as_slice() {
+                    [Operand::Var(a), Operand::Var(b)] => {
+                        string_literals.get(a.as_str()).zip(string_literals.get(b.as_str())).map(|(la, lb)| {
+                            let mut v = la.bytes.clone();
+                            v.extend_from_slice(&lb.bytes);
+                            v
+                        })
+                    }
+                    _ => None,
+                };
+                if joined.as_deref() != Some(lit.bytes.as_slice()) || lit.bytes.len() > lang83.str_ceiling as usize {
+                    return Err(IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: format!(
+                            "str_concat {dest:?}: its folded literal is not its operands' joined literals \
+                             within the string ceiling (internal fold-table inconsistency); refusing to compile"
+                        ),
+                    });
+                }
                 // Both operands are literals — the joined bytes are a compile-time
                 // constant.  Normally the handle is that constant's raw data-segment
                 // offset.  But when this folded result crosses a call boundary
@@ -1588,6 +1644,24 @@ fn emit_instr(
                         op: "str_concat (missing __array_bump global)".to_string(),
                     }
                 })?;
+
+                // LANG83 PR5a: the string ceiling, checked before anything is
+                // allocated. Both lengths are widened to i64 first, so their sum
+                // cannot wrap however large either header is:
+                //   if u64(la) + u64(lb) >u ceiling { Trap.Overflow }
+                code.extend(encode_local_get(ra));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_i64_extend_i32_u());
+                code.extend(encode_local_get(rb));
+                code.extend(encode_i32_load(0));
+                code.extend(encode_i64_extend_i32_u());
+                code.push(I64_ADD);
+                code.extend(encode_i64_const(i64::from(lang83.str_ceiling)));
+                code.push(I64_GT_U);
+                code.push(IF);
+                code.push(BLOCK_EMPTY);
+                emit_str_trap(code, lang83, TRAP_OVERFLOW, fn_name)?;
+                code.push(END);
 
                 // Ensure linear memory can hold the new block (header + both byte
                 // runs) BEFORE any write touches it: needed_end = bump + 4 + la + lb.
@@ -1684,7 +1758,9 @@ fn emit_instr(
         // have no compile-time answer, so build a fresh `[i32 len][bytes]` block —
         // exactly like a runtime `str_concat`, but copying one operand's
         // `[start, end)` run:
-        //   trap unless 0 ≤ start ≤ end ≤ len          ;; unsigned, per E4 §2.2
+        //   Trap.Bounds unless 0 ≤ start ≤ end ≤ len   ;; unsigned, per E4 §2.2;
+        //                                              ;; i64 slots checked before
+        //                                              ;; the i32.wrap (LANG83 PR5a)
         //   new  = bump                                ;; base of the sliced block
         //   bump = bump + 4 + (end - start)            ;; reserve header + the run
         //   mem[new]      = end - start                ;; the i32 length header
@@ -1787,29 +1863,30 @@ fn emit_instr(
                         code.push(I64_GT_U);
                         code.push(IF);
                         code.push(BLOCK_EMPTY);
-                        code.push(UNREACHABLE);
+                        emit_str_trap(code, lang83, TRAP_BOUNDS, fn_name)?;
                         code.push(END);
                     }
                 }
 
-                // Bounds: `unreachable` (trap) unless 0 ≤ start ≤ end ≤ len.  The
-                // compares are UNSIGNED, so a negative index (a huge unsigned) fails
-                // one of them — matching `str_index`'s trap rule and E4 §2.2.
-                // if start >u end { unreachable }
+                // Bounds: `Trap.Bounds` (LANG83 PR5a: `env.__trap(1)`, then
+                // `unreachable`) unless 0 ≤ start ≤ end ≤ len.  The compares are
+                // UNSIGNED, so a negative index (a huge unsigned) fails one of them
+                // — matching `str_index`'s trap rule and E4 §2.2.
+                // if start >u end { Trap.Bounds }
                 code.extend_from_slice(&push_start);
                 code.extend_from_slice(&push_end);
                 code.push(I32_GT_U);
                 code.push(IF);
                 code.push(BLOCK_EMPTY);
-                code.push(UNREACHABLE);
+                emit_str_trap(code, lang83, TRAP_BOUNDS, fn_name)?;
                 code.push(END);
-                // if end >u len { unreachable }
+                // if end >u len { Trap.Bounds }
                 code.extend_from_slice(&push_end);
                 code.extend_from_slice(&push_src_len);
                 code.push(I32_GT_U);
                 code.push(IF);
                 code.push(BLOCK_EMPTY);
-                code.push(UNREACHABLE);
+                emit_str_trap(code, lang83, TRAP_BOUNDS, fn_name)?;
                 code.push(END);
 
                 // Ensure linear memory can hold the new block (header + the run)
@@ -1943,7 +2020,7 @@ fn emit_instr(
                 }
                 code.push(IF);
                 code.push(BLOCK_EMPTY);
-                code.push(UNREACHABLE);
+                emit_str_trap(code, lang83, TRAP_BOUNDS, fn_name)?;
                 code.push(END);
 
                 // byte = load8_u(offset + idx)  — the literal has no header.
@@ -1976,7 +2053,7 @@ fn emit_instr(
                 }
                 code.push(IF);
                 code.push(BLOCK_EMPTY);
-                code.push(UNREACHABLE);
+                emit_str_trap(code, lang83, TRAP_BOUNDS, fn_name)?;
                 code.push(END);
 
                 // byte = load8_u(handle + 4 + idx)  — skip the i32 length header.
@@ -4435,6 +4512,20 @@ const WASM_I64_EXTEND_I32_U: u8 = 0xAD;
 /// `i64.extend_i32_s` (0xAC).
 const WASM_I64_EXTEND_I32_S: u8 = 0xAC;
 
+/// The LANG83 trap sequence for a string op's failure (PR5a): `Trap.Bounds`
+/// for an out-of-range `str_index` / `str_slice`, `Trap.Overflow` for a
+/// `str_concat` past the string ceiling. Before PR5a these sites emitted a
+/// bare `unreachable`, an untyped WASM trap that named no kind.
+fn emit_str_trap(
+    code: &mut Vec<u8>,
+    lang83: Lang83Imports,
+    kind: &str,
+    fn_name: &str,
+) -> Result<(), IIRWasmError> {
+    let id = interpreter_ir::exception_kind::trap_kind_id(kind).expect("a registered trap kind");
+    emit_lang83_trap(code, lang83, id, fn_name)
+}
+
 /// `i32.const <kind_id>; call $env.__trap; unreachable` (LANG83 PR1b).
 fn emit_lang83_trap(
     code: &mut Vec<u8>,
@@ -5321,6 +5412,8 @@ fn build_str_cmp_helper() -> FunctionBody {
 }
 
 fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
+    // LANG83 PR5a: the most bytes a folded `str_concat` may produce (#18800).
+    let str_ceiling = module.str_ceiling();
     // Use a HashSet for O(1) deduplication checks, preserving first-seen order
     // in the Vec.  Without the set, deduplication would be O(M × N) where M is
     // the number of global accesses and N the number of distinct names —
@@ -5468,6 +5561,23 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                         // happen to fold, so the variable has exactly one
                         // representation (a `[i32 len][bytes]` handle) everywhere.
                         let foldable = !fn_runtime_valued.contains(dest);
+                        // LANG83 PR5a (#18800): a fold may not build a string the
+                        // program could not. A join longer than the module's ceiling
+                        // is NOT folded — it takes the runtime path below, whose
+                        // inline length check raises `Trap.Overflow` at run time,
+                        // exactly as twig-aot's and iir-to-llvm's folds stop at the
+                        // ceiling. Folding it anyway (as this pass did) put the
+                        // over-long bytes in the data segment and let a chain of
+                        // `d = d ++ d` double in the compiler without bound:
+                        //
+                        //   doublings of an 8-byte literal │ 10     │ 20     │ 40
+                        //   data segment before the fix    │ 16 KiB │ 16 MiB │ 8 TiB
+                        //
+                        // With the check every folded literal is at most
+                        // `str_ceiling()` bytes, and the chain stops folding at the
+                        // first join past it (whose operands are then promoted to
+                        // runtime blocks below, like any other runtime concat's).
+                        let ceiling = str_ceiling as usize;
                         let Some((left_lit, right_lit)) = string_literals
                             .get(&fn_.name)
                             .filter(|_| foldable)
@@ -5477,6 +5587,7 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                     fn_strings.get(right)?.clone(),
                                 ))
                             })
+                            .filter(|(l, r)| l.bytes.len().saturating_add(r.bytes.len()) <= ceiling)
                         else {
                             // A non-foldable concatenation allocates a runtime
                             // `[len][bytes]` block in linear memory. It may be
@@ -5520,6 +5631,14 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                     &lit.bytes,
                                     lit.len,
                                 );
+                            }
+                            // `dest` now holds a run-time string, so it must not
+                            // keep a literal an earlier write gave it: the table is
+                            // keyed by name, and the lowering would fold every read
+                            // of `dest` (this concat included) to that stale value
+                            // (#18800 security review).
+                            if let Some(fn_strings) = string_literals.get_mut(&fn_.name) {
+                                fn_strings.remove(dest);
                             }
                             continue;
                         };
@@ -5647,6 +5766,11 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                                     });
                             }
                             None => {
+                                // As for a concat that is not folded: forget any
+                                // literal an earlier write gave `dest` (#18800).
+                                if let Some(fn_strings) = string_literals.get_mut(&fn_.name) {
+                                    fn_strings.remove(dest);
+                                }
                                 // Runtime slice (a runtime-handle source and/or
                                 // runtime indices): the lowering bump-allocates a
                                 // fresh `[i32 len][bytes]` block and `memory.copy`s the
@@ -6026,9 +6150,14 @@ pub fn lower_iir_to_wasm(
                     | "i64_add_ovf" | "i64_sub_ovf" | "i64_mul_ovf" | "i64_neg_ovf"
                     // A failed narrowing traps Trap.ConvRange.
                     | "real_to_int_trunc" | "real_to_int_floor"
+                    // LANG83 PR5a: an out-of-range read traps Trap.Bounds, and
+                    // a concat past the string ceiling traps Trap.Overflow.
+                    // (So every host that runs a string program provides
+                    // `env.__trap`; see the lesson on typed WASM traps.)
+                    | "str_index" | "str_slice" | "str_concat"
             )
         });
-    let mut lang83 = Lang83Imports::default();
+    let mut lang83 = Lang83Imports { str_ceiling: module.str_ceiling(), ..Lang83Imports::default() };
     if lang83_uses_write_i64 {
         lang83.write_i64 = Some(next_import_idx);
         next_import_idx += 1;
@@ -6611,6 +6740,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -6741,6 +6871,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
         assert!(matches!(result, Err(IIRWasmError::ValidationFailed(_))));

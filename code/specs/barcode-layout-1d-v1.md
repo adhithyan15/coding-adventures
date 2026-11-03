@@ -203,16 +203,41 @@ and known divergences, but it must not carry a revision, corpus digest, pull
 request, executed-test path, or zero-authority proof. A `conformant` entry has
 no known divergence and must carry all of those promotion fields.
 
-The corpus digest is SHA-256 over the raw checked-in `cases.json` bytes. The
-verified revision is a reachable evidence commit whose package source and
-conformance test match the bytes executed before publication. After a squash
-merge, it may be the durable merge commit when that commit preserves the tested
-package tree. `package_tree` is that commit's Git tree ID for
-the canonical package root and must equal the package tree in the checked-out
-adoption commit. This binds the tested package bytes; the repository contract
-job fetches history so it can resolve the exact implementation revision rather
-than trusting the registry claim. Both the revision and adoption PR are checked
-against the durable backlog owner rather than the mutable active-PR pointer.
+The corpus digest is SHA-256 over the raw checked-in `cases.json` bytes.
+
+`package_tree` is the integrity anchor. It is the Git tree object ID of the
+canonical package root at the commit whose lane tests passed. A tree ID is
+content-addressed: a squash merge that carries the same package bytes
+reproduces the identical tree object, so the evidence stays resolvable on the
+default branch after the pull request's own commits are discarded. The
+repository gate requires `package_tree` to resolve to a tree object, and
+requires the checked-out package tree to equal it. The only drift it admits is
+a dependency-lockfile refresh (the test's `DEPENDENCY_LOCK_FILES`). Any other
+change under the package root (source, tests, manifests, build recipes,
+changelogs) must re-run the lane's tests and, once they pass, set
+`package_tree` to the re-verified tree in the same pull request that changes
+the lane.
+
+`verified_revision` is provenance: the commit at which that tree was verified.
+Wherever that commit can be resolved, its tree at the package root must equal
+`package_tree`, so a pin that names a real commit cannot disagree with the tree
+it claims. A verified revision that cannot be resolved, or is not an ancestor
+of the checked-out commit, is not a failure on its own. That is the normal
+state once the verifying pull request is squash-merged, and the tree still
+carries the evidence. Repointing the revision at the merge commit afterwards is
+allowed but not required.
+
+The repository contract job fetches history so it can resolve both objects
+rather than trusting the registry claim. Both the revision and adoption PR are
+checked against the durable backlog owner rather than the mutable active-PR
+pointer: `verified_revision` must equal the owner item's
+`implementation_revision`.
+
+An earlier version of this section required `verified_revision` to be an
+ancestor of the checked-out commit. Under squash merges no pull request could
+satisfy that for a change to its own lane, because the only commits it can pin
+are the ones the squash discards. Main went red after every such merge until a
+follow-up repointed the revision (#16343, #16361, #18527).
 The adoption PR carries those exact bytes and the registry transition. The
 executed test path must exist inside the target package, consume every corpus
 case dynamically, and be tracked in the checked-out adoption commit. The

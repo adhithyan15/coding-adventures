@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 456,
+  "sourceHash": "fnv1a64:db9fdd034ef70104",
+  "lessonIds": [
+    "ZH-C456-zousan",
+    "ZH-C456-qiuzhu",
+    "ZH-C456-luren",
+    "ZH-C456-shizhu",
+    "ZH-C456-renling"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch456.txt",
+  "json": "chinese/narration/ch456.json",
+  "textHash": "fnv1a64:f2dd47083d99906e",
+  "jsonHash": "fnv1a64:b43fc95efa2542c6",
+  "findings": []
+}

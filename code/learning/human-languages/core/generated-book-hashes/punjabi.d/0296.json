@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 296,
+  "sourceHash": "fnv1a64:6d48a32d2c51e5c9",
+  "lessonIds": [
+    "PA-C296-khisakna",
+    "PA-C296-chipakna",
+    "PA-C296-garha",
+    "PA-C296-chikna",
+    "PA-C296-pighalna"
+  ],
+  "tex": "punjabi/book/chapters/ch296-slippery-paths.tex"
+}

@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 268,
+  "sourceHash": "fnv1a64:c07b22bf2b502559",
+  "lessonIds": [
+    "MW-C268-kaivno",
+    "MW-C268-sunavno",
+    "MW-C268-salah",
+    "MW-C268-matlab",
+    "MW-C268-sipharas"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch268.txt",
+  "json": "marwadi/narration/ch268.json",
+  "textHash": "fnv1a64:0d277ec94c6e433a",
+  "jsonHash": "fnv1a64:3686a1efaa6e83a0",
+  "findings": []
+}

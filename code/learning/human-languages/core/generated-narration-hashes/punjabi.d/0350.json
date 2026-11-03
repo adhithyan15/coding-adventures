@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 350,
+  "sourceHash": "fnv1a64:27d971ede34f398f",
+  "lessonIds": [
+    "PA-C350-shauk",
+    "PA-C350-natak",
+    "PA-C350-filam",
+    "PA-C350-nachauna",
+    "PA-C350-parchauna",
+    "PA-R350-review-344-350"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch350.txt",
+  "json": "punjabi/narration/ch350.json",
+  "textHash": "fnv1a64:2ca1a45d876a2ade",
+  "jsonHash": "fnv1a64:0a363e9f26ea52f2",
+  "findings": []
+}

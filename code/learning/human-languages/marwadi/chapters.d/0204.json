@@ -1,0 +1,19 @@
+{
+  "chapter": 204,
+  "title": "Out and About",
+  "label": "ch:mw-out-and-about",
+  "canDo": "I can stroll round the town and find my way.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "MW-C204-nakso",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 204: I can stroll round the town and find my way.",
+    "assesses": [
+      "MW-LEX-C204-OUT204-03",
+      "MW-LEX-C204-OUT204-04",
+      "MW-LEX-C204-OUT204-05"
+    ]
+  }
+}

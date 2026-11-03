@@ -133,9 +133,10 @@ fn case_eq_compiles_and_matches_ruby_output() {
         eprintln!("note: `node` unavailable — skipping execution");
         return;
     }
-    let mut path: PathBuf = std::env::temp_dir();
-    path.push(format!("sir_js_case_eq_{}.js", std::process::id()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
+    path.push(format!("sir_js_case_eq_{}.js", unique_suffix()));
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
     assert!(
@@ -151,4 +152,15 @@ fn case_eq_compiles_and_matches_ruby_output() {
         "A\nY\nC",
         "case_eq did not match Ruby === semantics"
     );
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

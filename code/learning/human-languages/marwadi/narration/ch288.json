@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 288,
+  "title": "Hard Work",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:f3b1535efad916ae",
+  "lessons": [
+    {
+      "id": "MW-C288-mehnat",
+      "sequence": 20130,
+      "title": "मेहनत (mehnat) — hard work",
+      "headword": "मेहनत",
+      "romanization": "mehnat",
+      "gloss": "hard work",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0ffb2f08b159174",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a pupil, then the Marwadi for a wrestling ground."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मेहनत",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेहनत — mehnat — \"hard work\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मेहनत चोखी बात है। mehnat chokhī bāt hai. Hard work is a good thing."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मेहनत (mehnat) is usually traced, through Persian mihnat, \"labour\", to Arabic miḥna, \"trial, hardship\". मेहनती, hard-working, is built on it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mehnat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mehnat*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mehnat, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mehnat*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mehnat chokhī bāt hai. — Hard work is a good thing.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mehnat chokhī bāt hai.* — Hard work is a good thing.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a pupil, then the Marwadi for a wrestling ground, then say mehnat again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a pupil, then the Marwadi for a wrestling ground, then say *mehnat* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मेहनत (mehnat) mean? (\"Hard work\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C288-mehnat-type",
+              "prompt": "Say the Marwadi for 'hard work'.",
+              "assesses": [
+                "MW-LEX-C288-KAM288-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मेहनत",
+                "mehnat"
+              ],
+              "feedback": {
+                "correct": "Right: मेहनत (mehnat) is 'hard work'.",
+                "incorrect": "'hard work' is मेहनत (mehnat)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C288-layak",
+      "sequence": 20140,
+      "title": "लायक (lāyak) — capable",
+      "headword": "लायक",
+      "romanization": "lāyak",
+      "gloss": "capable",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e07cefc1fd330c83",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a wrestling ground, then the Marwadi for hard work."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लायक",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लायक — lāyak — \"capable\"."
+            },
+            {
+              "kind": "speech",
+              "text": "छोरो घणो लायक है। chhoro ghaṇo lāyak hai. The boy is very capable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लायक (lāyak) is usually traced, through Persian, to Arabic lāyiq, \"worthy, fit\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāyak",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāyak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lāyak, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lāyak*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhoro ghaṇo lāyak hai. — The boy is very capable.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhoro ghaṇo lāyak hai.* — The boy is very capable.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a wrestling ground, then the Marwadi for hard work, then say lāyak again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a wrestling ground, then the Marwadi for hard work, then say *lāyak* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लायक (lāyak) mean? (\"Capable\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C288-layak-type",
+              "prompt": "Say the Marwadi for 'capable'.",
+              "assesses": [
+                "MW-LEX-C288-KAM288-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लायक",
+                "lāyak"
+              ],
+              "feedback": {
+                "correct": "Right: लायक (lāyak) is 'capable'.",
+                "incorrect": "'capable' is लायक (lāyak)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C288-ustad",
+      "sequence": 20150,
+      "title": "उस्ताद (ustād) — a master of a craft",
+      "headword": "उस्ताद",
+      "romanization": "ustād",
+      "gloss": "a master of a craft",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d40684e60187b21b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for hard work, then the Marwadi for capable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: उस्ताद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उस्ताद — ustād — \"a master of a craft\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो उस्ताद घणो हुसियार है। mhāro ustād ghaṇo husiyār hai. My master is very clever."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "उस्ताद (ustād) is usually traced to Persian ustād, \"a master\": the one who has the skill and teaches it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ustād",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ustād*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ustād, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ustād*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro ustād ghaṇo husiyār hai. — My master is very clever.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro ustād ghaṇo husiyār hai.* — My master is very clever.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for hard work, then the Marwadi for capable, then say ustād again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for hard work, then the Marwadi for capable, then say *ustād* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does उस्ताद (ustād) mean? (\"A master of a craft\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C288-ustad-type",
+              "prompt": "Say the Marwadi for 'a master of a craft'.",
+              "assesses": [
+                "MW-LEX-C288-KAM288-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "उस्ताद",
+                "ustād"
+              ],
+              "feedback": {
+                "correct": "Right: उस्ताद (ustād) is 'a master of a craft'.",
+                "incorrect": "'a master of a craft' is उस्ताद (ustād)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C288-dhandho",
+      "sequence": 20160,
+      "title": "धंधो (dhandho) — a trade",
+      "headword": "धंधो",
+      "romanization": "dhandho",
+      "gloss": "a trade",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:960a260806fd0f04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for capable, then the Marwadi for a master of a craft."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: धंधो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धंधो — dhandho — \"a trade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो धंधो सोरो कोनी। mhāro dhandho soro konī. My trade isn't easy."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "धंधो (dhandho) is inherited from Sanskrit dhandha, \"awkwardness\"; CDIAL gives no Marwari form in this entry, but lists Hindi dhandhā, \"craft, way of life\", and Sindhi dhandho, \"business\" (CDIAL 6727). How the sense moved to work is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhandho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhandho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dhandho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dhandho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro dhandho soro konī. — My trade isn't easy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro dhandho soro konī.* — My trade isn't easy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for capable, then the Marwadi for a master of a craft, then say dhandho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for capable, then the Marwadi for a master of a craft, then say *dhandho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does धंधो (dhandho) mean? (\"A trade\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C288-dhandho-type",
+              "prompt": "Say the Marwadi for 'a trade'.",
+              "assesses": [
+                "MW-LEX-C288-KAM288-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "धंधो",
+                "dhandho"
+              ],
+              "feedback": {
+                "correct": "Right: धंधो (dhandho) is 'a trade'.",
+                "incorrect": "'a trade' is धंधो (dhandho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C288-majur",
+      "sequence": 20170,
+      "title": "मजूर (majūr) — a labourer",
+      "headword": "मजूर",
+      "romanization": "majūr",
+      "gloss": "a labourer",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bc9b967a9d41cc44",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a master of a craft, then the Marwadi for a trade."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मजूर",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मजूर — majūr — \"a labourer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मजूर खेत मांय मेहनत करै है। majūr khet mā̃y mehnat karai hai. The labourer works hard in the field."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मजूर (majūr) is usually traced to Persian mazdūr, \"a labourer\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majūr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majūr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majūr, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majūr*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "majūr khet mā̃y mehnat karai hai. — The labourer works hard in the field.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *majūr khet mā̃y mehnat karai hai.* — The labourer works hard in the field.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a master of a craft, then the Marwadi for a trade, then say majūr again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a master of a craft, then the Marwadi for a trade, then say *majūr* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मजूर (majūr) mean? (\"A labourer\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C288-majur-type",
+              "prompt": "Say the Marwadi for 'a labourer'.",
+              "assesses": [
+                "MW-LEX-C288-KAM288-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मजूर",
+                "majūr"
+              ],
+              "feedback": {
+                "correct": "Right: मजूर (majūr) is 'a labourer'.",
+                "incorrect": "'a labourer' is मजूर (majūr)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

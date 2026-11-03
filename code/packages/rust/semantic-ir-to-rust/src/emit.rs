@@ -40,6 +40,13 @@ thread_local! {
     /// (not plain `let`) so the later reassignment compiles.  Populated
     /// per function in `emit_function`; immutable bindings stay `let`.
     static MUTABLE_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+
+    /// The SIR name of every function in the module being emitted.  A
+    /// *variable* spelled like one of them is renamed by [`var_ident`] so
+    /// it cannot shadow the function (#18485).  Filled at the start of
+    /// every `emit_module`, because `emit_expr` sees one expression at a
+    /// time and has no handle on the module.
+    static FUNCTION_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 fn fresh_loop_id() -> usize {
@@ -54,6 +61,11 @@ fn fresh_loop_id() -> usize {
 /// prior validation; this function assumes the module is valid.
 pub fn emit_module(m: &Module) -> String {
     LOOP_COUNTER.with(|c| c.set(0));
+    FUNCTION_NAMES.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().map(|f| f.name.clone()));
+    });
     let mut out = String::new();
     emit_banner(&mut out, m);
     emit_allows(&mut out);
@@ -279,14 +291,14 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
-        let _ = write!(out, "{}: __sir::Value", sanitize_ident(&c.name));
+        let _ = write!(out, "{}: __sir::Value", var_ident(&c.name));
     }
     for p in &f.params {
         if !first {
             out.push_str(", ");
         }
         first = false;
-        let _ = write!(out, "{}: __sir::Value", sanitize_ident(&p.name));
+        let _ = write!(out, "{}: __sir::Value", var_ident(&p.name));
     }
     out.push_str(") -> __sir::Value {\n");
 
@@ -349,7 +361,7 @@ fn emit_default_param_prologue(out: &mut String, f: &Function, indent: usize) {
     let pad = indent_str(indent);
     for p in &f.params {
         let Some(default) = &p.default else { continue };
-        let name = sanitize_ident(&p.name);
+        let name = var_ident(&p.name);
         let _ = write!(
             out,
             "{}let {} = if __sir::is_missing(&{}) {{ ",
@@ -425,12 +437,33 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
             collect_expr_assigned(key, out);
             collect_expr_assigned(value, out);
         }
+        // #18798 — a `TryCatch` (`begin`/`rescue`/`ensure`) runs its blocks
+        // in the enclosing function, so a store there into an outer local
+        // needs that local declared `let mut`.  This arm used to collect
+        // nothing, and `x = 0; begin; x = 1; rescue; end` failed rustc with
+        // `cannot assign twice to immutable variable` (it surfaced when a
+        // method-level `rescue` began storing the method's value).
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            for s in body {
+                collect_stmt_assigned(s, out);
+            }
+            for clause in rescues {
+                for s in &clause.body {
+                    collect_stmt_assigned(s, out);
+                }
+            }
+            for s in ensure_body.iter().flatten() {
+                collect_stmt_assigned(s, out);
+            }
+        }
         // SIR17 nodes are rejected at the capability check for this
         // backend; nothing reachable to collect.
-        Stmt::ClassDef { .. }
-        | Stmt::ModuleDef { .. }
-        | Stmt::SingletonClassDef { .. }
-        | Stmt::TryCatch { .. } => {}
+        Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {}
         // SIR29 nominal-OOP nodes: `Feature::NominalClasses`/`Interfaces`/
         // `VirtualDispatch` are not in this backend's accepted-features
         // list (see `ACCEPTED_FEATURES` in lib.rs), so `check_module`
@@ -695,7 +728,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 "{}{} {}: __sir::Value = ",
                 pad,
                 let_keyword(name),
-                sanitize_ident(name)
+                var_ident(name)
             );
             emit_expr(out, value, indent);
             out.push_str(";\n");
@@ -721,7 +754,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             value,
             ..
         } => {
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, var_ident(name));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -1060,12 +1093,16 @@ fn emit_try_catch(
             // `Value::Exception` carrying the class tag and message, so
             // `e.class` / `e.is_a?` / `e.message` all answer.  It used to bind
             // the message STRING (see `exc_value`).
+            // #18798: `let mut` when the clause body stores into the binding
+            // (`rescue => e` ⏎ `e = 5`); a plain `let` failed rustc with
+            // "cannot assign twice to immutable variable".
             if let Some(bind) = &r.binding {
                 let _ = writeln!(
                     out,
-                    "{}let {}: __sir::Value = __sir::exc_value(&__exc);",
+                    "{}{} {}: __sir::Value = __sir::exc_value(&__exc);",
                     bpad,
-                    sanitize_ident(bind)
+                    let_keyword(bind),
+                    var_ident(bind)
                 );
             }
             emit_bare_stmts(out, &r.body, arm + 2);
@@ -1522,7 +1559,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
 fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
     match scope {
         Scope::Local | Scope::Param | Scope::Capture => {
-            let _ = write!(out, "{}.clone()", sanitize_ident(name));
+            let _ = write!(out, "{}.clone()", var_ident(name));
         }
         Scope::Global => {
             let _ = write!(out, "__sir::global_get_static({})", quote_rs_string(name));
@@ -2095,6 +2132,26 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str(") } })");
         return;
     }
+    // #18798 — `not` is SIR's boolean negation: Ruby `!x`, `not x`, and
+    // every `unless c` / `until c` (lowered as `if not(c)` / `while
+    // not(c)`).  It had no arm here and no entry in
+    // `call_builtin_by_name`, so EVERY Ruby `unless` panicked with
+    // "unknown builtin: not".  The result is a real `Bool` (Ruby's `!x` is
+    // `true` or `false`, never the operand), taken with SIR truthiness:
+    // only `nil` and `false` are falsy, so `!0` is `false`.
+    //
+    // | x                        | not(x) |
+    // |--------------------------|--------|
+    // | nil                      | true   |
+    // | false                    | true   |
+    // | true                     | false  |
+    // | anything else (0, "", …) | false  |
+    if name == "not" && args.len() == 1 {
+        out.push_str("__sir::Value::Bool(!__sir::truthy(&(");
+        emit_expr(out, &args[0], indent);
+        out.push_str(")))");
+        return;
+    }
 
     // Variadic helpers take a Vec<Value>; fixed-arity helpers take
     // positional Value arguments.  This matches the inlined runtime
@@ -2605,7 +2662,7 @@ fn emit_for_range(
     indent: usize,
 ) {
     let id = fresh_loop_id();
-    let v = sanitize_ident(var);
+    let v = var_ident(var);
     let pad = indent_str(indent);
     let inner = indent + 1;
     let inner_pad = indent_str(inner);
@@ -2641,10 +2698,16 @@ fn emit_for_range(
         "{}while if __sir_step_{id} >= 0 {{ __sir_i_{id} < __sir_stop_{id} }} else {{ __sir_i_{id} > __sir_stop_{id} }} {{",
         inner_pad, id = id
     );
+    // `let mut` when the body assigns the loop variable (Python's
+    // `for i in range(3): i += 10`).  The next iteration still takes its
+    // value from the hidden counter, never from `var`.
     let _ = writeln!(
         out,
-        "{}let {}: __sir::Value = __sir::Value::Int(__sir_i_{});",
-        body_pad, v, id
+        "{}{} {}: __sir::Value = __sir::Value::Int(__sir_i_{});",
+        body_pad,
+        let_keyword(var),
+        v,
+        id
     );
     emit_block_as_stmts(out, body, inner + 1);
     let _ = writeln!(out, "{}__sir_i_{id} += __sir_step_{id};", body_pad, id = id);
@@ -2659,12 +2722,18 @@ fn emit_for_range(
 /// chain into a `Vec<Value>`; the loop binds each element to `var`.
 fn emit_for_each(out: &mut String, var: &str, iter: &Expr, body: &Block, indent: usize) {
     let pad = indent_str(indent);
-    let v = sanitize_ident(var);
+    let v = var_ident(var);
     // No type annotation on the loop pattern: `for <pat>: T in ...` is not
     // valid Rust (type ascription on a `for` binding is rejected).  The
     // element type is already `__sir::Value` because `seq_iter` returns a
     // `Vec<Value>`, so a plain `for <var> in ...` binds it correctly.
-    let _ = write!(out, "{}for {} in __sir::seq_iter(&(", pad, v);
+    // `mut` when the body assigns the loop variable (see `emit_for_range`).
+    let binding = if MUTABLE_NAMES.with(|m| m.borrow().contains(var)) {
+        format!("mut {v}")
+    } else {
+        v
+    };
+    let _ = write!(out, "{}for {} in __sir::seq_iter(&(", pad, binding);
     emit_expr(out, iter, indent);
     out.push_str(")) {\n");
     emit_block_as_stmts(out, body, indent + 1);
@@ -2679,7 +2748,7 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
                 out,
                 "{} {}: __sir::Value = ",
                 let_keyword(name),
-                sanitize_ident(name)
+                var_ident(name)
             );
             emit_expr(out, value, indent);
             out.push_str("; ");
@@ -2696,7 +2765,7 @@ fn emit_stmt_inline(out: &mut String, s: &Stmt, indent: usize) {
             value,
             ..
         } => {
-            let _ = write!(out, "{} = ", sanitize_ident(name));
+            let _ = write!(out, "{} = ", var_ident(name));
             emit_expr(out, value, indent);
             out.push_str("; ");
         }
@@ -2926,6 +2995,49 @@ const TAG_VERBATIM: &str = "v";
 /// per-character escaping (contains an illegal character), or the
 /// empty-input sentinel.
 const TAG_ESCAPED: &str = "e";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a *variable* renamed
+/// because a function of the module has the same SIR name (see
+/// [`var_ident`]).  Distinct from [`TAG_VERBATIM`] and [`TAG_ESCAPED`], so a
+/// renamed variable can never equal any output of [`sanitize_ident`].
+const TAG_LOCAL: &str = "l";
+
+/// The Rust identifier for the SIR *variable* `name`: a local, parameter,
+/// capture, loop variable or `rescue` binding.  (Globals live in the
+/// runtime's global store, keyed by their SIR name, so they never reach
+/// here.)
+///
+/// SIR keeps functions and variables in two namespaces, and a source
+/// language may use both spellings at once (Ruby: `def f; 40; end; f = 2;
+/// f() + f` is 42).  In Rust a local `let f` shadows the item `fn f` in the
+/// value namespace, and `f()` failed with `error[E0618]: expected function,
+/// found Value` (#18485).  A variable that collides with a function is
+/// renamed:
+///
+/// | SIR variable | module has a function of that name? | Rust             |
+/// |--------------|-------------------------------------|------------------|
+/// | `x`          | no                                  | `x`              |
+/// | `f`          | yes                                 | `__sir_esc_lf`   |
+/// | `fn`         | yes                                 | `__sir_esc_lfn`  |
+///
+/// The renamed form is [`ESCAPE_MARKER`], [`TAG_LOCAL`], then
+/// `sanitize_ident(name)` with any raw-identifier `r#` dropped (it cannot
+/// follow a prefix).  Dropping it keeps the map one-to-one, because a
+/// keyword never sanitizes to its bare spelling -- the same argument as the
+/// `__cap_` temporaries in `emit_make_closure`.  Every renamed form is
+/// disjoint from every `sanitize_ident` output, which either lacks the
+/// marker or follows it with another tag, and it depends only on the name,
+/// so a variable's binding and every use of it agree.
+fn var_ident(name: &str) -> String {
+    if FUNCTION_NAMES.with(|t| t.borrow().contains(name)) {
+        format!(
+            "{ESCAPE_MARKER}{TAG_LOCAL}{}",
+            sanitize_ident(name).trim_start_matches("r#")
+        )
+    } else {
+        sanitize_ident(name)
+    }
+}
 
 /// Sanitize a SIR identifier for Rust.
 ///
@@ -4589,6 +4701,57 @@ mod tests {
         assert!(out.trim_end().ends_with('}'), "got: {out}");
     }
 
+    /// A body that assigns the loop variable needs a `mut` binding, or
+    /// rustc refuses the program (`cannot assign twice to immutable
+    /// variable`).  Python's `for i in range(3): i += 10` lowers to this
+    /// (#18482).  The counter still steps `__sir_i_N`, not `i`.
+    #[test]
+    fn a_loop_variable_the_body_assigns_is_bound_mut() {
+        let assign_i = Stmt::Assign {
+            name: "i".into(),
+            scope: Scope::Local,
+            value: int(10),
+            span: s(),
+        };
+        let range = Stmt::ForRange {
+            var: "i".into(),
+            start: int(0),
+            stop: int(3),
+            step: int(1),
+            body: block(vec![assign_i.clone()], nil()),
+            span: s(),
+        };
+        let each = Stmt::ForEach {
+            var: "x".into(),
+            iter: int(0),
+            body: block(
+                vec![Stmt::Assign {
+                    name: "x".into(),
+                    scope: Scope::Local,
+                    value: int(1),
+                    span: s(),
+                }],
+                nil(),
+            ),
+            span: s(),
+        };
+        let mut out = String::new();
+        MUTABLE_NAMES.with(|m| {
+            let mut set = m.borrow_mut();
+            set.clear();
+            set.insert("i".to_string());
+            set.insert("x".to_string());
+        });
+        emit_stmt(&mut out, &range, 1);
+        emit_stmt(&mut out, &each, 1);
+        MUTABLE_NAMES.with(|m| m.borrow_mut().clear());
+        assert!(
+            out.contains("let mut i: __sir::Value = __sir::Value::Int(__sir_i_"),
+            "got: {out}"
+        );
+        assert!(out.contains("for mut x in __sir::seq_iter("), "got: {out}");
+    }
+
     #[test]
     fn emit_for_range_caches_bounds_and_binds_int_var() {
         let mut out = String::new();
@@ -5265,6 +5428,19 @@ mod tests {
     }
 
     #[test]
+    fn emit_not_builtin_negates_by_truthiness() {
+        // #18798 — every Ruby `unless` lowers to `if not(c)`; `not` had no
+        // arm here, fell to `call_builtin_by_name` (which had no entry
+        // either), and panicked "unknown builtin: not" at runtime.
+        let not = builtin("not", vec![int(0)]);
+        assert_eq!(
+            emit_e(&not),
+            "__sir::Value::Bool(!__sir::truthy(&(__sir::Value::Int(0i64))))"
+        );
+        assert!(!emit_e(&not).contains("call_builtin_by_name"));
+    }
+
+    #[test]
     fn emit_super_routes_to_call_super() {
         // super("x") inside Cat#describe → __super__("describe","Cat","x").
         let e = builtin(
@@ -5430,5 +5606,163 @@ mod tests {
             emit_s(&st),
             "let _ = __sir::cvar_set(\"@@count\", __sir::Value::Int(0i64));\n"
         );
+    }
+
+    // ── a variable never shadows a function (#18485) ─────────────────
+
+    /// `def f; 40; end` and a `main` whose local is also named `f`:
+    /// `let f = 2; f() + f`, which a source language with separate
+    /// namespaces (Ruby) evaluates to 42.
+    fn local_named_like_a_function() -> Module {
+        let sp = Span::synthetic;
+        let func = |name: &str, body: semantic_ir::Block| semantic_ir::Function {
+            name: name.to_string(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let f = func(
+            "f",
+            semantic_ir::Block {
+                stmts: vec![],
+                value: Expr::IntLit { value: 40, span: sp() },
+                span: sp(),
+            },
+        );
+        let main = func(
+            "main",
+            semantic_ir::Block {
+                stmts: vec![Stmt::LetStarBinding {
+                    name: "f".to_string(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: sp() },
+                    span: sp(),
+                }],
+                value: Expr::BuiltinCall {
+                    name: "+".to_string(),
+                    args: vec![
+                        Expr::DirectCall {
+                            fn_name: "f".to_string(),
+                            args: vec![],
+                            effects: EffectSet::PURE,
+                            span: sp(),
+                        },
+                        Expr::VarRef {
+                            name: "f".to_string(),
+                            scope: Scope::Local,
+                            span: sp(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            },
+        );
+        Module {
+            name: "shadow".to_string(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    #[test]
+    fn a_local_named_like_a_function_is_renamed_and_the_function_is_not() {
+        let out = emit_module(&local_named_like_a_function());
+        // The function keeps its own spelling.  Everything from its
+        // definition on is the user's code (the inlined runtime comes
+        // first, and binds names of its own).
+        let at = out.find("fn f(").unwrap_or_else(|| panic!("`f` is defined:\n{out}"));
+        let out = &out[at..];
+        // The local is bound, and read, under its renamed spelling...
+        assert!(out.contains("let __sir_esc_lf: __sir::Value = "), "{out}");
+        assert!(out.contains("__sir_esc_lf.clone()"), "{out}");
+        // ...never under the function's own spelling, which the call keeps.
+        assert!(!out.contains("let f: __sir::Value"), "{out}");
+        assert!(out.contains("f()"), "{out}");
+    }
+
+    #[test]
+    fn var_ident_renames_exactly_the_names_of_functions() {
+        FUNCTION_NAMES.with(|t| {
+            let mut t = t.borrow_mut();
+            t.clear();
+            t.insert("f".to_string());
+        });
+        assert_eq!(var_ident("f"), "__sir_esc_lf");
+        assert_eq!(var_ident("x"), sanitize_ident("x"));
+        // A user variable spelled like the renamed form takes the verbatim
+        // escape, so the two stay apart.
+        assert_ne!(var_ident("__sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
+    }
+
+    // ── constants and the renamed `main` (follow-ups to #18485) ──────
+
+    /// A constant is never an identifier in this backend: the one place it
+    /// is accepted, the class operand of `raise`, emits its *name string*,
+    /// and every other constant use is refused before emit.  So a constant
+    /// spelled like a function cannot shadow it.  `def Boom; 40; end` plus
+    /// `raise Boom, "m"`: the function keeps its name and the class is the
+    /// string `"Boom"`.
+    #[test]
+    fn a_constant_named_like_a_function_is_a_string_not_an_identifier() {
+        let boom = Function {
+            name: "Boom".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::IntLit { value: 40, span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let raise = Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![
+                Expr::VarRef { name: "Boom".into(), scope: Scope::Const, span: s() },
+                Expr::StrLit { value: "m".into(), span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut main = boom.clone();
+        main.name = "main".into();
+        main.body.value = raise;
+        let m = Module {
+            name: "consts".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![boom, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(out.contains("__sir::raise(\"Boom\", "), "{out}");
+    }
+
+    /// SIR's `main` is emitted as `__sir_user_main`; no user name -- of a
+    /// function or a variable -- can produce that spelling, so a user
+    /// function spelled `__sir_user_main` and the renamed `main` never meet.
+    #[test]
+    fn no_user_name_spells_the_renamed_main() {
+        let lookalike = "__sir_user_main";
+        FUNCTION_NAMES.with(|t| *t.borrow_mut() = [lookalike.to_string()].into_iter().collect());
+        for spelling in [function_emit_name(lookalike), var_ident(lookalike), sanitize_ident(lookalike)] {
+            assert_ne!(spelling, function_emit_name("main"), "{spelling}");
+            assert!(spelling.starts_with("__sir_esc_"), "{spelling}");
+        }
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
     }
 }

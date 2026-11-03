@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-297-TOUCH297",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "PA-EXT-297-TOUCH297"
+  ],
+  "after": []
+}

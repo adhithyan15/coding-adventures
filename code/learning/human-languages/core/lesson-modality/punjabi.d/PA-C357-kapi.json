@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C357-kapi",
+    "language": "punjabi",
+    "chapter": 357,
+    "sequence": 22030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f17e5a05ded56467"
+  },
+  "findings": []
+}

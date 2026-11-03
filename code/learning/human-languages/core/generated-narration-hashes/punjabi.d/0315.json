@@ -1,0 +1,20 @@
+{
+  "language": "punjabi",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:baa1d502cce98376",
+  "lessonIds": [
+    "PA-C315-daku",
+    "PA-C315-hamla",
+    "PA-C315-bhannna",
+    "PA-C315-gahina",
+    "PA-C315-jan",
+    "PA-R315-review-309-315"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "punjabi/narration/ch315.txt",
+  "json": "punjabi/narration/ch315.json",
+  "textHash": "fnv1a64:ee09eac90925a0c7",
+  "jsonHash": "fnv1a64:7445f2499d12b921",
+  "findings": []
+}

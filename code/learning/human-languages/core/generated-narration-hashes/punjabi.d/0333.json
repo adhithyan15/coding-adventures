@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 333,
+  "sourceHash": "fnv1a64:0829aee05bdbaf80",
+  "lessonIds": [
+    "PA-C333-nai",
+    "PA-C333-munnna",
+    "PA-C333-dhobi",
+    "PA-C333-mochi",
+    "PA-C333-mali"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch333.txt",
+  "json": "punjabi/narration/ch333.json",
+  "textHash": "fnv1a64:1472070e9f31cd59",
+  "jsonHash": "fnv1a64:dc68d2c72d889654",
+  "findings": []
+}

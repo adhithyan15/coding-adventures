@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 390,
+  "sourceHash": "fnv1a64:3d826d4d13df0544",
+  "lessonIds": [
+    "ZH-C390-queding",
+    "ZH-C390-yueding",
+    "ZH-W390-ding-settle",
+    "ZH-C390-dingqi",
+    "ZH-C390-ruqi",
+    "ZH-C390-dayue"
+  ],
+  "tex": "chinese/book/chapters/ch390-as-we-agreed.tex"
+}

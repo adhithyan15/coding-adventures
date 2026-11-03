@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C480-guomin",
+    "language": "chinese",
+    "chapter": 480,
+    "sequence": 36160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:381bb35a59aa30c3"
+  },
+  "findings": []
+}

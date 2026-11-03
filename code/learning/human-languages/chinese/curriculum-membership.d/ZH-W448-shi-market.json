@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W448-shi-market",
+  "pathSegment": "ZH-PATH-448-MARKET448",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-448-MARKET448",
+      "order": 2
+    }
+  ]
+}

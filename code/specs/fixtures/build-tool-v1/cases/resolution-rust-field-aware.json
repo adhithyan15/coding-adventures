@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "resolution/rust-field-aware",
   "domain": "resolution",
-  "summary": "Rust resolution reads only inline path dependencies in the top-level Cargo dependencies table.",
+  "summary": "Rust resolution reads path entries in dependencies, build-dependencies, their target forms and sub-tables, with package renames and quoted field keys; dev-dependencies, patch, registry entries, features and comments add no edge.",
   "platforms": [
     "darwin",
     "linux",
@@ -19,7 +19,7 @@
       },
       {
         "path": "code/packages/rust/alpha/Cargo.toml",
-        "content_utf8": "[package]\nname = \"alpha\"\nversion = \"0.1.0\"\ndescription = \"Mentions gamma without depending on it.\"\n\n[features]\ngamma = [\"coding-adventures-gamma\"]\n\n[dependencies]\nbeta_alias = { package = \"beta-helper\", path = \"../beta-helper\" }\ndelta = { version = \"0.1.0\", path = \"../delta\" } # gamma stays a comment\ngamma = { version = \"0.1.0\", features = [\"path\"] }\nserde = \"1\"\n\n[dev-dependencies]\ngamma = { path = \"../gamma\" }\n\n[build-dependencies]\ngamma = { path = \"../gamma\" }\n\n[target.'cfg(unix)'.dependencies]\ngamma = { path = \"../gamma\" }\n"
+        "content_utf8": "[package]\nname = \"alpha\"\nversion = \"0.1.0\"\ndescription = \"Mentions gamma and mu without depending on them.\"\n\n[features]\ngamma = [\"coding-adventures-gamma\"]\n\n[dependencies]\nbeta_alias = { package = \"beta-helper\", path = \"../beta-helper\" }\ndelta = { version = \"0.1.0\", path = \"../delta\" } # gamma stays a comment\ngamma = { version = \"0.1.0\", features = [\"path\"] }\nserde = \"1\"\n# mu = { path = \"../mu\" }\nomicron = { path = \"../omicron\", features = [\n    \"x\", # [not-a-header]\n] }\nrho = { \"path\" = \"../rho\" }\nupsilon = { \"Path\" = \"../upsilon\" }\n\n[dev-dependencies]\nepsilon = { path = \"../epsilon\" }\n\n[target.'cfg(unix)'.dev-dependencies]\nzeta = { path = \"../zeta\" }\n\n[build-dependencies]\neta = { path = \"../eta\" }\n\n[target.'cfg(any(unix, windows))'.dependencies]\ntheta = { path = \"../theta\" }\n\n[target.x86_64-unknown-linux-gnu.build-dependencies]\niota = { path = \"../iota\" }\n\n[dependencies.kappa]\nversion = \"0.1.0\"\npath = \"../kappa\"\n\n[dependencies.lambda]\nversion = \"0.1.0\"\n\n[dependencies.sigma]\n'path' = \"../sigma\"\n\n[build-dependencies.tau_alias]\n\"package\" = \"tau\"\npath = \"../tau\"\n\n[target.\"thumbv8m.main-none-eabihf\".dependencies.pi_alias]\npackage = \"pi\"\npath = \"../pi\"\n\n[patch.crates-io]\nnu = { path = \"../nu\" }\n"
       },
       {
         "path": "code/packages/rust/beta-helper/BUILD",
@@ -38,12 +38,132 @@
         "content_utf8": "[package]\nname = \"delta\"\nversion = \"0.1.0\"\n"
       },
       {
+        "path": "code/packages/rust/epsilon/BUILD",
+        "content_utf8": "echo build epsilon\n"
+      },
+      {
+        "path": "code/packages/rust/epsilon/Cargo.toml",
+        "content_utf8": "[package]\nname = \"epsilon\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/eta/BUILD",
+        "content_utf8": "echo build eta\n"
+      },
+      {
+        "path": "code/packages/rust/eta/Cargo.toml",
+        "content_utf8": "[package]\nname = \"eta\"\nversion = \"0.1.0\"\n"
+      },
+      {
         "path": "code/packages/rust/gamma/BUILD",
         "content_utf8": "echo build gamma\n"
       },
       {
         "path": "code/packages/rust/gamma/Cargo.toml",
         "content_utf8": "[package]\nname = \"gamma\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/iota/BUILD",
+        "content_utf8": "echo build iota\n"
+      },
+      {
+        "path": "code/packages/rust/iota/Cargo.toml",
+        "content_utf8": "[package]\nname = \"iota\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/kappa/BUILD",
+        "content_utf8": "echo build kappa\n"
+      },
+      {
+        "path": "code/packages/rust/kappa/Cargo.toml",
+        "content_utf8": "[package]\nname = \"kappa\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/lambda/BUILD",
+        "content_utf8": "echo build lambda\n"
+      },
+      {
+        "path": "code/packages/rust/lambda/Cargo.toml",
+        "content_utf8": "[package]\nname = \"lambda\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/mu/BUILD",
+        "content_utf8": "echo build mu\n"
+      },
+      {
+        "path": "code/packages/rust/mu/Cargo.toml",
+        "content_utf8": "[package]\nname = \"mu\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/nu/BUILD",
+        "content_utf8": "echo build nu\n"
+      },
+      {
+        "path": "code/packages/rust/nu/Cargo.toml",
+        "content_utf8": "[package]\nname = \"nu\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/omicron/BUILD",
+        "content_utf8": "echo build omicron\n"
+      },
+      {
+        "path": "code/packages/rust/omicron/Cargo.toml",
+        "content_utf8": "[package]\nname = \"omicron\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/pi/BUILD",
+        "content_utf8": "echo build pi\n"
+      },
+      {
+        "path": "code/packages/rust/pi/Cargo.toml",
+        "content_utf8": "[package]\nname = \"pi\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/rho/BUILD",
+        "content_utf8": "echo build rho\n"
+      },
+      {
+        "path": "code/packages/rust/rho/Cargo.toml",
+        "content_utf8": "[package]\nname = \"rho\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/sigma/BUILD",
+        "content_utf8": "echo build sigma\n"
+      },
+      {
+        "path": "code/packages/rust/sigma/Cargo.toml",
+        "content_utf8": "[package]\nname = \"sigma\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/tau/BUILD",
+        "content_utf8": "echo build tau\n"
+      },
+      {
+        "path": "code/packages/rust/tau/Cargo.toml",
+        "content_utf8": "[package]\nname = \"tau\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/theta/BUILD",
+        "content_utf8": "echo build theta\n"
+      },
+      {
+        "path": "code/packages/rust/theta/Cargo.toml",
+        "content_utf8": "[package]\nname = \"theta\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/upsilon/BUILD",
+        "content_utf8": "echo build upsilon\n"
+      },
+      {
+        "path": "code/packages/rust/upsilon/Cargo.toml",
+        "content_utf8": "[package]\nname = \"upsilon\"\nversion = \"0.1.0\"\n"
+      },
+      {
+        "path": "code/packages/rust/zeta/BUILD",
+        "content_utf8": "echo build zeta\n"
+      },
+      {
+        "path": "code/packages/rust/zeta/Cargo.toml",
+        "content_utf8": "[package]\nname = \"zeta\"\nversion = \"0.1.0\"\n"
       }
     ]
   },
@@ -70,6 +190,42 @@
         ],
         [
           "rust/delta",
+          "rust/alpha"
+        ],
+        [
+          "rust/eta",
+          "rust/alpha"
+        ],
+        [
+          "rust/iota",
+          "rust/alpha"
+        ],
+        [
+          "rust/kappa",
+          "rust/alpha"
+        ],
+        [
+          "rust/omicron",
+          "rust/alpha"
+        ],
+        [
+          "rust/pi",
+          "rust/alpha"
+        ],
+        [
+          "rust/rho",
+          "rust/alpha"
+        ],
+        [
+          "rust/sigma",
+          "rust/alpha"
+        ],
+        [
+          "rust/tau",
+          "rust/alpha"
+        ],
+        [
+          "rust/theta",
           "rust/alpha"
         ]
       ]

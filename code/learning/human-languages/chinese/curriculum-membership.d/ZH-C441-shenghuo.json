@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C441-shenghuo",
+  "pathSegment": "ZH-PATH-441-CAMP441",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-441-CAMP441",
+      "order": 3
+    }
+  ]
+}

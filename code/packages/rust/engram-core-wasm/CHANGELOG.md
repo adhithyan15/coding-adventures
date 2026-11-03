@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Fixed — the focused note field always has a name (E4)
+
+`note-editor-selected-field-label` was `""` when no field was selected (a
+note type with no fields, or an empty collection). NoteEditor 0.2.0 mounts
+DraftEditor for that field, and DraftEditor uses the label as the field's
+accessible name, so `""` would have left an unnamed text area. It is now
+"Field". The placeholder in that state is still "Select a field", and every
+other state still sends the selected field's name. The new test
+`the_focused_note_field_is_named_even_with_no_field_selected` covers it
+(`mosaic-editor-convergence-audit-v1.md` §8, D2).
+
 ### Changed — the screen switcher sends plain labels (UI86, #15420)
 
 `switcher_rows` is now `switcher_labels`, returning the six screen names

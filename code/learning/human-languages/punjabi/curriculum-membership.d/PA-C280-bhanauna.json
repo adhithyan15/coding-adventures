@@ -1,0 +1,11 @@
+{
+  "id": "PA-C280-bhanauna",
+  "pathSegment": "PA-PATH-280-CHANGE280",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-280-CHANGE280",
+      "order": 1
+    }
+  ]
+}

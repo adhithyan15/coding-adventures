@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 423,
+  "sourceHash": "fnv1a64:0c136b8304edc63b",
+  "lessonIds": [
+    "ZH-C423-lukuang",
+    "ZH-C423-dongnan",
+    "ZH-W423-nan-south",
+    "ZH-C423-xinan",
+    "ZH-C423-nanxia",
+    "ZH-C423-nanbei"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch423.txt",
+  "json": "chinese/narration/ch423.json",
+  "textHash": "fnv1a64:5621513b3e16ad54",
+  "jsonHash": "fnv1a64:943d6a18d0f90f8d",
+  "findings": []
+}

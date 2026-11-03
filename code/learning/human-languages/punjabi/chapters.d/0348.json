@@ -1,0 +1,19 @@
+{
+  "chapter": 348,
+  "title": "Instruments I Like",
+  "label": "ch:pa-a2-instruments-i-like",
+  "canDo": "I can name the instruments I like and say how I practise.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-LIKE"
+  ],
+  "payoff": {
+    "lesson": "PA-C348-gunjna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 348: I can name the instruments I like and say how I practise.",
+    "assesses": [
+      "PA-LEX-C348-MUSIC348-03",
+      "PA-LEX-C348-MUSIC348-04",
+      "PA-LEX-C348-MUSIC348-05"
+    ]
+  }
+}

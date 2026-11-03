@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-514-WEATHER514",
+  "spine_node": "SPINE-DESCRIBE-EXPERIENCE",
+  "before": [],
+  "inline": [
+    "ZH-EXT-514-WEATHER514"
+  ],
+  "after": []
+}

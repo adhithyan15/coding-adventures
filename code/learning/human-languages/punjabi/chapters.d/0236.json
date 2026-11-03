@@ -1,0 +1,19 @@
+{
+  "chapter": 236,
+  "title": "Scrubbing the Pots",
+  "label": "ch:pa-a2-scrubbing-the-pots",
+  "canDo": "I can talk about washing the dishes.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-C236-katora",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 236: I can talk about washing the dishes.",
+    "assesses": [
+      "PA-LEX-C236-KAM236-03",
+      "PA-LEX-C236-KAM236-04",
+      "PA-LEX-C236-KAM236-05"
+    ]
+  }
+}

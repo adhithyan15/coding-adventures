@@ -1,0 +1,11 @@
+{
+  "id": "PA-C306-turi",
+  "pathSegment": "PA-PATH-306-WINNOW306",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-306-WINNOW306",
+      "order": 2
+    }
+  ]
+}

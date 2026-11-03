@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C254-alas",
+    "language": "marwadi",
+    "chapter": 254,
+    "sequence": 17710,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6f34102b87e7570"
+  },
+  "findings": []
+}

@@ -515,6 +515,7 @@ fn retired_float_writers_are_refused() {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         assert!(!validate_for_beam(&module).is_empty(), "{name}");
         assert!(lower_iir_to_beam(&module, &IIRBeamConfig::new("floats")).is_err(), "{name}");
@@ -534,6 +535,7 @@ fn a_module_without_digit_ops_is_unchanged() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let m = lower_iir_to_beam(&module, &IIRBeamConfig::new("plain")).unwrap();
     assert!(!m.atoms.iter().any(|a| a == "__iir_f64_shortest" || a == "float_to_list"));
@@ -578,6 +580,7 @@ fn digit_module() -> BEAMModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
     lower_iir_to_beam(&module, &IIRBeamConfig::new("digits")).expect("lowers")
@@ -615,6 +618,7 @@ fn pr7b_digit_helpers_share_the_parse_and_are_exported() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     assert!(lower_iir_to_beam(&clash, &IIRBeamConfig::new("clash")).is_err());
     assert_eq!(m.exports.len(), fis.len(), "every func_info is exported");
@@ -695,6 +699,7 @@ fn call_module(pool: usize, srcs: &[usize]) -> BEAMModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     assert!(validate_for_beam(&module).is_empty(), "{:?}", validate_for_beam(&module));
     lower_iir_to_beam(&module, &IIRBeamConfig::new("args")).expect("lowers")

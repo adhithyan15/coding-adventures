@@ -1,0 +1,11 @@
+{
+  "id": "PA-C222-karoge",
+  "pathSegment": "PA-PATH-222-A2-KARANGA",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-222-A2-KARANGA",
+      "order": 2
+    }
+  ]
+}

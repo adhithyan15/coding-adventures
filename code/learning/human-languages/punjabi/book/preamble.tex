@@ -243,6 +243,10 @@
 % where the last word ended. Block callouts set ragged right is ordinary
 % typography, and it is what \chapteropening already does above.
 \tcbset{before upper=\raggedright}
+% HL-C88: quote blocks set ragged right, as the tcolorboxes are, so a
+% Gurmukhi quote line never stretches its word spaces.
+\let\hlorigquote\quote
+\def\quote{\hlorigquote\raggedright}
 \emergencystretch=2em
 
 % ---------------------------------------------------------------------------

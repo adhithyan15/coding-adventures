@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 275,
+  "sourceHash": "fnv1a64:143cf37c3ce90704",
+  "lessonIds": [
+    "PA-C275-dhilla",
+    "PA-C275-tang",
+    "PA-C275-phabbna",
+    "PA-C275-darjan",
+    "PA-C275-thaila"
+  ],
+  "tex": "punjabi/book/chapters/ch275-too-loose-too-tight.tex"
+}

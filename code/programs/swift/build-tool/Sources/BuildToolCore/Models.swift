@@ -41,6 +41,28 @@ public struct MetadataEncodingError: Error, LocalizedError, Equatable {
     }
 }
 
+/// A package whose own manifest resolves the package itself as a
+/// dependency: the conformance contract's `DEPENDENCY_SELF_EDGE`. `manifest`
+/// is repository-relative, so the diagnostic never discloses the checkout
+/// root.
+public struct DependencySelfEdgeError: Error, LocalizedError, Equatable {
+    public let code: String
+    public let package: String
+    public let manifest: String
+    public let dependency: String
+
+    public init(code: String, package: String, manifest: String, dependency: String) {
+        self.code = code
+        self.package = package
+        self.manifest = manifest
+        self.dependency = dependency
+    }
+
+    public var errorDescription: String? {
+        "\(code): package=\(package) manifest=\(manifest) dependency=\(dependency)"
+    }
+}
+
 public struct DuplicatePackageIdentityError: Error, LocalizedError, Equatable {
     public let code: String
     public let package: String

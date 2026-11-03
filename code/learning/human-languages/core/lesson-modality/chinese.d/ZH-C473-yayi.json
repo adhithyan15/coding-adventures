@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C473-yayi",
+    "language": "chinese",
+    "chapter": 473,
+    "sequence": 35780,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f3077d8847dc181c"
+  },
+  "findings": []
+}

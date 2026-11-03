@@ -1,0 +1,20 @@
+{
+  "chapter": 321,
+  "title": "People of Long Ago",
+  "label": "ch:zh-people-of-long-ago",
+  "canDo": "I can talk about history, the people of long ago, old books and old scripts.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C321-wenzi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 321: I can talk about history, the people of long ago, old books and old scripts.",
+    "assesses": [
+      "ZH-LEX-C321-ANCIENT321-03",
+      "ZH-LEX-C321-ANCIENT321-04",
+      "ZH-LEX-C321-ANCIENT321-05",
+      "ZH-SCRIPT-GU-ANCIENT-01"
+    ]
+  }
+}

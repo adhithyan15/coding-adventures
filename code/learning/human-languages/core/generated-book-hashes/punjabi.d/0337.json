@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 337,
+  "sourceHash": "fnv1a64:49ec99f7a347528c",
+  "lessonIds": [
+    "PA-C337-mangna",
+    "PA-C337-benti",
+    "PA-C337-thorha",
+    "PA-C337-zara",
+    "PA-C337-mangvauna"
+  ],
+  "tex": "punjabi/book/chapters/ch337-asking-nicely.tex"
+}

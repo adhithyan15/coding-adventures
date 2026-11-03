@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 387,
+  "sourceHash": "fnv1a64:b802ee6e753e5574",
+  "lessonIds": [
+    "ZH-C387-shouru",
+    "ZH-C387-cunkuan",
+    "ZH-C387-zhangdan",
+    "ZH-C387-wanggou",
+    "ZH-C387-yusuan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch387.txt",
+  "json": "chinese/narration/ch387.json",
+  "textHash": "fnv1a64:9cfd561e73819289",
+  "jsonHash": "fnv1a64:6ed9de17c1661a81",
+  "findings": []
+}

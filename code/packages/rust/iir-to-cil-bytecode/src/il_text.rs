@@ -679,6 +679,15 @@ fn emit_lang83_trap(il: &mut String, fn_name: &str, kind: &str) -> Result<(), II
     Ok(())
 }
 
+/// Push the length of the string in `name` as an `int64` (LANG83 PR5a), so a
+/// bound can be compared with an `int64` index without narrowing it.
+fn emit_string_length_i8(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrError> {
+    load_var(il, regs, name)?;
+    let _ = writeln!(il, "    callvirt instance int32 [System.Runtime]System.String::get_Length()");
+    let _ = writeln!(il, "    conv.i8");
+    Ok(())
+}
+
 /// Emit a load (`ldarg`/`ldloc`) of `name` onto the CIL stack.
 fn load_var(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrError> {
     let h = regs.home(name)?;
@@ -882,6 +891,9 @@ fn store_var(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrErr
 /// lambda/label as `<name>(…)`), plus the `Run()` `.entrypoint` launcher that prints
 /// `MccarthyEntry()`'s result so a runner reads it by running.
 pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRClrError> {
+    // LANG83 PR5a: the module's string ceiling, before anything is emitted
+    // (#18800). This path skips `validate_iir_for_clr`, so it asks directly.
+    crate::validate::check_str_ceiling(module)?;
     let entry = entry_name(module);
     if !module.functions.iter().any(|f| f.name == entry) {
         return Err(IIRClrError::InvalidOperand {
@@ -1410,6 +1422,19 @@ fn emit_method(
                 })?;
                 let left = var_src(f, instr, 0, "str_concat")?;
                 let right = var_src(f, instr, 1, "str_concat")?;
+                // LANG83 PR5a: the module's string ceiling, checked before the
+                // new string exists, on lengths widened to int64 (no wrap):
+                //   ld a; get_Length; conv.i8; ld b; get_Length; conv.i8; add
+                //   ldc.i8 <ceiling>; ble.un OK; <trap Trap.Overflow>
+                // OK:
+                let ok = lang83_label();
+                emit_string_length_i8(il, &regs, left)?;
+                emit_string_length_i8(il, &regs, right)?;
+                let _ = writeln!(il, "    add");
+                let _ = writeln!(il, "    ldc.i8 {}", module.str_ceiling());
+                let _ = writeln!(il, "    ble.un {ok}");
+                emit_lang83_trap(il, &f.name, interpreter_ir::exception_kind::TRAP_OVERFLOW)?;
+                let _ = writeln!(il, "  {ok}:");
                 load_var(il, &regs, left)?;
                 load_var(il, &regs, right)?;
                 let _ = writeln!(
@@ -1428,9 +1453,28 @@ fn emit_method(
                 let src = var_src(f, instr, 0, "str_slice")?;
                 let start = var_src(f, instr, 1, "str_slice")?;
                 let end = var_src(f, instr, 2, "str_slice")?;
+                // LANG83 PR5a: `0 <= start <= end <= len` on the full int64
+                // values, BEFORE the narrowing below. Two unsigned compares cover
+                // it: `end >u len` rejects a negative or too-large end, and then
+                // `start >u end` rejects a negative start or a backwards range.
+                //   ld end:i8; ld src; get_Length; conv.i8; bgt.un TRAP
+                //   ld start:i8; ld end:i8; bgt.un TRAP; br OK
+                // TRAP: <trap Trap.Bounds>
+                // OK:
+                let (trap, ok) = (lang83_label(), lang83_label());
+                load_var_as(il, &regs, end, "int64")?;
+                emit_string_length_i8(il, &regs, src)?;
+                let _ = writeln!(il, "    bgt.un {trap}");
+                load_var_as(il, &regs, start, "int64")?;
+                load_var_as(il, &regs, end, "int64")?;
+                let _ = writeln!(il, "    bgt.un {trap}");
+                let _ = writeln!(il, "    br {ok}");
+                let _ = writeln!(il, "  {trap}:");
+                emit_lang83_trap(il, &f.name, interpreter_ir::exception_kind::TRAP_BOUNDS)?;
+                let _ = writeln!(il, "  {ok}:");
                 // `Substring(int32, int32)` is an int32-argument method, so both
-                // offsets are narrowed at the boundary (an i64 string offset is
-                // meaningless — `String` is int32-indexed).
+                // offsets are narrowed at the boundary; the check above has
+                // proved both lie in [0, len], so the narrowing is exact.
                 load_var(il, &regs, src)?;
                 load_var_as(il, &regs, start, "int32")?;
                 load_var_as(il, &regs, end, "int32")?;
@@ -1471,6 +1515,18 @@ fn emit_method(
                 })?;
                 let src = var_src(f, instr, 0, "str_index")?;
                 let idx = var_src(f, instr, 1, "str_index")?;
+                // LANG83 PR5a: `0 <= idx < len` on the full int64 index, BEFORE
+                // it is narrowed to the int32 `get_Chars` takes. One unsigned
+                // compare covers both ends (a negative index is a huge unsigned):
+                //   ld idx:i8; ld src; get_Length; conv.i8; blt.un OK
+                //   <trap Trap.Bounds>
+                // OK:
+                let ok = lang83_label();
+                load_var_as(il, &regs, idx, "int64")?;
+                emit_string_length_i8(il, &regs, src)?;
+                let _ = writeln!(il, "    blt.un {ok}");
+                emit_lang83_trap(il, &f.name, interpreter_ir::exception_kind::TRAP_BOUNDS)?;
+                let _ = writeln!(il, "  {ok}:");
                 load_var(il, &regs, src)?;
                 load_var_as(il, &regs, idx, "int32")?;
                 let _ = writeln!(

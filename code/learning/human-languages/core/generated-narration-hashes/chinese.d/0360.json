@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 360,
+  "sourceHash": "fnv1a64:8d0350229e4f0278",
+  "lessonIds": [
+    "ZH-C360-gonggong",
+    "ZH-C360-biyao",
+    "ZH-W360-bi-must",
+    "ZH-C360-bubi",
+    "ZH-C360-changhe",
+    "ZH-C360-chadui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch360.txt",
+  "json": "chinese/narration/ch360.json",
+  "textHash": "fnv1a64:defb63d42ac0395a",
+  "jsonHash": "fnv1a64:894fc437a6de5650",
+  "findings": []
+}

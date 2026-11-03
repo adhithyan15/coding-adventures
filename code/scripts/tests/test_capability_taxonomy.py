@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+import subprocess
 import unittest
 from pathlib import Path
 from typing import Any
@@ -40,14 +42,14 @@ class CapabilityTaxonomyTest(unittest.TestCase):
         actions = self.taxonomy["all_actions"]
         valid_count = sum(len(allowed) for allowed in categories.values())
         invalid_count = len(categories) * len(actions) - valid_count
-        self.assertEqual(19, valid_count)
-        self.assertEqual(93, invalid_count)
+        self.assertEqual(25, valid_count)
+        self.assertEqual(162, invalid_count)
         self.assertEqual(self.taxonomy["expected_valid_pair_count"], valid_count)
         self.assertEqual(
             self.taxonomy["expected_invalid_cross_pair_count"], invalid_count
         )
 
-    def test_both_manifest_schemas_accept_all_19_valid_pairs(self) -> None:
+    def test_both_manifest_schemas_accept_all_25_valid_pairs(self) -> None:
         for schema_name, schema in self.manifest_schemas.items():
             validator = jsonschema.Draft202012Validator(schema)
             for category, actions in self.taxonomy["categories"].items():
@@ -62,7 +64,7 @@ class CapabilityTaxonomyTest(unittest.TestCase):
                         )
                         self.assertEqual([], [error.message for error in errors])
 
-    def test_both_manifest_schemas_reject_all_93_invalid_cross_pairs(self) -> None:
+    def test_both_manifest_schemas_reject_all_162_invalid_cross_pairs(self) -> None:
         for schema_name, schema in self.manifest_schemas.items():
             validator = jsonschema.Draft202012Validator(schema)
             for category, allowed in self.taxonomy["categories"].items():
@@ -92,6 +94,88 @@ class CapabilityTaxonomyTest(unittest.TestCase):
                         )
                     )
                     self.assertTrue(errors, "unknown vocabulary must fail closed")
+
+    def test_nondeterminism_categories_are_closed_and_named(self) -> None:
+        # VER00 section 6.3 adds rand, thread and ui so a simulated host can
+        # control every source of nondeterminism a unit test meets. Spell
+        # the new pairs out here, independently of the fixture, so a fixture
+        # edit cannot quietly widen or narrow them.
+        categories = self.taxonomy["categories"]
+        self.assertEqual(["read"], categories["rand"])
+        self.assertEqual(["spawn", "message"], categories["thread"])
+        self.assertEqual(["read", "write", "event"], categories["ui"])
+        accepted = [
+            ("rand", "read"),
+            ("thread", "spawn"),
+            ("thread", "message"),
+            ("ui", "read"),
+            ("ui", "write"),
+            ("ui", "event"),
+        ]
+        # Each new action belongs to exactly one category, and the old
+        # categories must not pick the new actions up, nor the new
+        # categories the old actions.
+        rejected = [
+            ("rand", "write"),
+            ("rand", "sleep"),
+            ("thread", "fork"),
+            ("thread", "exec"),
+            ("thread", "read"),
+            ("ui", "message"),
+            ("ui", "spawn"),
+            ("ui", "list"),
+            ("proc", "spawn"),
+            ("stdout", "event"),
+            ("net", "message"),
+            ("time", "spawn"),
+        ]
+        for schema_name, schema in self.manifest_schemas.items():
+            validator = jsonschema.Draft202012Validator(schema)
+            for category, action in accepted:
+                with self.subTest(schema=schema_name, pair=(category, action)):
+                    validator.validate(self.manifest(schema_name, category, action))
+            for category, action in rejected:
+                with self.subTest(schema=schema_name, pair=(category, action)):
+                    self.assertTrue(
+                        list(
+                            validator.iter_errors(
+                                self.manifest(schema_name, category, action)
+                            )
+                        ),
+                        "a cross-pair with a new category or action must fail",
+                    )
+
+    def test_there_is_no_all_or_wildcard_category_or_action(self) -> None:
+        # D21 has no escape hatch: over-declaring must be impossible, so no
+        # category or action may stand for "everything".
+        for schema_name, schema in self.manifest_schemas.items():
+            validator = jsonschema.Draft202012Validator(schema)
+            for category, action in (
+                ("all", "read"),
+                ("*", "read"),
+                ("rand", "all"),
+                ("thread", "*"),
+                ("ui", "all"),
+            ):
+                with self.subTest(schema=schema_name, pair=(category, action)):
+                    self.assertTrue(
+                        list(
+                            validator.iter_errors(
+                                self.manifest(schema_name, category, action)
+                            )
+                        )
+                    )
+
+    def test_new_capabilities_still_require_a_justification(self) -> None:
+        validator = jsonschema.Draft202012Validator(self.manifest_schemas["required"])
+        for category, action in (("rand", "read"), ("thread", "spawn"), ("ui", "event")):
+            manifest = self.manifest("required", category, action)
+            del manifest["capabilities"][0]["justification"]
+            with self.subTest(pair=(category, action)):
+                self.assertTrue(list(validator.iter_errors(manifest)))
+            manifest["capabilities"][0]["justification"] = "short"
+            with self.subTest(pair=(category, action), justification="short"):
+                self.assertTrue(list(validator.iter_errors(manifest)))
 
     def test_agent_manifest_schema_versions_are_explicitly_evolved(self) -> None:
         validator = jsonschema.Draft202012Validator(self.manifest_schemas["agent"])
@@ -236,6 +320,60 @@ class CapabilityTaxonomyTest(unittest.TestCase):
                     pair=pair,
                 ):
                     self.assertIn(pair, allowed)
+
+    def test_v1_manifests_validate_except_the_shrink_only_ledger(self) -> None:
+        """Every tracked manifest must validate against the v1 schema.
+
+        Validity is decided from the file itself, never from its own
+        `$schema` field: a manifest cannot opt out of the check by omitting
+        or misspelling that field. Files are enumerated with `git ls-files`,
+        so untracked build output is never read and no directory name is
+        skipped by accident.
+
+        A known set of legacy manifests does not validate yet. They are listed
+        in a ledger that may only shrink, and each entry is frozen by the
+        SHA-256 of its exact bytes:
+        - a manifest outside the ledger that is invalid fails the test;
+        - a listed manifest that now validates must be removed from the ledger;
+        - a listed manifest whose bytes changed fails the test, so an invalid
+          manifest cannot quietly gain capabilities while it waits to be fixed.
+        """
+        ledger_path = REPO_ROOT / "code/specs/data/required-capabilities-v1-invalid-ledger.json"
+        ledger = json.loads(ledger_path.read_text(encoding="utf-8"))["invalid_manifests"]
+        validator = jsonschema.Draft202012Validator(self.manifest_schemas["required"])
+        tracked = subprocess.run(
+            ["git", "ls-files", "-z", "--", "code/*required_capabilities.json"],
+            cwd=REPO_ROOT,
+            capture_output=True,
+            check=True,
+        ).stdout.decode("utf-8").split("\0")
+        invalid: dict[str, str] = {}
+        for relative in filter(None, tracked):
+            raw = (REPO_ROOT / relative).read_bytes()
+            try:
+                manifest = json.loads(raw)
+                valid = isinstance(manifest, dict) and not list(validator.iter_errors(manifest))
+            except json.JSONDecodeError:
+                valid = False
+            if not valid:
+                invalid[relative] = hashlib.sha256(raw).hexdigest()
+        self.assertGreater(len(tracked), 3000)
+        self.assertEqual(sorted(set(invalid) - set(ledger)), [], "new invalid manifests")
+        self.assertEqual(sorted(set(ledger) - set(invalid)), [], "fixed manifests still in the ledger")
+        changed = sorted(path for path in invalid.keys() & ledger.keys() if invalid[path] != ledger[path])
+        self.assertEqual(changed, [], "ledgered manifests changed without being fixed")
+
+    def test_c_and_cpp_package_names_are_accepted(self) -> None:
+        validator = jsonschema.Draft202012Validator(self.manifest_schemas["required"])
+        for package in ("c/ct-compare", "cpp/ct-compare"):
+            manifest = {
+                "version": 1,
+                "package": package,
+                "capabilities": [],
+                "justification": "Pure computation.",
+            }
+            with self.subTest(package=package):
+                self.assertEqual(list(validator.iter_errors(manifest)), [])
 
     def test_camera_media_authority_free_manifest_is_schema_valid(self) -> None:
         manifest_path = (

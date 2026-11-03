@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C306-jingguo",
+  "pathSegment": "ZH-PATH-306-WEDDING306",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-306-WEDDING306",
+      "order": 1
+    }
+  ]
+}

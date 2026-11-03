@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C288-dhandho",
+    "language": "marwadi",
+    "chapter": 288,
+    "sequence": 20160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:960a260806fd0f04"
+  },
+  "findings": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C532-ruyi",
+    "language": "chinese",
+    "chapter": 532,
+    "sequence": 39960,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b2af91644a5bf633"
+  },
+  "findings": []
+}

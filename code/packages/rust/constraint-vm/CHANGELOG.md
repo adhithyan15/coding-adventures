@@ -1,5 +1,26 @@
 # Changelog — `constraint-vm`
 
+## Unreleased — 2026-11-02
+
+QF_BV (VER10) now runs through the VM: `constraint-engine` 0.3.0 adds a
+bit-vector tactic, and no VM code changed.
+
+### Added
+
+- `tests/qfbv.rs` and `tests/qfbv/*.smt2`. Each corpus file states its
+  expected answers.
+  - **Corpus:** 15 `.smt2` files (23 `check-sat` answers), read by
+    `smt-lib-format` (a new dev-dependency) and executed by `Vm`.
+  - **SAT answers:** every model is re-checked by an independent concrete
+    evaluator.
+  - **UNSAT answers:** the engine has already certified each one with
+    `drat-check`. The test also brute-forces it when inputs total ≤ 16
+    bits.
+  - **Random problems:** 400 random QF_BV problems are compared against
+    brute force.
+  - **Refusals and limits:** cases for unsupported input, a huge unused
+    declaration, Boolean connectives, reset and scoping.
+
 ## 0.1.0 — 2026-05-04
 
 Initial release.  **LANG24 PR 24-D.**

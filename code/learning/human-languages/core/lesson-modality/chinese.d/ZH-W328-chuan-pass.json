@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W328-chuan-pass",
+    "language": "chinese",
+    "chapter": 328,
+    "sequence": 25525,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ddfc3219e1762f4d",
+    "detachableSegments": [
+      "Script — the person piece, then two bars and a turning sweep"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

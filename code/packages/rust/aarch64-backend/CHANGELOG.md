@@ -1,5 +1,16 @@
 # Changelog — `aarch64-backend`
 
+## Unreleased — LANG83 PR5a — `str_concat` takes the string ceiling
+
+- The `str_concat` builtin row is now 3 arguments: `__twig_str_concat(a, b, max)`, where `max` is the module's string ceiling and the runtime raises `Trap.Overflow` past it. `twig-aot` passes the ceiling. No codegen change: the generic `call_builtin` marshaller handles three arguments like `str_slice`.
+
+## Unreleased — `alloc_ref_array`: arrays of GC references are traced
+
+### Added
+
+- New CIR op `alloc_ref_array <count> -> <dest>`. It lowers exactly like `alloc_array` (an `8 + count*8` block with the length at `+0`) but calls `__twig_alloc_ref_array_bytes` instead of `__twig_alloc_bytes`. That allocator's heap kind traces every word past the length header, so a string (or other reference) reachable only through the array is marked, and compaction moves it and rewrites the element. Before this, a BASIC `DIM A$(n)` array was an untraced blob, and its strings were freed while the array still held their handles. twig-aot emits the op for arrays of reference elements. The specialiser erases `array<T>` to `any`, so the backend cannot choose the allocator itself.
+- Test: `alloc_ref_array_uses_the_reference_tracing_allocator`: the call target differs, and the instruction bytes are otherwise identical.
+
 ## Unreleased — a `bool`-typed comparison is signed (#18453)
 
 ### Fixed

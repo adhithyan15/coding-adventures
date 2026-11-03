@@ -1,0 +1,11 @@
+{
+  "id": "PA-C277-saman",
+  "pathSegment": "PA-PATH-277-CHOOSE277",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-277-CHOOSE277",
+      "order": 4
+    }
+  ]
+}

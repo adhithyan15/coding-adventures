@@ -1,0 +1,11 @@
+{
+  "id": "PA-C255-dak",
+  "pathSegment": "PA-PATH-255-POST255",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-255-POST255",
+      "order": 0
+    }
+  ]
+}

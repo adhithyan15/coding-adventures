@@ -257,11 +257,14 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // Lexicographic byte comparison normalized to -1/0/1 by `__twig_str_cmp`.
     BuiltinSig { name: "str_cmp", n_args: 2, returns: true },
     // E4-dyn runtime string concatenation.  `int64_t __twig_str_concat(int64_t a,
-    // int64_t b)` reads both `[i64 len][bytes]` headers and returns a handle to a
-    // fresh joined block.  Same 2-arg / returns-i64 shape as `str_eq` (both operand
-    // handles ride x0/x1, the result handle rides x0), so the generic `call_builtin`
-    // marshaller needs no new codegen — only this table entry.
-    BuiltinSig { name: "str_concat", n_args: 2, returns: true },
+    // int64_t b, int64_t max)` reads both `[i64 len][bytes]` headers and returns a
+    // handle to a fresh joined block.  LANG83 PR5a added `max`, the module's string
+    // ceiling (`twig-aot` passes `IIRModule::str_ceiling()` as an immediate): past
+    // it the helper raises `Trap.Overflow` through `__twig_trap`.  Same 3-arg /
+    // returns-i64 shape as `str_slice` (the arguments ride x0/x1/x2, the result
+    // handle the return register), so the generic `call_builtin` marshaller needs
+    // no new codegen — only this table entry.
+    BuiltinSig { name: "str_concat", n_args: 3, returns: true },
     // Length-prefixed substring handle; the shared helper checks [start, end).
     BuiltinSig { name: "str_slice", n_args: 3, returns: true },
     // Checked byte read from a length-prefixed string and a live integer index.
@@ -1592,11 +1595,25 @@ fn emit_instr(
     // `alloc_array <count> -> <dest>` (ty = `array<i64>`). Allocate `8 + count*8`
     // bytes via the shared runtime helper, store the length header, return base.
     //   x0 = count ; x0 = count<<3 ; x0 += 8 ; bl __twig_alloc_bytes ; [x0]=count
-    if op == "alloc_array" {
+    //
+    // `alloc_ref_array` is the same block for an array whose elements are GC
+    // references (BASIC `DIM A$(n)`: each element a string handle). It calls
+    // `__twig_alloc_ref_array_bytes`, whose heap kind traces every word past the
+    // 8-byte length header, so a string reachable only through the array is marked
+    // (and, under compaction, moved with the element rewritten). `__twig_alloc_bytes`
+    // is a no-reference blob kind: through it such a string was invisible to every
+    // collection and freed while the array still held its handle. twig-aot picks the
+    // op from the IIR element type, which the specialiser erases before this point.
+    if op == "alloc_array" || op == "alloc_ref_array" {
         let dest = require_dest(instr)?;
         let count_src = instr.srcs.first().ok_or_else(|| {
-            BackendError::MalformedInstr("alloc_array: needs srcs[0]=count".into())
+            BackendError::MalformedInstr(format!("{op}: needs srcs[0]=count"))
         })?;
+        let allocator = if op == "alloc_ref_array" {
+            "__twig_alloc_ref_array_bytes"
+        } else {
+            "__twig_alloc_bytes"
+        };
         // The AOT specialiser collapses the `array<T>` result type to `any` (it
         // is not in the scalar allowlist), so `instr.ty` no longer carries the
         // element type here. The native backend supports 8-byte elements
@@ -1608,7 +1625,7 @@ fn emit_instr(
         asm.mov_imm64(Reg::X1, elem_size.trailing_zeros() as u64); // log2(8)=3
         asm.lsl_reg(Reg::X0, Reg::X0, Reg::X1);
         asm.add_imm(Reg::X0, Reg::X0, 8)?;
-        asm.bl_external("__twig_alloc_bytes");
+        asm.bl_external(allocator);
         // dest = base (x0); then write the length header [base+0] = count.
         let slot = alloc.slot_of(dest);
         asm.str_(Reg::X0, Reg::Sp, slot)?;
@@ -2802,6 +2819,28 @@ mod tests {
         let traps = words.iter().filter(|&&w| w == 0x0000DEAD).count();
         assert!(traps >= 2, "expected ≥2 udf bounds traps, got {traps} in {words:?}");
         assert!(!bytes.is_empty() && bytes.len().is_multiple_of(4));
+    }
+
+    /// `alloc_ref_array` (an array of GC references, e.g. BASIC `A$`) allocates through
+    /// the reference-tracing `__twig_alloc_ref_array_bytes`; `alloc_array` keeps the
+    /// no-reference `__twig_alloc_bytes`. Otherwise the two lower identically.
+    #[test]
+    fn alloc_ref_array_uses_the_reference_tracing_allocator() {
+        let build = |op: &str| {
+            vec![
+                const_u64("n", 3),
+                heap(op, Some("a"), vec![CIROperand::Var("n".into())], "any"),
+                ret_u64("n"),
+            ]
+        };
+        let (plain, plain_ext) = compile_with_relocs(&ctx("arr", &[], "u64"), &build("alloc_array"))
+            .unwrap_or_else(|e| panic!("alloc_array: {e}"));
+        let (refs, ref_ext) = compile_with_relocs(&ctx("arr", &[], "u64"), &build("alloc_ref_array"))
+            .unwrap_or_else(|e| panic!("alloc_ref_array: {e}"));
+        let syms = |ext: &[Reloc]| ext.iter().map(|r| r.symbol.clone()).collect::<Vec<_>>();
+        assert_eq!(syms(&plain_ext), ["__twig_alloc_bytes"]);
+        assert_eq!(syms(&ref_ext), ["__twig_alloc_ref_array_bytes"]);
+        assert_eq!(plain.len(), refs.len(), "same instruction sequence, other callee");
     }
 
     /// AOT00-T8 follow-up: every `array_set` must also call the generational write

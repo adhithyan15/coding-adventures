@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C356-chucuo",
+    "language": "chinese",
+    "chapter": 356,
+    "sequence": 27530,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a7eabbd2262a8705"
+  },
+  "findings": []
+}

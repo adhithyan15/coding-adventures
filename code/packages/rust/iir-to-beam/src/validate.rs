@@ -203,6 +203,7 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///     exports: vec![],
 ///     imports: vec![],
 ///     release: None,
+///     str_max_bytes: None,
 /// };
 /// assert!(validate_for_beam(&module).is_empty());
 /// ```
@@ -273,6 +274,17 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
         // Return early — the per-function checks below would be vacuous.
         return errors;
     }
+
+    // ── LANG83 PR5a: the module's string ceiling (#18800) ───────────────────
+    //
+    // A `str_const` longer than the module's ceiling (`StrTooLong`), or a
+    // ceiling above the registry's (`StrMaxBytes`), is malformed IR: no
+    // column could hold the literal, and `str_concat` is the only op allowed
+    // to find an over-long string at run time.  `IIRModule::validate` knew
+    // this, but nothing on the way to a backend called it, so every column
+    // compiled such a module.  The shared check lives in `interpreter-ir`, so
+    // every column refuses exactly the same modules.
+    errors.extend(module.str_ceiling_errors());
 
     // ── Check 1.5: Atom length (trust-boundary guard) ────────────────────────
     //
@@ -729,6 +741,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         }
     }
 
@@ -742,6 +755,7 @@ mod tests {
             exports: vec![],
             imports: vec![],
             release: None,
+            str_max_bytes: None,
         };
         let errs = validate_for_beam(&module);
         assert!(!errs.is_empty(), "should reject empty module");

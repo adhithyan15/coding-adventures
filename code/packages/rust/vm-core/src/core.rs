@@ -436,7 +436,10 @@ impl VMCore {
     /// against the frame register limit ([`check_register_limits`]); a
     /// function that needs more than [`VMFrame::MAX_FRAME_REGISTERS`]
     /// registers fails the call with [`VMError::RegisterLimitExceeded`] and
-    /// no instruction executes.  Otherwise any error an instruction raises.
+    /// no instruction executes.  Likewise a module whose string literals do
+    /// not fit its LANG83 string ceiling fails with
+    /// [`VMError::InvalidModule`] ([`check_str_ceiling`], #18800).
+    /// Otherwise any error an instruction raises.
     ///
     /// On error the call stack is cleared before returning, so a failed run
     /// does not keep up to [`Self::max_register_slots`] of register files
@@ -470,6 +473,9 @@ impl VMCore {
         // Load-time check: refuse a module with a function too big for a
         // frame, naming it, before any output or side effect happens.
         check_register_limits(module)?;
+        // And one whose string literals do not fit its string ceiling
+        // (LANG83 PR5a, #18800) — the compiled columns refuse it too.
+        check_str_ceiling(module)?;
 
         // Build the root frame.  `for_function` sizes the register file to
         // at least one slot per parameter, so the argument writes are in
@@ -498,6 +504,8 @@ impl VMCore {
         // to this invocation, not cumulative lifetime instructions.
         let instrs_before = self.metrics_instrs;
 
+        // LANG83 PR5a: read before `module.functions` is borrowed below.
+        let str_max_bytes = module.str_ceiling();
         let mut ctx = DispatchCtx {
             frames: &mut self.frames,
             module_fns: &mut module.functions,
@@ -517,6 +525,7 @@ impl VMCore {
             // large limit does not overflow (which would panic in debug builds
             // or wrap silently in release builds, disabling the limit).
             max_instructions: self.max_instructions.map(|limit| instrs_before.saturating_add(limit)),
+            str_max_bytes: str_max_bytes as usize,
             fn_call_counts: &mut self.fn_call_counts,
             metrics_instrs: &mut self.metrics_instrs,
             metrics_jit_hits: &mut self.metrics_jit_hits,
@@ -554,8 +563,9 @@ impl VMCore {
         let fn_idx = module.functions.iter().position(|f| f.name == fn_name)
             .ok_or_else(|| VMError::UnknownOpcode(format!("function {fn_name:?}")))?;
 
-        // Same load-time register-limit check as `execute`.
+        // Same load-time checks as `execute`.
         check_register_limits(module)?;
+        check_str_ceiling(module)?;
 
         let entry = &module.functions[fn_idx];
         let mut root_frame = VMFrame::for_call(entry, None, 0, self.max_register_slots)?;
@@ -578,6 +588,8 @@ impl VMCore {
         let instrs_before = self.metrics_instrs;
         let mut traces: Vec<crate::trace::VMTrace> = Vec::new();
 
+        // LANG83 PR5a: read before `module.functions` is borrowed below.
+        let str_max_bytes = module.str_ceiling();
         let mut ctx = DispatchCtx {
             frames: &mut self.frames,
             module_fns: &mut module.functions,
@@ -594,6 +606,7 @@ impl VMCore {
             max_memory_entries: self.max_memory_entries,
             max_gc_heap_bytes: self.max_gc_heap_bytes,
             max_instructions: self.max_instructions.map(|limit| instrs_before.saturating_add(limit)),
+            str_max_bytes: str_max_bytes as usize,
             fn_call_counts: &mut self.fn_call_counts,
             metrics_instrs: &mut self.metrics_instrs,
             metrics_jit_hits: &mut self.metrics_jit_hits,
@@ -764,6 +777,32 @@ impl std::fmt::Debug for VMCore {
 /// [`VMError::RegisterLimitExceeded`] for the first function over the limit.
 pub fn check_register_limits(module: &IIRModule) -> Result<(), VMError> {
     module.functions.iter().try_for_each(VMFrame::check_register_limit)
+}
+
+/// Check `module` against its LANG83 string ceiling (#18800): no `str_const`
+/// longer than `IIRModule::str_ceiling()`, and no `str_max_bytes` above
+/// `STR_MAX_BYTES`.
+///
+/// This is the second load-time check [`VMCore::execute`] and
+/// [`VMCore::execute_traced`] run, after [`check_register_limits`]. It is
+/// `interpreter-ir`'s shared [`IIRModule::str_ceiling_errors`], the check every
+/// compiled column runs before code generation, so the reference interpreter
+/// refuses exactly the modules they refuse. Without it the VM printed a
+/// literal longer than the ceiling, which `str_concat`'s `Trap.Overflow` says
+/// no string may be.
+///
+/// Cost: one pass over the instructions, allocating only for a violation.
+///
+/// # Errors
+///
+/// [`VMError::InvalidModule`] listing every violation.
+pub fn check_str_ceiling(module: &IIRModule) -> Result<(), VMError> {
+    let errors = module.str_ceiling_errors();
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(VMError::InvalidModule { errors })
+    }
 }
 
 #[cfg(test)]

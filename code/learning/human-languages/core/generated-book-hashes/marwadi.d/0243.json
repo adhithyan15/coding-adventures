@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 243,
+  "sourceHash": "fnv1a64:32d5c0fe388e7c85",
+  "lessonIds": [
+    "MW-C243-chori",
+    "MW-C243-lutno",
+    "MW-C243-khosno",
+    "MW-C243-gamno",
+    "MW-C243-thagno"
+  ],
+  "tex": "marwadi/book/chapters/ch243-a-thief-at-the-fair.tex"
+}

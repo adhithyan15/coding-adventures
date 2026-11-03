@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C422-beishang",
+  "pathSegment": "ZH-PATH-422-NORTH422",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-422-NORTH422",
+      "order": 4
+    }
+  ]
+}

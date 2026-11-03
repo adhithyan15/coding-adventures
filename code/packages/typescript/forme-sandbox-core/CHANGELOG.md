@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Declare the native launcher as `proc:exec`, the capability that starting a
+  program needs. The manifest said `proc:spawn`, which was never a Spec 13
+  pair. It went unnoticed while `spawn` was an unknown action, but D21 now
+  defines `spawn` for `thread` (starting a worker inside the process), so
+  `proc:spawn` became a rejected cross-pair.
+
 ## 1.0.0 — 2026-10-05
 
 - Join the aligned stable Forme `1.0.0` package line targeting kernel API v2; see the [`forme-types` migration guide](../forme-types/MIGRATION-v2.md) for the breaking `RenderedPage` provenance and stage/plugin version changes.

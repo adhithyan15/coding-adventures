@@ -1,0 +1,11 @@
+{
+  "id": "MW-C260-salo",
+  "pathSegment": "MW-PATH-260-BAHU260",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "MW-EXT-260-BAHU260",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C523-maijia-seller",
+  "pathSegment": "ZH-PATH-523-TRADE523",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-523-TRADE523",
+      "order": 3
+    }
+  ]
+}

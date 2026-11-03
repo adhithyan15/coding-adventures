@@ -1,0 +1,19 @@
+{
+  "chapter": 268,
+  "title": "At the Bus Stand",
+  "label": "ch:pa-a2-at-the-bus-stand",
+  "canDo": "I can find a seat at a busy bus stand.",
+  "spineNodes": [
+    "SPINE-ASK-LOCATION"
+  ],
+  "payoff": {
+    "lesson": "PA-C268-tikna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 268: I can find a seat at a busy bus stand.",
+    "assesses": [
+      "PA-LEX-C268-STAND268-03",
+      "PA-LEX-C268-STAND268-04",
+      "PA-LEX-C268-STAND268-05"
+    ]
+  }
+}

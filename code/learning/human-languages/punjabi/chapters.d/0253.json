@@ -1,0 +1,19 @@
+{
+  "chapter": 253,
+  "title": "Rules at the Gate",
+  "label": "ch:pa-a2-rules-at-the-gate",
+  "canDo": "I can understand a rule or a notice at an office gate.",
+  "spineNodes": [
+    "SPINE-READ-PRACTICAL-TEXTS"
+  ],
+  "payoff": {
+    "lesson": "PA-C253-ishtihar",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 253: I can understand a rule or a notice at an office gate.",
+    "assesses": [
+      "PA-LEX-C253-RULE253-03",
+      "PA-LEX-C253-RULE253-04",
+      "PA-LEX-C253-RULE253-05"
+    ]
+  }
+}

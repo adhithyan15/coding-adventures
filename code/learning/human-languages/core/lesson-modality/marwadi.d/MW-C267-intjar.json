@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C267-intjar",
+    "language": "marwadi",
+    "chapter": 267,
+    "sequence": 19080,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0e0c5a80ed49b20f"
+  },
+  "findings": []
+}

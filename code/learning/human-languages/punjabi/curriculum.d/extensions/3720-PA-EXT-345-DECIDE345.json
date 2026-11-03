@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-345-DECIDE345",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can set a condition and say what we decided.",
+  "prerequisites": []
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C334-rangna",
+    "language": "punjabi",
+    "chapter": 334,
+    "sequence": 20320,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:87df33771a12b0b6"
+  },
+  "findings": []
+}

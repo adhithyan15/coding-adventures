@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 293,
+  "sourceHash": "fnv1a64:795d10131fa2215f",
+  "lessonIds": [
+    "ZH-C293-zazhi",
+    "ZH-C293-bao",
+    "ZH-W293-bao-report",
+    "ZH-C293-jianbao",
+    "ZH-C293-toutiao",
+    "ZH-C293-guanzhu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch293.txt",
+  "json": "chinese/narration/ch293.json",
+  "textHash": "fnv1a64:a8a4c3fc92f0bacc",
+  "jsonHash": "fnv1a64:c3ae646fede800e6",
+  "findings": []
+}

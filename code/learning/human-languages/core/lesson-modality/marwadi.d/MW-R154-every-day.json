@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R154-every-day",
+    "language": "marwadi",
+    "chapter": 154,
+    "sequence": 9610,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eeffe426df88c556"
+  },
+  "findings": []
+}

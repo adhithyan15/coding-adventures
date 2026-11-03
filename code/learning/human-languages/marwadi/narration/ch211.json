@@ -1,0 +1,808 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 211,
+  "title": "Roomy or Tight",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7f9f7531c70d7ac2",
+  "lessons": [
+    {
+      "id": "MW-C211-map",
+      "sequence": 14030,
+      "title": "माप (māp) — a size; a measure",
+      "headword": "माप",
+      "romanization": "māp",
+      "gloss": "a size; a measure",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b169735b3a2c4baf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for fake, then the Marwadi for to pick out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: माप",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माप — māp — \"a size; a measure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ये जूती म्हारो माप कोनी। ye jūtī mhāro māp konī. These shoes aren't my size."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "माप (māp) is inherited from Sanskrit māpya, \"to be measured\". CDIAL gives no Marwari form in this entry, but lists Hindi māp, \"measurement, measure\" (CDIAL 10053)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māp",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māp*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "māp, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *māp*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ye jūtī mhāro māp konī. — These shoes aren't my size.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ye jūtī mhāro māp konī.* — These shoes aren't my size.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for fake, then the Marwadi for to pick out, then say māp again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for fake, then the Marwadi for to pick out, then say *māp* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does माप (māp) mean? (\"A size; a measure\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C211-map-type",
+              "prompt": "Say the Marwadi for 'a size'.",
+              "assesses": [
+                "MW-LEX-C211-SIZE211-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "माप",
+                "māp"
+              ],
+              "feedback": {
+                "correct": "Right: माप (māp) is 'a size; a measure'.",
+                "incorrect": "'a size' is माप (māp)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C211-napno",
+      "sequence": 14040,
+      "title": "नापणो (nāpṇo) — to measure",
+      "headword": "नापणो",
+      "romanization": "nāpṇo",
+      "gloss": "to measure",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2c7560b8b0a2377",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to pick out, then the Marwadi for a size."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नापणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नापणो — nāpṇo — \"to measure\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मिस्त्री भींत नापै है। mistrī bhī̃t nāpai hai. The mason measures the wall."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं कमरो नाप्यो, mhaĩ kamro nāpyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नापणो (nāpṇo) is inherited from Sanskrit jñāpyate, \"is made known\". CDIAL gives no Marwari form in this entry, but lists Hindi nāpnā, \"to measure\" (CDIAL 5283)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāpṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāpṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāpṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāpṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mistrī bhī̃t nāpai hai. — The mason measures the wall.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mistrī bhī̃t nāpai hai.* — The mason measures the wall.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to pick out, then the Marwadi for a size, then say nāpṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to pick out, then the Marwadi for a size, then say *nāpṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नापणो (nāpṇo) mean? (\"To measure\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C211-napno-type",
+              "prompt": "Say the Marwadi for 'to measure'.",
+              "assesses": [
+                "MW-LEX-C211-SIZE211-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "नापणो",
+                "nāpṇo"
+              ],
+              "feedback": {
+                "correct": "Right: नापणो (nāpṇo) is 'to measure'.",
+                "incorrect": "'to measure' is नापणो (nāpṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C211-moklo",
+      "sequence": 14050,
+      "title": "मोकळो (mokḷo) — roomy; loose",
+      "headword": "मोकळो",
+      "romanization": "mokḷo",
+      "gloss": "roomy; loose",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f31f82466b01b280",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a size, then the Marwadi for to measure."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मोकळो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोकळो — mokḷo — \"roomy; loose\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ये कुरतो मोकळो है। ye kurto mokḷo hai. This kurta is roomy."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मोकळो (mokḷo) is inherited from a reconstructed mukna, \"loosed\"; CDIAL lists Old Marwari mokaï, \"sends\", and Hindi moklā, \"loose, free\", under it (CDIAL 10157)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokḷo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokḷo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mokḷo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mokḷo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ye kurto mokḷo hai. — This kurta is roomy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ye kurto mokḷo hai.* — This kurta is roomy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a size, then the Marwadi for to measure, then say mokḷo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a size, then the Marwadi for to measure, then say *mokḷo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मोकळो (mokḷo) mean? (\"Roomy; loose\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C211-moklo-type",
+              "prompt": "Say the Marwadi for 'roomy'.",
+              "assesses": [
+                "MW-LEX-C211-SIZE211-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मोकळो",
+                "mokḷo"
+              ],
+              "feedback": {
+                "correct": "Right: मोकळो (mokḷo) is 'roomy; loose'.",
+                "incorrect": "'roomy' is मोकळो (mokḷo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C211-tang",
+      "sequence": 14060,
+      "title": "तंग (taṅg) — tight",
+      "headword": "तंग",
+      "romanization": "taṅg",
+      "gloss": "tight",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8eb8b4ad2a8c8500",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to measure, then the Marwadi for roomy."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: तंग",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तंग — taṅg — \"tight\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ये पजामो तंग है। ye pajāmo taṅg hai. These trousers are tight."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "तंग (taṅg) is usually traced to Persian tang, \"narrow, tight\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṅg",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṅg*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṅg, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṅg*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ye pajāmo taṅg hai. — These trousers are tight.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ye pajāmo taṅg hai.* — These trousers are tight.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to measure, then the Marwadi for roomy, then say taṅg again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to measure, then the Marwadi for roomy, then say *taṅg* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does तंग (taṅg) mean? (\"Tight\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C211-tang-type",
+              "prompt": "Say the Marwadi for 'tight'.",
+              "assesses": [
+                "MW-LEX-C211-SIZE211-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "तंग",
+                "taṅg"
+              ],
+              "feedback": {
+                "correct": "Right: तंग (taṅg) is 'tight'.",
+                "incorrect": "'tight' is तंग (taṅg)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C211-samavno",
+      "sequence": 14070,
+      "title": "समावणो (samāvṇo) — to fit (into)",
+      "headword": "समावणो",
+      "romanization": "samāvṇo",
+      "gloss": "to fit (into)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1b8f0a852067a28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for roomy, then the Marwadi for tight."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: समावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समावणो — samāvṇo — \"to fit (into)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारो पग जूती मांय कोनी समावै। mhāro pag jūtī mā̃y konī samāvai. My foot won't fit in the shoe."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो सामान पेटी मांय समायो, vo sāmān peṭī mā̃y samāyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "समावणो (samāvṇo) is inherited from Sanskrit sammāti, \"is contained in\"; CDIAL lists Old Marwari samāi, \"fits into, is contained in\" (CDIAL 12975)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "samāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *samāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhāro pag jūtī mā̃y konī samāvai. — My foot won't fit in the shoe.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhāro pag jūtī mā̃y konī samāvai.* — My foot won't fit in the shoe.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for roomy, then the Marwadi for tight, then say samāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for roomy, then the Marwadi for tight, then say *samāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does समावणो (samāvṇo) mean? (\"To fit (into)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C211-samavno-type",
+              "prompt": "Say the Marwadi for 'to fit'.",
+              "assesses": [
+                "MW-LEX-C211-SIZE211-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "समावणो",
+                "samāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: समावणो (samāvṇo) is 'to fit (into)'.",
+                "incorrect": "'to fit' is समावणो (samāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

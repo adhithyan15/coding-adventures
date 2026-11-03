@@ -1,0 +1,11 @@
+{
+  "id": "PA-C304-sitta",
+  "pathSegment": "PA-PATH-304-GROW304",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-304-GROW304",
+      "order": 3
+    }
+  ]
+}

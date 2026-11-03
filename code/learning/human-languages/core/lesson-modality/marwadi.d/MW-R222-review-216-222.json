@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-R222-review-216-222",
+    "language": "marwadi",
+    "chapter": 222,
+    "sequence": 15350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ed4a7487700f6181"
+  },
+  "findings": []
+}

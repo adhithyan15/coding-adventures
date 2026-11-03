@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 257,
+  "sourceHash": "fnv1a64:fc058dcb43bb8da3",
+  "lessonIds": [
+    "PA-C257-khata",
+    "PA-C257-rakam",
+    "PA-C257-nakad",
+    "PA-C257-kadhvauna",
+    "PA-C257-vadhna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch257.txt",
+  "json": "punjabi/narration/ch257.json",
+  "textHash": "fnv1a64:aafed9103f8d1fc2",
+  "jsonHash": "fnv1a64:d0a288efcee883b7",
+  "findings": []
+}

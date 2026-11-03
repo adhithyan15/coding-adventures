@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:bc9870121b7a69ea",
+  "lessonIds": [
+    "PA-C363-koshish",
+    "PA-C363-usarna",
+    "PA-C363-nibhauna",
+    "PA-C363-samvarna",
+    "PA-C363-tarakki"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch363.txt",
+  "json": "punjabi/narration/ch363.json",
+  "textHash": "fnv1a64:6ba2a96593273b1b",
+  "jsonHash": "fnv1a64:5fbd0252eeb95045",
+  "findings": []
+}

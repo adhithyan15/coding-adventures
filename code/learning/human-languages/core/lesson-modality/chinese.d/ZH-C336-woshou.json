@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C336-woshou",
+    "language": "chinese",
+    "chapter": 336,
+    "sequence": 25970,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6ce3d00456f7a185"
+  },
+  "findings": []
+}

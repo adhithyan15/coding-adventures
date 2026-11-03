@@ -46,12 +46,14 @@ static COUNTER: AtomicU32 = AtomicU32::new(0);
 fn run_raw(module: &Module) -> Option<(String, bool)> {
     let cc = find_cc()?;
     let artifact = semantic_ir_to_c::compile(module).expect("C backend compile (no panic)");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+    let dir = scratch.path();
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
     let stem = format!("sirc_exc_{}_{}", std::process::id(), n);
     let cpath: PathBuf = dir.join(format!("{stem}.c"));
     let exe: PathBuf = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
-    std::fs::File::create(&cpath)
+    let _cleanup = RemoveOnDrop([cpath.clone(), exe.clone()]);
+    sir_test_scratch::create_new(&cpath)
         .and_then(|mut f| f.write_all(artifact.source.as_bytes()))
         .expect("write .c");
     let out = Command::new(&cc)
@@ -375,4 +377,18 @@ fn exception_emits_the_setjmp_handler_shape() {
     assert!(src.contains("_sir_push_handler()"), "handler push:\n{src}");
     assert!(src.contains("_sir_rescue_matches("), "rescue matching:\n{src}");
     assert!(src.contains("\"StandardError\""), "quoted rescue type (no injection):\n{src}");
+}
+
+/// Deletes a run's `.c` file and executable when the helper returns or
+/// panics.  Each call names its files uniquely (see `unique_suffix` or the
+/// counter above), so without this they would pile up in the temp directory,
+/// one pair per test run.
+struct RemoveOnDrop([std::path::PathBuf; 2]);
+
+impl Drop for RemoveOnDrop {
+    fn drop(&mut self) {
+        for path in &self.0 {
+            let _ = std::fs::remove_file(path);
+        }
+    }
 }

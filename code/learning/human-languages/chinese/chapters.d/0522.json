@@ -1,0 +1,19 @@
+{
+  "chapter": 522,
+  "title": "Something Needs Fixing",
+  "label": "ch:zh-something-needs-fixing",
+  "canDo": "I can talk about a leak, a repairman who comes to the house, the water bill, locks and the floor.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C522-diban",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 522: I can talk about a leak, a repairman who comes to the house, the water bill, locks and the floor.",
+    "assesses": [
+      "ZH-LEX-C522-FIXIT522-03",
+      "ZH-LEX-C522-FIXIT522-04",
+      "ZH-LEX-C522-FIXIT522-05"
+    ]
+  }
+}

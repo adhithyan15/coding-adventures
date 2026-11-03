@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C199-daskhat",
+    "language": "marwadi",
+    "chapter": 199,
+    "sequence": 13420,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:bb0c2a84412ce213"
+  },
+  "findings": []
+}

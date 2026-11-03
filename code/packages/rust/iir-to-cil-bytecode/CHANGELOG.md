@@ -1,5 +1,16 @@
 # Changelog — iir-to-cil-bytecode
 
+## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused on every CLR path
+
+- A `str_const` longer than the module's string ceiling (`StrTooLong`), or a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), is refused as `IIRClrError::ValidationFailed` before anything is emitted, on all three entry points: `lower_iir_to_cil` (through `validate_iir_for_clr`), and `emit_il` (the real-CoreCLR `.il` path the CoreCLR column runs) and `lower_typed_scalars_to_cil`, which skip that validator and call the new crate-private `validate::check_str_ceiling`. The check is `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, `emit_il` compiled the 17-byte literal of a ceiling-16 module.
+- Test `a_literal_past_the_module_ceiling_is_refused_on_every_clr_path` (fails without the check).
+
+## Unreleased — LANG83 PR5a — strings fail closed, checked before narrowing
+
+- `str_index` compares the `int64` index with `get_Length` widened to `int64` (`blt.un`, one unsigned compare for both ends) **before** the `conv.i4` that `get_Chars` takes; `str_slice` checks `end >u len` and then `start >u end` before narrowing either offset for `Substring`. A failing check runs the LANG83 trap sequence with `Trap.Bounds` (flush `Console.Out`, throw `System.Exception("Trap.Bounds")`). Before, the index was narrowed first (a silent wrong read at `2^32 + 1`), and a failure was an `IndexOutOfRangeException` / `ArgumentOutOfRangeException` with no kind.
+- `str_concat` compares the sum of the two lengths (as `int64`) with the module's string ceiling and raises `Trap.Overflow` past it (`ble.un` over the trap).
+- New `tests/lang83_pr5a.rs` checks the IL shape and runs a stack-depth model over every path of the entry method (labels reached with an empty stack, `throw` ending its path), because CoreCLR rejects IL that `ilasm` accepts. CI executes the cases on CoreCLR.
+
 ## Unreleased — LANG83 PR7f-1 — the dynamic-value primitives, under neutral names
 
 - `OP_SUPPORT` declares the ten LANG83 PR7f dynamic-value primitives `Refused(NO_TAGGED_WORD_RUNTIME)`: the CLR holds dynamic values as objects (through `lang-aot`'s structural lowering) and links no tagged-word runtime. A test comment names `dyn_pair_new` (was `dyn_cons`).

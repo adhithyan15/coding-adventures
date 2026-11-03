@@ -611,15 +611,28 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "*.tar.gz" in workflow
     assert "archive-macos-app" in workflow
     assert "Trestle.app/Contents/Info.plist" in workflow
-    assert 'if ! kill -0 "$app_pid" 2>/dev/null; then' in workflow
+    # Every Trestle launch on macOS goes through the shared launcher, whose
+    # exit 2 ("quit early") is the only case that collects crash reports and
+    # an lldb backtrace. The inline `kill -0` loops it replaced are gone.
+    assert 'if ! kill -0 "$app_pid" 2>/dev/null; then' not in workflow
+    assert "launch_standard_app" not in workflow
+    assert workflow.count("bash code/scripts/mosaic-release-launch.sh 5") == 2
     assert 'SWIFT_BACKTRACE="enable=yes,interactive=no,output-to=stderr"' in workflow
-    assert workflow.count('if ! kill -0 "$app_pid" 2>/dev/null; then') == 2
-    assert 'cat "$log"' in workflow
-    assert workflow.count('"$HOME/Library/Logs/DiagnosticReports"') == 2
+    assert 'if [[ "$status" -eq 2 ]]; then' in workflow
+    assert workflow.count('"$HOME/Library/Logs/DiagnosticReports"') == 1
     assert "-name 'Trestle*.ips'" in workflow
     assert "com.apple.security.get-task-allow" in workflow
     assert 'lldb --batch -o run -o "thread backtrace all"' in workflow
-    assert workflow.count("diagnose_swift_crash \\") == 2
+    assert workflow.count("diagnose_swift_crash \\") == 1
+    assert workflow.count("launch_trestle ") == 4
+    # A bare `! grep` that is not a function's last command never fails a
+    # set -e step, so the runtime-failure check is an explicit `if grep`.
+    assert '! grep -E "missing required MIL prop' not in workflow
+    assert 'if grep -E "missing required MIL prop' in workflow
+    # The WinUI upgrade and recovery launches use the shared Windows launcher.
+    assert workflow.count("-File code/scripts/mosaic-release-launch.ps1") == 2
+    assert "$upgradeProcess" not in workflow
+    assert "$recoveryProcess" not in workflow
     assert "archive-windows-app" in workflow
     assert "write-windows-icon" in workflow
     assert "-p:SelfContained=true" in workflow

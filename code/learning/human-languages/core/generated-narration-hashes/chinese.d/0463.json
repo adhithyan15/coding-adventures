@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 463,
+  "sourceHash": "fnv1a64:b087096478e36663",
+  "lessonIds": [
+    "ZH-C463-danxiao",
+    "ZH-C463-kepa",
+    "ZH-W463-pa-fear",
+    "ZH-C463-xiaren",
+    "ZH-C463-fadou",
+    "ZH-C463-emeng",
+    "ZH-R463-review-458-463"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch463.txt",
+  "json": "chinese/narration/ch463.json",
+  "textHash": "fnv1a64:fdedfc12c9fd1b84",
+  "jsonHash": "fnv1a64:25c4d2751c62e7eb",
+  "findings": []
+}

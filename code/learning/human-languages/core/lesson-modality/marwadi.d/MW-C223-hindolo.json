@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C223-hindolo",
+    "language": "marwadi",
+    "chapter": 223,
+    "sequence": 15370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:b00cb2dd78e86800"
+  },
+  "findings": []
+}

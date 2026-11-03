@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:b910a535f0071113",
+  "lessonIds": [
+    "ZH-C308-shizong",
+    "ZH-C308-zicong",
+    "ZH-W308-zi-self",
+    "ZH-C308-laizi",
+    "ZH-C308-fanzui",
+    "ZH-C308-paichusuo"
+  ],
+  "tex": "chinese/book/chapters/ch308-ever-since.tex"
+}

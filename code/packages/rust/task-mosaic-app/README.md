@@ -48,3 +48,20 @@ The crate also consumes TaskApp's shared
 real-WASM test assert the same canonical task/project state and user-visible core
 slots after each lifecycle step; intentional theme-storage and locale-copy
 differences are documented in `code/specs/task-app-presentation-contract-v1.md`.
+
+It also runs TaskApp's shared `fixtures/task-name-matching-v1.json`, the cases
+for how a note's *Attach to task* name finds its task: Unicode lowercasing of
+both names (`str::to_lowercase`), the typed name trimmed of `White_Space`, the
+first task by id winning a tie, and no Unicode normalization. The web host's
+`notes.test.ts` runs the same file, so the two hosts attach a note to the same
+task for the same typed name (`code/specs/task-app-notes-ui-v1.md`, addendum
+v1.4).
+
+And it runs `fixtures/task-name-limit-v1.json`, the boundary of the task-name
+limit: task-core's `MAX_TASK_NAME_CHARS`, 512 Unicode scalar values. Every field
+a task name is typed into (Add Task, the edit field, the Sheet's Name cell, a
+note's *Attach to task*) refuses an edit past it as typed, the way a note title
+does; Add or Save with a draft restored over it shows "Task names can be at most
+512 characters." A name stored before the cap loads whole and can only shrink
+(`code/specs/task-app-data-model.md`, "Task names are bounded"). The web host's
+`task-name-limit.test.ts` runs the same cases.

@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 417,
+  "sourceHash": "fnv1a64:1d6838899a9f5b23",
+  "lessonIds": [
+    "ZH-C417-haiguan",
+    "ZH-C417-rujing",
+    "ZH-C417-chujing",
+    "ZH-C417-shenbao",
+    "ZH-C417-mianshui"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch417.txt",
+  "json": "chinese/narration/ch417.json",
+  "textHash": "fnv1a64:f0cb3134120bfb66",
+  "jsonHash": "fnv1a64:8d983be50b91146a",
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 448,
+  "title": "At the Market",
+  "label": "ch:zh-at-the-market",
+  "canDo": "I can talk about stalls, find the market, stay in town, go to a morning market and run a stall.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C448-baitan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 448: I can talk about stalls, find the market, stay in town, go to a morning market and run a stall.",
+    "assesses": [
+      "ZH-LEX-C448-MARKET448-03",
+      "ZH-LEX-C448-MARKET448-04",
+      "ZH-LEX-C448-MARKET448-05"
+    ]
+  }
+}

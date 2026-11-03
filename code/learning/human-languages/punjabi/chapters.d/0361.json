@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "After School",
+  "label": "ch:pa-a2-after-school",
+  "canDo": "I can say where I study after school and what I have earned.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-HAVE-AND-CAN-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C361-ustad",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say where I study after school and what I have earned.",
+    "assesses": [
+      "PA-LEX-C361-COLLEGE361-03",
+      "PA-LEX-C361-COLLEGE361-04",
+      "PA-LEX-C361-COLLEGE361-05"
+    ]
+  }
+}

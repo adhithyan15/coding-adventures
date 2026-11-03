@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C350-genju",
+  "pathSegment": "ZH-PATH-350-FACTS350",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-350-FACTS350",
+      "order": 2
+    }
+  ]
+}

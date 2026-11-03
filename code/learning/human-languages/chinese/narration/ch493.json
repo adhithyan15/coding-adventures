@@ -1,0 +1,864 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 493,
+  "title": "Extra Lessons",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:a8d4557215a8de32",
+  "lessons": [
+    {
+      "id": "ZH-C493-buxi",
+      "sequence": 37360,
+      "title": "bǔxí — to take extra lessons",
+      "headword": "bǔxí",
+      "romanization": "bǔxí",
+      "gloss": "to take extra lessons",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ee9cf95a762da130",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for English (the language), then the Mandarin for a major (at university)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: bǔxí",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bǔxí — \"to take extra lessons\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ bǔxí le yì nián shùxué — I had extra maths lessons for a year."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bǔxí is built from bǔ 'to patch' and xí 'to practise', both inherited from Middle Chinese, puX and zip (Guangyun, in Baxter's transcription), which glosses the first 'to mend clothes' and the second 'to learn'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bǔxí",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bǔxí*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bǔxí, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bǔxí*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ bǔxí le yì nián shùxué — I had extra maths lessons for a year.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ bǔxí le yì nián shùxué* — I had extra maths lessons for a year.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for English (the language), then the Mandarin for a major (at university), then say bǔxí again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for English (the language), then the Mandarin for a major (at university), then say *bǔxí* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does bǔxí mean? (\"To take extra lessons\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C493-jiajiao",
+      "sequence": 37370,
+      "title": "家教 (jiājiào) — private tutor",
+      "headword": "家教",
+      "romanization": "jiājiào",
+      "gloss": "private tutor",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef3cf2a9e446a52a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a major (at university), then the Mandarin for to take extra lessons."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 家教",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "家教 — jiājiào — \"private tutor\"."
+            },
+            {
+              "kind": "speech",
+              "text": "大学的时候我当过家教 dàxué de shíhou wǒ dāng guo jiājiào — At university I worked as a private tutor."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 教 (jiào) — eleven strokes in two pieces: on the left the top of 老 lǎo with 子 zǐ tucked under it, seven strokes; on the right four strokes, two falling to the left, a short bar and a long stroke falling to the right. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "家教 (jiājiào) is built from 家 'a home' and 教 'to teach', both inherited from Middle Chinese, kae and kaewH (Guangyun, in Baxter's transcription), which glosses the second 'to instruct'. Here 教 keeps the falling tone, jiào."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiājiào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiājiào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiājiào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiājiào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dàxué de shíhou wǒ dāng guo jiājiào — At university I worked as a private tutor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dàxué de shíhou wǒ dāng guo jiājiào* — At university I worked as a private tutor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a major (at university), then the Mandarin for to take extra lessons, then say jiājiào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a major (at university), then the Mandarin for to take extra lessons, then say *jiājiào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 家教 (jiājiào) mean? (\"Private tutor\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W493-jiao-instruct",
+      "sequence": 37375,
+      "title": "教 (jiào) — the top of lǎo over zǐ, then four strokes",
+      "headword": "教",
+      "romanization": "jiào",
+      "gloss": "教 — the top of 老 over 子, then four strokes on the right",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1aacdb861a3c76a3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the top of lǎo over zǐ, then four strokes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the top of lǎo over zǐ, then four strokes and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiājiào — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiājiào* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "老 子 家."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — lǎo, zǐ, jiā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *lǎo*, *zǐ*, *jiā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the top of lǎo over zǐ, then four strokes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "教 (jiào)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, seven strokes. First the top of 老, four strokes, as you wrote them: a short bar, a vertical through it, a long bar, and a long stroke falling to the left. Then 子 zǐ, three strokes, tucked under it: a bar that turns and falls to the left, a vertical with a hook, and a stroke rising to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, four strokes: a short stroke falling to the left, a bar, a long stroke falling to the left, and a long stroke falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 3 + 4 = eleven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "教 (jiào), all eleven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 教, all eleven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 教 (jiào) have? (Two.) What starts the left piece? (The top of 老.) What sits under it? (子.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 教 (jiào), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C493-jiaoyu",
+      "sequence": 37380,
+      "title": "jiàoyù — to educate; to bring up (the young); education",
+      "headword": "jiàoyù",
+      "romanization": "jiàoyù",
+      "gloss": "to educate; to bring up (the young); education",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ed77b7bfe7b65eb0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to take extra lessons, then the Mandarin for a private tutor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiàoyù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiàoyù — \"to educate; to bring up (the young); education\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jiàoyù háizi bù róngyì — Bringing up children isn't easy."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiàoyù is built from 教 (jiào) 'to instruct' and yù 'to rear', both inherited from Middle Chinese, kaewH and yuwk (Guangyun, in Baxter's transcription), which glosses the first 'to instruct' and the second 'to nourish' and 'to grow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiàoyù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiàoyù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiàoyù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiàoyù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiàoyù háizi bù róngyì — Bringing up children isn't easy.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiàoyù háizi bù róngyì* — Bringing up children isn't easy.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to take extra lessons, then the Mandarin for a private tutor, then say jiàoyù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to take extra lessons, then the Mandarin for a private tutor, then say *jiàoyù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiàoyù mean? (\"To educate; to bring up (the young); education\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C493-fudao",
+      "sequence": 37390,
+      "title": "fǔdǎo — to tutor; to give guidance",
+      "headword": "fǔdǎo",
+      "romanization": "fǔdǎo",
+      "gloss": "to tutor; to give guidance",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e37f93f57cef71f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a private tutor, then the Mandarin for to educate."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: fǔdǎo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fǔdǎo — \"to tutor; to give guidance\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jiějie měi tiān wǎnshang fǔdǎo wǒ zuò zuòyè — My sister helps me with my homework every evening."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: fǔ is said with a rising tone before dǎo, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "fǔdǎo is built from fǔ 'to help' and dǎo 'to lead', both inherited from Middle Chinese, bjuX and dawH (Guangyun, in Baxter's transcription), which glosses the first 'to assist' and the second 'to guide'. Both modern third tones are irregular: bjuX and dawH would regularly give fù and dào."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fǔdǎo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fǔdǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "fǔdǎo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *fǔdǎo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiějie měi tiān wǎnshang fǔdǎo wǒ zuò zuòyè — My sister helps me with my homework every evening.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiějie měi tiān wǎnshang fǔdǎo wǒ zuò zuòyè* — My sister helps me with my homework every evening.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a private tutor, then the Mandarin for to educate, then say fǔdǎo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a private tutor, then the Mandarin for to educate, then say *fǔdǎo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does fǔdǎo mean? (\"To tutor; to give guidance\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C493-qingjiao",
+      "sequence": 37400,
+      "title": "请教 (qǐngjiào) — to seek advice (from someone who knows more)",
+      "headword": "请教",
+      "romanization": "qǐngjiào",
+      "gloss": "to seek advice (from someone who knows more)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e75c4d7c109b8007",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to educate, then the Mandarin for to tutor."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 请教",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "请教 — qǐngjiào — \"to seek advice (from someone who knows more)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我常常请教我的上司 wǒ chángcháng qǐngjiào wǒ de shàngsi — I often ask my boss for advice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "请教 (qǐngjiào) is built from 请 'to ask' and 教 (jiào) 'to instruct', both inherited from Middle Chinese, tshjengX and kaewH (Guangyun, in Baxter's transcription), which glosses the first 'to beg' and 'to ask'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐngjiào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐngjiào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qǐngjiào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qǐngjiào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ chángcháng qǐngjiào wǒ de shàngsi — I often ask my boss for advice.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ chángcháng qǐngjiào wǒ de shàngsi* — I often ask my boss for advice.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to educate, then the Mandarin for to tutor, then say qǐngjiào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to educate, then the Mandarin for to tutor, then say *qǐngjiào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 请教 (qǐngjiào) mean? (\"To seek advice (from someone who knows more)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

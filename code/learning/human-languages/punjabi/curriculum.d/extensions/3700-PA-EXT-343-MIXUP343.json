@@ -1,0 +1,8 @@
+{
+  "id": "PA-EXT-343-MIXUP343",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say that I got muddled and sort out a mix-up.",
+  "prerequisites": []
+}

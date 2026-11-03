@@ -1,0 +1,11 @@
+{
+  "id": "PA-C330-jathani",
+  "pathSegment": "PA-PATH-330-SPOUSE330",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-330-SPOUSE330",
+      "order": 4
+    }
+  ]
+}

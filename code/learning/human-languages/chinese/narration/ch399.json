@@ -1,0 +1,860 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 399,
+  "title": "Only If",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:063f959e4ba1e6d4",
+  "lessons": [
+    {
+      "id": "ZH-C399-yaoqiu",
+      "sequence": 30290,
+      "title": "yāoqiú — to require; to demand (of someone)",
+      "headword": "yāoqiú",
+      "romanization": "yāoqiú",
+      "gloss": "to require; to demand (of someone)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:367a8be7464f7322",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for ready-made, then the Mandarin for to hinge on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: yāoqiú",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yāoqiú — \"to require; to demand (of someone)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "lǎoshī yāoqiú wǒmen měitiān shuō hànyǔ — The teacher asks us to speak Chinese every day."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "yāoqiú is built from yāo 'to press' and qiú 'to seek', both inherited from Middle Chinese, 'jiew and gjuw (Guangyun, in Baxter's transcription), which glosses the first 'to force, in common speech' and the second 'to look for'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yāoqiú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yāoqiú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yāoqiú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yāoqiú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lǎoshī yāoqiú wǒmen měitiān shuō hànyǔ — The teacher asks us to speak Chinese every day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lǎoshī yāoqiú wǒmen měitiān shuō hànyǔ* — The teacher asks us to speak Chinese every day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for ready-made, then the Mandarin for to hinge on, then say yāoqiú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for ready-made, then the Mandarin for to hinge on, then say *yāoqiú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does yāoqiú mean? (\"To require; to demand (of someone)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C399-zhiyou",
+      "sequence": 30300,
+      "title": "只有 (zhǐyǒu) — only if (with cái after it)",
+      "headword": "只有",
+      "romanization": "zhǐyǒu",
+      "gloss": "only if (with cái after it)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9590de855a7108b9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to hinge on, then the Mandarin for to demand (of someone)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 只有",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "只有 — zhǐyǒu — \"only if (with cái after it)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "只有你去他才会去 zhǐyǒu nǐ qù tā cái huì qù — He'll only go if you go."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 只 (zhǐ) — five strokes: 口 on top, and 八 under it. The next lesson puts it in your hand."
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: zhǐ is said with a rising tone before yǒu, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "只有 (zhǐyǒu) is built from zhǐ 'only' and 有 'to have'. The second is inherited from Middle Chinese hjuwX (Guangyun, in Baxter's transcription); the dictionary lists the first, tsyeX there, as a particle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyǒu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyǒu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyǒu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyǒu nǐ qù tā cái huì qù — He'll only go if you go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyǒu nǐ qù tā cái huì qù* — He'll only go if you go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to hinge on, then the Mandarin for to demand (of someone), then say zhǐyǒu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to hinge on, then the Mandarin for to demand (of someone), then say *zhǐyǒu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 只有 (zhǐyǒu) mean? (\"Only if (with cái after it)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W399-zhi-only",
+      "sequence": 30305,
+      "title": "只 (zhǐ) — 口 over 八",
+      "headword": "只",
+      "romanization": "zhǐ",
+      "gloss": "只 — 口 over 八",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:047b17a6ef3808bc",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — 口 over 八",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — 口 over 八 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zhǐyǒu — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zhǐyǒu* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "口 八."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — kǒu, bā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *kǒu*, *bā*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — 口 over 八",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "只 (zhǐ)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, top before bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "口 on top, three strokes, as you wrote it: a short vertical, a stroke that runs right and turns down, then the bar that closes the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "八 under it, two strokes: a stroke falling to the left, then a dot falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 2 = five."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "只 (zhǐ), all five, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 只, all five, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 只 (zhǐ)? (Five.) What is on top? (口.) What is under it? (八.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 只 (zhǐ), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C399-zhiyao",
+      "sequence": 30310,
+      "title": "只要 (zhǐyào) — as long as; provided (that)",
+      "headword": "只要",
+      "romanization": "zhǐyào",
+      "gloss": "as long as; provided (that)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7966a7d7ec3c968f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to demand (of someone), then the Mandarin for only if."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 只要",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "只要 — zhǐyào — \"as long as; provided (that)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "只要不下雨我们就去 zhǐyào bú xiàyǔ wǒmen jiù qù — As long as it doesn't rain, we'll go."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "只要 (zhǐyào) is built from 只 (zhǐ) 'only' and 要 'to need'. The second is inherited from Middle Chinese 'jiewH (Guangyun, in Baxter's transcription), glossed 'to bind by agreement'; the dictionary lists the first, tsyeX there, as a particle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyào",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyào*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyào, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyào*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyào bú xiàyǔ wǒmen jiù qù — As long as it doesn't rain, we'll go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyào bú xiàyǔ wǒmen jiù qù* — As long as it doesn't rain, we'll go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to demand (of someone), then the Mandarin for only if, then say zhǐyào again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to demand (of someone), then the Mandarin for only if, then say *zhǐyào* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 只要 (zhǐyào) mean? (\"As long as; provided (that)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C399-manzu",
+      "sequence": 30320,
+      "title": "mǎnzú — to meet (a requirement); to satisfy",
+      "headword": "mǎnzú",
+      "romanization": "mǎnzú",
+      "gloss": "to meet (a requirement); to satisfy",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:efe1d2c435aa9ba0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for only if, then the Mandarin for as long as."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mǎnzú",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mǎnzú — \"to meet (a requirement); to satisfy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhǐyào mǎnzú zhèxiē yāoqiú nǐ jiù néng qù — As long as you meet these requirements, you can go."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mǎnzú is built from mǎn 'full' and zú 'enough', both inherited from Middle Chinese, manX and tsjowk (Guangyun, in Baxter's transcription), which glosses the first 'brimming' and the second 'the foot' and 'full'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mǎnzú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mǎnzú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mǎnzú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mǎnzú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyào mǎnzú zhèxiē yāoqiú nǐ jiù néng qù — As long as you meet these requirements, you can go.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyào mǎnzú zhèxiē yāoqiú nǐ jiù néng qù* — As long as you meet these requirements, you can go.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for only if, then the Mandarin for as long as, then say mǎnzú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for only if, then the Mandarin for as long as, then say *mǎnzú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mǎnzú mean? (\"To meet (a requirement); to satisfy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C399-chengjia",
+      "sequence": 30330,
+      "title": "成家 (chéngjiā) — to marry and settle down",
+      "headword": "成家",
+      "romanization": "chéngjiā",
+      "gloss": "to marry and settle down",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de6c8c3c8e160197",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for as long as, then the Mandarin for to meet (a requirement)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 成家",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "成家 — chéngjiā — \"to marry and settle down\"."
+            },
+            {
+              "kind": "speech",
+              "text": "只要找到好工作他就想成家 zhǐyào zhǎodào hǎo gōngzuò tā jiù xiǎng chéngjiā — As long as he finds a good job, he wants to marry and settle down."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "成家 (chéngjiā) is built from 成 'to complete' and 家 'a home', both inherited from Middle Chinese, dzyeng and kae (Guangyun, in Baxter's transcription), which glosses the second 'a dwelling'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngjiā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngjiā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chéngjiā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chéngjiā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyào zhǎodào hǎo gōngzuò tā jiù xiǎng chéngjiā — As long as he finds a good job, he wants to marry and settle down.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyào zhǎodào hǎo gōngzuò tā jiù xiǎng chéngjiā* — As long as he finds a good job, he wants to marry and settle down.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for as long as, then the Mandarin for to meet (a requirement), then say chéngjiā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for as long as, then the Mandarin for to meet (a requirement), then say *chéngjiā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 成家 (chéngjiā) mean? (\"To marry and settle down\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

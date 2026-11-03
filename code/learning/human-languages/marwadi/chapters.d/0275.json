@@ -1,0 +1,19 @@
+{
+  "chapter": 275,
+  "title": "Well Done!",
+  "label": "ch:mw-well-done",
+  "canDo": "I can praise someone and ask what they think.",
+  "spineNodes": [
+    "SPINE-NEGATE-AND-ASK"
+  ],
+  "payoff": {
+    "lesson": "MW-C275-ray",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 275: I can praise someone and ask what they think.",
+    "assesses": [
+      "MW-LEX-C275-SABAS275-03",
+      "MW-LEX-C275-SABAS275-04",
+      "MW-LEX-C275-SABAS275-05"
+    ]
+  }
+}

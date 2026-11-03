@@ -1,5 +1,91 @@
 # Changelog
 
+## Unreleased — `not` is a builtin; stores inside `begin`/`rescue` (#18798)
+
+- **A `rescue => e` binding the clause stores into** (`e = 5`) is now
+  declared with `let_keyword` (`let mut` when assigned); a plain `let` failed
+  rustc.  Test `stores_inside_try_catch_compile` (also covers the outer
+  local stored inside a `TryCatch`).
+
+- **`not`.**  Every Ruby `unless`, `until` and `!x` lowers to
+  `BuiltinCall("not", [x])`, which panicked `unknown builtin: not`.  The
+  emitter now inlines `__sir::Value::Bool(!__sir::truthy(&(x)))` and
+  `call_builtin_by_name` has a `"not"` arm.  Test
+  `emit_not_builtin_negates_by_truthiness`.
+- **A store into an outer local inside a `TryCatch`.**
+  `collect_assigned_locals` skipped `TryCatch` bodies (its comment said the
+  node was refused by the capability check, which stopped being true), so
+  `x = 0; begin; x = 1; rescue; end` declared `x` with a plain `let` and
+  rustc failed: `cannot assign twice to immutable variable`.  It now walks
+  the body, every `rescue` clause and the `ensure` body.  End-to-end check:
+  `sir-conformance`'s `rb_store_into_an_outer_local_inside_begin`.
+
+## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
+
+### Constants and the renamed `main` (follow-ups to #18485)
+
+From the security review of #18788.  Nothing to rename here, now pinned by
+tests: a constant is never a Rust identifier (the `raise` class operand, the
+only constant this backend accepts, is emitted as its name *string*, and
+every other constant use is refused before emit), so a constant spelled like
+a function cannot shadow it; and no user name can spell `__sir_user_main`,
+the renamed SIR `main`, because `sanitize_ident` reserves every `__sir…` name
+(#18466).
+
+### Test temp files live in a private scratch directory
+
+The execution tests wrote each emitted program to a predictable name
+(`<program>_<pid>_<counter>`) directly in the shared system temp directory.
+Unique among this checkout's tests, but not private: any other process on
+the host could create that name first, replace it, or plant a symlink there
+(and beside a `.py` file, a module `python3` would import from the script's
+own directory).  Each test call now writes into a fresh
+[`sir-test-scratch`](../sir-test-scratch) directory -- random name, created
+atomically, mode `0700` on Unix, removed with its contents when the test
+returns or panics -- and creates its files with `create_new`, so an existing
+file is an error rather than reused.  The existing removal guards stay.
+
+## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
+
+The execution tests named their temp files from the process id alone, or (in
+the C tests) the process id and a hash of the source. `cargo test` runs one
+binary's tests on parallel threads that share the process id, so two tests
+reaching the same helper with the same name could overwrite or delete each
+other's files mid-run. Every such name in 25 test files now carries a
+per-call `unique_suffix()` (process id plus a per-file atomic counter), the
+scheme `sir-conformance`'s `temp_path` uses. Test-only; no emitted code
+changes.
+
+## Unreleased — A variable never shadows a function of the same name (#18485)
+
+SIR keeps functions and variables in separate namespaces, and Ruby relies on
+it: `def f; 40; end; f = 2; puts f() + f` prints 42. This backend emitted
+the local as `f` next to the function `f`, so the local shadowed the
+function and the call did not compile (`error[E0618]: expected function`). A
+*variable* (local, parameter, capture, loop variable, `rescue` binding)
+whose SIR name is also a function's name is now emitted through `var_ident`
+as `__sir_esc_l` + `sanitize_ident(name)`; every other variable, and every
+function, keeps its spelling. This is the rule the JavaScript, TypeScript
+and Python backends need (callers append code that calls their emitted
+functions by name), so all five backends share it. The new `l` tag sits
+beside `sanitize_ident`'s `v` and `e`, so the renamed form can equal no
+other identifier. New unit tests
+`a_local_named_like_a_function_is_renamed_and_the_function_is_not` and
+`var_ident_renames_exactly_the_names_of_functions`; `sir-conformance`'s
+`tests/local_shadows_function.rs` runs the end-to-end proof (a keyword's
+raw-identifier `r#` is dropped after the prefix, as the `__cap_` temporaries
+already do).
+
+## Unreleased — A loop variable the body assigns is bound `mut` (#18482 review)
+
+`ForRange` bound its variable with `let`, and `ForEach` with a plain
+`for x in`, even when the body assigned it.  rustc then refused the program
+(`cannot assign twice to immutable variable`).  Python's `for i in
+range(3): i += 10` lowers to exactly that.  Both now consult
+`MUTABLE_NAMES`, like `LetBinding` does (`let mut i` / `for mut x in`).  The
+hidden counter still decides the next value.  New unit test
+`a_loop_variable_the_body_assigns_is_bound_mut`.
+
 ## Unreleased — Generated names reserved (issue #18466)
 
 - **`sanitize_ident` escapes the names the emitter binds**: `__sir…` (the

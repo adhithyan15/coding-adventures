@@ -1,0 +1,20 @@
+{
+  "language": "marwadi",
+  "chapter": 222,
+  "sourceHash": "fnv1a64:2e9263de50af86ff",
+  "lessonIds": [
+    "MW-C222-adhi",
+    "MW-C222-bhijno",
+    "MW-C222-os",
+    "MW-C222-dhujno",
+    "MW-C222-dhuvar",
+    "MW-R222-review-216-222"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "marwadi/narration/ch222.txt",
+  "json": "marwadi/narration/ch222.json",
+  "textHash": "fnv1a64:212935529f0c6fe3",
+  "jsonHash": "fnv1a64:701ef4c52d24fff2",
+  "findings": []
+}

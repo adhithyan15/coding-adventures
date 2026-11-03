@@ -1,4 +1,20 @@
 # Changelog — iir-to-llvm
+
+## Unreleased — LANG83 PR5a follow-ups (#18800) — a literal past the ceiling is refused, a join past it is not interned
+
+- `validate_for_llvm` (and so `lower_iir_to_llvm`) refuses a `str_const` longer than the module's string ceiling (`StrTooLong`) and a `str_max_bytes` above `STR_MAX_BYTES` (`StrMaxBytes`), through `interpreter-ir`'s shared `IIRModule::str_ceiling_errors`. Before, nothing called `IIRModule::validate` on the way here, so a 17-byte literal in a module whose ceiling is 16 compiled.
+- Test `a_literal_past_the_module_ceiling_is_refused_at_compile_time` (fails without the check).
+- **The literal pre-pass stops at the ceiling** (item 4). `collect_string_literals` interned every join of two known literals, so the 17-byte value `lower_str_concat` refused to fold under a ceiling of 16 was still emitted as a `[17 x i8]` constant, and a chain of `d = d ++ d` doubled in the compiler (twenty doublings of 8 bytes: about 16 MiB of constants). It now applies `lower_str_concat`'s own condition, `len a + len b <= str_ceiling()`, and forgets the destination's value past it.
+- Test `a_literal_join_past_the_ceiling_is_not_interned` (fails without the fix).
+- Comments (item 5): the `@__twig_str_concat` declaration's comment and `runtime_str_concat_lowers_to_twig_str_concat_call`'s doc name the third argument, the module's string ceiling (they still described two). Comment only.
+- Test `a_rewritten_string_variable_never_reads_its_stale_literal` pins that the WASM fail-open the security review found cannot happen here: a non-`str`-hinted `str_const` is refused, and a rewritten destination's concat past the ceiling is a run-time call whose length is read at run time. It is a guard and also passes without changes.
+
+## Unreleased — LANG83 PR5a — strings fail closed
+
+- A folded out-of-range `str_index` or `str_slice` raises `Trap.Bounds` through the module's own `@__iir_trap` (flush, then `trap: Trap.Bounds` on stderr), not `@llvm.trap` (SIGILL, buffered output lost). The runtime path already calls `twig_runtime.c`'s helpers, which now raise `Trap.Bounds` themselves.
+- `@__twig_str_concat` is declared and called with a third argument, the module's string ceiling (`IIRModule::str_ceiling`); the helper raises `Trap.Overflow` past it. A literal concat whose result would exceed the ceiling is not folded, so the trap happens at run time.
+- Tests: `e4_string_literal_index_out_of_bounds_traps` now requires `@__iir_trap(@__iir_trap_msg.1, …)`; new `e4_string_literal_slice_out_of_bounds_traps_bounds` and `a_literal_concat_past_the_ceiling_is_a_runtime_call_with_the_ceiling`.
+
 ## Unreleased — only the entry point is exported (#18416)
 
 - In a module with an entry point, every function except the entry is emitted `define internal`. Before, every program function was a global symbol, and the linker binds every reference to a global in the executable to that one definition. So a program that defined a function named like libc's replaced it for the linked C runtime and the collector too. With `(define (abort) 0)`, the pair guard's `abort()` returned. With `(define (malloc n) 0)`, gc-core-capi's allocations failed. With `(define (calloc a b) 0)`, `__dyn_pair_new` got a null cell. Nothing in the runtime calls a program function by name: closures dispatch through the module's own `__dyn_call_closure`. So the entry (`main`, called by the C start-up code) is the only function that must stay external. A module without an entry point is a library and keeps external linkage everywhere.

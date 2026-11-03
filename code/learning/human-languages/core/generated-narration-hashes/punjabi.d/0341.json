@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 341,
+  "sourceHash": "fnv1a64:57c276fceaf1347f",
+  "lessonIds": [
+    "PA-C341-shakk",
+    "PA-C341-yakin",
+    "PA-C341-bharosa",
+    "PA-C341-andaza",
+    "PA-C341-jachna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch341.txt",
+  "json": "punjabi/narration/ch341.json",
+  "textHash": "fnv1a64:0edbed8c92246360",
+  "jsonHash": "fnv1a64:8ade3d62aed5f75b",
+  "findings": []
+}

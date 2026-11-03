@@ -1,0 +1,19 @@
+{
+  "chapter": 221,
+  "title": "I Will Go",
+  "label": "ch:pa-a2-javanga",
+  "canDo": "I can say that I, someone else or we will go somewhere tomorrow, with the -ga future.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C221-payoff",
+    "kind": "production",
+    "summary": "Say who will go where tomorrow with javanga / javangi, javega / javegi and javange.",
+    "assesses": [
+      "PA-GRAMMAR-FUT-1SG-221",
+      "PA-GRAMMAR-FUT-3SG-221",
+      "PA-GRAMMAR-FUT-1PL-221"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "id": "PA-C298-kumlauna",
+  "pathSegment": "PA-PATH-298-THORN298",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "PA-EXT-298-THORN298",
+      "order": 4
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "language": "marwadi",
+  "chapter": 169,
+  "sourceHash": "fnv1a64:373842a9117c0add",
+  "lessonIds": [
+    "MW-C169-povno",
+    "MW-C169-belno",
+    "MW-C169-ukalno",
+    "MW-C169-talno",
+    "MW-C169-chakhno"
+  ],
+  "tex": "marwadi/book/chapters/ch169-making-rotis.tex"
+}

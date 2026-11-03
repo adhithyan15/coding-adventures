@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 363,
+  "sourceHash": "fnv1a64:739e26a3186bb988",
+  "lessonIds": [
+    "PA-C363-koshish",
+    "PA-C363-usarna",
+    "PA-C363-nibhauna",
+    "PA-C363-samvarna",
+    "PA-C363-tarakki"
+  ],
+  "tex": "punjabi/book/chapters/ch363-at-work.tex"
+}

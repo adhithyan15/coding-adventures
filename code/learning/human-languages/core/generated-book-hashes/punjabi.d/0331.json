@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 331,
+  "sourceHash": "fnv1a64:d6489c1d2f86a02f",
+  "lessonIds": [
+    "PA-C331-chacha",
+    "PA-C331-taia",
+    "PA-C331-mama",
+    "PA-C331-masi",
+    "PA-C331-masar"
+  ],
+  "tex": "punjabi/book/chapters/ch331-uncles-and-aunts.tex"
+}

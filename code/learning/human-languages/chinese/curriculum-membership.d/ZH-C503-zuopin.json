@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C503-zuopin",
+  "pathSegment": "ZH-PATH-503-ART503",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-503-ART503",
+      "order": 2
+    }
+  ]
+}

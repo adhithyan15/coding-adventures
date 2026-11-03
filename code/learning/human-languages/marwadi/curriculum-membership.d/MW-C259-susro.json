@@ -1,0 +1,11 @@
+{
+  "id": "MW-C259-susro",
+  "pathSegment": "MW-PATH-259-SASU259",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "MW-EXT-259-SASU259",
+      "order": 1
+    }
+  ]
+}

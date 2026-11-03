@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 326,
+  "sourceHash": "fnv1a64:e720a79a4f61a164",
+  "lessonIds": [
+    "ZH-C326-guojia",
+    "ZH-C326-shijie",
+    "ZH-W326-jie-boundary",
+    "ZH-C326-waijie",
+    "ZH-C326-jianli",
+    "ZH-C326-wenming"
+  ],
+  "tex": "chinese/book/chapters/ch326-around-the-world.tex"
+}

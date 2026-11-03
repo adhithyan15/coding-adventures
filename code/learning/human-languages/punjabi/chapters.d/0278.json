@@ -1,0 +1,19 @@
+{
+  "chapter": 278,
+  "title": "Packets and Accounts",
+  "label": "ch:pa-a2-packets-and-accounts",
+  "canDo": "I can talk about goods that are packed and sold.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-WANT"
+  ],
+  "payoff": {
+    "lesson": "PA-C278-jorna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 278: I can talk about goods that are packed and sold.",
+    "assesses": [
+      "PA-LEX-C278-STOCK278-03",
+      "PA-LEX-C278-STOCK278-04",
+      "PA-LEX-C278-STOCK278-05"
+    ]
+  }
+}

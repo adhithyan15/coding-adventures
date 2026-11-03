@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W418-ting-stop",
+  "pathSegment": "ZH-PATH-418-CHECKIN418",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-418-CHECKIN418",
+      "order": 3
+    }
+  ]
+}

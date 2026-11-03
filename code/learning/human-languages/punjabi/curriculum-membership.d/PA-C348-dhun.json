@@ -1,0 +1,11 @@
+{
+  "id": "PA-C348-dhun",
+  "pathSegment": "PA-PATH-348-MUSIC348",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-348-MUSIC348",
+      "order": 2
+    }
+  ]
+}

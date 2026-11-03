@@ -1,0 +1,757 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 241,
+  "title": "Cutting Vegetables",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:d33d7b81ea88630d",
+  "lessons": [
+    {
+      "id": "PA-C241-chhillna",
+      "sequence": 13820,
+      "title": "ਛਿੱਲਣਾ (chhillṇā) — to peel",
+      "headword": "ਛਿੱਲਣਾ",
+      "romanization": "chhillṇā",
+      "gloss": "to peel",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2f79d45cf4a0efec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a pestle, then the Punjabi for to pound."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਛਿੱਲਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛਿੱਲਣਾ — chhillṇā — \"to peel\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਚਾਕੂ ਨਾਲ ਆਲੂ ਛਿੱਲਦੀ ਹਾਂ। maiṁ chākū nāl ālū chhilldī hāṁ. I peel the potatoes with a knife."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਆਲੂ ਛਿੱਲੇ, maiṁ ālū chhille."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਛਿੱਲਣਾ (chhillṇā) is inherited from a reconstructed chilla, \"torn, cut\"; CDIAL lists Punjabi chillṇā, \"to cut with a knife, peel\" (CDIAL 5051)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhillṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhillṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chhillṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chhillṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ chākū nāl ālū chhilldī hāṁ. — I peel the potatoes with a knife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ chākū nāl ālū chhilldī hāṁ.* — I peel the potatoes with a knife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a pestle, then the Punjabi for to pound, then say chhillṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a pestle, then the Punjabi for to pound, then say *chhillṇā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਛਿੱਲਣਾ (chhillṇā) mean? (\"To peel\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C241-katarna",
+      "sequence": 13830,
+      "title": "ਕਤਰਨਾ (katarnā) — to chop finely",
+      "headword": "ਕਤਰਨਾ",
+      "romanization": "katarnā",
+      "gloss": "to chop finely",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b7c012dc582a7065",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to pound, then the Punjabi for to peel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਤਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਤਰਨਾ — katarnā — \"to chop finely\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਸਾਗ ਕਤਰਦੀ ਹਾਂ। maiṁ sāg katardī hāṁ. I chop the greens finely."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਸਾਗ ਕਤਰਿਆ, maiṁ sāg katriā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਤਰਨਾ (katarnā) is inherited, built on Sanskrit kartari, \"scissors, knife\"; CDIAL lists Punjabi katarnā, \"to clip, shear\" (CDIAL 2858), and does not give the kitchen sense \"chop finely\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katarnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katarnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katarnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katarnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ sāg katardī hāṁ. — I chop the greens finely.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ sāg katardī hāṁ.* — I chop the greens finely.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to pound, then the Punjabi for to peel, then say katarnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to pound, then the Punjabi for to peel, then say *katarnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਤਰਨਾ (katarnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਤਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਤਰਨਾ (katarnā) mean? (\"To chop finely\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C241-chirna",
+      "sequence": 13840,
+      "title": "ਚੀਰਨਾ (chīrnā) — to split; to slit",
+      "headword": "ਚੀਰਨਾ",
+      "romanization": "chīrnā",
+      "gloss": "to split; to slit",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4342fb6d23dce302",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to peel, then the Punjabi for to chop finely."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਚੀਰਨਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੀਰਨਾ — chīrnā — \"to split; to slit\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਚਾਕੂ ਨਾਲ ਨਿੰਬੂ ਚੀਰਦਾ ਹਾਂ। maiṁ chākū nāl nimbū chīrdā hāṁ. I split the lemon with a knife."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਨਿੰਬੂ ਚੀਰਿਆ, maiṁ nimbū chīriā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਚੀਰਨਾ (chīrnā) is inherited from a reconstructed cīrayati, \"splits\"; CDIAL lists Punjabi cīrnā, \"to rend, split, saw\" (CDIAL 4844)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chīrnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chīrnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chīrnā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *chīrnā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ chākū nāl nimbū chīrdā hāṁ. — I split the lemon with a knife.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ chākū nāl nimbū chīrdā hāṁ.* — I split the lemon with a knife.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to peel, then the Punjabi for to chop finely, then say chīrnā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to peel, then the Punjabi for to chop finely, then say *chīrnā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਚੀਰਨਾ (chīrnā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਚੀਰਨਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਚੀਰਨਾ (chīrnā) mean? (\"To split; to slit\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C241-mirach",
+      "sequence": 13850,
+      "title": "ਮਿਰਚ (mirach) — a chilli; pepper",
+      "headword": "ਮਿਰਚ",
+      "romanization": "mirach",
+      "gloss": "a chilli; pepper",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5a584043fedffcdb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to chop finely, then the Punjabi for to split."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਮਿਰਚ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਿਰਚ — mirach — \"a chilli; pepper\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਹਰੀ ਮਿਰਚ ਬਹੁਤ ਤਿੱਖੀ ਹੈ। eh harī mirach bahut tikkhī hai. This green chilli is very hot."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਮਿਰਚ (mirach) is inherited from Sanskrit marīca, \"peppercorn\"; CDIAL lists Punjabi mirc, \"black pepper\" (CDIAL 9875). CDIAL does not give the everyday sense \"chilli\", and it notes that the Sanskrit word may itself be Austroasiatic."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mirach",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mirach*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mirach, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mirach*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh harī mirach bahut tikkhī hai. — This green chilli is very hot.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh harī mirach bahut tikkhī hai.* — This green chilli is very hot.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to chop finely, then the Punjabi for to split, then say mirach again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to chop finely, then the Punjabi for to split, then say *mirach* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਮਿਰਚ (mirach) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਮਿਰਚ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਮਿਰਚ (mirach) mean? (\"A chilli; pepper\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C241-vesan",
+      "sequence": 13860,
+      "title": "ਵੇਸਣ (vesaṇ) — gram flour",
+      "headword": "ਵੇਸਣ",
+      "romanization": "vesaṇ",
+      "gloss": "gram flour",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:611aaaef42580218",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to split, then the Punjabi for a chilli."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵੇਸਣ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੇਸਣ — vesaṇ — \"gram flour\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਵੇਸਣ ਨਾਲ ਪਕੌੜੇ ਬਣਾਉਂਦੀ ਹਾਂ। maiṁ vesaṇ nāl pakauṛe baṇāundī hāṁ. I make pakoras with gram flour."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵੇਸਣ (vesaṇ) is inherited from Sanskrit vēsana, \"flour of a particular vegetable product\"; CDIAL lists Punjabi vesaṇ, \"gram flour\" (CDIAL 12133)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vesaṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vesaṇ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vesaṇ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vesaṇ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ vesaṇ nāl pakauṛe baṇāundī hāṁ. — I make pakoras with gram flour.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ vesaṇ nāl pakauṛe baṇāundī hāṁ.* — I make pakoras with gram flour.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to split, then the Punjabi for a chilli, then say vesaṇ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to split, then the Punjabi for a chilli, then say *vesaṇ* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵੇਸਣ (vesaṇ) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵੇਸਣ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵੇਸਣ (vesaṇ) mean? (\"Gram flour\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

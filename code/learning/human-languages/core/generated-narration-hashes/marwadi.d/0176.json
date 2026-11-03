@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 176,
+  "sourceHash": "fnv1a64:51bb3ce6e0f86ee8",
+  "lessonIds": [
+    "MW-C176-dhakno",
+    "MW-C176-badhno",
+    "MW-C176-gath",
+    "MW-C176-sakal",
+    "MW-C176-tagno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch176.txt",
+  "json": "marwadi/narration/ch176.json",
+  "textHash": "fnv1a64:01a2b9b59882711d",
+  "jsonHash": "fnv1a64:e2b0a7f6bd05902e",
+  "findings": []
+}

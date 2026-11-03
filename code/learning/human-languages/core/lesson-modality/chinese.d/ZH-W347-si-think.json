@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W347-si-think",
+    "language": "chinese",
+    "chapter": 347,
+    "sequence": 27065,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:28a47c1f3996376c",
+    "detachableSegments": [
+      "Script — a box with a cross, over the heart"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,19 @@
+{
+  "chapter": 492,
+  "title": "School Subjects",
+  "label": "ch:zh-school-subjects",
+  "canDo": "I can name school subjects, say which one I like best and talk about my major.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C492-zhuanye",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 492: I can name school subjects, say which one I like best and talk about my major.",
+    "assesses": [
+      "ZH-LEX-C492-SUBJECTS492-03",
+      "ZH-LEX-C492-SUBJECTS492-04",
+      "ZH-LEX-C492-SUBJECTS492-05"
+    ]
+  }
+}

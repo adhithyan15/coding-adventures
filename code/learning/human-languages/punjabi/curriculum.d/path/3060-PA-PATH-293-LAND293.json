@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-293-LAND293",
+  "spine_node": "SPINE-DESCRIBE-QUALITIES",
+  "before": [],
+  "inline": [
+    "PA-EXT-293-LAND293"
+  ],
+  "after": []
+}

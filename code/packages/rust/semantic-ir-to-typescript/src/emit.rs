@@ -575,6 +575,20 @@ thread_local! {
     /// closure's `ArgumentError` (see [`emit_strict_closure`]).  Set at the
     /// start of every `emit_module`.
     static EXCEPTIONS_IMPORTED: Cell<bool> = const { Cell::new(false) };
+
+    /// The SIR name of every function in the module being emitted.  A
+    /// *variable* spelled like one of them is renamed by [`var_ident`] so
+    /// it cannot shadow the function (#18485).  Filled at the start of
+    /// every `emit_module`, for the same reason as [`STRICT_ARITY`].
+    static FUNCTION_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+
+    /// The SIR name of every module global (`Module::globals`) of the
+    /// module being emitted.  A global spelled like a function is renamed
+    /// by [`global_ident`], and a function-scoped variable or a constant
+    /// spelled like a global by [`var_ident`] / [`const_ident`], so no two
+    /// kinds of binding share a TypeScript identifier.  Filled at the start
+    /// of every `emit_module`, for the same reason as [`STRICT_ARITY`].
+    static GLOBAL_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
 }
 
 fn fresh_loop_id() -> usize {
@@ -594,6 +608,16 @@ pub fn emit_module(m: &Module) -> String {
         let mut t = t.borrow_mut();
         t.clear();
         t.extend(m.functions.iter().filter_map(|f| Some((f.name.clone(), f.exact_arity()?))));
+    });
+    FUNCTION_NAMES.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.functions.iter().map(|f| f.name.clone()));
+    });
+    GLOBAL_NAMES.with(|t| {
+        let mut t = t.borrow_mut();
+        t.clear();
+        t.extend(m.globals.iter().map(|g| g.name.clone()));
     });
     let mut out = String::new();
     emit_banner(&mut out, m);
@@ -702,7 +726,7 @@ fn emit_globals(out: &mut String, globals: &[Global]) {
     }
     out.push('\n');
     for g in globals {
-        let _ = writeln!(out, "let {}: __Sir.Val = null;", sanitize_ident(&g.name));
+        let _ = writeln!(out, "let {}: __Sir.Val = null;", global_ident(&g.name));
     }
 }
 
@@ -738,7 +762,7 @@ fn emit_function(out: &mut String, f: &Function) {
             out.push_str(", ");
         }
         first = false;
-        let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&c.name));
+        let _ = write!(out, "{}: __Sir.Val", var_ident(&c.name));
     }
     // KW3 — keyword parameters lower to a single trailing "options object".
     //
@@ -791,12 +815,12 @@ fn emit_function(out: &mut String, f: &Function) {
         // call-position treatment.)
         match p.kind {
             ParamKind::Rest => {
-                let _ = write!(out, "...{}: __Sir.Val[]", sanitize_ident(&p.name));
+                let _ = write!(out, "...{}: __Sir.Val[]", var_ident(&p.name));
             }
             // Keyword handled above (skipped); this arm covers positionals and
             // the KwRest object fallback.
             ParamKind::Required | ParamKind::KwRest | ParamKind::Keyword => {
-                let _ = write!(out, "{}: __Sir.Val", sanitize_ident(&p.name));
+                let _ = write!(out, "{}: __Sir.Val", var_ident(&p.name));
                 // P2b default parameters.  A SIR default is evaluated
                 // per-call in the callee's parameter scope and may reference
                 // EARLIER params — exactly TypeScript's native default-value
@@ -843,7 +867,16 @@ fn emit_function(out: &mut String, f: &Function) {
             if i > 0 {
                 out.push_str(", ");
             }
-            out.push_str(&sanitize_ident(&p.name));
+            // The object key is what the call site writes,
+            // `sanitize_ident(name)`; the bound local is `var_ident(name)`,
+            // which differs only when a function has the same name (#18485).
+            let key = sanitize_ident(&p.name);
+            let local = var_ident(&p.name);
+            if key == local {
+                out.push_str(&local);
+            } else {
+                let _ = write!(out, "{key}: {local}");
+            }
             if let Some(default) = &p.default {
                 out.push_str(" = ");
                 emit_expr(out, default, 2);
@@ -1196,7 +1229,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 "{}{} {}: __Sir.Val = ",
                 pad,
                 keyword,
-                sanitize_ident(name)
+                var_ident(name)
             );
             emit_expr(out, value, indent);
             out.push_str(";\n");
@@ -1205,7 +1238,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             // Recognize the synthesised _init global_set pattern and
             // emit a direct assignment for nicer output.
             if let Some((global, value)) = pick_global_set(expr) {
-                let _ = write!(out, "{}{} = ", pad, sanitize_ident(global));
+                let _ = write!(out, "{}{} = ", pad, global_ident(global));
                 emit_expr(out, value, indent);
                 out.push_str(";\n");
             } else if let Expr::If {
@@ -1263,8 +1296,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             value,
             ..
         } => {
-            let _ = scope; // identifier is the same for all four
-            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}{} = ", pad, scoped_ident(name, *scope));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -1305,11 +1337,18 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             emit_block_as_stmts(out, body, indent + 2);
             let _ = writeln!(out, "{}}}", pad);
         }
-        // `for (var = start; …; var += step) { body }` — half-open
-        // (`stop` exclusive).  `stop`/`step` are evaluated ONCE into
-        // block-scoped temporaries (matching Python's `range`), and the
-        // loop condition is direction-aware so a negative `step` counts
-        // down correctly.
+        // A half-open (`stop` exclusive) counting loop.  `start`/`stop`/
+        // `step` are evaluated ONCE into block-scoped temporaries (matching
+        // Python's `range`), and the loop condition is direction-aware so a
+        // negative `step` counts down correctly.
+        //
+        // The loop counts with a **hidden counter** `__sir_i_<id>`, and each
+        // iteration binds `var` afresh from it (`let var = __sir_i_<id>;`).
+        // Counting with `var` itself (as this backend used to) let the body
+        // change the number of iterations: `for i in range(3): i += 10` ran
+        // once.  SIR, like Python's `range` and the C/Go/Rust/Ruby backends,
+        // takes the next value from the range whatever the body did to
+        // `var` (#18482).  Mirrors the JavaScript backend.
         Stmt::ForRange {
             var,
             start,
@@ -1319,14 +1358,15 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ..
         } => {
             let id = fresh_loop_id();
-            let v = sanitize_ident(var);
+            let v = var_ident(var);
             let inner = indent + 2;
             let inner_pad = " ".repeat(inner);
+            let body_pad = " ".repeat(inner + 2);
             // Open a block so the temporaries don't leak.
             let _ = writeln!(out, "{}{{", pad);
-            let _ = write!(out, "{}let {}: __Sir.Val = ", inner_pad, v);
+            let _ = write!(out, "{}let __sir_i_{}: number = (", inner_pad, id);
             emit_expr(out, start, inner);
-            out.push_str(";\n");
+            out.push_str(") as number;\n");
             let _ = write!(out, "{}const __sir_stop_{}: number = (", inner_pad, id);
             emit_expr(out, stop, inner);
             out.push_str(") as number;\n");
@@ -1335,17 +1375,16 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             out.push_str(") as number;\n");
             let _ = writeln!(
                 out,
-                "{}while (__sir_step_{id} >= 0 ? ({v} as number) < __sir_stop_{id} : ({v} as number) > __sir_stop_{id}) {{",
-                inner_pad, id = id, v = v
+                "{}while (__sir_step_{id} >= 0 ? __sir_i_{id} < __sir_stop_{id} : __sir_i_{id} > __sir_stop_{id}) {{",
+                inner_pad, id = id
             );
+            let _ = writeln!(out, "{}let {}: __Sir.Val = __sir_i_{};", body_pad, v, id);
             emit_block_as_stmts(out, body, inner + 2);
             let _ = writeln!(
                 out,
-                "{}{} = ({} as number) + __sir_step_{};",
-                " ".repeat(inner + 2),
-                v,
-                v,
-                id
+                "{}__sir_i_{id} = __sir_i_{id} + __sir_step_{id};",
+                body_pad,
+                id = id
             );
             let _ = writeln!(out, "{}}}", inner_pad);
             let _ = writeln!(out, "{}}}", pad);
@@ -1360,7 +1399,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             } else {
                 "const"
             };
-            let _ = write!(out, "{}for ({} {} of ((", pad, kw, sanitize_ident(var));
+            let _ = write!(out, "{}for ({} {} of ((", pad, kw, var_ident(var));
             emit_expr(out, iter, indent);
             out.push_str(") as __Sir.Val[])) {\n");
             emit_block_as_stmts(out, body, indent + 2);
@@ -1399,7 +1438,7 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             value,
             ..
         } => {
-            let _ = write!(out, "{}const {}: __Sir.Val = ", pad, sanitize_ident(name));
+            let _ = write!(out, "{}const {}: __Sir.Val = ", pad, const_ident(name));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -1500,13 +1539,21 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                         "{}{} (__SirExc.rescueMatches(__exc, {})) {{",
                         ipad, kw, types
                     );
-                    // `rescue Foo => e` binds the caught value as a local.
+                    // `rescue Foo => e` binds the caught value as a local:
+                    // `let` when the clause stores into it (`e = 5`), as for
+                    // any other binding (#18798; `const` failed to compile).
                     if let Some(bind) = &r.binding {
+                        let keyword = if MUTABLE_NAMES.with(|m| m.borrow().contains(bind)) {
+                            "let"
+                        } else {
+                            "const"
+                        };
                         let _ = writeln!(
                             out,
-                            "{}  const {}: __Sir.Val = __exc;",
+                            "{}  {} {}: __Sir.Val = __exc;",
                             ipad,
-                            sanitize_ident(bind)
+                            keyword,
+                            var_ident(bind)
                         );
                     }
                     emit_stmt_block(out, &r.body, inner + 2);
@@ -2136,7 +2183,7 @@ fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
 fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
     match scope {
         Scope::Local | Scope::Param | Scope::Capture | Scope::Global => {
-            let _ = write!(out, "{}", sanitize_ident(name));
+            let _ = write!(out, "{}", scoped_ident(name, scope));
         }
         Scope::Builtin => {
             let _ = write!(out, "__Sir.builtinClosure({})", quote_ts_string(name));
@@ -2153,9 +2200,10 @@ fn emit_var_ref(out: &mut String, name: &str, scope: Scope) {
             let _ = write!(out, "__SirOop.cvarGet({})", quote_ts_string(name));
         }
         Scope::Const => {
-            // Constants are ordinary module-level bindings — a bare,
-            // sanitised identifier (e.g. `LEGS`).
-            out.push_str(&sanitize_ident(name));
+            // Constants are ordinary bindings — a bare, sanitised
+            // identifier (e.g. `LEGS`), renamed only when a function or
+            // global has the same name (see `const_ident`).
+            out.push_str(&const_ident(name));
         }
     }
 }
@@ -2780,6 +2828,144 @@ const TAG_VERBATIM: &str = "v";
 /// sentinel.
 const TAG_ESCAPED: &str = "e";
 
+/// Tag immediately following [`ESCAPE_MARKER`] for a *variable* renamed
+/// because a function or a global of the module has the same SIR name (see
+/// [`var_ident`]).  Distinct from [`TAG_VERBATIM`] and [`TAG_ESCAPED`], so a
+/// renamed variable can never equal any output of [`sanitize_ident`].
+const TAG_LOCAL: &str = "l";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a *module global*
+/// renamed because a function of the module has the same SIR name (see
+/// [`global_ident`]).
+const TAG_GLOBAL: &str = "g";
+
+/// Tag immediately following [`ESCAPE_MARKER`] for a *constant*
+/// (`Scope::Const`) renamed because a function or a global of the module
+/// has the same SIR name (see [`const_ident`]).
+const TAG_CONST: &str = "c";
+
+/// ## Four SIR namespaces, one TypeScript namespace (#18485)
+///
+/// SIR names a binding in one of four separate namespaces, and the
+/// validator accepts a module that uses one name in several of them:
+///
+/// | SIR namespace | named by                                              |
+/// |---------------|-------------------------------------------------------|
+/// | function      | `Function::name`, `DirectCall`, `MakeClosure`         |
+/// | global        | `Module::globals`, `VarRef`/`Assign` of `Scope::Global` |
+/// | variable      | locals, parameters, captures, loop variables, `rescue` bindings |
+/// | constant      | `VarRef`/`Assign` of `Scope::Const`                   |
+///
+/// A source language may rely on that.  Ruby does:
+///
+/// ```ruby
+/// def f; 40; end
+/// f = 2
+/// puts f() + f      # 42: `f()` is the method, bare `f` the local
+/// ```
+///
+/// TypeScript has one namespace, so two bindings spelled alike collide:
+/// a local `f` shadowed the function `f` (`TypeError: f is not a
+/// function`), a global `let f` next to `function f` was a duplicate
+/// declaration (`SyntaxError`), and a local `x` hid the global `x` from a
+/// `Global` read in the same function.
+///
+/// The functions cannot move -- they are top-level declarations that
+/// callers append code to call by name.  So each *other* kind moves, and
+/// only when it collides with a binding that outranks it:
+///
+/// | SIR binding   | renamed when the module also has a ... | renamed spelling              |
+/// |---------------|----------------------------------------|-------------------------------|
+/// | function      | (never)                                | `sanitize_ident(name)`        |
+/// | global        | function of that name                  | `_$sir_esc_g` + `sanitize_ident(name)` |
+/// | variable      | function or global of that name        | `_$sir_esc_l` + `sanitize_ident(name)` |
+/// | constant      | function or global of that name        | `_$sir_esc_c` + `sanitize_ident(name)` |
+///
+/// Each renamed spelling is [`ESCAPE_MARKER`], a one-letter tag, then
+/// `sanitize_ident(name)`.  It is one-to-one because `sanitize_ident` is;
+/// it never equals any `sanitize_ident` output, which either lacks the
+/// marker or follows it with [`TAG_VERBATIM`] or [`TAG_ESCAPED`]; and the
+/// three tags differ, so the renamed kinds never equal each other.  The
+/// choice depends only on the name and its namespace, so every binding and
+/// every use of one name agree.
+///
+/// (A variable and a constant spelled alike still share a spelling: both
+/// keep `sanitize_ident(name)` unless something outranks them.  Ruby
+/// cannot write that pair -- a constant starts with a capital letter and a
+/// local does not -- and constants carry no declaration list to check
+/// against.)
+///
+/// The TypeScript identifier for the SIR *variable* `name`: a local,
+/// parameter, capture, loop variable or `rescue` binding.
+///
+/// | SIR variable | function or global of that name? | TypeScript        |
+/// |--------------|----------------------------------|-------------------|
+/// | `x`          | no                               | `x`               |
+/// | `f`          | yes                              | `_$sir_esc_lf`    |
+/// | `class`      | yes                              | `_$sir_esc_l_$sir_esc_eclass` |
+fn var_ident(name: &str) -> String {
+    if is_function_name(name) || is_global_name(name) {
+        format!("{ESCAPE_MARKER}{TAG_LOCAL}{}", sanitize_ident(name))
+    } else {
+        sanitize_ident(name)
+    }
+}
+
+/// The TypeScript identifier for the module global `name`, at its
+/// declaration (`let f = null;`), its `_init` assignment, and every
+/// `Global` read and write.
+///
+/// A global spelled like a function is renamed (see the namespace table
+/// above): `let f = null;` beside `function f()` was a duplicate
+/// declaration.  A `Global` reference to a name that is *not* a declared
+/// global keeps the function's spelling: that is how code reaches a
+/// function's handle in this backend (a hand-built module may name a
+/// function `id` as `VarRef { scope: Global }`, and the validator accepts a
+/// `Global` reference to either kind of name).
+fn global_ident(name: &str) -> String {
+    if is_global_name(name) && is_function_name(name) {
+        format!("{ESCAPE_MARKER}{TAG_GLOBAL}{}", sanitize_ident(name))
+    } else {
+        sanitize_ident(name)
+    }
+}
+
+/// The TypeScript identifier for the constant `name` (`Scope::Const`).
+///
+/// A constant spelled like a function or a global is renamed, so a
+/// constant read never yields the function (or global) of the same name.
+/// An `Assign` of `Scope::Const` (`const F: __Sir.Val = 2;`) and every read
+/// use the same spelling, so the constant still reads back its own value
+/// while `F()` still calls the function.
+fn const_ident(name: &str) -> String {
+    if is_function_name(name) || is_global_name(name) {
+        format!("{ESCAPE_MARKER}{TAG_CONST}{}", sanitize_ident(name))
+    } else {
+        sanitize_ident(name)
+    }
+}
+
+/// Is `name` the SIR name of a function of the module being emitted?
+fn is_function_name(name: &str) -> bool {
+    FUNCTION_NAMES.with(|t| t.borrow().contains(name))
+}
+
+/// Is `name` the SIR name of a global of the module being emitted?
+fn is_global_name(name: &str) -> bool {
+    GLOBAL_NAMES.with(|t| t.borrow().contains(name))
+}
+
+/// The identifier for the variable `name` of `scope`: a module global goes
+/// through [`global_ident`], and a function's variable through
+/// [`var_ident`].
+fn scoped_ident(name: &str, scope: Scope) -> String {
+    if scope == Scope::Global {
+        global_ident(name)
+    } else {
+        var_ident(name)
+    }
+}
+
 /// Sanitize a SIR identifier for TypeScript.
 ///
 /// SIR names can include `?`, `!`, `-`, `+`, `*`, etc.  TypeScript
@@ -2873,7 +3059,7 @@ fn sanitize_comment(s: &str) -> String {
 ///
 /// | reserved               | where the emitter writes it                                  |
 /// |------------------------|--------------------------------------------------------------|
-/// | `__sir…` (any case)    | the runtime imports `__Sir`, `__SirOop`, `__SirExc`, …, the entry's `__sir_result`, loop temporaries `__sir_stop_N`/`__sir_step_N` |
+/// | `__sir…` (any case)    | the runtime imports `__Sir`, `__SirOop`, `__SirExc`, …, the entry's `__sir_result`, loop temporaries `__sir_i_N`/`__sir_stop_N`/`__sir_step_N` |
 /// | `_a`                   | a closure wrapper's argument array, `(..._a) => …`; the captured values are evaluated inside it |
 /// | `__l`                  | the arrow that evaluates a short-circuit `and`/`or` operand once |
 /// | `__kw`                 | a function's keyword-argument options object                 |
@@ -4015,7 +4201,277 @@ mod tests {
         );
         assert!(out.contains("break;\n"), "got {out}");
         assert!(!out.contains("=>"), "must not route through an arrow-function IIFE: {out}");
-        assert!(!out.contains('?'), "must not route through the value-position ternary: {out}");
+        assert!(!out.contains("?"), "must not route through the value-position ternary: {out}");
         assert!(out.contains("} else {"), "got {out}");
+    }
+
+    // ── a variable never shadows a function (#18485) ─────────────────
+
+    /// `def f; 40; end` and a `main` whose local is also named `f`:
+    /// `let f = 2; f() + f`, which a source language with separate
+    /// namespaces (Ruby) evaluates to 42.
+    fn local_named_like_a_function() -> Module {
+        let sp = Span::synthetic;
+        let func = |name: &str, body: semantic_ir::Block| semantic_ir::Function {
+            name: name.to_string(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body,
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        };
+        let f = func(
+            "f",
+            semantic_ir::Block {
+                stmts: vec![],
+                value: Expr::IntLit { value: 40, span: sp() },
+                span: sp(),
+            },
+        );
+        let main = func(
+            "main",
+            semantic_ir::Block {
+                stmts: vec![Stmt::LetStarBinding {
+                    name: "f".to_string(),
+                    sir_type: None,
+                    value: Expr::IntLit { value: 2, span: sp() },
+                    span: sp(),
+                }],
+                value: Expr::BuiltinCall {
+                    name: "+".to_string(),
+                    args: vec![
+                        Expr::DirectCall {
+                            fn_name: "f".to_string(),
+                            args: vec![],
+                            effects: EffectSet::PURE,
+                            span: sp(),
+                        },
+                        Expr::VarRef {
+                            name: "f".to_string(),
+                            scope: Scope::Local,
+                            span: sp(),
+                        },
+                    ],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            },
+        );
+        Module {
+            name: "shadow".to_string(),
+            manifest: semantic_ir::FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![f, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    #[test]
+    fn a_local_named_like_a_function_is_renamed_and_the_function_is_not() {
+        let out = emit_module(&local_named_like_a_function());
+        // The function keeps its own spelling.  Everything from its
+        // definition on is the user's code (the inlined runtime comes
+        // first, and binds names of its own).
+        let at = out.find("function f(").unwrap_or_else(|| panic!("`f` is defined:\n{out}"));
+        let out = &out[at..];
+        // The local is bound, and read, under its renamed spelling...
+        assert!(out.contains(" _$sir_esc_lf: __Sir.Val = "), "{out}");
+        assert!(out.contains("_$sir_esc_lf"), "{out}");
+        // ...never under the function's own spelling, which the call keeps.
+        assert!(!out.contains(" f: __Sir.Val = "), "{out}");
+        assert!(out.contains("f()"), "{out}");
+    }
+
+    #[test]
+    fn var_ident_renames_exactly_the_names_of_functions() {
+        FUNCTION_NAMES.with(|t| {
+            let mut t = t.borrow_mut();
+            t.clear();
+            t.insert("f".to_string());
+        });
+        assert_eq!(var_ident("f"), "_$sir_esc_lf");
+        assert_eq!(var_ident("x"), sanitize_ident("x"));
+        // A user variable spelled like the renamed form takes the verbatim
+        // escape, so the two stay apart.
+        assert_ne!(var_ident("_$sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
+    }
+
+    // ── globals and constants never collide with functions ───────────
+
+    /// A function of no parameters whose body is `stmts` then `value`.
+    fn nullary(name: &str, stmts: Vec<Stmt>, value: Expr) -> Function {
+        let sp = Span::synthetic;
+        Function {
+            name: name.to_string(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: semantic_ir::Block { stmts, value, span: sp() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    fn scoped(name: &str, scope: Scope) -> Expr {
+        Expr::VarRef { name: name.to_string(), scope, span: Span::synthetic() }
+    }
+
+    fn plus(a: Expr, b: Expr) -> Expr {
+        Expr::BuiltinCall {
+            name: "+".to_string(),
+            args: vec![a, b],
+            effects: EffectSet::PURE,
+            span: Span::synthetic(),
+        }
+    }
+
+    fn lit(value: i64) -> Expr {
+        Expr::IntLit { value, span: Span::synthetic() }
+    }
+
+    fn call0(fn_name: &str) -> Expr {
+        Expr::DirectCall {
+            fn_name: fn_name.to_string(),
+            args: vec![],
+            effects: EffectSet::PURE,
+            span: Span::synthetic(),
+        }
+    }
+
+    /// A module of `functions` and one global per name in `globals`, each
+    /// set by `_init` to `2` (the synthesised `global_set` shape Twig emits).
+    fn module_with_globals(mut functions: Vec<Function>, globals: &[&str]) -> Module {
+        let sp = Span::synthetic;
+        let init: Vec<Stmt> = globals
+            .iter()
+            .map(|g| Stmt::ExprStmt {
+                expr: Expr::BuiltinCall {
+                    name: "global_set".to_string(),
+                    args: vec![Expr::SymLit { name: g.to_string(), span: sp() }, lit(2)],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            })
+            .collect();
+        functions.push(nullary("_init", init, Expr::NilLit { span: sp() }));
+        Module {
+            name: "namespaces".to_string(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions,
+            globals: globals
+                .iter()
+                .map(|g| Global {
+                    name: g.to_string(),
+                    sir_type: None,
+                    init_function: "_init".to_string(),
+                    span: sp(),
+                })
+                .collect(),
+            metadata: Metadata::new(),
+            span: sp(),
+        }
+    }
+
+    /// `def f; 40; end`, a global `f` set to 2, and `main` = `f() + <global
+    /// f>`.  Emitting both as `f` was a duplicate declaration.
+    #[test]
+    fn a_global_named_like_a_function_is_renamed_at_every_site() {
+        let out = emit_module(&module_with_globals(
+            vec![
+                nullary("f", vec![], lit(40)),
+                nullary("main", vec![], plus(call0("f"), scoped("f", Scope::Global))),
+            ],
+            &["f"],
+        ));
+        let at = out.find("function f(").unwrap_or_else(|| panic!("`f` is defined:\n{out}"));
+        let user = &out[at..];
+        assert!(out.contains("let _$sir_esc_gf: __Sir.Val = null;"), "{out}");
+        assert!(user.contains("_$sir_esc_gf = 2;"), "{user}");
+        assert!(user.contains("f(), _$sir_esc_gf") || user.contains("f() + _$sir_esc_gf"), "{user}");
+        assert!(!out.contains("let f: __Sir.Val = null;"), "{out}");
+    }
+
+    /// A `Global` reference to a name that is only a function still reaches
+    /// the function.
+    #[test]
+    fn a_global_reference_to_a_function_keeps_the_function_spelling() {
+        let out = emit_module(&module_with_globals(
+            vec![nullary("id", vec![], lit(1)), nullary("main", vec![], scoped("id", Scope::Global))],
+            &[],
+        ));
+        let at = out.find("function main(").unwrap_or_else(|| panic!("`main`:\n{out}"));
+        assert!(out[at..].contains("return id;"), "{}", &out[at..]);
+    }
+
+    /// A local named like a global hid the global from a `Global` read in
+    /// the same function.
+    #[test]
+    fn a_local_named_like_a_global_is_renamed() {
+        let main = nullary(
+            "main",
+            vec![Stmt::LetStarBinding {
+                name: "x".to_string(),
+                sir_type: None,
+                value: lit(40),
+                span: Span::synthetic(),
+            }],
+            plus(scoped("x", Scope::Local), scoped("x", Scope::Global)),
+        );
+        let out = emit_module(&module_with_globals(vec![main], &["x"]));
+        let at = out.find("function main(").unwrap_or_else(|| panic!("`main`:\n{out}"));
+        let body = &out[at..];
+        assert!(out.contains("let x: __Sir.Val = null;"), "the global keeps its name:\n{out}");
+        assert!(body.contains(" _$sir_esc_lx: __Sir.Val = 40;"), "{body}");
+        assert!(!body.contains(" x: __Sir.Val = "), "{body}");
+    }
+
+    /// `def F; 40; end; F = 2; F() + F` (Ruby: 42).  The constant was
+    /// declared `const F` inside `main`, shadowing the function, so `F()`
+    /// called the integer.
+    #[test]
+    fn a_constant_named_like_a_function_is_renamed_at_assignment_and_read() {
+        let main = nullary(
+            "main",
+            vec![Stmt::Assign {
+                name: "F".to_string(),
+                scope: Scope::Const,
+                value: lit(2),
+                span: Span::synthetic(),
+            }],
+            plus(call0("F"), scoped("F", Scope::Const)),
+        );
+        let out = emit_module(&module_with_globals(vec![nullary("F", vec![], lit(40)), main], &[]));
+        let at = out.find("function main(").unwrap_or_else(|| panic!("`main`:\n{out}"));
+        let body = &out[at..];
+        assert!(body.contains("const _$sir_esc_cF: __Sir.Val = 2;"), "{body}");
+        assert!(body.contains("F(), _$sir_esc_cF") || body.contains("F() + _$sir_esc_cF"), "{body}");
+        assert!(!body.contains("const F: "), "{body}");
+    }
+
+    #[test]
+    fn the_three_renamed_kinds_never_share_a_spelling() {
+        FUNCTION_NAMES.with(|t| *t.borrow_mut() = ["F".to_string()].into_iter().collect());
+        GLOBAL_NAMES.with(|t| *t.borrow_mut() = ["F".to_string(), "G".to_string()].into_iter().collect());
+        assert_eq!(const_ident("G"), "_$sir_esc_cG");
+        assert_eq!(global_ident("G"), "G", "a global not shadowing a function keeps its name");
+        let spellings = [var_ident("F"), global_ident("F"), const_ident("F"), sanitize_ident("F")];
+        for (i, a) in spellings.iter().enumerate() {
+            for b in &spellings[i + 1..] {
+                assert_ne!(a, b);
+            }
+        }
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
+        GLOBAL_NAMES.with(|t| t.borrow_mut().clear());
     }
 }

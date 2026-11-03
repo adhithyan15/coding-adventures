@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 286,
+  "sourceHash": "fnv1a64:25335d940c6fdb20",
+  "lessonIds": [
+    "PA-C286-jhari",
+    "PA-C286-gajjna",
+    "PA-C286-varhna",
+    "PA-C286-jhakkhar",
+    "PA-C286-chamakna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch286.txt",
+  "json": "punjabi/narration/ch286.json",
+  "textHash": "fnv1a64:fa18b2084fb90c23",
+  "jsonHash": "fnv1a64:2b091f4b18c62bd1",
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 237,
+  "sourceHash": "fnv1a64:572d39d338d51dd9",
+  "lessonIds": [
+    "PA-C237-ubalna",
+    "PA-C237-autna",
+    "PA-C237-dahim",
+    "PA-C237-chati",
+    "PA-C237-madhani"
+  ],
+  "tex": "punjabi/book/chapters/ch237-milk-on-the-fire.tex"
+}

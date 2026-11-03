@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C353-mukabla",
+    "language": "punjabi",
+    "chapter": 353,
+    "sequence": 21830,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ab81f599645ce0c5"
+  },
+  "findings": []
+}

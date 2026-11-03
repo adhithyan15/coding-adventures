@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:6aec51e0e0822ec5",
+  "lessonIds": [
+    "PA-C290-asman",
+    "PA-C290-gare",
+    "PA-C290-khullhna",
+    "PA-C290-ghatna",
+    "PA-C290-vagna"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch290.txt",
+  "json": "punjabi/narration/ch290.json",
+  "textHash": "fnv1a64:d1fa67a5c5784deb",
+  "jsonHash": "fnv1a64:80d6133a689b27f3",
+  "findings": []
+}

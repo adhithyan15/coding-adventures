@@ -1,0 +1,753 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 257,
+  "title": "At the Bank Counter",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:fc058dcb43bb8da3",
+  "lessons": [
+    {
+      "id": "PA-C257-khata",
+      "sequence": 15200,
+      "title": "ਖਾਤਾ (khātā) — a bank account; an account book",
+      "headword": "ਖਾਤਾ",
+      "romanization": "khātā",
+      "gloss": "a bank account; an account book",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:967b3f4c613cef5a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to send off, then the Punjabi for to tear."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਖਾਤਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖਾਤਾ — khātā — \"a bank account; an account book\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੇਰਾ ਖਾਤਾ ਸ਼ਹਿਰ ਦੇ ਬੈਂਕ ਵਿੱਚ ਹੈ। merā khātā shahir de baiṅk vich hai. My account is at the bank in town."
+            },
+            {
+              "kind": "speech",
+              "text": "A masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਖਾਤਾ (khātā) is filed by CDIAL under Sanskrit kṣatra, \"might, rule\"; CDIAL lists Punjabi khāttā, \"account book\", there, as a word taken from Hindi khātā (CDIAL 3648). How the sense moved is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khātā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khātā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "khātā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *khātā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "merā khātā shahir de baiṅk vich hai. — My account is at the bank in town.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *merā khātā shahir de baiṅk vich hai.* — My account is at the bank in town.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to send off, then the Punjabi for to tear, then say khātā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to send off, then the Punjabi for to tear, then say *khātā* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਖਾਤਾ (khātā) mean? (\"A bank account; an account book\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C257-rakam",
+      "sequence": 15210,
+      "title": "ਰਕਮ (rakam) — a sum of money",
+      "headword": "ਰਕਮ",
+      "romanization": "rakam",
+      "gloss": "a sum of money",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8a8a0fff3df3cb2a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for to tear, then the Punjabi for a bank account."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਰਕਮ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਕਮ — rakam — \"a sum of money\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਇਹ ਰਕਮ ਬਹੁਤ ਵੱਡੀ ਹੈ। eh rakam bahut vaḍḍī hai. This sum is very large."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰਕਮ (rakam) is a loan, usually traced through Persian to Arabic raqam, \"a figure, a written sum\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rakam, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rakam*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eh rakam bahut vaḍḍī hai. — This sum is very large.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eh rakam bahut vaḍḍī hai.* — This sum is very large.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for to tear, then the Punjabi for a bank account, then say rakam again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for to tear, then the Punjabi for a bank account, then say *rakam* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਰਕਮ (rakam) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਰਕਮ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਰਕਮ (rakam) mean? (\"A sum of money\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C257-nakad",
+      "sequence": 15220,
+      "title": "ਨਕਦ (nakad) — in cash",
+      "headword": "ਨਕਦ",
+      "romanization": "nakad",
+      "gloss": "in cash",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:744a3380a9d2679b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a bank account, then the Punjabi for a sum of money."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਨਕਦ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਕਦ — nakad — \"in cash\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਦੁਕਾਨ ਉੱਤੇ ਨਕਦ ਪੈਸੇ ਦਿੰਦਾ ਹਾਂ। maiṁ dukān utte nakad paise dindā hāṁ. I pay in cash at the shop."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਨਕਦ (nakad) is a loan, usually traced through Persian to Arabic naqd, \"ready money\"."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakad",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakad*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nakad, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nakad*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ dukān utte nakad paise dindā hāṁ. — I pay in cash at the shop.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ dukān utte nakad paise dindā hāṁ.* — I pay in cash at the shop.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a bank account, then the Punjabi for a sum of money, then say nakad again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a bank account, then the Punjabi for a sum of money, then say *nakad* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਨਕਦ (nakad) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਨਕਦ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਨਕਦ (nakad) mean? (\"In cash\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C257-kadhvauna",
+      "sequence": 15230,
+      "title": "ਕਢਵਾਉਣਾ (kaḍhvāuṇā) — to withdraw; to have something taken out",
+      "headword": "ਕਢਵਾਉਣਾ",
+      "romanization": "kaḍhvāuṇā",
+      "gloss": "to withdraw; to have something taken out",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:847974f907c33b1f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for a sum of money, then the Punjabi for in cash."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕਢਵਾਉਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਢਵਾਉਣਾ — kaḍhvāuṇā — \"to withdraw; to have something taken out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੈਂ ਹਰ ਮਹੀਨੇ ਬੈਂਕ ਤੋਂ ਪੈਸੇ ਕਢਵਾਉਂਦਾ ਹਾਂ। maiṁ har mahīne baiṅk ton paise kaḍhvāundā hāṁ. I withdraw money from the bank every month."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): ਮੈਂ ਬੈਂਕ ਤੋਂ ਪੈਸੇ ਕਢਵਾਏ, maiṁ baiṅk ton paise kaḍhvāe."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਢਵਾਉਣਾ (kaḍhvāuṇā) is the causative of kaḍḍhṇā, \"to pull out\", inherited from a reconstructed kaḍḍhati, \"pulls, draws\"; CDIAL lists Punjabi kaḍḍhṇā under it (CDIAL 2660)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍhvāuṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍhvāuṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kaḍhvāuṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kaḍhvāuṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ har mahīne baiṅk ton paise kaḍhvāundā hāṁ. — I withdraw money from the bank every month.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maiṁ har mahīne baiṅk ton paise kaḍhvāundā hāṁ.* — I withdraw money from the bank every month.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for a sum of money, then the Punjabi for in cash, then say kaḍhvāuṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for a sum of money, then the Punjabi for in cash, then say *kaḍhvāuṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕਢਵਾਉਣਾ (kaḍhvāuṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕਢਵਾਉਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕਢਵਾਉਣਾ (kaḍhvāuṇā) mean? (\"To withdraw; to have something taken out\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C257-vadhna",
+      "sequence": 15240,
+      "title": "ਵਧਣਾ (vadhṇā) — to go up; to grow",
+      "headword": "ਵਧਣਾ",
+      "romanization": "vadhṇā",
+      "gloss": "to go up; to grow",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5201f721ca33f32f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Punjabi for in cash, then the Punjabi for to withdraw."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਵਧਣਾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਧਣਾ — vadhṇā — \"to go up; to grow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੈਂਕ ਵਿੱਚ ਪੈਸੇ ਹੌਲੀ ਹੌਲੀ ਵਧਦੇ ਹਨ। baiṅk vich paise haulī haulī vadhde han. Money slowly grows in the bank."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): ਉਹ ਰੁੱਖ ਬਹੁਤ ਵਧਿਆ, oh rukkh bahut vadhiā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਵਧਣਾ (vadhṇā) is inherited from Sanskrit vardhate, \"grows, increases\"; CDIAL lists Punjabi vadhṇā, \"to increase, grow, advance\", under it (CDIAL 11376)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for reading notices and messages."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadhṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadhṇā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vadhṇā, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vadhṇā*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baiṅk vich paise haulī haulī vadhde han. — Money slowly grows in the bank.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baiṅk vich paise haulī haulī vadhde han.* — Money slowly grows in the bank.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Punjabi for in cash, then the Punjabi for to withdraw, then say vadhṇā again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Punjabi for in cash, then the Punjabi for to withdraw, then say *vadhṇā* again]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਵਧਣਾ (vadhṇā) once, checking the whole word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਵਧਣਾ** once, checking the whole word]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਵਧਣਾ (vadhṇā) mean? (\"To go up; to grow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

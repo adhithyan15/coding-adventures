@@ -292,9 +292,10 @@ mod tests {
         // disambiguates.
         static SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
         let nonce = SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
-        let file = std::env::temp_dir()
+        let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
+        let file = scratch.path()
             .join(format!("sir_rb3_{}_{}.py", std::process::id(), nonce));
-        std::fs::write(&file, source).expect("write temp python");
+        sir_test_scratch::write_new(&file, source).expect("write temp python");
         let out = std::process::Command::new(exe)
             .arg(&file)
             .env("PYTHONPATH", &pythonpath)
@@ -1797,9 +1798,10 @@ mod tests {
                 py_root.join("sir-runtime-exceptions/src"),
             ])
             .expect("join PYTHONPATH");
-            let file = std::env::temp_dir()
-                .join(format!("sir_e2_nomatch_{}.py", std::process::id()));
-            std::fs::write(&file, &a.source).expect("write temp python");
+            let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
+            let file = scratch.path()
+                .join(format!("sir_e2_nomatch_{}.py", unique_suffix()));
+            sir_test_scratch::write_new(&file, &a.source).expect("write temp python");
             let out = std::process::Command::new(exe)
                 .arg(&file)
                 .env("PYTHONPATH", &pythonpath)
@@ -2773,9 +2775,10 @@ mod tests {
 
         static SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
         let nonce = SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
         let file =
-            std::env::temp_dir().join(format!("sir_syswrite_{}_{}.py", std::process::id(), nonce));
-        std::fs::write(&file, &source).expect("write temp python");
+            scratch.path().join(format!("sir_syswrite_{}_{}.py", std::process::id(), nonce));
+        sir_test_scratch::write_new(&file, &source).expect("write temp python");
         let out = std::process::Command::new(exe)
             .arg(&file)
             .env("PYTHONPATH", &pythonpath)
@@ -2929,9 +2932,10 @@ mod tests {
 
         static SEQ: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
         let nonce = SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let scratch = sir_test_scratch::Scratch::new("sir_python_test_");
         let file =
-            std::env::temp_dir().join(format!("sir_div_{}_{}.py", std::process::id(), nonce));
-        std::fs::write(&file, &source).expect("write temp python");
+            scratch.path().join(format!("sir_div_{}_{}.py", std::process::id(), nonce));
+        sir_test_scratch::write_new(&file, &source).expect("write temp python");
         let out = std::process::Command::new(exe)
             .arg(&file)
             .env("PYTHONPATH", &pythonpath)
@@ -3039,5 +3043,16 @@ mod tests {
                 "[{op}] expected 'SirError: divided by 0' on stderr, got:\n{err}"
             );
         }
+    }
+
+    /// A per-call unique part for this file's temp-file names.  The process id
+    /// keeps parallel test binaries apart, and the counter keeps apart the tests
+    /// of this binary, which run on parallel threads under one process id
+    /// (#18485).  A name built from the process id alone, or from it and a hash
+    /// of the source, let two tests that compile the same program share a file.
+    fn unique_suffix() -> String {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static NEXT: AtomicU64 = AtomicU64::new(0);
+        format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
     }
 }

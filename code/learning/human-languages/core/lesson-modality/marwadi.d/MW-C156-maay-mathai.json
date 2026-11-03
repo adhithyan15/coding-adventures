@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "MW-C156-maay-mathai",
+    "language": "marwadi",
+    "chapter": 156,
+    "sequence": 9680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1162b5d11ff70e61"
+  },
+  "findings": []
+}

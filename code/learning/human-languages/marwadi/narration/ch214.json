@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 214,
+  "title": "Taking It Back",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:3f861a3ab5d30759",
+  "lessons": [
+    {
+      "id": "MW-C214-pherno",
+      "sequence": 14180,
+      "title": "फेरणो (pherṇo) — to give back; to return (a thing)",
+      "headword": "फेरणो",
+      "romanization": "pherṇo",
+      "gloss": "to give back; to return (a thing)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c767e940d9f715e1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for free of charge, then the Marwadi for to be sold."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: फेरणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेरणो — pherṇo — \"to give back; to return (a thing)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं काल ये कुरतो फेरसूं। hū̃ kāl ye kurto phersū̃. I'll take this kurta back tomorrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं कुरतो फेर्यो, mhaĩ kurto pheryo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "फेरणो (pherṇo) is inherited from a reconstructed phirati, \"turns\"; CDIAL lists Old Marwari phiraï, \"turns, walks about\" (CDIAL 9078). Giving a purchase back is, probably, turning it back; फेर, \"again\", comes from the same word."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pherṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pherṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pherṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pherṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ kāl ye kurto phersū̃. — I'll take this kurta back tomorrow.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ kāl ye kurto phersū̃.* — I'll take this kurta back tomorrow.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for free of charge, then the Marwadi for to be sold, then say pherṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for free of charge, then the Marwadi for to be sold, then say *pherṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does फेरणो (pherṇo) mean? (\"To give back; to return (a thing)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C214-pherno-type",
+              "prompt": "Say the Marwadi for 'to give back'.",
+              "assesses": [
+                "MW-LEX-C214-RETURN214-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "फेरणो",
+                "pherṇo"
+              ],
+              "feedback": {
+                "correct": "Right: फेरणो (pherṇo) is 'to give back; to return (a thing)'.",
+                "incorrect": "'to give back' is फेरणो (pherṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C214-sarikho",
+      "sequence": 14190,
+      "title": "सारीखो (sārīkho) — alike; the same as",
+      "headword": "सारीखो",
+      "romanization": "sārīkho",
+      "gloss": "alike; the same as",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:44305ad637d73ca4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to be sold, then the Marwadi for to give back."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: सारीखो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सारीखो — sārīkho — \"alike; the same as\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ये दो कुरता सारीखा है। ye do kurtā sārīkhā hai. These two kurtas are alike."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "सारीखो (sārīkho) is inherited from Sanskrit sadṛkṣa, \"like\"; CDIAL lists Old Marwari sārikho, \"like\" (CDIAL 13119)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārīkho",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārīkho*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sārīkho, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sārīkho*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ye do kurtā sārīkhā hai. — These two kurtas are alike.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ye do kurtā sārīkhā hai.* — These two kurtas are alike.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to be sold, then the Marwadi for to give back, then say sārīkho again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to be sold, then the Marwadi for to give back, then say *sārīkho* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does सारीखो (sārīkho) mean? (\"Alike; the same as\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C214-sarikho-type",
+              "prompt": "Say the Marwadi for 'alike'.",
+              "assesses": [
+                "MW-LEX-C214-RETURN214-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "सारीखो",
+                "sārīkho"
+              ],
+              "feedback": {
+                "correct": "Right: सारीखो (sārīkho) is 'alike; the same as'.",
+                "incorrect": "'alike' is सारीखो (sārīkho)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C214-thaili",
+      "sequence": 14200,
+      "title": "थैली (thailī) — a small bag",
+      "headword": "थैली",
+      "romanization": "thailī",
+      "gloss": "a small bag",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1a1cc26293ca378",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to give back, then the Marwadi for alike."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: थैली",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थैली — thailī — \"a small bag\"."
+            },
+            {
+              "kind": "speech",
+              "text": "सामान थैली मांय राखो। sāmān thailī mā̃y rākho. Put the things in the bag."
+            },
+            {
+              "kind": "speech",
+              "text": "A feminine noun."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थैली (thailī) is inherited from Sanskrit sthavi, \"sack, bag\". CDIAL gives no Marwari form in this entry, but lists Hindi thailī, \"bag\" (CDIAL 13746)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thailī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thailī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "thailī, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *thailī*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sāmān thailī mā̃y rākho. — Put the things in the bag.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sāmān thailī mā̃y rākho.* — Put the things in the bag.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to give back, then the Marwadi for alike, then say thailī again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to give back, then the Marwadi for alike, then say *thailī* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does थैली (thailī) mean? (\"A small bag\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C214-thaili-type",
+              "prompt": "Say the Marwadi for 'a small bag'.",
+              "assesses": [
+                "MW-LEX-C214-RETURN214-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "थैली",
+                "thailī"
+              ],
+              "feedback": {
+                "correct": "Right: थैली (thailī) is 'a small bag'.",
+                "incorrect": "'a small bag' is थैली (thailī)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C214-palatno",
+      "sequence": 14210,
+      "title": "पलटणो (palaṭṇo) — to flip over; to change",
+      "headword": "पलटणो",
+      "romanization": "palaṭṇo",
+      "gloss": "to flip over; to change",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:649ff5f49840ce6f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for alike, then the Marwadi for a small bag."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पलटणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पलटणो — palaṭṇo — \"to flip over; to change\"."
+            },
+            {
+              "kind": "speech",
+              "text": "आप थैली पलटो। āp thailī palṭo. Please turn the bag over."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं थैली पलटी, mhaĩ thailī palṭī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पलटणो (palaṭṇo) is inherited from a reconstructed pallaṭṭ, \"turn, overturn\", whose origin CDIAL calls very doubtful; CDIAL lists Old Marwari palaṭaï, \"alters\", and Hindi palaṭnā, \"to overturn\" (CDIAL 7968)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palaṭṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palaṭṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "palaṭṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *palaṭṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āp thailī palṭo. — Please turn the bag over.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āp thailī palṭo.* — Please turn the bag over.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for alike, then the Marwadi for a small bag, then say palaṭṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for alike, then the Marwadi for a small bag, then say *palaṭṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पलटणो (palaṭṇo) mean? (\"To flip over; to change\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C214-palatno-type",
+              "prompt": "Say the Marwadi for 'to flip over'.",
+              "assesses": [
+                "MW-LEX-C214-RETURN214-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पलटणो",
+                "palaṭṇo"
+              ],
+              "feedback": {
+                "correct": "Right: पलटणो (palaṭṇo) is 'to flip over; to change'.",
+                "incorrect": "'to flip over' is पलटणो (palaṭṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C214-ladhno",
+      "sequence": 14220,
+      "title": "लाधणो (lādhṇo) — to be found; to turn up",
+      "headword": "लाधणो",
+      "romanization": "lādhṇo",
+      "gloss": "to be found; to turn up",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d7da5fdc5e0a9d6e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for a small bag, then the Marwadi for to flip over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: लाधणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाधणो — lādhṇo — \"to be found; to turn up\"."
+            },
+            {
+              "kind": "speech",
+              "text": "म्हारी रसीद कोनी लाधै। mhārī rasīd konī lādhai. I can't find my receipt."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (it …): वो सिक्को लाध्यो, vo sikko lādhyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "लाधणो (lādhṇo) is inherited from Sanskrit labdha, \"taken, seized\"; CDIAL lists the Old Marwari verb lādhaï, \"finds\" (CDIAL 10946)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lādhṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lādhṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "lādhṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *lādhṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mhārī rasīd konī lādhai. — I can't find my receipt.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mhārī rasīd konī lādhai.* — I can't find my receipt.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for a small bag, then the Marwadi for to flip over, then say lādhṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for a small bag, then the Marwadi for to flip over, then say *lādhṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does लाधणो (lādhṇo) mean? (\"To be found; to turn up\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C214-ladhno-type",
+              "prompt": "Say the Marwadi for 'to turn up'.",
+              "assesses": [
+                "MW-LEX-C214-RETURN214-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "लाधणो",
+                "lādhṇo"
+              ],
+              "feedback": {
+                "correct": "Right: लाधणो (lādhṇo) is 'to be found; to turn up'.",
+                "incorrect": "'to turn up' is लाधणो (lādhṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

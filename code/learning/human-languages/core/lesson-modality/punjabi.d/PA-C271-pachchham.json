@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C271-pachchham",
+    "language": "punjabi",
+    "chapter": 271,
+    "sequence": 15950,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a6a47f2b6670c9e1"
+  },
+  "findings": []
+}

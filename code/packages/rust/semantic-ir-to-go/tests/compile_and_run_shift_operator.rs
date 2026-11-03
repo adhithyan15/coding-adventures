@@ -20,7 +20,6 @@
 //!
 //! Gates on `go`; logs a skip when absent.
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
@@ -97,7 +96,7 @@ fn demo_module(name: &str, stmts: Vec<Stmt>) -> Module {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -110,11 +109,12 @@ fn run(module: &Module) -> Option<String> {
         return None;
     }
     let artifact = compile(module).expect("module should compile to Go source");
-    let dir = std::env::temp_dir();
-    let src_path = dir.join(format!("sir_go_shift_{}_{}.go", std::process::id(), module.name));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
+    let src_path = dir.join(format!("sir_go_shift_{}_{}.go", unique_suffix(), module.name));
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
-    let run_out = Command::new("go").arg("run").arg(&src_path).output().expect("invoke go run");
+    let run_out = sir_test_scratch::go_command().arg("run").arg(&src_path).output().expect("invoke go run");
     let _ = std::fs::remove_file(&src_path);
     if !run_out.status.success() {
         panic!(
@@ -190,4 +190,15 @@ fn string_receiver_concatenates_to_a_new_string() {
     if let Some(out) = run(&m) {
         assert_eq!(out, "abcd\n");
     }
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

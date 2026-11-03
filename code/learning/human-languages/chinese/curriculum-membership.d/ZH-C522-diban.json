@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C522-diban",
+  "pathSegment": "ZH-PATH-522-FIXIT522",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-522-FIXIT522",
+      "order": 4
+    }
+  ]
+}

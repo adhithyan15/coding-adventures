@@ -1,0 +1,19 @@
+{
+  "language": "punjabi",
+  "chapter": 340,
+  "sourceHash": "fnv1a64:c040f13454660021",
+  "lessonIds": [
+    "PA-C340-vaada",
+    "PA-C340-manauna",
+    "PA-C340-bilkul",
+    "PA-C340-kabulna",
+    "PA-C340-samjhauta"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "punjabi/narration/ch340.txt",
+  "json": "punjabi/narration/ch340.json",
+  "textHash": "fnv1a64:96bfa9db1930758b",
+  "jsonHash": "fnv1a64:ed87de5d1af9dab6",
+  "findings": []
+}

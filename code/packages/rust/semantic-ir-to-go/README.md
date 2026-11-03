@@ -35,6 +35,11 @@ so `sanitize_ident` escapes every name the file declares — the runtime's
 `math`, …, `main`, `init`, `_` and the predeclared `any`/`min`/`max`/… —
 into `sir_esc_v<name>`, and a `rescue` binds the recovered panic as
 `__sir_r` (SIR10 "Generated names", issue #18466).
+A *variable* whose SIR name is also the name of one of the module's
+functions is emitted as `sir_esc_l<sanitize_ident(name)>` (`var_ident`), so
+it cannot shadow the function: SIR keeps the two namespaces apart, and
+Ruby's `def f; 40; end; f = 2; f() + f` is 42 (issue #18485). Functions keep
+their names.
 
 ### SIR16 (v1) — complete
 
@@ -392,7 +397,21 @@ func() Value {
 
 SIR's synthesised `main` is renamed to `_sir_user_main`; the emitter
 generates the real `func main()` that calls `_init()` (if present)
-then `_sir_user_main()`.
+then `_sir_user_main()`.  No user name can spell `_sir_user_main`:
+`sanitize_ident` reserves every `_sir…` name, so a user function, variable
+or constant of that name is emitted as `sir_esc_v_sir_user_main`.
+
+## Running the execution tests
+
+The tests run what the backend emits with `go run`.  Each test call writes
+its program into a private scratch directory (`sir-test-scratch`: random
+name, mode `0700`, removed afterwards), and every `go` it starts uses the
+build cache `<target>/<profile>/sir-go-build-cache` instead of the shared
+`~/.cache/go-build`.  That cache is the fix for an intermittent
+"failed to compile" (`# command-line-arguments ... no such file or
+directory` under `$GOCACHE`): a `go clean -cache` elsewhere deleted the
+standard library's export data while a test was compiling against it.
+`cargo clean` removes the private cache.
 
 ## Related crates
 

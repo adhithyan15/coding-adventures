@@ -1,0 +1,19 @@
+{
+  "chapter": 286,
+  "title": "Rain on the Way",
+  "label": "ch:pa-a2-rain-on-the-way",
+  "canDo": "I can say what the rain and the storm will do.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-FUTURE"
+  ],
+  "payoff": {
+    "lesson": "PA-C286-chamakna",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 286: I can say what the rain and the storm will do.",
+    "assesses": [
+      "PA-LEX-C286-STORM286-03",
+      "PA-LEX-C286-STORM286-04",
+      "PA-LEX-C286-STORM286-05"
+    ]
+  }
+}

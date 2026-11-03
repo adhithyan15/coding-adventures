@@ -1,0 +1,19 @@
+{
+  "chapter": 227,
+  "title": "Soap and Water",
+  "label": "ch:pa-a2-soap-and-water",
+  "canDo": "I can talk about washing my hands and face.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "PA-C227-tuti",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 227: I can talk about washing my hands and face.",
+    "assesses": [
+      "PA-LEX-C227-DIN227-03",
+      "PA-LEX-C227-DIN227-04",
+      "PA-LEX-C227-DIN227-05"
+    ]
+  }
+}

@@ -46,6 +46,76 @@
   and missing `--root` or `--language` values with status 2 before discovery.
   Stable argument diagnostics do not repeat raw, potentially path-bearing
   input.
+- `DEPENDENCY_SELF_EDGE` diagnostics cut the manifest path at the **last**
+  `code/packages/` or `code/programs/` pair (security review, round 2).
+  Cutting at the first `/code/` printed the checkout's own directory for the
+  common `~/code/<repo>` layout; the self-edge tests now place the checkout
+  under `code/packages/checkout/` to pin it.
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: `toml_bracket_scan` carries the bracket depth,
+  the open string's delimiter and a pending escape from line to line (so a
+  string left open at a line end still continues after the joining space),
+  and the pieces are joined once with `table.concat`, instead of rescanning
+  the growing value for every appended line, which was quadratic. Quoted
+  field and sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`)
+  are read as the bare key, compared verbatim and case-sensitively, per the
+  amended contract. A Cargo path entry that resolves to the crate itself is
+  now a `DependencySelfEdgeError` (`DEPENDENCY_SELF_EDGE`, repository-relative
+  manifest, `Resolver.is_dependency_self_edge_error`; `build.lua` exits 2)
+  instead of a silently drawn self-loop. `trim_spaces_and_tabs` is an index
+  scan: its `gsub("[ \t]+$", "")` took 12.6 s on a 40 KB interior run of
+  spaces. Tests: the 11 new one-shape cases (57, now with a row-count
+  assert), a 20,000-line continuation, a 100 KB run of spaces, 100,000 blank
+  lines before the `[package]` name, self-edges by alias, by name and from a
+  target table, and a real CLI exit-2 test.
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form, so a change to a crate used only by
+  a build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md`, ported
+  from the Go reference: headers are split into dotted-key segments outside
+  strings (quoted cfgs stay one segment, table names compare case-sensitively,
+  `[[...]]` and malformed headers end the table); comments are stripped
+  outside strings; inline values whose arrays continue onto later lines are
+  joined; `path` and `package` field keys must be exact and hold one non-empty
+  string; names are ASCII-lowercased and deduplicated. Dev-dependencies (every
+  form), `[patch]`, `[replace]`, `[workspace]` and registry entries add no
+  edge.
+- The old reader counted any `[dependencies]` line mentioning `path`, so a
+  registry entry with `features = ["path"]` drew an edge, and it looked up
+  the entry key instead of a `package` rename. Both are fixed.
+  `Resolver.cargo_link_dependency_names` is exported for the tests.
+- Tests: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames`, raw-byte BOM/CRLF, duplicate collapse, and
+  the shared `resolution-rust-field-aware.json` fixture. The reader returns
+  the same dependency names as the Go reader for all 1,650 tracked
+  `Cargo.toml` files.
+
+- Graph and diff selection runs about 7x faster on large path sets, with the
+  same answers. `test_graph_diff.lua`'s full-scale case (4,096 roots × 500-byte
+  paths) took 5.5 s CPU locally and 15.6–18.5 s on `windows-2025`, failing
+  its 12 s bound on every PR that selects this package; it now takes 0.76 s.
+  Measured linear before and after, so this is a constant-factor fix:
+  - `root_less` (the root-identity sort comparator, ~40% of samples) finds
+    the first differing byte by binary search over prefix equality instead
+    of reading every shared byte in Lua. It stays byte-wise; Lua's string
+    `<` would go through `strcoll` and follow the host locale.
+  - ASCII fast paths for NFC (identity), case folding (`A`..`Z` → `a`..`z`)
+    and full uppercase (`a`..`z` → `A`..`Z`), via explicit byte tables, not
+    the locale-dependent `string.lower`/`upper`. Non-ASCII strings still go
+    through the generated Unicode 17 module.
+  - The per-scalar control/forbidden-character loop is one byte-class
+    `find` (`[\0-\31` + the %-escaped forbidden set): in valid UTF-8 a
+    control scalar is one byte below 32 and every forbidden character is
+    ASCII. DEL (127) stays accepted.
+  - The separator scan in `prefix_materialization_work` uses `find`.
+  New tests pin each fast path's boundaries through the public API, and pass
+  against the old implementation too.
+- Package discovery without LuaFileSystem now uses `nul` for Windows directory
+  probes as well as listings, so `dir /ad` results are not silently discarded
+  by a Unix-only `/dev/null` redirection. Deterministic fallback tests cover
+  Windows commands, sorting, missing entries, and fail-closed path quoting.
 - Diff selection now charges the exact UTF-8 bytes of first-seen unique glob
   declarations against a 4 MiB ceiling before normalization, even when no
   paths changed. Package-root classification uses one reusable changed-path

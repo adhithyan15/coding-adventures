@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 538,
+  "sourceHash": "fnv1a64:f924ac1ff8eafb97",
+  "lessonIds": [
+    "ZH-C538-miande",
+    "ZH-C538-conger",
+    "ZH-C538-benshen",
+    "ZH-C538-chansheng",
+    "ZH-C538-genben"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch538.txt",
+  "json": "chinese/narration/ch538.json",
+  "textHash": "fnv1a64:a7c01584e7b3a509",
+  "jsonHash": "fnv1a64:abb6261204ccf98e",
+  "findings": []
+}

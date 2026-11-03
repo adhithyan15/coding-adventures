@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C483-manxing",
+  "pathSegment": "ZH-PATH-483-BETTER483",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-483-BETTER483",
+      "order": 4
+    }
+  ]
+}

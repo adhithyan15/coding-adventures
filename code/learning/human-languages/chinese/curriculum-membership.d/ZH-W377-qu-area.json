@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W377-qu-area",
+  "pathSegment": "ZH-PATH-377-AREA377",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-377-AREA377",
+      "order": 2
+    }
+  ]
+}

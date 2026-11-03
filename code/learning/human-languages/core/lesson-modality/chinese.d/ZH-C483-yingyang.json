@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C483-yingyang",
+    "language": "chinese",
+    "chapter": 483,
+    "sequence": 36310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:8a86f7cf1bd36070"
+  },
+  "findings": []
+}

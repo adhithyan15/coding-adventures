@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 445,
+  "sourceHash": "fnv1a64:940200e503a88033",
+  "lessonIds": [
+    "ZH-C445-hailang",
+    "ZH-C445-yuchuan",
+    "ZH-C445-shangan",
+    "ZH-C445-beike",
+    "ZH-C445-tuichao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch445.txt",
+  "json": "chinese/narration/ch445.json",
+  "textHash": "fnv1a64:912f6694f9f45db5",
+  "jsonHash": "fnv1a64:7deffac7d6b183e9",
+  "findings": []
+}

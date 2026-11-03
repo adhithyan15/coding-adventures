@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 285,
+  "sourceHash": "fnv1a64:00db67f0e4f85b01",
+  "lessonIds": [
+    "MW-C285-akhar",
+    "MW-C285-pano",
+    "MW-C285-path",
+    "MW-C285-ratno",
+    "MW-C285-ucharno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch285.txt",
+  "json": "marwadi/narration/ch285.json",
+  "textHash": "fnv1a64:4943531286b9db36",
+  "jsonHash": "fnv1a64:994c347b7c87d070",
+  "findings": []
+}

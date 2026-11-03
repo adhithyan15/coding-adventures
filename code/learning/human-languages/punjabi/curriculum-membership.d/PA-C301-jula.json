@@ -1,0 +1,11 @@
+{
+  "id": "PA-C301-jula",
+  "pathSegment": "PA-PATH-301-PLOUGH301",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-301-PLOUGH301",
+      "order": 2
+    }
+  ]
+}

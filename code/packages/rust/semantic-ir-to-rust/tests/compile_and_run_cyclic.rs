@@ -170,14 +170,15 @@ fn cyclic_seq_compiles_runs_and_terminates() {
     let artifact = compile(&cyclic_module()).expect("module should compile to Rust source");
 
     // 2. Write the source to a unique temp file.
-    let dir = std::env::temp_dir();
-    let nonce = std::process::id();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
+    let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_cyclic_{nonce}.rs"));
     let bin_path = dir.join(format!(
         "sir_cyclic_{nonce}{}",
         if cfg!(windows) { ".exe" } else { "" }
     ));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     // 3. Compile with rustc.
     let mut cmd = Command::new("rustc");
@@ -246,4 +247,15 @@ fn cyclic_seq_compiles_runs_and_terminates() {
     // 6. Best-effort cleanup.
     let _ = std::fs::remove_file(&src_path);
     let _ = std::fs::remove_file(&bin_path);
+}
+
+/// A per-call unique part for this file's temp-file names.  The process id
+/// keeps parallel test binaries apart, and the counter keeps apart the tests
+/// of this binary, which run on parallel threads under one process id
+/// (#18485).  A name built from the process id alone, or from it and a hash
+/// of the source, let two tests that compile the same program share a file.
+fn unique_suffix() -> String {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    static NEXT: AtomicU64 = AtomicU64::new(0);
+    format!("{}_{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed))
 }

@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 476,
+  "sourceHash": "fnv1a64:5054c491bedede94",
+  "lessonIds": [
+    "ZH-C476-bozi",
+    "ZH-C476-shetou",
+    "ZH-C476-jianbang",
+    "ZH-C476-yaotou",
+    "ZH-C476-tengtong"
+  ],
+  "tex": "chinese/book/chapters/ch476-neck-and-shoulders.tex"
+}

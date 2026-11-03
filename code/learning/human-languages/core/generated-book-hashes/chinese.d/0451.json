@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 451,
+  "sourceHash": "fnv1a64:fc9c5a70b5bccdbc",
+  "lessonIds": [
+    "ZH-C451-chisu",
+    "ZH-C451-tese",
+    "ZH-W451-se-colour",
+    "ZH-C451-chuse",
+    "ZH-C451-sucai",
+    "ZH-C451-sheng"
+  ],
+  "tex": "chinese/book/chapters/ch451-specialities.tex"
+}

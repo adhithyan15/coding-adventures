@@ -1,0 +1,9 @@
+{
+  "id": "PA-PATH-338-PERM338",
+  "spine_node": "SPINE-NEGATE-AND-ASK",
+  "before": [],
+  "inline": [
+    "PA-EXT-338-PERM338"
+  ],
+  "after": []
+}

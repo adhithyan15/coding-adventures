@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C519-qingchen",
+  "pathSegment": "ZH-PATH-519-OUTDOORS519",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-519-OUTDOORS519",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "language": "punjabi",
+  "chapter": 315,
+  "sourceHash": "fnv1a64:3bc959ab4944da1d",
+  "lessonIds": [
+    "PA-C315-daku",
+    "PA-C315-hamla",
+    "PA-C315-bhannna",
+    "PA-C315-gahina",
+    "PA-C315-jan",
+    "PA-R315-review-309-315"
+  ],
+  "tex": "punjabi/book/chapters/ch315-bandits-on-the-road.tex"
+}

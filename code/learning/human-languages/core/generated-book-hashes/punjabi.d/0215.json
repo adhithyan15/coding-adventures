@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 215,
+  "sourceHash": "fnv1a64:db4851012dd2c198",
+  "lessonIds": [
+    "PA-C215-ask-return",
+    "PA-C215-ki-pinde",
+    "PA-C215-ki-review",
+    "PA-C215-exchange",
+    "PA-C215-payoff"
+  ],
+  "tex": "punjabi/book/chapters/ch215-do-you-drink-tea.tex"
+}

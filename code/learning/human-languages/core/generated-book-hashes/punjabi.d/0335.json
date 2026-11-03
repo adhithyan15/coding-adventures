@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 335,
+  "sourceHash": "fnv1a64:000877674c13ee1e",
+  "lessonIds": [
+    "PA-C335-sona",
+    "PA-C335-suniar",
+    "PA-C335-loha",
+    "PA-C335-gharna",
+    "PA-C335-misatri"
+  ],
+  "tex": "punjabi/book/chapters/ch335-gold-and-iron.tex"
+}

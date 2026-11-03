@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C445-shangan",
+    "language": "chinese",
+    "chapter": 445,
+    "sequence": 33790,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:dbfd35ca2eeef6e2"
+  },
+  "findings": []
+}

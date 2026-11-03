@@ -1,0 +1,717 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 346,
+  "title": "Thinking It Over",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5c26ed45528c776b",
+  "lessons": [
+    {
+      "id": "ZH-C346-kaolu",
+      "sequence": 27000,
+      "title": "kǎolǜ — to think something over; to consider",
+      "headword": "kǎolǜ",
+      "romanization": "kǎolǜ",
+      "gloss": "to think something over; to consider",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f78af1fcfe934f9c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for online friend, then the Mandarin for postcode."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: kǎolǜ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kǎolǜ — \"to think something over; to consider\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zài kǎolǜ qù bu qù Zhōngguó — I'm thinking over whether to go to China."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kǎolǜ is built from kǎo and lǜ, both inherited from Middle Chinese, khawX and ljoH (Guangyun, in Baxter's transcription), which glosses the first 'to check' and 'to complete', and the second 'to think'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎolǜ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎolǜ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kǎolǜ, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kǎolǜ*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zài kǎolǜ qù bu qù Zhōngguó — I'm thinking over whether to go to China.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zài kǎolǜ qù bu qù Zhōngguó* — I'm thinking over whether to go to China.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for online friend, then the Mandarin for postcode, then say kǎolǜ again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for online friend, then the Mandarin for postcode, then say *kǎolǜ* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does kǎolǜ mean? (\"To think something over; to consider\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C346-guandian",
+      "sequence": 27010,
+      "title": "guāndiǎn — point of view; standpoint",
+      "headword": "guāndiǎn",
+      "romanization": "guāndiǎn",
+      "gloss": "point of view; standpoint",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:13495106efbe8435",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for postcode, then the Mandarin for to think something over."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: guāndiǎn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guāndiǎn — \"point of view; standpoint\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ juéde zhège guāndiǎn hěn yǒu yìsi — I think that's an interesting point of view."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "guāndiǎn is built from guān and 点 'a point', both inherited from Middle Chinese, kwan and temX (Guangyun, in Baxter's transcription), which glosses the first 'to view' and the second 'a dot'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guāndiǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guāndiǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "guāndiǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *guāndiǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ juéde zhège guāndiǎn hěn yǒu yìsi — I think that's an interesting point of view.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ juéde zhège guāndiǎn hěn yǒu yìsi* — I think that's an interesting point of view.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for postcode, then the Mandarin for to think something over, then say guāndiǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for postcode, then the Mandarin for to think something over, then say *guāndiǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does guāndiǎn mean? (\"Point of view; standpoint\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C346-ganxiang",
+      "sequence": 27020,
+      "title": "感想 (gǎnxiǎng) — impressions afterwards; thoughts",
+      "headword": "感想",
+      "romanization": "gǎnxiǎng",
+      "gloss": "impressions afterwards; thoughts",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f17ad18a2b558964",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to think something over, then the Mandarin for a point of view."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 感想",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "感想 — gǎnxiǎng — \"impressions afterwards; thoughts\"."
+            },
+            {
+              "kind": "speech",
+              "text": "看了这本书你有什么感想 kàn le zhè běn shū nǐ yǒu shénme gǎnxiǎng — What did you make of the book once you'd read it?"
+            },
+            {
+              "kind": "speech",
+              "text": "Two third tones meet in this word: gǎn is said with a rising tone before xiǎng, and the spelling keeps both marks."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "感想 (gǎnxiǎng) is built from 感 'to feel' and 想 'to think', both inherited from Middle Chinese, komX and sjangX (Guangyun, in Baxter's transcription), which glosses the first 'to move' and the second 'to think'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎnxiǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎnxiǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gǎnxiǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gǎnxiǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kàn le zhè běn shū nǐ yǒu shénme gǎnxiǎng — What did you make of the book once you'd read it?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kàn le zhè běn shū nǐ yǒu shénme gǎnxiǎng* — What did you make of the book once you'd read it?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to think something over, then the Mandarin for a point of view, then say gǎnxiǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to think something over, then the Mandarin for a point of view, then say *gǎnxiǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 感想 (gǎnxiǎng) mean? (\"Impressions afterwards; thoughts\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C346-yiwei",
+      "sequence": 27030,
+      "title": "以为 (yǐwéi) — to wrongly assume; to take it that (often wrongly)",
+      "headword": "以为",
+      "romanization": "yǐwéi",
+      "gloss": "to wrongly assume; to take it that (often wrongly)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8ab2427b88281a38",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a point of view, then the Mandarin for your impressions afterwards."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 以为",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "以为 — yǐwéi — \"to wrongly assume; to take it that (often wrongly)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "我以为你不来了 wǒ yǐwéi nǐ bù lái le — I thought you weren't coming."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "以为 (yǐwéi) is built from 以 'to take' and 为 'to make', both inherited from Middle Chinese, yiX and hjwe (Guangyun, in Baxter's transcription), which glosses the first 'to use' and lists the second as the everyday spelling of a word glossed 'to make'. How the pair came to mean a belief that turns out wrong is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǐwéi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǐwéi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yǐwéi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yǐwéi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ yǐwéi nǐ bù lái le — I thought you weren't coming.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ yǐwéi nǐ bù lái le* — I thought you weren't coming.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a point of view, then the Mandarin for your impressions afterwards, then say yǐwéi again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a point of view, then the Mandarin for your impressions afterwards, then say *yǐwéi* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 以为 (yǐwéi) mean? (\"To wrongly assume; to take it that (often wrongly)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C346-guji",
+      "sequence": 27040,
+      "title": "gūjì — to reckon; to make a rough guess",
+      "headword": "gūjì",
+      "romanization": "gūjì",
+      "gloss": "to reckon; to make a rough guess",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:53af80d614027a52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for your impressions afterwards, then the Mandarin for to wrongly assume."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: gūjì",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gūjì — \"to reckon; to make a rough guess\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yīnwèi xiàyǔ suǒyǐ wǒ gūjì tā bú huì lái — It's raining, so I reckon he won't come."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gūjì is built from gū and jì, both inherited from Middle Chinese, kuX and kejH (Guangyun, in Baxter's transcription), which glosses the first 'a market tax' and the second 'to reckon up'. How the first came to mean estimating is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for giving reasons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gūjì",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gūjì*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gūjì, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gūjì*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yīnwèi xiàyǔ suǒyǐ wǒ gūjì tā bú huì lái — It's raining, so I reckon he won't come.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yīnwèi xiàyǔ suǒyǐ wǒ gūjì tā bú huì lái* — It's raining, so I reckon he won't come.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for your impressions afterwards, then the Mandarin for to wrongly assume, then say gūjì again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for your impressions afterwards, then the Mandarin for to wrongly assume, then say *gūjì* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does gūjì mean? (\"To reckon; to make a rough guess\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,13 @@
+{
+  "language": "punjabi",
+  "chapter": 264,
+  "sourceHash": "fnv1a64:829225e6657a6e93",
+  "lessonIds": [
+    "PA-C264-par",
+    "PA-C264-langhna",
+    "PA-C264-phatak",
+    "PA-C264-khambha",
+    "PA-C264-kona"
+  ],
+  "tex": "punjabi/book/chapters/ch264-across-the-line.tex"
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W496-ji-grade",
+    "language": "chinese",
+    "chapter": 496,
+    "sequence": 37525,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:73c0035a56539d9e",
+    "detachableSegments": [
+      "Script — the silk piece, then three strokes"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

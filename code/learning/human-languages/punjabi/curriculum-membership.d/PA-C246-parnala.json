@@ -1,0 +1,11 @@
+{
+  "id": "PA-C246-parnala",
+  "pathSegment": "PA-PATH-246-GHR246",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "PA-EXT-246-GHR246",
+      "order": 3
+    }
+  ]
+}

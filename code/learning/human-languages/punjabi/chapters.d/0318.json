@@ -1,0 +1,19 @@
+{
+  "chapter": 318,
+  "title": "A Day of Mishaps",
+  "label": "ch:pa-a2-a-day-of-mishaps",
+  "canDo": "I can say what went wrong on a bad day.",
+  "spineNodes": [
+    "SPINE-TALK-ABOUT-PAST"
+  ],
+  "payoff": {
+    "lesson": "PA-C318-malah",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 318: I can say what went wrong on a bad day.",
+    "assesses": [
+      "PA-LEX-C318-MISHAP318-03",
+      "PA-LEX-C318-MISHAP318-04",
+      "PA-LEX-C318-MISHAP318-05"
+    ]
+  }
+}

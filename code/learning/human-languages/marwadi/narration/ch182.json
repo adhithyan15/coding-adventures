@@ -1,0 +1,816 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 182,
+  "title": "Shake, Stir and Serve",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:04fe7440d8e27580",
+  "lessons": [
+    {
+      "id": "MW-C182-jhatakno",
+      "sequence": 11820,
+      "title": "झटकणो (jhaṭakṇo) — to shake out",
+      "headword": "झटकणो",
+      "romanization": "jhaṭakṇo",
+      "gloss": "to shake out",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:75ed8a5767a1bd5b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to strain, then the Marwadi for rice pudding."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: झटकणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झटकणो — jhaṭakṇo — \"to shake out\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं दिनूगै चादर झटकूं हूं। hū̃ dinūgai chādar jhaṭkū̃ hū̃. I shake out the sheet early in the morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं चादर झटकी, mhaĩ chādar jhaṭkī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "झटकणो (jhaṭakṇo) comes from a reconstructed jhaṭ, \"a sudden movement\", the word behind झट; CDIAL lists Hindi jhaṭaknā, \"to jerk\" (CDIAL 5327). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṭakṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṭakṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jhaṭakṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jhaṭakṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ dinūgai chādar jhaṭkū̃ hū̃. — I shake out the sheet early in the morning.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ dinūgai chādar jhaṭkū̃ hū̃.* — I shake out the sheet early in the morning.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to strain, then the Marwadi for rice pudding, then say jhaṭakṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to strain, then the Marwadi for rice pudding, then say *jhaṭakṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does झटकणो (jhaṭakṇo) mean? (\"To shake out\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C182-jhatakno-type",
+              "prompt": "Say the Marwadi for 'to shake out'.",
+              "assesses": [
+                "MW-LEX-C182-JHATKO182-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "झटकणो",
+                "jhaṭakṇo"
+              ],
+              "feedback": {
+                "correct": "Right: झटकणो (jhaṭakṇo) is 'to shake out'.",
+                "incorrect": "'to shake out' is झटकणो (jhaṭakṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C182-gholno",
+      "sequence": 11830,
+      "title": "घोळणो (ghoḷṇo) — to dissolve; to stir in",
+      "headword": "घोळणो",
+      "romanization": "ghoḷṇo",
+      "gloss": "to dissolve; to stir in",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d2c70a454824b0b0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for rice pudding, then the Marwadi for to shake out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: घोळणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोळणो — ghoḷṇo — \"to dissolve; to stir in\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं पाणी मांय गुड़ घोळूं हूं। hū̃ pāṇī mā̃y guṛ ghoḷū̃ hū̃. I dissolve jaggery in water."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं गुड़ घोळ्यो, mhaĩ guṛ ghoḷyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "घोळणो (ghoḷṇo) is inherited from Sanskrit gholayati, \"mixes, stirs together\"; CDIAL lists Hindi gholnā, \"to mix, dissolve\", and Gujarati ghoḷvũ (CDIAL 4526). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoḷṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoḷṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ghoḷṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ghoḷṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ pāṇī mā̃y guṛ ghoḷū̃ hū̃. — I dissolve jaggery in water.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ pāṇī mā̃y guṛ ghoḷū̃ hū̃.* — I dissolve jaggery in water.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for rice pudding, then the Marwadi for to shake out, then say ghoḷṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for rice pudding, then the Marwadi for to shake out, then say *ghoḷṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does घोळणो (ghoḷṇo) mean? (\"To dissolve; to stir in\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C182-gholno-type",
+              "prompt": "Say the Marwadi for 'to dissolve'.",
+              "assesses": [
+                "MW-LEX-C182-JHATKO182-02"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "घोळणो",
+                "ghoḷṇo"
+              ],
+              "feedback": {
+                "correct": "Right: घोळणो (ghoḷṇo) is 'to dissolve; to stir in'.",
+                "incorrect": "'to dissolve' is घोळणो (ghoḷṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C182-milavno",
+      "sequence": 11840,
+      "title": "मिलावणो (milāvṇo) — to mix",
+      "headword": "मिलावणो",
+      "romanization": "milāvṇo",
+      "gloss": "to mix",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e4344c86a18252f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to shake out, then the Marwadi for to dissolve."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मिलावणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिलावणो — milāvṇo — \"to mix\"."
+            },
+            {
+              "kind": "speech",
+              "text": "हूं दूध मांय खांड मिलाऊं हूं। hū̃ dūdh mā̃y khā̃ḍ milāū̃ hū̃. I mix sugar into the milk."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं दूध मांय खांड मिलाई, mhaĩ dūdh mā̃y khā̃ḍ milāī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मिलावणो (milāvṇo) is built on Sanskrit milati, \"meets\"; CDIAL lists Old Marwari milaï (CDIAL 10133). It is the causative partner of मिलणो, to meet: to make things meet is to mix them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "milāvṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *milāvṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "milāvṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *milāvṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hū̃ dūdh mā̃y khā̃ḍ milāū̃ hū̃. — I mix sugar into the milk.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hū̃ dūdh mā̃y khā̃ḍ milāū̃ hū̃.* — I mix sugar into the milk.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to shake out, then the Marwadi for to dissolve, then say milāvṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to shake out, then the Marwadi for to dissolve, then say *milāvṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मिलावणो (milāvṇo) mean? (\"To mix\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C182-milavno-type",
+              "prompt": "Say the Marwadi for 'to mix'.",
+              "assesses": [
+                "MW-LEX-C182-JHATKO182-03"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "मिलावणो",
+                "milāvṇo"
+              ],
+              "feedback": {
+                "correct": "Right: मिलावणो (milāvṇo) is 'to mix'.",
+                "incorrect": "'to mix' is मिलावणो (milāvṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C182-bagharno",
+      "sequence": 11850,
+      "title": "बघारणो (baghārṇo) — to temper (spices in hot oil)",
+      "headword": "बघारणो",
+      "romanization": "baghārṇo",
+      "gloss": "to temper (spices in hot oil)",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:22ab61ab025ed48d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to dissolve, then the Marwadi for to mix."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बघारणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बघारणो — baghārṇo — \"to temper (spices in hot oil)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां दाल बघारै है। mā̃ dāl baghārai hai. Mother tempers the dal."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं दाल बघारी, mhaĩ dāl baghārī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बघारणो (baghārṇo) is inherited from Sanskrit vyāghārayati, \"sprinkles over\" (with ghee); CDIAL lists Hindi baghārnā, for frying spices in hot oil (CDIAL 12191). CDIAL gives no Marwari form in this entry."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baghārṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baghārṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "baghārṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *baghārṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ dāl baghārai hai. — Mother tempers the dal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ dāl baghārai hai.* — Mother tempers the dal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to dissolve, then the Marwadi for to mix, then say baghārṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to dissolve, then the Marwadi for to mix, then say *baghārṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बघारणो (baghārṇo) mean? (\"To temper (spices in hot oil)\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C182-bagharno-type",
+              "prompt": "Say the Marwadi for 'to temper'.",
+              "assesses": [
+                "MW-LEX-C182-JHATKO182-04"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "बघारणो",
+                "baghārṇo"
+              ],
+              "feedback": {
+                "correct": "Right: बघारणो (baghārṇo) is 'to temper (spices in hot oil)'.",
+                "incorrect": "'to temper' is बघारणो (baghārṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C182-purasno",
+      "sequence": 11860,
+      "title": "पुरसणो (purasṇo) — to serve food",
+      "headword": "पुरसणो",
+      "romanization": "purasṇo",
+      "gloss": "to serve food",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cd161d2aa41d7e17",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Marwadi for to mix, then the Marwadi for to temper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पुरसणो",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुरसणो — purasṇo — \"to serve food\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मां थाळी मांय रोटी पुरसै है। mā̃ thāḷī mā̃y roṭī pursai hai. Mother serves rotis onto the plate."
+            },
+            {
+              "kind": "speech",
+              "text": "Past (I …): म्हैं खीचड़ो पुरस्यो, mhaĩ khīchṛo purasyo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पुरसणो (purasṇo) is inherited from Sanskrit pariveṣati, \"serves food\"; CDIAL lists Old Marwari purasaï, \"serves a meal\" (CDIAL 7888)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for this chapter."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purasṇo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purasṇo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "purasṇo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *purasṇo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mā̃ thāḷī mā̃y roṭī pursai hai. — Mother serves rotis onto the plate.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mā̃ thāḷī mā̃y roṭī pursai hai.* — Mother serves rotis onto the plate.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Marwadi for to mix, then the Marwadi for to temper, then say purasṇo again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Marwadi for to mix, then the Marwadi for to temper, then say *purasṇo* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पुरसणो (purasṇo) mean? (\"To serve food\".) Say it once more."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "MW-C182-purasno-type",
+              "prompt": "Say the Marwadi for 'to serve food'.",
+              "assesses": [
+                "MW-LEX-C182-JHATKO182-05"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "पुरसणो",
+                "purasṇo"
+              ],
+              "feedback": {
+                "correct": "Right: पुरसणो (purasṇo) is 'to serve food'.",
+                "incorrect": "'to serve food' is पुरसणो (purasṇo)."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

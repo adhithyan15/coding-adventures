@@ -1,0 +1,764 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 216,
+  "title": "Where Did They Go?",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:2cb08e0edcead7c2",
+  "lessons": [
+    {
+      "id": "PA-C216-gae-return",
+      "sequence": 11780,
+      "title": "Return to a familiar went",
+      "headword": "ਉਹ ਗਏ",
+      "romanization": "uh gae",
+      "gloss": "retrieve the familiar they went by ear",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:47f04bbeb72163f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "oh gae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *oh gae*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਹ ਗਏ (uh gae), \"they went\". Then to go: ਜਾਣਾ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਗਏ is the went form for a group, or for one person you respect. Today it gets two partners: one for a man, one for a woman. Hold ਉਹ ਰੋਜ਼ ਸਕੂਲ ਜਾਂਦਾ ਹੈ beside it: every day, and once, in the past."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "they went",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *they went*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਹ ਗਏ (uh gae)."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "he goes to school every day",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *he goes to school every day*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਹ ਰੋਜ਼ ਸਕੂਲ ਜਾਂਦਾ ਹੈ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say they went once more. No new form is needed yet."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C216-gia-gai",
+      "sequence": 11790,
+      "title": "ਗਿਆ, ਗਈ — went",
+      "headword": "ਗਿਆ · ਗਈ",
+      "romanization": "giā · gaī",
+      "gloss": "went: the past of ਜਾਣਾ, agreeing with the one who went",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:71c70bbd92659fc5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say they went. Then home and school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: one went for each",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The went form agrees with whoever went: ਗਿਆ for a man or a boy, ਗਈ for a woman or a girl, and the ਗਏ you know for a group."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਘਰ ਗਿਆ। — Aman ghar giā. — Aman went home."
+            },
+            {
+              "kind": "speech",
+              "text": "ਕੁੜੀ ਸਕੂਲ ਗਈ। — kuṛī sakūl gaī. — The girl went to school."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਹ ਕਿੱਥੇ ਗਏ? — uh kitthe gae? — Where did they go?"
+            },
+            {
+              "kind": "speech",
+              "text": "There is no helper at the end. CDIAL lists Punjabi geā, \"gone\", under Sanskrit gata, \"gone\" (CDIAL 4008)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the boy went to school",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *the boy went to school*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਮੁੰਡਾ ਸਕੂਲ ਗਿਆ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "she went home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *she went home*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਹ ਘਰ ਗਈ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਅਮਨ ਘਰ ਗਿਆ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਅਮਨ ਘਰ ਗਿਆ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਗਿਆ and ਗਈ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਗਿਆ** and **ਗਈ** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Went, for a man? (ਗਿਆ.) For a woman? (ਗਈ.) For a group? (ਗਏ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C216-gia-review",
+      "sequence": 11800,
+      "title": "Hear and say went again",
+      "headword": "ਗਿਆ · ਗਈ · ਗਏ",
+      "romanization": "giā · gaī · gae",
+      "gloss": "retrieve the three went forms by sound and script",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:362c6a4f89d43ad2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "giā; gaī; gae",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *giā; gaī; gae*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਗਿਆ, ਗਈ, ਗਏ."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the girl went home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *the girl went home*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੁੜੀ ਘਰ ਗਈ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman went to school",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman went to school*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਸਕੂਲ ਗਿਆ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਗਏ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਗਏ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to ਏ, say e, then say the whole form."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the model and write ਗਈ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the model and write **ਗਈ** once]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which went has ਏ at its end? (ਗਏ, for a group.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C216-kall",
+      "sequence": 11810,
+      "title": "ਕੱਲ੍ਹ (kallh) (kall) — yesterday; tomorrow",
+      "headword": "ਕੱਲ੍ਹ",
+      "romanization": "kallh",
+      "gloss": "yesterday; tomorrow",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4581fbb3af57360f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new sense: say Aman went home, then the farewell ਕੱਲ੍ਹ (kallh) ਮਿਲਾਂਗੇ, \"we will meet tomorrow\"."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ਕੱਲ੍ਹ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੱਲ੍ਹ (kallh) — kall — \"yesterday; tomorrow\". It names the day one step from today, either way; the verb tells you which."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਕੱਲ੍ਹ ਘਰ ਗਿਆ। — Aman kallh ghar giā. — Aman went home yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "With a went form it is yesterday; in ਕੱਲ੍ਹ (kallh) ਮਿਲਾਂਗੇ it is tomorrow."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੱਲ੍ਹ (kallh) (kall) is inherited from Sanskrit kālya, \"at dawn; tomorrow\": CDIAL lists Punjabi kall, \"yesterday, tomorrow\" (CDIAL 3104)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for talking about the past."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kall",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kall*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "the girl went to school yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *the girl went to school yesterday*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੁੜੀ ਕੱਲ੍ਹ (kallh) ਸਕੂਲ ਗਈ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say we will meet tomorrow, then Aman went home yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *we will meet tomorrow*, then *Aman went home yesterday*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਕੱਲ੍ਹ (kallh) once from the model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਕੱਲ੍ਹ** once from the model]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ਕੱਲ੍ਹ (kallh) mean? (\"Yesterday; tomorrow\".) Which one, with ਗਿਆ? (Yesterday.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C216-where-did-they-go",
+      "sequence": 11820,
+      "title": "ਉਹ ਕੱਲ੍ਹ ਕਿੱਥੇ ਗਏ? (uh kallh kitthe gae?) — where did they go yesterday?",
+      "headword": "ਉਹ ਕੱਲ੍ਹ ਕਿੱਥੇ ਗਏ?",
+      "romanization": "uh kallh kitthe gae?",
+      "gloss": "where did they go yesterday? asking and telling with went",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:4cd53e598358e360",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say yesterday, then where? Then the girl went to school."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: asking where",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕਿੱਥੇ goes right before the went form, where the place will go in the answer:"
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਹ ਕੱਲ੍ਹ ਕਿੱਥੇ ਗਏ? — uh kallh kitthe gae? — Where did they go yesterday?"
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਹ ਕੱਲ੍ਹ ਬਾਜ਼ਾਰ ਗਏ। — uh kallh bāzār gae. — They went to the market yesterday."
+            },
+            {
+              "kind": "speech",
+              "text": "ਅਮਨ ਕੱਲ੍ਹ ਕਿੱਥੇ ਗਿਆ? — Aman kallh kitthe giā? — Where did Aman go yesterday?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "where did the girl go yesterday?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *where did the girl go yesterday?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਕੁੜੀ ਕੱਲ੍ਹ (kallh) ਕਿੱਥੇ ਗਈ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "she went home",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *she went home*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਹ ਘਰ ਗਈ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਉਹ ਕੱਲ੍ਹ ਕਿੱਥੇ ਗਏ? (uh kallh kitthe gae?)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਉਹ ਕੱਲ੍ਹ ਕਿੱਥੇ ਗਏ?**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to ਏ in ਗਏ."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy ਉਹ ਕੱਲ੍ਹ ਕਿੱਥੇ ਗਏ? (uh kallh kitthe gae?) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **ਉਹ ਕੱਲ੍ਹ ਕਿੱਥੇ ਗਏ?** once]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask where Aman went yesterday, then answer it."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C216-payoff",
+      "sequence": 11830,
+      "title": "Where they went: a four-skill payoff",
+      "headword": "ਉਹ ਕੱਲ੍ਹ ਕਿੱਥੇ ਗਏ?",
+      "romanization": "uh kallh kitthe gae?",
+      "gloss": "say who went where yesterday",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "eyes-or-hands-step"
+      ],
+      "sourceHash": "fnv1a64:2138eec7d1f674fa",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes or your hands for the steps that ask you to read, point, write or gesture"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice: four skills"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes or your hands for the steps that ask you to read, point, write or gesture. You can listen to everything else now. I will say so again when we reach it, but leave this section until you have stopped: Guided Practice: four skills."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say went for a man, a woman and a group. Then yesterday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice: four skills",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "Aman went to school yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *Aman went to school yesterday*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਅਮਨ ਕੱਲ੍ਹ (kallh) ਸਕੂਲ ਗਿਆ।."
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "where did they go?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *where did they go?*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਉਹ ਕਿੱਥੇ ਗਏ?"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੁੜੀ ਕੱਲ੍ਹ (kallh) ਘਰ ਗਈ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੁੜੀ ਕੱਲ੍ਹ ਘਰ ਗਈ।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its meaning. Then point to ਏ in ਗਏ."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "cover the line and write ਅਮਨ ਕੱਲ੍ਹ (kallh) ਘਰ ਗਿਆ।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: cover the line and write **ਅਮਨ ਕੱਲ੍ਹ ਘਰ ਗਿਆ।**]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say where you went yesterday, with the went form that fits you."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

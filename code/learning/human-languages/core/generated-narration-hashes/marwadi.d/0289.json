@@ -1,0 +1,19 @@
+{
+  "language": "marwadi",
+  "chapter": 289,
+  "sourceHash": "fnv1a64:029c9b706b7ebdb3",
+  "lessonIds": [
+    "MW-C289-masin",
+    "MW-C289-chalavno",
+    "MW-C289-ghisno",
+    "MW-C289-rando",
+    "MW-C289-chitarno"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "marwadi/narration/ch289.txt",
+  "json": "marwadi/narration/ch289.json",
+  "textHash": "fnv1a64:0d41aa3af796062f",
+  "jsonHash": "fnv1a64:f7deb1e1122925cb",
+  "findings": []
+}

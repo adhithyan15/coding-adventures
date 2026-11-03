@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C334-chunlian",
+    "language": "chinese",
+    "chapter": 334,
+    "sequence": 25850,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:6fe8e5e0c74b6253"
+  },
+  "findings": []
+}

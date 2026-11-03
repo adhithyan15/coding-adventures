@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 339,
+  "sourceHash": "fnv1a64:282a6f0c570ae11d",
+  "lessonIds": [
+    "ZH-C339-changjia",
+    "ZH-C339-guoqing",
+    "ZH-W339-qing-celebrate",
+    "ZH-C339-qingzhu",
+    "ZH-C339-xiqing",
+    "ZH-C339-yanhua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch339.txt",
+  "json": "chinese/narration/ch339.json",
+  "textHash": "fnv1a64:05683297f0636427",
+  "jsonHash": "fnv1a64:1c8339960767a83d",
+  "findings": []
+}

@@ -25,6 +25,19 @@
 //! Wrong operand type → `RuntimeError::TypeError("<name> expects <kind>")`.
 //! Division by zero → `RuntimeError::TypeError("division by zero")`.
 //!
+//! The string builtins that do the job of a LANG83 string op fail the way
+//! the op does (#18800), with `RuntimeError::Trap { kind }`:
+//!
+//! | Builtin | Op it mirrors | Fails with | When |
+//! |---------|---------------|------------|------|
+//! | `string-ref s i` | `str_index` | `Trap.Bounds` | `i < 0` or `i ≥ length` |
+//! | `substring s a b` | `str_slice` | `Trap.Bounds` | not `0 ≤ a ≤ b ≤ length` |
+//! | `string-append a b` | `str_concat` | `Trap.Overflow` | `len a + len b` > the ceiling ([`STR_MAX_BYTES`]) |
+//! | `make-string n ch` | — | `Trap.Overflow` | `n × len_utf8(ch)` > the ceiling |
+//!
+//! An operand of the wrong *type* (a non-string, a non-integer index) is
+//! still a `TypeError`: that is not one of the closed `Trap.*` kinds.
+//!
 //! Real Scheme-style condition systems are out of scope for PR 2;
 //! the binding's exception model layers on top once a frontend
 //! needs it.
@@ -37,6 +50,32 @@ use crate::value::LispyValue;
 // ---------------------------------------------------------------------------
 // Arity / type helpers
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// LANG83 traps (#18800)
+// ---------------------------------------------------------------------------
+
+/// The largest string the string builtins build, in bytes: 2³⁰ − 64.
+///
+/// This is LANG83's registry-wide string ceiling, `interpreter_ir::STR_MAX_BYTES`,
+/// repeated here because this crate is a language runtime that does not
+/// depend on the IIR (twig-vm, which depends on both, pins the two equal in
+/// a test). It is the largest round value below .NET's `System.String` limit,
+/// the tightest host any backend stores strings in.
+///
+/// `string-append` refuses to build a longer string ([`string_append`] uses
+/// this value; [`string_append_within`] takes a module's lower ceiling).
+pub const STR_MAX_BYTES: usize = (1 << 30) - 64;
+
+/// LANG83's `Trap.Bounds`: an index or a range outside the string.
+const TRAP_BOUNDS: &str = "Trap.Bounds";
+/// LANG83's `Trap.Overflow`: a result too long for the string type.
+const TRAP_OVERFLOW: &str = "Trap.Overflow";
+
+/// A `RuntimeError::Trap` naming `kind`.
+fn trap(kind: &str) -> RuntimeError {
+    RuntimeError::Trap { kind: kind.to_string() }
+}
 
 /// Format a "expected N args, got M" error message.
 fn arity_error(name: &str, expected: usize, got: usize) -> RuntimeError {
@@ -933,39 +972,31 @@ pub fn string_length(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
 
 /// `(string-ref s i) → Int` — return the i-th code point as an integer (LANG47).
 ///
-/// `i` is a 0-indexed code-point position.  Returns a `TypeError` if `i` is
-/// out of bounds.
+/// `i` is a 0-indexed code-point position. An index outside `0 ≤ i < length`
+/// is `Trap.Bounds`, the trap the `str_index` op raises (#18800; it was a
+/// `TypeError`). The index is converted with `usize::try_from`, never `as`,
+/// so on a 32-bit host 2³² + 1 is out of range rather than index 1.
 pub fn string_ref(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
     if args.len() != 2 {
         return Err(arity_error("string-ref", 2, args.len()));
     }
     let bytes = as_str_bytes("string-ref", args[0])?;
     let idx = as_int("string-ref", args[1])?;
-    if idx < 0 {
-        return Err(RuntimeError::TypeError(format!(
-            "string-ref: index {idx} is negative"
-        )));
-    }
-    let idx = idx as usize;
+    // A negative index, or one too large for this host, is out of range.
+    let idx = usize::try_from(idx).map_err(|_| trap(TRAP_BOUNDS))?;
     let cp = if let Ok(s) = std::str::from_utf8(bytes) {
-        s.chars()
-            .nth(idx)
-            .ok_or_else(|| RuntimeError::TypeError(format!(
-                "string-ref: index {idx} out of bounds (length {})",
-                s.chars().count()
-            )))?
-            as u32
+        s.chars().nth(idx).ok_or_else(|| trap(TRAP_BOUNDS))? as u32
     } else {
         // Byte-mode fallback.
-        *bytes.get(idx).ok_or_else(|| RuntimeError::TypeError(format!(
-            "string-ref: index {idx} out of bounds (byte-length {})",
-            bytes.len()
-        )))? as u32
+        *bytes.get(idx).ok_or_else(|| trap(TRAP_BOUNDS))? as u32
     };
     Ok(LispyValue::int(cp as i64))
 }
 
 /// `(substring s start end) → String` — slice [start, end) by code points (LANG47).
+///
+/// A range outside `0 ≤ start ≤ end ≤ length` is `Trap.Bounds`, the trap the
+/// `str_slice` op raises (#18800; it was a `TypeError`).
 pub fn substring(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
     if args.len() != 3 {
         return Err(arity_error("substring", 3, args.len()));
@@ -973,55 +1004,123 @@ pub fn substring(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
     let bytes = as_str_bytes("substring", args[0])?;
     let start = as_int("substring", args[1])?;
     let end   = as_int("substring", args[2])?;
-    if start < 0 || end < start {
-        return Err(RuntimeError::TypeError(format!(
-            "substring: invalid range [{start}, {end})"
-        )));
+    let (Ok(start), Ok(end)) = (usize::try_from(start), usize::try_from(end)) else {
+        return Err(trap(TRAP_BOUNDS)); // a negative offset
+    };
+    if end < start {
+        return Err(trap(TRAP_BOUNDS));
     }
-    let start = start as usize;
-    let end   = end   as usize;
 
-    let byte_start = byte_offset_of_nth_codepoint(bytes, start)
-        .ok_or_else(|| RuntimeError::TypeError(format!(
-            "substring: start {start} out of bounds"
-        )))?;
-    let byte_end = byte_offset_of_nth_codepoint(bytes, end)
-        .ok_or_else(|| RuntimeError::TypeError(format!(
-            "substring: end {end} out of bounds"
-        )))?;
+    // Each offset past the last code point has no byte offset: out of range.
+    let byte_start = byte_offset_of_nth_codepoint(bytes, start).ok_or_else(|| trap(TRAP_BOUNDS))?;
+    let byte_end = byte_offset_of_nth_codepoint(bytes, end).ok_or_else(|| trap(TRAP_BOUNDS))?;
     Ok(heap::alloc_string(&bytes[byte_start..byte_end]))
 }
 
-/// `(string-append s1 s2) → String` — concatenate two strings (LANG47).
+/// `(string-append s1 s2) → String` — concatenate two strings (LANG47),
+/// under the registry-wide ceiling [`STR_MAX_BYTES`].
+///
+/// This is the context-free builtin [`crate::LispyBinding`] resolves. A VM
+/// that knows its module's lower ceiling calls [`string_append_within`]
+/// instead (twig-vm does).
 pub fn string_append(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    string_append_within(args, STR_MAX_BYTES)
+}
+
+/// `(string-append s1 s2)` under an explicit string ceiling, in bytes.
+///
+/// A result longer than `ceiling` is `Trap.Overflow`, the trap the
+/// `str_concat` op raises past its module's ceiling (#18800; before, the
+/// builtin had no ceiling at all). The check comes **before** the
+/// allocation, and is written so it cannot overflow:
+///
+/// ```text
+///   traps  iff  len b > ceiling  or  len a > ceiling − len b
+///   (the subtraction runs only when len b ≤ ceiling, so it never wraps)
+/// ```
+///
+/// A `ceiling` above [`STR_MAX_BYTES`] is clamped to it, as
+/// `IIRModule::str_ceiling()` clamps a malformed module value.
+///
+/// ```
+/// use dynval_runtime::builtins::{string_append_within, STR_MAX_BYTES};
+/// use dynval_runtime::alloc_string;
+/// use lang_runtime_core::RuntimeError;
+/// let ab = [alloc_string(b"ab"), alloc_string(b"cde")];
+/// assert!(string_append_within(&ab, 5).is_ok());
+/// assert_eq!(
+///     string_append_within(&ab, 4),
+///     Err(RuntimeError::Trap { kind: "Trap.Overflow".into() }),
+/// );
+/// assert!(string_append_within(&ab, usize::MAX).is_ok()); // clamped to STR_MAX_BYTES
+/// # let _ = STR_MAX_BYTES;
+/// ```
+pub fn string_append_within(args: &[LispyValue], ceiling: usize) -> Result<LispyValue, RuntimeError> {
     if args.len() != 2 {
         return Err(arity_error("string-append", 2, args.len()));
     }
     let a = as_str_bytes("string-append", args[0])?;
     let b = as_str_bytes("string-append", args[1])?;
+    let ceiling = ceiling.min(STR_MAX_BYTES);
+    if b.len() > ceiling || a.len() > ceiling - b.len() {
+        return Err(trap(TRAP_OVERFLOW));
+    }
     let mut result = Vec::with_capacity(a.len() + b.len());
     result.extend_from_slice(a);
     result.extend_from_slice(b);
     Ok(heap::alloc_string(&result))
 }
 
-/// `(make-string n ch) → String` — build a string of `n` copies of code point `ch` (LANG47).
+/// `(make-string n ch) → String` — build a string of `n` copies of code point `ch` (LANG47),
+/// under the registry-wide ceiling [`STR_MAX_BYTES`].
+///
+/// The context-free builtin [`crate::LispyBinding`] resolves; twig-vm calls
+/// [`make_string_within`] with its module's ceiling instead.
 pub fn make_string(args: &[LispyValue]) -> Result<LispyValue, RuntimeError> {
+    make_string_within(args, STR_MAX_BYTES)
+}
+
+/// `(make-string n ch)` under an explicit string ceiling, in bytes.
+///
+/// `make-string` is the other builtin that *grows* a string (with
+/// `string-append`), so it obeys the same contract (#18800 security review):
+///
+/// | input | result |
+/// |-------|--------|
+/// | `n < 0` | `TypeError` (unchanged) |
+/// | `ch` not a Unicode scalar value (negative, ≥ 2³², a surrogate, > U+10FFFF) | `TypeError` |
+/// | `n × len_utf8(ch)` overflows, or exceeds `ceiling` | `Trap.Overflow`, before anything is allocated |
+///
+/// Before, `n as usize * cp.len_utf8()` could wrap, a huge `n` asked the
+/// allocator for that many bytes, and `ch as u32` truncated, so
+/// `ch = 2³² + 65` built `"A"`s. `ceiling` is clamped to [`STR_MAX_BYTES`].
+///
+/// ```
+/// use dynval_runtime::builtins::make_string_within;
+/// use dynval_runtime::LispyValue;
+/// use lang_runtime_core::RuntimeError;
+/// let args = [LispyValue::int(3), LispyValue::int(0xE9)]; // "ééé": 6 bytes
+/// assert!(make_string_within(&args, 6).is_ok());
+/// assert_eq!(make_string_within(&args, 5), Err(RuntimeError::Trap { kind: "Trap.Overflow".into() }));
+/// ```
+pub fn make_string_within(args: &[LispyValue], ceiling: usize) -> Result<LispyValue, RuntimeError> {
     if args.len() != 2 {
         return Err(arity_error("make-string", 2, args.len()));
     }
     let n  = as_int("make-string", args[0])?;
     let ch = as_int("make-string", args[1])?;
-    if n < 0 {
+    let Ok(n) = usize::try_from(n) else {
         return Err(RuntimeError::TypeError(format!("make-string: length {n} is negative")));
-    }
-    let cp = char::from_u32(ch as u32).ok_or_else(|| {
+    };
+    let cp = u32::try_from(ch).ok().and_then(char::from_u32).ok_or_else(|| {
         RuntimeError::TypeError(format!("make-string: {ch} is not a valid Unicode code point"))
     })?;
-    let mut s = String::with_capacity(n as usize * cp.len_utf8());
-    for _ in 0..n {
-        s.push(cp);
+    let ceiling = ceiling.min(STR_MAX_BYTES);
+    match n.checked_mul(cp.len_utf8()) {
+        Some(bytes) if bytes <= ceiling => {}
+        _ => return Err(trap(TRAP_OVERFLOW)),
     }
+    let s: String = std::iter::repeat_n(cp, n).collect();
     Ok(heap::alloc_string(s.as_bytes()))
 }
 
@@ -1538,6 +1637,79 @@ mod tests {
         assert!(string_ref(&[s("hi"), i(-1)]).is_err());
     }
 
+    fn bounds() -> RuntimeError {
+        RuntimeError::Trap { kind: "Trap.Bounds".into() }
+    }
+    fn overflow() -> RuntimeError {
+        RuntimeError::Trap { kind: "Trap.Overflow".into() }
+    }
+
+    /// #18800: `string-ref` out of range is LANG83's `Trap.Bounds`, the trap
+    /// `str_index` raises — at every edge, in the UTF-8 and the byte-mode
+    /// path. It was a `TypeError`. A non-integer index is still a type error.
+    #[test]
+    fn string_ref_out_of_range_is_trap_bounds() {
+        let big = crate::value::INT_MAX;
+        for idx in [-1, 2, 3, big, crate::value::INT_MIN, (1 << 32) + 1] {
+            assert_eq!(string_ref(&[s("hi"), i(idx)]), Err(bounds()), "\"hi\"[{idx}]");
+        }
+        // "é" is one code point (two bytes): index 1 is past it.
+        assert_eq!(string_ref(&[s("é"), i(1)]), Err(bounds()));
+        assert_eq!(string_ref(&[s("é"), i(0)]).unwrap(), i(0xE9));
+        // Not UTF-8: indexed by byte.
+        let raw = heap::alloc_string(&[0xFF, 0xFE]);
+        assert_eq!(string_ref(&[raw, i(1)]).unwrap(), i(0xFE));
+        assert_eq!(string_ref(&[raw, i(2)]), Err(bounds()));
+        assert_eq!(string_ref(&[raw, i(-1)]), Err(bounds()));
+        assert!(matches!(string_ref(&[s("hi"), s("0")]), Err(RuntimeError::TypeError(_))));
+    }
+
+    /// #18800: `substring` outside `0 ≤ start ≤ end ≤ length` is
+    /// `Trap.Bounds`, the trap `str_slice` raises. It was a `TypeError`.
+    #[test]
+    fn substring_out_of_range_is_trap_bounds() {
+        let big = crate::value::INT_MAX;
+        for (a, b) in [(-1, 1), (3, 1), (0, 6), (6, 6), (0, big), (big, big), (-1, -1), (crate::value::INT_MIN, 0)] {
+            assert_eq!(substring(&[s("hello"), i(a), i(b)]), Err(bounds()), "hello[{a}..{b})");
+        }
+        // The edges that are in range.
+        for (a, b, want) in [(0, 0, &b""[..]), (5, 5, b""), (0, 5, b"hello"), (4, 5, b"o")] {
+            let v = substring(&[s("hello"), i(a), i(b)]).unwrap();
+            assert_eq!(unsafe { heap::string_bytes(v).unwrap() }, want, "hello[{a}..{b})");
+        }
+        // Not UTF-8: offsets are bytes.
+        let raw = heap::alloc_string(&[0xFF, 0xFE, 0xFD]);
+        assert_eq!(substring(&[raw, i(1), i(4)]), Err(bounds()));
+        let v = substring(&[raw, i(1), i(3)]).unwrap();
+        assert_eq!(unsafe { heap::string_bytes(v).unwrap() }, &[0xFE, 0xFD]);
+        assert!(matches!(substring(&[s("hello"), i(0), s("1")]), Err(RuntimeError::TypeError(_))));
+    }
+
+    /// #18800: `string-append` past the ceiling is `Trap.Overflow`, the trap
+    /// `str_concat` raises, checked before anything is allocated. Before, it
+    /// had no ceiling. (The registry ceiling itself is 2³⁰ − 64 bytes, too big
+    /// to build here, so the edges run under a small explicit one.)
+    #[test]
+    fn string_append_past_the_ceiling_is_trap_overflow() {
+        let (ab, cde) = (s("ab"), s("cde"));
+        for ceiling in [0, 1, 2, 3, 4] {
+            assert_eq!(string_append_within(&[ab, cde], ceiling), Err(overflow()), "ceiling {ceiling}");
+        }
+        for ceiling in [5, 6, usize::MAX] {
+            let v = string_append_within(&[ab, cde], ceiling).unwrap();
+            assert_eq!(unsafe { heap::string_bytes(v).unwrap() }, b"abcde", "ceiling {ceiling}");
+        }
+        // Either operand alone past the ceiling (the `len b > ceiling` arm).
+        assert_eq!(string_append_within(&[s(""), cde], 2), Err(overflow()));
+        assert_eq!(string_append_within(&[cde, s("")], 2), Err(overflow()));
+        assert!(string_append_within(&[s(""), s("")], 0).is_ok());
+        // The context-free builtin uses the registry ceiling.
+        assert_eq!(STR_MAX_BYTES, (1 << 30) - 64);
+        assert!(string_append(&[ab, cde]).is_ok());
+        assert!(matches!(string_append_within(&[ab], 9), Err(RuntimeError::TypeError(_))));
+        assert!(matches!(string_append_within(&[ab, i(1)], 9), Err(RuntimeError::TypeError(_))));
+    }
+
     #[test]
     fn substring_basic() {
         assert_eq!(
@@ -1578,6 +1750,30 @@ mod tests {
         assert_eq!(unsafe { heap::string_bytes(v).unwrap() }, b"abc");
         let v2 = string_append(&[s("abc"), s("")]).unwrap();
         assert_eq!(unsafe { heap::string_bytes(v2).unwrap() }, b"abc");
+    }
+
+    /// #18800 security review: `make-string` past the ceiling is
+    /// `Trap.Overflow`, checked before anything is allocated, including a
+    /// length whose byte count overflows `usize`; a code point that is not a
+    /// Unicode scalar value is a `TypeError`, never truncated.
+    #[test]
+    fn make_string_past_the_ceiling_is_trap_overflow() {
+        let make = |n: i64, ch: i64, ceiling: usize| make_string_within(&[i(n), i(ch)], ceiling);
+        assert_eq!(make(5, b'x' as i64, 4), Err(overflow()));
+        assert_eq!(make(3, 0xE9, 5), Err(overflow())); // "é" is 2 bytes: 6 > 5
+        assert_eq!(make(crate::value::INT_MAX, 0x1F600, usize::MAX), Err(overflow())); // 4 × 2⁶⁰ bytes
+        assert_eq!(make(crate::value::INT_MAX, b'x' as i64, usize::MAX), Err(overflow()));
+        let v = make(3, 0xE9, 6).unwrap();
+        assert_eq!(unsafe { heap::string_bytes(v).unwrap() }, "ééé".as_bytes());
+        assert!(make(0, b'x' as i64, 0).is_ok());
+        // The code point is checked, not truncated: 2³² + 65 is not 'A'.
+        for ch in [(1 << 32) + 65, -1, 0xD800, 0x11_0000] {
+            assert!(matches!(make(1, ch, 9), Err(RuntimeError::TypeError(_))), "{ch:#x}");
+        }
+        assert!(matches!(make(-1, b'x' as i64, 9), Err(RuntimeError::TypeError(_))));
+        // The context-free builtin: the registry ceiling.
+        assert_eq!(make_string(&[i(crate::value::INT_MAX), i(b'x' as i64)]), Err(overflow()));
+        assert!(make_string(&[i(2), i(b'x' as i64)]).is_ok());
     }
 
     #[test]

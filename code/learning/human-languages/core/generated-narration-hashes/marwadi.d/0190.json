@@ -1,0 +1,21 @@
+{
+  "language": "marwadi",
+  "chapter": 190,
+  "sourceHash": "fnv1a64:26b6f58659aa995b",
+  "lessonIds": [
+    "MW-C190-dhoti",
+    "MW-C190-jamo",
+    "MW-C190-posak",
+    "MW-C190-rumal",
+    "MW-C190-gahno",
+    "MW-R190-review-185-190",
+    "MW-R190-review-final-190"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "marwadi/narration/ch190.txt",
+  "json": "marwadi/narration/ch190.json",
+  "textHash": "fnv1a64:3bfa328592e6a096",
+  "jsonHash": "fnv1a64:989c4edbdbbd8795",
+  "findings": []
+}

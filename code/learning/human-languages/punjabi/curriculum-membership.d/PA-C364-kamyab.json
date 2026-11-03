@@ -1,0 +1,11 @@
+{
+  "id": "PA-C364-kamyab",
+  "pathSegment": "PA-PATH-364-JOB364",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "PA-EXT-364-JOB364",
+      "order": 2
+    }
+  ]
+}

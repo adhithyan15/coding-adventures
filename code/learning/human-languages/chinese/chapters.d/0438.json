@@ -1,0 +1,20 @@
+{
+  "chapter": 438,
+  "title": "The North",
+  "label": "ch:zh-the-north",
+  "canDo": "I can talk about developing an area, the northern and western parts, a part of the visitors and all of the luggage.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C438-quanbu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 438: I can talk about developing an area, the northern and western parts, a part of the visitors and all of the luggage.",
+    "assesses": [
+      "ZH-LEX-C438-NORTH438-03",
+      "ZH-LEX-C438-NORTH438-04",
+      "ZH-LEX-C438-NORTH438-05",
+      "ZH-SCRIPT-BU-PART-01"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-C290-khullhna",
+    "language": "punjabi",
+    "chapter": 290,
+    "sequence": 17480,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a471a9902bd9a30b"
+  },
+  "findings": []
+}

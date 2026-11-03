@@ -451,11 +451,14 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // Lexicographic byte comparison normalized to -1/0/1 by `__twig_str_cmp`.
     BuiltinSig { name: "str_cmp", n_args: 2, returns: true },
     // E4-dyn runtime string concatenation.  `int64_t __twig_str_concat(int64_t a,
-    // int64_t b)` reads both `[i64 len][bytes]` headers and returns a handle to a
-    // fresh joined block.  Same 2-arg / returns-i64 shape as `str_eq` (operand handles
-    // ride RDI/RSI, the result handle rides RAX), so the generic `call_builtin`
-    // marshaller needs no new codegen — only this table entry.
-    BuiltinSig { name: "str_concat", n_args: 2, returns: true },
+    // int64_t b, int64_t max)` reads both `[i64 len][bytes]` headers and returns a
+    // handle to a fresh joined block.  LANG83 PR5a added `max`, the module's string
+    // ceiling (`twig-aot` passes `IIRModule::str_ceiling()` as an immediate): past
+    // it the helper raises `Trap.Overflow` through `__twig_trap`.  Same 3-arg /
+    // returns-i64 shape as `str_slice` (the arguments ride RDI/RSI/RDX, the result
+    // handle the return register), so the generic `call_builtin` marshaller needs
+    // no new codegen — only this table entry.
+    BuiltinSig { name: "str_concat", n_args: 3, returns: true },
     // Length-prefixed substring handle; the shared helper checks [start, end).
     BuiltinSig { name: "str_slice", n_args: 3, returns: true },
     // Checked byte read from a length-prefixed string and a live integer index.
@@ -1428,16 +1431,30 @@ fn emit_instr(
     // native backend only supports 8-byte elements, so the stride is a fixed 8 —
     // `array_get`/`array_set` validate the element width per access.)
     //   rdi = count ; shl rdi,3 ; add rdi,8 ; call __twig_alloc_bytes ; [rax]=count
-    if op == "alloc_array" {
+    //
+    // `alloc_ref_array` is the same block for an array whose elements are GC
+    // references (BASIC `DIM A$(n)`: each element a string handle). It calls
+    // `__twig_alloc_ref_array_bytes`, whose heap kind traces every word past the
+    // 8-byte length header, so a string reachable only through the array is marked
+    // (and, under compaction, moved with the element rewritten). `__twig_alloc_bytes`
+    // is a no-reference blob kind: through it such a string was invisible to every
+    // collection and freed while the array still held its handle. twig-aot picks the
+    // op from the IIR element type, which the specialiser erases before this point.
+    if op == "alloc_array" || op == "alloc_ref_array" {
         let dest = require_dest(instr)?;
         let count_src = instr.srcs.first().ok_or_else(|| {
-            BackendError::MalformedInstr("alloc_array: needs srcs[0]=count".into())
+            BackendError::MalformedInstr(format!("{op}: needs srcs[0]=count"))
         })?;
+        let allocator = if op == "alloc_ref_array" {
+            "__twig_alloc_ref_array_bytes"
+        } else {
+            "__twig_alloc_bytes"
+        };
         let arg0_reg = abi.arg_regs()[0];
         load_operand(asm, alloc, arg0_reg, count_src);
         asm.shl_imm8(arg0_reg, 3); // count*8
         asm.add_imm32(arg0_reg, 8); // + 8-byte length header
-        asm.call_rel32("__twig_alloc_bytes", ExternalRelocKind::PltRel32);
+        asm.call_rel32(allocator, ExternalRelocKind::PltRel32);
         // dest = base (rax); then write [base+0] = count.
         let slot = alloc.slot_of(dest);
         asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
@@ -4299,6 +4316,30 @@ mod tests {
         let plt: Vec<_> = relocs.iter()
             .filter(|r| r.symbol == "__twig_alloc_bytes").collect();
         assert_eq!(plt.len(), 1);
+    }
+
+    /// `alloc_ref_array` (an array of GC references, e.g. BASIC `A$`) calls the
+    /// reference-tracing `__twig_alloc_ref_array_bytes`; `alloc_array` keeps the
+    /// no-reference `__twig_alloc_bytes`. The code is otherwise byte-identical (the
+    /// callee differs only in a relocation).
+    #[test]
+    fn alloc_ref_array_uses_the_reference_tracing_allocator() {
+        let ctx = fn_ctx("a", &[], "u64");
+        let build = |op: &str| vec![
+            instr("const_u64", Some("n"), vec![Op::Int(3)]),
+            instr(op, Some("a"), vec![Op::Var("n".into())]),
+            instr("ret_u64", None, vec![Op::Var("n".into())]),
+        ];
+        for abi in [X86_64Abi::SysV, X86_64Abi::MsX64] {
+            let (plain, plain_relocs) =
+                compile_function_with_relocs(&ctx, &build("alloc_array"), abi).unwrap();
+            let (refs, ref_relocs) =
+                compile_function_with_relocs(&ctx, &build("alloc_ref_array"), abi).unwrap();
+            let syms = |r: &[ExternalReloc]| r.iter().map(|x| x.symbol.clone()).collect::<Vec<_>>();
+            assert_eq!(syms(&plain_relocs), ["__twig_alloc_bytes"], "{abi:?}");
+            assert_eq!(syms(&ref_relocs), ["__twig_alloc_ref_array_bytes"], "{abi:?}");
+            assert_eq!(plain, refs, "{abi:?}: identical bytes; only the call target differs");
+        }
     }
 
     #[test]

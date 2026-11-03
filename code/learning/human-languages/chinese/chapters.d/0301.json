@@ -1,0 +1,21 @@
+{
+  "chapter": 301,
+  "title": "Getting Out",
+  "label": "ch:zh-getting-out",
+  "canDo": "I can say people ran from danger, someone helped a person up, and it all went as expected.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R301-review-296-301",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 301: I can say people ran from danger, someone helped a person up, and it all went as expected.",
+    "assesses": [
+      "ZH-LEX-C301-ESCAPE301-01",
+      "ZH-LEX-C301-ESCAPE301-02",
+      "ZH-LEX-C301-ESCAPE301-03",
+      "ZH-LEX-C301-ESCAPE301-04",
+      "ZH-LEX-C301-ESCAPE301-05"
+    ]
+  }
+}

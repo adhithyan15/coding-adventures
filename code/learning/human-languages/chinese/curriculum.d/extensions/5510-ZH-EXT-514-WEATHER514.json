@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-514-WEATHER514",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about wind and storms, getting caught in the rain, things that freeze and snow that melts.",
+  "prerequisites": []
+}

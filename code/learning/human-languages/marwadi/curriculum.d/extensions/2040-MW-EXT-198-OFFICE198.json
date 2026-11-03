@@ -1,0 +1,8 @@
+{
+  "id": "MW-EXT-198-OFFICE198",
+  "stage": "A2",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can ask for something at an office.",
+  "prerequisites": []
+}
