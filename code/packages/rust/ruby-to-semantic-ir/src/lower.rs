@@ -78,8 +78,17 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         top_level_methods: HashSet::new(),
         nested_methods: HashSet::new(),
         enclosing_visible: HashSet::new(),
-        for_counter: 0,
+        fresh_counter: 0,
+        used_names: HashSet::new(),
+        statement_puts: HashSet::new(),
     };
+    // #18798 — the bare `puts` names that are whole statements; only those
+    // print a newline (see `Lowerer::bare_puts_call`).
+    collect_statement_puts(program, &mut lw.statement_puts);
+    // #18798 — every name the source spells, so an invented local
+    // (`__for_<n>`, `__rescue_value_<n>`) can never be one of them, even
+    // one assigned later in the program (see `Lowerer::fresh_name`).
+    collect_source_names(program, &mut lw.used_names);
     // #18778 — learn every method name before lowering any body, so a bare
     // `g` can be told apart from a local (see `Lowerer::bare_name_call`).
     collect_method_names(
@@ -1098,9 +1107,75 @@ struct Lowerer {
     /// is that local, never a method call.  Emptied for a `def` body, which
     /// sees no outer local.
     enclosing_visible: HashSet<String>,
-    /// #18778 — counter for the fresh loop variables `__for_<n>` that a
-    /// `for` loop iterates with (see [`Lowerer::lower_for_statement`]).
-    for_counter: usize,
+    /// #18778 / #18798 — counter for the locals this lowerer invents: the
+    /// `__for_<n>` a `for` loop iterates with (see
+    /// [`Lowerer::lower_for_statement`]) and the `__rescue_value_<n>` that
+    /// holds a method-level `rescue`'s value (see
+    /// [`Lowerer::lower_rescued_method_body`]).  One counter for both.
+    fresh_counter: usize,
+    /// #18798 — the one pool of names an invented local must avoid: every
+    /// `Name` the source spells, plus every name already invented.  (The
+    /// lesson of #18771: two generators with separate skip lists can invent
+    /// the same name.)
+    used_names: HashSet<String>,
+    /// #18798 — `(line, column)` of every bare `puts` that is a whole
+    /// statement on its own (an `expression_stmt` whose expression is just
+    /// that name).  See [`Lowerer::bare_puts_call`].
+    statement_puts: HashSet<(usize, usize)>,
+}
+
+/// #18798 — record where a bare `puts` is a whole statement: an
+/// `expression_stmt` whose expression is nothing but the name (a chain of
+/// single-child nodes ending in the one `Name` token `puts`).
+fn collect_statement_puts(node: &GrammarASTNode, out: &mut HashSet<(usize, usize)>) {
+    if node.rule_name == "expression_stmt" {
+        let mut inner = node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Node(n) => Some(n),
+            ASTNodeOrToken::Token(_) => None,
+        });
+        while let Some(n) = inner {
+            match n.children.as_slice() {
+                [ASTNodeOrToken::Node(only)] => inner = Some(only),
+                [ASTNodeOrToken::Token(t)] if t.type_ == TokenType::Name && t.value == "puts" => {
+                    out.insert((t.line, t.column));
+                    break;
+                }
+                _ => break,
+            }
+        }
+    }
+    for child in &node.children {
+        if let ASTNodeOrToken::Node(n) = child {
+            collect_statement_puts(n, out);
+        }
+    }
+}
+
+/// #18798 — collect every name the source spells under `node` into `out`:
+/// each `Name` token's value, and every identifier-shaped word inside a
+/// `String` token.  A string's `#{…}` interpolation is lowered from the
+/// token's text later, so a name used only there (`"#{__rescue_value_0}"`)
+/// is no `Name` token here; taking every word of every string is a cheap
+/// over-approximation (an extra word only makes an invented name skip one
+/// more spelling).
+fn collect_source_names(node: &GrammarASTNode, out: &mut HashSet<String>) {
+    for child in &node.children {
+        match child {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => {
+                out.insert(t.value.clone());
+            }
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => {
+                let is_word = |c: char| c.is_alphanumeric() || c == '_';
+                for word in t.value.split(|c: char| !is_word(c)) {
+                    if !word.is_empty() {
+                        out.insert(word.to_string());
+                    }
+                }
+            }
+            ASTNodeOrToken::Token(_) => {}
+            ASTNodeOrToken::Node(n) => collect_source_names(n, out),
+        }
+    }
 }
 
 /// #18778 — collect the names of the `def`s among `node`'s statements: a
@@ -2289,19 +2364,27 @@ impl Lowerer {
         Ok(out)
     }
 
-    /// A fresh `__for_<n>` name for a `for` loop's own variables, skipping
-    /// any spelling the program already uses for a local, parameter or
-    /// method.
+    /// A fresh `__for_<n>` name for a `for` loop's own variables.
     fn fresh_for_name(&mut self) -> String {
+        self.fresh_name("__for_")
+    }
+
+    /// A fresh local name `<prefix><n>`, claimed from the one pool
+    /// [`Self::used_names`]: it is no name the source spells anywhere
+    /// (local, parameter, method, constant — before or after this point),
+    /// and no name invented before.  It is claimed the moment it is chosen.
+    fn fresh_name(&mut self, prefix: &str) -> String {
         loop {
-            let candidate = format!("__for_{}", self.for_counter);
-            self.for_counter += 1;
-            let taken = self.declared_locals.contains(&candidate)
+            let candidate = format!("{prefix}{}", self.fresh_counter);
+            self.fresh_counter += 1;
+            let taken = self.used_names.contains(&candidate)
+                || self.declared_locals.contains(&candidate)
                 || self.current_params.contains(&candidate)
                 || self.enclosing_visible.contains(&candidate)
                 || self.top_level_methods.contains(&candidate)
                 || self.nested_methods.contains(&candidate);
             if !taken {
+                self.used_names.insert(candidate.clone());
                 return candidate;
             }
         }
@@ -6373,27 +6456,16 @@ impl Lowerer {
         // carries trailing `rescue`/`ensure` clauses (no explicit
         // `begin`), the WHOLE method body is the protected region: wrap
         // the body statements and the clauses in a single
-        // `Stmt::TryCatch` (the method's value is then nil).
+        // `Stmt::TryCatch`.  #18798: the method's value is the body's last
+        // value, or the rescuing clause's (see `lower_rescued_method_body`);
+        // it used to be nil.
         let has_exception_clauses = node.children.iter().any(|c| {
             matches!(c, ASTNodeOrToken::Node(n)
                 if n.rule_name == "rescue_clause" || n.rule_name == "ensure_clause")
         });
 
         let (mut stmts_out, value): (Vec<Stmt>, Expr) = if has_exception_clauses {
-            self.features_used.insert(Feature::Exceptions);
-            let try_body = self.lower_flat_statements(node)?;
-            let (rescues, ensure_body) = self.lower_rescue_ensure_clauses(node)?;
-            (
-                vec![Stmt::TryCatch {
-                    body: try_body,
-                    rescues,
-                    ensure_body,
-                    span: self.span_of(node),
-                }],
-                Expr::NilLit {
-                    span: self.span_of(node),
-                },
-            )
+            self.lower_rescued_method_body(node)?
         } else {
             let mut stmts_out: Vec<Stmt> = Vec::new();
             let mut value: Option<Expr> = None;
@@ -7528,6 +7600,111 @@ impl Lowerer {
         Ok(body)
     }
 
+    /// #18798 — the body of a `def` with method-level `rescue`/`ensure`
+    /// clauses, as `(statements, value)`.
+    ///
+    /// Ruby's value for such a method is the body's last value when it
+    /// finishes, or the last value of the `rescue` clause that caught the
+    /// exception; an `ensure` clause runs but never changes it:
+    ///
+    /// ```ruby
+    /// def risky
+    ///   raise "x"
+    /// rescue => e
+    ///   "rescued"       # risky returns "rescued"
+    /// end
+    /// ```
+    ///
+    /// A SIR `TryCatch` is a statement, with no value, and this method
+    /// returned `nil` on every backend.  So the value goes through a local
+    /// the lowerer invents (`__rescue_value_<n>`, from [`Self::fresh_name`]):
+    ///
+    /// ```text
+    /// let __rescue_value_0 = nil
+    /// TryCatch {
+    ///   body:    [ …, __rescue_value_0 = <body's last value> ],
+    ///   rescues: [ { …, body: [ …, __rescue_value_0 = <clause's last value> ] } ],
+    ///   ensure:  [ … ]               // unchanged: its value is discarded
+    /// }
+    /// value: __rescue_value_0
+    /// ```
+    ///
+    /// The store is the last statement of each block, so a body that raises
+    /// part-way never reaches it, and the catching clause's store wins.  A
+    /// clause with no statements leaves `nil`, as in Ruby.  A last statement
+    /// with no value here (an assignment, a loop) stores nothing, which is
+    /// what a method without `rescue` returns for it too (`lower_tail_value`).
+    fn lower_rescued_method_body(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<(Vec<Stmt>, Expr), RubyLowerError> {
+        let span = self.span_of(node);
+        self.features_used.insert(Feature::Exceptions);
+        self.features_used.insert(Feature::MutableBindings);
+        self.features_used.insert(Feature::DynamicTyping);
+        let result = self.fresh_name("__rescue_value_");
+        self.declared_locals.insert(result.clone());
+        let try_body = self.lower_statements_storing_last(node, &result)?;
+        let (rescues, ensure_body) = self.rescue_ensure_clauses(node, Some(&result))?;
+        let stmts = vec![
+            Stmt::LetBinding {
+                name: result.clone(),
+                sir_type: None,
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            },
+            Stmt::TryCatch {
+                body: try_body,
+                rescues,
+                ensure_body,
+                span: span.clone(),
+            },
+        ];
+        let value = Expr::VarRef {
+            name: result,
+            scope: Scope::Local,
+            span,
+        };
+        Ok((stmts, value))
+    }
+
+    /// #18798 — like [`Self::lower_flat_statements`], but the last
+    /// statement's value (when it has one, per [`Self::lower_tail_value`])
+    /// is stored into the local `result` instead of being dropped.
+    fn lower_statements_storing_last(
+        &mut self,
+        node: &GrammarASTNode,
+        result: &str,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        let statements: Vec<&GrammarASTNode> = node
+            .children
+            .iter()
+            .filter_map(|c| match c {
+                ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(n),
+                _ => None,
+            })
+            .collect();
+        let mut body = Vec::new();
+        for (i, s) in statements.iter().enumerate() {
+            let Some(inner) = self.first_node_child(s) else {
+                continue;
+            };
+            if i + 1 == statements.len() {
+                if let Some(value) = self.lower_tail_value(inner)? {
+                    body.push(Stmt::Assign {
+                        name: result.to_string(),
+                        scope: Scope::Local,
+                        value,
+                        span: self.span_of(s),
+                    });
+                    continue;
+                }
+            }
+            body.extend(self.lower_statement_inner_multi(inner)?);
+        }
+        Ok(body)
+    }
+
     /// Scan `node`'s direct children for `rescue_clause` / `ensure_clause`
     /// and build the `(rescues, ensure_body)` for a `Stmt::TryCatch`.
     /// Shared by `begin … end` (Phase 16a) and method-level rescue on a
@@ -7536,6 +7713,17 @@ impl Lowerer {
     fn lower_rescue_ensure_clauses(
         &mut self,
         node: &GrammarASTNode,
+    ) -> Result<(Vec<RescueClause>, Option<Vec<Stmt>>), RubyLowerError> {
+        self.rescue_ensure_clauses(node, None)
+    }
+
+    /// [`Self::lower_rescue_ensure_clauses`], with each `rescue` clause's
+    /// last value stored into `result` when one is given (#18798, see
+    /// [`Self::lower_rescued_method_body`]).
+    fn rescue_ensure_clauses(
+        &mut self,
+        node: &GrammarASTNode,
+        result: Option<&str>,
     ) -> Result<(Vec<RescueClause>, Option<Vec<Stmt>>), RubyLowerError> {
         // Each rescue_clause, in source order.
         let mut rescues: Vec<RescueClause> = Vec::new();
@@ -7593,7 +7781,10 @@ impl Lowerer {
                     let newly_bound = binding
                         .as_ref()
                         .filter(|b| self.declared_locals.insert((*b).clone()));
-                    let rescue_body = self.lower_flat_statements(n);
+                    let rescue_body = match result {
+                        Some(result) => self.lower_statements_storing_last(n, result),
+                        None => self.lower_flat_statements(n),
+                    };
                     if let Some(b) = newly_bound {
                         self.declared_locals.remove(b);
                     }
@@ -8867,6 +9058,17 @@ impl Lowerer {
                     effects: EffectSet::PURE,
                     span: self.span_of(node),
                 })
+            }
+            // #18798 — `+x` is `x`: Ruby's `Numeric#+@` returns the number
+            // itself.  The rule exists so that a line starting with `+`
+            // (`x = 5` ⏎ `+1`) is its own statement rather than `5 + 1`.
+            "unary_plus" => {
+                let inner = self.first_node_child(node).ok_or_else(|| RubyLowerError {
+                    message: "unary_plus had no factor child".to_string(),
+                    line: node.start_line.unwrap_or(0),
+                    column: node.start_column.unwrap_or(0),
+                })?;
+                self.lower_expression(inner)
             }
             // Phase 23b (FC) — `defined?(x)` in expression position
             // (assignment RHS, condition, …).
@@ -10424,6 +10626,11 @@ impl Lowerer {
                             } else if let Some(call) = self.bare_name_call(&tok.value, &span) {
                                 // #18778 — not a local: a call (`puts g`).
                                 return Ok(call);
+                            } else if let Some(call) =
+                                self.bare_puts_call(&tok.value, (tok.line, tok.column), &span)
+                            {
+                                // #18798 — a bare `puts` prints a newline.
+                                return Ok(call);
                             } else {
                                 Scope::Local
                             };
@@ -10540,6 +10747,43 @@ impl Lowerer {
             effects: EffectSet::PURE,
             span: span.clone(),
         })
+    }
+
+    /// #18798 — a bare `puts` (no arguments, no parentheses) is a call that
+    /// prints a newline, exactly like `puts()`:
+    ///
+    /// ```ruby
+    /// puts 1
+    /// puts        # prints an empty line
+    /// puts 2
+    /// ```
+    ///
+    /// It used to lower as a read of a local named `puts`, which the
+    /// validator refused ("references unknown name `puts`").  The same
+    /// parse-order rule as [`Self::bare_name_call`] applies: a local or a
+    /// parameter named `puts` is that variable, and a `def puts` the program
+    /// defines is left to `bare_name_call` (or refused, inside a class).
+    /// Otherwise it is the `__sys_write__` that `puts()` lowers to, with no
+    /// values, which every backend prints as a lone `"\n"`.
+    ///
+    /// Only where the `puts` is a whole statement (`at` is in
+    /// [`Self::statement_puts`]).  As a value (`x = puts`, `f(puts)`) it is
+    /// still refused as an unknown name: a name in a value position that
+    /// silently printed would be a surprise worth a compile error instead.
+    fn bare_puts_call(&mut self, name: &str, at: (usize, usize), span: &Span) -> Option<Expr> {
+        if name != "puts" || !self.statement_puts.contains(&at) {
+            return None;
+        }
+        let shadowed = self.declared_locals.contains(name)
+            || self.current_params.contains(name)
+            || self.enclosing_visible.contains(name)
+            || self.top_level_methods.contains(name)
+            || self.nested_methods.contains(name);
+        if shadowed {
+            return None;
+        }
+        let effects = ruby_builtin_effects(name)?;
+        Some(self.builtin_call_or_sys_write(name.to_string(), Vec::new(), effects, span.clone()))
     }
 
     // -------------------------------------------------------------------
