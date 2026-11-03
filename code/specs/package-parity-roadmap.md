@@ -20566,7 +20566,7 @@ behavior. Complete local validation, reconcile live overlap, and require fresh
 independent exact-head review before first publication.
 
 The local implementation is complete at product revision
-`61990a6516051d9fa41c088108c5e9fadafefb4b`. Focused tests cover exact and
+`69ff4a5fe29d045c12be189cffd82b408abdad30`. Focused tests cover exact and
 lookalike paths, all three platforms, language filtering, ordinary-root union,
 rename-old-source retention, missing-reader atomic failure, prerequisite
 closure, emitted toolchains, and direct-reader drift. Go vet and build pass;
