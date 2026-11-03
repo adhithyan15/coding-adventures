@@ -201,6 +201,24 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the TF01 self-corpus and its Python reference",
 		matches:  isTestBootstrapInput,
 	},
+	{
+		name:     "rust/warrant-grammar",
+		language: "rust",
+		inputs:   "canonical Warrant grammars, syntax corpus and transport gate",
+		matches:  isWarrantGrammarInput,
+	},
+}
+
+// Canonical inputs live outside the Rust artifact package. Exact file paths
+// and slash-delimited prefixes avoid selecting lookalike versions/directories.
+// Validator-test edits select the consumer too: its BUILD runs those tests.
+func isWarrantGrammarInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/grammars/warrant/") ||
+		strings.HasPrefix(changed, "code/specs/fixtures/warrant-syntax-v1/") ||
+		changed == "code/scripts/warrant_syntax_corpus.py" ||
+		changed == "code/scripts/tests/test_warrant_syntax_corpus.py" ||
+		changed == "code/scripts/tfv.py" ||
+		changed == "code/specs/VER04-warrant-language.md"
 }
 
 // CT01 is embedded in an L0 test, so edits outside the crate must still run it.

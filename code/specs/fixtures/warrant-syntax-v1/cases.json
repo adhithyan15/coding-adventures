@@ -1,0 +1,476 @@
+{
+  "format": "warrant-syntax-v1",
+  "cases": [
+    {
+      "id": "declarations/all",
+      "feature": "declarations",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  error E = A | B\n  model Word = U64\n  model same(a: Bytes, b: Bytes) -> Bool = a == b\n  op eq(a: Bytes, b: Bytes) -> Bool\n",
+      "accept": true,
+      "witnesses": [
+        "error_declaration=error E = A | B",
+        "model_declaration=model Word = U64",
+        "operation=op eq ( a : Bytes , b : Bytes ) -> Bool"
+      ]
+    },
+    {
+      "id": "values/bools",
+      "feature": "values",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    true != false\n",
+      "accept": true,
+      "witnesses": [
+        "comparison=true != false"
+      ]
+    },
+    {
+      "id": "values/empty-bytes",
+      "feature": "values",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    b\"\" == b\"\"\n",
+      "accept": true,
+      "witnesses": [
+        "literal=b\"\""
+      ]
+    },
+    {
+      "id": "values/word-wrap",
+      "feature": "values",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    18446744073709551615u64 + 1u64 == 0u64\n",
+      "accept": true,
+      "witnesses": [
+        "sum=18446744073709551615u64 + 1u64"
+      ]
+    },
+    {
+      "id": "types/aggregates",
+      "feature": "types",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  op aggregate(a: Option<List<U8>>) -> Result<Bytes, E>\n",
+      "accept": true,
+      "witnesses": [
+        "type=Option < List < U8 > >",
+        "type=Result < Bytes , E >"
+      ]
+    },
+    {
+      "id": "types/fixed-zero",
+      "feature": "types",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  op eq_fixed<N: Nat>(a: Bytes<N>, b: Bytes<N>) -> Bool\n  example zero:\n    eq_fixed<0>(b\"\", b\"\") == true\n",
+      "accept": true,
+      "witnesses": [
+        "reference=eq_fixed < 0 > ( b\"\" , b\"\" )",
+        "type=Bytes < N >"
+      ]
+    },
+    {
+      "id": "values/option-match",
+      "feature": "values",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  model unwrap(x: Option<Int>) -> Int = match x with None -> 0 | Some(y) -> y\n",
+      "accept": true,
+      "witnesses": [
+        "match_expression=match x with None -> 0 | Some ( y ) -> y"
+      ]
+    },
+    {
+      "id": "operators/multiply",
+      "feature": "operators",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    1 + 2 * 3 == 7\n",
+      "accept": true,
+      "witnesses": [
+        "sum=1 + 2 * 3",
+        "product=2 * 3"
+      ]
+    },
+    {
+      "id": "operators/boolean",
+      "feature": "operators",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    not (true and false) or true\n",
+      "accept": true,
+      "witnesses": [
+        "unary=not ( true and false )",
+        "conjunction=true and false"
+      ]
+    },
+    {
+      "id": "operators/implies-right",
+      "feature": "operators",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    false => true => false\n",
+      "accept": true,
+      "witnesses": [
+        "implication=false => true => false",
+        "implication=true => false"
+      ]
+    },
+    {
+      "id": "precedence/grouped",
+      "feature": "precedence",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    (1 + 2) * 3 == 9\n",
+      "accept": true,
+      "witnesses": [
+        "sum=1 + 2",
+        "product=( 1 + 2 ) * 3"
+      ]
+    },
+    {
+      "id": "precedence/subtraction-order",
+      "feature": "precedence",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    9 - 3 - 1 == 5\n",
+      "accept": true,
+      "witnesses": [
+        "sum=9 - 3 - 1"
+      ]
+    },
+    {
+      "id": "quantifiers/refined-forall",
+      "feature": "quantifiers",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  claim reflexive:\n    forall n: Nat | n < 4. n == n\n",
+      "accept": true,
+      "witnesses": [
+        "quantified=forall n : Nat | n < 4 . n == n",
+        "comparison=n < 4"
+      ]
+    },
+    {
+      "id": "quantifiers/multiple-exists",
+      "feature": "quantifiers",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  claim zero:\n    exists a: Int, b: Int. a + b == 0\n",
+      "accept": true,
+      "witnesses": [
+        "quantified=exists a : Int , b : Int . a + b == 0"
+      ]
+    },
+    {
+      "id": "contracts/input-bound-label",
+      "feature": "contracts",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  error E = Length\n  op select(a: Bytes, b: Bytes, choice: Bool) -> Result<Bytes, E> fresh\n  labels select:\n    a.contents secret\n    a.length public\n    choice secret\n  input select.a:\n    hostile\n    rejects len(a) != len(b) with E.Length\n    ensures no_panic, terminates\n  bound select:\n    steps <= 64 * len(a) + 512\n    heap <= 2 * len(a)\n    depth <= 32\n",
+      "accept": true,
+      "witnesses": [
+        "label_row=a.contents secret",
+        "rejection=rejects len ( a ) != len ( b ) with E.Length",
+        "bound_row=steps <= 64 * len ( a ) + 512"
+      ]
+    },
+    {
+      "id": "contracts/assumptions",
+      "feature": "contracts",
+      "source": "warrant corpus\n  assume platform:\n    u64.wraps\n  assume environment:\n    caller_ok: true\n",
+      "accept": true,
+      "witnesses": [
+        "platform_row=u64.wraps",
+        "environment_row=caller_ok : true"
+      ]
+    },
+    {
+      "id": "layout/multiline-comments",
+      "feature": "layout",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  -- public syntax fixture: λ\n  example multiline:\n    (1 +\n     2) == 3 -- inline comment\n",
+      "accept": true,
+      "witnesses": [
+        "sum=1 + 2"
+      ]
+    },
+    {
+      "id": "lexical/keyword-prefix",
+      "feature": "lexical",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  op warrantish(n: Int) -> Int\n",
+      "accept": true,
+      "witnesses": [
+        "operation=op warrantish ( n : Int ) -> Int"
+      ]
+    },
+    {
+      "id": "lexical/qualified-error",
+      "feature": "lexical",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    Err(E.Bad) == Err(E.Bad)\n",
+      "accept": true,
+      "witnesses": [
+        "reference=Err ( E.Bad )"
+      ]
+    },
+    {
+      "id": "types/list",
+      "feature": "types",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  model sequence() -> List<Int> = [1, 2, 3]\n",
+      "accept": true,
+      "witnesses": [
+        "list_literal=[ 1 , 2 , 3 ]"
+      ]
+    },
+    {
+      "id": "values/total-div",
+      "feature": "values",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    div(7, 0) == None\n",
+      "accept": true,
+      "witnesses": [
+        "reference=div ( 7 , 0 )"
+      ]
+    },
+    {
+      "id": "values/checked-width",
+      "feature": "values",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    fixed<16>(b\"\") == None\n",
+      "accept": true,
+      "witnesses": [
+        "reference=fixed < 16 > ( b\"\" )"
+      ]
+    },
+    {
+      "id": "operators/conditional",
+      "feature": "operators",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  model choose(p: Bool) -> Int = if p then 1 else 0\n",
+      "accept": true,
+      "witnesses": [
+        "conditional=if p then 1 else 0"
+      ]
+    },
+    {
+      "id": "operators/result-match",
+      "feature": "operators",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  model value(r: Result<Int, E>) -> Int = match r with Ok(x) -> x | Err(e) -> 0\n",
+      "accept": true,
+      "witnesses": [
+        "pattern=Ok ( x )",
+        "pattern=Err ( e )"
+      ]
+    },
+    {
+      "id": "precedence/nested-match",
+      "feature": "precedence",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  model value(x: Option<Option<Int>>) -> Int = match x with None -> 0 | Some(y) -> (match y with None -> 1 | Some(z) -> z)\n",
+      "accept": true,
+      "witnesses": [
+        "match_expression=match y with None -> 1 | Some ( z ) -> z"
+      ]
+    },
+    {
+      "id": "layout/no-final-newline",
+      "feature": "layout",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example last:\n    true",
+      "accept": true,
+      "witnesses": [
+        "literal=true"
+      ]
+    },
+    {
+      "id": "types/bool-int-is-syntax",
+      "feature": "types",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example sample:\n    true == 1\n",
+      "accept": true,
+      "witnesses": [
+        "comparison=true == 1"
+      ]
+    },
+    {
+      "id": "declarations/duplicate-is-syntax",
+      "feature": "declarations",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example same:\n    true\n  example same:\n    false\n",
+      "accept": true,
+      "witnesses": [
+        "literal=true",
+        "literal=false"
+      ]
+    },
+    {
+      "id": "quantifiers/vacuous-is-syntax",
+      "feature": "quantifiers",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  claim empty:\n    forall n: Nat | n < 0. n == n\n",
+      "accept": true,
+      "witnesses": [
+        "comparison=n < 0"
+      ]
+    },
+    {
+      "id": "declarations/unknown-block",
+      "feature": "declarations",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  scenario bad:\n    true\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "declarations/missing-arrow",
+      "feature": "declarations",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  model f(x: Int) Int = x\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "values/uppercase-bytes",
+      "feature": "values",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    b\"FF\" == b\"FF\"\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "values/odd-bytes",
+      "feature": "values",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    b\"0\" == b\"0\"\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "values/float",
+      "feature": "values",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    1.5 == 1.5\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "lexical/text",
+      "feature": "lexical",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    \"hello\" == \"hello\"\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "lexical/leading-zero",
+      "feature": "lexical",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    01 == 1\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "lexical/unknown-character",
+      "feature": "lexical",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    @\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "operators/chained-comparison",
+      "feature": "operators",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    1 < 2 < 3\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "operators/unchecked-div",
+      "feature": "operators",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    7 / 0 == 0\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "operators/trailing-comma",
+      "feature": "operators",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    len(b\"\",) == 0\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "types/empty-width",
+      "feature": "types",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  op bad(a: Bytes<>) -> Bool\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "types/result-arity",
+      "feature": "types",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  op bad() -> Result<Int>\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "types/unclosed",
+      "feature": "types",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  op bad(a: List<Int) -> Bool\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "quantifiers/missing-dot",
+      "feature": "quantifiers",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  claim bad:\n    forall n: Nat n == n\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "quantifiers/dot-needs-gap",
+      "feature": "quantifiers",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  claim bad:\n    forall n: Nat.(n == n)\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "quantifiers/missing-type",
+      "feature": "quantifiers",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  claim bad:\n    forall n. n == n\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "contracts/missing-hostile",
+      "feature": "contracts",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  input eq.a:\n    ensures no_panic\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "contracts/missing-ensures",
+      "feature": "contracts",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  input eq.a:\n    hostile\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "contracts/missing-bound-value",
+      "feature": "contracts",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq:\n    steps <=\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "contracts/missing-label-class",
+      "feature": "contracts",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  labels eq:\n    a.contents\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "precedence/unclosed",
+      "feature": "precedence",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    (1 + 2 * 3 == 7\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "precedence/empty-group",
+      "feature": "precedence",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    () == 0\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "precedence/extra-close",
+      "feature": "precedence",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example bad:\n    1 + 2) == 3\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "layout/leading-tab",
+      "feature": "layout",
+      "source": "warrant corpus\n\texample tab:\n\t\ttrue\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "layout/bad-dedent",
+      "feature": "layout",
+      "source": "warrant corpus\n  example first:\n    true\n   example second:\n     false\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "layout/missing-body",
+      "feature": "layout",
+      "source": "warrant corpus\n  example empty:\n",
+      "accept": false,
+      "witnesses": []
+    },
+    {
+      "id": "layout/trailing-garbage",
+      "feature": "layout",
+      "source": "warrant corpus\n  assume platform:\n    none\n  assume environment:\n    none\n  example good:\n    true\ngarbage\n",
+      "accept": false,
+      "witnesses": []
+    }
+  ]
+}

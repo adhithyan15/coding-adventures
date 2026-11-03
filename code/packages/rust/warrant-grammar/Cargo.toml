@@ -1,0 +1,19 @@
+[package]
+name = "coding_adventures_warrant_grammar"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical Warrant v0 token/parser grammar data and syntax-corpus checks (VER04 P006a)"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+
+[dev-dependencies]
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+[[test]]
+name = "self_corpus"
+path = "tests/self_corpus.rs"
+harness = false
