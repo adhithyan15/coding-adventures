@@ -77,6 +77,14 @@ let result = check_sat(&prog).unwrap();
 assert!(result.is_unsat());
 ```
 
+## Bit-vectors (QF_BV)
+
+Since `constraint-engine` 0.3.0 (VER10), programs over `(_ BitVec w)`
+variables are decided by the engine's BV tactic, which bit-blasts them and
+certifies every UNSAT with `drat-check`. The VM needs nothing special:
+`tests/qfbv.rs` runs a corpus of `.smt2` files through `smt-lib-format`
+and `Vm::execute`.
+
 ## Relationship to LANG23
 
 `lang-refinement-checker` uses this crate as its backend.  The pattern is:
