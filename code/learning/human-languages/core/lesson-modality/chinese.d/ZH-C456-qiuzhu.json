@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C456-qiuzhu",
+    "language": "chinese",
+    "chapter": 456,
+    "sequence": 34350,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:602fb2ed9b1d9701"
+  },
+  "findings": []
+}

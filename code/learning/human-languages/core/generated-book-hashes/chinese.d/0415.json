@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 415,
+  "sourceHash": "fnv1a64:f81e3f9b60c66f6a",
+  "lessonIds": [
+    "ZH-C415-hangzhanlou",
+    "ZH-C415-tuoyun",
+    "ZH-C415-dengjipai",
+    "ZH-C415-anjian",
+    "ZH-C415-dengjikou"
+  ],
+  "tex": "chinese/book/chapters/ch415-the-terminal.tex"
+}

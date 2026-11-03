@@ -1,0 +1,19 @@
+{
+  "chapter": 355,
+  "title": "Thanks, but No",
+  "label": "ch:zh-thanks-but-no",
+  "canDo": "I can turn something down politely, say someone won't do something, and say it to their face.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C355-dangmian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 355: I can turn something down politely, say someone won't do something, and say it to their face.",
+    "assesses": [
+      "ZH-LEX-C355-REFUSE355-03",
+      "ZH-LEX-C355-REFUSE355-04",
+      "ZH-LEX-C355-REFUSE355-05"
+    ]
+  }
+}

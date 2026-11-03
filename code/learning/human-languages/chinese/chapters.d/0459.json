@@ -1,0 +1,19 @@
+{
+  "chapter": 459,
+  "title": "On My Mind",
+  "label": "ch:zh-on-my-mind",
+  "canDo": "I can say I feel lonely, that I have a lot to do, talk about feelings between people and what is on my mind.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C459-weiqu",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 459: I can say I feel lonely, that I have a lot to do, talk about feelings between people and what is on my mind.",
+    "assesses": [
+      "ZH-LEX-C459-MIND459-03",
+      "ZH-LEX-C459-MIND459-04",
+      "ZH-LEX-C459-MIND459-05"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 436,
+  "sourceHash": "fnv1a64:4eddbc10ee3b12c4",
+  "lessonIds": [
+    "ZH-C436-dixing",
+    "ZH-C436-nanfang",
+    "ZH-W436-fang-side",
+    "ZH-C436-beifang",
+    "ZH-C436-fangyan",
+    "ZH-C436-kouyin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch436.txt",
+  "json": "chinese/narration/ch436.json",
+  "textHash": "fnv1a64:67a89a66e4287b71",
+  "jsonHash": "fnv1a64:5662346714867587",
+  "findings": []
+}

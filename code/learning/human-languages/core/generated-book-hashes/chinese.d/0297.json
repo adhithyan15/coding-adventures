@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 297,
+  "sourceHash": "fnv1a64:4645f0df312ea78d",
+  "lessonIds": [
+    "ZH-C297-baoxian",
+    "ZH-C297-shigu",
+    "ZH-W297-gu-old",
+    "ZH-C297-zeren",
+    "ZH-C297-houguo",
+    "ZH-C297-chuli"
+  ],
+  "tex": "chinese/book/chapters/ch297-whose-fault.tex"
+}

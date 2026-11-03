@@ -150,3 +150,14 @@ LANG22 PR 11+: .ldp serialiser, JIT promotion, AOT-PGO ← reads ProfileTable
 ```
 
 See [`LANG22-typing-spectrum-aot-jit.md`](../../specs/LANG22-typing-spectrum-aot-jit.md) for the unified AOT/JIT/PGO compilation story that builds on top of this stack.
+
+## LANG83 PR5a — string failures are registered traps
+
+`RunError::Trap { kind }` carries a LANG83 registered trap kind (the twin of
+`vm-core`'s `VMError::Trap`). An out-of-range `str_index` or `str_slice`
+raises `Trap.Bounds`, and a `str_concat` whose result would exceed the
+module's string ceiling (`IIRModule::str_ceiling`) raises `Trap.Overflow`:
+
+```text
+(string-ref "ABC" 3)   =>  Err(RunError::Trap { kind: "Trap.Bounds" })   // "trap: Trap.Bounds"
+```

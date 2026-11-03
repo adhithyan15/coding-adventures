@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C427-zizhucan",
+  "pathSegment": "ZH-PATH-427-COMEGO427",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-427-COMEGO427",
+      "order": 3
+    }
+  ]
+}

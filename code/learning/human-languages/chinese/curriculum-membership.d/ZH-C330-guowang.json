@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C330-guowang",
+  "pathSegment": "ZH-PATH-330-KING330",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-330-KING330",
+      "order": 3
+    }
+  ]
+}

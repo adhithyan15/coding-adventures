@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C497-zhishi",
+    "language": "chinese",
+    "chapter": 497,
+    "sequence": 37590,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:1fc75b42f34294ed"
+  },
+  "findings": []
+}

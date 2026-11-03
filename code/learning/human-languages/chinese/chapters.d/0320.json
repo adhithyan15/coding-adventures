@@ -1,0 +1,19 @@
+{
+  "chapter": 320,
+  "title": "On the Phone",
+  "label": "ch:zh-on-the-phone",
+  "canDo": "I can say someone hung up, dial a number, get through, bring something up and talk about a voice message.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C320-yuyin",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 320: I can say someone hung up, dial a number, get through, bring something up and talk about a voice message.",
+    "assesses": [
+      "ZH-LEX-C320-PHONE320-03",
+      "ZH-LEX-C320-PHONE320-04",
+      "ZH-LEX-C320-PHONE320-05"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-280-THINK",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what I think, and ask what you think.",
+  "prerequisites": []
+}

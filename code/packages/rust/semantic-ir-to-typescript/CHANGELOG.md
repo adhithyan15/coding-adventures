@@ -1,5 +1,55 @@
 # Changelog
 
+## Unreleased — a `rescue` binding the clause reassigns (#18798)
+
+`rescue => e` ⏎ `e = 5` failed: the binding was always `const`
+(the reassignment did not type-check).  It is now `let` when the clause stores into it (`const` otherwise), like every
+other binding.  Test `rescue_binding_that_the_clause_reassigns_is_let_ts`; end-to-end, `sir-conformance`'s
+`rb_rescue_binding_reassigned_in_the_clause`.
+
+## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
+
+### Globals and constants never collide with functions
+
+Follow-up to #18485, from the security review of #18788.  SIR names a
+function, a module global, a function's variable and a constant in four
+separate namespaces; TypeScript has one.  #18788 kept variables apart from
+functions.  Still colliding:
+
+| SIR                              | emitted                                 | result                                    |
+|----------------------------------|-----------------------------------------|-------------------------------------------|
+| global `f` and function `f`      | `let f = null;` and `function f()`      | `SyntaxError: Identifier 'f' has already been declared` |
+| local `x` and global `x`         | `let x = 40` inside the function        | the `Global` read saw the local: 80, not 42 |
+| constant `F` and function `F`    | `const F: __Sir.Val = 2` beside `function F()` | `TypeError: F is not a function`   |
+
+Each kind now moves when something outranks it (functions never move,
+because callers call them by name): a global spelled like a function becomes
+`_$sir_esc_g<name>` (`global_ident`), a variable spelled like a function or
+a global `_$sir_esc_l<name>` (`var_ident`), and a constant spelled like
+either `_$sir_esc_c<name>` (`const_ident`).  The three tags differ from each
+other and from `sanitize_ident`'s `v`/`e`, so the map stays one-to-one.  A
+`Global` reference to a name that is only a function keeps the function's
+spelling (how this backend hands out a function's handle).
+
+Tests: emit-level unit tests for each case, and
+`tests/twig_generated_names.rs`'s
+`globals_locals_and_constants_never_collide_with_each_other` runs all three
+under `node` -- on the previous emitter they print a `SyntaxError`, 80 and a
+`TypeError`.
+
+### Test temp files live in a private scratch directory
+
+The execution tests wrote each emitted program to a predictable name
+(`<program>_<pid>_<counter>`) directly in the shared system temp directory.
+Unique among this checkout's tests, but not private: any other process on
+the host could create that name first, replace it, or plant a symlink there
+(and beside a `.py` file, a module `python3` would import from the script's
+own directory).  Each test call now writes into a fresh
+[`sir-test-scratch`](../sir-test-scratch) directory -- random name, created
+atomically, mode `0700` on Unix, removed with its contents when the test
+returns or panics -- and creates its files with `create_new`, so an existing
+file is an error rather than reused.  The existing removal guards stay.
+
 ## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
 
 The execution tests named their temp files from the process id alone, or (in

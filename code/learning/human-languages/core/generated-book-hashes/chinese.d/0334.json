@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 334,
+  "sourceHash": "fnv1a64:b8dcaeb542ee5a3e",
+  "lessonIds": [
+    "ZH-C334-zhengyue",
+    "ZH-C334-hongbao",
+    "ZH-W334-hong-red",
+    "ZH-C334-tie",
+    "ZH-C334-chunlian",
+    "ZH-C334-honghuo"
+  ],
+  "tex": "chinese/book/chapters/ch334-red-envelopes.tex"
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C353-bujiande",
+  "pathSegment": "ZH-PATH-353-POINT353",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-353-POINT353",
+      "order": 3
+    }
+  ]
+}

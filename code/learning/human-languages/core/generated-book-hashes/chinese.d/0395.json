@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 395,
+  "sourceHash": "fnv1a64:7d54049cd1c7a77f",
+  "lessonIds": [
+    "ZH-C395-shixian",
+    "ZH-C395-qude",
+    "ZH-W395-qu-take",
+    "ZH-C395-chengguo",
+    "ZH-C395-wancheng",
+    "ZH-C395-tiaojian"
+  ],
+  "tex": "chinese/book/chapters/ch395-getting-results.tex"
+}

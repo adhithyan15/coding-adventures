@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 482,
+  "sourceHash": "fnv1a64:26f5756e5d5228c8",
+  "lessonIds": [
+    "ZH-C482-jizhen",
+    "ZH-C482-zhiliao",
+    "ZH-C482-yaopian",
+    "ZH-C482-xiaodu",
+    "ZH-C482-huli"
+  ],
+  "tex": "chinese/book/chapters/ch482-treatment.tex"
+}

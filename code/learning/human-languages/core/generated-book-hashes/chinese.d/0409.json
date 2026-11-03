@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 409,
+  "sourceHash": "fnv1a64:f70a9eb03fa3bc64",
+  "lessonIds": [
+    "ZH-C409-gaofeng",
+    "ZH-C409-jiaotong",
+    "ZH-W409-tong-through",
+    "ZH-C409-tongche",
+    "ZH-C409-shoupiaoyuan",
+    "ZH-C409-dache"
+  ],
+  "tex": "chinese/book/chapters/ch409-heavy-traffic.tex"
+}

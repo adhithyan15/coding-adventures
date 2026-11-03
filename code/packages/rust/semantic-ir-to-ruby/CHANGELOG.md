@@ -1,5 +1,78 @@
 # Changelog
 
+## Unreleased — class names that are not Ruby constants; `each` (#18778)
+
+### Fixed (review of #18778)
+
+- **A subclass of a renamed class showed the parent's name.**
+  `sir_show_class_as` installed `name`/`to_s`/`inspect` as singleton
+  methods, which subclasses inherit: `Puppy.name` was `"dog"`, and an
+  exception subclass of a renamed `my_err` reported `my_err`.  Each now
+  answers the source name only for the class itself (`equal?(klass)`) and
+  defers to `super` otherwise.  Test
+  `a_subclass_of_a_renamed_class_keeps_its_own_name`.
+- **A user class could replace a runtime constant.**  `ruby_const` reserved
+  only the `SirC` marker, but the runtime defines `SirPair`, `SirNDArray`,
+  `SirSymTerm` and `SIR_*` constants; a user `class SirPair` replaced the
+  cons-pair struct through `const_set`.  Every name that starts with `Sir`
+  and an upper-case letter, or with `SIR_`, is now renamed (`SirCv…`); the
+  map stays one-to-one because the marker is itself reserved.  Test
+  `a_user_class_spelled_like_a_runtime_constant_does_not_replace_it`.
+- **`each` over a Hash with a one-parameter block** raised `ArgumentError`
+  (the block is a strict lambda, and it was always called with key and
+  value).  The emitter now passes the block's parameter count, and
+  `sir_each` gives a one-parameter block the `[key, value]` pair, as Ruby
+  does.  Test `each_over_a_hash_gives_a_one_parameter_block_the_pair`.
+
+### Fixed
+
+- **A class whose name is not a Ruby constant** (Python's `class dog:`, the
+  Python frontend's `__param_a`) died at run time with `wrong constant name
+  dog (NameError)`: `Object.const_set` takes only an upper-case first
+  letter.  Every constant position — `const_set` of a class, module or
+  constant, `Class.new(<super>)`, `sir_new`, `define_method`,
+  `define_singleton_method`, `public_send` on a class, `super`,
+  `include`/`extend`, a `Const` reference, and a `rescue` clause — now goes
+  through `ruby_const`, a one-to-one map per `::` segment: an upper-case
+  name passes through (so `StandardError` is Ruby's own class), a lower-case
+  or `_` name gets the `SirCl` prefix, and an upper-case name that already
+  starts with the `SirC` marker gets `SirCv`.  A renamed class or module is
+  followed by the new runtime helper `sir_show_class_as`, which gives it its
+  source name back for `name`, `to_s`, `inspect`, an instance's default
+  `to_s`/`inspect`, an exception's default message, and Ruby's own messages
+  that ask for the class name.  Tests
+  `lower_case_class_names_are_renamed_one_to_one_and_keep_their_names`,
+  `a_lower_case_exception_class_is_rescued_by_its_renamed_constant`,
+  `methods_and_mixins_of_a_renamed_class_use_its_constant`.
+
+### Added
+
+- **`recv.each { … }`**, the first built-in method this backend runs: the
+  Ruby frontend lowers `[1].each do |x| … end` to `__method__(recv, "each",
+  closure)`, which was refused (the Collections batch).  It now renders as
+  the runtime's `sir_each(recv, block)`: the receiver's own `each` when its
+  class defines one, else native `Array#each` / `Hash#each` (key and value
+  as two arguments); it returns the receiver.  Any other built-in method,
+  and `each` without a block, is still refused.  Tests
+  `each_with_a_block_runs_over_an_array_and_a_hash`,
+  `each_runs_a_user_classs_own_each_and_returns_the_receiver`,
+  `other_built_in_methods_are_still_refused`.
+
+## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
+
+### Test temp files live in a private scratch directory
+
+The execution tests wrote each emitted program to a predictable name
+(`<program>_<pid>_<counter>`) directly in the shared system temp directory.
+Unique among this checkout's tests, but not private: any other process on
+the host could create that name first, replace it, or plant a symlink there
+(and beside a `.py` file, a module `python3` would import from the script's
+own directory).  Each test call now writes into a fresh
+[`sir-test-scratch`](../sir-test-scratch) directory -- random name, created
+atomically, mode `0700` on Unix, removed with its contents when the test
+returns or panics -- and creates its files with `create_new`, so an existing
+file is an error rather than reused.  The existing removal guards stay.
+
 ## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
 
 The execution tests named their temp files from the process id alone, or (in

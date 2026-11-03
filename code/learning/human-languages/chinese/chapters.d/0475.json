@@ -1,0 +1,21 @@
+{
+  "chapter": 475,
+  "title": "Head to Knees",
+  "label": "ch:zh-head-to-knees",
+  "canDo": "I can talk about the palm of my hand, my knees and back, how tall I am, and bending an arm.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-R475-review-470-475",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 475: I can talk about the palm of my hand, my knees and back, how tall I am, and bending an arm.",
+    "assesses": [
+      "ZH-LEX-C475-BODY475-01",
+      "ZH-LEX-C475-BODY475-02",
+      "ZH-LEX-C475-BODY475-03",
+      "ZH-LEX-C475-BODY475-04",
+      "ZH-LEX-C475-BODY475-05"
+    ]
+  }
+}

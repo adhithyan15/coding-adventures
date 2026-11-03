@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 308,
+  "sourceHash": "fnv1a64:ac513dacaefdec8b",
+  "lessonIds": [
+    "ZH-C308-shizong",
+    "ZH-C308-zicong",
+    "ZH-W308-zi-self",
+    "ZH-C308-laizi",
+    "ZH-C308-fanzui",
+    "ZH-C308-paichusuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch308.txt",
+  "json": "chinese/narration/ch308.json",
+  "textHash": "fnv1a64:87892d8926c8d58e",
+  "jsonHash": "fnv1a64:505caee7fbfe9191",
+  "findings": []
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W446-cheng-town",
+    "language": "chinese",
+    "chapter": 446,
+    "sequence": 33835,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:81d9b6066673cff7",
+    "detachableSegments": [
+      "Script — the earth piece, then 成"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

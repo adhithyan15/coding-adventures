@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C287-zui-most",
+    "language": "chinese",
+    "chapter": 287,
+    "sequence": 21750,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4583384b2c1e9a04"
+  },
+  "findings": []
+}

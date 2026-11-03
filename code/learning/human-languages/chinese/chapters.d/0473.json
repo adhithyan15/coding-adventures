@@ -1,0 +1,19 @@
+{
+  "chapter": 473,
+  "title": "At the Dentist",
+  "label": "ch:zh-at-the-dentist",
+  "canDo": "I can talk about my mouth, my dentist and my teeth, and having a tooth out or filled.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C473-buya",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 473: I can talk about my mouth, my dentist and my teeth, and having a tooth out or filled.",
+    "assesses": [
+      "ZH-LEX-C473-TEETH473-03",
+      "ZH-LEX-C473-TEETH473-04",
+      "ZH-LEX-C473-TEETH473-05"
+    ]
+  }
+}

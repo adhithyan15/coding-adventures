@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C447-raolu",
+  "pathSegment": "ZH-PATH-447-WALK447",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-447-WALK447",
+      "order": 3
+    }
+  ]
+}

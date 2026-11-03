@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W523-mai-sell",
+  "pathSegment": "ZH-PATH-523-TRADE523",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-523-TRADE523",
+      "order": 2
+    }
+  ]
+}

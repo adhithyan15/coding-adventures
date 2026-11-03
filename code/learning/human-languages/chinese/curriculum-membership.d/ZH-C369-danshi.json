@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C369-danshi",
+  "pathSegment": "ZH-PATH-369-CLEAR369",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-369-CLEAR369",
+      "order": 1
+    }
+  ]
+}

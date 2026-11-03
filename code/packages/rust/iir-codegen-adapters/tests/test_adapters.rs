@@ -34,6 +34,7 @@ fn void_module() -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -61,6 +62,7 @@ fn add_i32_module() -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -88,6 +90,7 @@ fn mul_i64_module() -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -125,6 +128,7 @@ fn two_function_module() -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -138,6 +142,7 @@ fn empty_module() -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 
@@ -157,6 +162,7 @@ fn unsupported_op_module() -> IIRModule {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     }
 }
 

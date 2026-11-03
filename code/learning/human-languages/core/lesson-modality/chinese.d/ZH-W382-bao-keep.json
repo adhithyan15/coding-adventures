@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W382-bao-keep",
+    "language": "chinese",
+    "chapter": 382,
+    "sequence": 29425,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:e06da75f8187b6e4",
+    "detachableSegments": [
+      "Script — the person piece, then 口 over a tree"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

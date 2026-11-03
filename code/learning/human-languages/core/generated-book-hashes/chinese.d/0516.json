@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 516,
+  "sourceHash": "fnv1a64:3a0b6af9c8ece551",
+  "lessonIds": [
+    "ZH-C516-luoye",
+    "ZH-C516-shu-tree",
+    "ZH-W516-shu-tree",
+    "ZH-C516-guoshu",
+    "ZH-C516-shulin",
+    "ZH-C516-chengshu"
+  ],
+  "tex": "chinese/book/chapters/ch516-trees-and-leaves.tex"
+}

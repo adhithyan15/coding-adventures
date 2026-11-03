@@ -346,6 +346,7 @@ fn typed_add_function_compiles_via_pipeline() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
 
     let config = IIRJvmConfig::new("AddTest");
@@ -378,6 +379,7 @@ fn typed_void_function_compiles_via_pipeline() {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
 
     let config = IIRJvmConfig::new("VoidTest");

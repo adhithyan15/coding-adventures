@@ -437,12 +437,33 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
             collect_expr_assigned(key, out);
             collect_expr_assigned(value, out);
         }
+        // #18798 — a `TryCatch` (`begin`/`rescue`/`ensure`) runs its blocks
+        // in the enclosing function, so a store there into an outer local
+        // needs that local declared `let mut`.  This arm used to collect
+        // nothing, and `x = 0; begin; x = 1; rescue; end` failed rustc with
+        // `cannot assign twice to immutable variable` (it surfaced when a
+        // method-level `rescue` began storing the method's value).
+        Stmt::TryCatch {
+            body,
+            rescues,
+            ensure_body,
+            ..
+        } => {
+            for s in body {
+                collect_stmt_assigned(s, out);
+            }
+            for clause in rescues {
+                for s in &clause.body {
+                    collect_stmt_assigned(s, out);
+                }
+            }
+            for s in ensure_body.iter().flatten() {
+                collect_stmt_assigned(s, out);
+            }
+        }
         // SIR17 nodes are rejected at the capability check for this
         // backend; nothing reachable to collect.
-        Stmt::ClassDef { .. }
-        | Stmt::ModuleDef { .. }
-        | Stmt::SingletonClassDef { .. }
-        | Stmt::TryCatch { .. } => {}
+        Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {}
         // SIR29 nominal-OOP nodes: `Feature::NominalClasses`/`Interfaces`/
         // `VirtualDispatch` are not in this backend's accepted-features
         // list (see `ACCEPTED_FEATURES` in lib.rs), so `check_module`
@@ -1072,11 +1093,15 @@ fn emit_try_catch(
             // `Value::Exception` carrying the class tag and message, so
             // `e.class` / `e.is_a?` / `e.message` all answer.  It used to bind
             // the message STRING (see `exc_value`).
+            // #18798: `let mut` when the clause body stores into the binding
+            // (`rescue => e` ⏎ `e = 5`); a plain `let` failed rustc with
+            // "cannot assign twice to immutable variable".
             if let Some(bind) = &r.binding {
                 let _ = writeln!(
                     out,
-                    "{}let {}: __sir::Value = __sir::exc_value(&__exc);",
+                    "{}{} {}: __sir::Value = __sir::exc_value(&__exc);",
                     bpad,
+                    let_keyword(bind),
                     var_ident(bind)
                 );
             }
@@ -2105,6 +2130,26 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str("); if __sir::truthy(&__l) { __l } else { (");
         emit_expr(out, &args[1], indent);
         out.push_str(") } })");
+        return;
+    }
+    // #18798 — `not` is SIR's boolean negation: Ruby `!x`, `not x`, and
+    // every `unless c` / `until c` (lowered as `if not(c)` / `while
+    // not(c)`).  It had no arm here and no entry in
+    // `call_builtin_by_name`, so EVERY Ruby `unless` panicked with
+    // "unknown builtin: not".  The result is a real `Bool` (Ruby's `!x` is
+    // `true` or `false`, never the operand), taken with SIR truthiness:
+    // only `nil` and `false` are falsy, so `!0` is `false`.
+    //
+    // | x                        | not(x) |
+    // |--------------------------|--------|
+    // | nil                      | true   |
+    // | false                    | true   |
+    // | true                     | false  |
+    // | anything else (0, "", …) | false  |
+    if name == "not" && args.len() == 1 {
+        out.push_str("__sir::Value::Bool(!__sir::truthy(&(");
+        emit_expr(out, &args[0], indent);
+        out.push_str(")))");
         return;
     }
 
@@ -5383,6 +5428,19 @@ mod tests {
     }
 
     #[test]
+    fn emit_not_builtin_negates_by_truthiness() {
+        // #18798 — every Ruby `unless` lowers to `if not(c)`; `not` had no
+        // arm here, fell to `call_builtin_by_name` (which had no entry
+        // either), and panicked "unknown builtin: not" at runtime.
+        let not = builtin("not", vec![int(0)]);
+        assert_eq!(
+            emit_e(&not),
+            "__sir::Value::Bool(!__sir::truthy(&(__sir::Value::Int(0i64))))"
+        );
+        assert!(!emit_e(&not).contains("call_builtin_by_name"));
+    }
+
+    #[test]
     fn emit_super_routes_to_call_super() {
         // super("x") inside Cat#describe → __super__("describe","Cat","x").
         let e = builtin(
@@ -5645,6 +5703,66 @@ mod tests {
         // A user variable spelled like the renamed form takes the verbatim
         // escape, so the two stay apart.
         assert_ne!(var_ident("__sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
+    }
+
+    // ── constants and the renamed `main` (follow-ups to #18485) ──────
+
+    /// A constant is never an identifier in this backend: the one place it
+    /// is accepted, the class operand of `raise`, emits its *name string*,
+    /// and every other constant use is refused before emit.  So a constant
+    /// spelled like a function cannot shadow it.  `def Boom; 40; end` plus
+    /// `raise Boom, "m"`: the function keeps its name and the class is the
+    /// string `"Boom"`.
+    #[test]
+    fn a_constant_named_like_a_function_is_a_string_not_an_identifier() {
+        let boom = Function {
+            name: "Boom".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::IntLit { value: 40, span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let raise = Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![
+                Expr::VarRef { name: "Boom".into(), scope: Scope::Const, span: s() },
+                Expr::StrLit { value: "m".into(), span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut main = boom.clone();
+        main.name = "main".into();
+        main.body.value = raise;
+        let m = Module {
+            name: "consts".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![boom, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(out.contains("__sir::raise(\"Boom\", "), "{out}");
+    }
+
+    /// SIR's `main` is emitted as `__sir_user_main`; no user name -- of a
+    /// function or a variable -- can produce that spelling, so a user
+    /// function spelled `__sir_user_main` and the renamed `main` never meet.
+    #[test]
+    fn no_user_name_spells_the_renamed_main() {
+        let lookalike = "__sir_user_main";
+        FUNCTION_NAMES.with(|t| *t.borrow_mut() = [lookalike.to_string()].into_iter().collect());
+        for spelling in [function_emit_name(lookalike), var_ident(lookalike), sanitize_ident(lookalike)] {
+            assert_ne!(spelling, function_emit_name("main"), "{spelling}");
+            assert!(spelling.starts_with("__sir_esc_"), "{spelling}");
+        }
         FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
     }
 }

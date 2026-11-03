@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C492-dili",
+    "language": "chinese",
+    "chapter": 492,
+    "sequence": 37330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0f7cf7f47c1168e1"
+  },
+  "findings": []
+}

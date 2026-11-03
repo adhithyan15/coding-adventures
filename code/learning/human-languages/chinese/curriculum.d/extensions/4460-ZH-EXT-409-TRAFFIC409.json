@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-409-TRAFFIC409",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can talk about rush hour and the traffic, say a line opens, find the conductor and take a taxi.",
+  "prerequisites": []
+}

@@ -1,0 +1,20 @@
+{
+  "chapter": 328,
+  "title": "A Legend",
+  "label": "ch:zh-a-legend",
+  "canDo": "I can talk about myths and legends, say a story was handed down, name a dragon and carry messages.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C328-chuanhua",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 328: I can talk about myths and legends, say a story was handed down, name a dragon and carry messages.",
+    "assesses": [
+      "ZH-LEX-C328-LEGEND328-03",
+      "ZH-LEX-C328-LEGEND328-04",
+      "ZH-LEX-C328-LEGEND328-05",
+      "ZH-SCRIPT-CHUAN-PASS-01"
+    ]
+  }
+}

@@ -946,21 +946,52 @@ fn lower_capability(capability: &Capability, os: OsFamily) -> SandboxRule {
 ///   category / target        every OS                 why
 ///   ----------------------   ----------------------   ------------------------------
 ///   ffi:*                    Unsupported              in-process code; nothing to broker (S-K6, S-I6)
+///   thread:*                 Unsupported              threads share the agent's address space;
+///                                                     no primitive names a worker role and
+///                                                     no broker can start one inside the agent
+///   ui:*                     Unsupported              a view or DOM node lives in the agent's
+///                                                     process; no primitive names one view
+///                                                     and no UI broker exists
 ///   proc:*                   Brokered (host_broker)   no primitive names a program or a PID;
 ///                                                     the supervisor spawns (spawn_verified)
 ///   net:*                    Brokered (host_broker)   no unprivileged primitive names a host
+///   rand:read                Brokered (host_broker)   no primitive scopes getrandom or
+///                                                     /dev/urandom; the broker serves entropy,
+///                                                     which a simulated host can also seed
 ///   Direct + wildcard        Brokered (host_broker)   "*", "**", globs: nothing exact to name
 /// ```
+///
+/// `thread` and `ui` are D21's nondeterminism categories (VER00 §6.3). Being
+/// unsupported here means a manifest that declares them cannot launch under
+/// a kernel sandbox at all (S-P3): it is never quietly run with the thread or
+/// view authority left unconfined.
 ///
 /// Portable has no kernel boundary at all, so everything else on it is the
 /// broker; `launch_preconditions` refuses it anyway (`NoKernelBoundary`).
 fn lower_rule(capability: &Capability, os: OsFamily) -> (String, SandboxCoverage, &'static str) {
-    if capability.category == Category::Ffi {
-        return (
-            format!("{os}.ffi.unenforceable"),
-            SandboxCoverage::Unsupported,
-            "native code runs inside the agent's own address space; no sandbox can target-scope it and no broker can perform it",
-        );
+    match capability.category {
+        Category::Ffi => {
+            return (
+                format!("{os}.ffi.unenforceable"),
+                SandboxCoverage::Unsupported,
+                "native code runs inside the agent's own address space; no sandbox can target-scope it and no broker can perform it",
+            )
+        }
+        Category::Thread => {
+            return (
+                format!("{os}.thread.unenforceable"),
+                SandboxCoverage::Unsupported,
+                "threads run inside the agent's own address space; seccomp, Seatbelt, AppContainer, Capsicum and pledge can refuse thread creation but cannot scope it to a worker role, and no broker can start a thread inside the agent",
+            )
+        }
+        Category::Ui => {
+            return (
+                format!("{os}.ui.unenforceable"),
+                SandboxCoverage::Unsupported,
+                "a view or DOM node lives inside the agent's own process or display session; no sandbox primitive can scope access to one view and no UI broker exists",
+            )
+        }
+        _ => {}
     }
     if os == OsFamily::Portable {
         let (primitive, coverage, note) = lower_portable(capability);
@@ -986,6 +1017,13 @@ fn lower_rule(capability: &Capability, os: OsFamily) -> (String, SandboxCoverage
                 format!("{os}.host_broker.net"),
                 SandboxCoverage::Brokered,
                 "no unprivileged primitive can scope a socket to one host, so the broker makes the connection",
+            )
+        }
+        Category::Rand => {
+            return (
+                format!("{os}.host_broker.entropy"),
+                SandboxCoverage::Brokered,
+                "no platform primitive can scope getrandom or /dev/urandom reads, so the broker serves entropy, as it answers the clock",
             )
         }
         _ => {}
@@ -1107,7 +1145,12 @@ fn lower_linux(capability: &Capability) -> (&'static str, SandboxCoverage, &'sta
             SandboxCoverage::LaunchTime,
             "stdio authority is selected by the file descriptors inherited at spawn",
         ),
-        Category::Net | Category::Proc | Category::Ffi => unreachable_lowering(),
+        Category::Net
+        | Category::Proc
+        | Category::Ffi
+        | Category::Rand
+        | Category::Thread
+        | Category::Ui => unreachable_lowering(),
     }
 }
 
@@ -1142,7 +1185,12 @@ fn lower_macos(capability: &Capability) -> (&'static str, SandboxCoverage, &'sta
             SandboxCoverage::Direct,
             "Seatbelt carries filesystem policy as exact path literals",
         ),
-        Category::Net | Category::Proc | Category::Ffi => unreachable_lowering(),
+        Category::Net
+        | Category::Proc
+        | Category::Ffi
+        | Category::Rand
+        | Category::Thread
+        | Category::Ui => unreachable_lowering(),
     }
 }
 
@@ -1168,7 +1216,12 @@ fn lower_windows(capability: &Capability) -> (&'static str, SandboxCoverage, &'s
             SandboxCoverage::LaunchTime,
             "stdio authority is selected by inheritable handles at spawn",
         ),
-        Category::Net | Category::Proc | Category::Ffi => unreachable_lowering(),
+        Category::Net
+        | Category::Proc
+        | Category::Ffi
+        | Category::Rand
+        | Category::Thread
+        | Category::Ui => unreachable_lowering(),
     }
 }
 
@@ -1194,7 +1247,12 @@ fn lower_freebsd(capability: &Capability) -> (&'static str, SandboxCoverage, &'s
             SandboxCoverage::LaunchTime,
             "stdio authority is selected by inherited descriptors and Capsicum rights",
         ),
-        Category::Net | Category::Proc | Category::Ffi => unreachable_lowering(),
+        Category::Net
+        | Category::Proc
+        | Category::Ffi
+        | Category::Rand
+        | Category::Thread
+        | Category::Ui => unreachable_lowering(),
     }
 }
 
@@ -1220,7 +1278,12 @@ fn lower_openbsd(capability: &Capability) -> (&'static str, SandboxCoverage, &'s
             SandboxCoverage::Brokered,
             "pledge cannot target-scope time reads, so the broker answers them",
         ),
-        Category::Net | Category::Proc | Category::Ffi => unreachable_lowering(),
+        Category::Net
+        | Category::Proc
+        | Category::Ffi
+        | Category::Rand
+        | Category::Thread
+        | Category::Ui => unreachable_lowering(),
     }
 }
 
@@ -1354,6 +1417,12 @@ mod tests {
             (Time, Sleep),
             (Stdin, Read),
             (Stdout, Write),
+            (Rand, Read),
+            (Thread, Spawn),
+            (Thread, Message),
+            (Ui, Read),
+            (Ui, Write),
+            (Ui, Event),
         ];
         // `Capability::new` refuses pairs capability-cage does not allow,
         // so the list cannot drift into invalid combinations.
@@ -1371,7 +1440,8 @@ mod tests {
     fn no_lowering_on_any_platform_is_advisory() {
         // S-P2: what would be advisory is brokered or unsupported instead.
         let capabilities = every_capability();
-        assert!(capabilities.len() >= 18);
+        // All 25 taxonomy pairs plus the wildcard filesystem case.
+        assert_eq!(capabilities.len(), 26);
         for os in OsFamily::all_supported() {
             for capability in &capabilities {
                 let rule = lower_capability(capability, os);
@@ -1437,6 +1507,97 @@ mod tests {
                     "{os}: {rejections:?}"
                 );
             }
+        }
+    }
+
+    #[test]
+    fn thread_and_ui_are_unsupported_on_every_platform() {
+        // D21 nondeterminism categories that live in the agent's own
+        // process. No platform can scope them and no broker can perform
+        // them, so a plan holding one must refuse to launch (S-P3), never
+        // run with the authority silently unconfined.
+        use Action::*;
+        use Category::*;
+        for os in OsFamily::all_supported() {
+            for (category, action, target) in [
+                (Thread, Spawn, "decode-pool"),
+                (Thread, Message, "decode-pool"),
+                (Thread, Spawn, "*"),
+                (Ui, Read, "#editor"),
+                (Ui, Write, "#editor"),
+                (Ui, Event, "*"),
+            ] {
+                let capability = Capability::new(category, action, target, "x").unwrap();
+                let rule = lower_capability(&capability, os);
+                assert_eq!(
+                    rule.coverage,
+                    SandboxCoverage::Unsupported,
+                    "{os} {category}:{action}"
+                );
+                assert!(!rule.is_native(), "{os} {category}:{action}");
+                assert!(
+                    rule.primitive
+                        .ends_with(&format!("{category}.unenforceable")),
+                    "{os}: {}",
+                    rule.primitive
+                );
+                let mut plan = SandboxPlan::empty("rust/worker", os);
+                plan.rules.push(rule);
+                let key = format!("{category}:{action}:{target}");
+                let rejections = plan.launch_preconditions().unwrap_err();
+                assert!(
+                    rejections.contains(&PlanRejection::UnsupportedRule(key.clone())),
+                    "{os}: {key}: {rejections:?}"
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn ambient_randomness_is_brokered_like_the_clock() {
+        // No kernel primitive can scope getrandom or /dev/urandom, so the
+        // broker serves entropy. That is a launchable coverage, unlike
+        // thread and ui, and it is never labelled Direct.
+        let rand = Capability::new(Category::Rand, Action::Read, "*", "session ids").unwrap();
+        for os in kernel_oses() {
+            let rule = lower_capability(&rand, os);
+            assert_eq!(rule.coverage, SandboxCoverage::Brokered, "{os}");
+            assert_eq!(rule.primitive, format!("{os}.host_broker.entropy"));
+            let mut plan = SandboxPlan::empty("rust/keys", os);
+            plan.rules.push(rule);
+            assert_eq!(plan.launch_preconditions(), Ok(()), "{os}");
+            let summary = plan.summary();
+            assert_eq!(summary.brokered_rules, 1, "{os}");
+            assert_eq!(summary.host_broker_rules, 1, "{os}");
+        }
+    }
+
+    #[test]
+    fn a_manifest_declaring_a_thread_cannot_launch() {
+        // End to end from JSON: the thread rule is planned, reported as
+        // unsupported, and the launch is refused on every kernel OS, while
+        // the brokered rand rule alongside it is fine.
+        let manifest = r#"{
+          "version": 1,
+          "package": "rust/decoder",
+          "capabilities": [
+            {"category": "rand", "action": "read", "target": "*",
+             "justification": "Seeds the shuffle of the work queue."},
+            {"category": "thread", "action": "spawn", "target": "decode-pool",
+             "justification": "Decodes frames on worker threads."}
+          ],
+          "justification": "A frame decoder with a worker pool."
+        }"#;
+        for os in kernel_oses() {
+            let plan = plan_from_json(manifest, os).unwrap();
+            assert_eq!(plan.summary().unsupported_rules, 1, "{os}");
+            assert_eq!(
+                plan.launch_preconditions(),
+                Err(vec![PlanRejection::UnsupportedRule(
+                    "thread:spawn:decode-pool".to_string()
+                )]),
+                "{os}"
+            );
         }
     }
 

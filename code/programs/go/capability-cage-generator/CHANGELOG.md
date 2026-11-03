@@ -4,6 +4,27 @@ All notable changes to this program will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+- D21's nondeterminism categories (VER00 §6.3). The closed taxonomy grows
+  from 19 to 25 pairs. `rand:read` generates `op.Rand.Read`, backed by an
+  aliased `crypto/rand` import, and `thread:spawn` generates
+  `op.Thread.Spawn(role, body)`, which checks the role against the declared
+  targets and refuses a nil body. `thread:message`, `ui:read`, `ui:write` and
+  `ui:event` are recognized but fail with the explicit unsupported-pair
+  error.
+- Tests now type-check generated files against the standard library
+  instead of only matching text.
+
+### Fixed
+
+- `env:read` with an exact target generated `return nil, ...` from a
+  method that returns a string, which did not compile. The scoped check now
+  takes the method's own zero value.
+- Generated imports are sorted by import path, ignoring any alias, which is
+  the order gofmt keeps. Output for every existing Go manifest is
+  byte-identical.
+
 ### Security
 
 - Validate every manifest capability against Spec 13's closed 19-pair

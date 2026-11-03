@@ -1,0 +1,856 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 498,
+  "title": "On the Pitch",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:dc995549daee0564",
+  "lessons": [
+    {
+      "id": "ZH-C498-tiyu",
+      "sequence": 37620,
+      "title": "tǐyù — physical education (a school subject)",
+      "headword": "tǐyù",
+      "romanization": "tǐyù",
+      "gloss": "physical education (a school subject)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c5abf827717463bf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for knowledge, then the Mandarin for to go on to further study."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tǐyù",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tǐyù — \"physical education (a school subject)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ zuì xǐhuan de kè shì tǐyù — My favourite lesson is PE."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tǐyù is built from 体 'the body' and yù 'to rear', both inherited from Middle Chinese, thejX and yuwk (Guangyun, in Baxter's transcription), which glosses the first 'the body' and the second 'to nourish' and 'to grow'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tǐyù",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tǐyù*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tǐyù, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tǐyù*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ zuì xǐhuan de kè shì tǐyù — My favourite lesson is PE.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ zuì xǐhuan de kè shì tǐyù* — My favourite lesson is PE.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for knowledge, then the Mandarin for to go on to further study, then say tǐyù again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for knowledge, then the Mandarin for to go on to further study, then say *tǐyù* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tǐyù mean? (\"Physical education (a school subject)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C498-qiuchang",
+      "sequence": 37630,
+      "title": "球场 (qiúchǎng) — sports ground; pitch; court",
+      "headword": "球场",
+      "romanization": "qiúchǎng",
+      "gloss": "sports ground; pitch; court",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9b68edf1dae3fded",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to go on to further study, then the Mandarin for physical education."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 球场",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "球场 — qiúchǎng — \"sports ground; pitch; court\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zài qiúchǎng tī le yí ge xiàwǔ zúqiú — We played football on the pitch all afternoon."
+            },
+            {
+              "kind": "speech",
+              "text": "The new character, in pieces: 球 (qiú) — eleven strokes in two pieces: on the left the jade piece of 理 lǐ, four strokes; on the right seven strokes, a bar, a long vertical with a hook, a dot and a rising stroke on the left, a short and a long falling stroke on the right, and a last dot at the top right. The next lesson puts it in your hand."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "球场 (qiúchǎng) is built from qiú 'a ball' and 场 'a ground', both inherited from Middle Chinese, gjuw and drjang (Guangyun, in Baxter's transcription), which glosses the second 'a threshing floor'. It glosses the first character 'a fine jade'; the sense 'a ball' belongs to a second character with the same sound, glossed 'a ball of hair to be struck', which modern writing spells the same way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qiúchǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qiúchǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qiúchǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qiúchǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zài qiúchǎng tī le yí ge xiàwǔ zúqiú — We played football on the pitch all afternoon.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zài qiúchǎng tī le yí ge xiàwǔ zúqiú* — We played football on the pitch all afternoon.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to go on to further study, then the Mandarin for physical education, then say qiúchǎng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to go on to further study, then the Mandarin for physical education, then say *qiúchǎng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 球场 (qiúchǎng) mean? (\"Sports ground; pitch; court\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W498-qiu-ball",
+      "sequence": 37635,
+      "title": "球 (qiú) — the jade piece, then seven strokes",
+      "headword": "球",
+      "romanization": "qiú",
+      "gloss": "球 — the jade piece of 理, then seven strokes",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:f68dbb4c10fe8b0a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the jade piece, then seven strokes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the jade piece, then seven strokes and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say qiúchǎng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *qiúchǎng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "理 场."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — lǐ, chǎng",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *lǐ*, *chǎng*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the jade piece, then seven strokes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "球 (qiú)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, left before right."
+            },
+            {
+              "kind": "speech",
+              "text": "The left piece, four strokes, as on the left of 理: two bars, a vertical through them, then a stroke rising to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The right piece, seven strokes. A bar. A long vertical down through it that hooks at the foot. On the left, a dot and a stroke rising to the right. On the right, a short stroke falling to the left and a long stroke falling to the right. Last, the small dot at the top right."
+            },
+            {
+              "kind": "speech",
+              "text": "4 + 7 = eleven."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "球 (qiú), all eleven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 球, all eleven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many pieces does 球 (qiú) have? (Two.) Which character you know has the same left piece? (理.) Which stroke comes last? (The small dot at the top right.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 球 (qiú), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C498-qiumen",
+      "sequence": 37640,
+      "title": "球门 (qiúmén) — goalmouth; goal (in football)",
+      "headword": "球门",
+      "romanization": "qiúmén",
+      "gloss": "goalmouth; goal (in football)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36d8310373617b32",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for physical education, then the Mandarin for a sports pitch."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 球门",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "球门 — qiúmén — \"goalmouth; goal (in football)\"."
+            },
+            {
+              "kind": "speech",
+              "text": "他站在球门前边 tā zhàn zài qiúmén qiánbian — He's standing in front of the goal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "球门 (qiúmén) is built from 球 (qiú) 'a ball' and 门 'a gate', both inherited from Middle Chinese, gjuw and mwon (Guangyun, in Baxter's transcription), which says the character is made of two door leaves."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qiúmén",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qiúmén*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "qiúmén, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *qiúmén*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā zhàn zài qiúmén qiánbian — He's standing in front of the goal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā zhàn zài qiúmén qiánbian* — He's standing in front of the goal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for physical education, then the Mandarin for a sports pitch, then say qiúmén again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for physical education, then the Mandarin for a sports pitch, then say *qiúmén* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 球门 (qiúmén) mean? (\"Goalmouth; goal (in football)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C498-shemen",
+      "sequence": 37650,
+      "title": "shèmén — to shoot at goal",
+      "headword": "shèmén",
+      "romanization": "shèmén",
+      "gloss": "to shoot at goal",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e69c28c24725ebd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a sports pitch, then the Mandarin for the goalmouth."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shèmén",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shèmén — \"to shoot at goal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "tā shèmén de shíhou qiúmén qiánbian méiyǒu rén — When he shot, there was nobody in front of the goal."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shèmén is built from shè 'to shoot' and 门 'a gate', both inherited from Middle Chinese, zyaeH and mwon (Guangyun, in Baxter's transcription), which glosses the first with the arts of archery."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shèmén",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shèmén*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shèmén, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shèmén*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā shèmén de shíhou qiúmén qiánbian méiyǒu rén — When he shot, there was nobody in front of the goal.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā shèmén de shíhou qiúmén qiánbian méiyǒu rén* — When he shot, there was nobody in front of the goal.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a sports pitch, then the Mandarin for the goalmouth, then say shèmén again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a sports pitch, then the Mandarin for the goalmouth, then say *shèmén* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shèmén mean? (\"To shoot at goal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C498-jinqiu",
+      "sequence": 37660,
+      "title": "进球 (jìnqiú) — to score a goal",
+      "headword": "进球",
+      "romanization": "jìnqiú",
+      "gloss": "to score a goal",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:028592fed9247a52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the goalmouth, then the Mandarin for to shoot at goal."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 进球",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "进球 — jìnqiú — \"to score a goal\"."
+            },
+            {
+              "kind": "speech",
+              "text": "进球的时候我感觉很开心 jìnqiú de shíhou wǒ gǎnjué hěn kāixīn — When I score, I feel great."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "进球 (jìnqiú) is built from 进 'to go in' and 球 (qiú) 'a ball', both inherited from Middle Chinese, tsinH and gjuw (Guangyun, in Baxter's transcription), which glosses the first 'forward'."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying how it was."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìnqiú",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìnqiú*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìnqiú, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìnqiú*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jìnqiú de shíhou wǒ gǎnjué hěn kāixīn — When I score, I feel great.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jìnqiú de shíhou wǒ gǎnjué hěn kāixīn* — When I score, I feel great.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the goalmouth, then the Mandarin for to shoot at goal, then say jìnqiú again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the goalmouth, then the Mandarin for to shoot at goal, then say *jìnqiú* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 进球 (jìnqiú) mean? (\"To score a goal\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

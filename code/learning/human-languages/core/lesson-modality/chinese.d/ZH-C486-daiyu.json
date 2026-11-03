@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C486-daiyu",
+    "language": "chinese",
+    "chapter": 486,
+    "sequence": 37040,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:708d0deae42169b3"
+  },
+  "findings": []
+}

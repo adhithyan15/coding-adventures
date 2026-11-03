@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C399-zhiyao",
+    "language": "chinese",
+    "chapter": 399,
+    "sequence": 30310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7966a7d7ec3c968f"
+  },
+  "findings": []
+}

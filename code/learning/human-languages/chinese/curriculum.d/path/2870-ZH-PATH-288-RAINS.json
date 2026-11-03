@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-288-RAINS",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-288-RAINS"
+  ],
+  "after": []
+}

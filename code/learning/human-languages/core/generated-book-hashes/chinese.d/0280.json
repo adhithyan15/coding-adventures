@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 280,
+  "sourceHash": "fnv1a64:7b5d5f0bad62e79d",
+  "lessonIds": [
+    "ZH-C280-yijian",
+    "ZH-W280-yi",
+    "ZH-C280-juede",
+    "ZH-C280-haoxiang",
+    "ZH-C280-zheme",
+    "ZH-C280-practice"
+  ],
+  "tex": "chinese/book/chapters/ch280-what-i-think.tex"
+}

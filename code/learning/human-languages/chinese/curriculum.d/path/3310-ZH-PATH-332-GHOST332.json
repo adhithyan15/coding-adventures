@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-332-GHOST332",
+  "spine_node": "SPINE-NARRATE-EVENTS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-332-GHOST332"
+  ],
+  "after": []
+}

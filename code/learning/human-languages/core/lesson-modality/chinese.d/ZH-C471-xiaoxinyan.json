@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C471-xiaoxinyan",
+    "language": "chinese",
+    "chapter": 471,
+    "sequence": 35690,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:a8e3b9f0d5573749"
+  },
+  "findings": []
+}

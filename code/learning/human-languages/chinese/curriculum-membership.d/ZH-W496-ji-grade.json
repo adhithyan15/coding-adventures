@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W496-ji-grade",
+  "pathSegment": "ZH-PATH-496-LEVELS496",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-496-LEVELS496",
+      "order": 2
+    }
+  ]
+}

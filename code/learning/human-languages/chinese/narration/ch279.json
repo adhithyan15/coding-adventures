@@ -1,0 +1,1501 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 279,
+  "title": "The Next Day",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:150cdea423590368",
+  "lessons": [
+    {
+      "id": "ZH-C279-dier-tian",
+      "sequence": 21080,
+      "title": "第二天 (dì'èr tiān) — the next day",
+      "headword": "第二天",
+      "romanization": "dì'èr tiān",
+      "gloss": "the next day; the following day",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ebaca22afdd2f25d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on the morning after."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 先洗手 然后吃早饭 — xiān xǐ shǒu, ránhòu chī zǎofàn — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 先洗手 然后吃早饭 — *xiān xǐ shǒu, ránhòu chī zǎofàn* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiēzhe, straight after — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiēzhe*, straight after — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dìyī, first — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dìyī*, first — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 明天 — míngtiān, tomorrow — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 明天 — *míngtiān*, tomorrow — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 第二天",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "第二天 — dì'èr tiān — \"the next day; the following day\"."
+            },
+            {
+              "kind": "speech",
+              "text": "第二天我们去了山上 dì'èr tiān wǒmen qù le shān shàng — The next day we went up the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "In a story, 第二天 (dì'èr tiān) is the day after the one you are telling; 明天 counts from today."
+            },
+            {
+              "kind": "speech",
+              "text": "山上 is 山 with 上, the short form of shàngbian: up on the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the first character in your hand. It is the dì of dìyī, first."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "第二天 (dì'èr tiān) is built from 第, which puts a number in order, 二 'two' and 天 'day'. All three are inherited from Middle Chinese, dejH, nyijH and then (Guangyun, in Baxter's transcription); the dictionary glosses the first 'order, sequence'. 'The next day' for the whole is the phrase's own sense: the second day of a story."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "第 (dì) before a number makes it an ordinal: dìyī, first, is one you say already, and 第二 is second."
+            },
+            {
+              "kind": "speech",
+              "text": "第二天 counts from the day the story is on, so it can follow a day in the past: 第二天天气很好 dì'èr tiān tiānqì hěn hǎo."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dì'èr tiān",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dì'èr tiān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dì'èr tiān, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dì'èr tiān*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "第二天我们去了山上 — dì'èr tiān wǒmen qù le shān shàng — The next day we went up the mountain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 第二天我们去了山上 — *dì'èr tiān wǒmen qù le shān shàng* — The next day we went up the mountain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "第二天天气很好 — dì'èr tiān tiānqì hěn hǎo — The next day the weather was fine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 第二天天气很好 — *dì'èr tiān tiānqì hěn hǎo* — The next day the weather was fine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dìyī, then 第二天 (dì'èr tiān)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dìyī*, then 第二天]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 第二天 (dì'èr tiān) mean? (\"The next day\".) How is it different from 明天? (明天 counts from today; 第二天 (dì'èr tiān) from the day in the story.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W279-di",
+      "sequence": 21090,
+      "title": "第 (dì) — the bamboo piece of 笑, then a five-stroke body",
+      "headword": "第",
+      "romanization": "dì",
+      "gloss": "第 — the bamboo piece of 笑, then a five-stroke body",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6dae5b689c1460d9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the bamboo piece of 笑, then a five-stroke body",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the bamboo piece of 笑, then a five-stroke body and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dì'èr tiān — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dì'èr tiān* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "笑 号."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — xiào, hào",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *xiào*, *hào*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the bamboo piece of 笑, then a five-stroke body",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "第 (dì)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you write the first already."
+            },
+            {
+              "kind": "speech",
+              "text": "The bamboo piece, six strokes, as on top of 笑: on the left a left-falling stroke, a short horizontal from it and a dot; then the same three on the right."
+            },
+            {
+              "kind": "speech",
+              "text": "The body, five strokes: a horizontal that turns down at its right end; a horizontal under it; a stroke that goes down, right, down again and hooks to the left, folding the way the foot of 号 does; the vertical down the middle; and last a left-falling stroke to the lower left."
+            },
+            {
+              "kind": "speech",
+              "text": "6 + 5 = eleven. The left-falling stroke comes after the vertical, last of all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "第 (dì), all eleven, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 第, all eleven, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 第 (dì)? (Eleven.) Where have you written its top? (On 笑.) Which stroke comes last? (The left-falling stroke, after the vertical.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 第 (dì), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C279-de-shihou",
+      "sequence": 21100,
+      "title": "…的时候 (… de shíhou) — when, and what was going on",
+      "headword": "…的时候",
+      "romanization": "… de shíhou",
+      "gloss": "…的时候 for the moment something happened, with 正在 for what was already going on",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c54af1d434dea102",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word for when, and a word for in the middle of."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "第二天, aloud — dì'èr tiān",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 第二天, aloud — *dì'èr tiān*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 时候 — shíhou, time; when — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 时候 — *shíhou*, time; when — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我正在吃饭 — wǒ zhèngzài chī fàn — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我正在吃饭 — *wǒ zhèngzài chī fàn* — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: …的时候 and 正在, for what was going on",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "…的时候 (… de shíhou) after a clause says when; 正在 in the other clause says what was already going on at that moment."
+            },
+            {
+              "kind": "speech",
+              "text": "他来的时候 我正在吃饭 tā lái de shíhou, wǒ zhèngzài chī fàn — When he came, I was eating. 我回家的时候 妈妈正在做饭 wǒ huí jiā de shíhou, māma zhèngzài zuòfàn — When I got home, Mum was cooking."
+            },
+            {
+              "kind": "speech",
+              "text": "The clause before 的时候 names the moment, and a bare verb is enough: 他来的时候. The other clause is the scene that was already running, with the 正在 of 我正在吃饭."
+            },
+            {
+              "kind": "speech",
+              "text": "正在 has no tense of its own: the story around it puts the scene in the past."
+            },
+            {
+              "kind": "speech",
+              "text": "All three characters of 的时候 are ones you write, so it prints whole for the first time."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "他来的时候 我正在吃饭 — tā lái de shíhou, wǒ zhèngzài chī fàn — When he came, I was eating.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 他来的时候 我正在吃饭 — *tā lái de shíhou, wǒ zhèngzài chī fàn* — When he came, I was eating.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我回家的时候 妈妈正在做饭 — wǒ huí jiā de shíhou, māma zhèngzài zuòfàn — When I got home, Mum was cooking.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我回家的时候 妈妈正在做饭 — *wǒ huí jiā de shíhou, māma zhèngzài zuòfàn* — When I got home, Mum was cooking.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我看书的时候 他来了 — wǒ kàn shū de shíhou, tā lái le — He came while I was reading.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我看书的时候 他来了 — *wǒ kàn shū de shíhou, tā lái le* — He came while I was reading.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you were doing when somebody phoned you last",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you were doing when somebody phoned you last]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does …的时候 (… de shíhou) give you? (The moment: when.) Which word gives the scene that was already going on? (正在.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C279-de-shihou-came",
+              "prompt": "How do you say 'when he came', in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-DE-SHIHOU-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "他来的时候",
+                "tā lái de shíhou",
+                "ta lai de shihou"
+              ],
+              "feedback": {
+                "correct": "他来的时候: the clause, then 的时候.",
+                "incorrect": "他来的时候. The moment comes first, then 的时候."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C279-turan",
+      "sequence": 21110,
+      "title": "突然 (tūrán) — suddenly",
+      "headword": "突然",
+      "romanization": "tūrán",
+      "gloss": "suddenly; all of a sudden",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3bb45e8434d0461c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: a moment, and then something breaking into it."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "他来的时候 我正在吃饭, aloud — tā lái de shíhou, wǒ zhèngzài chī fàn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 他来的时候 我正在吃饭, aloud — *tā lái de shíhou, wǒ zhèngzài chī fàn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "然后, aloud — ránhòu",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 然后, aloud — *ránhòu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 下雨 — xiàyǔ, to rain — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 下雨 — *xiàyǔ*, to rain — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 突然",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "突然 — tūrán — \"suddenly; all of a sudden\"."
+            },
+            {
+              "kind": "speech",
+              "text": "突然下雨了 tūrán xiàyǔ le — Suddenly it started to rain."
+            },
+            {
+              "kind": "speech",
+              "text": "他突然来了 tā tūrán lái le — He turned up out of the blue."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts the first character in your hand. The second is the 然 of 然后."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "突然 (tūrán) is built from 突 and 然, both inherited from Middle Chinese. The Guangyun lists 突 under two readings: thwot, glossed 'the look of coming out', and dwot, glossed 'to butt' and 'to deceive'; tū is the regular modern sound of thwot. 然 is nyen, glossed as a particle and 'so, like this' (Guangyun, in Baxter's transcription). 'Suddenly' for the pair is the word's own sense, which neither gloss gives."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "突然 goes before the verb, or at the front of the clause: 突然下雨了, 他突然来了 (tā tūrán lái le)."
+            },
+            {
+              "kind": "speech",
+              "text": "With …的时候 (… de shíhou) it breaks into a scene: 我看书的时候 他突然来了 wǒ kàn shū de shíhou, tā tūrán lái le."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūrán",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūrán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tūrán, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tūrán*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "突然下雨了 — tūrán xiàyǔ le — Suddenly it started to rain.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 突然下雨了 — *tūrán xiàyǔ le* — Suddenly it started to rain.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我看书的时候 他突然来了 — wǒ kàn shū de shíhou, tā tūrán lái le — I was reading when he suddenly came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我看书的时候 他突然来了 — *wǒ kàn shū de shíhou, tā tūrán lái le* — I was reading when he suddenly came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 然后, then 突然 (tūrán): the same 然, two words",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 然后, then 突然: the same 然, two words]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 突然 (tūrán) mean? (\"Suddenly\".) Where does it go? (Before the verb, or at the front of its clause.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W279-tu",
+      "sequence": 21120,
+      "title": "突 (tū) — the roof of 家, 八, then 大 with a dot",
+      "headword": "突",
+      "romanization": "tū",
+      "gloss": "突 — the roof of 家, 八, then 大 with a dot",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:fa3b2d30dc0e5752",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the roof of 家, 八, then 大 with a dot",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the roof of 家, 八, then 大 with a dot and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say tūrán — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *tūrán* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "家 八 然."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — jiā, bā, rán",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *jiā*, *bā*, *rán*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the roof of 家, 八, then 大 with a dot",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "突 (tū)."
+            },
+            {
+              "kind": "speech",
+              "text": "Three pieces, and you write every one of them already."
+            },
+            {
+              "kind": "speech",
+              "text": "The roof, three strokes, as on top of 家: the dot, a short left stroke, then a horizontal that hooks down at its right end."
+            },
+            {
+              "kind": "speech",
+              "text": "八, two strokes, under the roof: a left-falling stroke, then a dot falling to the right."
+            },
+            {
+              "kind": "speech",
+              "text": "大 with a dot, four strokes, at the foot, as on the right of 然: the bar, the left-falling stroke, the right-falling stroke, and the dot at its upper right last."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 2 + 4 = nine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "突 (tū), all nine, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 突, all nine, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 突 (tū)? (Nine.) Which character you write has the same roof? (家.) Where have you met the piece at the foot? (On the right of 然.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 突 (tū), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C279-yixiazi",
+      "sequence": 21130,
+      "title": "一下子 (yíxiàzi) — all at once",
+      "headword": "一下子",
+      "romanization": "yíxiàzi",
+      "gloss": "all at once; in no time",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9a6db382d9d81511",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, then 一 with its rising tone."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "突然, aloud — tūrán",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 突然, aloud — *tūrán*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 一个 — yí ge, with 一 rising — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 一个 — *yí ge*, with 一 rising — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 冷 — lěng, cold — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 冷 — *lěng*, cold — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 一下子",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "一下子 — yíxiàzi — \"all at once; in no time\"."
+            },
+            {
+              "kind": "speech",
+              "text": "天气一下子冷了 tiānqì yíxiàzi lěng le — All at once the weather turned cold."
+            },
+            {
+              "kind": "speech",
+              "text": "一 rises before the fall of xià: yíxiàzi, as in yí ge."
+            },
+            {
+              "kind": "speech",
+              "text": "Every character in it is one you write."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "一下子 (yíxiàzi) is built from 一 'one', 下, here a single go, and the ending 子. All three are inherited from Middle Chinese, 'jit, haeX and tsiX (Guangyun, in Baxter's transcription). The dictionary lists 下 under two readings, haeX and haeH, and glosses the first 'below' and 'to go down'; neither 'a go' nor 'all at once' is given there, so both are the modern word's own senses."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "突然 (tūrán) says it came without warning; 一下子 (yíxiàzi) says the change took no time at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Both go before the verb: 天气一下子冷了 tiānqì yíxiàzi lěng le. The 了 at the end is the 了 of a change."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yíxiàzi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yíxiàzi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yíxiàzi, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yíxiàzi*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "天气一下子冷了 — tiānqì yíxiàzi lěng le — All at once the weather turned cold.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 天气一下子冷了 — *tiānqì yíxiàzi lěng le* — All at once the weather turned cold.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我一下子明白了 — wǒ yíxiàzi míngbai le — All at once I understood.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我一下子明白了 — *wǒ yíxiàzi míngbai le* — All at once I understood.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 突然 (tūrán), then 一下子 (yíxiàzi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 突然, then 一下子]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 一下子 (yíxiàzi) mean? (\"All at once\".) How does 一 sound in it? (Rising: yí.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C279-reading",
+      "sequence": 21140,
+      "title": "(reading) (shàng ge xīngqīliù, wǒ hé liǎng ge tóngxué qù shān shàng) — a day on the mountain",
+      "headword": "(reading)",
+      "romanization": "shàng ge xīngqīliù, wǒ hé liǎng ge tóngxué qù shān shàng",
+      "gloss": "a thirteen-line story of a day on a mountain, every character written by the reader",
+      "script": "chinese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "reading-type",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:34e947f768d341a2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Reading",
+          "Reading — once more, without help"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Thirteen short lines: a day that went wrong, then right."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 一下子 — yíxiàzi, all at once — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 一下子 — *yíxiàzi*, all at once — **R1**, one lesson back]"
+            },
+            {
+              "kind": "speech",
+              "text": "山上 山下."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both aloud — shān shàng, shān xià",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both aloud — *shān shàng*, *shān xià*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "comprehension",
+          "title": "Reading",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "上个星期六 我和两个同学去山上 我们先开车 然后下车看花 中午我们在山上吃饭 吃了饭以后 突然下雨了 雨很大 我们都没有雨衣 我们正在找车的时候 一个老人来了 他说 去我家 他家在山下 我们在他家喝了茶 第二天 (dì'èr tiān) 天气很好 我们先去看了山上的花 然后回家了 最后 我们给他打了电话 说谢谢 那天是我最开心的一天."
+            },
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the story through once without stopping; do not translate as you go",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the story through once without stopping; do not translate as you go]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the pinyin and the English, after you have tried",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shàng ge xīngqīliù, wǒ hé liǎng ge tóngxué qù shān shàng — Last Saturday two classmates and I went up the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen xiān kāichē, ránhòu xiàchē kàn huā — First we drove, then we got out to look at the flowers."
+            },
+            {
+              "kind": "speech",
+              "text": "zhōngwǔ wǒmen zài shān shàng chī fàn — At noon we ate on the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "chī le fàn yǐhòu, tūrán xiàyǔ le — After we had eaten, it suddenly started to rain."
+            },
+            {
+              "kind": "speech",
+              "text": "yǔ hěn dà, wǒmen dōu méiyǒu yǔyī — The rain was heavy, and none of us had a raincoat."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zhèngzài zhǎo chē de shíhou, yí ge lǎorén lái le — While we were looking for the car, an old man came along."
+            },
+            {
+              "kind": "speech",
+              "text": "tā shuō, qù wǒ jiā — He said: come to my house."
+            },
+            {
+              "kind": "speech",
+              "text": "tā jiā zài shān xià — His house was at the foot of the mountain."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zài tā jiā hē le chá — We had tea at his house."
+            },
+            {
+              "kind": "speech",
+              "text": "dì'èr tiān, tiānqì hěn hǎo — The next day the weather was fine."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen xiān qù kàn le shān shàng de huā, ránhòu huí jiā le — First we went to see the flowers on the mountain, then we went home."
+            },
+            {
+              "kind": "speech",
+              "text": "zuìhòu, wǒmen gěi tā dǎ le diànhuà, shuō xièxie — Last of all, we phoned him to say thank you."
+            },
+            {
+              "kind": "speech",
+              "text": "nà tiān shì wǒ zuì kāixīn de yì tiān — That was my happiest day."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "comprehension",
+          "title": "Reading — once more, without help",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the story a second time, the pinyin covered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the story a second time, the pinyin covered]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put these in order: the tea, the rain, the drive, the phone call. (The drive, the rain, the tea, the phone call.)"
+            },
+            {
+              "kind": "speech",
+              "text": "The next day? (先去看了山上的花 然后回家了.)"
+            },
+            {
+              "kind": "speech",
+              "text": "How did they thank him? (给他打了电话.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C279-reading-why",
+              "prompt": "Why did they go to the old man's house?",
+              "assesses": [
+                "ZH-SKILL-READ-STORY-01",
+                "ZH-SKILL-CONNECTED-READING"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "it rained",
+                "because it rained",
+                "it was raining",
+                "下雨了",
+                "突然下雨了",
+                "the rain",
+                "they had no raincoats",
+                "没有雨衣"
+              ],
+              "feedback": {
+                "correct": "突然下雨了, and nobody had a 雨衣.",
+                "incorrect": "The line with 突然 says it: 突然下雨了."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Who came while they looked for the car? (一个老人.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C279-practice",
+      "sequence": 21150,
+      "title": "他突然来了 (tā tūrán lái le)",
+      "headword": "他突然来了",
+      "romanization": "tā tūrán lái le",
+      "gloss": "two speakers retell the mountain story in the first person: the moment, the scene, the next day",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d5226cecb3a440dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here: the story you read, told aloud as your own."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "第二天 天气很好, aloud — dì'èr tiān, tiānqì hěn hǎo",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 第二天 天气很好, aloud — *dì'èr tiān, tiānqì hěn hǎo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 一下子 — yíxiàzi — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 一下子 — *yíxiàzi* — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我回家的时候 妈妈正在做饭 — wǒ huí jiā de shíhou, māma zhèngzài zuòfàn — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我回家的时候 妈妈正在做饭 — *wǒ huí jiā de shíhou, māma zhèngzài zuòfàn* — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 上个星期六你做什么了 shàng ge xīngqīliù nǐ zuò shénme le — What did you do last Saturday? B: 我和两个同学去山上了 wǒ hé liǎng ge tóngxué qù shān shàng le — Two classmates and I went up the mountain. A: 天气好吗 tiānqì hǎo ma — Was the weather good? B: 吃了饭以后 突然下雨了 chī le fàn yǐhòu, tūrán xiàyǔ le — After we'd eaten, it suddenly rained. A: 你们有雨衣吗 nǐmen yǒu yǔyī ma — Did you have raincoats? B: 没有 我们找车的时候 一个老人来了 méiyǒu, wǒmen zhǎo chē de shíhou, yí ge lǎorén lái le — No. While we were looking for the car, an old man came. A: 第二天呢 dì'èr tiān ne — And the next day? B: 天气一下子好了 我们看了花 然后回家了 tiānqì yíxiàzi hǎo le, wǒmen kàn le huā, ránhòu huí jiā le — The weather was fine in no time. We looked at the flowers, then went home."
+            },
+            {
+              "kind": "speech",
+              "text": "B tells the story from the inside: 我们, not they. The time words still lead each turn."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C279-practice-who",
+              "prompt": "Who came while they were looking for the car?",
+              "assesses": [
+                "ZH-PERFORMANCE-THATDAY-01",
+                "ZH-GRAMMAR-DE-SHIHOU-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "an old man",
+                "old man",
+                "一个老人",
+                "老人",
+                "lǎorén",
+                "an old person",
+                "a man"
+              ],
+              "feedback": {
+                "correct": "一个老人: an old man.",
+                "incorrect": "B says 一个老人来了: an old man came."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — telling a day",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A story needs a moment, a scene, a turn and a next day:"
+            },
+            {
+              "kind": "speech",
+              "text": "他来的时候 我正在看书 tā lái de shíhou, wǒ zhèngzài kàn shū — the moment and the scene."
+            },
+            {
+              "kind": "speech",
+              "text": "突然下雨了 tūrán xiàyǔ le — the turn."
+            },
+            {
+              "kind": "speech",
+              "text": "天气一下子冷了 tiānqì yíxiàzi lěng le — a change that took no time."
+            },
+            {
+              "kind": "speech",
+              "text": "第二天 dì'èr tiān — the day after, inside the story."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Nà tiān nǐ zuò shénme le?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Tell a day of your own in six lines: a time, what you were doing, what happened, the next day."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "第二天 (dì'èr tiān) and 突然 (tūrán)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 第二天 and 突然]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "那天我正在看书的时候 他突然来了 — nà tiān wǒ zhèngzài kàn shū de shíhou, tā tūrán lái le — That day, while I was reading, he suddenly came.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 那天我正在看书的时候 他突然来了 — *nà tiān wǒ zhèngzài kàn shū de shíhou, tā tūrán lái le* — That day, while I was reading, he suddenly came.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "第二天天气很好 — dì'èr tiān tiānqì hěn hǎo — The next day the weather was fine.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 第二天天气很好 — *dì'èr tiān tiānqì hěn hǎo* — The next day the weather was fine.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "突然下雨了",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 突然下雨了]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say suddenly it rained. (突然下雨了.) Say when he came, I was eating. (他来的时候 我正在吃饭.) Say the next day. (第二天 (dì'èr tiān).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

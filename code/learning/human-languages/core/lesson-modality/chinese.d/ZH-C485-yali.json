@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C485-yali",
+    "language": "chinese",
+    "chapter": 485,
+    "sequence": 36390,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:23ef80f7dc785c95"
+  },
+  "findings": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C333-chuxi",
+  "pathSegment": "ZH-PATH-333-EVE333",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-333-EVE333",
+      "order": 1
+    }
+  ]
+}

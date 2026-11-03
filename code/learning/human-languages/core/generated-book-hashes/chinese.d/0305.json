@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 305,
+  "sourceHash": "fnv1a64:d8b6d6c8b53ec83b",
+  "lessonIds": [
+    "ZH-C305-tanlianai",
+    "ZH-C305-qiuhun",
+    "ZH-C305-dinghun",
+    "ZH-C305-xishi",
+    "ZH-C305-xinlang"
+  ],
+  "tex": "chinese/book/chapters/ch305-getting-engaged.tex"
+}

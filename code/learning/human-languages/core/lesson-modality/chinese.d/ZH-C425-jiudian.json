@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C425-jiudian",
+    "language": "chinese",
+    "chapter": 425,
+    "sequence": 32200,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:65d2c3e9e7a47d12"
+  },
+  "findings": []
+}

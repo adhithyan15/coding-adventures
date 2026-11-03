@@ -89,7 +89,8 @@ output     = rotr32(xorshifted, rot)      -- right-rotate 32-bit word
 The rotate scatters every bit of state into the output uniformly. PCG32 passes
 all known statistical test suites (TestU01 BigCrush, PractRand) while using
 only 8 bytes of state. Seeded with the "initseq" warm-up to prevent poor
-behaviour from seeds 0 and 1:
+behaviour from seeds 0 and 1. The increment is the LCG's `c`
+(1 442 695 040 888 963 407, already odd):
 
 ```
 state = 0
@@ -114,27 +115,71 @@ module-level functions).
 | `next_u32()` | uint32 | Advance state; return 32-bit unsigned integer in [0, 2^32). |
 | `next_u64()` | uint64 | Two consecutive `next_u32` calls composed as `(hi << 32) \| lo`. |
 | `next_float()` | float | `next_u32 / 2^32` — uniform in [0.0, 1.0). |
-| `next_int_in_range(min, max)` | int | Rejection sampling; uniform in [min, max] inclusive. |
+| `next_int_in_range(min, max)` | int | Uniform in [min, max] inclusive, signed 64-bit bounds; rejection sampling in three regimes (below). |
 
-### Rejection Sampling
+### Rejection Sampling (`next_int_in_range`, v2)
 
-Naïve `value % range` over-samples low values when 2^32 is not divisible by
-`range`. Example: range = 3, 2^32 = 4 294 967 296 = 3 × 1 431 655 765 + 1.
-The remainder 1 means value 0 is sampled once more than values 1 and 2.
-
-Rejection sampling eliminates the bias:
+`min` and `max` are **signed 64-bit integers** with `min <= max`. A lane whose
+integers are unbounded (Python, Ruby, Elixir, Haskell `Integer`, Perl
+`Math::BigInt`, TypeScript `bigint`) must reject values outside
+`[-2^63, 2^63 - 1]` the same way it rejects `min > max`. The *span*
 
 ```
-range     = max − min + 1
-threshold = (−range) mod 2^32 mod range
-loop:
-    r = next_u32()
-    if r >= threshold: return min + (r % range)
+span = max − min + 1          -- an exact integer, 1 ≤ span ≤ 2^64
 ```
 
-`threshold` is the count of "biased" values at the bottom of [0, 2^32). Any
-draw below the threshold is discarded. The expected number of iterations is
-< 2 for all ranges.
+does not fit a signed 64-bit integer when the range is wider than half the
+domain, so lanes compute it as an unsigned 64-bit value (`max − min` wrapping,
+then `+ 1`), where the full domain `[-2^63, 2^63 − 1]` wraps to 0, meaning
+2^64.
+
+Naïve `value % span` over-samples low values whenever the number of possible
+draws is not a multiple of `span`. Example: span = 3, 2^32 = 3 × 1 431 655 765
++ 1, so the remainder 1 means 0 is drawn once more than 1 and 2. Rejection
+sampling discards the few draws at the bottom of the range that cause the
+excess. There are three regimes, chosen only by `span`:
+
+```
+if span ≤ 2^32:                                -- 32-bit regime (v1, unchanged)
+    threshold = (2^32 − span) mod span
+    loop:
+        r = next_u32()
+        if r ≥ threshold: return min + (r mod span)
+
+elif span < 2^64:                              -- 64-bit regime (new in v2)
+    threshold = (2^64 − span) mod span
+    loop:
+        r = next_u64()
+        if r ≥ threshold: return min + (r mod span)
+
+else:                                          -- span = 2^64: the whole domain
+    return min + next_u64()                    -- every u64 is a valid offset
+```
+
+`threshold` is the count of biased values at the bottom of the draw's range.
+At most half the draws are ever rejected, so the expected number of iterations
+is below 2 in every regime. The addition `min + offset` is done in wrapping
+64-bit arithmetic (or exactly, in unbounded lanes); its result always lies in
+`[min, max]`.
+
+**Why three regimes.** v1 used only the 32-bit loop, so for `span > 2^32` it
+could never return a value more than 2^32 − 1 above `min`, and the full domain
+made `span` wrap to 0 and divide by zero. Lanes also disagreed: some computed
+`threshold` modulo 2^64 while drawing 32 bits. That is biased, differs from the
+v1 formula, and for spans whose 64-bit threshold exceeds 2^32 (span = 2^63 + 1,
+for one) rejects every possible draw, so the call never returns. Keeping the 32-bit regime exactly as v1 defined it means every
+range up to 2^32 values still produces the v1 sequence; only ranges that were
+broken change.
+
+### Conformance corpus
+
+`code/specs/fixtures/rng-v1/cases.json` pins exact outputs for every
+generator: `next_u32`, `next_u64`, `next_float` (as IEEE-754 bits) and
+`next_int_in_range` in all three regimes, including spans that reject about
+half their draws, single-value ranges, and both ends of the 64-bit domain.
+`code/scripts/rng_conformance.py` re-derives every value with its own
+standard-library implementation of this spec, and checks each regime is
+exercised. A lane conforms when it reproduces every case.
 
 ### Known Reference Values (seed = 1)
 

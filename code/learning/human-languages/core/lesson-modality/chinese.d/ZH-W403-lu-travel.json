@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W403-lu-travel",
+    "language": "chinese",
+    "chapter": 403,
+    "sequence": 31065,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:ad6d29d7faa75c5c",
+    "detachableSegments": [
+      "Script — a left piece of four strokes, then a right piece of six"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

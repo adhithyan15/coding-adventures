@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W390-ding-settle",
+  "pathSegment": "ZH-PATH-390-AGREE390",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-390-AGREE390",
+      "order": 2
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C321-wenzi",
+  "pathSegment": "ZH-PATH-321-ANCIENT321",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-321-ANCIENT321",
+      "order": 5
+    }
+  ]
+}

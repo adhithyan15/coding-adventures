@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W438-bu-part",
+    "language": "chinese",
+    "chapter": 438,
+    "sequence": 33425,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3a28e9dc7c62611c",
+    "detachableSegments": [
+      "Script — five strokes over 口, then the right piece of 那"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

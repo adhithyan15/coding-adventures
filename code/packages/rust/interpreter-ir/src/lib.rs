@@ -100,7 +100,7 @@ pub mod source_loc;
 pub use exception_kind::{kind_matches, CATCH_ANY, TRAP_KIND};
 pub use function::{FunctionTypeStatus, IIRFunction};
 pub use instr::{IIRInstr, Operand};
-pub use module::IIRModule;
+pub use module::{IIRModule, STR_MAX_BYTES};
 pub use module_exports::{IIRExport, IIRImport};
 pub use op_registry::{OpKind, OpSpec, OpSupport, STANDARD_OPS};
 pub use slot_state::{SlotKind, SlotState, MAX_POLYMORPHIC_OBSERVATIONS};

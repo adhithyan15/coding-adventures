@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 497,
+  "sourceHash": "fnv1a64:7d977631740dbeb1",
+  "lessonIds": [
+    "ZH-C497-zixue",
+    "ZH-C497-kewai",
+    "ZH-C497-biji",
+    "ZH-C497-zhishi",
+    "ZH-C497-shengxue",
+    "ZH-R497-review-492-497"
+  ],
+  "voiceLessons": 6,
+  "drivablePrefix": 6,
+  "text": "chinese/narration/ch497.txt",
+  "json": "chinese/narration/ch497.json",
+  "textHash": "fnv1a64:24b8633b5bc4dc28",
+  "jsonHash": "fnv1a64:1829eaefeb03bcdf",
+  "findings": []
+}

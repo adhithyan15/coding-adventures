@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C422-kuaisu",
+  "pathSegment": "ZH-PATH-422-NORTH422",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-422-NORTH422",
+      "order": 5
+    }
+  ]
+}

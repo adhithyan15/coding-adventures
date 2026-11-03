@@ -1,5 +1,50 @@
 # Changelog
 
+## Unreleased — `not` is a builtin; stores inside `begin`/`rescue` (#18798)
+
+- **A `rescue => e` binding the clause stores into** (`e = 5`) is now
+  declared with `let_keyword` (`let mut` when assigned); a plain `let` failed
+  rustc.  Test `stores_inside_try_catch_compile` (also covers the outer
+  local stored inside a `TryCatch`).
+
+- **`not`.**  Every Ruby `unless`, `until` and `!x` lowers to
+  `BuiltinCall("not", [x])`, which panicked `unknown builtin: not`.  The
+  emitter now inlines `__sir::Value::Bool(!__sir::truthy(&(x)))` and
+  `call_builtin_by_name` has a `"not"` arm.  Test
+  `emit_not_builtin_negates_by_truthiness`.
+- **A store into an outer local inside a `TryCatch`.**
+  `collect_assigned_locals` skipped `TryCatch` bodies (its comment said the
+  node was refused by the capability check, which stopped being true), so
+  `x = 0; begin; x = 1; rescue; end` declared `x` with a plain `let` and
+  rustc failed: `cannot assign twice to immutable variable`.  It now walks
+  the body, every `rescue` clause and the `ensure` body.  End-to-end check:
+  `sir-conformance`'s `rb_store_into_an_outer_local_inside_begin`.
+
+## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
+
+### Constants and the renamed `main` (follow-ups to #18485)
+
+From the security review of #18788.  Nothing to rename here, now pinned by
+tests: a constant is never a Rust identifier (the `raise` class operand, the
+only constant this backend accepts, is emitted as its name *string*, and
+every other constant use is refused before emit), so a constant spelled like
+a function cannot shadow it; and no user name can spell `__sir_user_main`,
+the renamed SIR `main`, because `sanitize_ident` reserves every `__sir…` name
+(#18466).
+
+### Test temp files live in a private scratch directory
+
+The execution tests wrote each emitted program to a predictable name
+(`<program>_<pid>_<counter>`) directly in the shared system temp directory.
+Unique among this checkout's tests, but not private: any other process on
+the host could create that name first, replace it, or plant a symlink there
+(and beside a `.py` file, a module `python3` would import from the script's
+own directory).  Each test call now writes into a fresh
+[`sir-test-scratch`](../sir-test-scratch) directory -- random name, created
+atomically, mode `0700` on Unix, removed with its contents when the test
+returns or panics -- and creates its files with `create_new`, so an existing
+file is an error rather than reused.  The existing removal guards stay.
+
 ## Unreleased — Temp-file names in the tests are unique per call (#18485 follow-up)
 
 The execution tests named their temp files from the process id alone, or (in

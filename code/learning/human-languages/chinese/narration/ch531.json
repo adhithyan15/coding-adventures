@@ -1,0 +1,853 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 531,
+  "title": "A Lucky Escape",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:38cc5bdbbe6543c1",
+  "lessons": [
+    {
+      "id": "ZH-C531-tuoxian",
+      "sequence": 39870,
+      "title": "tuōxiǎn — to get out of danger",
+      "headword": "tuōxiǎn",
+      "romanization": "tuōxiǎn",
+      "gloss": "to get out of danger",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f8c06a317bba62cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for a prize you win, then the Mandarin for the jackpot."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: tuōxiǎn",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tuōxiǎn — \"to get out of danger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "zhǐyào zhǎo dào lù wǒmen jiù néng tuōxiǎn — As long as we find the way, we'll get out of danger."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tuōxiǎn is built from tuō and xiǎn 'danger', both inherited from Middle Chinese, thwat and xjemX (Guangyun, in Baxter's transcription). The dictionary glosses the first as bone with the flesh taken off, and the second 'dangerous' and 'hard'; the sense 'to slip free' is not given for the first."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuōxiǎn",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuōxiǎn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuōxiǎn, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuōxiǎn*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "zhǐyào zhǎo dào lù wǒmen jiù néng tuōxiǎn — As long as we find the way, we'll get out of danger.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *zhǐyào zhǎo dào lù wǒmen jiù néng tuōxiǎn* — As long as we find the way, we'll get out of danger.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for a prize you win, then the Mandarin for the jackpot, then say tuōxiǎn again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for a prize you win, then the Mandarin for the jackpot, then say *tuōxiǎn* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tuōxiǎn mean? (\"To get out of danger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C531-jihu",
+      "sequence": 39880,
+      "title": "jīhū — very nearly; all but",
+      "headword": "jīhū",
+      "romanization": "jīhū",
+      "gloss": "very nearly; all but",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c4acf1dfeb1fe091",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for the jackpot, then the Mandarin for to get out of danger."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jīhū",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīhū — \"very nearly; all but\"."
+            },
+            {
+              "kind": "speech",
+              "text": "rúguǒ xiàyǔ gōngyuán lǐ jīhū méiyǒu rén — If it rains, there's hardly anyone in the park."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jīhū is built from jī and hū, both inherited from Middle Chinese, kj+j and hu (Guangyun, in Baxter's transcription). The dictionary lists the first four times: kj+j, which gives jī, in a phrase meaning 'very nearly', and gj+j, glossed 'near'. It glosses the second as a grammar word; the level tone of hū is not the regular outcome of hu, which would give hú."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīhū",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīhū*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jīhū, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jīhū*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rúguǒ xiàyǔ gōngyuán lǐ jīhū méiyǒu rén — If it rains, there's hardly anyone in the park.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rúguǒ xiàyǔ gōngyuán lǐ jīhū méiyǒu rén* — If it rains, there's hardly anyone in the park.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for the jackpot, then the Mandarin for to get out of danger, then say jīhū again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for the jackpot, then the Mandarin for to get out of danger, then say *jīhū* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jīhū mean? (\"Very nearly; all but\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C531-jiaoxing",
+      "sequence": 39890,
+      "title": "jiǎoxìng — lucky by a fluke",
+      "headword": "jiǎoxìng",
+      "romanization": "jiǎoxìng",
+      "gloss": "lucky by a fluke",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b2e09c0ede61261",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for to get out of danger, then the Mandarin for all but."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: jiǎoxìng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiǎoxìng — \"lucky by a fluke\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒmen zhè cì méi chūshì zhǐ shì jiǎoxìng — Nothing happened to us this time, but it was only a fluke."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jiǎoxìng is built from jiǎo and xìng, both inherited from Middle Chinese, kewX and heangX (Guangyun, in Baxter's transcription). The dictionary reads the first character as written today ngew, the name of a far country, and lists the word itself, in an older spelling, under its second syllable; the first syllable of that spelling, kewX, regularly gives jiǎo."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiǎoxìng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiǎoxìng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jiǎoxìng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jiǎoxìng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒmen zhè cì méi chūshì zhǐ shì jiǎoxìng — Nothing happened to us this time, but it was only a fluke.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒmen zhè cì méi chūshì zhǐ shì jiǎoxìng* — Nothing happened to us this time, but it was only a fluke.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for to get out of danger, then the Mandarin for all but, then say jiǎoxìng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for to get out of danger, then the Mandarin for all but, then say *jiǎoxìng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does jiǎoxìng mean? (\"Lucky by a fluke\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C531-buxing",
+      "sequence": 39900,
+      "title": "búxìng — misfortune; unfortunate",
+      "headword": "búxìng",
+      "romanization": "búxìng",
+      "gloss": "misfortune; unfortunate",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e4ce5f2154520e6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for all but, then the Mandarin for lucky by a fluke."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: búxìng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "búxìng — \"misfortune; unfortunate\"."
+            },
+            {
+              "kind": "speech",
+              "text": "jíshǐ yùdào búxìng yě búyào fàngqì — Even if misfortune comes your way, don't give up."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            },
+            {
+              "kind": "speech",
+              "text": "Tone: 不 is said bú before the falling tone of xìng, and the spelling shows it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "búxìng is built from 不 'not' and xìng 'fortunate', both inherited from Middle Chinese, pjut and heangX (Guangyun, in Baxter's transcription), which glosses the second as having good fortune and escaping harm."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "búxìng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *búxìng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "búxìng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *búxìng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jíshǐ yùdào búxìng yě búyào fàngqì — Even if misfortune comes your way, don't give up.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jíshǐ yùdào búxìng yě búyào fàngqì* — Even if misfortune comes your way, don't give up.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for all but, then the Mandarin for lucky by a fluke, then say búxìng again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for all but, then the Mandarin for lucky by a fluke, then say *búxìng* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does búxìng mean? (\"Misfortune; unfortunate\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C531-shishou",
+      "sequence": 39910,
+      "title": "shīshǒu — to lose one's grip; to do by a slip of the hand",
+      "headword": "shīshǒu",
+      "romanization": "shīshǒu",
+      "gloss": "to lose one's grip; to do by a slip of the hand",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a5d9400cc24a98a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: say the Mandarin for lucky by a fluke, then the Mandarin for a misfortune."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: shīshǒu",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shīshǒu — \"to lose one's grip; to do by a slip of the hand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "yàoshi nǐ shīshǒu dǎpò le bēizi jiù zài mǎi yí ge — If your hand slips and you break a cup, buy another one."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "shīshǒu is built from shī 'to lose' and 手 'the hand', both inherited from Middle Chinese, syit and syuwX (Guangyun, in Baxter's transcription), which glosses the first 'a mistake' and 'to let go': the hand lets it go."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word for saying what would happen."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shīshǒu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shīshǒu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shīshǒu, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *shīshǒu*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "yàoshi nǐ shīshǒu dǎpò le bēizi jiù zài mǎi yí ge — If your hand slips and you break a cup, buy another one.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *yàoshi nǐ shīshǒu dǎpò le bēizi jiù zài mǎi yí ge* — If your hand slips and you break a cup, buy another one.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the Mandarin for lucky by a fluke, then the Mandarin for a misfortune, then say shīshǒu again",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the Mandarin for lucky by a fluke, then the Mandarin for a misfortune, then say *shīshǒu* again]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does shīshǒu mean? (\"To lose one's grip; to do by a slip of the hand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-R531-review-526-531",
+      "sequence": 39920,
+      "title": "Looking back: from How Heavy? to A Lucky Escape",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "a review of the words from How Heavy? to A Lucky Escape",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bb6badf00fc5e6cb",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Mandarin for to weigh on a scale and a kilogram."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": true,
+              "source": "[PAUSE 2s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to weigh on a scale, a kilogram, how heavy something is, in large amounts, a small amount of",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to weigh on a scale, a kilogram, how heavy something is, in large amounts, a small amount of]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to place an order, to wrap goods for sale, a member of a club, a favourable deal, a checked pattern",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to place an order, to wrap goods for sale, a member of a club, a favourable deal, a checked pattern]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "as luck would have it, to be obliged to, to draw lots, to make a bet, happening by chance",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: as luck would have it, to be obliged to, to draw lots, to make a bet, happening by chance]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to be out of luck, a person's luck, to be in luck, fortunate, fate",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to be out of luck, a person's luck, to be in luck, fortunate, fate]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a lottery ticket, to draw for prizes, to win in a draw, a prize you win, the jackpot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a lottery ticket, to draw for prizes, to win in a draw, a prize you win, the jackpot]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "to get out of danger, all but, lucky by a fluke, a misfortune, to lose one's grip",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: to get out of danger, all but, lucky by a fluke, a misfortune, to lose one's grip]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "量 运 — each one aloud, then a word that holds it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 量 运 — each one aloud, then a word that holds it]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To weigh on a scale? (chēng.) A kilogram? (gōngjīn.) How heavy something is? (重量, zhòngliàng.) In large amounts? (大量, dàliàng.) A small amount of? (少量, shǎoliàng.) To place an order? (xiàdān.) To wrap goods for sale? (bāozhuāng.) A member of a club? (huìyuán.) A favourable deal? (yōuhuì.) A checked pattern? (格子, gézi.) As luck would have it? (pèngqiǎo.) To be obliged to? (不得不, bùdébù.) To draw lots? (chōuqiān.) To make a bet? (dǎdǔ.) Happening by chance? (ǒurán.) To be out of luck? (dǎoméi.) A person's luck? (运气, yùnqi.) To be in luck? (走运, zǒuyùn.) Fortunate? (xìngyùn.) Fate? (mìngyùn.) A lottery ticket? (cǎipiào.) To draw for prizes? (chōujiǎng.) To win in a draw? (zhòngjiǎng.) A prize you win? (jiǎngpǐn.) The jackpot? (tóujiǎng.) To get out of danger? (tuōxiǎn.) All but? (jīhū.) Lucky by a fluke? (jiǎoxìng.) A misfortune? (búxìng.) To lose one's grip? (shīshǒu.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

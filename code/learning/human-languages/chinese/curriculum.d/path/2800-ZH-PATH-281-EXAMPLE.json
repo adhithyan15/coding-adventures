@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-281-EXAMPLE",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-281-EXAMPLE"
+  ],
+  "after": []
+}

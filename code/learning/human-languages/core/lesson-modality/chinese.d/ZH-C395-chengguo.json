@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C395-chengguo",
+    "language": "chinese",
+    "chapter": 395,
+    "sequence": 30100,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2fd6c4b149094579"
+  },
+  "findings": []
+}

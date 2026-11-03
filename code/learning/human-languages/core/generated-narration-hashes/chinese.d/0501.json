@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 501,
+  "sourceHash": "fnv1a64:a2edca7054c3f826",
+  "lessonIds": [
+    "ZH-C501-yundongyuan",
+    "ZH-C501-guanjun",
+    "ZH-C501-jinpai",
+    "ZH-C501-huode",
+    "ZH-C501-qiuxing"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch501.txt",
+  "json": "chinese/narration/ch501.json",
+  "textHash": "fnv1a64:c718ed7c63578026",
+  "jsonHash": "fnv1a64:dcd92b8f0e8b2aa4",
+  "findings": []
+}

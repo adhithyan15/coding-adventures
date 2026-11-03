@@ -106,13 +106,14 @@ fn run_symbolic_program(m: &Module) -> Option<String> {
     static SEQ: AtomicUsize = AtomicUsize::new(0);
 
     let source = semantic_ir_to_ruby::compile(m).expect("ruby emit").source;
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_ruby_test_");
+    let dir = scratch.path();
     let path = dir.join(format!(
         "sir_ruby_symbolic_{}_{}.rb",
         std::process::id(),
         SEQ.fetch_add(1, Ordering::Relaxed)
     ));
-    std::fs::File::create(&path).ok()?.write_all(source.as_bytes()).ok()?;
+    sir_test_scratch::create_new(&path).ok()?.write_all(source.as_bytes()).ok()?;
     let out = std::process::Command::new("ruby").arg(&path).output().ok()?;
     let _ = std::fs::remove_file(&path);
     assert!(
@@ -240,9 +241,10 @@ fn depth_limit_guard_raises_a_ruby_error_instead_of_crashing() {
     if std::process::Command::new("ruby").arg("--version").output().is_err() {
         return; // skip: no ruby on PATH
     }
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_ruby_test_");
+    let dir = scratch.path();
     let path = dir.join(format!("sir_ruby_symbolic_depth_{}.rb", unique_suffix()));
-    std::fs::write(&path, &source).expect("write temp ruby");
+    sir_test_scratch::write_new(&path, &source).expect("write temp ruby");
     let out = std::process::Command::new("ruby").arg(&path).output().expect("spawn ruby");
     let _ = std::fs::remove_file(&path);
     assert!(
@@ -333,9 +335,10 @@ fn deep_rule_rhs_reports_depth_limit_error_not_a_crash_even_with_a_shallow_targe
     if std::process::Command::new("ruby").arg("--version").output().is_err() {
         return; // skip: no ruby on PATH
     }
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_ruby_test_");
+    let dir = scratch.path();
     let path = dir.join(format!("sir_ruby_symbolic_rule_depth_{}.rb", unique_suffix()));
-    std::fs::write(&path, &source).expect("write temp ruby");
+    sir_test_scratch::write_new(&path, &source).expect("write temp ruby");
     let out = std::process::Command::new("ruby").arg(&path).output().expect("spawn ruby");
     let _ = std::fs::remove_file(&path);
     assert!(

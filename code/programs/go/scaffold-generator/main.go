@@ -1981,6 +1981,39 @@ final class %sTests: XCTestCase {
 // File generation — Haskell
 // =========================================================================
 
+// haskellDarwinCLTPrefix selects the Command Line Tools developer directory
+// for one BUILD line, on macOS only.
+//
+// GHC 9.4.8's macOS bindist hardcodes a Command Line Tools (CLT) SDK sysroot.
+// On a runner whose default developer directory is an *older* Xcode, the
+// Xcode linker is handed CLT SDK stubs it cannot parse (`arm64e.x1`) and every
+// link fails. Pointing DEVELOPER_DIR at the CLT selects the matching linker.
+//
+//	uname -s   effect of the prefix               then
+//	Darwin     export DEVELOPER_DIR=<CLT path>    run the Cabal command
+//	Linux      nothing                            run the Cabal command
+//
+// The build tool runs every BUILD line as its own `sh -c`, so the export lives
+// and dies with that one line's process tree; nothing global (`xcode-select`)
+// changes, and the Cabal command is the last thing the line runs, so its exit
+// status is the line's. Cabal builds the whole local project inside that one
+// process, which is why a freshly scaffolded package root must carry the
+// selection itself rather than relying on its dependencies' BUILD files.
+// `build-tool --validate-build-files` rejects a Haskell BUILD without it
+// (lessons.d/ghc-must-select-the-linker-matching-its-hardcoded-macos-sdk.md).
+const haskellDarwinCLTPrefix = `if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; `
+
+// haskellDarwinBuild renders the generated Haskell BUILD: the two-line
+// explanation every Haskell package root carries, then the package command
+// behind the Darwin CLT selection. BUILD_windows is written separately and
+// never gets the prefix, because Windows runs BUILD lines under `cmd /C`,
+// which cannot parse it.
+func haskellDarwinBuild(command string) string {
+	return "# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.\n" +
+		"# Scope the selection to Cabal and its children, keeping other packages intact.\n" +
+		haskellDarwinCLTPrefix + command + "\n"
+}
+
 func generateHaskell(targetDir, pkgName, description, layerCtx string, directDeps, orderedDeps []string) error {
 	moduleName := toCamelCase(pkgName)
 	qualifiedModuleName := "CodingAdventures." + moduleName
@@ -2070,7 +2103,7 @@ spec =
 		"src/CodingAdventures/" + moduleName + ".hs": libHs,
 		"test/Spec.hs":                               specHs,
 		"test/" + moduleName + "Spec.hs":             packageSpecHs,
-		"BUILD":                                      "cabal test\n",
+		"BUILD":                                      haskellDarwinBuild("cabal test"),
 		"BUILD_windows":                              "echo \"haskell support not enabled in windows CI yet -- skipping\"\n",
 		"required_capabilities.json":                 capabilityManifest,
 	}

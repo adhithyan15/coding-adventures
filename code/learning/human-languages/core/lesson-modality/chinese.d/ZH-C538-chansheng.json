@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C538-chansheng",
+    "language": "chinese",
+    "chapter": 538,
+    "sequence": 40270,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0cfc03a298c2b1b9"
+  },
+  "findings": []
+}

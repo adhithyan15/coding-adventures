@@ -4,7 +4,87 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18798)
+
+- Re-review follow-up: 3 more programs — statements after a block opener
+  on one line (`{ |x| foo; bar }`, `do |x| foo; bar end`, `{ |x| puts;
+  puts 2 }`), `then` after a condition, and a `-`/`[` line after
+  `x = super`.
+- Security review follow-up: 5 more programs — `super` ending its line,
+  `super; setup` and `x = super` ⏎ `puts x`, `yield` ending its line,
+  a bare `puts` before a modifier `if`, and a `rescue` binding the clause
+  reassigns (Rust and JavaScript refused or threw).  `return`/`break`/
+  `next` ending a line are covered by the frontend tests only: no backend
+  runs a `return`/`break`/`next` builtin yet (#18798).
+- `tests/ruby_sir_gaps.rs` gains 10 Ruby programs, each checked against
+  real `ruby` and run on all six backends: a line starting with `-`, `+`
+  or `(` (after an assignment, a name and `;`), an operator ending a line
+  and a leading-dot chain, a lone name before a `(` line, a bare `puts`,
+  `unless`/`until`/`!` (Go and Rust panicked `unknown builtin: not`),
+  `rescue Klass` ⏎ next line, a method-level `rescue`'s value, `;` between
+  statements, and a store into an outer local inside `begin`/`rescue`
+  (rustc refused it).
+
+### Added (#18778)
+
+- Review follow-up: `tests/ruby_sir_gaps.rs` gains `for`-body locals
+  visible after the loop, and ranges with non-literal and Float ends
+  (`1..2.5` runs 1 and 2).  A Hash's `each` with a one-parameter block is
+  NOT in the corpus: only the Ruby backend gives the block the
+  `[key, value]` pair; the others crash, and C prints nothing (#18798).
+- **`tests/ruby_sir_gaps.rs`.**  22 Ruby programs, each checked against
+  real `ruby`, and 2 Python programs, checked against CPython, run on all
+  six backends: `for` (arrays, `...`/`..` ranges, zero trips, in a method,
+  nested loops sharing a variable, a body ending in an `if`), a `while`
+  body ending in `puts`, `rescue => e`, `f() + f` at the start of a
+  statement / in a block / before a modifier `if`, bare method names (at
+  top level, in a method, in a block, and an outer local beating a method),
+  `each` over an array and a hash and in a method, a `[` that starts a line
+  after an assignment and after a call, and Python classes named `dog`,
+  `animal` and `SirCldog` (spelled like `dog`'s renamed Ruby constant).  A
+  `REFUSED` table lists the cells that must be refused at compile time (the
+  C and Ruby backends do not run `e.message` yet); a listed cell that runs
+  fails the test, and so does an unlisted refusal.
+- `tests/local_shadows_function.rs` gains a Ruby `for` loop variable named
+  like a method (`for f in [1, 2]`), now that the frontend has `for`.
+
+### Removed
+
+- The two `KNOWN_GAPS` entries in `tests/python_statement_forms.rs`
+  (`py_param_copy_spelled_like_a_hoisted_method` and
+  `py_hoisted_method_then_param_copy` on Ruby): the Ruby backend now
+  defines a class named `__param_a`, and the stale-entry check reported
+  both cells as passing.  The table stays, empty, for the next gap.
+
 ### Fixed
+
+- **Each run's files live in a private scratch directory (#18788 security
+  review).**  `temp_path` named files `<program>_<target>_<pid>_<n>` directly
+  in the shared system temp directory: unique, but predictable, so any other
+  process on the host could create, replace or symlink a name before the
+  harness wrote it.  Every `run_*` function now makes a fresh
+  `sir_test_scratch::Scratch` (random name, created atomically, mode `0700`
+  on Unix, removed on drop), `temp_path` names files inside it, and files
+  are created with `write_new` (`create_new`).  The `TempFile` guards stay.
+  New unit test `temp_paths_live_in_the_runs_private_directory`.
+- **`run_go` uses a Go build cache nothing else deletes.**  `go run` read
+  standard-library export data from the shared `~/.cache/go-build`, and a
+  `go clean -cache` elsewhere turned into a spurious
+  `# command-line-arguments` compile error (the root cause of the
+  `semantic-ir-to-go` `twig_pairs_and_closures.rs` flake).  It now runs
+  `sir_test_scratch::go_command()`, whose `GOCACHE` is under the cargo
+  target directory.
+
+### Added
+
+- **Globals and constants in `tests/local_shadows_function.rs`.**  Two
+  hand-built modules -- a module global named like a function, and a local
+  named like a global read in the same function -- run on every backend
+  (JavaScript under `node` used to print a `SyntaxError` and 80).  A new
+  test, `constants_named_like_methods_print_rubys_output`, runs two Ruby
+  programs with a constant spelled like a method (`F = 2; F() + F`, and a
+  raised class `Boom` beside `def Boom`) against real `ruby`; backends that
+  refuse a constant *assignment* (JavaScript, Go, Rust) skip the first.
 
 - **Temp files are unique per call (#18485).**  `temp_path` named a run's
   source and binary after the program, the target and the process id.

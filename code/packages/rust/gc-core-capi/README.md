@@ -119,7 +119,8 @@ together, the two maps a precise collector needs.
 that no stack map names and no stack scan reaches, so an image registers its
 globals block once at start-up with `__gc_register_global_roots(base, count)`
 (twig-aot's generated `__gc_init_stackmaps` does). Every collection entry —
-conservative, precise, minor, incremental and compacting — appends each
+conservative, precise, minor, incremental (at `start` and again at `finish`) and
+compacting, plus `__gc_collect_roots` / `__gc_collect_region` — appends each
 registered slot's address to its precise root slots, so a global's object is
 marked and, under compaction, moved with the global rewritten in place. Slots
 rather than a conservative region, so global-reachable data stays movable; see

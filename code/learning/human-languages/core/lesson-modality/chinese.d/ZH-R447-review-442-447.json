@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-R447-review-442-447",
+    "language": "chinese",
+    "chapter": 447,
+    "sequence": 33920,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:0a17f253a629ce35"
+  },
+  "findings": []
+}

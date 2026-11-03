@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 352,
+  "sourceHash": "fnv1a64:6f0cb6ebf87b2681",
+  "lessonIds": [
+    "ZH-C352-tonggan",
+    "ZH-C352-kending",
+    "ZH-C352-renke",
+    "ZH-C352-benyi",
+    "ZH-C352-biaoshi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch352.txt",
+  "json": "chinese/narration/ch352.json",
+  "textHash": "fnv1a64:40cce39a2f5a21da",
+  "jsonHash": "fnv1a64:433b34b1746c919d",
+  "findings": []
+}

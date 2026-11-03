@@ -144,6 +144,12 @@ fn ts_to_runnable_js(ts: &str) -> String {
         "import * as __SirExc from \"@coding-adventures/sir-runtime-exceptions\";\n",
         SIR_EXC_STUB,
     )
+    // A module that declares `Constants` imports the OOP runtime as well;
+    // none of these programs calls into it, so an empty object stands in.
+    .replace(
+        "import * as __SirOop from \"@coding-adventures/sir-runtime-oop\";\n",
+        "const __SirOop = {};\n",
+    )
     .replace(": __Sir.Val[]", "")
     .replace(": __Sir.Val", "")
 }
@@ -164,11 +170,12 @@ fn run_module(module: &Module, label: &str, tag: &str) -> Option<Output> {
         return None;
     }
     let n = COUNTER.fetch_add(1, Ordering::Relaxed);
-    let path = std::env::temp_dir().join(format!(
+    let scratch = sir_test_scratch::Scratch::new("sir_typescript_test_");
+    let path = scratch.path().join(format!(
         "sir_ts_twig_gn_{tag}_{}_{n}.js",
         std::process::id()
     ));
-    std::fs::write(&path, ts_to_runnable_js(&artifact.source)).expect("write temp js");
+    sir_test_scratch::write_new(&path, ts_to_runnable_js(&artifact.source)).expect("write temp js");
     let out = Command::new("node")
         .arg(&path)
         .output()
@@ -665,5 +672,112 @@ fn a_variable_named_like_a_function_does_not_shadow_it() {
             ));
         }
     }
+    assert!(failures.is_empty(), "{}", failures.join("\n\n"));
+}
+
+/// Rename the module global `from` to `to`: its declaration, the `_init`
+/// `global_set` that gives it its value, and every `Global` read.  Function
+/// names are left alone, so afterwards a global and a function may share one
+/// SIR name.
+fn rename_global(m: &mut Module, from: &str, to: &str) {
+    fn walk(e: &mut Expr, from: &str, to: &str) {
+        match e {
+            Expr::VarRef { name, scope: semantic_ir::Scope::Global, .. } if name == from => {
+                *name = to.to_string()
+            }
+            Expr::SymLit { name, .. } if name == from => *name = to.to_string(),
+            Expr::BuiltinCall { args, .. } | Expr::DirectCall { args, .. } => {
+                for a in args {
+                    walk(a, from, to);
+                }
+            }
+            Expr::Block(b) => {
+                for s in &mut b.stmts {
+                    if let Stmt::LetBinding { value, .. }
+                    | Stmt::LetStarBinding { value, .. }
+                    | Stmt::ExprStmt { expr: value, .. } = s
+                    {
+                        walk(value, from, to);
+                    }
+                }
+                walk(&mut b.value, from, to);
+            }
+            _ => {}
+        }
+    }
+    for g in &mut m.globals {
+        if g.name == from {
+            g.name = to.to_string();
+        }
+    }
+    for f in &mut m.functions {
+        for s in &mut f.body.stmts {
+            if let Stmt::ExprStmt { expr, .. } = s {
+                walk(expr, from, to);
+            }
+        }
+        walk(&mut f.body.value, from, to);
+    }
+}
+
+/// Follow-up to #18485: a module global, a local and a constant each live in
+/// a SIR namespace of their own, apart from the functions.  TypeScript has
+/// one namespace, and before this
+///
+/// | case                          | emitted                               | result                         |
+/// |-------------------------------|---------------------------------------|--------------------------------|
+/// | global named like a function  | `let f = null;` beside `function f()` | `SyntaxError` (redeclared)     |
+/// | local named like a global     | `let x = 40` hid `let x` (the global) | printed 80, not 42             |
+/// | constant named like a function| `const F = 2` beside `function F()`   | `TypeError: F is not a function` |
+///
+/// Twig can spell none of them (it has one namespace), so each program is
+/// lowered with distinct names and then renamed in SIR.
+#[test]
+fn globals_locals_and_constants_never_collide_with_each_other() {
+    let mut failures = Vec::new();
+    let mut check = |tag: &str, m: &Module| {
+        let report = semantic_ir::validate(m);
+        assert!(report.is_ok(), "[{tag}] renamed module is valid: {:?}", report.issues);
+        let Some(out) = run_module(m, tag, tag) else { return };
+        let got = String::from_utf8_lossy(&out.stdout);
+        if !out.status.success() || got.trim_end() != "42" {
+            failures.push(format!(
+                "[{tag}] printed {got:?}, want \"42\"; stderr:\n{}",
+                String::from_utf8_lossy(&out.stderr)
+            ));
+        }
+    };
+
+    // A global `f` beside the function `f`: (f) + f = 40 + 2.
+    let mut m = lower("(define (f) 40) (define y 2) (define (g) (+ (f) y)) (print (g))");
+    rename_global(&mut m, "y", "f");
+    check("global_named_like_a_function", &m);
+
+    // A local `x` beside the global `x`: local 40 + global 2.
+    let mut m = lower("(define x 2) (define (g) (let ((y 40)) (+ y x))) (print (g))");
+    let g = m.functions.iter_mut().find(|f| f.name == "g").expect("g");
+    rename_var(&mut g.body.value, "y", "x");
+    check("local_named_like_a_global", &m);
+
+    // A constant `F` beside the function `F`: `F = 2; (F) + F`.
+    let mut m = lower("(define (F) 40) (define (g) (+ (F) 2)) (print (g))");
+    m.manifest.add(Feature::Constants);
+    m.manifest.add(Feature::MutableBindings);
+    let g = m.functions.iter_mut().find(|f| f.name == "g").expect("g");
+    let Expr::BuiltinCall { args, .. } = &mut g.body.value else {
+        panic!("(+ (F) 2) lowers to a builtin call: {:?}", g.body.value)
+    };
+    args[1] = Expr::VarRef { name: "F".into(), scope: semantic_ir::Scope::Const, span: Span::synthetic() };
+    g.body.stmts.insert(
+        0,
+        Stmt::Assign {
+            name: "F".into(),
+            scope: semantic_ir::Scope::Const,
+            value: Expr::IntLit { value: 2, span: Span::synthetic() },
+            span: Span::synthetic(),
+        },
+    );
+    check("constant_named_like_a_function", &m);
+
     assert!(failures.is_empty(), "{}", failures.join("\n\n"));
 }

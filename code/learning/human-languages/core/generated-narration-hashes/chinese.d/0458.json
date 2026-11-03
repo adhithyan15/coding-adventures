@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 458,
+  "sourceHash": "fnv1a64:f5591c5071d3fc7c",
+  "lessonIds": [
+    "ZH-C458-qingxu",
+    "ZH-C458-xinteng",
+    "ZH-C458-xingfen",
+    "ZH-C458-qingsong",
+    "ZH-C458-fan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch458.txt",
+  "json": "chinese/narration/ch458.json",
+  "textHash": "fnv1a64:5540a87a65cea345",
+  "jsonHash": "fnv1a64:c92d6396f56a874b",
+  "findings": []
+}

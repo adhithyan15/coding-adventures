@@ -1,0 +1,19 @@
+{
+  "chapter": 472,
+  "title": "Faces",
+  "label": "ch:zh-faces",
+  "canDo": "I can talk about eyebrows, how someone looks, someone turning nasty, a facial expression and a hot forehead.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C472-etou",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 472: I can talk about eyebrows, how someone looks, someone turning nasty, a facial expression and a hot forehead.",
+    "assesses": [
+      "ZH-LEX-C472-FACE472-03",
+      "ZH-LEX-C472-FACE472-04",
+      "ZH-LEX-C472-FACE472-05"
+    ]
+  }
+}

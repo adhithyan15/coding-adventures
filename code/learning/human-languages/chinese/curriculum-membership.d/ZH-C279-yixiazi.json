@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C279-yixiazi",
+  "pathSegment": "ZH-PATH-279-NEXTDAY",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "ZH-EXT-279-NEXTDAY",
+      "order": 5
+    }
+  ]
+}

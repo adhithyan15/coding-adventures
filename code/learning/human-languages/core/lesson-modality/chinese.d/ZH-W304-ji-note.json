@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W304-ji-note",
+    "language": "chinese",
+    "chapter": 304,
+    "sequence": 23735,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d1c11adf12ed7a53",
+    "detachableSegments": [
+      "Script — the speech piece, then the right piece of 起"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

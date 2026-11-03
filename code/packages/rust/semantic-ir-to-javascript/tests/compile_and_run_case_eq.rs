@@ -133,9 +133,10 @@ fn case_eq_compiles_and_matches_ruby_output() {
         eprintln!("note: `node` unavailable — skipping execution");
         return;
     }
-    let mut path: PathBuf = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_javascript_test_");
+    let mut path: PathBuf = scratch.path().to_path_buf();
     path.push(format!("sir_js_case_eq_{}.js", unique_suffix()));
-    std::fs::write(&path, &artifact.source).expect("write temp js");
+    sir_test_scratch::write_new(&path, &artifact.source).expect("write temp js");
     let output = Command::new("node").arg(&path).output().expect("spawn node");
     let _ = std::fs::remove_file(&path);
     assert!(

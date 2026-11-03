@@ -1,0 +1,21 @@
+{
+  "chapter": 317,
+  "title": "Looking Back",
+  "label": "ch:zh-looking-back",
+  "canDo": "I can talk about growing up, marriage and family, and doing things ahead of time.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R317-review-final-317",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 317: I can talk about growing up, marriage and family, and doing things ahead of time.",
+    "assesses": [
+      "ZH-LEX-C317-LOOKBACK317-01",
+      "ZH-LEX-C317-LOOKBACK317-02",
+      "ZH-LEX-C317-LOOKBACK317-03",
+      "ZH-LEX-C317-LOOKBACK317-04",
+      "ZH-LEX-C317-LOOKBACK317-05"
+    ]
+  }
+}

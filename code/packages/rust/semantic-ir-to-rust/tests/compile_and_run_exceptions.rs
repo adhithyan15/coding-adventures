@@ -131,11 +131,12 @@ fn rustc_available() -> bool {
 /// `(stdout, exit_success)`.  Returns `None` if the host has no usable
 /// linker (a skip, never a failure).
 fn compile_and_run(source: &str, tag: &str) -> Option<(String, bool)> {
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = format!("{}_{}", unique_suffix(), tag);
     let src_path = dir.join(format!("sir_exc_{nonce}.rs"));
     let bin_path = dir.join(format!("sir_exc_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -212,6 +213,48 @@ fn bare_rescue_catches_anything() {
     let Some((stdout, ok)) = compile_and_run(&src, "bare") else { return };
     assert!(ok, "process should exit 0 (bare rescue caught)");
     assert_eq!(stdout.lines().collect::<Vec<_>>(), vec!["2"], "got {stdout:?}");
+}
+
+/// #18798 — a store inside a `TryCatch` into a local declared outside it
+/// (`x = 0; begin; x = 1; rescue; x = 2; end`), and a store into the
+/// clause's own binding (`rescue => e` ⏎ `e = 5`).  Both locals were
+/// declared with a plain `let`, and rustc refused the program: "cannot
+/// assign twice to immutable variable".  Prints `2` then `5`.
+#[test]
+fn stores_inside_try_catch_compile() {
+    if !rustc_available() {
+        eprintln!("skipping: rustc not on PATH");
+        return;
+    }
+    let local = |name: &str| Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() };
+    let assign = |name: &str, v: i64| Stmt::Assign {
+        name: name.into(),
+        scope: Scope::Local,
+        value: ilit(v),
+        span: s(),
+    };
+    let stmts = vec![
+        Stmt::LetBinding { name: "x".into(), sir_type: None, value: ilit(0), span: s() },
+        Stmt::TryCatch {
+            body: vec![raise_stmt("TypeError", "boom"), assign("x", 1)],
+            rescues: vec![rescue(&[], None, vec![assign("x", 2)])],
+            ensure_body: None,
+            span: s(),
+        },
+        print_stmt(local("x")),
+        Stmt::TryCatch {
+            body: vec![raise_stmt("TypeError", "boom")],
+            rescues: vec![rescue(&[], Some("e"), vec![assign("e", 5), print_stmt(local("e"))])],
+            ensure_body: None,
+            span: s(),
+        },
+    ];
+    let src = compile(&module_from_main(stmts, &[Feature::Constants, Feature::MutableBindings]))
+        .expect("compile")
+        .source;
+    let Some((stdout, ok)) = compile_and_run(&src, "stores") else { return };
+    assert!(ok, "process should exit 0");
+    assert_eq!(stdout.lines().collect::<Vec<_>>(), vec!["2", "5"], "got {stdout:?}");
 }
 
 /// (c) an unmatched rescue re-raises: the process exits NON-zero and the inner

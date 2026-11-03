@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 362,
+  "sourceHash": "fnv1a64:c515f23d501dc55e",
+  "lessonIds": [
+    "ZH-C362-dasheng",
+    "ZH-C362-bixu",
+    "ZH-W362-xu-must",
+    "ZH-C362-luan",
+    "ZH-C362-gongzheng",
+    "ZH-C362-yiwu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch362.txt",
+  "json": "chinese/narration/ch362.json",
+  "textHash": "fnv1a64:6f5d4b7cc32de706",
+  "jsonHash": "fnv1a64:95b124cf72abd290",
+  "findings": []
+}

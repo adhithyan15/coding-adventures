@@ -1092,7 +1092,55 @@ array with this truthful capability:
 }
 ```
 
-### 5.8 Common Files (All Languages)
+### 5.8 Haskell BUILD Files
+
+#### `BUILD`
+
+Every scaffold implementation that emits Haskell packages MUST make the
+generated `BUILD` select the Command Line Tools linker on macOS, because the
+build tool's `--validate-build-files` rejects a Haskell BUILD without it (see
+`12-build-system.md` and
+`lessons.d/ghc-must-select-the-linker-matching-its-hardcoded-macos-sdk.md`).
+GHC 9.4.8's macOS bindist hardcodes a CLT SDK sysroot, and an older default
+Xcode linker cannot read that SDK's `arm64e.x1` stubs. Cabal builds the whole
+local project inside the one process the package root's BUILD line starts, so
+a freshly scaffolded package must carry the selection itself; it cannot rely
+on its dependencies'. The generated file is exactly these three lines, where
+`{cabal command}` is the generator's existing package command:
+
+```bash
+# The Darwin GHC bindist links CLT SDK stubs: use the matching CLT linker.
+# Scope the selection to Cabal and its children, keeping other packages intact.
+if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; {cabal command}
+```
+
+The prefix is POSIX `sh`, exports only inside that line's own `sh -c`, leaves
+Linux's inherited environment untouched, never calls `xcode-select`, and keeps
+the Cabal command's exit status as the line's exit status.
+
+The package commands are a pre-existing per-implementation difference that
+this rule does not change:
+
+| Implementation | `{cabal command}` |
+|----------------|-------------------|
+| Go | `cabal test` |
+| Python, Ruby, Rust, TypeScript, Elixir | `cabal test all` |
+| Native Haskell | `if command -v cabal >/dev/null 2>&1; then cabal test all; else echo 'cabal not found -- skipping'; fi` |
+
+#### `BUILD_windows`
+
+Windows runs BUILD lines under `cmd /C`, which cannot parse the POSIX prefix,
+so every Haskell scaffold MUST also emit a `BUILD_windows` that does not
+contain it. The Go and native Haskell generators keep their existing skip
+record (`echo "haskell support not enabled in windows CI yet -- skipping"`).
+The Python, Ruby, Rust, TypeScript, and Elixir generators previously emitted no
+`BUILD_windows`, so Windows ran their plain `BUILD`; they now emit a
+`BUILD_windows` holding exactly that plain command (`cabal test all`), which
+keeps their Windows behaviour unchanged. Generator tests MUST assert that the
+generated `BUILD` carries the Darwin prefix and that the generated
+`BUILD_windows` does not.
+
+### 5.9 Common Files (All Languages)
 
 #### `README.md`
 

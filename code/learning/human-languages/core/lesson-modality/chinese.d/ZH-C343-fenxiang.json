@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C343-fenxiang",
+    "language": "chinese",
+    "chapter": 343,
+    "sequence": 26330,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:fa0237f8afcf1a13"
+  },
+  "findings": []
+}

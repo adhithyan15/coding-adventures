@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-387-MONEY387",
+  "spine_node": "SPINE-GIVE-REASONS",
+  "before": [],
+  "inline": [
+    "ZH-EXT-387-MONEY387"
+  ],
+  "after": []
+}

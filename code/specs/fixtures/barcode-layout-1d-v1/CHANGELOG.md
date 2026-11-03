@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Re-verify the Haskell lane after #18812 added the Darwin CLT-linker
+  selection to its `BUILD` and an entry to its `CHANGELOG.md`: `package_tree`
+  is now `fcd26e71df41f1766cbbd4ca7568f595c587c89c`, verified at `2920eadb3ea`.
+- Make `package_tree` the content-addressed evidence anchor so a lane change
+  survives its own squash merge. The gate now requires `package_tree` to be a
+  git tree object and diffs it directly against the checked-out package tree;
+  `verified_revision` is provenance, cross-checked against `package_tree`
+  whenever git can resolve it and no longer required to be a HEAD ancestor.
+  Drift outside dependency lockfiles, BUILD and CHANGELOG included, still
+  fails, and the message says to set `package_tree` to the re-verified tree in
+  the same PR that changes the lane.
 - Repoint the unchanged Haskell package-tree evidence to PR #18527's reachable
   squash-merge revision so fresh clones can verify ancestry after publication.
 - Re-verify the Haskell lane at the durable Windows-front implementation and

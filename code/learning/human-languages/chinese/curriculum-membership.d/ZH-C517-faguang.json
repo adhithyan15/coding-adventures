@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C517-faguang",
+  "pathSegment": "ZH-PATH-517-LIGHT517",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-517-LIGHT517",
+      "order": 3
+    }
+  ]
+}

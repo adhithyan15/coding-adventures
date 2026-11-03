@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C288-conditional",
+  "pathSegment": "ZH-PATH-288-RAINS",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-288-RAINS",
+      "order": 3
+    }
+  ]
+}

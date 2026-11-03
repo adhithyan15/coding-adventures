@@ -1,0 +1,19 @@
+{
+  "chapter": 361,
+  "title": "A Good Guest, a Good Host",
+  "label": "ch:zh-a-good-guest-a-good-host",
+  "canDo": "I can say hello properly, bow, look after guests and propose a toast.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C361-kanbuqi",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 361: I can say hello properly, bow, look after guests and propose a toast.",
+    "assesses": [
+      "ZH-LEX-C361-GUEST361-03",
+      "ZH-LEX-C361-GUEST361-04",
+      "ZH-LEX-C361-GUEST361-05"
+    ]
+  }
+}

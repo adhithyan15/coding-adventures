@@ -71,14 +71,28 @@ var Manifest = cage.EmptyManifest
 ## Taxonomy Enforcement
 
 Category and action form one closed identity. The generator accepts only the
-19 pairs defined by Spec 13 and exercised by
+25 pairs defined by Spec 13 and exercised by
 `code/specs/fixtures/capability-security-v1/taxonomy.json`. It validates the
 whole manifest before writing output.
 
 The generator currently emits enforcing methods for filesystem read, write,
 create, delete, and list; network connect, listen, and DNS; process exec;
-environment read; time read and sleep; stdin read; and stdout write. Other
-valid Spec 13 pairs fail with an explicit unsupported-pair error. They never
+environment read; time read and sleep; stdin read; stdout write; random read;
+and thread spawn. Other valid Spec 13 pairs fail with an explicit
+unsupported-pair error.
+
+D21's nondeterminism categories map like this:
+
+| Pair             | Generated method                              | Target check          |
+|------------------|-----------------------------------------------|-----------------------|
+| `rand:read`      | `op.Rand.Read(p []byte) (int, error)`         | none: target is `*`   |
+| `thread:spawn`   | `op.Thread.Spawn(role string, body func()) error` | role must be declared |
+| `thread:message` | none: unsupported-pair error                  |                       |
+| `ui:read/write/event` | none: unsupported-pair error             |                       |
+
+A message between goroutines is a send on a typed channel, and a view is not
+a Go value, so no generic method could perform those pairs; generating one
+would mean an unchecked method. They never
 produce a TODO or a weaker unguarded method, and an existing generated file is
 left intact. Batch generation applies the same rule atomically across the
 preflight phase, including currently valid but unsupported pairs such as

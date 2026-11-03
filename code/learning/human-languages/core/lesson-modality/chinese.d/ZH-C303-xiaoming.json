@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C303-xiaoming",
+    "language": "chinese",
+    "chapter": 303,
+    "sequence": 23680,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:70e47a5e7f79b09d"
+  },
+  "findings": []
+}

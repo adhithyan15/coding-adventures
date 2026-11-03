@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C508-dongshi",
+    "language": "chinese",
+    "chapter": 508,
+    "sequence": 38170,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c46899fbac8fb160"
+  },
+  "findings": []
+}

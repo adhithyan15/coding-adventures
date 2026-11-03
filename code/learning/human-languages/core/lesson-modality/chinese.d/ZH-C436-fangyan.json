@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C436-fangyan",
+    "language": "chinese",
+    "chapter": 436,
+    "sequence": 33340,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:82085aaac64bbdfd"
+  },
+  "findings": []
+}

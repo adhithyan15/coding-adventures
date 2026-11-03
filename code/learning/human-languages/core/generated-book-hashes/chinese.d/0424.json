@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 424,
+  "sourceHash": "fnv1a64:429dbf54d5eb88c7",
+  "lessonIds": [
+    "ZH-C424-suidao",
+    "ZH-C424-diaotou",
+    "ZH-C424-lubiao",
+    "ZH-C424-shisu",
+    "ZH-C424-banlu",
+    "ZH-R424-review-420-424"
+  ],
+  "tex": "chinese/book/chapters/ch424-on-the-road.tex"
+}

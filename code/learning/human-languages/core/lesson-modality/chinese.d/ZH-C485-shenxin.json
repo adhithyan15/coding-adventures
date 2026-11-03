@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C485-shenxin",
+    "language": "chinese",
+    "chapter": 485,
+    "sequence": 36410,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:48b6840a7c37f1f5"
+  },
+  "findings": []
+}

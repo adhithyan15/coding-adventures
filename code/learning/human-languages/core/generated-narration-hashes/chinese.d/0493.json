@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 493,
+  "sourceHash": "fnv1a64:a8d4557215a8de32",
+  "lessonIds": [
+    "ZH-C493-buxi",
+    "ZH-C493-jiajiao",
+    "ZH-W493-jiao-instruct",
+    "ZH-C493-jiaoyu",
+    "ZH-C493-fudao",
+    "ZH-C493-qingjiao"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch493.txt",
+  "json": "chinese/narration/ch493.json",
+  "textHash": "fnv1a64:01c50b0c8b7aeedd",
+  "jsonHash": "fnv1a64:916a30577cc50431",
+  "findings": []
+}

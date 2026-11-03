@@ -1,0 +1,20 @@
+{
+  "chapter": 399,
+  "title": "Only If",
+  "label": "ch:zh-only-if",
+  "canDo": "I can talk about requirements, the only way something happens, what is enough, meeting a demand and settling down.",
+  "spineNodes": [
+    "SPINE-EXPRESS-CONDITION"
+  ],
+  "payoff": {
+    "lesson": "ZH-C399-chengjia",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 399: I can talk about requirements, the only way something happens, what is enough, meeting a demand and settling down.",
+    "assesses": [
+      "ZH-LEX-C399-ONLYIF399-03",
+      "ZH-LEX-C399-ONLYIF399-04",
+      "ZH-LEX-C399-ONLYIF399-05",
+      "ZH-SCRIPT-ZHI-ONLY-01"
+    ]
+  }
+}

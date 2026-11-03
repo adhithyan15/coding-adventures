@@ -1,0 +1,1220 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "lcg/seed-1-basics",
+      "generator": "lcg",
+      "seed": "1",
+      "calls": [
+        {
+          "op": "next_u32",
+          "result": "1817669548"
+        },
+        {
+          "op": "next_u32",
+          "result": "2187888307"
+        },
+        {
+          "op": "next_u32",
+          "result": "2784682393"
+        },
+        {
+          "op": "next_u64",
+          "result": "7062582983020148404"
+        },
+        {
+          "op": "next_float",
+          "result_bits": "3fe004303cc00000"
+        },
+        {
+          "op": "next_float",
+          "result_bits": "3fe1b9d6a6800000"
+        }
+      ]
+    },
+    {
+      "id": "lcg/seed-0",
+      "generator": "lcg",
+      "seed": "0",
+      "calls": [
+        {
+          "op": "next_u32",
+          "result": "335903614"
+        },
+        {
+          "op": "next_u32",
+          "result": "436792849"
+        }
+      ]
+    },
+    {
+      "id": "lcg/seed-u64-max",
+      "generator": "lcg",
+      "seed": "18446744073709551615",
+      "calls": [
+        {
+          "op": "next_u32",
+          "result": "3149104977"
+        },
+        {
+          "op": "next_u64",
+          "result": "12801857353422081707"
+        }
+      ]
+    },
+    {
+      "id": "lcg/range-32-bit-regime",
+      "generator": "lcg",
+      "seed": "42",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "4"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "6"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "4"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "2"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "5"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-5",
+          "max": "5",
+          "result": "-1"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-5",
+          "max": "5",
+          "result": "4"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-5",
+          "max": "5",
+          "result": "-5"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "7",
+          "max": "7",
+          "result": "7"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-3",
+          "max": "-3",
+          "result": "-3"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967295",
+          "result": "1532238609"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967295",
+          "result": "2271604781"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "-9223372032559808513",
+          "result": "-9223372032901386044"
+        }
+      ]
+    },
+    {
+      "id": "lcg/range-32-bit-rejects-about-half",
+      "generator": "lcg",
+      "seed": "7",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1957042814"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1746229857"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "2067259829"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "900287724"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "254022501"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "582002912"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1685383162"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1975464253"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1976098224"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "546327659"
+        }
+      ]
+    },
+    {
+      "id": "lcg/range-64-bit-regime",
+      "generator": "lcg",
+      "seed": "42",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967296",
+          "result": "2822794681"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967296",
+          "result": "934411930"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967296",
+          "result": "1486407022"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "1099511627776",
+          "result": "765158603024"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "1099511627776",
+          "result": "532674505212"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "1099511627776",
+          "result": "75280063506"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "-1",
+          "result": "-1467064327586012444"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "-1",
+          "result": "-3765296976597338005"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "9223372028264841215",
+          "max": "9223372036854775807",
+          "result": "9223372031155477299"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "9223372028264841215",
+          "max": "9223372036854775807",
+          "result": "9223372034692764430"
+        }
+      ]
+    },
+    {
+      "id": "lcg/range-64-bit-rejects-about-half",
+      "generator": "lcg",
+      "seed": "7",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-1723371904274614495"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-344558671622484756"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-1984706469867348762"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-736094785239058623"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-6876912603330212253"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-3650593301906882336"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-4931768991411032027"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-6425506092160455100"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-137223068398430769"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-8155274826722562240"
+        }
+      ]
+    },
+    {
+      "id": "lcg/range-whole-64-bit-domain",
+      "generator": "lcg",
+      "seed": "42",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "1258627372353583269"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "-1607849226780163009"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "3323140493381398553"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "-8821956069069206739"
+        }
+      ]
+    },
+    {
+      "id": "lcg/range-min-above-max-is-an-error-that-draws-nothing",
+      "generator": "lcg",
+      "seed": "1",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "0",
+          "error": "RNG_RANGE_INVALID"
+        },
+        {
+          "op": "next_u32",
+          "result": "1817669548"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "9223372036854775807",
+          "max": "-9223372036854775808",
+          "error": "RNG_RANGE_INVALID"
+        },
+        {
+          "op": "next_u32",
+          "result": "2187888307"
+        }
+      ]
+    },
+    {
+      "id": "xorshift64/seed-1-basics",
+      "generator": "xorshift64",
+      "seed": "1",
+      "calls": [
+        {
+          "op": "next_u32",
+          "result": "1082269761"
+        },
+        {
+          "op": "next_u32",
+          "result": "201397313"
+        },
+        {
+          "op": "next_u32",
+          "result": "1854285353"
+        },
+        {
+          "op": "next_u64",
+          "result": "6151213564881900133"
+        },
+        {
+          "op": "next_float",
+          "result_bits": "3fecaa6300200000"
+        },
+        {
+          "op": "next_float",
+          "result_bits": "3fed77b3ce200000"
+        }
+      ]
+    },
+    {
+      "id": "xorshift64/seed-0",
+      "generator": "xorshift64",
+      "seed": "0",
+      "calls": [
+        {
+          "op": "next_u32",
+          "result": "1082269761"
+        },
+        {
+          "op": "next_u32",
+          "result": "201397313"
+        }
+      ]
+    },
+    {
+      "id": "xorshift64/seed-u64-max",
+      "generator": "xorshift64",
+      "seed": "18446744073709551615",
+      "calls": [
+        {
+          "op": "next_u32",
+          "result": "1065361344"
+        },
+        {
+          "op": "next_u64",
+          "result": "287931308024073696"
+        }
+      ]
+    },
+    {
+      "id": "xorshift64/range-32-bit-regime",
+      "generator": "xorshift64",
+      "seed": "42",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "1"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "6"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "5"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "5"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "5"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-5",
+          "max": "5",
+          "result": "1"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-5",
+          "max": "5",
+          "result": "-4"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-5",
+          "max": "5",
+          "result": "-1"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "7",
+          "max": "7",
+          "result": "7"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-3",
+          "max": "-3",
+          "result": "-3"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967295",
+          "result": "2774057375"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967295",
+          "result": "967440348"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "-9223372032559808513",
+          "result": "-9223372034787323085"
+        }
+      ]
+    },
+    {
+      "id": "xorshift64/range-32-bit-rejects-about-half",
+      "generator": "xorshift64",
+      "seed": "7",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1133437382"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1184223458"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1986304720"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1455212451"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1285330705"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1035610811"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1128445769"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "164143267"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "53319908"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1635342995"
+        }
+      ]
+    },
+    {
+      "id": "xorshift64/range-64-bit-regime",
+      "generator": "xorshift64",
+      "seed": "42",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967296",
+          "result": "1655748629"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967296",
+          "result": "2383326191"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967296",
+          "result": "2822506402"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "1099511627776",
+          "result": "910188998306"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "1099511627776",
+          "result": "1032054777659"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "1099511627776",
+          "result": "683856404251"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "-1",
+          "result": "-343730203266905515"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "-1",
+          "result": "-5984906766536452625"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "9223372028264841215",
+          "max": "9223372036854775807",
+          "result": "9223372029874262226"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "9223372028264841215",
+          "max": "9223372036854775807",
+          "result": "9223372034049511596"
+        }
+      ]
+    },
+    {
+      "id": "xorshift64/range-64-bit-rejects-about-half",
+      "generator": "xorshift64",
+      "seed": "7",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-4355295544201876029"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-692258216666675293"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-4775457466373738008"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-4376734357083610973"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-8994364767691253101"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-689251684245894"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-1474151576126944331"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-8901760342468698800"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-8535493738211260225"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-6278500217525272190"
+        }
+      ]
+    },
+    {
+      "id": "xorshift64/range-whole-64-bit-domain",
+      "generator": "xorshift64",
+      "seed": "42",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "1536091046075826879"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "5895574177148040552"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "807288384600938531"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "2716392765132087602"
+        }
+      ]
+    },
+    {
+      "id": "xorshift64/range-min-above-max-is-an-error-that-draws-nothing",
+      "generator": "xorshift64",
+      "seed": "1",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "0",
+          "error": "RNG_RANGE_INVALID"
+        },
+        {
+          "op": "next_u32",
+          "result": "1082269761"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "9223372036854775807",
+          "max": "-9223372036854775808",
+          "error": "RNG_RANGE_INVALID"
+        },
+        {
+          "op": "next_u32",
+          "result": "201397313"
+        }
+      ]
+    },
+    {
+      "id": "pcg32/seed-1-basics",
+      "generator": "pcg32",
+      "seed": "1",
+      "calls": [
+        {
+          "op": "next_u32",
+          "result": "1412771199"
+        },
+        {
+          "op": "next_u32",
+          "result": "1791099446"
+        },
+        {
+          "op": "next_u32",
+          "result": "124312908"
+        },
+        {
+          "op": "next_u64",
+          "result": "8454956634394186834"
+        },
+        {
+          "op": "next_float",
+          "result_bits": "3fe3365c4c000000"
+        },
+        {
+          "op": "next_float",
+          "result_bits": "3fdf58f279400000"
+        }
+      ]
+    },
+    {
+      "id": "pcg32/seed-0",
+      "generator": "pcg32",
+      "seed": "0",
+      "calls": [
+        {
+          "op": "next_u32",
+          "result": "3894649422"
+        },
+        {
+          "op": "next_u32",
+          "result": "2055130073"
+        }
+      ]
+    },
+    {
+      "id": "pcg32/seed-u64-max",
+      "generator": "pcg32",
+      "seed": "18446744073709551615",
+      "calls": [
+        {
+          "op": "next_u32",
+          "result": "3643879478"
+        },
+        {
+          "op": "next_u64",
+          "result": "14793033478887622302"
+        }
+      ]
+    },
+    {
+      "id": "pcg32/range-32-bit-regime",
+      "generator": "pcg32",
+      "seed": "42",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "3"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "6"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "4"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "4"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "6",
+          "result": "4"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-5",
+          "max": "5",
+          "result": "5"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-5",
+          "max": "5",
+          "result": "0"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-5",
+          "max": "5",
+          "result": "-3"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "7",
+          "max": "7",
+          "result": "7"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-3",
+          "max": "-3",
+          "result": "-3"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967295",
+          "result": "3045727705"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967295",
+          "result": "1731076225"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "-9223372032559808513",
+          "result": "-9223372036748194340"
+        }
+      ]
+    },
+    {
+      "id": "pcg32/range-32-bit-rejects-about-half",
+      "generator": "pcg32",
+      "seed": "7",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "2053818843"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1663713063"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "205922330"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "2032774051"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1836978729"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "235666839"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "701129115"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1072309206"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1387365216"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "2147483648",
+          "result": "1082349239"
+        }
+      ]
+    },
+    {
+      "id": "pcg32/range-64-bit-regime",
+      "generator": "pcg32",
+      "seed": "42",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967296",
+          "result": "2819770580"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967296",
+          "result": "3513360617"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "4294967296",
+          "result": "1930385286"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "1099511627776",
+          "result": "192554467494"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "1099511627776",
+          "result": "38631132845"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "0",
+          "max": "1099511627776",
+          "result": "933727082084"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "-1",
+          "result": "-8765608113260405866"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "-1",
+          "result": "-1948096761763847573"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "9223372028264841215",
+          "max": "9223372036854775807",
+          "result": "9223372036081215703"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "9223372028264841215",
+          "max": "9223372036854775807",
+          "result": "9223372035579698354"
+        }
+      ]
+    },
+    {
+      "id": "pcg32/range-64-bit-rejects-about-half",
+      "generator": "pcg32",
+      "seed": "7",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-492673959372910039"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-8211190665874860015"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-6212045411309700380"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-4617839059964145938"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-3264683801677991196"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-3448477375418470139"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-7662238150329199716"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-1499526810846189731"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-3276498253917658310"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "0",
+          "result": "-4288938005031854072"
+        }
+      ]
+    },
+    {
+      "id": "pcg32/range-whole-64-bit-domain",
+      "generator": "pcg32",
+      "seed": "42",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "4824898736646243497"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "-957100015860231293"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "8480100722241615410"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "-9223372036854775808",
+          "max": "9223372036854775807",
+          "result": "5460387141847599063"
+        }
+      ]
+    },
+    {
+      "id": "pcg32/range-min-above-max-is-an-error-that-draws-nothing",
+      "generator": "pcg32",
+      "seed": "1",
+      "calls": [
+        {
+          "op": "next_int_in_range",
+          "min": "1",
+          "max": "0",
+          "error": "RNG_RANGE_INVALID"
+        },
+        {
+          "op": "next_u32",
+          "result": "1412771199"
+        },
+        {
+          "op": "next_int_in_range",
+          "min": "9223372036854775807",
+          "max": "-9223372036854775808",
+          "error": "RNG_RANGE_INVALID"
+        },
+        {
+          "op": "next_u32",
+          "result": "1791099446"
+        }
+      ]
+    }
+  ]
+}

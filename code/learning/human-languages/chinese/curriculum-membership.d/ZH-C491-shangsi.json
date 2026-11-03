@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C491-shangsi",
+  "pathSegment": "ZH-PATH-491-BOSS491",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-491-BOSS491",
+      "order": 1
+    }
+  ]
+}

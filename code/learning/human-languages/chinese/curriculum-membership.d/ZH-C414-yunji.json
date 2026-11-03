@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C414-yunji",
+  "pathSegment": "ZH-PATH-414-CABIN414",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-414-CABIN414",
+      "order": 3
+    }
+  ]
+}

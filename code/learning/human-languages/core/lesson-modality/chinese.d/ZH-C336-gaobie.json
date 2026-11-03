@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C336-gaobie",
+    "language": "chinese",
+    "chapter": 336,
+    "sequence": 25930,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f596054b9d2a1383"
+  },
+  "findings": []
+}

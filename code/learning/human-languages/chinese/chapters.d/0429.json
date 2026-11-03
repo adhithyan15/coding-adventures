@@ -1,0 +1,21 @@
+{
+  "chapter": 429,
+  "title": "Home Again",
+  "label": "ch:zh-home-again",
+  "canDo": "I can talk about the journey, give someone a lift on my way, get a lift, get about and count the costs.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-R429-review-final-429",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 429: I can talk about the journey, give someone a lift on my way, get a lift, get about and count the costs.",
+    "assesses": [
+      "ZH-LEX-C429-HOME429-01",
+      "ZH-LEX-C429-HOME429-02",
+      "ZH-LEX-C429-HOME429-03",
+      "ZH-LEX-C429-HOME429-04",
+      "ZH-LEX-C429-HOME429-05"
+    ]
+  }
+}

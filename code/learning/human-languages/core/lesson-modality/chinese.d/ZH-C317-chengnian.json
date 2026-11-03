@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C317-chengnian",
+    "language": "chinese",
+    "chapter": 317,
+    "sequence": 24400,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4ead49fb77443839"
+  },
+  "findings": []
+}

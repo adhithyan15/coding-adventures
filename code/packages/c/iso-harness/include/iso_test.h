@@ -139,22 +139,54 @@ static int iso_test_checks_failed = 0;
     } while (0)
 
 /* ISO_CHECK_EQ_DBL(a, b, eps) — floating-point equality within a tolerance.
- * The absolute difference is computed inline (no <math.h> / no -lm needed). */
+ * The absolute difference is computed inline (no <math.h> / no -lm needed).
+ *
+ * The check PASSES only when one of these holds, and fails otherwise:
+ *
+ *     a == b                  exact equality, which also covers equal infinities
+ *                             (inf - inf is NaN, so the tolerance test alone
+ *                             would reject them)
+ *     a and b are both NaN    "expected NaN, got NaN"; x != x is true only for NaN
+ *     |a - b| <= eps          within tolerance
+ *
+ * The tolerance is tested as `<=`, never as "fail if > eps". Every comparison
+ * with NaN is false, so the old `if (d > eps) fail` let a NaN result, or a NaN
+ * eps, pass against ANY expected value:
+ *
+ *     a      b      eps    old      now
+ *     NaN    0.3    1e-9   pass     FAIL
+ *     0.3    NaN    1e-9   pass     FAIL
+ *     NaN    NaN    0      pass     pass
+ *     inf    inf    0      pass     pass   (via a == b)
+ *     inf    -inf   1e300  pass     FAIL   (difference is inf)
+ *     inf    1.0    1e300  FAIL     FAIL
+ *     0.3    0.3    NaN    pass     pass   (via a == b)
+ *     0.3    0.31   NaN    pass     FAIL
+ *
+ * Each argument is evaluated exactly once, like every other check here.
+ *
+ * Do not build tests with -ffast-math: it lets the compiler assume no NaN
+ * exists and fold `x != x` to false. */
 #define ISO_CHECK_EQ_DBL(a, b, eps)                                            \
     do {                                                                       \
         double iso_a_ = (double)(a);                                           \
         double iso_b_ = (double)(b);                                           \
+        double iso_e_ = (double)(eps);                                         \
         double iso_d_ = iso_a_ - iso_b_;                                       \
+        int iso_ok_;                                                           \
         if (iso_d_ < 0) {                                                      \
             iso_d_ = -iso_d_;                                                   \
         }                                                                      \
+        iso_ok_ = iso_a_ == iso_b_                                             \
+                  || (iso_a_ != iso_a_ && iso_b_ != iso_b_)                    \
+                  || iso_d_ <= iso_e_;                                         \
         iso_test_checks_run++;                                                 \
-        if (iso_d_ > (double)(eps)) {                                          \
+        if (!iso_ok_) {                                                        \
             iso_test_checks_failed++;                                          \
             printf("  FAIL %s:%d  ISO_CHECK_EQ_DBL(%s, %s): %g != %g "         \
-                   "(|d|=%g > %g)\n",                                          \
+                   "(|d|=%g, eps %g)\n",                                       \
                    __FILE__, __LINE__, #a, #b, iso_a_, iso_b_, iso_d_,         \
-                   (double)(eps));                                            \
+                   iso_e_);                                                    \
         }                                                                      \
     } while (0)
 

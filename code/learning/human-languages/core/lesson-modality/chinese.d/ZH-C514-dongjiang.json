@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C514-dongjiang",
+    "language": "chinese",
+    "chapter": 514,
+    "sequence": 39030,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7fa87b02c2f6eba0"
+  },
+  "findings": []
+}

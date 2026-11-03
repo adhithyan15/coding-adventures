@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W463-pa-fear",
+    "language": "chinese",
+    "chapter": 463,
+    "sequence": 35265,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:6b8cbd7d3bd21025",
+    "detachableSegments": [
+      "Script — the heart piece, then 白"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

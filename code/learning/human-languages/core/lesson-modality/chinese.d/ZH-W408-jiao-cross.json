@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W408-jiao-cross",
+    "language": "chinese",
+    "chapter": 408,
+    "sequence": 31325,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:82c6f686ccdb1768",
+    "detachableSegments": [
+      "Script — a lid, then two strokes crossing"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

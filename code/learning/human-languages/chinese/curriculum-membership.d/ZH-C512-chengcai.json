@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C512-chengcai",
+  "pathSegment": "ZH-PATH-512-DREAMS512",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-512-DREAMS512",
+      "order": 2
+    }
+  ]
+}

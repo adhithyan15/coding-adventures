@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C438-bufen",
+  "pathSegment": "ZH-PATH-438-NORTH438",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-438-NORTH438",
+      "order": 4
+    }
+  ]
+}

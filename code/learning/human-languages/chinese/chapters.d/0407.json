@@ -1,0 +1,21 @@
+{
+  "chapter": 407,
+  "title": "Pulling In",
+  "label": "ch:zh-pulling-in",
+  "canDo": "I can say a train is pulling in, name the soft sleeper, find an empty seat and reach the end of the line.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-R407-review-402-407",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 407: I can say a train is pulling in, name the soft sleeper, find an empty seat and reach the end of the line.",
+    "assesses": [
+      "ZH-LEX-C407-PULLIN407-01",
+      "ZH-LEX-C407-PULLIN407-02",
+      "ZH-LEX-C407-PULLIN407-03",
+      "ZH-LEX-C407-PULLIN407-04",
+      "ZH-LEX-C407-PULLIN407-05"
+    ]
+  }
+}

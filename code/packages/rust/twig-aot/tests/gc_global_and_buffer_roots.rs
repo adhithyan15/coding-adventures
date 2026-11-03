@@ -450,3 +450,61 @@ fn dead_string_buffers_are_reclaimed_once_their_frame_is_gone() {
     assert_eq!(live("strings_helper", true, true), Some(13), "the literals died with mk's frame");
     assert_eq!(live("strings_main", true, false), Some(34), "main's literal slots are roots (R1)");
 }
+
+/// An **incremental** cycle (`start`, `step` to done, `finish`) spliced in front of
+/// the global read, followed by a churn that reuses freed cells. The globals are roots
+/// at `start` and are re-scanned at `finish`, which (like `start`) now walks the
+/// compiled caller's stack from its own frame-building trampoline. Every global shape
+/// must still read 7. A guard for the native call path; the re-scan itself is proven
+/// by gc-core-capi's `incremental_finish_rescans_roots_stored_during_the_phase`.
+#[test]
+fn global_survives_an_incremental_cycle() {
+    let dir = tempfile::tempdir().unwrap();
+    let mut failures = Vec::new();
+    for (tag, mut m) in global_variants() {
+        let f = m.functions.iter_mut().find(|f| f.name == "f").expect("f");
+        let pos = f.instructions.iter().position(is_global_get).expect("global read");
+        let w4 = f
+            .instructions
+            .iter()
+            .find(|i| i.op == "call" && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "w4"))
+            .cloned()
+            .expect("f calls (w4)");
+        let mut reuse = w4;
+        reuse.dest = Some("__reuse".into());
+        let cycle = [
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("gc_collect_incremental_start".into())],
+                "void",
+            ),
+            IIRInstr::new("const", Some("__budget".into()), vec![Operand::Int(1 << 30)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("__done".into()),
+                vec![
+                    Operand::Var("gc_collect_incremental_step".into()),
+                    Operand::Var("__budget".into()),
+                ],
+                "i64",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("__freed".into()),
+                vec![Operand::Var("gc_collect_incremental_finish".into())],
+                "i64",
+            ),
+            reuse,
+        ];
+        for (k, instr) in cycle.into_iter().enumerate() {
+            f.instructions.insert(pos + k, instr);
+        }
+        f.source_map.clear();
+        let out = run(&build(&m, &dir, &format!("incremental_{tag}")));
+        if out.status.code() != Some(7) {
+            failures.push(format!("{tag}: exit {:?}", out.status.code()));
+        }
+    }
+    assert!(failures.is_empty(), "{failures:?}");
+}

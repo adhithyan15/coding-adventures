@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C433-renshanrenhai",
+  "pathSegment": "ZH-PATH-433-OVERSEAS433",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-433-OVERSEAS433",
+      "order": 3
+    }
+  ]
+}

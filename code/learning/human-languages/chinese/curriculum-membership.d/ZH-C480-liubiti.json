@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C480-liubiti",
+  "pathSegment": "ZH-PATH-480-SYMPTOM480",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-480-SYMPTOM480",
+      "order": 2
+    }
+  ]
+}

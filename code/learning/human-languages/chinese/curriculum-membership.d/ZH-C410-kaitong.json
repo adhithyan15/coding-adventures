@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C410-kaitong",
+  "pathSegment": "ZH-PATH-410-COACH410",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-410-COACH410",
+      "order": 3
+    }
+  ]
+}

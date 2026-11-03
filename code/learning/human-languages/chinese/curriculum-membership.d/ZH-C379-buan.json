@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C379-buan",
+  "pathSegment": "ZH-PATH-379-SAFE379",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-379-SAFE379",
+      "order": 3
+    }
+  ]
+}

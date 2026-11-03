@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-289-IFTIME",
+  "spine_node": "SPINE-EXPRESS-CONDITION",
+  "before": [],
+  "inline": [
+    "ZH-EXT-289-IFTIME"
+  ],
+  "after": []
+}

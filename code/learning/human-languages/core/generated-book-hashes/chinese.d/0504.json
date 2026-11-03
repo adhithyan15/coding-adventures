@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 504,
+  "sourceHash": "fnv1a64:b3617ecda3704494",
+  "lessonIds": [
+    "ZH-C504-geci",
+    "ZH-C504-erge",
+    "ZH-W504-ge-song",
+    "ZH-C504-guoge",
+    "ZH-C504-minge",
+    "ZH-C504-yanchang-sing"
+  ],
+  "tex": "chinese/book/chapters/ch504-songs.tex"
+}

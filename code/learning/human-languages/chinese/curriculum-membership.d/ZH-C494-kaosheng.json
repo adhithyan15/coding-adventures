@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C494-kaosheng",
+  "pathSegment": "ZH-PATH-494-GAOKAO494",
+  "pathOrder": 2,
+  "extensions": [
+    {
+      "id": "ZH-EXT-494-GAOKAO494",
+      "order": 2
+    }
+  ]
+}

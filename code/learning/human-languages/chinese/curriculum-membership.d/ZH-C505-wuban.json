@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C505-wuban",
+  "pathSegment": "ZH-PATH-505-DANCE505",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-505-DANCE505",
+      "order": 3
+    }
+  ]
+}

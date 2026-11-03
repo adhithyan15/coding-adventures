@@ -1,0 +1,21 @@
+{
+  "language": "chinese",
+  "chapter": 345,
+  "sourceHash": "fnv1a64:5f319c1214780dde",
+  "lessonIds": [
+    "ZH-C345-jushuo",
+    "ZH-C345-congci",
+    "ZH-C345-qiyuan",
+    "ZH-C345-wangyou",
+    "ZH-C345-youbian",
+    "ZH-R345-review-341-345",
+    "ZH-R345-review-final-345"
+  ],
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
+  "text": "chinese/narration/ch345.txt",
+  "json": "chinese/narration/ch345.json",
+  "textHash": "fnv1a64:a95fcf03ab59a55a",
+  "jsonHash": "fnv1a64:0d820743026a7794",
+  "findings": []
+}

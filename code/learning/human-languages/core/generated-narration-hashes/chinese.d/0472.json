@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 472,
+  "sourceHash": "fnv1a64:0e16af533798116a",
+  "lessonIds": [
+    "ZH-C472-meimao",
+    "ZH-C472-lianse",
+    "ZH-W472-lian-face",
+    "ZH-C472-bianlian",
+    "ZH-C472-biaoqing",
+    "ZH-C472-etou"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch472.txt",
+  "json": "chinese/narration/ch472.json",
+  "textHash": "fnv1a64:a1f7af4bca91c52d",
+  "jsonHash": "fnv1a64:129119bf11e22e00",
+  "findings": []
+}

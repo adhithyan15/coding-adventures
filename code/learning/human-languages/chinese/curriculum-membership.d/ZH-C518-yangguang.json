@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C518-yangguang",
+  "pathSegment": "ZH-PATH-518-SUN518",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-518-SUN518",
+      "order": 1
+    }
+  ]
+}

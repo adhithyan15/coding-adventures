@@ -33,7 +33,8 @@ fn run_ruby(src: &str) -> Option<String> {
     let cc = find_cc()?;
     let module = ruby_to_semantic_ir::compile_source(src, "prog").expect("ruby lowering");
     let art = semantic_ir_to_c::compile(&module).expect("C compile (no panic)");
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_c_test_");
+    let dir = scratch.path();
     // Hash the full source, not just its length -- two tests with equal-length
     // sources run as parallel threads in the SAME process (cargo test's
     // default), so a length-keyed stem collides and one test's compile/run
@@ -47,7 +48,7 @@ fn run_ruby(src: &str) -> Option<String> {
     let cpath = dir.join(format!("{stem}.c"));
     let exe = dir.join(format!("{stem}{}", std::env::consts::EXE_SUFFIX));
     let _cleanup = RemoveOnDrop([cpath.clone(), exe.clone()]);
-    std::fs::write(&cpath, &art.source).expect("write .c");
+    sir_test_scratch::write_new(&cpath, &art.source).expect("write .c");
     let out = Command::new(&cc)
         .args(["-std=c99", "-Wall", "-o"])
         .arg(&exe)

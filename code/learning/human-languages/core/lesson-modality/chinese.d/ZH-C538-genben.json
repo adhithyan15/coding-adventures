@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C538-genben",
+    "language": "chinese",
+    "chapter": 538,
+    "sequence": 40280,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:5a0be812987689c9"
+  },
+  "findings": []
+}

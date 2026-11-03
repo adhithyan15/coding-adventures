@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C442-he",
+    "language": "chinese",
+    "chapter": 442,
+    "sequence": 33630,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:7ac1bb952054e014"
+  },
+  "findings": []
+}

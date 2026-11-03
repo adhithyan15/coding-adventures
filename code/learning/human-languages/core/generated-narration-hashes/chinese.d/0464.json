@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 464,
+  "sourceHash": "fnv1a64:456994aae8fac378",
+  "lessonIds": [
+    "ZH-C464-fahuo",
+    "ZH-C464-huoqi",
+    "ZH-C464-qiren",
+    "ZH-C464-chuqi",
+    "ZH-C464-fennu"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch464.txt",
+  "json": "chinese/narration/ch464.json",
+  "textHash": "fnv1a64:59115fa2bd63ef34",
+  "jsonHash": "fnv1a64:5e474487b16e3bdb",
+  "findings": []
+}

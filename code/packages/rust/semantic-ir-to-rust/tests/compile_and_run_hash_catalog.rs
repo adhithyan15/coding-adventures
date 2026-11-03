@@ -241,12 +241,13 @@ fn hash_catalog_compile_and_run() {
 
     let artifact = compile(&catalog_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_hash_catalog_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_hash_catalog_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -370,12 +371,13 @@ fn hash_enumerable_aggregates_compile_and_run() {
 
     let artifact = compile(&enum_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_hash_enum_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_hash_enum_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -495,12 +497,13 @@ fn hash_enumerable_breadth_compile_and_run() {
 
     let artifact = compile(&breadth_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_hash_breadth_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_hash_breadth_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");
@@ -629,12 +632,13 @@ fn hash_to_h_and_indexed_iteration_compile_and_run() {
 
     let artifact = compile(&to_h_demo()).expect("module should compile to Rust source");
 
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_rust_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_hash_toh_{nonce}.rs"));
     let bin_path =
         dir.join(format!("sir_hash_toh_{nonce}{}", if cfg!(windows) { ".exe" } else { "" }));
-    std::fs::write(&src_path, &artifact.source).expect("write temp source");
+    sir_test_scratch::write_new(&src_path, &artifact.source).expect("write temp source");
 
     let mut cmd = Command::new("rustc");
     cmd.arg("--edition").arg("2021").arg("-O");

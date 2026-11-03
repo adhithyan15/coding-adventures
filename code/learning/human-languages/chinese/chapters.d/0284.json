@@ -1,0 +1,25 @@
+{
+  "chapter": 284,
+  "title": "Two Tickets",
+  "label": "ch:zh-two-tickets",
+  "canDo": "I can buy a ticket and say how I am travelling.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C284-practice",
+    "kind": "four-skill-function-map",
+    "summary": "Saying how you travel with 坐 … 去, buying and returning tickets, platforms, one-way tickets and seats, 在 after a verb for where something lands, and 家 for counting shops, built on one new written character: 坐.",
+    "assesses": [
+      "ZH-LEX-C284-ZHANTAI-01",
+      "ZH-GRAMMAR-TICKET-01",
+      "ZH-SCRIPT-ZUO-01",
+      "ZH-LEX-C284-DANCHENG-01",
+      "ZH-LEX-C284-ZUOWEI-01",
+      "ZH-LEX-C284-TUIPIAO-01",
+      "ZH-GRAMMAR-V-ZAI-PLACE-01",
+      "ZH-GRAMMAR-JIA-MEASURE-01",
+      "ZH-PERFORMANCE-TICKET-01"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C511-muqin",
+    "language": "chinese",
+    "chapter": 511,
+    "sequence": 38310,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c596822e437a1a68"
+  },
+  "findings": []
+}

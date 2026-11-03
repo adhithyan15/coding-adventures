@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C508-jiemei",
+    "language": "chinese",
+    "chapter": 508,
+    "sequence": 38130,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:619b00cbe18f671f"
+  },
+  "findings": []
+}

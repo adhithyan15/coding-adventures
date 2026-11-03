@@ -1,0 +1,21 @@
+{
+  "chapter": 435,
+  "title": "At the Top",
+  "label": "ch:zh-at-the-top",
+  "canDo": "I can talk about climbing a mountain, the summit, a sunrise, a magnificent view and the way down.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-R435-review-430-435",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 435: I can talk about climbing a mountain, the summit, a sunrise, a magnificent view and the way down.",
+    "assesses": [
+      "ZH-LEX-C435-SUMMIT435-01",
+      "ZH-LEX-C435-SUMMIT435-02",
+      "ZH-LEX-C435-SUMMIT435-03",
+      "ZH-LEX-C435-SUMMIT435-04",
+      "ZH-LEX-C435-SUMMIT435-05"
+    ]
+  }
+}

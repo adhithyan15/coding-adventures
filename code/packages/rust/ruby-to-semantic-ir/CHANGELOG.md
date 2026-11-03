@@ -2,6 +2,161 @@
 
 All notable changes to the `ruby-to-semantic-ir` crate will be documented in this file.
 
+## Unreleased — lexer refusals are typed errors (#18814)
+
+### Changed
+
+- `compile_source` builds its parser with `try_create_ruby_parser` and
+  returns a lexer failure as a `RubyLowerError` at line 0, column 0
+  instead of panicking.  That includes the lexer's new 1 MiB source
+  budget, so an oversized program is refused at once with
+  `ruby lexer: source bytes (N) exceed the limit of 1048576`; before
+  #18814 it was lexed in quadratic time (~150 s for 400 KB of `a&.b`).
+  Parse errors still panic, as `parse_ruby` does.  Test
+  `oversized_source_is_a_typed_error_not_a_panic`.
+
+## Unreleased — newline gluing, `rescue Klass` ⏎, bare `puts`, method-level `rescue` value (#18798)
+
+### Fixed (re-review of #18798)
+
+- A statement after `{`, a block's `|`, `do`, `then`, `begin`, … on the
+  same line no longer takes the next statement as its argument, and a
+  `-`/`[` line after `x = super` starts a new statement (see ruby-lexer).
+  Tests `a_statement_after_an_opener_on_the_same_line_takes_nothing_from_the_next`
+  and `a_sign_or_bracket_after_super_starts_a_new_statement`.
+
+### Fixed (security review of #18798)
+
+- **`super` ⏎ `puts "hi"`** printed a blank line, passed `nil` up and
+  dropped `"hi"` (it read `super(puts)`); `super; setup`, `yield; foo` and
+  `return; 42` swallowed the next statement as an argument.  Test
+  `a_keyword_ending_its_line_takes_nothing_from_the_next`.
+- **A bare `puts` prints only as a whole statement** (`statement_puts`, the
+  positions of `expression_stmt`s that are just `puts`).  As a value
+  (`x = puts`, `f(puts)`) it stays an unknown name the validator refuses.
+  `puts if c` works (see ruby-parser).  Test
+  `a_bare_puts_used_as_a_value_is_not_a_call`.
+- **Invented names skip names spelled only in a `#{…}` interpolation**:
+  `collect_source_names` also takes every identifier-shaped word of every
+  string, since interpolation is lowered from the string's text.  Test
+  `invented_names_skip_names_spelled_only_in_an_interpolation`.
+
+### Fixed
+
+- **A line that starts with `-`, `+` or `(` starts a statement.**
+  `x = 5` ⏎ `-1` ⏎ `puts x` printed 4 on every backend (`x = 5 - 1`), and
+  `x = foo` ⏎ `(1)` passed 1 to `foo`.  The lexer tags those tokens and the
+  grammar refuses them in binary and argument positions; `unary_plus`
+  lowers to its operand.  Tests
+  `a_sign_that_starts_a_line_starts_a_new_statement`,
+  `an_operator_ending_a_line_or_a_dot_starting_one_continues_it`,
+  `a_paren_that_starts_a_line_is_not_an_argument_list`.
+- **A name alone on its line takes nothing from the next line**
+  (`puts` ⏎ `puts 2` was `puts(puts 2)`, `foo` ⏎ `(1)` was `foo(1)`).
+- **`rescue Klass` ⏎ next line.**  The class list ends at the line break;
+  it read `Klass(next line)`, which the validator refused.  Test
+  `a_rescue_class_list_ends_at_the_line_break`.
+- **A bare `puts` prints a newline.**  It lowers like `puts()` (a
+  `__sys_write__` with no values) unless a local, parameter or user `def`
+  is named `puts`; it was a read of an unknown local.  Test
+  `a_bare_puts_prints_a_newline_and_takes_nothing_from_the_next_line`.
+- **A method-level `rescue` keeps its value.**  `def risky; raise "x";
+  rescue => e; "rescued"; end` returned `nil`: the body and clauses were a
+  `TryCatch` statement.  `lower_rescued_method_body` stores the last value
+  of the body and of each `rescue` clause into an invented
+  `__rescue_value_<n>` and returns it; `ensure` never changes it.  Tests
+  `method_level_rescue_keeps_the_value_of_each_block` and the updated
+  `def_with_method_level_*` shape tests.
+- **`;` separates statements** (it stopped the parse).  Test
+  `semicolons_separate_statements`.
+
+### Changed
+
+- Invented locals (`__for_<n>`, `__rescue_value_<n>`) are claimed from one
+  pool, `used_names`, seeded with every `Name` the source spells, so a
+  program name assigned *later* can no longer be one of them (#18771's
+  lesson).  `for_while_form_temporaries_are_declared_locals` now expects
+  the loop to skip the program's own `__for_0`/`__for_1`; test
+  `invented_names_skip_every_name_the_source_spells`.
+
+## Unreleased — Ruby-on-SIR gaps (#18778)
+
+### Fixed (re-review of #18778)
+
+- **A `for` iterable that reads a body local is refused at compile time.**
+  The body's locals are declared `nil` before the loop, so `for i in 0...n`
+  with `n` first assigned in the body read that `nil` and failed at run
+  time (before the declarations existed, the validator refused it).  The
+  lowerer now refuses it: in Ruby the name is not a local at that point.
+  Test `for_iterable_reading_a_body_local_is_refused`.
+- **The `while` form's counter and end are recorded as locals**, so a later
+  `__for_0 = …` in the program is an `Assign`, not a second `let`.  Test
+  `for_while_form_temporaries_are_declared_locals`.
+- **The `while` form's increment comes right after the store into the loop
+  variable**, before the user's statements, so no statement of the body
+  can skip it (a future `next` would otherwise loop forever).  Pinned in
+  `for_over_an_inclusive_range_with_a_non_integer_end_counts_with_le`.
+
+### Fixed (review of #18778)
+
+- **`for i in 1..2.5` ran 1, 2 and 3.**  An inclusive range's stop was
+  `b + 1` for any `b`.  It is now `b + 1` only for an integer-literal `b`;
+  `a..b` with any other `b` lowers to a `While` that counts while
+  `i <= b` (start and end evaluated once), and a range that starts at a
+  Float literal is refused, as Ruby cannot iterate from a Float.  Tests
+  `for_over_an_inclusive_range_with_a_non_integer_end_counts_with_le`,
+  `for_over_a_range_that_starts_at_a_float_is_refused`.
+- **Locals first assigned in a `for` body now stay visible after the
+  loop**, as in Ruby: `collect_loop_assigned_names` finds them (stopping
+  at blocks, lambdas, `def`s, classes and modules) and they are declared
+  `nil` before the loop.  The grammar comment already said so; the code
+  had restored the locals instead.  A `rescue => e` binding still stays
+  inside its clause (#18798).  Test
+  `for_body_locals_are_declared_before_the_loop`.
+
+### Added
+
+- **`for x in xs [do] … end`** (`lower_for_statement`).  A `for` opens no
+  scope: `x` is a local of the enclosing scope, declared `nil` before the
+  loop when new, and keeps the last item.  The loop iterates a fresh
+  `__for_<n>` (skipping any spelling the program uses) and stores it into
+  `x` first thing in the body.  A literal `a...b` / `a..b` lowers to a
+  `ForRange` (stop `b` / `b + 1`), anything else to a `ForEach`.  A
+  parameter as the loop variable is refused with a clear message.
+- **Bare method names are calls** (`bare_name_call`).  Ruby reads a bare `g`
+  as a local only if an assignment or parameter `g` appears earlier in the
+  scope; otherwise it is `g()`.  The lowerer used to read every bare name as
+  a local, so `def g; 42; end; puts g` was refused ("references unknown name
+  `g`").  A name is now a `DirectCall` when it is a top-level `def` that no
+  class or module also defines, and is not a local of the current scope or
+  of a scope around the block/lambda being lowered.  The method names are
+  collected before any body is lowered (`collect_method_names`).
+
+### Fixed
+
+- **`rescue => e` with no class** binds `e`.  The grammar now parses it
+  (see `ruby-parser`); the binding is a local of the clause body, so a bare
+  `e` there reads the exception even when a method `e` exists.
+- **A loop body's last statement ran on C and Ruby** (`loop_body`).  The
+  `while` body's trailing expression became the body's *value*, which the C
+  and Ruby backends never emit: `while x < 3; x += 1; puts x; end` printed
+  nothing there.  The value is now an `ExprStmt`.  (The lesson "A loop
+  body's trailing expression is its block value" — `python-to-semantic-ir`
+  had the same bug.)
+- **A method ending in `x if c` returned `nil`** whether or not `c` held,
+  on every backend.  A tail `if`/`unless` modifier is now promoted like a
+  tail `if` statement: its one expression is the branch's value.
+- `f() + f` at the start of a statement and inside block / `->` bodies, and
+  a `[` that starts a new line, now parse as Ruby reads them (grammar and
+  lexer changes in `ruby-parser` / `ruby-lexer`).
+
+### Changed
+
+- `parenless_reference_to_non_block_method_is_left_alone` became
+  `parenless_reference_to_non_block_method_is_a_call_without_a_block`: a
+  bare `g` naming `def g(x)` is now the call `g()`, which the validator
+  refuses for its arity (Ruby raises `ArgumentError`).
+
 ## 0.11.0 — SIR21 T3b-2 Slice 4: `/` lowers to `div_floor`
 
 Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C280-yijian",
+    "language": "chinese",
+    "chapter": 280,
+    "sequence": 21160,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ac4e63b71446051d"
+  },
+  "findings": []
+}

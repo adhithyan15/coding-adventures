@@ -1,0 +1,19 @@
+{
+  "chapter": 412,
+  "title": "Harbour and Deck",
+  "label": "ch:zh-harbour-and-deck",
+  "canDo": "I can talk about the harbour, the deck and the cabins, a boat coming in to shore and a passenger ship.",
+  "spineNodes": [
+    "SPINE-HANDLE-TRAVEL"
+  ],
+  "payoff": {
+    "lesson": "ZH-C412-kechuan",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 412: I can talk about the harbour, the deck and the cabins, a boat coming in to shore and a passenger ship.",
+    "assesses": [
+      "ZH-LEX-C412-HARBOUR412-03",
+      "ZH-LEX-C412-HARBOUR412-04",
+      "ZH-LEX-C412-HARBOUR412-05"
+    ]
+  }
+}

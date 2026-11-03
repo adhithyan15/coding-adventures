@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C444-bandao",
+  "pathSegment": "ZH-PATH-444-ISLAND444",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-444-ISLAND444",
+      "order": 3
+    }
+  ]
+}

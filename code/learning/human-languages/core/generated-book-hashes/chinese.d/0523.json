@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 523,
+  "sourceHash": "fnv1a64:688565bbe0abdc16",
+  "lessonIds": [
+    "ZH-C523-pifa",
+    "ZH-C523-maimai",
+    "ZH-W523-mai-sell",
+    "ZH-C523-maijia-seller",
+    "ZH-C523-maijia-buyer",
+    "ZH-C523-lingshou"
+  ],
+  "tex": "chinese/book/chapters/ch523-buying-and-selling.tex"
+}

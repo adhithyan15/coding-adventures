@@ -228,6 +228,35 @@ Git or acquiring process, environment, or network authority. OCaml remains an
 emerging lane until its promotion gates pass and is therefore not in this
 fifteen-lane denominator.
 
+Haskell packages carry one platform-routing rule. GHC 9.4.8's macOS bindist
+hardcodes a Command Line Tools SDK sysroot; when the runner's default developer
+directory is an older Xcode beside newer Command Line Tools, that Xcode linker
+cannot read the CLT SDK's `arm64e.x1` stubs and every link fails. Cabal builds
+a package's whole local project in the one process the package root's BUILD
+line starts, so fixing a dependency's BUILD never protects the root that
+selected it. Every BUILD line a `haskell` package runs on macOS (the file
+Darwin resolves: `BUILD_mac`, then `BUILD_mac_and_linux`, then `BUILD`) must
+therefore select `DEVELOPER_DIR=/Library/Developer/CommandLineTools` behind a
+`[ "$(uname -s)" = Darwin ]` check, in one of two accepted shapes:
+
+```sh
+# Prefix: export inside this line's own `sh -c`, then the unchanged command.
+if [ "$(uname -s)" = Darwin ]; then export DEVELOPER_DIR=/Library/Developer/CommandLineTools; fi; cabal test all
+# Inline: the assignment scoped to the Darwin branch's Cabal command.
+if [ "$(uname -s)" = Darwin ]; then DEVELOPER_DIR=/Library/Developer/CommandLineTools cabal test all; else cabal test all; fi
+```
+
+Both scope the selection to that line's process tree (each line is its own
+`sh -c`), leave other platforms' inherited environment untouched, never call
+`xcode-select`, and keep the package command's exit status as the line's exit
+status. A line consisting only of the `BUILD_TOOL_UNSUPPORTED` protocol record
+or of a bare `echo` launches no toolchain and is exempt. Comment lines never
+satisfy the rule. `--validate-build-files` rejects a missing selection and
+names the file and the governing lesson
+(`lessons.d/ghc-must-select-the-linker-matching-its-hardcoded-macos-sdk.md`).
+This rule is implemented by the Go reference tool; it has no neutral
+conformance fixture yet.
+
 Tracked dependency artifacts are a separate validation boundary. The closed
 `tracked_artifact_absence` snapshot supplies bounded path and entry-kind
 records as inert data and declares the exact Unicode `17.0.0` data version.

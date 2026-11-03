@@ -1,0 +1,11 @@
+{
+  "id": "ZH-W392-gai-alter",
+  "pathSegment": "ZH-PATH-392-NEWPLAN392",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-392-NEWPLAN392",
+      "order": 1
+    }
+  ]
+}

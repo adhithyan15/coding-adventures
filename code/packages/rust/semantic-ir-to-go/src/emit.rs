@@ -1823,6 +1823,26 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         out.push_str(" } }()");
         return;
     }
+    // #18798 — `not` is SIR's boolean negation: Ruby `!x`, `not x`, and
+    // every `unless c` / `until c` (lowered as `if not(c)` / `while
+    // not(c)`).  It had no arm here and no entry in the runtime's
+    // by-name dispatch, so EVERY Ruby `unless` panicked with "unknown
+    // builtin: not".  The result is a real `bool` (Ruby's `!x` is `true`
+    // or `false`, never the operand), taken with SIR truthiness: only
+    // `nil` and `false` are falsy, so `!0` is `false`.
+    //
+    // | x                       | not(x) |
+    // |-------------------------|--------|
+    // | nil                     | true   |
+    // | false                   | true   |
+    // | true                    | false  |
+    // | anything else (0, "", …) | false  |
+    if name == "not" && args.len() == 1 {
+        out.push_str("Value(!_sir_truthy(");
+        emit_expr(out, &args[0], indent);
+        out.push_str("))");
+        return;
+    }
     // All variadic-ish builtins in the Go runtime take []Value and
     // return Value.  Same calling shape for fixed-arity ones to keep
     // the emitter simple.
@@ -2804,6 +2824,31 @@ mod tests {
             "func() Value { __l := Value(false); if _sir_truthy(__l) { return __l } else { return Value(int64(7)) } }()"
         );
         assert!(!or.contains("_sir_call_builtin_by_name"));
+    }
+
+    #[test]
+    fn emit_not_builtin_negates_by_truthiness() {
+        // #18798 — every Ruby `unless` lowers to `if not(c)`; `not` had no
+        // arm here, fell to `_sir_call_builtin_by_name` (which had no entry
+        // either), and panicked "unknown builtin: not" at runtime.
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::BuiltinCall {
+                name: "not".into(),
+                args: vec![Expr::IntLit {
+                    value: 0,
+                    span: s(),
+                }],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "Value(!_sir_truthy(Value(int64(0))))");
+        // The runtime's by-name dispatch knows it too, for a first-class
+        // reference to the builtin.
+        assert!(crate::runtime::RUNTIME.contains("case \"not\":"));
     }
 
     #[test]
@@ -4515,6 +4560,66 @@ mod tests {
         // A user variable spelled like the renamed form takes the verbatim
         // escape, so the two stay apart.
         assert_ne!(var_ident("sir_esc_lf"), var_ident("f"));
+        FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
+    }
+
+    // ── constants and the renamed `main` (follow-ups to #18485) ──────
+
+    /// A constant is never an identifier in this backend: the one place it
+    /// is accepted, the class operand of `raise`, emits its *name string*,
+    /// and every other constant use is refused before emit.  So a constant
+    /// spelled like a function cannot shadow it.  `def Boom; 40; end` plus
+    /// `raise Boom, "m"`: the function keeps its name and the class is the
+    /// string `"Boom"`.
+    #[test]
+    fn a_constant_named_like_a_function_is_a_string_not_an_identifier() {
+        let boom = Function {
+            name: "Boom".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts: vec![], value: Expr::IntLit { value: 40, span: s() }, span: s() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let raise = Expr::BuiltinCall {
+            name: "raise".into(),
+            args: vec![
+                Expr::VarRef { name: "Boom".into(), scope: Scope::Const, span: s() },
+                Expr::StrLit { value: "m".into(), span: s() },
+            ],
+            effects: EffectSet::PURE,
+            span: s(),
+        };
+        let mut main = boom.clone();
+        main.name = "main".into();
+        main.body.value = raise;
+        let m = Module {
+            name: "consts".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![boom, main],
+            globals: vec![],
+            metadata: Metadata::new(),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(out.contains("_sir_new_error(\"Boom\", "), "{out}");
+    }
+
+    /// SIR's `main` is emitted as `_sir_user_main`; no user name -- of a
+    /// function or a variable -- can produce that spelling, so a user
+    /// function spelled `_sir_user_main` and the renamed `main` never meet.
+    #[test]
+    fn no_user_name_spells_the_renamed_main() {
+        let lookalike = "_sir_user_main";
+        FUNCTION_NAMES.with(|t| *t.borrow_mut() = [lookalike.to_string()].into_iter().collect());
+        for spelling in [function_emit_name(lookalike), var_ident(lookalike), sanitize_ident(lookalike)] {
+            assert_ne!(spelling, function_emit_name("main"), "{spelling}");
+            assert!(spelling.starts_with("sir_esc_"), "{spelling}");
+        }
         FUNCTION_NAMES.with(|t| t.borrow_mut().clear());
     }
 }

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 467,
+  "sourceHash": "fnv1a64:06a9dac5c686ac36",
+  "lessonIds": [
+    "ZH-C467-piqi",
+    "ZH-C467-gexing",
+    "ZH-W467-xing-nature",
+    "ZH-C467-tianxing",
+    "ZH-C467-kailang",
+    "ZH-C467-huopo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch467.txt",
+  "json": "chinese/narration/ch467.json",
+  "textHash": "fnv1a64:f1adc13d1f01f046",
+  "jsonHash": "fnv1a64:669633fd856973cc",
+  "findings": []
+}

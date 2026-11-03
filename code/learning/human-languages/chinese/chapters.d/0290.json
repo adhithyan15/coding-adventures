@@ -1,0 +1,19 @@
+{
+  "chapter": 290,
+  "title": "In the News",
+  "label": "ch:zh-in-the-news",
+  "canDo": "I can talk about the news, the radio, the host of a show and what everyone is talking about.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C290-redian",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 290: I can talk about the news, the radio, the host of a show and what everyone is talking about.",
+    "assesses": [
+      "ZH-LEX-C290-NEWS290-03",
+      "ZH-LEX-C290-NEWS290-04",
+      "ZH-LEX-C290-NEWS290-05"
+    ]
+  }
+}

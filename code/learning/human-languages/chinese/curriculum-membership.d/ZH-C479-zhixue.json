@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C479-zhixue",
+  "pathSegment": "ZH-PATH-479-BLOOD479",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-479-BLOOD479",
+      "order": 3
+    }
+  ]
+}

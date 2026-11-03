@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C288-depends",
+    "language": "chinese",
+    "chapter": 288,
+    "sequence": 21820,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:17928547a428a81d"
+  },
+  "findings": []
+}

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 328,
+  "sourceHash": "fnv1a64:ae29afaf22bfef77",
+  "lessonIds": [
+    "ZH-C328-shenhua",
+    "ZH-C328-chuanshuo",
+    "ZH-W328-chuan-pass",
+    "ZH-C328-liuchuan",
+    "ZH-C328-long",
+    "ZH-C328-chuanhua"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch328.txt",
+  "json": "chinese/narration/ch328.json",
+  "textHash": "fnv1a64:c0ec1bdfc68183bb",
+  "jsonHash": "fnv1a64:21b35c58c51c3a4a",
+  "findings": []
+}

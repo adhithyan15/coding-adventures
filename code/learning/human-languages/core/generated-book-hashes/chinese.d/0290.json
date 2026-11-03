@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 290,
+  "sourceHash": "fnv1a64:16f3c888ab5e9751",
+  "lessonIds": [
+    "ZH-C290-xinwen",
+    "ZH-C290-baodao",
+    "ZH-C290-diantai",
+    "ZH-C290-zhuchiren",
+    "ZH-C290-redian"
+  ],
+  "tex": "chinese/book/chapters/ch290-in-the-news.tex"
+}

@@ -73,6 +73,7 @@
 //!     exports: vec![],
 //!     imports: vec![],
 //!     release: None,
+//!     str_max_bytes: None,
 //! };
 //!
 //! let ll = lower_iir_to_llvm(&module, &IIRLlvmConfig::default())
@@ -895,6 +896,14 @@ pub fn lower_iir_to_llvm(
                         trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(kind));
                     }
                 }
+                // LANG83 PR5a: a folded out-of-range `str_index` / `str_slice`
+                // raises `Trap.Bounds` through the module's own `@__iir_trap`.
+                // (The runtime path's helpers trap through `__twig_trap`.)
+                "str_index" | "str_slice" => {
+                    trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(
+                        interpreter_ir::exception_kind::TRAP_BOUNDS,
+                    ));
+                }
                 // LANG83: a failed narrowing raises the typed `Trap.ConvRange`.
                 "real_to_int_trunc" | "real_to_int_floor" => {
                     trap_kinds.extend(interpreter_ir::exception_kind::trap_kind_id(
@@ -1196,7 +1205,7 @@ pub fn lower_iir_to_llvm(
             // `@__twig_str_concat` (E4-dyn) is provided by `twig_runtime.c`: reads both
             // operands' `[i64 len][bytes]` headers and returns an i64 handle to a fresh
             // joined block. Used when `str_concat` has a non-literal (runtime) operand.
-            out.push_str("declare i64 @__twig_str_concat(i64, i64)\n");
+            out.push_str("declare i64 @__twig_str_concat(i64, i64, i64)\n");
         }
         if used_str_eq {
             // `@__twig_str_eq` (E4-dyn) is provided by `twig_runtime.c`: compares both
@@ -1302,6 +1311,7 @@ pub fn lower_iir_to_llvm(
             &globals,
             &global_types,
             &string_literals,
+            module.str_ceiling(),
             &mut out,
         )?;
     }
@@ -1622,6 +1632,10 @@ struct FnState<'a> {
     /// values. A slot's `alloca`/`load`/`store` all use this type. Any slot not
     /// present here defaults to `i64`. (See [`collect_slot_types`].)
     slot_types: std::collections::HashMap<String, &'static str>,
+    /// The module's string ceiling (`IIRModule::str_ceiling`, LANG83 PR5a):
+    /// the third argument of every `@__twig_str_concat` call, and the limit a
+    /// literal concat fold may not pass.
+    str_ceiling: u32,
 }
 
 impl FnState<'_> {
@@ -1678,6 +1692,9 @@ impl FnState<'_> {
 }
 
 /// Emit one LLVM `define` block for one IIR function.
+// One argument per module-wide table the body needs (LANG83 PR5a added the
+// string ceiling); bundling them into a struct would only rename the list.
+#[allow(clippy::too_many_arguments)]
 fn lower_function(
     func: &IIRFunction,
     internal: bool,
@@ -1685,6 +1702,7 @@ fn lower_function(
     globals: &HashMap<String, String>,
     global_types: &HashMap<String, &'static str>,
     string_literals: &HashMap<String, LlvmStringLiteralRef>,
+    str_ceiling: u32,
     out: &mut String,
 ) -> Result<(), IIRLlvmError> {
     // ── Header line: `define <ret> @<name>(<params>) {`
@@ -1768,6 +1786,7 @@ fn lower_function(
         block_open: true, // the entry block is open until its first terminator.
         slots,
         slot_types,
+        str_ceiling,
     };
     for (pname, pty) in &func.params {
         let llvm_val = format!("%{pname}");
@@ -2470,9 +2489,13 @@ fn lower_str_concat(
     // Literal fast path: when BOTH operands are compile-time string VALUES, the
     // collection pre-pass already interned the joined literal — reuse its symbol so
     // the result stays a known literal (downstream `str_len`/`str_index` keep folding).
-    if let (Some(left_value), Some(right_value)) =
-        (state.str_values.get(&left).cloned(), state.str_values.get(&right).cloned())
-    {
+    // LANG83 PR5a: never past the module's string ceiling — such a fold falls
+    // through to the runtime call, which raises `Trap.Overflow`.
+    let fold = match (state.str_values.get(&left).cloned(), state.str_values.get(&right).cloned()) {
+        (Some(l), Some(r)) if l.len().saturating_add(r.len()) <= state.str_ceiling as usize => Some((l, r)),
+        _ => None,
+    };
+    if let Some((left_value, right_value)) = fold {
         let value = format!("{left_value}{right_value}");
         let info = state.string_literals.get(&value).ok_or_else(|| {
             IIRLlvmError::InvalidOperand {
@@ -2520,8 +2543,12 @@ fn lower_str_concat(
         right_operand
     };
     let res = state.fresh("scc");
+    // LANG83 PR5a: the third argument is the module's string ceiling; past it
+    // the helper raises `Trap.Overflow` (through `__twig_trap`) before it
+    // allocates.
     out.push_str(&format!(
-        "  {res} = call i64 @__twig_str_concat(i64 {left_handle}, i64 {right_handle})\n"
+        "  {res} = call i64 @__twig_str_concat(i64 {left_handle}, i64 {right_handle}, i64 {})\n",
+        state.str_ceiling
     ));
     // `dest` now holds a runtime i64 handle. If it previously held a literal —
     // ALGOL's `s := pick(1)` is `str_const "" → s` then `str_concat(…) → s` —
@@ -2617,7 +2644,10 @@ fn lower_str_slice(
             detail: format!("str_slice end {end:?} is not a constant integer value"),
         })?;
     if start_value < 0 || end_value < start_value || end_value as usize > literal.len() {
-        out.push_str("  call void @llvm.trap()\n");
+        // LANG83 PR5a: the registered `Trap.Bounds` (flush, then the kind),
+        // not `@llvm.trap` (SIGILL, buffered output lost). The trap ends the
+        // block, so code after it lands in a fresh, unreachable one.
+        emit_lang83_trap_mid_block(interpreter_ir::exception_kind::TRAP_BOUNDS, state, out);
         state.env.insert(dest.clone(), "null".to_string());
         state.str_lens.insert(dest.clone(), 0);
         state.str_values.insert(dest, String::new());
@@ -2708,7 +2738,8 @@ fn lower_str_index(
         .and_then(|idx| literal.as_bytes().get(idx))
         .copied()
     else {
-        out.push_str("  call void @llvm.trap()\n");
+        // LANG83 PR5a: `Trap.Bounds` through `@__iir_trap`, as above.
+        emit_lang83_trap_mid_block(interpreter_ir::exception_kind::TRAP_BOUNDS, state, out);
         state.env.insert(dest, "0".to_string());
         return Ok(());
     };
@@ -2964,6 +2995,19 @@ fn emit_trap_call(id: u32, out: &mut String) {
     let len = trap_message_bytes(id).len();
     out.push_str(&format!("  call void @__iir_trap(ptr @__iir_trap_msg.{id}, i64 {len})\n"));
     out.push_str("  unreachable\n");
+}
+
+/// Raise the registered trap `kind` in the middle of a lowering: the trap
+/// sequence ends the current block, and a fresh (unreachable) block is opened
+/// for whatever IIR follows, exactly as [`lower_trap`] does. The kind's
+/// `@__iir_trap_msg.<id>` is emitted because the op's kinds are collected up
+/// front (see `trap_kinds` in `lower_iir_to_llvm`).
+fn emit_lang83_trap_mid_block(kind: &str, state: &mut FnState, out: &mut String) {
+    let id = interpreter_ir::exception_kind::trap_kind_id(kind).expect("a registered trap kind");
+    emit_trap_call(id, out);
+    let after = state.fresh_bare("after_trap");
+    out.push_str(&format!("{after}:\n"));
+    state.block_open = true;
 }
 
 /// Lower `trap "<kind>"`. Control never falls through, but IIR may still list

@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C356-cuoguo",
+    "language": "chinese",
+    "chapter": 356,
+    "sequence": 27520,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:eb026ce42e35602a"
+  },
+  "findings": []
+}

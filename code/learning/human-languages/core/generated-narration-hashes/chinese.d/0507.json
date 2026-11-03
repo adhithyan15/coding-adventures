@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 507,
+  "sourceHash": "fnv1a64:1d397b651162a594",
+  "lessonIds": [
+    "ZH-C507-xiongdi",
+    "ZH-C507-fuzi",
+    "ZH-W507-fu-father",
+    "ZH-C507-funu",
+    "ZH-C507-fuqi",
+    "ZH-C507-zhangbei"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch507.txt",
+  "json": "chinese/narration/ch507.json",
+  "textHash": "fnv1a64:521d47a0082f6211",
+  "jsonHash": "fnv1a64:ea450db3d167689b",
+  "findings": []
+}

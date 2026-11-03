@@ -1,0 +1,15 @@
+{
+  "language": "chinese",
+  "chapter": 373,
+  "sourceHash": "fnv1a64:73b199c6906bdf46",
+  "lessonIds": [
+    "ZH-C373-quedian",
+    "ZH-C373-haochu",
+    "ZH-C373-huaichu",
+    "ZH-C373-tianzhen",
+    "ZH-C373-dangzhen",
+    "ZH-R373-review-369-373",
+    "ZH-R373-review-final-373"
+  ],
+  "tex": "chinese/book/chapters/ch373-pros-and-cons.tex"
+}

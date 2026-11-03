@@ -1,0 +1,13 @@
+{
+  "language": "chinese",
+  "chapter": 477,
+  "sourceHash": "fnv1a64:fd2d06f7a8a418dd",
+  "lessonIds": [
+    "ZH-C477-xinzang",
+    "ZH-C477-gutou",
+    "ZH-C477-danao",
+    "ZH-C477-changwei",
+    "ZH-C477-weikou"
+  ],
+  "tex": "chinese/book/chapters/ch477-inside-the-body.tex"
+}

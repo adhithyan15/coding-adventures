@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-320-PHONE320",
+  "stage": "B1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can say someone hung up, dial a number, get through, bring something up and talk about a voice message.",
+  "prerequisites": []
+}

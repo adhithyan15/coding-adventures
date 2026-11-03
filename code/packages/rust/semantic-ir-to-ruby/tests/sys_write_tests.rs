@@ -18,13 +18,14 @@ fn run_ruby(source: &str) -> Option<String> {
     use std::io::Write;
     use std::sync::atomic::{AtomicUsize, Ordering};
     static SEQ: AtomicUsize = AtomicUsize::new(0);
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_ruby_test_");
+    let dir = scratch.path();
     let path = dir.join(format!(
         "sir_ruby_syswrite_{}_{}.rb",
         std::process::id(),
         SEQ.fetch_add(1, Ordering::Relaxed)
     ));
-    std::fs::File::create(&path)
+    sir_test_scratch::create_new(&path)
         .ok()?
         .write_all(source.as_bytes())
         .ok()?;

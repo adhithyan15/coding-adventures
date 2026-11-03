@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 474,
+  "sourceHash": "fnv1a64:a1ba034b168fd4ce",
+  "lessonIds": [
+    "ZH-C474-gebo",
+    "ZH-C474-liqi",
+    "ZH-W474-li-strength",
+    "ZH-C474-tili",
+    "ZH-C474-yongli",
+    "ZH-C474-shouzhi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch474.txt",
+  "json": "chinese/narration/ch474.json",
+  "textHash": "fnv1a64:1add887f5e3f902c",
+  "jsonHash": "fnv1a64:b5a0363ece2a1166",
+  "findings": []
+}

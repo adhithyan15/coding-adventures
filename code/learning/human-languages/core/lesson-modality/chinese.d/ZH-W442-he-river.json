@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W442-he-river",
+    "language": "chinese",
+    "chapter": 442,
+    "sequence": 33635,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:56b373f70b2c64ed",
+    "detachableSegments": [
+      "Script — the water piece, then 可"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

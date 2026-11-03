@@ -2,6 +2,7 @@
 package capabilitycage
 
 import (
+	cryptorand "crypto/rand"
 	"io/fs"
 	"net"
 	"os"
@@ -27,6 +28,12 @@ type Backend interface {
 	Sleep(d time.Duration)
 	ReadStdin(p []byte) (int, error)
 	WriteStdout(p []byte) (int, error)
+	// ReadRandom fills p from ambient entropy. A simulated host returns a
+	// seeded stream instead, so a test that draws random numbers replays.
+	ReadRandom(p []byte) (int, error)
+	// Spawn runs body concurrently. role is the manifest target that was
+	// checked; a simulated host can use it to decide when the worker runs.
+	Spawn(role string, body func())
 }
 
 // OpenBackend is the default Backend. It delegates directly to Go's standard library.
@@ -124,6 +131,14 @@ func (b *OpenBackend) ReadStdin(p []byte) (int, error) {
 
 func (b *OpenBackend) WriteStdout(p []byte) (int, error) {
 	return os.Stdout.Write(p) //nolint:cap
+}
+
+func (b *OpenBackend) ReadRandom(p []byte) (int, error) {
+	return cryptorand.Read(p) //nolint:cap
+}
+
+func (b *OpenBackend) Spawn(role string, body func()) {
+	go body() //nolint:cap
 }
 
 var _ Backend = (*OpenBackend)(nil)

@@ -23,3 +23,14 @@ Pin to a revision already on main, or repoint the pin in the merge itself or
 in a follow-up. Better still, have the test name the cause ("verified_revision
 is not reachable; repoint it at the merge commit") instead of failing on a
 raw git error.
+
+**Fixed by** making the evidence content-addressed (branch
+`fix/barcode-evidence-survives-squash`). `package_tree` is a git tree id, and
+a squash merge of the same bytes reproduces the identical tree object, so the
+pin stays resolvable on main without a follow-up. The gate now requires
+`package_tree` to be a tree object and the checked-out package tree to equal
+it, modulo dependency lockfiles. `verified_revision` is provenance: when git
+can resolve it, its package tree must equal `package_tree`; when the squash
+has discarded it, that alone does not fail. A PR that changes a lane re-runs
+the lane and sets `package_tree` to the new tree in that same PR. #18527 hit
+the old rule a third time (053cb27651a, repointed by #18531) before this.

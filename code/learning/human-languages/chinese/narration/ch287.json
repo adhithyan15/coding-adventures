@@ -1,0 +1,1226 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "chapter": 287,
+  "title": "What I Want to Be",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:3a4ffdb61ba0e372",
+  "lessons": [
+    {
+      "id": "ZH-C287-dang",
+      "sequence": 21700,
+      "title": "当 (dāng) — to work as",
+      "headword": "当",
+      "romanization": "dāng",
+      "gloss": "to work as; to be (a job or a role)",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:376e8aa80555e9f5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A new chapter, and it opens on the job you might do one day."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 我感觉很好 — wǒ gǎnjué hěn hǎo — R1, the chapter you have finished",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 我感觉很好 — *wǒ gǎnjué hěn hǎo* — **R1**, the chapter you have finished]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 医生 — yīshēng, a doctor — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 医生 — *yīshēng*, a doctor — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say lǎoshī, a teacher — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *lǎoshī*, a teacher — **R3**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dāngshí, at that time — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dāngshí*, at that time — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: 当",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当 — dāng — \"to work as; to be\", in a job or a role."
+            },
+            {
+              "kind": "speech",
+              "text": "我想当医生 wǒ xiǎng dāng yīshēng — I want to be a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "tā dāng le liǎng nián lǎoshī — He worked as a teacher for two years."
+            },
+            {
+              "kind": "speech",
+              "text": "The next lesson puts it in your hand. It is the dāng of dāngshí."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当 (dāng) is inherited from Middle Chinese tang (Guangyun, in Baxter's transcription). The dictionary lists the character under two readings, tang and tangH, and glosses tang 'to match', 'to face' and 'to be in charge'; 'to work as' is not given there, so how the word came by it is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当 takes a job or a role after it: 当医生, dāng lǎoshī."
+            },
+            {
+              "kind": "speech",
+              "text": "With a length of time, it follows the pattern you have: dāng le liǎng nián lǎoshī."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dāng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dāng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我想当医生 — wǒ xiǎng dāng yīshēng — I want to be a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我想当医生 — *wǒ xiǎng dāng yīshēng* — I want to be a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tā dāng le liǎng nián lǎoshī — He worked as a teacher for two years.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tā dāng le liǎng nián lǎoshī* — He worked as a teacher for two years.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dāngshí, then 当 (dāng): the same syllable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dāngshí*, then 当: the same syllable]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does 当 (dāng) mean? (\"To work as; to be\".) What follows it? (A job or a role.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-W287-dang",
+      "sequence": 21710,
+      "title": "当 (dāng) — the top of 常, then the foot of 雪",
+      "headword": "当",
+      "romanization": "dāng",
+      "gloss": "当 — the top of 常, then the foot of 雪",
+      "script": "chinese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:4455cf9d0892e34b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Script — the top of 常, then the foot of 雪",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now. I will say so again when we reach them, but leave these sections until you have stopped: Warm-up, Script — the top of 常, then the foot of 雪 and Guided Practice."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word first, then the character inside it."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say dāng — R1, one lesson back, before it decays",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *dāng* — **R1**, one lesson back, before it decays]"
+            },
+            {
+              "kind": "speech",
+              "text": "常 雪."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one aloud, with nothing said first — cháng, xuě",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one aloud, with nothing said first — *cháng*, *xuě*]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the top of 常, then the foot of 雪",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "当 (dāng)."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you write both already."
+            },
+            {
+              "kind": "speech",
+              "text": "Three short strokes on top, as on top of 常: the short vertical in the middle first, then the dot to its left, then the short left-falling stroke to its right."
+            },
+            {
+              "kind": "speech",
+              "text": "Three horizontals joined on the right, as at the foot of 雪: a horizontal that turns down at its right end, a horizontal across the middle, and a horizontal along the foot."
+            },
+            {
+              "kind": "speech",
+              "text": "3 + 3 = six."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "当 (dāng), all six, with the model in front of you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 当, all six, with the model in front of you]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "write it again from memory, and count the pieces, not the strokes",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: write it again from memory, and count the pieces, not the strokes]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many strokes in 当 (dāng)? (Six.) Which stroke comes first? (The short vertical in the middle.) Where have you written its lower piece? (At the foot of 雪.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Hanzi Writer Data 当 (dāng), pinned stroke paths and medians."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C287-ambition",
+      "sequence": 21720,
+      "title": "以后我想… (yǐhòu wǒ xiǎng …) — later, I want to",
+      "headword": "以后我想…",
+      "romanization": "yǐhòu wǒ xiǎng …",
+      "gloss": "以后 and 想 or 要: what you want to do or be later",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bb05a644fdd71c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Words you have, put together to look ahead."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我想当医生, aloud — wǒ xiǎng dāng yīshēng",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我想当医生, aloud — *wǒ xiǎng dāng yīshēng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiānglái, in the future — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiānglái*, in the future — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 以后 — yǐhòu, later — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 以后 — *yǐhòu*, later — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 以后 and 想, looking ahead",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A time word for later, then 想 or 要, says what you want to do or be."
+            },
+            {
+              "kind": "speech",
+              "text": "以后我想去中国工作 yǐhòu wǒ xiǎng qù Zhōngguó gōngzuò — Later on I want to go and work in China. 以后你想当什么 yǐhòu nǐ xiǎng dāng shénme — What do you want to be later on?"
+            },
+            {
+              "kind": "speech",
+              "text": "以后 here is later, some time to come, at the front of the sentence. jiānglái reaches further: some day, in the future."
+            },
+            {
+              "kind": "speech",
+              "text": "想 is a wish; 要 is a plan you mean to keep, as in 下个月我要去中国."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "以后我想去中国工作 — yǐhòu wǒ xiǎng qù Zhōngguó gōngzuò — Later on I want to go and work in China.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 以后我想去中国工作 — *yǐhòu wǒ xiǎng qù Zhōngguó gōngzuò* — Later on I want to go and work in China.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "以后你想当什么 — yǐhòu nǐ xiǎng dāng shénme — What do you want to be later on?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 以后你想当什么 — *yǐhòu nǐ xiǎng dāng shénme* — What do you want to be later on?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ xiǎng dāng lǎoshī — I want to be a teacher.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ xiǎng dāng lǎoshī* — I want to be a teacher.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what you want to do later on, with 以后 and 想",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what you want to do later on, with 以后 and 想]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does 以后 go? (At the front.) Which says a wish, 想 or 要? (想.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C287-ambition-work",
+              "prompt": "How do you say 'later on I want to go and work in China', in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-AMBITION-01"
+              ],
+              "responseSeconds": 14,
+              "acceptedResponses": [
+                "以后我想去中国工作",
+                "yǐhòu wǒ xiǎng qù zhōngguó gōngzuò",
+                "yihou wo xiang qu zhongguo gongzuo"
+              ],
+              "feedback": {
+                "correct": "以后我想去中国工作: the time word, then 想.",
+                "incorrect": "以后我想去中国工作. 以后 leads, 想 comes before the verb."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C287-mengxiang",
+      "sequence": 21730,
+      "title": "mèngxiǎng — a dream for your life",
+      "headword": "mèngxiǎng",
+      "romanization": "mèngxiǎng",
+      "gloss": "a dream (for your life); an aspiration",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:021d17c1736160f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's plan, and a word for what happens in sleep."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "以后我想去中国工作, aloud — yǐhòu wǒ xiǎng qù Zhōngguó gōngzuò",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 以后我想去中国工作, aloud — *yǐhòu wǒ xiǎng qù Zhōngguó gōngzuò*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuòmèng, to dream — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuòmèng*, to dream — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mèngxiǎng",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mèngxiǎng — \"a dream\", the one you have for your life."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ de mèngxiǎng shì dāng yīshēng — My dream is to be a doctor."
+            },
+            {
+              "kind": "speech",
+              "text": "Its first character comes later. The second is the 想 you write."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mèngxiǎng is built from mèng 'a dream' and 想 'to think', both inherited from Middle Chinese. The Guangyun lists the first under two readings, mjuwng and mjuwngH, and under the second describes the spirit wandering in sleep; 想 is sjangX, glossed 'to think' (Guangyun, in Baxter's transcription)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "zuòmèng is dreaming in your sleep; mèngxiǎng is the dream you have for your life."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a noun, and 是 links it to the dream itself: wǒ de mèngxiǎng shì …."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mèngxiǎng",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mèngxiǎng*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mèngxiǎng, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mèngxiǎng*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de mèngxiǎng shì dāng yīshēng — My dream is to be a doctor.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de mèngxiǎng shì dāng yīshēng* — My dream is to be a doctor.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuòmèng, then mèngxiǎng: asleep, then awake",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuòmèng*, then *mèngxiǎng*: asleep, then awake]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mèngxiǎng mean? (\"A dream for your life\".) And zuòmèng? (To dream in your sleep.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C287-mubiao",
+      "sequence": 21740,
+      "title": "mùbiāo — a goal",
+      "headword": "mùbiāo",
+      "romanization": "mùbiāo",
+      "gloss": "a goal; a target",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a396dbc96a387b6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: last lesson's word, and one that shares this word's first sound."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mèngxiǎng, a dream for your life — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mèngxiǎng*, a dream for your life — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say jiémù, a programme — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *jiémù*, a programme — **R3**, durable]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: mùbiāo",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mùbiāo — \"a goal; a target\"."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ de mùbiāo shì shuō hǎo Hànyǔ — My goal is to speak Chinese well."
+            },
+            {
+              "kind": "speech",
+              "text": "Its characters come later; for now it is a word for the ear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mùbiāo is built from mù 'the eye' and biāo 'a mark', both inherited from Middle Chinese, mjuwk and pjiew (Guangyun, in Baxter's transcription), which glosses the first 'the eye' and the second 'to raise' and 'the tip of a tree'. 'A goal' for the pair is its own sense."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mèngxiǎng is what you hope for; mùbiāo is what you aim at, and can reach step by step."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mùbiāo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mùbiāo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mùbiāo, once more",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mùbiāo*, once more]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wǒ de mùbiāo shì shuō hǎo Hànyǔ — My goal is to speak Chinese well.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wǒ de mùbiāo shì shuō hǎo Hànyǔ* — My goal is to speak Chinese well.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mèngxiǎng, then mùbiāo: the hope, then the aim",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mèngxiǎng*, then *mùbiāo*: the hope, then the aim]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mùbiāo mean? (\"A goal\".) How is it different from mèngxiǎng? (A goal is something you aim at and can reach.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C287-zui-most",
+      "sequence": 21750,
+      "title": "我最喜欢… (wǒ zuì xǐhuan …) — the one I like best",
+      "headword": "我最喜欢…",
+      "romanization": "wǒ zuì xǐhuan …",
+      "gloss": "最 before 喜欢 or an adjective: the most of all",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4583384b2c1e9a04",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A word you have said for a long time, printed for the first time."
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mùbiāo, a goal — R1, one lesson back",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mùbiāo*, a goal — **R1**, one lesson back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say zuì, most — R3, durable",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *zuì*, most — **R3**, durable]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say 他比我大 — tā bǐ wǒ dà — R3",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say 他比我大 — *tā bǐ wǒ dà* — **R3**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: 最, the most of all",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "最 before 喜欢 or an adjective picks out the top of the group."
+            },
+            {
+              "kind": "speech",
+              "text": "我最喜欢中国菜 wǒ zuì xǐhuan Zhōngguó cài — I like Chinese food best. 这家书店最大 zhè jiā shūdiàn zuì dà — This bookshop is the biggest."
+            },
+            {
+              "kind": "speech",
+              "text": "zuì you have said since the chapter on order; now it prints. 比 sets two things side by side, 我比他大; 最 needs no second thing: it is the most of all."
+            },
+            {
+              "kind": "speech",
+              "text": "The story on the mountain ended on it: 那天是我最开心的一天."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我最喜欢中国菜 — wǒ zuì xǐhuan Zhōngguó cài — I like Chinese food best.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我最喜欢中国菜 — *wǒ zuì xǐhuan Zhōngguó cài* — I like Chinese food best.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "这家书店最大 — zhè jiā shūdiàn zuì dà — This bookshop is the biggest.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 这家书店最大 — *zhè jiā shūdiàn zuì dà* — This bookshop is the biggest.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "那天是我最开心的一天 — nà tiān shì wǒ zuì kāixīn de yì tiān — That was my happiest day.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 那天是我最开心的一天 — *nà tiān shì wǒ zuì kāixīn de yì tiān* — That was my happiest day.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the food you like best, with 我最喜欢",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the food you like best, with 我最喜欢]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does 最 go? (Before 喜欢 or an adjective.) Does it need a second thing, as 比 does? (No.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": false,
+              "id": "ZH-C287-zui-most-food",
+              "prompt": "How do you say 'I like Chinese food best', in characters?",
+              "assesses": [
+                "ZH-GRAMMAR-ZUI-MOST-01"
+              ],
+              "responseSeconds": 13,
+              "acceptedResponses": [
+                "我最喜欢中国菜",
+                "wǒ zuì xǐhuan zhōngguó cài",
+                "wo zui xihuan zhongguo cai"
+              ],
+              "feedback": {
+                "correct": "我最喜欢中国菜: 最 before 喜欢.",
+                "incorrect": "我最喜欢中国菜. 最 goes right before 喜欢."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ZH-C287-practice",
+      "sequence": 21760,
+      "title": "以后我想当医生 (yǐhòu wǒ xiǎng dāng yīshēng)",
+      "headword": "以后我想当医生",
+      "romanization": "yǐhòu wǒ xiǎng dāng yīshēng",
+      "gloss": "two speakers talk about what they want to be, a dream and what they like best",
+      "script": "chinese",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4ebf24aee797cab3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The chapter closes here, with a question every child is asked."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我最喜欢中国菜, aloud — wǒ zuì xǐhuan Zhōngguó cài",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我最喜欢中国菜, aloud — *wǒ zuì xǐhuan Zhōngguó cài*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mùbiāo, a goal — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mùbiāo*, a goal — **R2**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say mèngxiǎng, a dream — R2",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *mèngxiǎng*, a dream — **R2**]"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: 以后你想当什么 yǐhòu nǐ xiǎng dāng shénme — What do you want to be later on? B: 我想当医生 wǒ xiǎng dāng yīshēng — I want to be a doctor. A: 为什么 wèishénme — Why? B: 因为我妈妈是医生 yīnwèi wǒ māma shì yīshēng — Because my mother is a doctor. A: nǐ de mèngxiǎng shì shénme — What's your dream? B: wǒ de mèngxiǎng shì qù Zhōngguó gōngzuò — My dream is to work in China. A: 你去过中国吗 nǐ qù guo Zhōngguó ma — Have you been to China? B: 去过 我最喜欢中国菜 qù guo, wǒ zuì xǐhuan Zhōngguó cài — I have. I like Chinese food best."
+            },
+            {
+              "kind": "speech",
+              "text": "当 (dāng) answers 当什么; 因为 answers 为什么; and B's last line looks back with 过 before it looks forward again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "comprehension",
+          "title": "Reading — the exchange at once",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange through once without stopping, then answer the question below",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange through once without stopping, then answer the question below]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "spoken": true,
+              "id": "ZH-C287-practice-why",
+              "prompt": "Why does B want to be a doctor?",
+              "assesses": [
+                "ZH-PERFORMANCE-AMBITION-01",
+                "ZH-LEX-C287-DANG-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "b's mother is a doctor",
+                "mother is a doctor",
+                "their mum is a doctor",
+                "因为我妈妈是医生",
+                "妈妈是医生",
+                "because their mother is a doctor",
+                "her mother is a doctor",
+                "his mother is a doctor"
+              ],
+              "feedback": {
+                "correct": "因为我妈妈是医生: the mother is a doctor.",
+                "incorrect": "B says 因为我妈妈是医生."
+              }
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — looking ahead",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What you want, what you dream of, what you aim at, and what you like best:"
+            },
+            {
+              "kind": "speech",
+              "text": "以后我想当医生 yǐhòu wǒ xiǎng dāng yīshēng — a wish for later."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ de mèngxiǎng shì … — a dream."
+            },
+            {
+              "kind": "speech",
+              "text": "wǒ de mùbiāo shì … — a goal."
+            },
+            {
+              "kind": "speech",
+              "text": "我最喜欢中国菜 wǒ zuì xǐhuan Zhōngguó cài — the best of all."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen. Yǐhòu nǐ xiǎng zuò shénme gōngzuò?"
+            },
+            {
+              "kind": "speech",
+              "text": "Speak. Say what you want to be or do later, and one goal on the way."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "当 (dāng) — the top of 常, then the foot of 雪",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 当 — the top of 常, then the foot of 雪]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "我去过中国 以后我想在中国工作 — wǒ qù guo Zhōngguó, yǐhòu wǒ xiǎng zài Zhōngguó gōngzuò — I've been to China, and later on I want to work there.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 我去过中国 以后我想在中国工作 — *wǒ qù guo Zhōngguó, yǐhòu wǒ xiǎng zài Zhōngguó gōngzuò* — I've been to China, and later on I want to work there.]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "以后你想当什么 — yǐhòu nǐ xiǎng dāng shénme — What do you want to be later on?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: 以后你想当什么 — *yǐhòu nǐ xiǎng dāng shénme* — What do you want to be later on?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange, both parts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange, both parts]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "我想当医生",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 我想当医生]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say you want to be a doctor. (我想当医生.) Ask what someone wants to be later on. (以后你想当什么.) Say what you like best. (我最喜欢… (wǒ zuì xǐhuan …).)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

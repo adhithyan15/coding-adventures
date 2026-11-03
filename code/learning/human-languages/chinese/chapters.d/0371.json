@@ -1,0 +1,19 @@
+{
+  "chapter": 371,
+  "title": "Although",
+  "label": "ch:zh-although",
+  "canDo": "I can say although, go so far as to say even, and draw a conclusion.",
+  "spineNodes": [
+    "SPINE-GIVE-REASONS"
+  ],
+  "payoff": {
+    "lesson": "ZH-C371-yuanze",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 371: I can say although, go so far as to say even, and draw a conclusion.",
+    "assesses": [
+      "ZH-LEX-C371-THOUGH371-03",
+      "ZH-LEX-C371-THOUGH371-04",
+      "ZH-LEX-C371-THOUGH371-05"
+    ]
+  }
+}

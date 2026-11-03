@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 510,
+  "sourceHash": "fnv1a64:535af37c8722e525",
+  "lessonIds": [
+    "ZH-C510-waipo",
+    "ZH-C510-sunzi",
+    "ZH-C510-sunnu",
+    "ZH-C510-tengai",
+    "ZH-C510-hong"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch510.txt",
+  "json": "chinese/narration/ch510.json",
+  "textHash": "fnv1a64:811cbf35213623a0",
+  "jsonHash": "fnv1a64:78a16d15f68cf9bc",
+  "findings": []
+}

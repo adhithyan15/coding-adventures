@@ -1,0 +1,14 @@
+{
+  "language": "chinese",
+  "chapter": 368,
+  "sourceHash": "fnv1a64:97d1704d845f4ab3",
+  "lessonIds": [
+    "ZH-C368-zhishao",
+    "ZH-C368-maobing",
+    "ZH-C368-liaobuqi",
+    "ZH-C368-guli",
+    "ZH-C368-xuanze",
+    "ZH-R368-review-364-368"
+  ],
+  "tex": "chinese/book/chapters/ch368-keep-going.tex"
+}

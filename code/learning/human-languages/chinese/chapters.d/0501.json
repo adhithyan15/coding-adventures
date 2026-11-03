@@ -1,0 +1,19 @@
+{
+  "chapter": 501,
+  "title": "Winners",
+  "label": "ch:zh-winners",
+  "canDo": "I can talk about athletes, champions, gold medals, winning prizes and star players.",
+  "spineNodes": [
+    "SPINE-DESCRIBE-EXPERIENCE"
+  ],
+  "payoff": {
+    "lesson": "ZH-C501-qiuxing",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 501: I can talk about athletes, champions, gold medals, winning prizes and star players.",
+    "assesses": [
+      "ZH-LEX-C501-WINNERS501-03",
+      "ZH-LEX-C501-WINNERS501-04",
+      "ZH-LEX-C501-WINNERS501-05"
+    ]
+  }
+}

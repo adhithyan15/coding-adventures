@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 389,
+  "sourceHash": "fnv1a64:1fec2b89a48af0ed",
+  "lessonIds": [
+    "ZH-C389-beiyong",
+    "ZH-C389-jieyue",
+    "ZH-C389-fengxian",
+    "ZH-C389-yifang",
+    "ZH-C389-daoqi"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch389.txt",
+  "json": "chinese/narration/ch389.json",
+  "textHash": "fnv1a64:8ebe48cc5bcd7470",
+  "jsonHash": "fnv1a64:7cad7ea022e1b4fb",
+  "findings": []
+}

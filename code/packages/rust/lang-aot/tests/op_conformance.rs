@@ -23,6 +23,7 @@
 //! | `pr7f2_lisp_rules_are_module_code_over_the_primitives` | LANG83 PR7f-2: Lisp's truthiness, `not`, `equal?` and exit code, written as IIR by `iir_builtin_lowering::lisp_semantics` over the dynamic-value primitives, print what `dynval-runtime`'s Rust value model says on LLVM and native x86-64, and no tagged-word backend knows a language-semantic builtin |
 //! | `pr7f_dynamic_values_run_on_the_tagged_word_backends` | LANG83 PR7f: the dynamic-value primitives are lowered exactly on the three tagged-word backends (native x86-64 and AArch64, LLVM) and refused, before any pass runs, everywhere else; the PR7f case runs on LLVM and native x86-64 whenever they are present |
 //! | `float_digits_table_matches_host_python3` | the PR7b expected digits are host `python3`'s `repr` split at the digits, whenever it is installed |
+//! | `pr5a_string_failures_are_registered_traps_on_every_column` | LANG83 PR5a: an out-of-range `str_index` / `str_slice` is `Trap.Bounds` and a `str_concat` past the module's string ceiling is `Trap.Overflow`, with the exact bytes written before the trap, in a foldable (literal) and an opaque (parameter) form, on every executable column; the 64-bit edges (2³², 2³² + 1, `i64::MIN`/`MAX`) included |
 //! | `flush_before_trap_is_proven_on_every_executable_column` | a program that writes (unflushed) output and then traps keeps that output, and the trap kind is observed, on every column that can run it |
 //!
 //! # The case corpus is IIR, not source
@@ -80,29 +81,68 @@ mod common;
 /// What a case must do when run.
 #[derive(Debug, Clone, Copy)]
 enum Expect {
-    /// Complete with this (trimmed) stdout.
+    /// Complete with this stdout, compared after a lossy UTF-8 decode, a
+    /// `trim()` and `\r\n` → `\n` (the cases that print lines).
     Stdout(&'static str),
-    /// Write this (trimmed) stdout, then trap with this kind.
+    /// Write this stdout (compared like [`Expect::Stdout`]), then trap with
+    /// this kind.
     StdoutThenTrap(&'static str, &'static str),
+    /// LANG83 PR5a: complete with exactly these stdout bytes: no decode, no
+    /// trim, no newline translation. A lossy decode reads a stray `0xA9` and a
+    /// stray `0xFF` as the same U+FFFD, and `trim()` hides a missing or extra
+    /// trailing newline; a byte-string case must see both.
+    StdoutBytes(&'static [u8]),
+    /// LANG83 PR5a: write exactly these bytes, then trap with this kind.
+    StdoutBytesThenTrap(&'static [u8], &'static str),
+}
+
+impl Expect {
+    /// The expected output, as text (lossy for a byte expectation).
+    fn out_text(&self) -> std::borrow::Cow<'static, str> {
+        match *self {
+            Expect::Stdout(out) | Expect::StdoutThenTrap(out, _) => out.into(),
+            Expect::StdoutBytes(out) | Expect::StdoutBytesThenTrap(out, _) => String::from_utf8_lossy(out),
+        }
+    }
+
+    /// The trap kind the case must end with, if any.
+    fn trap_kind(&self) -> Option<&'static str> {
+        match *self {
+            Expect::StdoutThenTrap(_, kind) | Expect::StdoutBytesThenTrap(_, kind) => Some(kind),
+            Expect::Stdout(_) | Expect::StdoutBytes(_) => None,
+        }
+    }
 }
 
 /// What a column observed.
 #[derive(Debug)]
 enum RunResult {
-    /// The program returned normally.
-    Completed { stdout: String },
-    /// The program trapped. `stdout` is everything written before the trap;
+    /// The program returned normally. `stdout` is the raw bytes it wrote.
+    Completed { stdout: Vec<u8> },
+    /// The program trapped. `stdout` is every byte written before the trap;
     /// `kind` is the reported trap kind when the column can recover it.
-    Trapped { stdout: String, kind: Option<String> },
+    Trapped { stdout: Vec<u8>, kind: Option<String> },
+}
+
+/// The text form [`Expect::Stdout`] compares: lossy, trimmed, LF newlines.
+fn stdout_text(stdout: &[u8]) -> String {
+    String::from_utf8_lossy(stdout).trim().replace("\r\n", "\n")
 }
 
 fn assert_outcome(column: &str, case: &Case, result: RunResult) {
     match (case.expect, result) {
         (Expect::Stdout(want), RunResult::Completed { stdout }) => {
-            assert_eq!(stdout.replace("\r\n", "\n"), want, "{column}: case `{}` stdout", case.name)
+            assert_eq!(stdout_text(&stdout), want, "{column}: case `{}` stdout", case.name)
         }
         (Expect::StdoutThenTrap(want, kind), RunResult::Trapped { stdout, kind: got }) => {
-            assert_eq!(stdout.replace("\r\n", "\n"), want, "{column}: case `{}` stdout before trap", case.name);
+            assert_eq!(stdout_text(&stdout), want, "{column}: case `{}` stdout before trap", case.name);
+            assert_eq!(got.as_deref(), Some(kind), "{column}: case `{}` trap kind", case.name);
+        }
+        (Expect::StdoutBytes(want), RunResult::Completed { stdout }) => {
+            assert_eq!(stdout, want, "{column}: case `{}` stdout bytes", case.name)
+        }
+        (Expect::StdoutBytesThenTrap(want, kind), RunResult::Trapped { stdout, kind: got }) => {
+            assert_eq!(stdout, want, "{column}: case `{}` stdout bytes before trap", case.name);
             assert_eq!(got.as_deref(), Some(kind), "{column}: case `{}` trap kind", case.name);
         }
         (expect, other) => panic!("{column}: case `{}` expected {expect:?}, got {other:?}", case.name),
@@ -400,6 +440,233 @@ fn checked_then_trap(name: &str, before: i64, a: i64, b: i64) -> IIRModule {
         op(name, "r", srcs, "i64"),
         print_i64("r"),
     ])
+}
+
+
+// --- LANG83 PR5a: strings fail closed ----------------------------------------
+//
+// Every string case runs in two forms (spec "PR5 — runtime strings",
+// "Conformance cases"):
+//
+// | form    | where the operands come from                       | what it proves                 |
+// |---------|----------------------------------------------------|--------------------------------|
+// | literal | `str_const` / `const` in `main`                    | a backend that *folds* the op still traps (never a value, never a compile error) |
+// | opaque  | parameters of a call-free function `f`, called by `main` | the run-time path traps; nothing can fold |
+//
+// The out-of-range values include the ones only a full 64-bit check sees:
+// `2³² + 1` is 1 after a 32-bit narrowing, and `2³²` is 0. JVM and CLR
+// narrowed first before PR5a, so `str_index "ABC", 2³² + 1` read `'B'`.
+//
+// Each trap case prints `B:` first (with `print_str`, no newline), so the
+// expectation also proves the column flushed it before trapping. The cases
+// compare bytes exactly (`Expect::StdoutBytes*`).
+
+/// The string every PR5a bounds case reads.
+const PR5A_SRC: &str = "ABC";
+
+/// `f(params) -> i64 { body; ret <ret> }` plus `main` that sets up `args`,
+/// prints `B:`, calls `f`, and writes `f`'s result. `f` makes no call, so the
+/// JIT would compile it (it refuses strings until PR5d).
+fn pr5a_opaque(params: &[(&str, &str)], args: Vec<IIRInstr>, body: Vec<IIRInstr>, ret: &str) -> IIRModule {
+    let mut f_body = body;
+    f_body.push(IIRInstr::new("ret", None, vec![var(ret)], "i64"));
+    let mut main = args;
+    main.push(text("pr5a.before", "B:"));
+    main.push(print_str("pr5a.before"));
+    let mut call = vec![var("f")];
+    call.extend(params.iter().map(|(n, _)| var(&format!("arg.{n}"))));
+    main.push(IIRInstr::new("call", Some("pr5a.r".into()), call, "i64"));
+    main.push(builtin("write_i64", "pr5a.r"));
+    let mut module = program(main);
+    module.add_or_replace(IIRFunction::new(
+        "f",
+        params.iter().map(|(n, t)| (n.to_string(), t.to_string())).collect(),
+        "i64",
+        f_body,
+    ));
+    module
+}
+
+/// The same program with every operand a literal in `main`, so a backend may
+/// fold the op.
+fn pr5a_literal(args: Vec<IIRInstr>, body: Vec<IIRInstr>, ret: &str) -> IIRModule {
+    let mut main = vec![text("pr5a.before", "B:"), print_str("pr5a.before")];
+    main.extend(args);
+    main.extend(body);
+    main.push(builtin("write_i64", ret));
+    program(main)
+}
+
+/// `str_index "ABC", I`, literal (`OPAQUE = false`) or opaque.
+fn pr5a_index<const I: i64, const OPAQUE: bool>() -> IIRModule {
+    let body = vec![op("str_index", "b", &["s", "i"], "i64")];
+    if OPAQUE {
+        pr5a_opaque(&[("s", "str"), ("i", "i64")], vec![text("arg.s", PR5A_SRC), int("arg.i", I)], body, "b")
+    } else {
+        pr5a_literal(vec![text("s", PR5A_SRC), int("i", I)], body, "b")
+    }
+}
+
+/// `str_len (str_slice "ABC", A, B)`, literal or opaque.
+fn pr5a_slice<const A: i64, const B: i64, const OPAQUE: bool>() -> IIRModule {
+    let body = vec![op("str_slice", "t", &["s", "a", "b"], "str"), op("str_len", "n", &["t"], "i64")];
+    if OPAQUE {
+        pr5a_opaque(
+            &[("s", "str"), ("a", "i64"), ("b", "i64")],
+            vec![text("arg.s", PR5A_SRC), int("arg.a", A), int("arg.b", B)],
+            body,
+            "n",
+        )
+    } else {
+        pr5a_literal(vec![text("s", PR5A_SRC), int("a", A), int("b", B)], body, "n")
+    }
+}
+
+/// An out-of-range `str_index` whose result nobody reads: dead-code
+/// elimination may not delete it, because its trap is observable. Prints `B:`
+/// (and, if the read were wrongly removed, `ok`).
+fn pr5a_unused_index<const OPAQUE: bool>() -> IIRModule {
+    let body = vec![op("str_index", "unused", &["s", "i"], "i64"), int("zero", 0)];
+    let mut m = if OPAQUE {
+        pr5a_opaque(&[("s", "str"), ("i", "i64")], vec![text("arg.s", PR5A_SRC), int("arg.i", 7)], body, "zero")
+    } else {
+        pr5a_literal(vec![text("s", PR5A_SRC), int("i", 7)], body, "zero")
+    };
+    m.functions.iter_mut().find(|f| f.name == "main").unwrap().instructions.retain(|i| {
+        !(i.op == "call_builtin" && i.srcs.get(1) == Some(&var(if OPAQUE { "pr5a.r" } else { "zero" })))
+    });
+    m
+}
+
+/// Under a module ceiling of 16: `d = s ++ s` (16 bytes, fits), write its
+/// length, then `d ++ "x"` (17 bytes) must trap `Trap.Overflow`.
+fn pr5a_ceiling<const OPAQUE: bool>() -> IIRModule {
+    let body = vec![
+        op("str_concat", "d", &["s", "s"], "str"),
+        op("str_len", "n", &["d"], "i64"),
+        builtin("write_i64", "n"),
+        op("str_concat", "e", &["d", "x"], "str"),
+        op("str_len", "m", &["e"], "i64"),
+    ];
+    let mut m = if OPAQUE {
+        pr5a_opaque(
+            &[("s", "str"), ("x", "str")],
+            vec![text("arg.s", "01234567"), text("arg.x", "x")],
+            body,
+            "m",
+        )
+    } else {
+        pr5a_literal(vec![text("s", "01234567"), text("x", "x")], body, "m")
+    };
+    m.str_max_bytes = Some(16);
+    m
+}
+
+/// Aliasing: a string op whose destination is one of its own operands.
+/// `s = s ++ s` ("abab"), then `s = str_slice s, 1, len s - 1` ("ba"), print.
+fn pr5a_aliasing<const OPAQUE: bool>() -> IIRModule {
+    let body = vec![
+        op("str_concat", "s", &["s", "s"], "str"),
+        op("str_len", "n", &["s"], "i64"),
+        int("one", 1),
+        op("sub", "j", &["n", "one"], "i64"),
+        op("str_slice", "s", &["s", "one", "j"], "str"),
+        print_str("s"),
+        op("str_len", "k", &["s"], "i64"),
+    ];
+    if OPAQUE {
+        pr5a_opaque(&[("s", "str")], vec![text("arg.s", "ab")], body, "k")
+    } else {
+        pr5a_literal(vec![text("s", "ab")], body, "k")
+    }
+}
+
+/// The opaque form of the six E4 string-op cases: each op reads parameters
+/// of `f`, and `f` returns the integer the literal case prints.
+/// One opaque PR5a program: `f`'s parameters, `main`'s argument setup,
+/// `f`'s body, and the register `f` returns.
+type OpaqueParts = (&'static [(&'static str, &'static str)], Vec<IIRInstr>, Vec<IIRInstr>, &'static str);
+
+fn pr5a_opaque_e4<const WHICH: u8>() -> IIRModule {
+    let (params, args, body, ret): OpaqueParts = match WHICH {
+        0 => (&[("s", "str")], vec![text("arg.s", "hello")], vec![op("str_len", "n", &["s"], "i64")], "n"),
+        1 => (
+            &[("s", "str"), ("i", "i64")],
+            vec![text("arg.s", "HELLO"), int("arg.i", 1)],
+            vec![op("str_index", "c", &["s", "i"], "i64")],
+            "c",
+        ),
+        2 => (
+            &[("s", "str"), ("a", "i64"), ("b", "i64")],
+            vec![text("arg.s", "HELLO"), int("arg.a", 1), int("arg.b", 3)],
+            vec![op("str_slice", "t", &["s", "a", "b"], "str"), print_str("t"), op("str_len", "n", &["t"], "i64")],
+            "n",
+        ),
+        3 => (
+            &[("a", "str"), ("b", "str")],
+            vec![text("arg.a", "AB"), text("arg.b", "CD")],
+            vec![op("str_concat", "t", &["a", "b"], "str"), print_str("t"), op("str_len", "n", &["t"], "i64")],
+            "n",
+        ),
+        4 => (
+            &[("a", "str"), ("b", "str")],
+            vec![text("arg.a", "xy"), text("arg.b", "xy")],
+            vec![op("str_eq", "r", &["a", "b"], "i64")],
+            "r",
+        ),
+        _ => (
+            &[("a", "str"), ("b", "str")],
+            vec![text("arg.a", "a"), text("arg.b", "b")],
+            vec![op("str_cmp", "r", &["a", "b"], "i64")],
+            "r",
+        ),
+    };
+    pr5a_opaque(params, args, body, ret)
+}
+
+/// The PR5a cases: every bounds edge in both forms, the unused read, the
+/// ceiling, aliasing, and the opaque form of each E4 string case. Each name
+/// ends in `(PR5a)`, which is how the gate finds them.
+fn pr5a_cases() -> Vec<Case> {
+    const BOUNDS: &str = "Trap.Bounds";
+    const OVERFLOW: &str = "Trap.Overflow";
+    const TWO_32: i64 = 1 << 32;
+    vec![
+        Case { name: "str_index at -1 traps Trap.Bounds, literal (PR5a)", build: pr5a_index::<{ -1 }, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at -1 traps Trap.Bounds, opaque (PR5a)", build: pr5a_index::<{ -1 }, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at len traps Trap.Bounds, literal (PR5a)", build: pr5a_index::<3, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at len traps Trap.Bounds, opaque (PR5a)", build: pr5a_index::<3, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at i64::MAX traps Trap.Bounds, literal (PR5a)", build: pr5a_index::<{ i64::MAX }, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at i64::MAX traps Trap.Bounds, opaque (PR5a)", build: pr5a_index::<{ i64::MAX }, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at i64::MIN traps Trap.Bounds, literal (PR5a)", build: pr5a_index::<{ i64::MIN }, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at i64::MIN traps Trap.Bounds, opaque (PR5a)", build: pr5a_index::<{ i64::MIN }, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at 2^32 + 1 traps Trap.Bounds, literal (PR5a)", build: pr5a_index::<{ TWO_32 + 1 }, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at 2^32 + 1 traps Trap.Bounds, opaque (PR5a)", build: pr5a_index::<{ TWO_32 + 1 }, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_index at 0 and len - 1 reads, opaque (PR5a)", build: pr5a_index::<2, true>, expect: Expect::StdoutBytes(b"B:67") },
+        Case { name: "str_slice with a < 0 traps Trap.Bounds, literal (PR5a)", build: pr5a_slice::<{ -1 }, 1, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice with a < 0 traps Trap.Bounds, opaque (PR5a)", build: pr5a_slice::<{ -1 }, 1, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice with b < a traps Trap.Bounds, literal (PR5a)", build: pr5a_slice::<2, 1, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice with b < a traps Trap.Bounds, opaque (PR5a)", build: pr5a_slice::<2, 1, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice with b > len traps Trap.Bounds, literal (PR5a)", build: pr5a_slice::<0, 4, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice with b > len traps Trap.Bounds, opaque (PR5a)", build: pr5a_slice::<0, 4, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice with a = 2^32 traps Trap.Bounds, literal (PR5a)", build: pr5a_slice::<TWO_32, { TWO_32 + 3 }, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice with a = 2^32 traps Trap.Bounds, opaque (PR5a)", build: pr5a_slice::<TWO_32, { TWO_32 + 3 }, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice with b = 2^32 + len traps Trap.Bounds, literal (PR5a)", build: pr5a_slice::<1, { TWO_32 + 3 }, false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice with b = 2^32 + len traps Trap.Bounds, opaque (PR5a)", build: pr5a_slice::<1, { TWO_32 + 3 }, true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_slice of [0, len) and [len, len) fit, opaque (PR5a)", build: pr5a_slice::<3, 3, true>, expect: Expect::StdoutBytes(b"B:0") },
+        Case { name: "an unused out-of-range str_index still traps, literal (PR5a)", build: pr5a_unused_index::<false>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "an unused out-of-range str_index still traps, opaque (PR5a)", build: pr5a_unused_index::<true>, expect: Expect::StdoutBytesThenTrap(b"B:", BOUNDS) },
+        Case { name: "str_concat to 16 fits and to 17 traps Trap.Overflow, literal (PR5a)", build: pr5a_ceiling::<false>, expect: Expect::StdoutBytesThenTrap(b"B:16", OVERFLOW) },
+        Case { name: "str_concat to 16 fits and to 17 traps Trap.Overflow, opaque (PR5a)", build: pr5a_ceiling::<true>, expect: Expect::StdoutBytesThenTrap(b"B:16", OVERFLOW) },
+        Case { name: "a string op may overwrite its own operand, literal (PR5a)", build: pr5a_aliasing::<false>, expect: Expect::StdoutBytes(b"B:ba2") },
+        Case { name: "a string op may overwrite its own operand, opaque (PR5a)", build: pr5a_aliasing::<true>, expect: Expect::StdoutBytes(b"B:ba2") },
+        Case { name: "str_len counts bytes, opaque (PR5a)", build: pr5a_opaque_e4::<0>, expect: Expect::StdoutBytes(b"B:5") },
+        Case { name: "str_index reads one byte, opaque (PR5a)", build: pr5a_opaque_e4::<1>, expect: Expect::StdoutBytes(b"B:69") },
+        Case { name: "str_slice takes [start, end), opaque (PR5a)", build: pr5a_opaque_e4::<2>, expect: Expect::StdoutBytes(b"B:EL2") },
+        Case { name: "str_concat joins, opaque (PR5a)", build: pr5a_opaque_e4::<3>, expect: Expect::StdoutBytes(b"B:ABCD4") },
+        Case { name: "str_eq compares bytes, opaque (PR5a)", build: pr5a_opaque_e4::<4>, expect: Expect::StdoutBytes(b"B:1") },
+        Case { name: "str_cmp orders lexically, opaque (PR5a)", build: pr5a_opaque_e4::<5>, expect: Expect::StdoutBytes(b"B:-1") },
+    ]
 }
 
 const MAX: i64 = i64::MAX;
@@ -962,7 +1229,7 @@ fn f64_unary(name: &str, x: f64) -> IIRModule {
 /// `MIN / -1`, results exactly representable), because those edges are what the
 /// PR1b ops define — the legacy ops are only required to agree away from them.
 fn cases() -> Vec<Case> {
-    vec![
+    let mut all = vec![
         // ── Output ──────────────────────────────────────────────────────────
         Case {
             name: "print_i64 writes the value and a newline",
@@ -1610,10 +1877,12 @@ fn cases() -> Vec<Case> {
             ),
         },
         Case {
-            // No backend lowers a symbol built from a literal: a symbol reaches
-            // the tagged-word backends as an interned `const … : symbol`. So
-            // this case is refused everywhere, before any pass runs.
-            name: "dyn_symbol of a literal is refused at compile time (PR7f)",
+            // No compiled backend lowers a symbol built from a literal: a
+            // symbol reaches the tagged-word backends as an interned
+            // `const … : symbol`, so they refuse this case before any pass
+            // runs. The VM lowers it (#18470): `dyn_symbol "A"` interns the
+            // name to a `Value::Symbol`, whose `dyn_tag` is 2.
+            name: "dyn_symbol of a literal runs on the VM only (PR7f, #18470)",
             build: || {
                 program(vec![
                     IIRInstr::new(
@@ -1644,7 +1913,10 @@ fn cases() -> Vec<Case> {
             },
             expect: Expect::StdoutThenTrap("-3!", "Trap.User"),
         },
-    ]
+    ];
+    // LANG83 PR5a: the string-failure, ceiling, DCE, aliasing and opaque cases.
+    all.extend(pr5a_cases());
+    all
 }
 
 // ===========================================================================
@@ -1685,8 +1957,10 @@ fn native_compile(module: &IIRModule, _exe: &std::path::Path) -> Result<(), Lang
 /// One shared, ordered output buffer (LANG83): every output builtin appends here.
 type Sink = Arc<Mutex<Vec<u8>>>;
 
-fn sink_text(sink: &Sink) -> String {
-    String::from_utf8_lossy(&sink.lock().expect("output sink poisoned")).trim().to_string()
+/// Every byte the program wrote, exactly (LANG83 PR5a: no decode, no trim;
+/// [`assert_outcome`] decides how to compare).
+fn sink_text(sink: &Sink) -> Vec<u8> {
+    sink.lock().expect("output sink poisoned").clone()
 }
 
 fn register_vm_output(vm: &mut vm_core::VMCore, sink: &Sink) {
@@ -1819,9 +2093,7 @@ fn run_jit(module: IIRModule, case: &Case) -> RunResult {
     // its compiled digit writer for every finite non-zero value, so a case
     // whose output holds a digit must have run one; `inf`, `nan` and the
     // zeros are written by the (interpreted) entry helper alone.
-    let prints_a_digit = match case.expect {
-        Expect::Stdout(out) | Expect::StdoutThenTrap(out, _) => out.bytes().any(|b| b.is_ascii_digit()),
-    };
+    let prints_a_digit = case.expect.out_text().bytes().any(|b| b.is_ascii_digit());
     if !call_free.iter().any(|n| n == "main") && prints_a_digit {
         let stats = jit.cache_stats();
         let ran_compiled = call_free.iter().any(|n| {
@@ -2176,7 +2448,7 @@ fn run_jvm(module: IIRModule, case: &Case) -> Option<RunResult> {
 
 fn run_process(mut cmd: Command) -> RunResult {
     let out = cmd.output().expect("spawn compiled program");
-    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    let stdout = out.stdout;
     if out.status.success() {
         RunResult::Completed { stdout }
     } else {
@@ -2402,6 +2674,68 @@ fn pr1b_ops_are_lowered_on_every_backend() {
                 backend.op_support(spec.name)
             );
         }
+    }
+}
+
+/// LANG83 PR5a — strings fail closed. The gate:
+///
+/// 1. the support matrix the spec pins: the E4 string ops and `print_str`
+///    are `Lowered` on every backend but the generic JIT, which refuses them
+///    (`INTERPRETER_TIER_ONLY`) until PR5d;
+/// 2. the registry: `str_index` / `str_slice` may trap `Trap.Bounds`, and
+///    `str_concat` `Trap.Overflow`, and all three survive dead-code
+///    elimination;
+/// 3. every PR5a case runs, with the exact bytes before the trap and the
+///    registered kind, on every executable column whose toolchain is present
+///    (WASM and VM always; LLVM with `clang`; native x86-64 on Linux; JVM with
+///    `java`), and compiles for CLR and BEAM, whose execution is CI's.
+#[test]
+fn pr5a_string_failures_are_registered_traps_on_every_column() {
+    const STRING_OPS: [&str; 8] =
+        ["str_const", "str_len", "str_index", "str_slice", "str_concat", "str_eq", "str_cmp", "print_str"];
+    for op in STRING_OPS {
+        for backend in Backend::ALL {
+            let support = backend.op_support(op);
+            if backend == Backend::Jit {
+                assert!(matches!(support, OpSupport::Refused(_)), "the JIT refuses {op} until PR5d: {support:?}");
+            } else {
+                assert!(support.is_lowered(), "{backend} must lower {op}: {support:?}");
+            }
+        }
+    }
+    use interpreter_ir::opcodes::{has_side_effects, trap_kinds};
+    assert_eq!(trap_kinds("str_index"), ["Trap.Bounds"]);
+    assert_eq!(trap_kinds("str_slice"), ["Trap.Bounds"]);
+    assert_eq!(trap_kinds("str_concat"), ["Trap.Overflow"]);
+    for op in ["str_index", "str_slice", "str_concat"] {
+        assert!(has_side_effects(op), "{op} must survive DCE");
+    }
+
+    let mut required = vec!["Wasm", "Vm"];
+    if clang_ok() {
+        required.push("Llvm");
+    }
+    if cfg!(target_os = "linux") {
+        required.push("NativeAot");
+    }
+    if java_ok() {
+        required.push("Jvm");
+    }
+    let corpus = cases();
+    let pr5a: Vec<&Case> = corpus.iter().filter(|c| c.name.ends_with("(PR5a)")).collect();
+    assert_eq!(pr5a.len(), 34, "the PR5a case table");
+    let traps = pr5a.iter().filter(|c| c.expect.trap_kind().is_some()).count();
+    assert_eq!(traps, 24, "twenty bounds edges, two unused reads, two ceilings");
+    for case in pr5a {
+        assert!(!case.lowered_on(Backend::Jit), "{}: the JIT refuses strings", case.name);
+        let ran = execute_everywhere(case);
+        for column in &required {
+            assert!(ran.contains(column), "{}: did not run on {column} (ran {ran:?})", case.name);
+        }
+        for backend in [Backend::Clr, Backend::Beam] {
+            compile_on(backend, case.module()).unwrap_or_else(|e| panic!("{}: {backend}: {e}", case.name));
+        }
+        eprintln!("LANG83 PR5a `{}` proven on {ran:?}", case.name);
     }
 }
 
@@ -2670,23 +3004,32 @@ fn pr7f2_lisp_rules_are_module_code_over_the_primitives() {
 }
 
 /// LANG83 PR7f: the dynamic-value primitives are calls into the tagged-word
-/// runtime, so they are lowered exactly where that runtime is linked (native
-/// x86-64 and AArch64, LLVM) and refused everywhere else, with the shared
-/// reason; `dyn_symbol` is refused everywhere (a symbol is an interned
-/// constant on the tagged-word backends). The case runs, with the expected
-/// output, on LLVM and native x86-64 whenever their toolchains are present,
-/// and every other backend refuses it before any lowering pass.
+/// runtime, so they are lowered where that runtime is linked (native x86-64
+/// and AArch64, LLVM) and refused, with the shared reason, by the other
+/// compiled backends; `dyn_symbol` is refused there too (a symbol is an
+/// interned constant on the tagged-word backends). The VM is the exception
+/// (#18470): it lowers the five primitives that read or make a value's kind
+/// (`dyn_tag`, `dyn_is_nil`, `dyn_is_pair`, `dyn_nil`, `dyn_symbol`) over its
+/// own `Value` kinds, and still refuses the five that build or take apart a
+/// tagged word or a cell. The pair case runs, with the expected output, on
+/// LLVM and native x86-64 whenever their toolchains are present, and every
+/// other backend — the VM included, for `dyn_box_int` — refuses it before
+/// any lowering pass.
 #[test]
 fn pr7f_dynamic_values_run_on_the_tagged_word_backends() {
     use interpreter_ir::op_registry::{NO_TAGGED_WORD_RUNTIME, SYMBOLS_ARE_INTERNED_CONSTANTS};
     let pr7f: Vec<&str> = STANDARD_OPS.iter().filter(|s| s.is_pr7f()).map(|s| s.name).collect();
     assert_eq!(pr7f.len(), 10, "the PR7f primitives: {pr7f:?}");
     let tagged = [Backend::X86_64, Backend::Aarch64, Backend::Llvm];
+    let vm_kind_primitives = ["dyn_tag", "dyn_is_nil", "dyn_is_pair", "dyn_nil", "dyn_symbol"];
     for name in &pr7f {
         for backend in Backend::ALL {
             let want = match (tagged.contains(&backend), *name) {
                 (true, "dyn_symbol") => OpSupport::Refused(SYMBOLS_ARE_INTERNED_CONSTANTS),
                 (true, _) => OpSupport::Lowered,
+                (false, name) if backend == Backend::Vm && vm_kind_primitives.contains(&name) => {
+                    OpSupport::Lowered
+                }
                 (false, _) => OpSupport::Refused(NO_TAGGED_WORD_RUNTIME),
             };
             assert_eq!(backend.op_support(name), want, "{backend} {name}");
@@ -2873,7 +3216,7 @@ fn flush_before_trap_is_proven_on_every_executable_column() {
     let corpus = cases();
     let traps: Vec<&Case> = corpus
         .iter()
-        .filter(|c| matches!(c.expect, Expect::StdoutThenTrap(out, _) if !out.is_empty()))
+        .filter(|c| c.expect.trap_kind().is_some() && !c.expect.out_text().is_empty())
         .collect();
     assert!(!traps.is_empty());
     let mut proven: Vec<&str> = Vec::new();

@@ -197,6 +197,80 @@ describe("per-language realization-map validation", () => {
   });
 });
 
+// The relocation ledger is computed from a per-concept index rather than a
+// corpus filter per node, and the ledger is compared as JSON, so ORDER is part
+// of the answer. These cases pin the order the original filter produced: corpus
+// order, a later lesson overwriting an earlier one's value for the same concept
+// while keeping the key's first position, and a concept listed twice on the
+// node still contributing each lesson once.
+describe("relocation ledger", () => {
+  const relocationTaxonomy: Taxonomy = {
+    version: 1,
+    concepts: {
+      "GREETING-HELLO": { family: "GREETING", gloss: "hello", core: true },
+      "GREETING-BYE": { family: "GREETING", gloss: "bye", core: true },
+      "GREETING-THANKS": { family: "GREETING", gloss: "thanks", core: true },
+      "GREETING-PLEASE": { family: "GREETING", gloss: "please", core: true },
+    },
+  };
+  const relocationSpine: CurriculumSpine = {
+    version: 1,
+    stages: ["pre-A1"],
+    nodes: [
+      {
+        id: "HELLO",
+        stage: "pre-A1",
+        canDo: "I can greet and take leave.",
+        prerequisites: [],
+        core: true,
+        concepts: ["GREETING-HELLO", "GREETING-BYE", "GREETING-HELLO"],
+      },
+      { id: "THANKS", stage: "pre-A1", canDo: "I can thank.", prerequisites: [], core: true, concepts: ["GREETING-THANKS"] },
+      { id: "PLEASE", stage: "pre-A1", canDo: "I can ask.", prerequisites: [], core: true, concepts: ["GREETING-PLEASE"] },
+    ],
+  };
+  const placed = (id: string, type: string, concept: string, spineNode: string) =>
+    parseLesson(
+      source(id, type, concept, []).replace("concept_tag:", `spine_node: ${spineNode}\nconcept_tag:`),
+      "test",
+    );
+  const lessons = [
+    placed("R1", "word", "GREETING-BYE", "THANKS"),
+    placed("R2", "phrase", "GREETING-HELLO", "PLEASE"),
+    placed("R3", "word", "GREETING-BYE", "PLEASE"),
+    // Excluded: declares its own node, an unknown node, or is not content.
+    placed("R4", "word", "GREETING-HELLO", "HELLO"),
+    placed("R5", "word", "GREETING-HELLO", "NOWHERE"),
+    placed("R6", "practice", "GREETING-HELLO", "THANKS"),
+  ];
+  const drift = (relocates: Record<string, string>) =>
+    validateCurriculum({
+      registry,
+      taxonomy: relocationTaxonomy,
+      spine: relocationSpine,
+      lessons,
+      curricula: [{
+        version: 1,
+        language: "test",
+        path: [],
+        spine: { HELLO: { segments: [], omits: [], relocates } },
+        extensions: [],
+      }],
+    }).filter((issue) => issue.code === "curriculum-relocation-ledger-drift");
+
+  it("accepts the ledger in corpus order with the last value per concept", () => {
+    expect(drift({ "GREETING-BYE": "PLEASE", "GREETING-HELLO": "PLEASE" })).toEqual([]);
+  });
+
+  it("rejects a ledger with the right entries in the wrong order", () => {
+    expect(drift({ "GREETING-HELLO": "PLEASE", "GREETING-BYE": "PLEASE" })).toHaveLength(1);
+  });
+
+  it("rejects a ledger that keeps the first value for a repeated concept", () => {
+    expect(drift({ "GREETING-BYE": "THANKS", "GREETING-HELLO": "PLEASE" })).toHaveLength(1);
+  });
+});
+
 describe("schema-v2 lesson validation", () => {
   it("requires schema version 2 before an activity contract can compile", () => {
     const legacy = source("A", "word", "GREETING-HELLO", []).replace(
@@ -305,6 +379,27 @@ Recall it.`,
     lessons.push(parseLesson(sourceV2("LAST", depth + 1, [`L${depth - 1}`], [atom(depth)], [], []), "test"));
     expect(notClosed(lessons)).toEqual([
       `LAST: required atom '${atom(depth)}' is not introduced by a transitive prerequisite`,
+    ]);
+  });
+
+  it("answers knowledge queries on every bit of a multi-word closure, from any prerequisite", () => {
+    // The memo path answers "is atom X known?" with a bit test against each
+    // prerequisite's closure instead of materialising a Set. Forty atoms from
+    // W put indices 0..39 in the language's bitset, so the closure spans two
+    // 32-bit words and index 31 is the sign bit (where a `> 0` test would lie).
+    // The lone atom from N lives only in the SECOND prerequisite's closure, so
+    // a lookup that stopped at the first closure would miss it.
+    const wide = Array.from({ length: 40 }, (_, n) => `TEST-LEX-WIDE${n}`);
+    const lessons = [
+      parseLesson(sourceV2("W", 10, [], [], wide, []), "test"),
+      parseLesson(sourceV2("N", 20, [], [], ["TEST-LEX-NARROW"], []), "test"),
+      parseLesson(
+        sourceV2("Q", 30, ["W", "N"], [...wide, "TEST-LEX-NARROW", "TEST-LEX-ABSENT"], [], []),
+        "test",
+      ),
+    ];
+    expect(notClosed(lessons)).toEqual([
+      "Q: required atom 'TEST-LEX-ABSENT' is not introduced by a transitive prerequisite",
     ]);
   });
 

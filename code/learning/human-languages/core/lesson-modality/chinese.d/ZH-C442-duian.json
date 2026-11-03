@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C442-duian",
+    "language": "chinese",
+    "chapter": 442,
+    "sequence": 33620,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:898dea2da303c511"
+  },
+  "findings": []
+}

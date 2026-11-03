@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C378-wuye",
+    "language": "chinese",
+    "chapter": 378,
+    "sequence": 29240,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:e10958ca5e5a2d17"
+  },
+  "findings": []
+}

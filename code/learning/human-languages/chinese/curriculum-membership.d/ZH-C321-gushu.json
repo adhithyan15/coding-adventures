@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C321-gushu",
+  "pathSegment": "ZH-PATH-321-ANCIENT321",
+  "pathOrder": 3,
+  "extensions": [
+    {
+      "id": "ZH-EXT-321-ANCIENT321",
+      "order": 3
+    }
+  ]
+}

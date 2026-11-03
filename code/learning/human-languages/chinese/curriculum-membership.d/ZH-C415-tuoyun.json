@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C415-tuoyun",
+  "pathSegment": "ZH-PATH-415-TERMINAL415",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "ZH-EXT-415-TERMINAL415",
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ZH-W533-xi-hope",
+    "language": "chinese",
+    "chapter": 533,
+    "sequence": 39995,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "script-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:820982f2c6beb880",
+    "detachableSegments": [
+      "Script — a cross, a bar and a long stroke, then three at the foot"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

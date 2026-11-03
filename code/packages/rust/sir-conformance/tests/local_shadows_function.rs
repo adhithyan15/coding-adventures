@@ -32,17 +32,18 @@
 //! test re-checks it against `ruby` when one is on `PATH`.
 //!
 //! The Ruby frontend cannot yet spell every kind of variable (it has no
-//! `for` loop and no closure literal this harness can run everywhere), so
-//! the second half of this file builds SIR **by hand** for the rest: a `for`
-//! range variable, a `for each` variable, a closure capture, and a keyword
-//! parameter, each named like the module's function `f`.
+//! closure literal this harness can run everywhere), so the second half of
+//! this file builds SIR **by hand** for the rest: a `for` range variable, a
+//! `for each` variable, a closure capture, and a keyword parameter, each
+//! named like the module's function `f`.  (Since #18778 the frontend has a
+//! `for` loop, so a Ruby `for` variable named `f` is a program above too.)
 
 use std::io::Write;
 use std::process::{Command, Stdio};
 
 use semantic_ir::{
     Block, Capture, CaptureValue, Effect, EffectSet, Expr, Feature, FeatureManifest, Function,
-    Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
+    Global, Metadata, Module, Param, ParamKind, Scope, Span, Stmt,
 };
 use sir_conformance::{lower_source_via, run_module, run_source_via, Frontend, RunOutcome, Target};
 
@@ -71,6 +72,14 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "rb_rescue_binding_named_like_a_method",
         "def f\n  40\nend\nbegin\n  raise \"boom\"\nrescue StandardError => f\n  puts f()\nend\n",
         "40",
+    ),
+    // A `for` loop variable named like a method (#18778): the loop iterates
+    // a fresh variable and stores it into the local `f`, which keeps the
+    // last item.  (40 + 1) + (40 + 2) = 83.
+    (
+        "rb_for_variable_named_like_a_method",
+        "def f\n  40\nend\nt = 0\nfor f in [1, 2]\n  t = t + f() + f\nend\nputs t\nputs f\n",
+        "83\n2",
     ),
     // The method is also called *recursively* from a body whose parameter
     // spells its name: the call inside must still reach the method.
@@ -305,6 +314,43 @@ fn module(name: &str, g: Function, extra: Vec<Function>, features: &[Feature]) -
     }
 }
 
+/// [`module`], plus a module global `global` that the synthesised `_init`
+/// sets to 2 -- the `global_set` shape the Twig frontend emits for
+/// `(define x 2)`.
+fn module_with_global(name: &str, global: &str, g: Function) -> Module {
+    let init = func(
+        "_init",
+        vec![],
+        vec![],
+        block(
+            vec![Stmt::ExprStmt {
+                expr: Expr::BuiltinCall {
+                    name: "global_set".to_string(),
+                    args: vec![
+                        Expr::SymLit {
+                            name: global.to_string(),
+                            span: sp(),
+                        },
+                        int(2),
+                    ],
+                    effects: EffectSet::PURE,
+                    span: sp(),
+                },
+                span: sp(),
+            }],
+            Expr::NilLit { span: sp() },
+        ),
+    );
+    let mut m = module(name, g, vec![init], &[Feature::Globals, Feature::Symbols]);
+    m.globals.push(Global {
+        name: global.to_string(),
+        sir_type: None,
+        init_function: "_init".to_string(),
+        span: sp(),
+    });
+    m
+}
+
 /// `(name, module, the stdout every backend must print)`.
 fn hand_built() -> Vec<(&'static str, Module, &'static str)> {
     let t0 = || Stmt::LetStarBinding {
@@ -448,6 +494,43 @@ fn hand_built() -> Vec<(&'static str, Module, &'static str)> {
             ),
             "42",
         ),
+        // A module *global* named `f` beside the function `f`:
+        // f() + <global f> → 40 + 2.  JavaScript declared both at the top
+        // level (`let f = null;` and `function f`), a SyntaxError.
+        (
+            "sir_global_named_like_a_function",
+            module_with_global(
+                "sir_global_named_like_a_function",
+                "f",
+                func("g", vec![], vec![], block(vec![], call_plus_var(Scope::Global))),
+            ),
+            "42",
+        ),
+        // A *local* `x` beside the global `x`, read in the same function:
+        // let x = 40; <local x> + <global x> → 42.  In JavaScript the local
+        // hid the global, so the sum was 80.
+        (
+            "sir_local_named_like_a_global",
+            module_with_global(
+                "sir_local_named_like_a_global",
+                "x",
+                func(
+                    "g",
+                    vec![],
+                    vec![],
+                    block(
+                        vec![Stmt::LetStarBinding {
+                            name: "x".to_string(),
+                            sir_type: None,
+                            value: int(40),
+                            span: sp(),
+                        }],
+                        add(var("x", Scope::Local), var("x", Scope::Global)),
+                    ),
+                ),
+            ),
+            "42",
+        ),
     ]
 }
 
@@ -501,6 +584,77 @@ fn hand_built_modules_print_the_same_on_every_backend() {
     assert!(
         wrong.is_empty(),
         "{} module/backend cells are wrong:\n{}",
+        wrong.len(),
+        wrong.join("\n")
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Constants: a namespace of their own too
+// ---------------------------------------------------------------------------
+
+/// `(name, Ruby source, Ruby's stdout)` for a *constant* spelled like a
+/// method.  Ruby keeps the two apart -- `F()` calls the method, bare `F`
+/// reads the constant.  The Python and TypeScript backends bound the
+/// constant as an ordinary identifier, which shadowed the function
+/// (`TypeError: 'int' object is not callable`).
+const CONSTANT_PROGRAMS: &[(&str, &str, &str)] = &[
+    (
+        "rb_constant_named_like_a_method",
+        "def F\n  40\nend\nF = 2\nputs F() + F\n",
+        "42",
+    ),
+    // The class operand of `raise`/`rescue` is a constant too.  Every
+    // backend accepts this one.
+    (
+        "rb_raised_class_named_like_a_method",
+        "class Boom < StandardError\nend\ndef Boom\n  40\nend\nbegin\n  raise Boom, \"x\"\nrescue Boom => e\n  puts Boom()\nend\n",
+        "40",
+    ),
+];
+
+/// Each constant program prints Ruby's output on every backend that accepts
+/// it.  The JavaScript, Go and Rust backends refuse a constant *assignment*
+/// (`UnsupportedFeature`: they accept constants only as class names), and
+/// that refusal is a skip; every other failure counts.
+#[test]
+fn constants_named_like_methods_print_rubys_output() {
+    let mut ran = 0usize;
+    let mut wrong: Vec<String> = Vec::new();
+    for (name, source, expected) in CONSTANT_PROGRAMS {
+        if let Some(actual) = real_ruby(source) {
+            assert_eq!(actual, *expected, "`{name}`: Ruby prints {actual:?}");
+        }
+        for &target in Target::all() {
+            match run_source_via(name, source, Frontend::Ruby, target) {
+                RunOutcome::Ran(stdout) => {
+                    if stdout != *expected {
+                        wrong.push(format!(
+                            "`{name}` on {}: printed {stdout:?}, expected {expected:?}",
+                            target.tag()
+                        ));
+                    }
+                    ran += 1;
+                }
+                RunOutcome::Failed(msg) if msg.contains("UnsupportedFeature") => {
+                    eprintln!("skip {name}/{}: refuses a constant assignment", target.tag())
+                }
+                RunOutcome::Skipped(why) => eprintln!("skip {name}/{}: {why}", target.tag()),
+                RunOutcome::Failed(msg) => {
+                    let head: Vec<&str> = msg.lines().take(6).collect();
+                    wrong.push(format!(
+                        "`{name}` on {}: failed:\n    {}",
+                        target.tag(),
+                        head.join("\n    ")
+                    ));
+                }
+            }
+        }
+    }
+    eprintln!("constants named like methods: {ran} program/backend runs");
+    assert!(
+        wrong.is_empty(),
+        "{} program/backend cells disagree with Ruby:\n{}",
         wrong.len(),
         wrong.join("\n")
     );

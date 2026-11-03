@@ -1,0 +1,21 @@
+{
+  "chapter": 312,
+  "title": "Locked Up",
+  "label": "ch:zh-locked-up",
+  "canDo": "I can talk about fines, fights and prison, and say someone got what they deserved.",
+  "spineNodes": [
+    "SPINE-NARRATE-EVENTS"
+  ],
+  "payoff": {
+    "lesson": "ZH-R312-review-308-312",
+    "kind": "production",
+    "summary": "Complete the last lesson of chapter 312: I can talk about fines, fights and prison, and say someone got what they deserved.",
+    "assesses": [
+      "ZH-LEX-C312-PRISON312-01",
+      "ZH-LEX-C312-PRISON312-02",
+      "ZH-LEX-C312-PRISON312-03",
+      "ZH-LEX-C312-PRISON312-04",
+      "ZH-LEX-C312-PRISON312-05"
+    ]
+  }
+}

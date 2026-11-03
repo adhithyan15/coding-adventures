@@ -1480,18 +1480,9 @@ public static class MosaicRuntimeHost
         ///   tenth       mosaic-state.v1.json.corrupt.9
         /// </code>
         ///
-        /// A name is skipped when anything is there
-        /// (<see cref="QuarantineNameTaken"/>), and
-        /// <c>File.Move(..., overwrite: false)</c> throws rather than replace
-        /// one that is already there: atomically on Windows, and through
-        /// link/unlink on Unix (a file system without hard links falls back to
-        /// check-then-rename, where a second instance quarantining at the same
-        /// moment could replace one rejected file with another). When the move
-        /// throws and the name is now taken, something got there after the
-        /// check, and the next name is tried. That is decided by looking again,
-        /// not from the exception, which differs by what is there and by
-        /// platform. Nothing is deleted first, so a move that fails halfway
-        /// loses nothing either.
+        /// How a name is chosen and taken is <see cref="MovePersistedStateAside"/>.
+        /// Nothing is deleted first, so a move that fails halfway loses
+        /// nothing either.
         ///
         /// If the move fails, or all ten names are taken, the rejected file is
         /// still at the live path, and the next save would write over it. So
@@ -1518,21 +1509,71 @@ public static class MosaicRuntimeHost
         /// Move <paramref name="path"/> to its first free quarantine name.
         /// Null when it moved; otherwise why it did not.
         /// </summary>
+        /// <remarks>
+        /// <c>File.Move(..., overwrite: false)</c> is NOT used for the move.
+        /// It refuses an existing target atomically on Windows, but on Linux
+        /// and macOS .NET implements it as <c>link(2)</c> and then
+        /// <c>unlink(2)</c>. When the link succeeds and the unlink fails, the
+        /// move throws having left the quarantine name as a second name (a
+        /// hard link) for the live file. That name then reads as taken, the
+        /// next name gets another link, and one fault burns all ten names
+        /// and reports them "taken". So, as the Compose, SwiftUI, Flutter and
+        /// Qt hosts do, the name is claimed first and the file is moved onto
+        /// the claim:
+        ///
+        /// <code>
+        ///   step                      succeeds                failure means
+        ///   ------------------------  ----------------------  ------------------------------------
+        ///   1 look at the name        free: go on             taken: next name;
+        ///                                                     cannot tell: stop and say why
+        ///   2 CreateNew claims it     an empty placeholder    something got there: next name;
+        ///                                                     anything else: stop and say why
+        ///   3 Move onto the claim     moved: done             stop and say why, after removing
+        ///                                                     the empty placeholder from step 2
+        /// </code>
+        ///
+        /// Step 1 is only advisory; step 2 (<c>O_CREAT | O_EXCL</c>, Windows
+        /// <c>CREATE_NEW</c>) is what refuses an existing name. Whether
+        /// something got there is decided by looking again, not from the
+        /// exception: onto a directory, POSIX reports "exists" but Windows
+        /// reports access denied. Step 3 is <c>File.Move</c> with
+        /// <c>overwrite: true</c>, which is <c>rename(2)</c>, or
+        /// <c>MoveFileEx</c> with <c>MOVEFILE_REPLACE_EXISTING</c>: an atomic
+        /// replace whose only possible victim is the empty placeholder this
+        /// host just made. The rejected bytes are never copied, so they cannot
+        /// arrive truncated, and no step can leave a second name for the live
+        /// file behind.
+        ///
+        /// Every failure stops at the name it happened on. A failed attempt
+        /// never uses a name up, so failures cannot pile up into "all ten
+        /// taken" when nothing but this host's own leftovers is there.
+        /// </remarks>
         private static string? MovePersistedStateAside(string path)
         {
             for (var index = 0; index < MaxQuarantinedStates; index++)
             {
                 var candidate = index == 0 ? path + ".corrupt" : $"{path}.corrupt.{index}";
-                if (QuarantineNameTaken(candidate)) continue;
+                if (QuarantineNameTaken(candidate, out var unreadable)) continue;
+                if (unreadable is not null) return unreadable;
                 try
                 {
-                    File.Move(path, candidate, overwrite: false);
+                    new FileStream(candidate, FileMode.CreateNew, FileAccess.Write, FileShare.None).Dispose();
+                }
+                catch (Exception claimError)
+                {
+                    if (QuarantineNameTaken(candidate, out unreadable)) continue;
+                    if (unreadable is not null) return unreadable;
+                    // TrimEnd: the warning adds its own full stop after this.
+                    return $"Could not move it aside to {candidate}: {claimError.Message.TrimEnd('.')}";
+                }
+                try
+                {
+                    File.Move(path, candidate, overwrite: true);
                     return null;
                 }
                 catch (Exception moveError)
                 {
-                    if (QuarantineNameTaken(candidate)) continue;
-                    // TrimEnd: the warning adds its own full stop after this.
+                    RemoveEmptyClaim(candidate);
                     return $"Could not move it aside to {candidate}: {moveError.Message.TrimEnd('.')}";
                 }
             }
@@ -1542,26 +1583,62 @@ public static class MosaicRuntimeHost
         /// <summary>
         /// Whether anything is at <paramref name="candidate"/>: a file, a
         /// directory, or a symbolic link or junction, even one whose target
-        /// is gone.
+        /// is gone. When the name cannot even be inspected the answer is
+        /// false and <paramref name="unreadable"/> says why.
         /// </summary>
         /// <remarks>
         /// <c>File.Exists</c> and <c>Directory.Exists</c> cover a file and a
         /// directory everywhere, but whether they see a dangling link depends
         /// on the platform, so <c>LinkTarget</c>, which reads the link itself,
-        /// settles that. A name that cannot even be inspected counts as taken:
-        /// skipping it never overwrites anything.
+        /// settles that.
+        ///
+        /// A name that cannot be inspected is NOT taken. Counting it as taken
+        /// looks safe, since skipping a name never overwrites it, but the
+        /// fault that hides one name (a bad path, an I/O error) usually hides
+        /// all ten, so the host would walk every name, switch saving off and
+        /// report "All 10 quarantine names beside it are taken": a false
+        /// message that sends the user looking for ten files that are not
+        /// there. The caller stops instead and reports the real error, naming
+        /// the name it could not inspect.
         /// </remarks>
-        private static bool QuarantineNameTaken(string candidate)
+        private static bool QuarantineNameTaken(string candidate, out string? unreadable)
         {
+            unreadable = null;
             try
             {
                 return File.Exists(candidate)
                     || Directory.Exists(candidate)
                     || new FileInfo(candidate).LinkTarget is not null;
             }
+            catch (Exception error)
+            {
+                unreadable = $"Could not inspect {candidate}: {error.Message.TrimEnd('.')}";
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Remove the placeholder <see cref="MovePersistedStateAside"/> claimed
+        /// when the move onto it failed, so a failure does not use the name
+        /// up.
+        /// </summary>
+        /// <remarks>
+        /// Only an empty regular file is removed: that is what the claim
+        /// made, and an empty file holds no one's data. Anything else there
+        /// (the rejected file, if the move did land after all) is left alone.
+        /// A placeholder that cannot be removed is left behind too; it costs
+        /// one name, never any data.
+        /// </remarks>
+        private static void RemoveEmptyClaim(string candidate)
+        {
+            try
+            {
+                var claim = new FileInfo(candidate);
+                if (claim.Exists && claim.LinkTarget is null && claim.Length == 0) claim.Delete();
+            }
             catch (Exception)
             {
-                return true;
+                // Left behind: an empty file holds no one's data.
             }
         }
 

@@ -37,7 +37,7 @@
 //! See [the crate README](../README.md) for the v0 lowering rules
 //! and the explicit list of deferred Ruby features.
 
-use coding_adventures_ruby_parser::parse_ruby;
+use coding_adventures_ruby_parser::try_create_ruby_parser;
 
 mod lower;
 
@@ -45,15 +45,29 @@ pub use lower::{compile, RubyLowerError};
 
 /// Parse Ruby source and lower it to SIR in a single call.
 ///
-/// Wraps [`parse_ruby`] followed by [`compile`].  The current
-/// `parse_ruby` panics on parse errors (legacy behaviour shared with
-/// the rest of the grammar-driven parsers); a future refactor will
-/// surface those as [`RubyLowerError`]s with proper line/column.
+/// Lexes and parses like `coding_adventures_ruby_parser::parse_ruby`,
+/// then runs [`compile`].
+///
+/// - A lexer failure is a [`RubyLowerError`] at line 0, column 0 (the
+///   position is unknown).  That includes the lexer's source budget
+///   (#18814): a source longer than the lexer's 1 MiB `MAX_SOURCE_BYTES`
+///   is refused before any of it is lexed, instead of panicking.
+/// - A parse error still panics, as `parse_ruby` does (legacy behaviour
+///   shared with the rest of the grammar-driven parsers); a future
+///   refactor will surface those as [`RubyLowerError`]s with proper
+///   line/column.
 pub fn compile_source(
     source: &str,
     module_name: &str,
 ) -> Result<semantic_ir::Module, RubyLowerError> {
-    let ast = parse_ruby(source);
+    let mut parser = try_create_ruby_parser(source).map_err(|message| RubyLowerError {
+        message,
+        line: 0,
+        column: 0,
+    })?;
+    let ast = parser
+        .parse()
+        .unwrap_or_else(|e| panic!("Ruby parse failed: {e}"));
     compile(&ast, module_name)
 }
 
@@ -65,6 +79,24 @@ mod tests {
 
     fn lower(src: &str) -> semantic_ir::Module {
         compile_source(src, "test").expect("lowering succeeded")
+    }
+
+    /// #18814 — a source past the lexer's 1 MiB budget is refused with a
+    /// typed error before any of it is lexed; it used to be lexed (in
+    /// quadratic time) and a lexer failure panicked.
+    #[test]
+    fn oversized_source_is_a_typed_error_not_a_panic() {
+        // `coding_adventures_ruby_lexer::MAX_SOURCE_BYTES`, plus one.
+        let source = "x = 1\n".repeat((1024 * 1024) / 6 + 1);
+        assert!(source.len() > 1024 * 1024);
+        let start = std::time::Instant::now();
+        let err = compile_source(&source, "test").unwrap_err();
+        assert!(start.elapsed() < std::time::Duration::from_secs(1));
+        assert_eq!((err.line, err.column), (0, 0));
+        assert!(
+            err.message.starts_with("ruby lexer: source bytes") && err.message.contains("exceed the limit of 1048576"),
+            "{err}"
+        );
     }
 
     fn main_body(m: &semantic_ir::Module) -> &semantic_ir::Block {
@@ -5730,12 +5762,20 @@ mod tests {
     #[test]
     fn def_with_method_level_rescue_wraps_body_in_trycatch() {
         // `def f; x = 1; rescue Foo => e; y = e; end` → the method body is
-        // a single `Stmt::TryCatch` (no explicit begin); the function
-        // value is nil.
+        // a single `Stmt::TryCatch` (no explicit begin), after the `let` of
+        // the local that holds the method's value (#18798).  Both blocks
+        // end in an assignment, which stores no value here, so the value
+        // stays nil.
         let m = lower("def f\n  x = 1\nrescue Foo => e\n  y = e\nend\n");
         let f = func(&m, "f");
-        assert_eq!(f.body.stmts.len(), 1, "method body is one TryCatch; got {:?}", f.body.stmts);
-        match &f.body.stmts[0] {
+        assert_eq!(f.body.stmts.len(), 2, "the value's `let`, then one TryCatch; got {:?}", f.body.stmts);
+        assert!(
+            matches!(&f.body.stmts[0], Stmt::LetBinding { name, value: Expr::NilLit { .. }, .. }
+                if name.starts_with("__rescue_value_")),
+            "got {:?}",
+            f.body.stmts[0]
+        );
+        match &f.body.stmts[1] {
             Stmt::TryCatch { body, rescues, ensure_body, .. } => {
                 assert!(!body.is_empty(), "try body has the method statements");
                 assert_eq!(rescues.len(), 1);
@@ -5745,8 +5785,62 @@ mod tests {
             }
             other => panic!("expected Stmt::TryCatch, got {:?}", other),
         }
-        assert!(matches!(f.body.value, Expr::NilLit { .. }), "method value is nil");
+        assert!(
+            matches!(&f.body.value, Expr::VarRef { name, .. } if name.starts_with("__rescue_value_")),
+            "the method's value is the local; got {:?}",
+            f.body.value
+        );
         assert!(m.manifest.contains(semantic_ir::Feature::Exceptions));
+    }
+
+    /// #18798 — a method-level `rescue` returns the value of the block that
+    /// finished: the body's last value, or the catching clause's.  It
+    /// returned nil on every backend.
+    #[test]
+    fn method_level_rescue_keeps_the_value_of_each_block() {
+        let m = lower("def risky\n  raise \"x\"\n  1\nrescue => e\n  \"rescued\"\nensure\n  2\nend\n");
+        let f = func(&m, "risky");
+        let Some(Stmt::LetBinding { name: result, .. }) = f.body.stmts.first() else {
+            panic!("expected the value's `let` first, got {:?}", f.body.stmts);
+        };
+        // The value the last statement of `stmts` stores into `result`.
+        let stored = |stmts: &[Stmt]| -> Option<Expr> {
+            match stmts.last() {
+                Some(Stmt::Assign { name, scope: Scope::Local, value, .. }) if name == result => {
+                    Some(value.clone())
+                }
+                _ => None,
+            }
+        };
+        let Some(Stmt::TryCatch { body, rescues, ensure_body, .. }) = f.body.stmts.get(1) else {
+            panic!("expected a TryCatch, got {:?}", f.body.stmts);
+        };
+        assert!(matches!(stored(body), Some(Expr::IntLit { value: 1, .. })), "{body:?}");
+        assert!(
+            matches!(stored(&rescues[0].body), Some(Expr::StrLit { ref value, .. }) if value == "rescued"),
+            "{:?}",
+            rescues[0].body
+        );
+        // `ensure`'s value is discarded, as in Ruby.
+        let ensure_body = ensure_body.as_ref().expect("ensure body");
+        assert!(!ensure_body.iter().any(|s| matches!(s, Stmt::Assign { name, .. } if name == result)));
+        assert!(matches!(&f.body.value, Expr::VarRef { name, .. } if name == result));
+        assert_valid(&m);
+    }
+
+    /// #18798 — an invented name is never one the source spells, even one
+    /// it spells only later: the method-level `rescue` value skips
+    /// `__rescue_value_0`, which the program assigns after the method.
+    #[test]
+    fn invented_names_skip_every_name_the_source_spells() {
+        let m = lower("def f\n  1\nrescue\n  2\nend\n__rescue_value_0 = 5\nputs f + __rescue_value_0\n");
+        let f = func(&m, "f");
+        let Some(Stmt::LetBinding { name, .. }) = f.body.stmts.first() else {
+            panic!("got {:?}", f.body.stmts);
+        };
+        assert_ne!(name, "__rescue_value_0");
+        assert!(name.starts_with("__rescue_value_"));
+        assert_valid(&m);
     }
 
     #[test]
@@ -5755,7 +5849,8 @@ mod tests {
         // and a populated ensure body.
         let m = lower("def f\n  x = 1\nensure\n  y = 2\nend\n");
         let f = func(&m, "f");
-        match &f.body.stmts[0] {
+        // (`stmts[0]` is the `let` of the local holding the value, #18798.)
+        match &f.body.stmts[1] {
             Stmt::TryCatch { rescues, ensure_body, .. } => {
                 assert!(rescues.is_empty(), "ensure-only: no rescues");
                 assert!(ensure_body.is_some(), "ensure body present");
@@ -6281,15 +6376,19 @@ mod tests {
     }
 
     #[test]
-    fn parenless_reference_to_non_block_method_is_left_alone() {
-        // `g` does not take a block, so a bare `g` is not rewritten (it
-        // stays whatever the lowerer produced — a VarRef — and no spurious
-        // DirectCall is synthesized).
+    fn parenless_reference_to_non_block_method_is_a_call_without_a_block() {
+        // `g` does not take a block, so a bare `g` gets no block slot.  It
+        // used to stay a VarRef; since #18778 a bare name that is not a
+        // local is a call of the method, as in Ruby (`g` here is `g()`).
+        // Ruby then raises ArgumentError (`g` wants one argument); the SIR
+        // validator refuses the same arity mismatch before anything runs.
         let m = lower("def g(x)\n  x + 1\nend\ng\n");
+        let call = find_direct_call(main_body(&m), "g").expect("a bare `g` is a call");
         assert!(
-            find_direct_call(main_body(&m), "g").is_none(),
-            "non-block method's bare ref must not be threaded"
+            matches!(call, Expr::DirectCall { args, .. } if args.is_empty()),
+            "a non-block method's bare call gets no threaded block: {call:?}"
         );
+        assert!(!semantic_ir::validate(&m).is_ok(), "the arity mismatch is refused");
     }
 
     // -----------------------------------------------------------------------
@@ -9716,5 +9815,731 @@ b = "y"
             "validator rejected chained/dotted bracket-index write program: {:?}",
             result
         );
+    }
+
+    // -----------------------------------------------------------------
+    // #18778 — Ruby-on-SIR gaps: `for`, `rescue => e`, `f() + f`, bare
+    // method calls, a `[` that starts a line, and loop / modifier values.
+    // Every test below failed against the frontend before this change
+    // (most by a parse panic or a validator refusal).
+    // -----------------------------------------------------------------
+
+    /// Assert the module passes the SIR validator.
+    fn assert_valid(m: &semantic_ir::Module) {
+        let report = semantic_ir::validate(m);
+        assert!(report.is_ok(), "validator rejected the module: {:?}", report.issues);
+    }
+
+    /// The statement that assigns the loop variable from the fresh
+    /// iteration variable, at the top of a `for` body.
+    fn assert_stores_loop_var(body: &semantic_ir::Block, var: &str, tmp: &str) {
+        match body.stmts.first() {
+            Some(Stmt::Assign { name, scope: Scope::Local, value: Expr::VarRef { name: from, .. }, .. }) => {
+                assert_eq!(name, var);
+                assert_eq!(from, tmp);
+            }
+            other => panic!("expected `{var} = {tmp}` first in the body, got {other:?}"),
+        }
+    }
+
+    /// `for x in [1, 2]` declares `x` (nil) BEFORE the loop, iterates a fresh
+    /// `__for_0`, and stores it into `x` first thing in the body — so `x`
+    /// keeps the last item after the loop, as in Ruby.  It used to be a parse
+    /// panic (the grammar had no `for`).
+    #[test]
+    fn for_over_an_array_lowers_to_for_each_that_stores_the_outer_variable() {
+        let m = lower("for x in [1, 2]\n  puts x\nend\nputs x\n");
+        let body = main_body(&m);
+        assert_eq!(binding_name(&body.stmts[0]), Some("x"));
+        assert!(matches!(binding_value(&body.stmts[0]), Some(Expr::NilLit { .. })));
+        match &body.stmts[1] {
+            Stmt::ForEach { var, iter, body, .. } => {
+                assert_eq!(var, "__for_0");
+                assert!(matches!(iter, Expr::SeqLit { .. }));
+                assert_stores_loop_var(body, "x", "__for_0");
+                // The `puts` is a statement, never the body's value.
+                assert!(matches!(body.value, Expr::NilLit { .. }));
+                assert_eq!(body.stmts.len(), 2);
+            }
+            other => panic!("expected ForEach, got {other:?}"),
+        }
+        assert!(m.manifest.contains(semantic_ir::Feature::Loops));
+        assert_valid(&m);
+    }
+
+    /// A literal range is counted by a `ForRange`: `a...b` stops at `b`,
+    /// `a..b` at `b + 1`.  `do` after the iterable is accepted.  A variable
+    /// that is already a local is not declared again.
+    #[test]
+    fn for_over_a_literal_range_lowers_to_for_range() {
+        let m = lower("i = 9\nfor i in 0...3 do\n  puts i\nend\nfor j in 1..2\n  puts j\nend\n");
+        let body = main_body(&m);
+        let loops: Vec<&Stmt> = body
+            .stmts
+            .iter()
+            .filter(|s| matches!(s, Stmt::ForRange { .. }))
+            .collect();
+        assert_eq!(loops.len(), 2, "got {:?}", body.stmts);
+        // `i` was bound by `i = 9`; only `j` gets a `nil` declaration.
+        let nil_decls: Vec<&str> = body
+            .stmts
+            .iter()
+            .filter(|s| matches!(binding_value(s), Some(Expr::NilLit { .. })))
+            .filter_map(binding_name)
+            .collect();
+        assert_eq!(nil_decls, vec!["j"]);
+        match loops[0] {
+            Stmt::ForRange { var, start, stop, body, .. } => {
+                assert_eq!(var, "__for_0");
+                assert!(matches!(start, Expr::IntLit { value: 0, .. }));
+                assert!(matches!(stop, Expr::IntLit { value: 3, .. }));
+                assert_stores_loop_var(body, "i", "__for_0");
+            }
+            _ => unreachable!(),
+        }
+        match loops[1] {
+            Stmt::ForRange { stop, .. } => match stop {
+                Expr::BuiltinCall { name, args, .. } => {
+                    assert_eq!(name, "+");
+                    assert!(matches!(args[0], Expr::IntLit { value: 2, .. }));
+                    assert!(matches!(args[1], Expr::IntLit { value: 1, .. }));
+                }
+                other => panic!("an inclusive range stops at end + 1, got {other:?}"),
+            },
+            _ => unreachable!(),
+        }
+        assert_valid(&m);
+    }
+
+    /// Review of #18778: locals first assigned in a `for` body are locals of
+    /// the scope around the loop, as in Ruby, so they are declared (nil)
+    /// before it and assigned inside it; a read after the loop sees them.
+    #[test]
+    fn for_body_locals_are_declared_before_the_loop() {
+        let m = lower("for x in [1, 2]\n  y = x * 10\n  a, b = 1, 2\nend\nputs y + a\n");
+        let body = main_body(&m);
+        let decls: Vec<&str> = body.stmts.iter().take(4).filter_map(binding_name).collect();
+        assert_eq!(decls, vec!["x", "y", "a", "b"]);
+        let loop_body = body
+            .stmts
+            .iter()
+            .find_map(|s| match s {
+                Stmt::ForEach { body, .. } => Some(body),
+                _ => None,
+            })
+            .expect("a ForEach");
+        assert!(
+            loop_body.stmts.iter().skip(1).all(|s| matches!(s, Stmt::Assign { .. })),
+            "every body assignment stores into an outer local: {:?}",
+            loop_body.stmts
+        );
+        assert_valid(&m);
+    }
+
+    /// Review of #18778: `a..b` counts with `<=` unless `b` is an integer
+    /// literal.  The stop used to be `b + 1` for any `b`, so `for i in
+    /// 1..2.5` ran 1, 2 and 3.
+    #[test]
+    fn for_over_an_inclusive_range_with_a_non_integer_end_counts_with_le() {
+        let m = lower("n = 2.5\nfor i in 1..n\n  puts i\nend\nfor j in 1..2.5\n  puts j\nend\n");
+        let body = main_body(&m);
+        let whiles: Vec<&Stmt> = body.stmts.iter().filter(|s| matches!(s, Stmt::While { .. })).collect();
+        assert_eq!(whiles.len(), 2, "got {:?}", body.stmts);
+        for w in whiles {
+            let Stmt::While { cond, body, .. } = w else { unreachable!() };
+            assert!(matches!(cond, Expr::BuiltinCall { name, .. } if name == "<="), "got {cond:?}");
+            // `i = counter` first, then the counter's increment — before the
+            // user's statements, so none of them can skip it.
+            assert!(matches!(&body.stmts[0], Stmt::Assign { value: Expr::VarRef { .. }, .. }));
+            assert!(matches!(&body.stmts[1], Stmt::Assign { value: Expr::BuiltinCall { name, .. }, .. } if name == "+"));
+            assert!(matches!(body.stmts.last(), Some(Stmt::ExprStmt { .. })), "the `puts` is last");
+        }
+        assert!(!body.stmts.iter().any(|s| matches!(s, Stmt::ForRange { .. })));
+        assert_valid(&m);
+    }
+
+    /// Re-review of #18778: the `while` form's counter and end are locals of
+    /// the enclosing scope.  #18798: they are claimed from the one pool of
+    /// names (`fresh_name`), which holds every name the source spells, so a
+    /// later `__for_0 = 7` in the program is the program's own local and
+    /// never the loop's counter: the loop takes the first spellings the
+    /// source does not use.
+    #[test]
+    fn for_while_form_temporaries_are_declared_locals() {
+        let m = lower("n = 2\nfor i in 1..n\n  puts i\nend\n__for_0 = 7\n__for_1 = 8\nputs __for_0 + __for_1\n");
+        let body = main_body(&m);
+        let lets: Vec<&str> = body.stmts.iter().filter_map(binding_name).collect();
+        for name in ["__for_0", "__for_1", "__for_2", "__for_3"] {
+            assert_eq!(
+                lets.iter().filter(|n| **n == name).count(),
+                1,
+                "each name is bound once: {lets:?}"
+            );
+        }
+        assert!(
+            !body.stmts.iter().any(|s| matches!(s, Stmt::Assign { name, .. } if name == "__for_0" || name == "__for_1")),
+            "the loop never stores into the program's `__for_0` / `__for_1`"
+        );
+        assert_valid(&m);
+    }
+
+    /// Re-review of #18778: an iterable that reads a local first assigned
+    /// in the loop body is refused at compile time.  The body's locals are
+    /// declared `nil` before the loop, so it used to read that `nil` and
+    /// fail at run time; in Ruby the name is not a local yet there.
+    #[test]
+    fn for_iterable_reading_a_body_local_is_refused() {
+        for src in [
+            "for i in 0...n\n  n = 3\nend\n",
+            "for x in xs\n  xs = [1]\nend\n",
+        ] {
+            let err = compile_source(src, "test").expect_err(src);
+            assert!(err.message.contains("first assigned"), "{src:?}: {err}");
+        }
+        // A local assigned BEFORE the loop is fine.
+        assert_valid(&lower("n = 3\nfor i in 0...n\n  n = 1\nend\n"));
+    }
+
+    /// Ruby cannot iterate a range that starts at a Float; that is refused.
+    #[test]
+    fn for_over_a_range_that_starts_at_a_float_is_refused() {
+        let err = compile_source("for i in 1.5..3\n  puts i\nend\n", "test")
+            .expect_err("refused");
+        assert!(err.message.contains("Float"), "got {err}");
+    }
+
+    /// The fresh iteration variable never takes a spelling the program
+    /// already uses.
+    #[test]
+    fn for_iteration_variable_skips_a_name_the_program_uses() {
+        let m = lower("__for_0 = 5\nfor x in [1]\n  puts x + __for_0\nend\n");
+        let body = main_body(&m);
+        assert!(
+            body.stmts.iter().any(|s| matches!(s, Stmt::ForEach { var, .. } if var == "__for_1")),
+            "got {:?}",
+            body.stmts
+        );
+        assert_valid(&m);
+    }
+
+    /// A parameter as the loop variable is refused with a clear message: a
+    /// store into a parameter does not compile on every backend.
+    #[test]
+    fn for_over_a_parameter_is_refused_cleanly() {
+        let err = compile_source("def f(n)\n  for n in [1]\n  end\nend\n", "test")
+            .expect_err("a parameter loop variable is refused");
+        assert!(err.message.contains("parameter"), "got {err}");
+    }
+
+    /// `rescue => e` (no class) binds the exception and has an empty type
+    /// list (a catch-all).  It used to leave `=> e` for the body, where it
+    /// lowered to a call of a method named `=>`.
+    #[test]
+    fn rescue_arrow_without_a_class_binds_the_exception() {
+        let m = lower("begin\n  raise \"boom\"\nrescue => e\n  puts e\nend\n");
+        let body = main_body(&m);
+        match &body.stmts[0] {
+            Stmt::TryCatch { rescues, .. } => {
+                assert_eq!(rescues.len(), 1);
+                assert!(rescues[0].exception_types.is_empty());
+                assert_eq!(rescues[0].binding.as_deref(), Some("e"));
+                assert_eq!(rescues[0].body.len(), 1);
+            }
+            other => panic!("expected TryCatch, got {other:?}"),
+        }
+        assert_valid(&m);
+    }
+
+    /// In the clause body the binding is a local, even when a method has
+    /// the same name: a bare `e` reads the exception.
+    #[test]
+    fn a_rescue_binding_shadows_a_method_of_the_same_name() {
+        let m = lower("def e\n  1\nend\nbegin\n  raise \"boom\"\nrescue => e\n  puts e\nend\n");
+        let Stmt::TryCatch { rescues, .. } = &main_body(&m).stmts[1] else {
+            panic!("expected TryCatch");
+        };
+        let Stmt::ExprStmt { expr: Expr::BuiltinCall { args, .. }, .. } = &rescues[0].body[0] else {
+            panic!("expected the puts");
+        };
+        assert!(
+            matches!(args.last(), Some(Expr::VarRef { name, scope: Scope::Local, .. }) if name == "e"),
+            "got {args:?}"
+        );
+        assert_valid(&m);
+    }
+
+    /// Does `e` contain `f() + f`: a `+` of a `DirectCall f` and a variable
+    /// `f` of the given scope?
+    fn is_call_plus_var(e: &Expr, scope: Scope) -> bool {
+        matches!(e, Expr::BuiltinCall { name, args, .. } if name == "+"
+            && matches!(&args[0], Expr::DirectCall { fn_name, .. } if fn_name == "f")
+            && matches!(&args[1], Expr::VarRef { name, scope: s, .. } if name == "f" && *s == scope))
+    }
+
+    /// `f() + f` at the start of a statement: the `method_call` statement
+    /// alternative matched `f()` and then the parse failed at `+`.
+    #[test]
+    fn call_plus_name_parses_at_the_start_of_a_statement() {
+        let m = lower("def f\n  40\nend\ndef g(f)\n  f() + f\nend\nf = 2\nf() + f\n");
+        assert!(is_call_plus_var(&fn_body(&m, "g").value, Scope::Param));
+        assert!(is_call_plus_var(&main_body(&m).value, Scope::Local));
+        assert_valid(&m);
+    }
+
+    /// The same inside a lambda body and a block body, and before a
+    /// modifier `if`.
+    #[test]
+    fn call_plus_name_parses_inside_a_lambda_a_block_and_a_modifier() {
+        let m = lower(
+            "def f\n  40\nend\ng = ->(f) { f() + f }\n[2].each { |f| f() + f }\ndef h(f)\n  f() + f if f > 0\nend\n",
+        );
+        let hoisted: Vec<&semantic_ir::Function> =
+            m.functions.iter().filter(|f| f.name.starts_with("__block_")).collect();
+        assert_eq!(hoisted.len(), 2);
+        for b in hoisted {
+            assert!(is_call_plus_var(&b.body.value, Scope::Param), "{}: {:?}", b.name, b.body);
+        }
+        assert_valid(&m);
+    }
+
+    /// A method whose body ENDS in `x if c` returns `x` when `c` holds.  The
+    /// modifier used to become a statement, so the method returned `nil`.
+    #[test]
+    fn a_method_ending_in_a_modifier_if_returns_its_value() {
+        let m = lower("def h(x)\n  x * 10 if x > 0\nend\n");
+        match &fn_body(&m, "h").value {
+            Expr::If { then_branch, else_branch, .. } => {
+                assert!(then_branch.stmts.is_empty());
+                assert!(matches!(&then_branch.value, Expr::BuiltinCall { name, .. } if name == "*"));
+                assert!(matches!(else_branch.value, Expr::NilLit { .. }));
+            }
+            other => panic!("expected the modifier `if` as the value, got {other:?}"),
+        }
+        assert_valid(&m);
+    }
+
+    /// A bare name that is not a local is a call of the method, like `g()`;
+    /// once `g` is assigned it is the local (Ruby's parse-order rule).
+    #[test]
+    fn a_bare_method_name_is_a_call_until_a_local_of_that_name_is_assigned() {
+        // (The trailing assignment keeps the last `puts` a statement rather
+        // than the program's value.)
+        let m = lower("def g\n  42\nend\nputs g\ng = 1\nputs g\ndone = 0\n");
+        let body = main_body(&m);
+        // What each `puts` prints, in order.
+        let printed: Vec<&Expr> = body
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
+                    if name == "__sys_write__" =>
+                {
+                    args.last()
+                }
+                _ => None,
+            })
+            .collect();
+        assert_eq!(printed.len(), 2, "got {:?}", body.stmts);
+        assert!(matches!(printed[0], Expr::DirectCall { fn_name, args, .. } if fn_name == "g" && args.is_empty()));
+        assert!(matches!(printed[1], Expr::VarRef { name, scope: Scope::Local, .. } if name == "g"));
+        assert_valid(&m);
+    }
+
+    /// Inside a block, a local of the scope around it wins over a method of
+    /// the same name, and inside a method body a method name is a call.
+    #[test]
+    fn a_bare_name_in_a_block_or_method_follows_the_scope_rule() {
+        let m = lower(
+            "def n\n  100\nend\ndef two\n  2\nend\ndef four\n  two * two\nend\nn = 5\n[1].each do |x|\n  puts n + x\nend\n",
+        );
+        let four = fn_body(&m, "four");
+        assert!(
+            matches!(&four.value, Expr::BuiltinCall { args, .. }
+                if args.iter().all(|a| matches!(a, Expr::DirectCall { fn_name, .. } if fn_name == "two"))),
+            "got {:?}",
+            four.value
+        );
+        let block = m.functions.iter().find(|f| f.name == "__block_0").expect("hoisted block");
+        assert_eq!(block.captures.len(), 1, "`n` is captured, not called");
+        assert_eq!(block.captures[0].name, "n");
+        assert_valid(&m);
+    }
+
+    /// A name that a class also defines is never turned into a call of the
+    /// top-level method (inside the class it would mean `self.m`).
+    #[test]
+    fn a_bare_name_that_a_class_also_defines_is_not_rewritten() {
+        let m = compile_source(
+            "def size\n  1\nend\nclass Box\n  def size\n    2\n  end\nend\nputs size\n",
+            "test",
+        )
+        .expect("lowers");
+        let body = main_body(&m);
+        let last = body.stmts.last().or(None).expect("a statement");
+        assert!(
+            !format!("{last:?}").contains("DirectCall"),
+            "`size` is ambiguous here and must stay a VarRef: {last:?}"
+        );
+    }
+
+    /// A `[` at the start of a line after a complete expression starts a
+    /// new statement.  `x = 5` ⏎ `[1].each …` used to lower as
+    /// `x = 5[1].each …`.
+    #[test]
+    fn a_bracket_that_starts_a_line_starts_a_new_statement() {
+        let m = lower("x = 5\n[1].each do |v|\n  puts v\nend\nputs 3\n[4].each { |v| puts v }\n");
+        let body = main_body(&m);
+        assert!(matches!(binding_value(&body.stmts[0]), Some(Expr::IntLit { value: 5, .. })));
+        // The last `each` is the program's tail, so it is the block's value.
+        let each_receivers: Vec<&Expr> = body
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::ExprStmt { expr, .. } => Some(expr),
+                _ => None,
+            })
+            .chain(std::iter::once(&body.value))
+            .filter_map(|e| match e {
+                Expr::BuiltinCall { name, args, .. } if name == "__method__" => Some(&args[0]),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(each_receivers.len(), 2, "two `each` statements: {:?}", body);
+        for r in each_receivers {
+            assert!(matches!(r, Expr::SeqLit { .. }), "an array literal receiver, got {r:?}");
+        }
+        assert_valid(&m);
+    }
+
+    /// Every top-level expression of `m`'s main body, in order: each
+    /// expression statement's expression, then the body's value.
+    fn main_exprs(m: &semantic_ir::Module) -> Vec<&Expr> {
+        let body = main_body(m);
+        body.stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::ExprStmt { expr, .. } => Some(expr),
+                _ => None,
+            })
+            .chain(std::iter::once(&body.value))
+            .collect()
+    }
+
+    /// #18798 — a `-` or `+` that starts a line after a complete expression
+    /// starts a new statement.  `x = 5` ⏎ `-1` ⏎ `puts x` printed 4 on
+    /// every backend (it was `x = 5 - 1`); Ruby prints 5.
+    #[test]
+    fn a_sign_that_starts_a_line_starts_a_new_statement() {
+        let m = lower("x = 5\n-1\ny = 6\n+2\n- 3\nputs x + y\n");
+        let body = main_body(&m);
+        let values: Vec<&Expr> = body.stmts.iter().filter_map(binding_value).collect();
+        assert!(matches!(values[0], Expr::IntLit { value: 5, .. }), "{:?}", body.stmts);
+        assert!(matches!(values[1], Expr::IntLit { value: 6, .. }), "{:?}", body.stmts);
+        let exprs = main_exprs(&m);
+        // `-1` and `- 3` are negations; `+2` is just `2`.
+        let negs = exprs
+            .iter()
+            .filter(|e| matches!(e, Expr::BuiltinCall { name, .. } if name == "neg"))
+            .count();
+        assert_eq!(negs, 2, "{exprs:?}");
+        assert!(exprs.iter().any(|e| matches!(e, Expr::IntLit { value: 2, .. })), "{exprs:?}");
+        assert_valid(&m);
+    }
+
+    /// An operator at the END of a line still continues the expression onto
+    /// the next one, and so does a `.` at the start of the next line.
+    #[test]
+    fn an_operator_ending_a_line_or_a_dot_starting_one_continues_it() {
+        let m = lower("x = 5 -\n1\ny = [1, 2]\n  .first\nputs x + y\n");
+        let body = main_body(&m);
+        let values: Vec<&Expr> = body.stmts.iter().filter_map(binding_value).collect();
+        assert!(matches!(values[0], Expr::BuiltinCall { name, .. } if name == "-"), "{:?}", body.stmts);
+        assert!(
+            matches!(values[1], Expr::BuiltinCall { name, args, .. }
+                if name == "__method__" && matches!(&args[1], Expr::StrLit { value, .. } if value == "first")),
+            "{:?}",
+            body.stmts
+        );
+        assert_valid(&m);
+    }
+
+    /// #18798 — a `(` that starts a line is not the argument list of the
+    /// name before it: `x = foo` ⏎ `(1)` is `x = foo`, then `(1)`, and a
+    /// lone `foo` ⏎ `(2)` calls `foo` with no argument.  Both used to pass
+    /// the parenthesised value as the argument.
+    #[test]
+    fn a_paren_that_starts_a_line_is_not_an_argument_list() {
+        let m = lower("def foo(a = 9)\n  a\nend\nx = foo\n(1)\nfoo\n(2)\nputs x\n");
+        let body = main_body(&m);
+        let calls_with = |n: usize| {
+            body.stmts
+                .iter()
+                .filter_map(binding_value)
+                .chain(main_exprs(&m))
+                .filter(|e| matches!(e, Expr::DirectCall { fn_name, args, .. } if fn_name == "foo" && args.len() == n))
+                .count()
+        };
+        assert_eq!(calls_with(0), 2, "{:?}", body.stmts);
+        assert_eq!(calls_with(1), 0, "{:?}", body.stmts);
+        assert_valid(&m);
+    }
+
+    /// #18798 — a bare `puts` prints a newline: it lowers to the same
+    /// `__sys_write__` as `puts()`, with no values.  It was refused
+    /// ("references unknown name `puts`"), and `puts` ⏎ `puts 2` read as
+    /// `puts(puts 2)`.
+    #[test]
+    fn a_bare_puts_prints_a_newline_and_takes_nothing_from_the_next_line() {
+        let m = lower("puts 1\nputs\nputs 2\n");
+        let writes: Vec<usize> = main_exprs(&m)
+            .into_iter()
+            .filter_map(|e| match e {
+                Expr::BuiltinCall { name, args, .. } if name == "__sys_write__" => Some(args.len()),
+                _ => None,
+            })
+            .collect();
+        // stream, terminator and unpack flag, then the values.
+        assert_eq!(writes, vec![4, 3, 4]);
+        assert_valid(&m);
+        // A local named `puts` is still that local.
+        let m = lower("puts = 3\nx = puts\n");
+        let body = main_body(&m);
+        assert!(
+            body.stmts
+                .iter()
+                .filter_map(binding_value)
+                .any(|v| matches!(v, Expr::VarRef { name, .. } if name == "puts")),
+            "{:?}",
+            body.stmts
+        );
+    }
+
+    /// #18798 (security review) — `super` ⏎ `puts "hi"`, the common
+    /// `initialize` shape, read as `super(puts)` then `"hi"`: it printed a
+    /// blank line, passed `nil` up and dropped `"hi"`.  The zero-argument
+    /// `super` and the `puts "hi"` are two statements; so are `super;
+    /// setup`, `yield; foo` and `return; 42`.
+    #[test]
+    fn a_keyword_ending_its_line_takes_nothing_from_the_next() {
+        let m = lower(
+            "class A\n  def initialize\n    puts \"A\"\n  end\nend\nclass B < A\n  def initialize\n    super\n    puts \"hi\"\n  end\nend\nB.new\n",
+        );
+        let init = m
+            .functions
+            .iter()
+            .filter(|f| f.name.contains("initialize"))
+            .find(|f| format!("{:?}", f.body).contains("__super__"))
+            .expect("B#initialize");
+        let calls: Vec<String> = init
+            .body
+            .stmts
+            .iter()
+            .filter_map(|s| match s {
+                Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. } => {
+                    Some(format!("{name}/{}", args.len()))
+                }
+                _ => None,
+            })
+            .chain(match &init.body.value {
+                Expr::BuiltinCall { name, args, .. } => Some(format!("{name}/{}", args.len())),
+                _ => None,
+            })
+            .collect();
+        // `__super__(method, class)` with nothing forwarded, then the
+        // `puts "hi"` (stream, terminator, unpack flag, value).
+        assert_eq!(calls, vec!["__super__/2", "__sys_write__/4"], "{:?}", init.body);
+        assert_valid(&m);
+
+        let m = lower("def t\n  yield; foo\nend\ndef foo\n  1\nend\nt { 2 }\n");
+        let t = func(&m, "t");
+        assert!(
+            format!("{:?}", t.body).contains("fn_name: \"foo\""),
+            "`foo` is a call of its own: {:?}",
+            t.body
+        );
+        let m = lower("def f\n  return; 42\nend\n");
+        let f = func(&m, "f");
+        assert!(
+            matches!(&f.body.stmts[0], Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
+                if name == "return" && matches!(args.as_slice(), [Expr::NilLit { .. }])),
+            "{:?}",
+            f.body
+        );
+    }
+
+    /// #18798 re-review — a name or keyword ends its statement after a
+    /// token that opens one on the SAME line too (`{`, a block's closing
+    /// `|`, `do`, `then`, `begin`, …).  Each of these read the second
+    /// statement as the first one's argument, silently; before the `;`
+    /// became a line break they were refused at the `;`.  Ruby (3.3.6)
+    /// runs both statements in each.
+    #[test]
+    fn a_statement_after_an_opener_on_the_same_line_takes_nothing_from_the_next() {
+        let defs = "def foo\n  puts \"foo\"\nend\ndef bar\n  puts \"bar\"\nend\ndef cleanup\n  1\nend\ndef wrap\n  yield\nend\n";
+        // Every call of `name` in `dbg` passes no argument.
+        let only_bare_calls = |dbg: &str, name: &str| {
+            let needle = format!("fn_name: \"{name}\", args: [");
+            let mut found = 0;
+            for (at, _) in dbg.match_indices(&needle) {
+                assert_eq!(&dbg[at + needle.len()..at + needle.len() + 1], "]", "{name} got an argument");
+                found += 1;
+            }
+            found
+        };
+        for (src, names) in [
+            ("[1].each { |x| foo; bar }\n", &["foo", "bar"][..]),
+            ("begin foo; bar end\n", &["foo", "bar"][..]),
+            ("loop do foo; bar end\n", &["foo", "bar"][..]),
+            ("[1].each do |x| foo; bar end\n", &["foo", "bar"][..]),
+            ("l = -> { foo; bar }\n", &["foo", "bar"][..]),
+            ("[1].each { |x| next; bar }\n", &["bar"][..]),
+            ("def t\n  wrap { yield; cleanup }\nend\n", &["cleanup"][..]),
+            ("case 1\nwhen 1 then foo; bar\nend\n", &["foo", "bar"][..]),
+        ] {
+            let m = lower(&format!("{defs}{src}"));
+            let dbg = format!("{m:?}");
+            for name in names {
+                assert!(only_bare_calls(&dbg, name) >= 1, "{src:?}: no call of {name}");
+            }
+        }
+        // `next;` / `return;` / `yield;` carry no value of their own.
+        let m = lower(&format!("{defs}[1].each {{ |x| next; bar }}\n"));
+        assert!(format!("{m:?}").contains("name: \"next\", args: [NilLit"), "{m:?}");
+        let m = lower("def f(c)\n  if c then return; 5 end\n  6\nend\n");
+        assert!(format!("{m:?}").contains("name: \"return\", args: [NilLit"), "{m:?}");
+        // (`yield` lowers to a call of the method's block parameter.)
+        let m = lower(&format!("{defs}def t\n  wrap {{ yield; cleanup }}\nend\n"));
+        let dbg = format!("{m:?}");
+        let yields: Vec<&str> = dbg.split("IndirectCall {").skip(1).collect();
+        assert!(!yields.is_empty(), "{dbg}");
+        for y in yields {
+            let call = &y[..y.find("effects").expect("an IndirectCall has effects")];
+            assert!(call.ends_with("args: [], "), "`yield` took an argument: {call}");
+        }
+        // `puts; puts 2` in a block: a newline, then 2.
+        let m = lower("[1].each { |x| puts; puts 2 }\n");
+        let dbg = format!("{m:?}");
+        assert_eq!(dbg.matches("name: \"__sys_write__\"").count(), 2, "{dbg}");
+        assert_valid(&m);
+    }
+
+    /// #18798 re-review — `super` (and `yield`) is a value, so a `-`, `+`,
+    /// `(` or `[` that starts the next line starts a new statement: `x =
+    /// super` ⏎ `-1` read as `x = super - 1`, and ⏎ `[1]` as `super[1]`.
+    #[test]
+    fn a_sign_or_bracket_after_super_starts_a_new_statement() {
+        let m = lower("class A\n  def v\n    7\n  end\nend\nclass B < A\n  def v\n    x = super\n    -1\n    y = super\n    [1]\n    x + y\n  end\nend\nputs B.new.v\n");
+        let dbg = format!("{m:?}");
+        assert!(!dbg.contains("name: \"-\""), "no subtraction: {dbg}");
+        assert!(!dbg.contains("\"[]\""), "no index: {dbg}");
+        assert_valid(&m);
+    }
+
+    /// #18798 (security review) — only a `puts` that is a whole statement
+    /// prints a newline.  As a value (`x = puts`, `f(puts)`) it stays a
+    /// reference to an unknown name, which the validator refuses.
+    #[test]
+    fn a_bare_puts_used_as_a_value_is_not_a_call() {
+        for src in ["x = puts\n", "def f(a)\n  a\nend\nf(puts)\n"] {
+            let m = lower(src);
+            assert!(!format!("{m:?}").contains("__sys_write__"), "{src:?}");
+            assert!(!semantic_ir::validate(&m).is_ok(), "{src:?}");
+        }
+        // As a statement inside `if`/modifier/blocks it still prints.
+        let m = lower("if true\n  puts\nend\nputs if true\n");
+        assert_eq!(format!("{m:?}").matches("__sys_write__").count(), 2);
+        assert_valid(&m);
+    }
+
+    /// #18798 (security review) — an invented name skips a name spelled
+    /// only inside a `#{…}` interpolation too, which is lowered from the
+    /// string's text rather than from `Name` tokens.
+    #[test]
+    fn invented_names_skip_names_spelled_only_in_an_interpolation() {
+        let m = lower("def f\n  x = \"#{__rescue_value_0}\"\n  1\nrescue\n  2\nend\n");
+        let f = func(&m, "f");
+        let Some(Stmt::LetBinding { name, .. }) = f.body.stmts.first() else {
+            panic!("got {:?}", f.body.stmts);
+        };
+        assert_ne!(name, "__rescue_value_0");
+    }
+
+    /// #18798 — a `rescue` line's class list ends at the line break:
+    /// `rescue Boom` ⏎ `puts 40` read as the call `Boom(puts 40)`, which
+    /// the validator refused.  A bare `rescue` ⏎ `note` keeps `note` as the
+    /// clause's first statement, not its class.
+    #[test]
+    fn a_rescue_class_list_ends_at_the_line_break() {
+        let rescues_of = |src: &str| {
+            let m = lower(src);
+            assert_valid(&m);
+            main_body(&m)
+                .stmts
+                .iter()
+                .find_map(|s| match s {
+                    Stmt::TryCatch { rescues, .. } => Some(rescues.clone()),
+                    _ => None,
+                })
+                .expect("a TryCatch")
+        };
+        let r = rescues_of("class Boom < StandardError\nend\nbegin\n  raise Boom\nrescue Boom\n  puts 40\nend\n");
+        assert_eq!(r[0].exception_types, vec!["Boom".to_string()]);
+        assert_eq!(r[0].binding, None);
+        assert_eq!(r[0].body.len(), 1, "{:?}", r[0].body);
+        let r = rescues_of("def note\n  0\nend\nbegin\n  raise \"x\"\nrescue\n  note\n  puts 1\nend\n");
+        assert!(r[0].exception_types.is_empty(), "{:?}", r[0]);
+        assert_eq!(r[0].body.len(), 2, "{:?}", r[0].body);
+        // A comma at the end of the line continues the list.
+        let r = rescues_of(
+            "class A < StandardError\nend\nclass B < StandardError\nend\nbegin\n  raise B\nrescue A,\n  B\n  puts 1\nend\n",
+        );
+        assert_eq!(r[0].exception_types, vec!["A".to_string(), "B".to_string()]);
+        assert_eq!(r[0].body.len(), 1, "{:?}", r[0].body);
+    }
+
+    /// #18798 — `;` separates statements, as a newline does.  It used to
+    /// stop the parse (`Unexpected token: ";"`), so the issue's one-line
+    /// `def risky; raise "x"; rescue => e; "rescued"; end` did not compile.
+    #[test]
+    fn semicolons_separate_statements() {
+        let m = lower("x = 1; y = 2; puts x + y\ndef risky; raise \"x\"; rescue => e; \"rescued\"; end\nputs risky\n");
+        let body = main_body(&m);
+        assert_eq!(body.stmts.iter().filter_map(binding_name).count(), 2, "{:?}", body.stmts);
+        assert!(m.functions.iter().any(|f| f.name == "risky"));
+        assert_valid(&m);
+        // The `;` that starts a block's block-local names is kept.
+        let m = lower("[1].each do |x; y|\n  y = x\n  puts y\nend\n");
+        assert_valid(&m);
+    }
+
+    /// `puts` ⏎ `[7].each …` is not `puts([7].each …)`.  #18798: the bare
+    /// `puts` is now lowered — a `__sys_write__` with no values, which
+    /// prints a newline — so the program is two statements, both run.
+    #[test]
+    fn a_bracket_line_is_never_the_argument_of_the_call_before_it() {
+        let m = lower("puts\n[7].each { |v| puts v }\n");
+        let body = main_body(&m);
+        assert!(
+            matches!(&body.stmts[0], Stmt::ExprStmt { expr: Expr::BuiltinCall { name, args, .. }, .. }
+                if name == "__sys_write__" && args.len() == 3),
+            "got {:?}",
+            body.stmts
+        );
+        assert_valid(&m);
+    }
+
+    /// A `while` body's last expression is a statement, not the body's
+    /// value: the C and Ruby backends emit only a loop body's statements,
+    /// so a trailing `puts` printed nothing there.
+    #[test]
+    fn a_while_body_ends_in_a_statement_not_a_value() {
+        let m = lower("x = 0\nwhile x < 3\n  x += 1\n  puts x\nend\n");
+        match &main_body(&m).stmts[1] {
+            Stmt::While { body, .. } => {
+                assert!(matches!(body.value, Expr::NilLit { .. }));
+                assert_eq!(body.stmts.len(), 2);
+            }
+            other => panic!("expected While, got {other:?}"),
+        }
     }
 }

@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 465,
+  "sourceHash": "fnv1a64:9c2c0acc9024ed92",
+  "lessonIds": [
+    "ZH-C465-tongkuai",
+    "ZH-C465-saoxing",
+    "ZH-W465-xing-mood",
+    "ZH-C465-leguan",
+    "ZH-C465-beiguan",
+    "ZH-C465-zixin"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch465.txt",
+  "json": "chinese/narration/ch465.json",
+  "textHash": "fnv1a64:c29adebc7ad3a139",
+  "jsonHash": "fnv1a64:5372facc909e21db",
+  "findings": []
+}

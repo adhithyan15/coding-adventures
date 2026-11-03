@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C304-xuefei",
+  "pathSegment": "ZH-PATH-304-SCHOOL304",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-304-SCHOOL304",
+      "order": 4
+    }
+  ]
+}

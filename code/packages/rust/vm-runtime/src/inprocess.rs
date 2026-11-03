@@ -70,6 +70,9 @@ impl InProcessVMRuntime {
     ///
     /// Returns `VmResult::trap(1)` if `fn_index` is out of bounds.
     /// Returns `VmResult::trap(2)` if execution fails.
+    /// Returns `VmResult::trap(4)` if an argument is malformed — a `Symbol`
+    /// whose payload is not a `u32` id — before anything runs (#18470
+    /// review: it used to arrive as `Value::Null`, which is now nil).
     pub fn vm_execute(&mut self, fn_index: usize, args: &[VmResult]) -> VmResult {
         let fn_name = match self.module.functions.get(fn_index) {
             Some(f) => f.name.clone(),
@@ -77,7 +80,9 @@ impl InProcessVMRuntime {
         };
 
         // Convert VmResult args to vm-core Values.
-        let arg_values: Vec<Value> = args.iter().map(vmresult_to_value).collect();
+        let Some(arg_values) = args.iter().map(vmresult_to_value).collect::<Option<Vec<Value>>>() else {
+            return VmResult::trap(4); // malformed argument
+        };
 
         match self.vm.execute(&mut self.module.clone(), &fn_name, &arg_values) {
             Ok(Some(value)) => VmResult::from_value(value),
@@ -117,15 +122,21 @@ impl InProcessVMRuntime {
 
 // ── Conversion helpers ────────────────────────────────────────────────────
 
-fn vmresult_to_value(r: &VmResult) -> Value {
-    match r.tag {
+/// The `Value` a `VmResult` argument stands for, or `None` for one no
+/// `VmResult::from_value` could have produced.
+fn vmresult_to_value(r: &VmResult) -> Option<Value> {
+    Some(match r.tag {
         VmResultTag::Bool => Value::Bool(r.payload != 0),
         VmResultTag::Str => Value::Str(String::new()), // intern pool TBD
         VmResultTag::Void => Value::Null,
         VmResultTag::Trap => Value::Null,
+        // A symbol id is a `u32`; a wider payload was not made by
+        // `from_value`. It is refused — not truncated into some other
+        // symbol, and not read as `Null`, which is nil to a Lisp module.
+        VmResultTag::Symbol => Value::Symbol(u32::try_from(r.payload).ok()?),
         // All integer / ref variants map to Int.
         _ => Value::Int(r.payload as i64),
-    }
+    })
 }
 
 #[cfg(test)]
@@ -138,6 +149,30 @@ mod tests {
         let mut m = IIRModule::new("test", "tetrad");
         m.functions.push(fn_);
         m
+    }
+
+    /// #18470: a `Symbol` result maps back to `Value::Symbol`, and a payload no
+    /// `from_value` could have written is not read as some other symbol.
+    #[test]
+    fn symbol_result_round_trips_and_rejects_a_wide_payload() {
+        let r = VmResult::from_value(Value::Symbol(9));
+        assert_eq!(vmresult_to_value(&r), Some(Value::Symbol(9)));
+        let wide = VmResult { tag: VmResultTag::Symbol, payload: u64::from(u32::MAX) + 1 };
+        assert_eq!(vmresult_to_value(&wide), None, "refused, not nil");
+    }
+
+    /// …and `vm_execute` refuses the call with trap 4 before running anything.
+    #[test]
+    fn a_malformed_symbol_argument_traps_before_execution() {
+        let fn_ = IIRFunction::new("id", vec![("x".into(), "any".into())], "any",
+            vec![IIRInstr::new("ret", None, vec![interpreter_ir::instr::Operand::Var("x".into())], "any")]);
+        let mut rt = InProcessVMRuntime::from_module(make_module_with_fn(fn_));
+        let ok = rt.vm_execute(0, &[VmResult::from_value(Value::Symbol(3))]);
+        assert_eq!(ok.tag, VmResultTag::Symbol, "a well-formed symbol round-trips: {ok:?}");
+        let wide = VmResult { tag: VmResultTag::Symbol, payload: u64::MAX };
+        let r = rt.vm_execute(0, &[wide]);
+        assert!(r.is_trap());
+        assert_eq!(r.trap_code(), Some(4));
     }
 
     #[test]
@@ -185,13 +220,13 @@ mod tests {
     fn vmresult_to_value_bool() {
         let r = VmResult::from_bool(true);
         let v = vmresult_to_value(&r);
-        assert_eq!(v, Value::Bool(true));
+        assert_eq!(v, Some(Value::Bool(true)));
     }
 
     #[test]
     fn vmresult_to_value_int() {
         let r = VmResult::from_i64(42);
         let v = vmresult_to_value(&r);
-        assert_eq!(v, Value::Int(42));
+        assert_eq!(v, Some(Value::Int(42)));
     }
 }

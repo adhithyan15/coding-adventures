@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 502,
+  "sourceHash": "fnv1a64:e84e7312ceb626de",
+  "lessonIds": [
+    "ZH-C502-youhua",
+    "ZH-C502-guohua",
+    "ZH-W502-hua-paint",
+    "ZH-C502-huajia",
+    "ZH-C502-minghua",
+    "ZH-C502-huazhan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch502.txt",
+  "json": "chinese/narration/ch502.json",
+  "textHash": "fnv1a64:4d5d5de9fbc954f2",
+  "jsonHash": "fnv1a64:98bc594f819a4dfd",
+  "findings": []
+}

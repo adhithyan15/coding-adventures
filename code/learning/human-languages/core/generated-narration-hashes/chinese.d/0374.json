@@ -1,0 +1,19 @@
+{
+  "language": "chinese",
+  "chapter": 374,
+  "sourceHash": "fnv1a64:c1e45736a36788c8",
+  "lessonIds": [
+    "ZH-C374-renkou",
+    "ZH-C374-zhengfu",
+    "ZH-C374-wenhua",
+    "ZH-C374-minzu",
+    "ZH-C374-fazhan"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 5,
+  "text": "chinese/narration/ch374.txt",
+  "json": "chinese/narration/ch374.json",
+  "textHash": "fnv1a64:cfc824580a9aedaa",
+  "jsonHash": "fnv1a64:b4fa2478599df3a9",
+  "findings": []
+}

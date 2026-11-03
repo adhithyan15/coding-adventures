@@ -12,9 +12,10 @@
 //! are both runtime parameters, forcing the runtime path) and check the returned
 //! byte against the Rust `src.as_bytes()[i]` oracle.
 
+mod common;
+
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use iir_to_wasm::{encode_module, lower_iir_to_wasm, IIRWasmConfig};
-use wasm_runtime::WasmRuntime;
 
 /// Build a module computing `at(src, i)` where `at(a: str, i: i64) -> i64` does
 /// `str_index a i` (so `a`/`i` are runtime handles), and run `main`. Returns the
@@ -50,10 +51,11 @@ fn try_index(src: &str, i: i64) -> Result<i64, String> {
         exports: vec![],
         imports: vec![],
         release: None,
+        str_max_bytes: None,
     };
     let wasm = lower_iir_to_wasm(&module, &IIRWasmConfig::default()).map_err(|e| format!("{e:?}"))?;
     let bytes = encode_module(&wasm).map_err(|e| format!("{e:?}"))?;
-    WasmRuntime::new()
+    common::runtime()
         .load_and_run(&bytes, "main", &[])
         .map_err(|e| format!("{e:?}"))?
         .first()

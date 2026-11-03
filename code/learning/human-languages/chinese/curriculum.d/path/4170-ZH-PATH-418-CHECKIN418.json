@@ -1,0 +1,9 @@
+{
+  "id": "ZH-PATH-418-CHECKIN418",
+  "spine_node": "SPINE-HANDLE-TRAVEL",
+  "before": [],
+  "inline": [
+    "ZH-EXT-418-CHECKIN418"
+  ],
+  "after": []
+}

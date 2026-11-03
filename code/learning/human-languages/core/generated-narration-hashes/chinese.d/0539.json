@@ -1,0 +1,20 @@
+{
+  "language": "chinese",
+  "chapter": 539,
+  "sourceHash": "fnv1a64:9475a76a368f55bb",
+  "lessonIds": [
+    "ZH-C539-re-provoke",
+    "ZH-C539-guai-blame",
+    "ZH-W539-guai",
+    "ZH-C539-guaishi",
+    "ZH-C539-chikui",
+    "ZH-C539-chuanghuo"
+  ],
+  "voiceLessons": 5,
+  "drivablePrefix": 2,
+  "text": "chinese/narration/ch539.txt",
+  "json": "chinese/narration/ch539.json",
+  "textHash": "fnv1a64:05a17675cd89648c",
+  "jsonHash": "fnv1a64:8094d8d465e63e32",
+  "findings": []
+}

@@ -1,0 +1,8 @@
+{
+  "id": "ZH-EXT-282-SHOULD",
+  "stage": "B1",
+  "kind": "required",
+  "category": "grammar",
+  "canDo": "I can say what someone should or had better do.",
+  "prerequisites": []
+}

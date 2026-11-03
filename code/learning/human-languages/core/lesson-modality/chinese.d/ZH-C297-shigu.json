@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "ZH-C297-shigu",
+    "language": "chinese",
+    "chapter": 297,
+    "sequence": 23370,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:c6e80d512cd97465"
+  },
+  "findings": []
+}

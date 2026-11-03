@@ -19,7 +19,6 @@
 //! interpolation is out of the Go backend's accepted set — see the crate
 //! tests — so we print structured results, matching prior Go exec tests).
 
-use std::process::Command;
 
 use semantic_ir::{
     Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
@@ -260,7 +259,7 @@ fn unknown_method_module() -> Module {
 }
 
 fn go_available() -> bool {
-    Command::new("go")
+    sir_test_scratch::go_command()
         .arg("version")
         .output()
         .map(|o| o.status.success())
@@ -268,11 +267,12 @@ fn go_available() -> bool {
 }
 
 fn run_go(source: &str, tag: &str) -> std::process::Output {
-    let dir = std::env::temp_dir();
+    let scratch = sir_test_scratch::Scratch::new("sir_go_test_");
+    let dir = scratch.path();
     let nonce = unique_suffix();
     let src_path = dir.join(format!("sir_go_coll_{tag}_{nonce}.go"));
-    std::fs::write(&src_path, source).expect("write temp source");
-    let out = Command::new("go")
+    sir_test_scratch::write_new(&src_path, source).expect("write temp source");
+    let out = sir_test_scratch::go_command()
         .arg("run")
         .arg(&src_path)
         .output()

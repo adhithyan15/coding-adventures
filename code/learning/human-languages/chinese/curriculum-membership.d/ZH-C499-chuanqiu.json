@@ -1,0 +1,11 @@
+{
+  "id": "ZH-C499-chuanqiu",
+  "pathSegment": "ZH-PATH-499-TEAM499",
+  "pathOrder": 4,
+  "extensions": [
+    {
+      "id": "ZH-EXT-499-TEAM499",
+      "order": 4
+    }
+  ]
+}
