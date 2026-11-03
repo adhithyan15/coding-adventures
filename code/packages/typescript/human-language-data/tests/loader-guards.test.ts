@@ -32,6 +32,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { isAbsentErrno, isSharded, readLedgerFile } from "../src/shard.js";
 import {
+  forEachTrackLessons,
   loadLanguageRegistry,
   listExamInventories,
   loadLessons,
@@ -411,6 +412,78 @@ describe("a track that cannot be loaded must not simply not exist", () => {
     }
 
     expect(() => loadLessons(root)).toThrow(/not a real directory but holds lessons/);
+  });
+});
+
+describe("forEachTrackLessons is loadLessons, one track at a time", () => {
+  // The streaming form exists so a corpus-wide test can derive something small
+  // from each track and let the parsed lessons go (see
+  // tests/figure-targets/real-corpus-fixture.ts). That is only safe if it is
+  // the SAME walk: same tracks, same order, same guards. `loadLessons` is now
+  // implemented on top of it, and this pins the equivalence from the outside.
+  function writeLesson(track: string, id: string): void {
+    mkdirSync(join(root, track, "lessons"), { recursive: true });
+    writeFileSync(
+      join(root, track, "lessons", `${id}.md`),
+      [
+        "---",
+        "schema_version: 2",
+        `id: ${id}`,
+        "chapter: 1",
+        "type: word",
+        "headword: hola",
+        "gloss: hello",
+        "concept_tag: GREETING-HELLO",
+        "skills: [listening, speaking]",
+        "---",
+        "",
+        `# ${id}`,
+        "",
+        "## Warm-up",
+        "",
+        "Say *hola* out loud.",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+  }
+
+  it("visits every track in loadLessons' order, and concatenates to loadLessons", () => {
+    writeLesson("spanish", "ES-C01-b");
+    writeLesson("spanish", "ES-C01-a");
+    writeLesson("french", "FR-C01-a");
+    // A track-shaped directory with no lessons/ is visited with nothing, exactly
+    // as `loadLessons` asks `loadTrackLessons` for it and gets [] back.
+    mkdirSync(join(root, "core"), { recursive: true });
+    // Not a track id and no lessons: skipped by both.
+    mkdirSync(join(root, "_fonts"), { recursive: true });
+
+    const visited: Array<[string, string[]]> = [];
+    const streamed: ReturnType<typeof loadLessons> = [];
+    forEachTrackLessons(root, (language, lessons) => {
+      visited.push([language, lessons.map((lesson) => lesson.realization.lessonId)]);
+      streamed.push(...lessons);
+    });
+
+    expect(visited).toEqual([
+      ["core", []],
+      ["french", ["FR-C01-a"]],
+      ["spanish", ["ES-C01-a", "ES-C01-b"]],
+    ]);
+    expect(streamed).toEqual(loadLessons(root));
+  });
+
+  it("refuses the same unloadable track loadLessons refuses, before visiting past it", () => {
+    writeLesson("spanish", "ES-C01-a");
+    mkdirSync(join(root, "_draft", "lessons"), { recursive: true });
+    writeFileSync(join(root, "_draft", "lessons", "01-x.md"), "# x\n", "utf8");
+
+    const visited: string[] = [];
+    expect(() => forEachTrackLessons(root, (language) => visited.push(language))).toThrow(
+      /not a usable track id/,
+    );
+    // `_draft` sorts before `spanish`, so the refusal comes first.
+    expect(visited).toEqual([]);
   });
 });
 

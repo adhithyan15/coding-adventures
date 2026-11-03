@@ -268,6 +268,27 @@ can write there can already replace code in `node_modules`.) The cache is off
 in every CLI process — `generate:*` and `check:*` always parse from disk.
 Deleting `node_modules/.cache` is always safe.
 
+The cache saves the parse, not the memory. The whole parsed corpus is well
+over 2 GB of heap, and a worker that keeps several copies dies on a
+small-RAM runner. A test that derives something small from each lesson should
+stream the corpus and keep only what it asserts on (spec HL112):
+
+```ts
+import { defaultCurriculumRoot, forEachTrackLessons } from "../src/loader.js";
+
+const writingLessons: string[] = [];
+forEachTrackLessons(defaultCurriculumRoot(), (_language, lessons) => {
+  // One track's parsed lessons are alive here; they are dropped afterwards.
+  for (const lesson of lessons) {
+    if (lesson.realization.type === "writing") writingLessons.push(lesson.realization.lessonId);
+  }
+});
+```
+
+`summarizeLessonModalities(entries)` is the matching piece for modality: it
+summarizes entries that were derived one track at a time exactly as
+`summarizeModality(lessons)` summarizes the parsed lessons.
+
 ## Validation rules (the CI gate)
 
 `validate()` returns a list of issues. **Errors** fail the build; **warnings** and
