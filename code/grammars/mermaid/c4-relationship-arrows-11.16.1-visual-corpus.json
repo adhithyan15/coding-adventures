@@ -4,6 +4,7 @@
   "source_corpus": "c4-relationship-arrows-11.16.1-corpus.json",
   "fixtures": [
     "bidirectional-relationship",
-    "backward-relationship"
+    "backward-relationship",
+    "short-backward-relationship"
   ]
 }
