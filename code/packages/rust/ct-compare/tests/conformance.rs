@@ -83,11 +83,11 @@ fn main() {
 fn reject_after_baseline(ctx: &Ctx, baseline: &Record, changed: &Record, fault: Fault) -> Verdict {
     // A checker that rejects everything must not pass its negative checks.
     if !matches!(verdict(ctx, baseline, Fault::None), Verdict::Pass) {
-        return Verdict::fail("adapter-baseline", "valid baseline did not pass");
+        return Verdict::fail("corpus-mismatch", "valid adapter baseline did not pass");
     }
     match verdict(ctx, changed, fault) {
         Verdict::Fail { .. } => Verdict::Pass,
-        Verdict::Pass => Verdict::fail("adapter-mutation", "broken behavior was accepted"),
+        Verdict::Pass => Verdict::fail("corpus-mismatch", "broken adapter behavior was accepted"),
     }
 }
 

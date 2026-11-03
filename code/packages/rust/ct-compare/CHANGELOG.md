@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Keep negative adapter diagnostics within TF01's closed failure-ID vocabulary:
+  rejected baselines and undetected injected defects report corpus-mismatch.
+  Exercise the real failing TAP output with the always-pass sabotage mode.
+
 - Run every CT01 shared corpus case through TF01's L0 harness, using the real
   fixed-array API, exact u64 values, native length-error mapping and selection
   ownership checks. Add five negative checks that catch broken adapter behavior.
