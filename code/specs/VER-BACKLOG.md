@@ -95,12 +95,17 @@ can progress independently once their prerequisites are available.
   reporting over the same instrumented artifacts works; a reusable wrapper or
   upstream response-file fix is lower priority than the pilot's critical path.
 
+- A dependent-branch replay printed partial-clone fetch errors but completed;
+  the requested blob's local bytes hashed to the expected SHA. Diagnose repeat
+  occurrences separately; preserve committed work and validate the replay.
+
 P004 local evidence: all 21 CT01 records and five negative adapter checks pass;
 18 existing unit tests and six optimized-IR tests pass; the CT01 Python suites
 pass 16 tests; Clippy and Ruff pass; focused Go repository-input tests pass.
 Direct LLVM reporting over the instrumented run covers 145/145 ct-compare source
-lines. The broader Go suite and hosted CI are separate checks, not inferred from
-these local results. Bootstrap's exact head passed a fresh security sub-agent
+lines. The full Go suite passed on the initial integration tree; it is rerun on
+the focused dependent branch before publication. Hosted CI remains separate.
+Bootstrap's exact head passed a fresh security sub-agent
 review; its existing auto-merge remains waiting for CI.
 
 P004 plan: specify deterministic CT01-to-TFV projection and fixed-width dispatch;
