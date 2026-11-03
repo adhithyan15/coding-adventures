@@ -2,6 +2,48 @@
 
 ## Unreleased
 
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: a `BracketScanner` carries the bracket depth,
+  open-string delimiter and pending escape from line to line instead of
+  rescanning the growing value, which was quadratic. Quoted field and
+  sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`) are read as
+  the bare key, per the amended contract. A dependency that resolves to the
+  package itself is now `DependencySelfEdgeError` (`DEPENDENCY_SELF_EDGE`,
+  exit status 2) instead of a silently inserted self-loop. Tests: 11 new
+  one-shape cases (57), a 20 000-line continuation, and Cargo self-edges.
+
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form. A change to a crate used only by a
+  build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md` (public
+  `Resolver.cargoLinkDependencyNames`, over UTF-8 bytes): headers are split
+  into dotted-key segments outside strings (quoted cfgs stay one segment,
+  table names compare case-sensitively, `[[...]]` and malformed headers end
+  the table); comments are stripped outside strings; inline values whose
+  arrays continue onto later lines are joined; `path` and `package` field keys
+  must be exact and hold one non-empty string; names are ASCII-lowercased and
+  deduplicated. Dev-dependencies (every form), `[patch]`, `[replace]`,
+  `[workspace]` and registry entries add no edge.
+- The old reader counted any `[dependencies]` line mentioning `path` and
+  looked up the entry key, so `x = { version = "1", features = ["path"] }`
+  drew an edge and a `package` rename was ignored
+  (`os-kernel = { package = "os-kernel-simulator", ... }` pointed at
+  `rust/os-kernel`). Both are fixed.
+- WASM wrappers are now known only by their declared Cargo name, as in the Go
+  reference. Claiming the bare directory name made 25 wrappers (`wasm/graph`,
+  `wasm/heap`, ...) depend on themselves instead of on the Rust crate they
+  wrap; the forced repository graph now has no self-edges, and its edges into
+  Rust and WASM packages equal the Go tool's (bar one TypeScript edge from
+  Go's cross-language resolution).
+- Tests: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames`, duplicate collapse, the WASM-wrapper alias
+  rule, and the shared `resolution-rust-field-aware.json` fixture, which now
+  also seeds this front (reader S) in `code/specs/ci-gate-registry.md` and the
+  Go build tool's routing map. The reader returns the same dependency names as
+  the Go reader for all 1,650 tracked `Cargo.toml` files.
+
 - Added a typed, process-free graph and diff-selection core with all eight
   graph and twelve diff-selection neutral fixture cases, exact caller-supplied
   source-boundary digest/fanout, canonical closures, structural diagnostics,

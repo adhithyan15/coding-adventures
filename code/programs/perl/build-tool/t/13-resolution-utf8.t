@@ -127,6 +127,21 @@ subtest 'shared valid UTF-8 fixture resolves the exact edge' => sub {
     is(graph_edges($graph), [['lua/other', 'lua/pkg']], 'fixture produces only the expected edge');
 };
 
+# Cargo link tables: inline and sub-table entries in [dependencies],
+# [build-dependencies] and their target forms are edges; dev-dependencies,
+# [patch], registry entries, features and comments are not.
+subtest 'shared Rust link-table fixture resolves the exact edges' => sub {
+    my $case = load_case('resolution-rust-field-aware.json');
+    my $root = materialize_case($case);
+    my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
+    $discovery->discover();
+    my @rust = grep { $_->{language} eq 'rust' } @{ $discovery->packages() };
+    my $graph = CodingAdventures::BuildTool::Resolver->new()->resolve(\@rust);
+    my @expected = sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] }
+        @{ $case->{expected}{result}{edges} };
+    is(graph_edges($graph), \@expected, 'fixture produces exactly the expected edges');
+};
+
 subtest 'shared invalid UTF-8 fixture fails closed with typed metadata' => sub {
     my $root = materialize_case(load_case('resolution-lua-invalid-utf8.json'));
     my $manifest = 'code/packages/lua/pkg/coding-adventures-pkg-0.1.0-1.rockspec';

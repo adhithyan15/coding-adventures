@@ -151,6 +151,10 @@ defmodule BuildTool.CLI do
         error in Discovery.DuplicatePackageIdentityError ->
           IO.puts(:stderr, Exception.message(error))
           2
+
+        error in Resolver.DependencySelfEdgeError ->
+          IO.puts(:stderr, Exception.message(error))
+          2
       end
     end
   end

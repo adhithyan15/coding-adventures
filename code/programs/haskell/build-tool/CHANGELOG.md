@@ -12,6 +12,28 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: the bracket scanner's state (depth, open string,
+  pending escape) is carried from line to line instead of rescanning the
+  growing value, which was quadratic. Candidate names are de-duplicated with
+  `Data.Set` instead of `nub`. Quoted field and sub-table keys
+  (`a = { "path" = "../a" }`, `'package' = "..."`) are read as the bare key,
+  per the amended contract. A Cargo path entry that resolves to the crate
+  itself is now `DEPENDENCY_SELF_EDGE` (exported `DependencySelfEdgeError`,
+  exit status 2) instead of being dropped. 11 new one-shape Hspec examples
+  (57), plus linear-time, de-duplication and self-edge examples.
+
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form. Headers are split into dotted-key
+  segments outside strings, so quoted cfgs with dots, commas and `=` stay one
+  segment; table names compare case-sensitively; inline values whose arrays
+  continue onto later lines are joined; `path` and `package` field keys must
+  be exact. This follows the corrected conformance contract and matches the
+  Go reader on every tracked `Cargo.toml`. `rustDependencyTokens` is exported
+  and covered by 46 one-shape Hspec examples.
+
 - Classify discovery language and package/program identity from the configured
   code-root bucket, preserving basename case and rejecting borrowed ancestor or
   later language names. Exclude the leading specification subtree before BUILD

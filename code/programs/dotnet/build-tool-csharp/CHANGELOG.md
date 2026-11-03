@@ -2,6 +2,51 @@
 
 ## Unreleased
 
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: a `TomlBracketScanner` carries the bracket
+  depth, the open string's delimiter and a pending escape from line to line
+  (so a string left open at a line end still continues after the joining
+  space), and the pieces are joined once, instead of rescanning the growing
+  value with `+=` for every appended line, which was quadratic. Quoted field
+  and sub-table keys (`a = { "path" = "../a" }`, `'package' = "..."`) are
+  read as the bare key, compared verbatim and case-sensitively, per the
+  amended contract. A Cargo path entry that resolves to the crate itself now
+  throws `DependencySelfEdgeException` (`DEPENDENCY_SELF_EDGE`,
+  repository-relative manifest; `RunAsync` writes the diagnostic to stderr
+  and exits 2) instead of a silently drawn self-loop. The `[package]` `name`
+  reader uses `[ \t]*` instead of a multi-line `\s*`, which backtracked
+  quadratically over a run of blank lines. Tests: the 11 new one-shape cases
+  (57), a 20,000-line continuation, 100,000 blank lines before an
+  unterminated and a real name, self-edges by alias, by name and from a
+  target table, and a front-door exit-2 test.
+- Rust resolution now reads path dependencies from `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three link
+  tables, not just the top-level `[dependencies]`, and reads the
+  `[dependencies.<name>]` sub-table form. A change to a crate used only by a
+  build script or on one target now rebuilds its dependents. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md`
+  (`Resolver.CargoLinkDependencyNames`): headers are split into dotted-key
+  segments outside strings (quoted cfgs stay one segment, table names compare
+  case-sensitively, `[[...]]` and malformed headers end the table); comments
+  are stripped outside strings; inline values whose arrays continue onto
+  later lines are joined; `path` and `package` field keys must be exact and
+  hold one non-empty string; names are ASCII-lowercased and deduplicated.
+  Dev-dependencies (every form), `[patch]`, `[replace]`, `[workspace]` and
+  registry entries add no edge.
+- The old reader counted any `[dependencies]` line mentioning `path` and
+  looked up the entry key, so `x = { version = "1", features = ["path"] }`
+  drew an edge and a `package` rename was ignored
+  (`os-kernel = { package = "os-kernel-simulator", ... }` pointed at
+  `rust/os-kernel`). Both are fixed. On the real repository the forced plan
+  gains 121 edges and loses that one; its edges into Rust and WASM packages
+  then equal the Go tool's (bar one TypeScript edge from Go's cross-language
+  resolution).
+- Tests: the 46 one-shape cases of the Go reference
+  `TestCargoLinkDependencyNames` as a theory, duplicate collapse, and
+  build/target/renamed sub-table edges against dev and patch tables. The
+  reader returns the same dependency names as the Go reader for all 1,650
+  tracked `Cargo.toml` files.
+
 - Added a process-free typed CI-gate registry evaluator with deterministic
   all-gate verdicts, nullable-snapshot fail-open behavior, portable glob
   selection, shared-pattern Unicode-scalar 50-million-unit preflight, and

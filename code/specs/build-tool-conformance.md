@@ -687,15 +687,145 @@ normalization: each run of hyphens, underscores, or periods becomes one hyphen
 before internal-package lookup. Extras, version specifiers, and environment
 markers do not form part of the normalized distribution name.
 
-For Rust `Cargo.toml` manifests, dependency candidates come only from inline
-entries in the top-level `[dependencies]` table whose value contains a `path`
-assignment. The dependency key before the first `=` is matched against known
-Cargo package names unless the inline table provides a quoted `package`
-override, in which case that published package name is authoritative. Resolvers
-ignore `[package]`, `[lib]`, features, workspace
-metadata, dev dependencies, build dependencies, target-specific dependency
-tables, non-path registry dependencies, comments, and every other field or
-table. Reaching any new TOML table ends the authoritative dependency table.
+For Rust `Cargo.toml` manifests, dependency candidates come from entries with
+a `path` field in the tables that link into, or build, the crate itself:
+`[dependencies]`, `[build-dependencies]` and its legacy spelling
+`[build_dependencies]`, and the same three tables under `[target.<cfg>.…]` for
+every `<cfg>`. A build dependency counts because it is compiled into the
+crate's build script, so changing it can change the crate. Target tables
+count for every configuration at once, as a union, because CI builds on
+several hosts and any of them may compile the entry. Dev dependencies do not
+count in any form: they link only into tests, examples and benches, and Cargo
+allows a dev-dependency cycle that would fail every build as a graph edge. The
+Go reference tool records them in a separate test-trigger relation instead
+(`12-build-system.md`). Resolvers read the manifest with the line procedure
+below; anything it does not describe contributes nothing.
+
+1. *Lines.* Split the text at LF and drop one trailing CR from each line; a
+   leading UTF-8 byte-order mark is ignored. A *string* is a basic string
+   `"..."`, in which a backslash makes the next character part of the string
+   (so `\"` does not end it), or a literal string `'...'`, which has no
+   escapes. Strings never span lines. On each line the comment begins at the
+   first `#` outside a string and is removed, and then leading and trailing
+   spaces and tabs are trimmed.
+2. *Headers.* A trimmed line that begins with `[` and ends with `]` is a
+   header. Every header ends the current table, including a header that is
+   malformed or that this contract does not read; the end of the file ends it
+   too. A header that begins with `[[` is an array of tables and opens no read
+   table. Otherwise the text between the outer brackets is split into
+   segments at each `.` outside a string. Each segment, trimmed of spaces and
+   tabs, must be a bare key (one or more ASCII letters, digits, `_` or `-`)
+   or exactly one complete string, whose value is the text between its
+   delimiters, verbatim (escapes are not decoded). An empty or otherwise
+   malformed segment, or an unterminated string, makes the header malformed.
+   With `D` standing for `dependencies`, `build-dependencies` or
+   `build_dependencies`, compared exactly and case-sensitively, exactly these
+   segment lists open a read table:
+   - `[D]` and `[target.C.D]` open an *inline dependency table*;
+   - `[D.N]` and `[target.C.D.N]` open a *dependency sub-table* for the
+     dependency key `N`.
+
+   Here `target` is the literal segment `target`, `C` is any one segment (a
+   quoted cfg such as `'cfg(any(unix, windows))'`, whose dots, commas and
+   parentheses lie inside the string, or a bare target triple such as
+   `x86_64-unknown-linux-gnu`), and `N` is any one segment. Because segment
+   values are compared rather than raw text, `["dependencies"]` and
+   `[target."cfg(unix)".build-dependencies]` are read. Every other segment
+   list opens no read table: `[package]`, `[features]`,
+   `[dev-dependencies]`, `[dev_dependencies]`, `[target.C.dev-dependencies]`,
+   `[D.N.features]`, `[target.C]`, `[patch.crates-io]`, `[replace]`,
+   `[workspace.dependencies]`, and so on.
+3. *Inline entries.* In an inline dependency table, each line that is not a
+   header and contains `=` outside strings is an entry. Its key is the
+   trimmed text before the first such `=`, and must be a bare key or exactly
+   one complete string (taken as its value, as in headers); a dotted key such
+   as `foo.path = "../foo"`, or any other key shape, contributes nothing. Its
+   value is the trimmed text after that `=`, and must begin with `{`; any
+   other value (a version string such as `serde = "1"`, or an array)
+   contributes nothing. If a `{` or `[` outside strings in the value is still
+   unclosed at the end of the line, the following lines are appended to it,
+   each comment-stripped and trimmed as in step 1 and joined with one space,
+   until every `{` and `[` the value opened is closed; lines consumed this way
+   are never examined as headers or entries. TOML 1.0 allows exactly this for
+   an array inside an inline table, and the repository writes
+   `name = { path = "...", features = [` with the array on later lines. If
+   the file ends first, the entry contributes nothing. The brackets are
+   counted over the joined value as one text: a string still open at the end
+   of one line continues after the joining space (a backslash ending a basic
+   string's line makes that space part of the string), and the count resumes
+   where the string closes. Each line's comment was still removed on its
+   own, in step 1. A reader should carry its scanning state from one line to
+   the next rather than rescan the joined value for every line it appends,
+   because rescanning is quadratic in a long entry; either way the result is
+   the same. The completed value must end with `}`. The text between the
+   outer braces is split into fields at each `,` that is outside strings and
+   not nested inside `[...]` or `{...}`. A field's key is the trimmed text
+   before its first `=` outside strings, and must be a bare key or exactly
+   one complete string, taken as its value verbatim exactly as entry keys
+   and header segments are. So `path`, `"path"` and `'path'` are all the key
+   `path`, while `Path`, `"Path"`, `"pa\u0074h"` (escapes are not decoded)
+   and a dotted key such as `path.x` are not, and a field whose key has any
+   other shape contributes nothing. The entry is a candidate only if a field
+   has the key `path`, compared exactly and case-sensitively, and its trimmed
+   value is exactly one non-empty string. The candidate's name is the value
+   of the first field with the key `package` (compared the same way) whose
+   trimmed value is exactly one non-empty string, if there is such a field,
+   and the entry key otherwise. Fields inside a nested table, such as
+   `x = { path = "..." }` as the value of a field, are not fields of the
+   entry.
+4. *Sub-table entries.* In a dependency sub-table, a line `K = V` whose key
+   `K` is a bare key or exactly one complete string (taken as its value, as
+   in step 3) equal to `path` or `package`, compared exactly and
+   case-sensitively, and whose trimmed value `V` is exactly one non-empty
+   string, sets that field. So `"path" = "../a"` and `'path' = "../a"` set
+   `path`, and `Path = "../a"` sets nothing. The first such line for a key
+   wins and every other line is ignored. When the sub-table ends it is a
+   candidate if `path` was set, named by `package` if that was set and by
+   `N` otherwise.
+5. *Matching.* Each candidate name is ASCII-lowercased and matched against
+   the known Cargo package names, which are the package directory alias and
+   the `[package]` `name`. A `package` rename is authoritative: the entry key
+   of a renamed entry is not looked up. Candidates from every read table are
+   united, and duplicates collapse to one edge. A registry-only entry (one
+   without `path`), `git`, `version`, `workspace = true`, `optional`,
+   `default-features` and `features` fields (a feature list that names a
+   package included), comments, and every other key, field or table
+   contribute nothing. A candidate that resolves to the package itself is
+   rejected as `DEPENDENCY_SELF_EDGE`, as in every ecosystem: it is neither
+   dropped nor drawn.
+
+These shapes are out of scope: a conforming reader need not handle them, the
+shared fixtures do not use them, and the repository's manifests avoid them.
+They are multi-line strings (`"""` or `'''`) and everything inside them,
+including a line inside one that looks like a header (this procedure would
+end the table there); dotted keys that spell a dependency or a dependency
+table (`foo.path = "..."` in an inline dependency table, `x.y = "..."` in a
+dependency sub-table, `dependencies.foo.path = "..."` at the root, or
+`dependencies.foo = { ... }` under `[target.<cfg>]`); inline tables that
+spell a dependency table (`build-dependencies = { foo = { path = "..." } }`
+under `[target.<cfg>]`, `target = { ... }` at the root); a multi-line value
+with a continuation line that begins with `[` and ends with `]` (which this
+procedure reads as a header) when that value is not the continuation of an
+inline dependency entry; and escape sequences in keys and header segments,
+which are compared verbatim. Out of scope means that a lenient reader
+following this procedure may drop, or invent, an edge for such a manifest.
+CI does not depend on that: the Go reference tool, which is the tool CI
+plans with, also reads every Rust and WASM package manifest with a strict,
+fail-closed reader (`12-build-system.md`). That reader refuses a manifest
+that uses a multi-line string anywhere, and one that writes into
+`[dependencies]`, `[build-dependencies]`, `[build_dependencies]` or a
+`[target.<cfg>.…]` form of them in any shape this procedure does not model
+(including every dotted-key and inline-table shape above), so such a
+manifest stops the plan instead of silently losing an edge. It also refuses
+workspace inheritance in those tables (`name = { workspace = true }`, or a
+`workspace` key in a `[D.N]` sub-table, quoted or not): Cargo takes such an
+entry's path from the workspace root's `[workspace.dependencies]`, which
+this procedure never reads, so under step 5 it would contribute nothing
+while Cargo links it. Shared fixtures also avoid
+`[dev-dependencies.<name>]` and `[target.<cfg>.dev-dependencies.<name>]`
+sub-tables: they contribute no edge under this contract, but the Go reference
+tool's separate fail-closed test-trigger reader refuses them, so such a case
+would fail there instead of proving an absent edge.
 
 For Ruby `.gemspec` manifests, dependency candidates come only from the first
 quoted gem-name argument of `add_dependency` and `add_runtime_dependency`

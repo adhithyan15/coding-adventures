@@ -32,6 +32,19 @@ func TestFormatResolverErrorUsesStableMetadataDiagnostic(t *testing.T) {
 	}
 }
 
+func TestFormatResolverErrorUsesStableSelfEdgeDiagnostic(t *testing.T) {
+	message, exitCode := formatResolverError(&resolver.DependencySelfEdgeError{
+		Code:       "DEPENDENCY_SELF_EDGE",
+		Package:    "rust/pkg",
+		Manifest:   "code/packages/rust/pkg/Cargo.toml",
+		Dependency: "rust/pkg",
+	})
+	want := "DEPENDENCY_SELF_EDGE: package=rust/pkg manifest=code/packages/rust/pkg/Cargo.toml dependency=rust/pkg"
+	if exitCode != 2 || message != want {
+		t.Fatalf("self-edge diagnostic = (%q, %d), want (%q, 2)", message, exitCode, want)
+	}
+}
+
 func TestFormatResolverErrorKeepsOperationalFailuresDistinct(t *testing.T) {
 	message, exitCode := formatResolverError(errors.New("resolver failed"))
 	if exitCode != 1 || message != "Error: resolver failed" {

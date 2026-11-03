@@ -70,6 +70,52 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 
+- `DEPENDENCY_SELF_EDGE` diagnostics cut the manifest path at the **last**
+  `code/packages/` or `code/programs/` pair (security review, round 2). The
+  first match printed the checkout's own directory when the repository sits
+  under a directory that itself holds such a pair; the self-edge tests now
+  place the checkout under `code/packages/checkout/` to pin it.
+- Cargo link-table security fixes. Inline values continuing onto later lines
+  are joined in linear time: `_toml_bracket_scan` carries the bracket depth,
+  the open string's delimiter and a pending escape from line to line (so a
+  string left open at a line end still continues after the joining space),
+  and the pieces are joined once, instead of rescanning the growing value
+  for every appended line, which was quadratic. Quoted field and sub-table
+  keys (`a = { "path" = "../a" }`, `'package' = "..."`) are read as the bare
+  key, compared verbatim and case-sensitively, per the amended contract. A
+  Cargo path entry that resolves to the crate itself is now a
+  `CodingAdventures::BuildTool::DependencySelfEdgeError`
+  (`DEPENDENCY_SELF_EDGE`, repository-relative manifest; the CLI exits 2)
+  instead of a silently drawn self-loop. Tests: the 11 new one-shape cases
+  (57, now with a row-count assert), a 20,000-line continuation, 100,000
+  blank lines before the `[package]` name, self-edges by alias, by name and
+  from a target table, and a real CLI exit-2 test.
+- Rust resolution now follows the Cargo link-table contract: path
+  dependencies count in `[dependencies]`, `[build-dependencies]`,
+  `[build_dependencies]` and every `[target.<cfg>.…]` form of the three, in
+  both the inline and the `[dependencies.<name>]` sub-table form, and in no
+  other table. This implements
+  the Rust line procedure of `code/specs/build-tool-conformance.md`, ported
+  from the Go reference: headers are split into dotted-key segments outside
+  strings (quoted cfgs stay one segment, table names compare case-sensitively,
+  `[[...]]` and malformed headers end the table); comments are stripped
+  outside strings; inline values whose arrays continue onto later lines are
+  joined; `path` and `package` field keys must be exact and hold one non-empty
+  string; names are ASCII-lowercased and deduplicated. Dev-dependencies (every
+  form), `[patch]`, `[replace]`, `[workspace]` and registry entries add no
+  edge.
+- The old reader matched every `name = { ... path = ...` line in the whole
+  manifest, so `[dev-dependencies]`, `[patch]` and `[workspace]` path
+  entries drew edges, while sub-tables, quoted keys and `package` renames
+  were missed. All of these now follow the contract.
+- Tests: `t/17-cargo-link-tables.t` runs the 46 one-shape cases of the Go
+  reference `TestCargoLinkDependencyNames`, a raw-byte BOM/CRLF manifest,
+  duplicate collapse and the declared-name alias;
+  `t/13-resolution-utf8.t` reads the shared
+  `resolution-rust-field-aware.json` fixture. The reader returns the same
+  dependency names as the Go reader for all 1,650 tracked `Cargo.toml`
+  files.
+
 - The emitted-Perl verifier requires an explicit reviewed Perl 5.38.2
   executable, uses taint mode with a minimal environment and no ambient Perl
   module paths, retains at most 8 KiB from each child stream, and unconditionally

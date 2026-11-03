@@ -1,6 +1,7 @@
 module BuildTool
     ( BuildResult(..)
     , Config(..)
+    , DependencySelfEdgeError(..)
     , MetadataEncodingError(..)
     , OrphanBuildFile(..)
     , OrphanDiagnostic(..)
@@ -21,8 +22,10 @@ module BuildTool
     , hashSourceSnapshot
     , inferLanguage
     , parseArgs
+    , renderDependencySelfEdgeError
     , renderMetadataEncodingError
     , resolveDependencies
+    , rustDependencyTokens
     , runWithArgs
     , trackedArtifactUnicodeVersion
     , validateOrphanCrateSnapshot
@@ -37,7 +40,7 @@ import qualified Data.Aeson.Key as Key
 import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString as BS
 import Data.Char (isAlpha, isAlphaNum, isAsciiLower, isAsciiUpper, isSpace, ord, toLower)
-import Data.List (intercalate, isInfixOf, isPrefixOf, nub, sort, sortOn, tails)
+import Data.List (foldl', intercalate, isInfixOf, isPrefixOf, nub, sort, sortOn, tails)
 import qualified Data.Map.Strict as Map
 import Data.Map.Strict (Map)
 import Data.Maybe (fromMaybe, isJust, listToMaybe, mapMaybe, maybeToList)
@@ -131,6 +134,23 @@ instance Show MetadataEncodingError where
     show = renderMetadataEncodingError
 
 instance Exception MetadataEncodingError
+
+-- | A package whose own manifest resolves the package itself as a
+-- dependency. The conformance contract rejects it as @DEPENDENCY_SELF_EDGE@
+-- (never dropped, never drawn); the manifest path is repository-relative so
+-- the diagnostic does not disclose the checkout root.
+data DependencySelfEdgeError = DependencySelfEdgeError
+    { selfEdgeErrorCode :: String
+    , selfEdgeErrorPackage :: String
+    , selfEdgeErrorManifest :: FilePath
+    , selfEdgeErrorDependency :: String
+    }
+    deriving (Eq)
+
+instance Show DependencySelfEdgeError where
+    show = renderDependencySelfEdgeError
+
+instance Exception DependencySelfEdgeError
 
 newtype PackageHashError = PackageHashError String
     deriving (Eq)
@@ -699,6 +719,16 @@ renderMetadataEncodingError metadataError =
         , "encoding=" ++ metadataErrorEncoding metadataError
         ]
 
+renderDependencySelfEdgeError :: DependencySelfEdgeError -> String
+renderDependencySelfEdgeError selfEdgeError =
+    intercalate
+        " "
+        [ selfEdgeErrorCode selfEdgeError ++ ":"
+        , "package=" ++ selfEdgeErrorPackage selfEdgeError
+        , "manifest=" ++ selfEdgeErrorManifest selfEdgeError
+        , "dependency=" ++ selfEdgeErrorDependency selfEdgeError
+        ]
+
 data Package = Package
     { packageName :: String
     , packagePath :: FilePath
@@ -835,12 +865,18 @@ runWithArgs rawArgs =
             putStrLn versionString
             pure 0
         Right (ParsedRun cfg) ->
-            (runBuild cfg `catch` handleMetadataEncodingError)
+            ((runBuild cfg `catch` handleMetadataEncodingError)
+                `catch` handleDependencySelfEdgeError)
                 `catch` handlePackageHashError
 
 handleMetadataEncodingError :: MetadataEncodingError -> IO Int
 handleMetadataEncodingError metadataError = do
     hPutStrLn stderr (renderMetadataEncodingError metadataError)
+    pure 2
+
+handleDependencySelfEdgeError :: DependencySelfEdgeError -> IO Int
+handleDependencySelfEdgeError selfEdgeError = do
+    hPutStrLn stderr (renderDependencySelfEdgeError selfEdgeError)
     pure 2
 
 handlePackageHashError :: PackageHashError -> IO Int
@@ -1375,14 +1411,38 @@ resolvePackageDeps aliasScopes pkg = do
     tokens <- readManifestTokens pkg
     let scope = dependencyScope (packageLanguage pkg)
     let aliases = Map.findWithDefault Map.empty scope aliasScopes
-    pure
-        ( nub
-            [ resolved
-            | token <- tokens
-            , Just resolved <- [Map.lookup token aliases]
-            , resolved /= packageName pkg
+    let resolved = [dependency | token <- tokens, Just dependency <- [Map.lookup token aliases]]
+    -- A Cargo manifest that names its own crate (by directory alias or by
+    -- [package] name) is the contract's DEPENDENCY_SELF_EDGE: reject it
+    -- rather than drop it. (Other ecosystems still drop a self-reference
+    -- here; the Rust paragraph of build-tool-conformance.md is the one this
+    -- reader was brought in line with.)
+    when (packageLanguage pkg == "rust" && packageName pkg `elem` resolved) $
+        throwIO
+            DependencySelfEdgeError
+                { selfEdgeErrorCode = "DEPENDENCY_SELF_EDGE"
+                , selfEdgeErrorPackage = packageName pkg
+                , selfEdgeErrorManifest = repositoryManifestPath (packagePath pkg </> "Cargo.toml")
+                , selfEdgeErrorDependency = packageName pkg
+                }
+    pure (nub [dependency | dependency <- resolved, dependency /= packageName pkg])
+
+-- | The repository-relative spelling of a manifest path: everything from the
+-- last @code/packages@ or @code/programs@ pair of components on, or just the
+-- file name when there is none — the same rule as the Go and Rust tools, so
+-- a diagnostic never discloses the checkout root.
+repositoryManifestPath :: FilePath -> FilePath
+repositoryManifestPath path =
+    let parts = splitDirectories (normalise path)
+        starts =
+            [ index
+            | (index, part : next : _) <- zip [0 :: Int ..] (tails parts)
+            , part == "code"
+            , next `elem` ["packages", "programs"]
             ]
-        )
+     in case starts of
+            [] -> takeFileName path
+            _ -> intercalate "/" (drop (last starts) parts)
 
 readBuildToolDeps :: Set String -> Package -> IO [String]
 readBuildToolDeps knownPackageNames pkg = do
@@ -1843,44 +1903,293 @@ readRustDependencyTokens pkg = do
             contents <- readFileStrict cargoPath
             pure (rustDependencyTokens contents)
 
+-- | The Cargo package names a @Cargo.toml@ declares as path dependencies in
+-- the tables Cargo compiles into the crate, lowercased and de-duplicated.
+--
+-- This is the Rust paragraph of @code/specs/build-tool-conformance.md@,
+-- pinned by the shared @resolution/rust-field-aware@ case:
+--
+-- > table                                edge?  why
+-- > -----------------------------------  -----  ------------------------------
+-- > [dependencies]                       yes    linked into the library
+-- > [build-dependencies]                 yes    compiled into build.rs
+-- > [build_dependencies]                 yes    legacy spelling of the above
+-- > [target.<cfg>.<one of the above>]    yes    union over every cfg: CI
+-- >                                             builds on several hosts
+-- > [dev-dependencies] (every form)      no     tests only; Cargo allows dev
+-- >                                             cycles
+-- > [patch], [replace], [workspace], ..  no     not a dependency of the crate
+--
+-- Both spellings of an entry are read:
+--
+-- > [dependencies]
+-- > gates = { package = "logic-gates", path = "../logic-gates" }   -- inline
+-- >
+-- > [dependencies.logic-gates]                                     -- sub-table
+-- > path = "../logic-gates"
+--
+-- The reader is one pass over comment-stripped, trimmed lines with a
+-- three-state machine ('CargoLinkTable'). Every header line ends the current
+-- table (that is when a sub-table's entry is complete, since its @path@ and
+-- @package@ keys may come in either order), and an inline value whose
+-- brackets are still open at the end of its line swallows the following
+-- lines until they close — TOML 1.0 lets an array inside an inline table
+-- span lines, and the repository relies on it.
+--
+-- The result is de-duplicated with a set, keeping first occurrences in
+-- order: @nub@ is quadratic in the number of candidates, and a crafted
+-- manifest can hold tens of thousands.
 rustDependencyTokens :: String -> [String]
-rustDependencyTokens = nub . collect False . lines
+rustDependencyTokens contents =
+    distinct Set.empty (scan CargoIgnoredTable (map cleanCargoLine (lines (dropByteOrderMark contents))))
   where
-    collect _ [] = []
-    collect inDependencies (rawLine : rest) =
-        let stripped = trim (stripTomlComment rawLine)
-         in case tomlSectionName stripped of
-                Just sectionName -> collect (sectionName == "dependencies") rest
-                Nothing ->
-                    if inDependencies
-                        then maybeToList (rustDependencyToken stripped) ++ collect True rest
-                        else collect False rest
+    distinct _ [] = []
+    distinct seen (name : rest)
+        | name `Set.member` seen = distinct seen rest
+        | otherwise = name : distinct (Set.insert name seen) rest
 
-rustDependencyToken :: String -> Maybe String
-rustDependencyToken stripped =
-    let (dependencyKey, assignment) = break (== '=') stripped
-        dependencyValue = drop 1 assignment
-        normalizedKey = map toLower (trim dependencyKey)
-        resolvedKey =
-            map toLower
-                (fromMaybe normalizedKey (cargoInlineStringValue "package" dependencyValue))
-     in if null assignment
-            || null normalizedKey
-            || not (hasCargoPathAssignment dependencyValue)
-            then Nothing
-            else Just resolvedKey
+    dropByteOrderMark ('\xFEFF' : rest) = rest
+    dropByteOrderMark text = text
 
-cargoInlineStringValue :: String -> String -> Maybe String
-cargoInlineStringValue fieldName value =
-    listToMaybe
-        [ quotedValue
-        | field <- splitCargoInlineFields value
-        , let withoutOpeningBrace = dropWhile (`elem` [' ', '\t', '{']) field
-        , let (key, assignment) = break (== '=') withoutOpeningBrace
-        , map toLower (trim key) == fieldName
-        , not (null assignment)
-        , quotedValue <- take 1 (extractQuotedValues (drop 1 assignment))
-        ]
+    scan table [] = finishCargoTable table
+    scan table (line : rest)
+        | isCargoHeaderLine line = finishCargoTable table ++ scan (classifyCargoLinkHeader line) rest
+    scan CargoIgnoredTable (_ : rest) = scan CargoIgnoredTable rest
+    scan CargoInlineTable (line : rest) =
+        case breakTomlOutsideStrings '=' line of
+            Just (key, rawValue)
+                | let value = trimSpacesAndTabs rawValue
+                , "{" `isPrefixOf` value ->
+                    case joinCargoContinuation value rest of
+                        Nothing -> [] -- the file ended inside the value
+                        Just (fullValue, remaining) ->
+                            maybeToList (cargoPathDependencyName key fullValue)
+                                ++ scan CargoInlineTable remaining
+            _ -> scan CargoInlineTable rest
+    scan table@(CargoSubTable key path package) (line : rest) =
+        case breakTomlOutsideStrings '=' line of
+            Just (field, rawValue)
+                | Just value <- tomlSingleString rawValue ->
+                    -- The key is decoded, so @"path"@ and @'path'@ are the
+                    -- key @path@; @Path@ is not (TOML keys are
+                    -- case-sensitive). The first occurrence of each wins.
+                    case tomlKeySegment field of
+                        Just "path" -> scan (CargoSubTable key (firstJust path value) package) rest
+                        Just "package" -> scan (CargoSubTable key path (firstJust package value)) rest
+                        _ -> scan table rest
+            _ -> scan table rest
+
+    firstJust existing value = maybe (Just value) Just existing
+
+    -- Join the continuation lines of an inline value in linear time: the
+    -- scanner state is carried from piece to piece (never rescanning the
+    -- growing value, which is quadratic in a long entry), the pieces are
+    -- collected newest-first, and they are joined once at the end.
+    joinCargoContinuation value = go (scanTomlBrackets tomlBracketScanStart value) [value]
+      where
+        go scanState pieces remaining
+            | tomlBracketScanDepth scanState <= 0 = Just (intercalate " " (reverse pieces), remaining)
+            | otherwise =
+                case remaining of
+                    [] -> Nothing
+                    next : more ->
+                        go (scanTomlBrackets (scanTomlBrackets scanState " ") next) (next : pieces) more
+
+-- | How the lines under the current header are read.
+data CargoLinkTable
+    = CargoIgnoredTable
+      -- ^ not a link table; its lines are skipped
+    | CargoInlineTable
+      -- ^ @[D]@ or @[target.C.D]@: one inline entry per line
+    | CargoSubTable String (Maybe String) (Maybe String)
+      -- ^ @[D.N]@ or @[target.C.D.N]@: the key N, and @path@ / @package@ so far
+
+finishCargoTable :: CargoLinkTable -> [String]
+finishCargoTable (CargoSubTable key (Just _) package) = [map toLower (fromMaybe key package)]
+finishCargoTable _ = []
+
+-- | Step 1 of the contract: drop one trailing CR, remove the comment (the
+-- first @#@ outside a string), trim spaces and tabs.
+cleanCargoLine :: String -> String
+cleanCargoLine rawLine =
+    let withoutCarriageReturn
+            | not (null rawLine) && last rawLine == '\r' = init rawLine
+            | otherwise = rawLine
+     in trimSpacesAndTabs (stripTomlComment withoutCarriageReturn)
+
+isCargoHeaderLine :: String -> Bool
+isCargoHeaderLine line = "[" `isPrefixOf` line && "]" `isSuffixOfString` line
+  where
+    isSuffixOfString suffix text = reverse suffix `isPrefixOf` reverse text
+
+-- | Classify a header line. It is split into dotted-key segments at every
+-- @.@ outside a string and each segment is decoded, so a quoted cfg stays one
+-- segment however much punctuation it holds:
+--
+-- > [target.'cfg(any(target_os = "linux", windows))'.dependencies]
+-- >  target  C (one quoted segment)                    D
+--
+-- Exactly @[D]@, @[D.N]@, @[target.C.D]@ and @[target.C.D.N]@ are read;
+-- arrays of tables, malformed headers and every other segment list are not.
+classifyCargoLinkHeader :: String -> CargoLinkTable
+classifyCargoLinkHeader line
+    | "[[" `isPrefixOf` line = CargoIgnoredTable
+    | otherwise =
+        case mapM tomlKeySegment (splitTomlOutsideStrings '.' False (init (drop 1 line))) of
+            Nothing -> CargoIgnoredTable
+            Just segments ->
+                case withoutTarget segments of
+                    [table] | isCargoLinkTableName table -> CargoInlineTable
+                    [table, key] | isCargoLinkTableName table -> CargoSubTable key Nothing Nothing
+                    _ -> CargoIgnoredTable
+  where
+    withoutTarget ("target" : _cfg : rest@(_ : _)) = rest
+    withoutTarget segments = segments
+
+-- | Compared exactly: TOML keys are case-sensitive.
+isCargoLinkTableName :: String -> Bool
+isCargoLinkTableName name = name `elem` ["dependencies", "build-dependencies", "build_dependencies"]
+
+-- | The crate a complete inline entry @key = { ... }@ names, if it is a path
+-- dependency. Fields are split at commas outside strings and outside nested
+-- @[...]@ / @{...}@, so a @features@ array cannot leak a fake field and a
+-- nested table's @path@ is not the entry's. A field key is decoded like an
+-- entry key, so @"path"@ and @'path'@ are the key @path@; the decoded key
+-- must then be exactly @path@ or @package@ (Cargo ignores @Package@).
+--
+-- > logic-gates = { path = "../logic-gates" }                    -> logic-gates
+-- > gates = { package = "logic-gates", path = "../logic-gates" } -> logic-gates
+-- > x = { version = "1", features = ["path"] }                   -> none
+-- > a = { "path" = "../a" }                                      -> a
+cargoPathDependencyName :: String -> String -> Maybe String
+cargoPathDependencyName rawKey rawValue = do
+    key <- tomlKeySegment rawKey
+    let value = trimSpacesAndTabs rawValue
+    if length value >= 2 && head value == '{' && last value == '}'
+        then Just ()
+        else Nothing
+    let fields =
+            [ (fieldKey, fieldValue)
+            | field <- splitTomlOutsideStrings ',' True (init (drop 1 value))
+            , Just (rawFieldKey, rawFieldValue) <- [breakTomlOutsideStrings '=' field]
+            , Just fieldValue <- [tomlSingleString rawFieldValue]
+            , Just fieldKey <- [tomlKeySegment rawFieldKey]
+            ]
+    _ <- lookup "path" fields
+    pure (map toLower (fromMaybe key (lookup "package" fields)))
+
+-- | Split a string token off the front of the text: @Just (token, rest)@
+-- when the text starts with a closed @"..."@ or @'...'@ string. In a basic
+-- string a backslash makes the next character part of it, so @\\"@ does not
+-- end it; literal strings have no escapes.
+takeTomlString :: String -> Maybe (String, String)
+takeTomlString (quote : body)
+    | quote == '"' || quote == '\'' = go [quote] body
+  where
+    go accumulated ('\\' : escaped : rest)
+        | quote == '"' = go (escaped : '\\' : accumulated) rest
+    go accumulated (character : rest)
+        | character == quote = Just (reverse (character : accumulated), rest)
+        | otherwise = go (character : accumulated) rest
+    go _ [] = Nothing
+takeTomlString _ = Nothing
+
+-- | Break at the first target character outside strings.
+breakTomlOutsideStrings :: Char -> String -> Maybe (String, String)
+breakTomlOutsideStrings target = go []
+  where
+    go _ [] = Nothing
+    go accumulated text@(character : rest)
+        | character == '"' || character == '\'' =
+            case takeTomlString text of
+                Just (token, remaining) -> go (reverse token ++ accumulated) remaining
+                Nothing -> Nothing
+        | character == target = Just (reverse accumulated, rest)
+        | otherwise = go (character : accumulated) rest
+
+-- | Split at every separator outside strings; with @nested@, also only at
+-- bracket depth zero. An unclosed string runs to the end of the last part.
+splitTomlOutsideStrings :: Char -> Bool -> String -> [String]
+splitTomlOutsideStrings separator nested = go (0 :: Int) []
+  where
+    go _ accumulated [] = [reverse accumulated]
+    go depth accumulated text@(character : rest)
+        | character == '"' || character == '\'' =
+            case takeTomlString text of
+                Just (token, remaining) -> go depth (reverse token ++ accumulated) remaining
+                Nothing -> [reverse accumulated ++ text]
+        | nested && (character == '[' || character == '{') = go (depth + 1) (character : accumulated) rest
+        | nested && (character == ']' || character == '}') = go (depth - 1) (character : accumulated) rest
+        | character == separator && depth == 0 = reverse accumulated : go depth [] rest
+        | otherwise = go depth (character : accumulated) rest
+
+-- | The state of counting the @{@ and @[@ outside strings that are not
+-- closed again, over text fed in pieces: the open count, the delimiter of a
+-- string being scanned (if any), and whether the last character was a
+-- backslash escaping the next one in a basic string. Feeding @"ab"@ and then
+-- @"cd"@ leaves exactly the state feeding @"abcd"@ would, so a string still
+-- open at the end of one line continues after the joining space, as it does
+-- in the joined value:
+--
+-- > feed {x = "q\   depth 1, inside "...", escape pending
+-- > feed " "         the space is escaped: still inside the string
+-- > feed ", p = 1 }  the string closes, } closes the table: depth 0
+--
+-- A depth of zero (or less) means an inline value is complete.
+data TomlBracketScan = TomlBracketScan
+    { tomlBracketScanDepth :: !Int
+    , _tomlBracketScanQuote :: !(Maybe Char)
+    , _tomlBracketScanEscape :: !Bool
+    }
+
+tomlBracketScanStart :: TomlBracketScan
+tomlBracketScanStart = TomlBracketScan 0 Nothing False
+
+scanTomlBrackets :: TomlBracketScan -> String -> TomlBracketScan
+scanTomlBrackets = foldl' step
+  where
+    step (TomlBracketScan depth quote True) _ = TomlBracketScan depth quote False
+    step state@(TomlBracketScan depth (Just quote) False) character
+        | quote == '"' && character == '\\' = TomlBracketScan depth (Just quote) True
+        | character == quote = TomlBracketScan depth Nothing False
+        | otherwise = state
+    step state@(TomlBracketScan depth Nothing False) character
+        | character == '"' || character == '\'' = TomlBracketScan depth (Just character) False
+        | character == '{' || character == '[' = TomlBracketScan (depth + 1) Nothing False
+        | character == '}' || character == ']' = TomlBracketScan (depth - 1) Nothing False
+        | otherwise = state
+
+-- | One key or header segment: a bare key (ASCII letters, digits, @_@, @-@)
+-- or exactly one closed string, whose value is the text between its quotes,
+-- verbatim (escapes are not decoded).
+tomlKeySegment :: String -> Maybe String
+tomlKeySegment raw =
+    case trimSpacesAndTabs raw of
+        [] -> Nothing
+        segment@(first : _)
+            | first == '"' || first == '\'' ->
+                case takeTomlString segment of
+                    Just (token, []) -> Just (init (drop 1 token))
+                    _ -> Nothing
+            | all isBareKeyCharacter segment -> Just segment
+            | otherwise -> Nothing
+  where
+    isBareKeyCharacter character =
+        isAsciiLower character || isAsciiUpper character
+            || (character >= '0' && character <= '9')
+            || character == '_' || character == '-'
+
+-- | The content of a value that is exactly one closed, non-empty string.
+tomlSingleString :: String -> Maybe String
+tomlSingleString raw =
+    case takeTomlString (trimSpacesAndTabs raw) of
+        Just (token, []) | length token > 2 -> Just (init (drop 1 token))
+        _ -> Nothing
+
+trimSpacesAndTabs :: String -> String
+trimSpacesAndTabs = dropWhileEnd isSpaceOrTab . dropWhile isSpaceOrTab
+  where
+    isSpaceOrTab character = character == ' ' || character == '\t'
 
 splitCargoInlineFields :: String -> [String]
 splitCargoInlineFields = go Nothing []
@@ -1895,37 +2204,6 @@ splitCargoInlineFields = go Nothing []
     go (Just quote) current (character : rest)
         | character == quote = go Nothing (character : current) rest
         | otherwise = go (Just quote) (character : current) rest
-
-hasCargoPathAssignment :: String -> Bool
-hasCargoPathAssignment = scan Nothing . map toLower . hideTomlStringContents
-  where
-    scan _ [] = False
-    scan previous remaining@(character : rest)
-        | isCargoPathFieldStart previous remaining = True
-        | otherwise = scan (Just character) rest
-
-    isCargoPathFieldStart previous remaining =
-        "path" `isPrefixOf` remaining
-            && maybe True (not . isCargoKeyCharacter) previous
-            && case dropWhile (`elem` [' ', '\t']) (drop 4 remaining) of
-                '=' : _ -> True
-                _ -> False
-
-isCargoKeyCharacter :: Char -> Bool
-isCargoKeyCharacter character = isAlphaNum character || character `elem` ['_', '-']
-
-hideTomlStringContents :: String -> String
-hideTomlStringContents = go Nothing
-  where
-    go _ [] = []
-    go Nothing (character : rest)
-        | character `elem` ['"', '\''] = ' ' : go (Just character) rest
-        | otherwise = character : go Nothing rest
-    go (Just quote) ('\\' : _escaped : rest)
-        | quote == '"' = ' ' : ' ' : go (Just quote) rest
-    go (Just quote) (character : rest)
-        | character == quote = ' ' : go Nothing rest
-        | otherwise = ' ' : go (Just quote) rest
 
 readRubyDependencyTokens :: Package -> IO [String]
 readRubyDependencyTokens pkg = do
