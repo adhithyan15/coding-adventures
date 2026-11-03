@@ -14297,7 +14297,8 @@ fn parse_c4_arguments(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseErro
                 let value = parse_c4_argument_value(cursor)?;
                 format!("{}={value}", token.value)
             }
-            "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION" => {
+            "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION" | "HEADER"
+            | "ELEMENT_MACRO" | "RELATION_MACRO" | "BOUNDARY_MACRO" | "CONFIG_MACRO" => {
                 parse_c4_argument_value(cursor)?
             }
             _ => return Err(token_error(&token, "expected C4 argument")),
@@ -14313,7 +14314,8 @@ fn parse_c4_argument_value(cursor: &mut TokenCursor) -> Result<String, ParseErro
     let token = cursor.current().clone();
     if !matches!(
         token_name(&token),
-        "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION"
+        "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION" | "HEADER"
+            | "ELEMENT_MACRO" | "RELATION_MACRO" | "BOUNDARY_MACRO" | "CONFIG_MACRO"
     ) {
         return Err(token_error(&token, "expected C4 argument value"));
     }
