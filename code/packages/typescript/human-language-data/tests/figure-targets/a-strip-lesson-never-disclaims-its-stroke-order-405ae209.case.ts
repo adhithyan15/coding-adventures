@@ -15,37 +15,26 @@
 // filmstrip may carry the disclaimer, and lessons with no strip are expected to
 // keep it.
 import { describe, expect, it } from "vitest";
-import { resolvedFigureTargets } from "../../src/figure-cli.js";
-import { defaultCurriculumRoot, loadLessons } from "../../src/loader.js";
+import {
+  realCorpusDisclaimingLessons as disclaimers,
+  realCorpusTargets,
+} from "./real-corpus-fixture.js";
 
-// The template, tolerant of the bold markers and line wrapping it is written
-// with ("does not yet tell you **where to start", across a `> ` line break),
-// plus its heading "— copy what you see".
-const DISCLAIMER = /does not (?:yet )?tell you[\s>*]*where to start|copy what you see/;
+// The disclaimer's pattern is `STROKE_ORDER_DISCLAIMER` in ./strip-prose.ts,
+// matched once per lesson while the shared fixture scans the corpus.
 
 describe("a lesson that prints a filmstrip", () => {
-  const root = defaultCurriculumRoot();
-  const lessons = loadLessons(root);
-  const stripLessons = new Set(
-    resolvedFigureTargets(root, lessons)
-      .filter((target) => target.kind === "script-filmstrip")
-      .map((target) => target.lessonId),
-  );
+  const stripLessons = new Set(realCorpusTargets.map((target) => target.lessonId));
 
   it("never says the book gives no stroke order", () => {
-    const contradicting = lessons
-      .filter((lesson) => stripLessons.has(lesson.realization.lessonId))
-      .filter((lesson) => DISCLAIMER.test(lesson.body))
-      .map((lesson) => lesson.realization.lessonId);
+    const contradicting = [...disclaimers].filter((id) => stripLessons.has(id));
     expect(contradicting).toEqual([]);
   });
 
   it("leaves the honest disclaimer on lessons that still have no strip", () => {
     // A control: if the template's wording drifted, the pattern above would
     // match nothing and the first case would pass vacuously.
-    const disclaiming = lessons.filter(
-      (lesson) => !stripLessons.has(lesson.realization.lessonId) && DISCLAIMER.test(lesson.body),
-    );
+    const disclaiming = [...disclaimers].filter((id) => !stripLessons.has(id));
     expect(disclaiming.length).toBeGreaterThan(0);
   });
 });

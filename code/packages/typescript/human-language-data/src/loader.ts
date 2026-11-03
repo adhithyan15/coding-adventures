@@ -770,6 +770,33 @@ export function loadLessons(
   onCacheKey?: LessonCacheKeyObserver,
 ): ParsedLesson[] {
   const out: ParsedLesson[] = [];
+  forEachTrackLessons(root, (_language, lessons) => out.push(...lessons), onCacheKey);
+  return out;
+}
+
+/**
+ * `loadLessons`, handed over one track at a time instead of concatenated.
+ *
+ * The same tracks, in the same order, through the same guards: `loadLessons` is
+ * this function with a visitor that appends. What differs is what the caller
+ * has to hold. The whole corpus is ~62,000 parsed lessons and well over 2 GB of
+ * heap, and a consumer that derives something small from each lesson — a test
+ * that wants the filmstrip targets, or one boolean per lesson — never needs more
+ * than one track of it alive at once. The visitor receives a fresh array it may
+ * keep, but a caller that keeps every array has rebuilt `loadLessons` and should
+ * call that instead.
+ *
+ * ```
+ * loadLessons:          [arabic ......][bengali ......] ... [urdu ......]   all alive
+ * forEachTrackLessons:  [arabic ......] -> visit -> drop
+ *                                      [bengali ......] -> visit -> drop   one alive
+ * ```
+ */
+export function forEachTrackLessons(
+  root: string,
+  visit: (language: string, lessons: ParsedLesson[]) => void,
+  onCacheKey?: LessonCacheKeyObserver,
+): void {
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) {
       // `Dirent.isDirectory()` is FALSE for a symlink, so a committed
@@ -813,9 +840,8 @@ export function loadLessons(
       }
       continue;
     }
-    out.push(...loadTrackLessons(track.name, root, onCacheKey));
+    visit(track.name, loadTrackLessons(track.name, root, onCacheKey));
   }
-  return out;
 }
 
 /**

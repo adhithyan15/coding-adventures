@@ -17,7 +17,6 @@ import { measureRamp } from "../src/ramp.js";
 // `vocabularyOf` / `verbVocabularyOf` are module-private in level-gate.ts, so the
 // criterion-2b test below mirrors them; CONTENT_TYPES is the filter they share.
 import { CONTENT_TYPES } from "../src/constants.js";
-import { measureContinuity } from "../src/continuity.js";
 import type { ContinuityReport } from "../src/continuity.js";
 import type { WritingStageReport } from "../src/writing-stages.js";
 import {
@@ -64,6 +63,28 @@ function realReport() {
   return REAL_REPORT;
 }
 
+// The report's text, rendered once. Four tests read it; each used to render its own.
+const REAL_RENDERED = renderCurriculumGapReport(REAL_REPORT);
+
+// The level gate's own inputs, read off the report that was just built rather
+// than measured again. `buildCurriculumGapReport` computes `levels`, `ramp` and
+// `continuity` with exactly the calls the tests below used to repeat in their
+// bodies -- `summarizeLevels(lessons, curricula, spine)`,
+// `measureRamp(lessons, loadChapterPolicy())`, `measureContinuity(lessons)`
+// (see `buildLevelGateSections` in src/report.ts) -- and hands them back
+// unchanged. Each of those is a whole-corpus pass, and at ~62,000 lessons the
+// file repeated them about a dozen times inside test bodies, which is what
+// pushed its cases past their budgets. Every test only reads these; a test
+// that needs a variant spreads a copy (`{ ...REAL_GATE_INPUTS, ramp: ... }`).
+const REAL_GATE_INPUTS = {
+  lessons: REAL_EVERYTHING.lessons,
+  levels: REAL_REPORT.levels!,
+  curricula: REAL_EVERYTHING.curricula,
+  spine: REAL_EVERYTHING.spine,
+  ramp: REAL_REPORT.ramp!,
+  continuity: REAL_REPORT.continuity,
+};
+
 // The atom-budget witness, built synthetically and at IMPORT for the same reason
 // REAL_REPORT is. The claim it carries is "a track can attain pre-A1 while an A1
 // lesson is over budget", and the corpus stopped holding a real example when the
@@ -72,14 +93,7 @@ function realReport() {
 // gate again on otherwise identical inputs.
 const SYNTHETIC_WITNESS = (() => {
   const e = REAL_EVERYTHING;
-  const inputs = {
-    lessons: e.lessons,
-    levels: summarizeLevels(e.lessons, e.curricula, e.spine),
-    curricula: e.curricula,
-    spine: e.spine,
-    ramp: measureRamp(e.lessons, loadChapterPolicy()),
-    continuity: measureContinuity(e.lessons),
-  };
+  const inputs = REAL_GATE_INPUTS;
   const baseline = runLevelGate(inputs);
   const track = baseline.tracks
     .filter((t) => t.attained === "A1")
@@ -187,14 +201,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // and a track that has not realized them is refused on that count. The failure
     // names a number instead of a void. (The corpus now exercises the positive case.)
     const e = REAL_EVERYTHING;
-    const gate = runLevelGate({
-      lessons: e.lessons,
-      levels: summarizeLevels(e.lessons, e.curricula, e.spine),
-      curricula: e.curricula,
-      spine: e.spine,
-      ramp: measureRamp(e.lessons, loadChapterPolicy()),
-      continuity: measureContinuity(e.lessons),
-    });
+    const gate = runLevelGate(REAL_GATE_INPUTS);
     const authored = e.spine.nodes.filter((n) => n.stage === "B1");
     expect(authored.length).toBeGreaterThan(0);
     // Authoring a rung does not climb it. No track may attain B1 on an empty ledger.
@@ -245,7 +252,7 @@ describe("the rungs tracks have climbed", () => {
     // rung for each track comes from its direct owner; this shared test states only
     // the invariant that every attained rung has no thin non-etymology atoms.
     const e = REAL_EVERYTHING;
-    const continuity = measureContinuity(e.lessons);
+    const continuity = REAL_GATE_INPUTS.continuity;
     const spineNodes = lessonSpineNodes(e.curricula);
     const stageOf = new Map<string, CefrLevel>();
     for (const node of e.spine.nodes) {
@@ -285,7 +292,7 @@ describe("the rungs tracks have climbed", () => {
   });
 
   it("names every track at every attained rung, because bare counts cannot be checked", () => {
-    const rendered = renderCurriculumGapReport(realReport());
+    const rendered = REAL_RENDERED;
     const line = rendered.split(/\r?\n/).find((l) => l.startsWith("levels with STRUCTURAL COVERAGE"))!;
     expect(line).toBeDefined();
     const groups = new Map<CefrLevel, string[]>();
@@ -329,7 +336,7 @@ describe("the rungs tracks have climbed", () => {
     // regression to a single "worst" blocker fails on the first track that has
     // two, which today is twenty-one of twenty-three.
     const gate = realReport().levelGate!;
-    const rendered = renderCurriculumGapReport(realReport());
+    const rendered = REAL_RENDERED;
     const lines = rendered.split(/\r?\n/);
     const start = lines.findIndex((l) => l.startsWith("per-track ladder"));
     expect(start).toBeGreaterThan(-1);
@@ -409,7 +416,7 @@ describe("the rungs tracks have climbed", () => {
     expect(witness).toBeDefined();
     const blocker = witness!.blockers.find((candidate) => candidate.criterion === "vocabulary")!;
     const target = gate.vocabularyTargets[witness!.inProgressAt!];
-    const rendered = renderCurriculumGapReport(realReport());
+    const rendered = REAL_RENDERED;
     const row = rendered
       .split(/\r?\n/)
       .find((line) => line.trimStart().startsWith(`${witness!.language} `) && line.includes("touches "))!;
@@ -428,7 +435,7 @@ describe("the rungs tracks have climbed", () => {
     // Asserting the word is ABSENT, not merely that the new one is present:
     // a rename that left the old phrasing on some other line would satisfy the
     // positive assertion above and change nothing a reader sees.
-    const rendered = renderCurriculumGapReport(realReport());
+    const rendered = REAL_RENDERED;
     expect(rendered).not.toContain("ATTAINED");
     expect(rendered).toContain("coverage complete, performance UNVERIFIED");
     // And the distinction is spelled out, not left to be inferred from a
@@ -452,7 +459,7 @@ describe("the rungs tracks have climbed", () => {
       const stage = node ? stageOf.get(node) : undefined;
       return stage !== undefined && levelRank(stage) <= levelRank("A1");
     };
-    const continuity = measureContinuity(e.lessons);
+    const continuity = REAL_GATE_INPUTS.continuity;
     const witnesses = gate.tracks.filter(
       (track) => track.attained !== null && levelRank(track.attained) >= levelRank("A1"),
     );
@@ -496,14 +503,8 @@ describe("etymology is a hook, not a skill", () => {
     // integer for unfinished work serializes parallel authoring, so the invariant
     // now checks the waiver itself with a property-selected witness.
     const e = REAL_EVERYTHING;
-    const base = measureContinuity(e.lessons);
-    const gateInputs = {
-      lessons: e.lessons,
-      levels: summarizeLevels(e.lessons, e.curricula, e.spine),
-      curricula: e.curricula,
-      spine: e.spine,
-      ramp: measureRamp(e.lessons, loadChapterPolicy()),
-    };
+    const base = REAL_GATE_INPUTS.continuity;
+    const gateInputs = REAL_GATE_INPUTS;
 
     // The waiver must be VISIBLE. A silently loosened gate is worse than a strict one.
     //
@@ -628,8 +629,7 @@ describe("etymology is a hook, not a skill", () => {
     // The waiver lives at the GATE on purpose. `measureContinuity` still reports every
     // atom, so the gap report and every pinned corpus figure keep meaning what they
     // say. If this ever fails, the waiver has leaked into the measurement.
-    const e = REAL_EVERYTHING;
-    const continuity = measureContinuity(e.lessons);
+    const continuity = REAL_GATE_INPUTS.continuity;
     const etymons = continuity.reinforcement.filter((d) => isEtymologyAtom(d.atom));
     expect(etymons.length).toBeGreaterThan(0);
   });
@@ -648,18 +648,7 @@ describe("the criteria themselves", () => {
   it("passes a level only when all four hold", () => {
     // A synthetic track that satisfies nothing must attain nothing, and must name
     // every criterion it failed rather than the first one.
-    const e = REAL_EVERYTHING;
-    const levels = summarizeLevels(e.lessons, e.curricula, e.spine);
-    const ramp = measureRamp(e.lessons, loadChapterPolicy());
-    const continuity = measureContinuity(e.lessons);
-    const gate = runLevelGate({
-      lessons: e.lessons,
-      levels,
-      curricula: e.curricula,
-      spine: e.spine,
-      ramp,
-      continuity,
-    });
+    const gate = runLevelGate(REAL_GATE_INPUTS);
     const worst = gate.tracks.find((t) => t.blockers.length >= 3);
     expect(worst).toBeDefined();
     expect(new Set(worst!.blockers.map((b) => b.criterion)).size).toBe(
@@ -886,14 +875,40 @@ word ${index + 1}
   it("is absent, not empty, when the caller supplied no policy", { timeout: 60_000 }, () => {
     // "Not measured" and "attained nothing" are opposite facts. A consumer that
     // passes no chapter policy must not see a report claiming zero attainment.
+    //
+    // The witness is one real track, not the whole corpus. Building a whole gap
+    // report a second time, inside this test's budget, took 24s on a quiet
+    // machine at ~62,000 lessons, and the corpus decides nothing here: the
+    // level gate is absent because the ramp it is built on needs the policy.
+    // So take the smallest track that the policy-ful report says ATTAINS a
+    // rung -- the track whose policy-less report would most plainly be lying if
+    // it printed "attained nothing" -- and show both halves: without the
+    // policy there is no gate at all, and with only the policy added the gate
+    // is back and finds the same rung.
     const e = REAL_EVERYTHING;
-    const report = buildCurriculumGapReport({
+    const lessonsPerTrack = new Map<string, number>();
+    for (const lesson of e.lessons) {
+      lessonsPerTrack.set(lesson.language, (lessonsPerTrack.get(lesson.language) ?? 0) + 1);
+    }
+    const attaining = REAL_REPORT.levelGate!.tracks.filter((track) => track.attained !== null);
+    expect(attaining.length).toBeGreaterThan(0);
+    const witness = [...attaining].sort(
+      (a, b) =>
+        (lessonsPerTrack.get(a.language) ?? 0) - (lessonsPerTrack.get(b.language) ?? 0) ||
+        a.language.localeCompare(b.language),
+    )[0]!;
+    const input = {
       registry: e.registry,
-      lessons: e.lessons,
+      lessons: e.lessons.filter((lesson) => lesson.language === witness.language),
       books: e.books,
       curricula: e.curricula,
       spine: e.spine,
-    });
-    expect(report.levelGate).toBeUndefined();
+    };
+    expect(buildCurriculumGapReport(input).levelGate).toBeUndefined();
+    const measured = buildCurriculumGapReport({ ...input, chapterPolicy: loadChapterPolicy() });
+    expect(
+      measured.levelGate?.tracks.find((track) => track.language === witness.language)?.attained,
+      witness.language,
+    ).toBe(witness.attained);
   });
 });
