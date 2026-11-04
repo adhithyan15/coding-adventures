@@ -20678,3 +20678,11 @@ JVM compiler backend commits are exact-path-disjoint from the six PR paths and
 touch no workflow. Treat the resulting head as a fifth reconciliation: rerun
 local validation, obtain fresh independent review, push normally, and require
 another entirely new hosted rollup.
+
+Protected main advanced once more while the fifth reconciled head was
+qualifying. Merge exact `origin/main`
+`57ff2ac06825b289dd975b4ded65a3cc0c28d3b8` normally and conflict-free. The
+intervening fully routed OCSP responder-path commit is exact-path-disjoint from
+the six PR paths and touches no workflow. Treat the resulting head as a sixth
+reconciliation with fresh local validation, independent review, normal push,
+and an entirely new hosted rollup.
