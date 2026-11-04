@@ -2,8 +2,18 @@
 
 An exam inventory is complete only when it accounts for all four content
 dimensions: communicative functions, grammar, phonology/orthography, and
-lexicon. Each dimension carries its own `complete` or `partial` status, source,
-and a plain-language boundary note. Completeness is derived; it is never inferred
+lexicon. A complete dimension must use one of two honest boundaries:
+
+1. a finite external source that actually enumerates the dimension; or
+2. when no such source exists, an explicit finite checked-in project-owned
+   selection whose exact points, assessment purpose, external anchors, and
+   source limitations are all reviewable.
+
+The second case closes this repository's enumeration only. It does not turn the
+selection into an external syllabus or prove lesson coverage, task performance,
+standard setting, learner readiness, validation, certification, or attainment.
+Each dimension carries its own `complete` or `partial` status, source, and a
+plain-language boundary note. Completeness is derived; it is never inferred
 from a file merely existing.
 
 ```ts
@@ -14,15 +24,15 @@ import {
 } from "@coding-adventures/human-language-data";
 
 const inventory = loadExamInventory("german", "A1");
-isExamInventoryComplete(inventory); // false until every dimension is source-closed
+isExamInventoryComplete(inventory); // false until every dimension has a finite honest boundary
 measureExamCoverage(inventory, lessons); // its enumerated points still count
 ```
 
 A partial inventory remains useful evidence and still generates named exam-point
 gaps. It also remains an `exam-inventory` backlog item. Thus 100% coverage means
 "all currently enumerated points are taught," never "the whole exam construct is
-known." The initial baseline is deliberately honest: zero complete and three
-partial inventories across 138 track/level targets.
+known." The planner derives complete and partial totals from the checked-in
+dimension statuses rather than treating file presence as completion.
 
 Spanish A1 shows what that distinction buys. It read 85/85 and 100% while it
 enumerated grammar alone. Adding the PCIC functional inventory, the general and
@@ -30,9 +40,18 @@ specific notions, and the orthography inventory took it to **223/273 and 82%**,
 with 50 points that no atom in the corpus corresponds to — clothing, the
 alphabet, most punctuation, the affirmative imperative. No lesson was removed
 between those two readings. The number fell because the target stopped
-flattering the book, which is the whole point of measuring against an external
-list. Spanish A1 is still a partial inventory: its pronunciation dimension has no
-A1-only boundary in the source (see HL20 §6a).
+flattering the book, which is the whole point of measuring against a finite,
+independently reviewable target list. Spanish A1 is still a partial inventory:
+its pronunciation dimension has no A1-only boundary in the source (see HL20
+§6a).
+
+Kannada B2 demonstrates the project-owned case. Its external anchors bound
+generic B2 performance, intermediate four-skill instruction, Kannada encoding,
+and contemporary genre domains, but none is presented as a finite Kannada B2
+grammar or word list. The checked-in inventory therefore names exactly 36
+project-selected demands, nine per dimension, and records those source limits.
+That makes the repository's enumeration complete while its strict lesson
+coverage can remain 0/36 and every uncovered point remains planner-visible.
 
 Committed inventory assertions follow the same ownership boundary as their
 curriculum. Generic probe semantics and hostile-file guards stay in

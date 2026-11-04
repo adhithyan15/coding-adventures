@@ -31,6 +31,9 @@ repository's Kannada B2 assessment contract.  Each of the four dimensions is
 complete *as an inventory*.  Lesson coverage remains measured separately and
 strictly; a null probe is still uncovered work, and inventory closure is not
 learner readiness, attainment, external validation, or external certification.
+This is the project-owned completion case now defined by the repository-wide
+HL20 feature contract: the exact finite selection, assessment purpose, external
+anchors, and their limitations are all checked in and independently reviewable.
 
 ## Contract
 
@@ -44,6 +47,8 @@ learner readiness, attainment, external validation, or external certification.
    uncovered points remain visible as `exam-point` work.
 6. Documentation must avoid claims of standard setting, qualified human
    validation, recording provenance, learner readiness, or learner attainment.
+7. The generic HL20 contract and module rationale must explicitly permit this
+   finite project-owned case without weakening the external-source preference.
 
 ## Validation
 

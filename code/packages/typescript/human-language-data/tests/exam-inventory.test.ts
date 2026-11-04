@@ -7,8 +7,9 @@
 //
 // Every other measurement in this package walks our own lessons, so every one
 // of them rises when a lesson is added — including a lesson on something the
-// exam does not test. This one resolves the corpus against an external, finite
-// list, so it can fall, and it can stay flat while the corpus grows.
+// assessment does not test. This one resolves the corpus against a finite,
+// reviewable list (external where available, otherwise an explicit checked-in
+// project boundary), so it can fall, and it can stay flat while the corpus grows.
 // ---------------------------------------------------------------------------
 import { describe, expect, it } from "vitest";
 import { listExamInventories, loadExamInventory } from "../src/loader.js";
@@ -83,6 +84,34 @@ describe("inventory completeness", () => {
     const coverage = measureExamCoverage(partial, [lesson("ES-1", ["ES-A", "ES-B"])]);
     expect(coverage).toMatchObject({ enumerated: 3, covered: 1, inventoryComplete: false });
     expect(formatExamCoverage(coverage)).toContain("(partial inventory)");
+  });
+
+  it("keeps project-owned inventory closure separate from lesson coverage", () => {
+    const projectOwned: ExamInventory = {
+      ...FIXTURE,
+      about: "Finite checked-in project-owned assessment boundary; not an external syllabus.",
+      source: "Exact project selection bounded by named external anchors and their limitations.",
+      scope: Object.fromEntries(
+        EXAM_CONTENT_DIMENSIONS.map((dimension) => [
+          dimension,
+          {
+            status: "complete" as const,
+            source: "Checked-in finite project-owned boundary",
+            note: "The exact selected points close project enumeration only; the external anchor does not supply a finite syllabus.",
+          },
+        ]),
+      ) as ExamInventory["scope"],
+      points: [{ id: "PROJECT-1", category: "Project selection", label: "reviewable demand", probe: null }],
+    };
+
+    expect(isExamInventoryComplete(projectOwned)).toBe(true);
+    expect(measureExamCoverage(projectOwned, [])).toMatchObject({
+      inventoryComplete: true,
+      enumerated: 1,
+      covered: 0,
+      unmapped: 1,
+      percent: 0,
+    });
   });
 });
 

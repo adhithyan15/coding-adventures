@@ -10,3 +10,7 @@
 - All four inventory dimensions are complete as enumeration, while strict
   lesson coverage remains 0/36. The uncovered points remain visible work; no
   readiness, certification, human-validation, or attainment claim is made.
+- Clarified the repository-wide HL20 contract and module rationale: finite
+  external inventories remain preferred, while an exact checked-in
+  project-owned selection may close enumeration only when its purpose, anchors,
+  and source limitations are explicit and reviewable.

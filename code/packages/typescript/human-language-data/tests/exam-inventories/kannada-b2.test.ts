@@ -19,6 +19,7 @@ describe("the committed Kannada B2 inventory", () => {
       expect(inventory.scope[dimension].status, dimension).toBe("complete");
       expect(inventory.scope[dimension].source.trim().length, dimension).toBeGreaterThan(20);
       expect(inventory.scope[dimension].note.trim().length, dimension).toBeGreaterThan(40);
+      expect(inventory.scope[dimension].note, dimension).toContain("finite project-owned boundary");
     }
   });
 
@@ -39,6 +40,12 @@ describe("the committed Kannada B2 inventory", () => {
     }
     expect(inventory.scope.lexicon.note).toContain("not a B2 word list");
     expect(inventory.scope.grammar.note).toContain("not a finite Kannada B2 grammar");
+    expect(inventory.scope["communicative-functions"].note).toContain(
+      "neither is presented as selecting Kannada exponents",
+    );
+    expect(inventory.scope["phonology-orthography"].note).toContain(
+      "Unicode closes the character and conjunct encoding model",
+    );
     expect(inventory.about).toContain("finite project-owned boundary");
   });
 
