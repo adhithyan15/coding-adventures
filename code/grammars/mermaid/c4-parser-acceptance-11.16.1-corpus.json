@@ -1,0 +1,40 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "complete active Mermaid 11.16.1 C4 parser acceptance surface",
+  "upstream_specs": [
+    "c4Boundary.spec.js",
+    "c4Component.spec.js",
+    "c4Container.spec.js",
+    "c4Diagram.spec.js",
+    "c4Person.spec.js",
+    "c4PersonExt.spec.js",
+    "c4System.spec.js"
+  ],
+  "fixtures": [
+    {
+      "name": "boundary-fields",
+      "source": "C4Context\nBoundary(b1, \"BankBoundary\", \"company\", $link=\"https://github.com/mermaidjs\", $tags=\"tag1,tag2\") {\n  System(SystemAA, \"Internet Banking System\")\n}"
+    },
+    {
+      "name": "component-macro-matrix",
+      "source": "C4Component\nComponent(ComponentAA, \"Component\", \"Technology\", \"Description\")\nComponentDb(ComponentDbAA, \"Component DB\", \"Technology\", \"Description\")\nComponentQueue(ComponentQueueAA, \"Component Queue\", \"Technology\", \"Description\")\nComponent_Ext(ComponentExtAA, \"External Component\", \"Technology\", \"Description\")\nComponentDb_Ext(ComponentDbExtAA, \"External Component DB\", \"Technology\", \"Description\")\nComponentQueue_Ext(ComponentQueueExtAA, \"External Component Queue\", \"Technology\", \"Description\")"
+    },
+    {
+      "name": "container-macro-matrix",
+      "source": "C4Container\nContainer(ContainerAA, \"Container\", \"Technology\", \"Description\")\nContainerDb(ContainerDbAA, \"Container DB\", \"Technology\", \"Description\")\nContainerQueue(ContainerQueueAA, \"Container Queue\", \"Technology\", \"Description\")\nContainer_Ext(ContainerExtAA, \"External Container\", \"Technology\", \"Description\")\nContainerDb_Ext(ContainerDbExtAA, \"External Container DB\", \"Technology\", \"Description\")\nContainerQueue_Ext(ContainerQueueExtAA, \"External Container Queue\", \"Technology\", \"Description\")"
+    },
+    {
+      "name": "person-fields",
+      "source": "C4Context\nPerson(customerA, \"Banking Customer A\", \"Customer description\", $sprite=\"users\", $link=\"https://github.com/mermaidjs\", $tags=\"tag1,tag2\")\nPerson_Ext(customerB, \"External Customer\", \"External description\", $sprite=\"users\", $link=\"https://github.com/mermaidjs\", $tags=\"tag1,tag2\")"
+    },
+    {
+      "name": "system-macro-matrix",
+      "source": "C4Context\nSystem(SystemAA, \"System\", \"Description\")\nSystemDb(SystemDbAA, \"System DB\", \"Description\")\nSystemQueue(SystemQueueAA, \"System Queue\", \"Description\")\nSystem_Ext(SystemExtAA, \"External System\", \"Description\")\nSystemDb_Ext(SystemDbExtAA, \"External System DB\", \"Description\")\nSystemQueue_Ext(SystemQueueExtAA, \"External System Queue\", \"Description\")"
+    },
+    {
+      "name": "keyword-default-and-trailing-space",
+      "source": "C4Context \ntitle title \nPerson(Person, \"Person\", \"Person\") \nPerson(default, \"default\", \"default\") "
+    }
+  ]
+}
