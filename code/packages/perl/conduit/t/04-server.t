@@ -18,9 +18,18 @@ my (undef, $portfile) = tempfile('conduit-portXXXXXX', TMPDIR => 1, OPEN => 0, U
 unlink $portfile;   # the server creates it; we poll for its appearance
 
 # ── Launch the server process ────────────────────────────────────────────────
-my $pid = fork();
-defined $pid or die "fork failed: $!";
-if (!$pid) {
+my $windows = $^O eq 'MSWin32';
+my $pid;
+if ($windows) {
+    # Native Windows fork is emulated. Track the actual server process instead
+    # of the pseudo-fork interpreter that waits for exec's child.
+    $pid = system(1, $^X, "-I$libdir", $app, $portfile);
+    $pid > 0 or die "launch server failed: $!";
+} else {
+    $pid = fork();
+    defined $pid or die "fork failed: $!";
+}
+if (!$windows && !$pid) {
     # Child: become the server. exec replaces the image so there is no shared
     # interpreter state with the parent — a clean, independent process.
     exec($^X, "-I$libdir", $app, $portfile)
@@ -32,7 +41,9 @@ my $reaped = 0;
 my $cleanup = sub {
     return if $reaped;
     $reaped = 1;
-    kill('TERM', $pid);
+    # On Windows the Rust server can be blocked outside Perl's signal polling;
+    # terminate the owned OS process rather than queueing an interpreter signal.
+    kill($windows ? 'KILL' : 'TERM', $pid);
     waitpid($pid, 0);
 };
 

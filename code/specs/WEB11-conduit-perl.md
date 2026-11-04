@@ -24,6 +24,49 @@ my $server = $app->bind('127.0.0.1', 3000);
 $server->serve;   # blocks until stopped
 ```
 
+## Native Windows build contract
+
+Windows XS extensions build and run against the same native Strawberry Perl
+installation. `perl-bridge` compiles its C shim using that interpreter's
+`ExtUtils::CBuilder`, archives the resulting COFF object, and supplies the Perl
+import library named by `Config{libperl}` in `Config{archlibexp}/CORE` to its
+Rust dependents. The dependency owns these linker settings; extension crates
+must not guess library names or search a different interpreter's installation.
+
+The bridge selects `PERL_BIN` when explicitly set, otherwise native Perl on
+PATH on Windows. It rejects MSYS Perl and mismatched pointer, integer or floating
+point layouts before compiling. The build retains zero external Rust
+dependencies. Unix compilation and macOS dynamic lookup keep their existing
+behavior. Verification must load each staged DLL with Perl and run the Conduit,
+IRC native-extension and Conduit Hello tests; linking alone is insufficient.
+
+Callback error strings allocated by the C shim must also be released by a shim
+function built with those same Perl headers. On native Windows the headers may
+route allocation through Perl's allocator; Rust's C-runtime `free` is not a
+matching deallocator. A dying handler must reach `on_error` and leave the server
+able to answer subsequent requests.
+Windows E2E tests must track the server's real OS process, using asynchronous
+`system` rather than Perl's emulated `fork`, and terminate that owned process
+during cleanup so waiting for it cannot leave the test suite hanging.
+
+Windows build recipes use a common PowerShell helper to select native Perl
+before invoking Cargo, staging the DLL and running prove. Git Bash prepends its
+MSYS Perl even when Windows PATH contains Strawberry; selecting the interpreter
+only inside Rust would leave the tests loading the DLL into a different Perl.
+An explicit PERL_BIN must identify native Perl; otherwise the helper searches
+the available Perl executables for Config{osname} equal to MSWin32.
+
+Incremental builds treat the shared helper and perl-bridge's Cargo manifest,
+build script and source directory as external inputs of all three Perl
+consumers: Conduit, IRC Server Native and Conduit Hello. Editing one of those
+inputs must select the consumers even when no Perl package file changed.
+Missing consumers fail closed, and single-language runs retain their language
+filter. Crate-root documentation and lookalike helper filenames are not build inputs.
+Both Unix and Windows native Perl recipes declare the Rust toolchain explicitly,
+so a helper-only edit installs Cargo as well as Perl in a fresh CI environment.
+The Windows native-suite gate includes all three consumers and the shared helper
+path, so a Perl-only helper edit actually executes the Windows build step.
+
 ## Architecture
 
 ```

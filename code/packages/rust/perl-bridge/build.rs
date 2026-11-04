@@ -9,6 +9,7 @@ fn main() {
     println!("cargo:rerun-if-env-changed=AR");
 
     if env::var("CARGO_CFG_TARGET_OS").ok().as_deref() == Some("windows") {
+        build_windows();
         return;
     }
 
@@ -41,6 +42,83 @@ fn main() {
     println!("cargo:rustc-link-lib=static=perl_bridge_shim");
 }
 
+// Strawberry's headers and import library describe the interpreter that loads
+// the extension. Use its own compiler configuration, rather than compiling GNU
+// Perl headers with the MSVC compiler selected for the Rust cdylib.
+fn build_windows() {
+    println!("cargo:rerun-if-env-changed=PATH");
+    let perl =
+        find_perl_bin().expect("perl-bridge requires native Strawberry Perl on PATH or PERL_BIN");
+    assert_eq!(
+        perl_config(&perl, "osname"),
+        "MSWin32",
+        "Windows XS extensions require native Strawberry Perl, not MSYS/Cygwin Perl"
+    );
+    let pointer_bytes = env::var("CARGO_CFG_TARGET_POINTER_WIDTH")
+        .expect("target pointer width")
+        .parse::<usize>()
+        .expect("numeric pointer width")
+        / 8;
+    for key in ["ptrsize", "ivsize"] {
+        assert_eq!(
+            perl_config(&perl, key)
+                .parse::<usize>()
+                .expect("numeric Perl layout"),
+            pointer_bytes,
+            "Perl {key} must match the Rust target's pointer-sized IV/UV layout"
+        );
+    }
+    assert_eq!(
+        perl_config(&perl, "nvsize"),
+        "8",
+        "Perl NV must match Rust f64"
+    );
+
+    let core = PathBuf::from(perl_config(&perl, "archlibexp")).join("CORE");
+    let import_name = perl_config(&perl, "libperl");
+    let import_path = core.join(&import_name);
+    assert!(
+        import_path.is_file(),
+        "Perl import library does not exist: {}",
+        import_path.display()
+    );
+    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR must be set"));
+    let object = out_dir.join("perl_bridge_shim.o");
+    let library = out_dir.join(
+        if env::var("CARGO_CFG_TARGET_ENV").ok().as_deref() == Some("msvc") {
+            "perl_bridge_shim.lib"
+        } else {
+            "libperl_bridge_shim.a"
+        },
+    );
+    run(Command::new(&perl).args([
+        "-MExtUtils::CBuilder", "-e",
+        "ExtUtils::CBuilder->new(quiet=>1)->compile(source=>$ARGV[0],object_file=>$ARGV[1]);",
+        "src/perl_bridge_shim.c",
+    ]).arg(&object), "compile Windows Perl bridge shim");
+    let ar = env::var("AR").unwrap_or_else(|_| perl_config(&perl, "ar"));
+    run(
+        Command::new(ar).arg("crs").arg(&library).arg(&object),
+        "archive Windows Perl bridge shim",
+    );
+
+    // GNU COFF archives are accepted by rust-lld on MSVC too. Verbatim keeps
+    // Config's real import-library filename (e.g. libperl542.a), without
+    // guessing a Perl version or replacing it with an invented .lib name.
+    println!("cargo:rustc-link-search=native={}", out_dir.display());
+    println!("cargo:rustc-link-lib=static=perl_bridge_shim");
+    println!("cargo:rustc-link-search=native={}", core.display());
+    println!("cargo:rustc-link-lib=dylib:+verbatim={import_name}");
+    println!("cargo:rerun-if-changed={}", import_path.display());
+}
+
+fn perl_config(perl: &str, key: &str) -> String {
+    run_capture(perl, &["-MConfig", "-e", "print $Config{$ARGV[0]}", key])
+        .unwrap_or_else(|| panic!("failed to query Perl Config{{{key}}}"))
+        .trim()
+        .to_string()
+}
+
 fn find_perl_bin() -> Option<String> {
     if let Ok(perl) = env::var("PERL_BIN") {
         let trimmed = perl.trim();
@@ -49,6 +127,11 @@ fn find_perl_bin() -> Option<String> {
         }
     }
 
+    // Windows BUILD recipes load the DLL with the Perl on PATH. A mise shim
+    // must not silently select another interpreter for compiling that DLL.
+    if cfg!(windows) {
+        return run_capture("perl", &["-e", "print $^X"]).map(|value| value.trim().to_string());
+    }
     if let Some(path) = run_capture("mise", &["which", "perl"]) {
         let trimmed = path.trim();
         if !trimmed.is_empty() && Path::new(trimmed).exists() {

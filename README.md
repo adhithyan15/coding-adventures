@@ -548,6 +548,11 @@ The main CI workflow uses the same build planner:
   a neural-framework conformance gate that CI reuses for the six native ports;
 - publish, release, and GitHub Pages workflows ship selected artifacts.
 
+The metadata job retains full commit/tree history and a complete source
+checkout. It downloads historical file contents on demand so provenance and
+dependency-baseline checks fit within the existing job budget. See the
+[metadata checkout contract](./code/specs/ci-gate-registry.md#metadata-checkout-and-historical-evidence).
+
 Packages are expected to carry tests, a README, a changelog (often sharded),
 and publishable ecosystem metadata. Libraries target at least 80% coverage, with 95% preferred
 for most package code.

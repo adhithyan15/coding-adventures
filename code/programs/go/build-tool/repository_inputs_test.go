@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/cigates"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/plan"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
@@ -175,6 +176,93 @@ func TestTestBootstrapCorpusSelectsTheHarness(t *testing.T) {
 	}
 	if _, err := repositoryInputConsumersForChange(corpus, packages[1:], "all"); err == nil {
 		t.Fatal("a corpus change with the harness missing must fail closed")
+	}
+}
+
+func TestNativePerlBuildInputsSelectTheirRuntimeConsumers(t *testing.T) {
+	packages := []discovery.Package{
+		{Name: "perl/conduit", Language: "perl"},
+		{Name: "perl/irc-server-native", Language: "perl"},
+		{Name: "perl/programs/conduit-hello", Language: "perl"},
+	}
+	want := map[string]bool{
+		"perl/conduit":                true,
+		"perl/irc-server-native":      true,
+		"perl/programs/conduit-hello": true,
+	}
+	for _, input := range []string{
+		"code/scripts/check-perl-extension-windows.ps1",
+		"code/packages/rust/perl-bridge/Cargo.toml",
+		"code/packages/rust/perl-bridge/build.rs",
+		"code/packages/rust/perl-bridge/src/perl_bridge_shim.c",
+		"code/packages/rust/perl-bridge/src/lib.rs",
+	} {
+		for _, language := range []string{"all", "perl"} {
+			got, err := repositoryInputConsumersForChange([]string{input}, packages, language)
+			if err != nil || !reflect.DeepEqual(got, want) {
+				t.Fatalf("%s (%s): got %v, err %v; want all native Perl consumers", input, language, got, err)
+			}
+		}
+		if _, err := repositoryInputConsumersForChange([]string{input}, packages[:2], "all"); err == nil {
+			t.Fatalf("%s: a missing runtime consumer must fail closed", input)
+		}
+		if got, err := repositoryInputConsumersForChange([]string{input}, nil, "go"); err != nil || len(got) != 0 {
+			t.Fatalf("%s: another language should not select Perl: %v, %v", input, got, err)
+		}
+	}
+	for _, other := range []string{
+		"code/scripts/check-perl-extension-windows.ps1.bak",
+		"code/packages/rust/perl-bridge/README.md",
+		"code/packages/rust/perl-bridge-other/src/lib.rs",
+	} {
+		got, err := repositoryInputConsumersForChange([]string{other}, packages, "all")
+		if err != nil || len(got) != 0 {
+			t.Fatalf("unrelated input %s selected %v: %v", other, got, err)
+		}
+	}
+}
+
+func TestNativePerlRecipesRequestRustForHelperOnlyChanges(t *testing.T) {
+	root := findRepoRoot("")
+	names := []string{"perl/conduit", "perl/irc-server-native", "perl/programs/conduit-hello"}
+	paths := []string{"code/packages/perl/conduit", "code/packages/perl/irc-server-native", "code/programs/perl/conduit-hello"}
+	for _, platform := range []string{"linux", "darwin", "windows"} {
+		var packages []discovery.Package
+		for i, path := range paths {
+			fronts := make(map[string]string)
+			for _, front := range []string{"BUILD", "BUILD_windows"} {
+				raw, err := os.ReadFile(filepath.Join(root, filepath.FromSlash(path), front))
+				if err != nil {
+					t.Fatal(err)
+				}
+				fronts[front] = string(raw)
+			}
+			packages = append(packages, discovery.Package{
+				Name: names[i], Language: "perl",
+				ExtraToolchains: discovery.ExtraToolchainsForSnapshot(fronts, platform),
+			})
+		}
+		consumers, err := repositoryInputConsumersForChange(
+			[]string{"code/scripts/check-perl-extension-windows.ps1"}, packages, "all")
+		if err != nil {
+			t.Fatal(err)
+		}
+		needed := computeLanguagesNeeded(packages, consumers, false, nil)
+		if !needed["perl"] || !needed["rust"] {
+			t.Fatalf("%s helper-only edit needs Perl and Rust: %v", platform, needed)
+		}
+		registry, err := cigates.Load(filepath.Join(root, filepath.FromSlash(cigates.DefaultRegistryPath)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		verdicts, err := cigates.Evaluate(registry, consumers,
+			[]string{"code/scripts/check-perl-extension-windows.ps1"}, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !verdicts["build-windows-os-suites"] {
+			t.Fatalf("%s helper-only plan must execute the Windows native suite", platform)
+		}
 	}
 }
 
