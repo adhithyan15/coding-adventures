@@ -105,6 +105,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-keyword-arguments-11.16.1-visual-corpus.json"
     ));
+    const C4_UPSTREAM_RENDERING_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-upstream-rendering-11.16.1-corpus.json"
+    ));
+    const C4_UPSTREAM_RENDERING_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-upstream-rendering-11.16.1-visual-corpus.json"
+    ));
     const C4_LEGACY_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-legacy-accessibility-11.16.1-corpus.json"
@@ -4990,6 +4998,47 @@ line "Target" [35, 50, 68, 82]"##,
             instruction,
             PaintInstruction::GlyphRun(_)
         )));
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_upstream_rendering_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(C4_UPSTREAM_RENDERING_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_UPSTREAM_RENDERING_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().unwrap();
+        let visual_names = visual["fixtures"].as_array().unwrap();
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for (index, (fixture, visual_name)) in fixtures.iter().zip(visual_names).enumerate() {
+            assert_eq!(fixture["name"], *visual_name);
+            let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+            let layout = layout_structural_diagram(&diagram);
+            assert!(!layout.nodes.is_empty());
+            assert!(!layout.relationships.is_empty());
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_upstream_rendering_{index}_e2e.png");
+            write_png(&pixels, &path).unwrap();
+            assert!(pixels.width > 0 && pixels.height > 0);
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::GlyphRun(_)
+            )));
+        }
     }
 
     #[test]

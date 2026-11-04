@@ -171,7 +171,10 @@ C4 accessibility titles and legacy, single-line, or block descriptions are gramm
 and survive semantic IR plus structural layout into backend-neutral PaintScene
 metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
 macro keywords remain valid as aliases and argument values, matching the pinned
-lexical-state behavior through semantic IR, structural layout, and native paint. C4
+lexical-state behavior through semantic IR, structural layout, and native paint.
+All six active upstream C4 Cypress rendering fixtures are also pinned as an
+acceptance corpus across grammar-first parsing, semantic IR, structural layout,
+portable PaintInstructions, and native Metal-to-PNG rendering. C4
 diagram titles may come from YAML front matter or an inline `title` statement,
 with inline titles taking precedence. Standard Mermaid init directives and comments
 are removed before C4 grammar parsing while preserving source line positions; the

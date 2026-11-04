@@ -2146,6 +2146,19 @@ mod tests {
     }
 
     #[test]
+    fn keeps_c4_macro_prefixed_aliases_as_identifiers() {
+        let tokens = tokenize_mermaid_c4(
+            "C4Context\nPerson(customerA, \"Customer\")\nSystem(SystemAA, \"Bank\")\nRel(SystemAA, customerA, \"Uses\")\n",
+        );
+        for alias in ["customerA", "SystemAA"] {
+            assert!(tokens.iter().any(|token| {
+                token.type_name.as_deref() == Some("IDENTIFIER") && token.value == alias
+            }));
+        }
+        assert!(!tokens.iter().any(|token| token.value == "AA"));
+    }
+
+    #[test]
     fn does_not_tokenize_unsupported_c4_rel_b_as_a_macro() {
         let tokens = tokenize_mermaid_c4("C4Context\nRel_B(a, b, \"Uses\")\n");
         assert!(!tokens.iter().any(|token| {
