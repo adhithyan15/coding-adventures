@@ -1071,3 +1071,41 @@ fn routed_response_binding_rejects_a_byte_equal_distinct_target_inner() {
     let _ = binding;
     let _ = path;
 }
+
+#[test]
+fn routed_response_binding_rejects_a_byte_equal_distinct_issuer() {
+    run_fixture_proof_test(routed_response_binding_rejects_a_byte_equal_distinct_issuer_inner);
+}
+
+fn routed_response_binding_rejects_a_byte_equal_distinct_issuer_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let leaf = decode(&leaf_encoded);
+    let ocsp_issuer = decode(&intermediate_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_routed_revocation!(binding, authenticated, &response, &leaf, &ocsp_issuer);
+    routed_reviewed_server_path!(reviewed_server, path, &leaf, &candidates);
+
+    let error = bind_x509_ocsp_routed_response_to_routed_reviewed_server_path(
+        authenticated,
+        reviewed_server,
+    )
+    .expect_err("byte-equal distinct issuer objects must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509OcspReviewedServerRevocationBindingErrorKind::IssuerMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 OCSP reviewed-server revocation binding error IssuerMismatch"
+    );
+    let diagnostic = format!("{error:?} {error}");
+    assert!(!diagnostic.contains("apple"));
+    assert!(!diagnostic.contains("6c869e"));
+    let _ = binding;
+    let _ = path;
+}
