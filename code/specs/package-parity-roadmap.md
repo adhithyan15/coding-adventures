@@ -20669,3 +20669,12 @@ single intervening music-machine native-backend commit is exact-path-disjoint
 from the six PR paths and touches no workflow. Treat the resulting head as a
 fourth reconciliation: rerun local validation, obtain fresh independent
 review, push normally, and require an entirely new hosted rollup.
+
+Protected main advanced again while that fourth reconciled head was
+qualifying. Merge exact `origin/main`
+`07311291dfb63b4292bc00b9c42db063d7a241de` normally and conflict-free. The
+three intervening reviewed-server OCSP binding, Mermaid ER topology, and Twig
+JVM compiler backend commits are exact-path-disjoint from the six PR paths and
+touch no workflow. Treat the resulting head as a fifth reconciliation: rerun
+local validation, obtain fresh independent review, push normally, and require
+another entirely new hosted rollup.
