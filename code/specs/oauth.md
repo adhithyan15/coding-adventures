@@ -2488,6 +2488,26 @@ intermediate revocation, generalize certificate-path validation, implement TLS
 or HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
 and live-provider readiness remain unavailable.
 
+A bounded routed-policy follow-up in the same package consumes that exact
+reified fully routed responder path and applies the selected Mozilla-reviewed
+terminal's supported out-of-band DNS constraints to the exact authenticated
+responder certificate. The responder and selected root constraints are both
+derived through the retained routed proof; callers cannot substitute a
+certificate, SAN collection, snapshot entry, path, algorithm, key, signature,
+or time. Entries without constraints succeed without reading Subject
+Alternative Name or manufacturing DNS evidence. Constrained entries decode
+the supported permitted-DNS subset and exact responder SAN under separate
+caller-owned ASN.1 limits, require every responder `dNSName` to comply, and
+retain only count evidence. Stable failures expose no certificate, name,
+constraint, response, key, signature, or status payload. This pure
+public-certificate-data policy performs no credential access or editing,
+signing, storage, clock acquisition, provider action, audit event, trace
+emission, I/O, network access, or other external effect. It does not apply the
+retained intermediate's DNS constraints, validate responder no-check policy,
+check responder or intermediate revocation, generalize path construction or
+validation, implement TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated

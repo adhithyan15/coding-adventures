@@ -66,6 +66,17 @@ accepting caller-supplied certificate, path, algorithm, key, signature, time,
 or policy input. It performs no new validation or external effect and stops
 before routed responder DNS, no-check, or revocation policy.
 
+`validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy` then
+consumes that exact routed responder path and derives both policy inputs
+internally: the fully routed authenticated responder certificate and the
+selected reviewed root's exact optional out-of-band name-constraint bytes.
+Entries without constraints succeed without reading the responder SAN.
+Constrained entries decode the supported permitted DNS subset and exact
+responder Subject Alternative Name under separate caller-owned limits, require
+every responder `dNSName` to comply, and retain only count evidence. Failures
+reuse the stable payload-free anchor-policy categories. No certificate, SAN,
+root, path, algorithm, key, signature, or time can be supplied independently.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy
@@ -110,10 +121,11 @@ malformed values fail with stable payload-free categories.
 This crate performs evidence composition, exact-time validity checks, the
 bounded selected-anchor and exact-intermediate responder DNS policies, and the
 RFC 6960 responder no-check branch described above only.
-The responder policy layers apply only to the fully fixed RSA SHA-256 proof.
-The fully routed proof may additionally be reified as a nominal responder path,
-but all data-driven routed flows stop before responder DNS, no-check, and
-revocation policy.
+The complete responder policy sequence applies only to the fully fixed RSA
+SHA-256 proof. The fully routed proof may additionally be reified as a nominal
+responder path and checked against selected-anchor DNS policy, but all
+data-driven routed flows stop before intermediate DNS, no-check, and revocation
+policy.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
