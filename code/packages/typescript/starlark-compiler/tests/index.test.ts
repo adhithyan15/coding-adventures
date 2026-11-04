@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
   ALL_OPS,
   Op,
@@ -13,120 +14,120 @@ import {
   opFromByte,
   unaryOpMap,
   unaryOpcode,
-} from "../src/index";
+} from "../src/index.js";
 
 describe("Starlark opcodes", () => {
   it("keeps Rust-compatible byte values", () => {
-    expect(Op.LoadConst).toBe(0x01);
-    expect(Op.Add).toBe(0x20);
-    expect(Op.CmpEq).toBe(0x30);
-    expect(Op.Jump).toBe(0x40);
-    expect(Op.MakeFunction).toBe(0x50);
-    expect(Op.BuildList).toBe(0x60);
-    expect(Op.LoadSubscript).toBe(0x70);
-    expect(Op.GetIter).toBe(0x80);
-    expect(Op.LoadModule).toBe(0x90);
-    expect(Op.Print).toBe(0xa0);
-    expect(Op.Halt).toBe(0xff);
+    assert.equal(Op.LoadConst, 0x01);
+    assert.equal(Op.Add, 0x20);
+    assert.equal(Op.CmpEq, 0x30);
+    assert.equal(Op.Jump, 0x40);
+    assert.equal(Op.MakeFunction, 0x50);
+    assert.equal(Op.BuildList, 0x60);
+    assert.equal(Op.LoadSubscript, 0x70);
+    assert.equal(Op.GetIter, 0x80);
+    assert.equal(Op.LoadModule, 0x90);
+    assert.equal(Op.Print, 0xa0);
+    assert.equal(Op.Halt, 0xff);
   });
 
   it("round trips every defined opcode", () => {
     for (const op of ALL_OPS) {
-      expect(opFromByte(opByte(op))).toBe(op);
+      assert.equal(opFromByte(opByte(op)), op);
     }
   });
 
   it("rejects invalid bytes", () => {
-    expect(opFromByte(0xee)).toBeUndefined();
-    expect(opFromByte(-1)).toBeUndefined();
-    expect(opFromByte(256)).toBeUndefined();
-    expect(opFromByte(1.5)).toBeUndefined();
+    assert.equal(opFromByte(0xee), undefined);
+    assert.equal(opFromByte(-1), undefined);
+    assert.equal(opFromByte(256), undefined);
+    assert.equal(opFromByte(1.5), undefined);
   });
 
   it("classifies opcodes by high nibble", () => {
-    expect(opCategory(Op.LoadConst)).toBe("stack");
-    expect(opCategory(Op.LoadName)).toBe("variable");
-    expect(opCategory(Op.RShift)).toBe("arithmetic");
-    expect(opCategory(Op.Not)).toBe("comparison");
-    expect(opCategory(Op.JumpIfTrue)).toBe("controlFlow");
-    expect(opCategory(Op.Return)).toBe("function");
-    expect(opCategory(Op.DictSet)).toBe("collection");
-    expect(opCategory(Op.LoadSlice)).toBe("subscriptAttribute");
-    expect(opCategory(Op.UnpackSequence)).toBe("iteration");
-    expect(opCategory(Op.ImportFrom)).toBe("module");
-    expect(opCategory(Op.Print)).toBe("io");
-    expect(opCategory(Op.Halt)).toBe("vmControl");
-    expect(opCategory(0x07 as Op)).toBeUndefined();
-    expect(opCategory(0xb0 as Op)).toBeUndefined();
+    assert.equal(opCategory(Op.LoadConst), "stack");
+    assert.equal(opCategory(Op.LoadName), "variable");
+    assert.equal(opCategory(Op.RShift), "arithmetic");
+    assert.equal(opCategory(Op.Not), "comparison");
+    assert.equal(opCategory(Op.JumpIfTrue), "controlFlow");
+    assert.equal(opCategory(Op.Return), "function");
+    assert.equal(opCategory(Op.DictSet), "collection");
+    assert.equal(opCategory(Op.LoadSlice), "subscriptAttribute");
+    assert.equal(opCategory(Op.UnpackSequence), "iteration");
+    assert.equal(opCategory(Op.ImportFrom), "module");
+    assert.equal(opCategory(Op.Print), "io");
+    assert.equal(opCategory(Op.Halt), "vmControl");
+    assert.equal(opCategory(0x07 as Op), undefined);
+    assert.equal(opCategory(0xb0 as Op), undefined);
   });
 });
 
 describe("operator maps", () => {
   it("maps binary operators", () => {
     const map = binaryOpMap();
-    expect(map.get("+")).toBe(Op.Add);
-    expect(map.get("-")).toBe(Op.Sub);
-    expect(map.get("*")).toBe(Op.Mul);
-    expect(map.get("/")).toBe(Op.Div);
-    expect(map.get("//")).toBe(Op.FloorDiv);
-    expect(map.get("%")).toBe(Op.Mod);
-    expect(map.get("**")).toBe(Op.Power);
-    expect(map.get("&")).toBe(Op.BitAnd);
-    expect(map.get("|")).toBe(Op.BitOr);
-    expect(map.get("^")).toBe(Op.BitXor);
-    expect(map.get("<<")).toBe(Op.LShift);
-    expect(map.get(">>")).toBe(Op.RShift);
-    expect(binaryOpcode("+")).toBe(Op.Add);
-    expect(binaryOpcode("???")).toBeUndefined();
-    expect(map.size).toBe(12);
+    assert.equal(map.get("+"), Op.Add);
+    assert.equal(map.get("-"), Op.Sub);
+    assert.equal(map.get("*"), Op.Mul);
+    assert.equal(map.get("/"), Op.Div);
+    assert.equal(map.get("//"), Op.FloorDiv);
+    assert.equal(map.get("%"), Op.Mod);
+    assert.equal(map.get("**"), Op.Power);
+    assert.equal(map.get("&"), Op.BitAnd);
+    assert.equal(map.get("|"), Op.BitOr);
+    assert.equal(map.get("^"), Op.BitXor);
+    assert.equal(map.get("<<"), Op.LShift);
+    assert.equal(map.get(">>"), Op.RShift);
+    assert.equal(binaryOpcode("+"), Op.Add);
+    assert.equal(binaryOpcode("???"), undefined);
+    assert.equal(map.size, 12);
   });
 
   it("maps comparison operators", () => {
     const map = compareOpMap();
-    expect(map.get("==")).toBe(Op.CmpEq);
-    expect(map.get("!=")).toBe(Op.CmpNe);
-    expect(map.get("<")).toBe(Op.CmpLt);
-    expect(map.get(">")).toBe(Op.CmpGt);
-    expect(map.get("<=")).toBe(Op.CmpLe);
-    expect(map.get(">=")).toBe(Op.CmpGe);
-    expect(map.get("in")).toBe(Op.CmpIn);
-    expect(map.get("not in")).toBe(Op.CmpNotIn);
-    expect(compareOpcode("in")).toBe(Op.CmpIn);
-    expect(compareOpcode("contains")).toBeUndefined();
-    expect(map.size).toBe(8);
+    assert.equal(map.get("=="), Op.CmpEq);
+    assert.equal(map.get("!="), Op.CmpNe);
+    assert.equal(map.get("<"), Op.CmpLt);
+    assert.equal(map.get(">"), Op.CmpGt);
+    assert.equal(map.get("<="), Op.CmpLe);
+    assert.equal(map.get(">="), Op.CmpGe);
+    assert.equal(map.get("in"), Op.CmpIn);
+    assert.equal(map.get("not in"), Op.CmpNotIn);
+    assert.equal(compareOpcode("in"), Op.CmpIn);
+    assert.equal(compareOpcode("contains"), undefined);
+    assert.equal(map.size, 8);
   });
 
   it("maps augmented assignments to arithmetic opcodes", () => {
     const map = augmentedAssignMap();
-    expect(map.get("+=")).toBe(Op.Add);
-    expect(map.get("-=")).toBe(Op.Sub);
-    expect(map.get("*=")).toBe(Op.Mul);
-    expect(map.get("/=")).toBe(Op.Div);
-    expect(map.get("//=")).toBe(Op.FloorDiv);
-    expect(map.get("%=")).toBe(Op.Mod);
-    expect(map.get("&=")).toBe(Op.BitAnd);
-    expect(map.get("|=")).toBe(Op.BitOr);
-    expect(map.get("^=")).toBe(Op.BitXor);
-    expect(map.get("<<=")).toBe(Op.LShift);
-    expect(map.get(">>=")).toBe(Op.RShift);
-    expect(map.get("**=")).toBe(Op.Power);
-    expect(augmentedAssignOpcode("**=")).toBe(Op.Power);
-    expect(augmentedAssignOpcode("=")).toBeUndefined();
-    expect(map.size).toBe(12);
+    assert.equal(map.get("+="), Op.Add);
+    assert.equal(map.get("-="), Op.Sub);
+    assert.equal(map.get("*="), Op.Mul);
+    assert.equal(map.get("/="), Op.Div);
+    assert.equal(map.get("//="), Op.FloorDiv);
+    assert.equal(map.get("%="), Op.Mod);
+    assert.equal(map.get("&="), Op.BitAnd);
+    assert.equal(map.get("|="), Op.BitOr);
+    assert.equal(map.get("^="), Op.BitXor);
+    assert.equal(map.get("<<="), Op.LShift);
+    assert.equal(map.get(">>="), Op.RShift);
+    assert.equal(map.get("**="), Op.Power);
+    assert.equal(augmentedAssignOpcode("**="), Op.Power);
+    assert.equal(augmentedAssignOpcode("="), undefined);
+    assert.equal(map.size, 12);
   });
 
   it("maps unary operators", () => {
     const map = unaryOpMap();
-    expect(map.get("-")).toBe(Op.Negate);
-    expect(map.get("~")).toBe(Op.BitNot);
-    expect(unaryOpcode("~")).toBe(Op.BitNot);
-    expect(unaryOpcode("not")).toBeUndefined();
-    expect(map.size).toBe(2);
+    assert.equal(map.get("-"), Op.Negate);
+    assert.equal(map.get("~"), Op.BitNot);
+    assert.equal(unaryOpcode("~"), Op.BitNot);
+    assert.equal(unaryOpcode("not"), undefined);
+    assert.equal(map.size, 2);
   });
 
   it("returns mutable map copies", () => {
     const map = binaryOpMap();
     map.set("custom", Op.Halt);
-    expect(binaryOpMap().has("custom")).toBe(false);
+    assert.equal(binaryOpMap().has("custom"), false);
   });
 });
