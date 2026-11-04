@@ -1,4 +1,5 @@
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
   literal,
   match,
@@ -30,31 +31,31 @@ function eq(a: Uint8Array, b: Uint8Array): boolean {
 
 describe("encode — spec vectors", () => {
   it("empty input", () => {
-    expect(encode(new Uint8Array())).toEqual([]);
+    assert.deepEqual(encode(new Uint8Array()), []);
   });
 
   it("single byte", () => {
-    expect(encode(enc("A"))).toEqual([literal(65)]);
+    assert.deepEqual(encode(enc("A")), [literal(65)]);
   });
 
   it("no repetition", () => {
     const tokens = encode(enc("ABCDE"));
-    expect(tokens.length).toBe(5);
-    expect(tokens.every((t) => t.kind === "literal")).toBe(true);
+    assert.equal(tokens.length, 5);
+    assert.equal(tokens.every((t) => t.kind === "literal"), true);
   });
 
   it("AABCBBABC", () => {
     const tokens = encode(enc("AABCBBABC"));
-    expect(tokens.length).toBe(7);
-    expect(tokens[6]).toEqual(match(5, 3));
+    assert.equal(tokens.length, 7);
+    assert.deepEqual(tokens[6], match(5, 3));
   });
 
   it("ABABAB", () => {
-    expect(encode(enc("ABABAB"))).toEqual([literal(65), literal(66), match(2, 4)]);
+    assert.deepEqual(encode(enc("ABABAB")), [literal(65), literal(66), match(2, 4)]);
   });
 
   it("AAAAAAA (self-referential match)", () => {
-    expect(encode(enc("AAAAAAA"))).toEqual([literal(65), match(1, 6)]);
+    assert.deepEqual(encode(enc("AAAAAAA")), [literal(65), match(1, 6)]);
   });
 });
 
@@ -63,33 +64,33 @@ describe("encode — spec vectors", () => {
 describe("encode — properties", () => {
   it("match offset >= 1", () => {
     for (const tok of encode(enc("ABABABAB"))) {
-      if (tok.kind === "match") expect(tok.offset).toBeGreaterThanOrEqual(1);
+      if (tok.kind === "match") assert.ok(tok.offset >= 1);
     }
   });
 
   it("match length >= min_match", () => {
     for (const tok of encode(enc("ABABABABABAB"))) {
-      if (tok.kind === "match") expect(tok.length).toBeGreaterThanOrEqual(3);
+      if (tok.kind === "match") assert.ok(tok.length >= 3);
     }
   });
 
   it("match offset within window_size", () => {
     const data = enc("ABCABCABCABC");
     for (const tok of encode(data, 4)) {
-      if (tok.kind === "match") expect(tok.offset).toBeLessThanOrEqual(4);
+      if (tok.kind === "match") assert.ok(tok.offset <= 4);
     }
   });
 
   it("match length within max_match", () => {
     const data = new Uint8Array(100).fill(65);
     for (const tok of encode(data, 4096, 5)) {
-      if (tok.kind === "match") expect(tok.length).toBeLessThanOrEqual(5);
+      if (tok.kind === "match") assert.ok(tok.length <= 5);
     }
   });
 
   it("min_match large forces all literals", () => {
     const tokens = encode(enc("ABABAB"), 4096, 255, 100);
-    expect(tokens.every((t) => t.kind === "literal")).toBe(true);
+    assert.equal(tokens.every((t) => t.kind === "literal"), true);
   });
 });
 
@@ -97,31 +98,31 @@ describe("encode — properties", () => {
 
 describe("decode", () => {
   it("empty", () => {
-    expect(decode([], 0)).toEqual(new Uint8Array());
+    assert.deepEqual(decode([], 0), new Uint8Array());
   });
 
   it("single literal", () => {
-    expect(decode([literal(65)], 1)).toEqual(new Uint8Array([65]));
+    assert.deepEqual(decode([literal(65)], 1), new Uint8Array([65]));
   });
 
   it("overlapping match — AAAAAAA", () => {
     const result = decode([literal(65), match(1, 6)], 7);
-    expect(result).toEqual(enc("AAAAAAA"));
+    assert.deepEqual(result, enc("AAAAAAA"));
   });
 
   it("ABABAB", () => {
     const result = decode([literal(65), literal(66), match(2, 4)], 6);
-    expect(result).toEqual(enc("ABABAB"));
+    assert.deepEqual(result, enc("ABABAB"));
   });
 
   it("truncates to original_length", () => {
     const result = decode([literal(65), literal(66), literal(67)], 2);
-    expect(result).toEqual(new Uint8Array([65, 66]));
+    assert.deepEqual(result, new Uint8Array([65, 66]));
   });
 
   it("returns all when -1", () => {
     const result = decode([literal(65), literal(66)]);
-    expect(result).toEqual(new Uint8Array([65, 66]));
+    assert.deepEqual(result, new Uint8Array([65, 66]));
   });
 });
 
@@ -146,7 +147,7 @@ describe("round-trip", () => {
 
   for (const [name, data] of cases) {
     it(name, () => {
-      expect(eq(rt(data), data)).toBe(true);
+      assert.equal(eq(rt(data), data), true);
     });
   }
 });
@@ -158,17 +159,17 @@ describe("wire format", () => {
     const data = enc("hello");
     const compressed = compress(data);
     const view = new DataView(compressed.buffer);
-    expect(view.getUint32(0, false)).toBe(5);
+    assert.equal(view.getUint32(0, false), 5);
   });
 
   it("compress is deterministic", () => {
     const data = enc("hello world test");
-    expect(compress(data)).toEqual(compress(data));
+    assert.deepEqual(compress(data), compress(data));
   });
 
   it("empty compresses to 8-byte header", () => {
     const c = compress(new Uint8Array());
-    expect(c.length).toBe(8);
+    assert.equal(c.length, 8);
   });
 
   it("crafted large block_count is safe", () => {
@@ -176,7 +177,7 @@ describe("wire format", () => {
     const view = new DataView(bad.buffer);
     view.setUint32(4, 0x40000000, false); // 2^30 blocks
     const result = decompress(bad);
-    expect(result).toBeInstanceOf(Uint8Array);
+    assert.ok(result instanceof Uint8Array);
   });
 });
 
@@ -185,19 +186,19 @@ describe("wire format", () => {
 describe("compression effectiveness", () => {
   it("repetitive data compresses", () => {
     const data = enc("ABC".repeat(1000));
-    expect(compress(data).length).toBeLessThan(data.length);
+    assert.ok(compress(data).length < data.length);
   });
 
   it("all-same byte compresses", () => {
     const data = new Uint8Array(10000).fill(0x42);
     const compressed = compress(data);
-    expect(compressed.length).toBeLessThan(data.length);
-    expect(eq(decompress(compressed), data)).toBe(true);
+    assert.ok(compressed.length < data.length);
+    assert.equal(eq(decompress(compressed), data), true);
   });
 
   it("LZSS much smaller than raw on repetitive data", () => {
     const data = enc("ABCDEF".repeat(500)); // 3000 bytes
-    expect(compress(data).length).toBeLessThan(data.length / 2);
+    assert.ok(compress(data).length < data.length / 2);
   });
 });
 
@@ -208,7 +209,7 @@ describe("serialise/deserialise", () => {
     const tokens = [literal(65), literal(66), match(2, 4)];
     const bytes = serialiseTokens(tokens, 6);
     const [recovered, origLen] = deserialiseTokens(bytes);
-    expect(origLen).toBe(6);
-    expect(recovered).toEqual(tokens);
+    assert.equal(origLen, 6);
+    assert.deepEqual(recovered, tokens);
   });
 });

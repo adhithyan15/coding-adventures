@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Compose the fully routed responder no-check proof with separately
+  authenticated intermediate status by deriving the retained intermediate,
+  selected reviewed root, and original observation time internally.
+- Retain both complete non-copyable inputs with the existing stable payload-
+  free target, issuer, and time failures, while leaving the added proof's own
+  responder revocation and complete revocation policy unresolved.
+- Bind a separate fully routed authenticated OCSP proof to the exact retained
+  intermediate, selected reviewed root, and original server-status observation
+  time, with stable payload-free target, issuer, and time mismatch failures.
+- Retain both complete non-copyable proofs without new cryptography or external
+  effects, while leaving responder-policy composition, the second proof's own
+  responder revocation, generalized path validation, TLS, HTTP, and OAuth
+  unresolved.
 - Bind a separate fully routed authenticated OCSP proof to the exact routed
   responder, retained intermediate, and original server-status observation
   time, with stable payload-free target, issuer, and time mismatch failures.

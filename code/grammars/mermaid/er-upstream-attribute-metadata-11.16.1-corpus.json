@@ -1,0 +1,27 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 classic ER Cypress escaped names, keys, and comments rendering corpus",
+  "fixtures": [
+    {
+      "name": "escaped-attribute-names",
+      "source": "erDiagram\nHOTEL {\n  string address\n  string `geo.accuracy`\n  string `check-in date` PK \"ISO 8601\"\n}\nHOTEL ||--o{ ROOM : has\nROOM {\n  int `room.number`\n  string `bed.type`\n}"
+    },
+    {
+      "name": "comma-and-period-attributes",
+      "source": "erDiagram\nHOTEL {\n  string address\n  GEOMETRY(point,4326) location\n  DECIMAL(10,2) price_per_night\n}\nHOTEL ||--o{ ROOM : has\nROOM {\n  int room.number\n  string bed.type\n}"
+    },
+    {
+      "name": "attribute-keys",
+      "source": "erDiagram\nAUTHOR_WITH_LONG_ENTITY_NAME {\n  string name PK\n}\nAUTHOR_WITH_LONG_ENTITY_NAME }|..|{ BOOK : writes\nBOOK {\n  float price\n  string author FK\n  string title PK\n}"
+    },
+    {
+      "name": "attribute-comments",
+      "source": "erDiagram\nAUTHOR_WITH_LONG_ENTITY_NAME {\n  string name \"comment\"\n}\nAUTHOR_WITH_LONG_ENTITY_NAME }|..|{ BOOK : writes\nBOOK {\n  string author\n  string title \"author comment\"\n  float price \"price comment\"\n}"
+    },
+    {
+      "name": "attribute-keys-and-comments",
+      "source": "erDiagram\nAUTHOR_WITH_LONG_ENTITY_NAME {\n  string name PK \"comment\"\n}\nAUTHOR_WITH_LONG_ENTITY_NAME }|..|{ BOOK : writes\nBOOK {\n  string description\n  float price \"price comment\"\n  string title PK \"title comment\"\n  string author FK\n}"
+    }
+  ]
+}
