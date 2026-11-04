@@ -1,10 +1,12 @@
+use core::cell::Cell;
 use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
 use sha256::sha256;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_policy::{
     validate_certificate_algorithm_policy, validate_certificate_role_policy,
-    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile, X509CertificateRole,
+    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
+    X509CertificateIssuerLinkErrorKind, X509CertificateRole,
 };
 use x509_ocsp_authenticated_responder::{
     authenticate_x509_ocsp_rsa_responder, authenticate_x509_ocsp_rsa_sha256_responder,
@@ -14,7 +16,9 @@ use x509_ocsp_authenticated_responder::{
 use x509_ocsp_basic_response::{decode_x509_ocsp_basic_response, X509OcspBasicResponse};
 use x509_ocsp_issuer_bound_responder::{
     bind_x509_ocsp_authenticated_responder_to_issuer,
-    bind_x509_ocsp_authenticated_rsa_responder_to_issuer, X509OcspIssuerBoundResponderErrorKind,
+    bind_x509_ocsp_authenticated_rsa_responder_to_issuer,
+    verify_x509_ocsp_authenticated_rsa_responder_routed_issuer_link,
+    X509OcspIssuerBoundResponderErrorKind, X509OcspRoutedIssuerBoundResponderErrorKind,
 };
 use x509_ocsp_responder_certificate_policy::validate_x509_ocsp_responder_certificate_policy;
 use x509_ocsp_responder_id_binding::bind_x509_ocsp_responder_id_to_certificate;
@@ -22,10 +26,16 @@ use x509_ocsp_rsa_algorithm_policy::{
     X509OcspRsaAlgorithmParametersPolicy, X509OcspRsaAlgorithmProfile,
 };
 use x509_ocsp_rsa_signature_routing::{X509OcspRsaSignatureRoute, X509OcspRsaSignatureVerifier};
+use x509_rsa_algorithm_policy::{
+    validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
+};
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_sha256_issuer_link::{
     verify_x509_rsa_sha256_issuer_link, VerifiedX509RsaSha256IssuerLink,
     X509RsaSha256IssuerLinkPolicy,
+};
+use x509_rsa_signature_routing::{
+    X509RsaSignatureRoute, X509RsaSignatureRoutingErrorKind, X509RsaSignatureVerifier,
 };
 use x509_time::{decode_x509_time, X509Time};
 
@@ -241,6 +251,38 @@ fn issuer_link<'responder, 'responder_encoded, 'issuer, 'issuer_encoded>(
     .unwrap()
 }
 
+fn issuer_role_policy<'issuer, 'issuer_encoded>(
+    issuer: &'issuer X509Certificate<'issuer_encoded>,
+) -> x509_certificate_policy::ValidatedCertificateRolePolicy<'issuer, 'issuer_encoded> {
+    validate_certificate_role_policy(
+        issuer,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap()
+}
+
+fn issuer_rsa_algorithm_policy<'issuer, 'issuer_encoded>(
+    issuer: &'issuer X509Certificate<'issuer_encoded>,
+) -> ValidatedX509RsaAlgorithmPolicy<'issuer, 'issuer_encoded> {
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(issuer, &algorithm_profiles()).unwrap();
+    validate_x509_rsa_algorithm_policy(
+        algorithm_policy,
+        RsaPublicKeyPolicy::new(2_048, 4_096, ALLOWED_EXPONENTS).unwrap(),
+        Asn1Limits::default(),
+    )
+    .unwrap()
+}
+
+fn certificate_signature_routes() -> [X509RsaSignatureRoute; 1] {
+    [X509RsaSignatureRoute::new(
+        0,
+        X509RsaSignatureVerifier::RsaPkcs1V15Sha256,
+    )]
+}
+
 #[test]
 fn checked_in_public_certificates_match_the_generation_trace() {
     let issuer = decode_hex(include_str!("fixtures/issuer.der.hex"));
@@ -378,5 +420,242 @@ fn routed_binding_rejects_a_byte_equal_distinct_responder_object() {
     assert_eq!(
         error.kind(),
         X509OcspIssuerBoundResponderErrorKind::EvidenceMismatch
+    );
+}
+
+#[test]
+fn routes_the_exact_responder_certificate_issuer_link() {
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature();
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+    let name_calls = Cell::new(0);
+
+    let bound = verify_x509_ocsp_authenticated_rsa_responder_routed_issuer_link(
+        authenticate_routed(&response, &responder),
+        validate_certificate_algorithm_policy(&responder, &algorithm_profiles()).unwrap(),
+        issuer_role_policy(&issuer),
+        issuer_rsa_algorithm_policy(&issuer),
+        |child_issuer, candidate_subject| {
+            name_calls.set(name_calls.get() + 1);
+            child_issuer.encoded() == candidate_subject.encoded()
+        },
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap();
+
+    assert_eq!(name_calls.get(), 1);
+    assert!(std::ptr::eq(
+        bound
+            .authenticated_responder()
+            .responder_certificate_policy()
+            .certificate(),
+        bound
+            .responder_issuer_signature()
+            .child_algorithm_policy()
+            .certificate()
+    ));
+    assert!(std::ptr::eq(
+        bound.issuer_role_policy().certificate(),
+        bound
+            .responder_issuer_signature()
+            .issuer_rsa_algorithm_policy()
+            .certificate()
+    ));
+    assert_eq!(
+        bound.responder_issuer_signature().verifier(),
+        X509RsaSignatureVerifier::RsaPkcs1V15Sha256
+    );
+    assert_eq!(
+        bound
+            .authenticated_responder()
+            .response_signature()
+            .verifier(),
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha256
+    );
+    assert_eq!(
+        format!("{bound:?}"),
+        "IssuerBoundX509OcspRsaRoutedIssuerResponder"
+    );
+}
+
+#[test]
+fn routed_issuer_link_rejects_a_distinct_responder_policy_before_name_policy() {
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let distinct_responder =
+        decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature();
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+    let name_calls = Cell::new(0);
+
+    let error = verify_x509_ocsp_authenticated_rsa_responder_routed_issuer_link(
+        authenticate_routed(&response, &responder),
+        validate_certificate_algorithm_policy(&distinct_responder, &algorithm_profiles()).unwrap(),
+        issuer_role_policy(&issuer),
+        issuer_rsa_algorithm_policy(&issuer),
+        |_, _| {
+            name_calls.set(name_calls.get() + 1);
+            true
+        },
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(name_calls.get(), 0);
+    assert_eq!(
+        error.kind(),
+        X509OcspRoutedIssuerBoundResponderErrorKind::ResponderAlgorithmEvidenceMismatch
+    );
+}
+
+#[test]
+fn routed_issuer_link_rejects_distinct_issuer_policy_before_name_policy() {
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let distinct_issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature();
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+    let name_calls = Cell::new(0);
+
+    let error = verify_x509_ocsp_authenticated_rsa_responder_routed_issuer_link(
+        authenticate_routed(&response, &responder),
+        validate_certificate_algorithm_policy(&responder, &algorithm_profiles()).unwrap(),
+        issuer_role_policy(&issuer),
+        issuer_rsa_algorithm_policy(&distinct_issuer),
+        |_, _| {
+            name_calls.set(name_calls.get() + 1);
+            true
+        },
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(name_calls.get(), 0);
+    assert_eq!(
+        error.kind(),
+        X509OcspRoutedIssuerBoundResponderErrorKind::IssuerAlgorithmEvidenceMismatch
+    );
+}
+
+#[test]
+fn routed_issuer_link_rejects_non_ca_role_before_name_policy() {
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature();
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+    let name_calls = Cell::new(0);
+    let end_entity_role = validate_certificate_role_policy(
+        &responder,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+
+    let error = verify_x509_ocsp_authenticated_rsa_responder_routed_issuer_link(
+        authenticate_routed(&response, &responder),
+        validate_certificate_algorithm_policy(&responder, &algorithm_profiles()).unwrap(),
+        end_entity_role,
+        issuer_rsa_algorithm_policy(&responder),
+        |_, _| {
+            name_calls.set(name_calls.get() + 1);
+            true
+        },
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(name_calls.get(), 0);
+    assert_eq!(
+        error.kind(),
+        X509OcspRoutedIssuerBoundResponderErrorKind::IssuerNotCertificateAuthority
+    );
+}
+
+#[test]
+fn routed_issuer_link_reports_name_policy_failure_once_and_redacts_display() {
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature();
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+    let name_calls = Cell::new(0);
+
+    let error = verify_x509_ocsp_authenticated_rsa_responder_routed_issuer_link(
+        authenticate_routed(&response, &responder),
+        validate_certificate_algorithm_policy(&responder, &algorithm_profiles()).unwrap(),
+        issuer_role_policy(&issuer),
+        issuer_rsa_algorithm_policy(&issuer),
+        |_, _| {
+            name_calls.set(name_calls.get() + 1);
+            false
+        },
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(name_calls.get(), 1);
+    assert_eq!(
+        error.kind(),
+        X509OcspRoutedIssuerBoundResponderErrorKind::IssuerName(
+            X509CertificateIssuerLinkErrorKind::NameMismatch
+        )
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 OCSP routed issuer-bound responder error IssuerName(NameMismatch)"
+    );
+}
+
+#[test]
+fn routed_issuer_link_preserves_signature_route_failures() {
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature();
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+
+    let error = verify_x509_ocsp_authenticated_rsa_responder_routed_issuer_link(
+        authenticate_routed(&response, &responder),
+        validate_certificate_algorithm_policy(&responder, &algorithm_profiles()).unwrap(),
+        issuer_role_policy(&issuer),
+        issuer_rsa_algorithm_policy(&issuer),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+        &[],
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspRoutedIssuerBoundResponderErrorKind::Signature(
+            X509RsaSignatureRoutingErrorKind::UnsupportedProfileRoute
+        )
     );
 }

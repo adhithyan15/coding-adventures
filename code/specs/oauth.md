@@ -2274,6 +2274,30 @@ responder certificate's revocation, fetch or cache data, read a clock, perform
 TLS or HTTP, authorize OAuth transport, or grant network authority. Concrete
 HTTPS and live-provider readiness remain unavailable.
 
+An additive data-driven entry point in the same composition now authenticates
+the responder-certificate issuer link without fixing that certificate
+signature to SHA-256. It consumes one routed authenticated-responder proof,
+independent certificate-bound algorithm policy for that exact responder
+certificate, certificate-wide issuing-CA role policy and certificate-bound RSA
+algorithm/key policy for one exact candidate issuer, caller-owned Name policy,
+caller-owned profile routes, and repository-owned RSA operation limits. Exact
+responder and issuer object-identity checks plus the issuing-CA role check run
+before Name policy or cryptography; byte-equal independent decodes fail closed.
+The Name callback runs exactly once, after which the selected child profile is
+routed through the existing repository-owned RSA PKCS #1 v1.5 SHA-256,
+SHA-384, or SHA-512 verifier. Non-copyable success evidence retains the routed
+response authentication, responder algorithm policy, issuer role policy, and
+selected certificate-signature proof so none can be substituted after
+verification. Existing fixed-link entry points remain unchanged. This
+public-data composition performs no credential access, edit, signing
+operation, provider action, storage access, audit or trace emission, I/O, or
+external effect. It does not establish that the candidate issuer issued a
+particular target certificate, bind a `CertID` or revocation decision,
+construct or validate a responder path, establish trust, check responder
+revocation, fetch or cache data, read a clock, perform TLS or HTTP, authorize
+OAuth transport, or grant network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded `x509-ocsp-cert-id-binding` prerequisite now binds one exact
 structurally decoded `SingleResponse` to one exact target certificate and one
 exact candidate issuer certificate. It first requires the target certificate's
