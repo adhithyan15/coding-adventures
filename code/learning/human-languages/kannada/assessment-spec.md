@@ -58,6 +58,40 @@ Sources checked 2026-09-13:
 - [Council of Europe introduction and certification caveat](https://www.coe.int/en/web/common-european-framework-reference-languages/introduction-and-context)
 - [Kannada Sahitya Parishat's Kannada Exams — Star of Mysore](https://starofmysore.com/kannada-sahitya-parishats-kannada-exams/)
 
+### A1 origin-cluster source plan
+
+The A1 inventory's place and origin cluster is a project-defined teaching
+boundary, not an externally certified Kannada syllabus. Its functional level is
+bounded by the CEFR A1 ability to ask and answer simple personal-detail
+questions and by this project's shared Spanish A1 proxy for structure only.
+Kannada forms remain owned by the Kannada track and by competent Kannada
+sources; Spanish does not select or validate them.
+
+A fresh corpus audit on 2026-11-04 found that the inventory notes had understated
+what the book already teaches. Chapter 91 owns **ಊರು** (*ūru*, home town) and
+**ನಿಮ್ಮ ಊರು ಯಾವುದು?** (*nimma ūru yāvudu?*, “what is your home town?”), while
+Chapter 103 owns **ನಗರ** (*nagara*, city), **ದೇಶ** (*dēśa*, country), and
+**ರಾಜ್ಯ** (*rājya*, state). The remaining six-point gap is therefore not a new
+list of generic place words. It is a slow composition path that relates a
+person to a place, asks where somebody is from, and answers with the ablative
+**-ಇಂದ** (*-inda*), while retrieving the existing town, city, country, and
+state vocabulary.
+
+One contemporary official transcript supplies a narrow primary-source boundary
+for an exact exchange: the Government of India's Kannada record of *Pariksha Pe
+Charcha 2023* prints **ನೀನು ಕರ್ನಾಟಕದವನೇ?** and the answer **ಹೌದು ಸರ್,
+ಬೆಂಗಳೂರಿನಿಂದ**. The lesson may use that attested exchange for recognition and
+may derive a neutral productive route from the book's already taught personal
+questions. The transcript does not assign a CEFR level, define a finite Kannada
+syllabus, certify the project, or establish learner readiness.
+
+Sources checked 2026-11-04:
+
+- [Government of India, Prime Minister's Office, *Pariksha Pe Charcha 2023*
+  Kannada transcript](https://www.pmindia.gov.in/kn/news_updates/%E0%B2%AA%E0%B2%B0%E0%B3%80%E0%B2%95%E0%B3%8D%E0%B2%B7%E0%B2%BE-%E0%B2%AA%E0%B3%87-%E0%B2%9A%E0%B2%B0%E0%B3%8D%E0%B2%9A%E0%B2%BE-2023-%E0%B2%AA%E0%B3%8D%E0%B2%B0%E0%B2%A7%E0%B2%BE%E0%B2%A8/)
+- [Council of Europe CEFR Companion Volume and language
+  versions](https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-companion-volume-and-its-language-versions)
+
 ### B2 content-inventory source plan
 
 The B2 task shape fixes **how** performance is sampled; it does not define the
