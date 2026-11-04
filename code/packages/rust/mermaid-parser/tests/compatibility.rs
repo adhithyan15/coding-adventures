@@ -297,6 +297,14 @@ const ER_UPSTREAM_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-upstream-labels-11.16.1-visual-corpus.json"
 ));
+const ER_UPSTREAM_NUMERIC_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-numeric-11.16.1-corpus.json"
+));
+const ER_UPSTREAM_NUMERIC_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-numeric-11.16.1-visual-corpus.json"
+));
 const ER_STYLES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
@@ -2697,6 +2705,36 @@ fn pinned_er_upstream_labels_reach_semantic_ir() {
         Some("has\none\ntwo\nthree\n...\nNth")
     );
     assert_eq!(diagrams[4].nodes[0].label, "Photograph");
+}
+
+#[test]
+fn pinned_er_upstream_numeric_entities_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_UPSTREAM_NUMERIC_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(ER_UPSTREAM_NUMERIC_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), visual_names.len());
+
+    let diagrams = fixtures
+        .iter()
+        .zip(visual_names)
+        .map(|(fixture, visual_name)| {
+            assert_eq!(fixture["name"], *visual_name);
+            parse_er_diagram(fixture["source"].as_str().unwrap()).unwrap()
+        })
+        .collect::<Vec<_>>();
+    assert!(diagrams[0].nodes.iter().any(|node| node.id == "3.5"));
+    assert!(diagrams[1].nodes.iter().any(|node| node.id == "u"));
+    assert!(diagrams[2].nodes.iter().any(|node| node.id == "3.14"));
+    assert_eq!(
+        diagrams[3].nodes.iter().find(|node| node.id == "1").unwrap().compartments[0].entries,
+        ["name: string", "value: int"]
+    );
+    assert!(diagrams[4].nodes.iter().any(|node| node.id == "1.5"));
+    for expected in ["1.5", "u", "1"] {
+        assert!(diagrams[5].nodes.iter().any(|node| node.id == expected));
+    }
 }
 
 #[test]
