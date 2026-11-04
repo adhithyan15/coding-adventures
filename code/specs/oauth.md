@@ -2652,6 +2652,27 @@ for the added responder, implement complete revocation policy, generalize path
 construction or validation, or provide TLS, HTTP, OAuth transport, or network
 authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
+A following bounded revocation-policy slice consumes that complete added-
+responder reviewed-root DNS proof and applies RFC 6960's trust-for-certificate-
+lifetime branch to the exact authenticated responder. The responder
+certificate is derived only through the retained proof; callers cannot
+substitute a certificate or extension value. The structurally unique
+`id-pkix-ocsp-nocheck` extension must be present and its value must be exact DER
+`NULL`. A critical instance can reach this semantic gate only when the earlier
+certificate-wide role policy explicitly recognized its OID; RFC 6960
+recommends, but does not require, non-critical marking. Success retains the
+complete reviewed-root DNS proof under a distinct non-copyable type. Missing
+or malformed values reuse stable failures that expose no certificate,
+extension, response, key, signature, status, hostname, root, or time payload.
+This pure public-certificate-data policy performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It resolves
+only the no-check branch for the added responder; separately authenticated
+revocation for responders without the extension, complete revocation policy,
+generalized path construction or validation, TLS, HTTP, OAuth transport, and
+network authority remain unavailable. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated

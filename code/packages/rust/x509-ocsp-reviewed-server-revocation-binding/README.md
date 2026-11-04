@@ -155,6 +155,19 @@ excluded or non-DNS root constraints or establish no-check or separately
 authenticated revocation policy for the added responder, complete revocation,
 generalized path validation, TLS, HTTP, OAuth, or network readiness.
 
+`validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_no_check_policy`
+then consumes that complete reviewed-root DNS proof and derives the added
+proof's exact authenticated responder internally. It requires the structurally
+unique RFC 6960 `id-pkix-ocsp-nocheck` extension and exact DER `NULL` contents.
+A critical instance can reach this semantic gate only when certificate-wide
+role policy already recognized the OID; RFC 6960 recommends, but does not
+require, non-critical marking. Success retains the entire prior proof, and
+missing or malformed values reuse the existing stable payload-free categories.
+This resolves only the trust-for-certificate-lifetime branch for the added
+responder; separately authenticated responder revocation, complete revocation,
+generalized path validation, TLS, HTTP, OAuth, and network readiness remain
+unresolved.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy
@@ -211,17 +224,19 @@ The independent intermediate branch binds another complete authenticated proof
 to the exact retained intermediate, selected reviewed root, and observation
 time. The no-check composition derives those same inputs through the consumed
 no-check proof and retains the added proof. Its follow-up projection reifies
-that proof's exact delegated responder-to-reviewed-root path, but stops before
-reviewed-root DNS policy or revocation policy for that responder.
+that proof's exact delegated responder-to-reviewed-root path; subsequent
+policies apply supported reviewed-root DNS constraints and the no-check branch
+to that exact added responder.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
 intermediate constraints to the responder certificate, compose intermediate-
 status evidence with the authenticated responder-revocation branch, implement
 complete revocation policy, validate the additional proof's own responder
-revocation, interpret unsupported OCSP extensions, acquire or cache OCSP data,
-read a clock, implement TLS or HTTP, authorize OAuth transport, open a network
-connection, or access a credential. The reviewed Mozilla root snapshot excludes OS,
+through the separately authenticated revocation alternative, interpret
+unsupported OCSP extensions, acquire or cache OCSP data, read a clock,
+implement TLS or HTTP, authorize OAuth transport, open a network connection,
+or access a credential. The reviewed Mozilla root snapshot excludes OS,
 enterprise, user-installed, and local roots. `webpki-roots` remains reviewed
 public data only, not a TLS or validation implementation. Concrete OAuth HTTPS
 remains unavailable.
