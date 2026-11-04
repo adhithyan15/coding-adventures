@@ -37,6 +37,16 @@ Build membership sets once after the existing duplicate/case-fold refusals;
 filter the already-sorted arrays against those sets so diagnostics retain their
 exact ordering and wording. Do not skip any identity or relax collision rules.
 
+The remaining measured cost is synchronous file opens, not JSON work: on a
+63,280-owner Windows checkout, a read-only pass spent about 24.2 seconds in
+text reads but less than 0.2 seconds each in parsing and canonical
+serialization. Add an awaitable direct-owner route that performs at most 16
+guarded reads at once per track, retaining exact text for canonical comparison.
+The existing synchronous API stays available. Both routes share the same
+preflight directory and identity checks, same parser, same ordering and final
+manifest validation. Every started read must settle before a failure rejects;
+the loader must not leave background file operations racing caller teardown.
+
 Measure the reader and end-to-end check after this single-read change. If
 either still exceeds its budget, profile the remaining phases and keep #18941
 open; a passing focused subcase is not full-suite acceptance.
@@ -47,6 +57,10 @@ open; a passing focused subcase is not full-suite acceptance.
   including source edits and unsafe owner paths.
 - Missing/extra identities and case-fold collisions retain their exact
   diagnostic ordering, with a large fixture preventing quadratic regressions.
+- Async and sync readers agree on a two-track fixture, including a changed
+  source, a symlink refusal, malformed JSON, dangerous keys, missing/extra
+  identities, and noncanonical bytes. A test proves the 16-read bound and
+  failure drain without depending on filesystem timing.
 - A test verifies that the value and canonical text are judged from one
   guarded source read, not two potentially different file versions.
 - Focused modality tests, the unweakened Windows/macOS package suites, and
