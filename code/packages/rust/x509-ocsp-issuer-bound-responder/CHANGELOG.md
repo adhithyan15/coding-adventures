@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add an exact-object routed responder-certificate issuer link that consumes
+  responder algorithm policy plus candidate-issuer role and RSA key policy.
+- Route the responder certificate signature through caller-owned profile
+  mappings to the repository-owned SHA-256, SHA-384, or SHA-512 verifier.
+- Reject responder-policy substitution, issuer-policy substitution, non-CA
+  roles, and Name-policy failures before returning non-copyable evidence.
 - Add a non-copyable issuer-binding result for the data-driven authenticated
   responder proof while preserving the existing fixed SHA-256 API.
 - Retain caller-routed SHA-256, SHA-384, or SHA-512 response-signature evidence

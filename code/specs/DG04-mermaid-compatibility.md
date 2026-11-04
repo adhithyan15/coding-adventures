@@ -244,8 +244,11 @@ sprite rendering, which pinned Mermaid documents as unfinished. The remaining
 grammar-first semantic metadata, including the documented shape helper forms, and
 survive layout into PaintScene metadata. Only the already-supported colors and
 technology affect paint; pinned Mermaid stores the other values without rendering
-them, so this implementation does not claim visual behavior for them. C4 remains
-partial while its remaining macro semantics and visual corpus are incomplete.
+them, so this implementation does not claim visual behavior for them. C4 is full
+at the pinned Mermaid 11.16.1 baseline. Its consolidated parser acceptance corpus
+covers every active upstream C4 parser specification, while the six-fixture
+Cypress rendering corpus exercises all five diagram headers and the external
+component queue path through native rendering.
 
 ## Required New Semantic Families
 

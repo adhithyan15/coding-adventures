@@ -37,6 +37,10 @@ const C4_UPSTREAM_RENDERING_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-upstream-rendering-11.16.1-visual-corpus.json"
 ));
+const C4_PARSER_ACCEPTANCE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-parser-acceptance-11.16.1-corpus.json"
+));
 const C4_LEGACY_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-legacy-accessibility-11.16.1-corpus.json"
@@ -2720,6 +2724,42 @@ fn pinned_c4_upstream_rendering_corpus_reaches_semantic_ir() {
         Some(diagram_ir::StructuralNodeMetadata::C4(metadata))
             if metadata.element_type == "external_component_queue"
     ));
+}
+
+#[test]
+fn c4_full_status_is_backed_by_pinned_parser_and_rendering_corpora() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST).unwrap();
+    let family = manifest["families"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|family| family["id"] == "c4")
+        .unwrap();
+    assert_eq!(family["status"], "full");
+
+    let syntax: Value = serde_json::from_str(C4_PARSER_ACCEPTANCE_CORPUS).unwrap();
+    let rendering: Value = serde_json::from_str(C4_UPSTREAM_RENDERING_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_UPSTREAM_RENDERING_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], rendering["upstream_commit"]);
+    assert_eq!(rendering["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(syntax["upstream_specs"].as_array().unwrap().len(), 7);
+    assert_eq!(rendering["fixtures"].as_array().unwrap().len(), 6);
+    assert_eq!(visual["fixtures"].as_array().unwrap().len(), 6);
+
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let diagrams = fixtures
+        .iter()
+        .map(|fixture| parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap())
+        .collect::<Vec<_>>();
+    assert_eq!(diagrams[0].groups.len(), 1);
+    assert_eq!(diagrams[1].nodes.len(), 6);
+    assert_eq!(diagrams[2].nodes.len(), 6);
+    assert_eq!(diagrams[3].nodes.len(), 2);
+    assert_eq!(diagrams[4].nodes.len(), 6);
+    assert_eq!(
+        diagrams[5].nodes.iter().map(|node| node.id.as_str()).collect::<Vec<_>>(),
+        ["Person", "default"]
+    );
 }
 
 #[test]
