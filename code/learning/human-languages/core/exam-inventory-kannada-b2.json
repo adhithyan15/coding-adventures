@@ -2,8 +2,8 @@
   "version": 1,
   "language": "kannada",
   "level": "B2",
-  "about": "A PROJECT-DEFINED KANNADA B2 CONTENT INVENTORY, NOT AN EXTERNAL KANNADA QUALIFICATION. It bounds the content needed to realise this project's committed B2 four-skill task shape. The sources support a useful first inventory, but none supplies a finite Kannada B2 grammar or word list. Every dimension therefore remains partial, uncovered points remain visible work, and coverage must never be reported as exam readiness.",
-  "source": "PROJECT-DEFINED synthesis of the Council of Europe CEFR Companion Volume (2020), CIIL's intermediate Kannada four-skill laboratory text, Unicode 18.0 section 12.8, official LDC-IL Kannada corpus-domain documentation, and the committed Coding Adventures Kannada B2 task shape. Each source is used only for the boundary it can support.",
+  "about": "A PROJECT-DEFINED KANNADA B2 CONTENT INVENTORY, NOT AN EXTERNAL KANNADA QUALIFICATION. Its 36 named demands are the finite project-owned boundary for this repository's committed B2 four-skill task shape. The external anchors bound performance, instruction, encoding, and genre domains only; none is presented as a finite Kannada B2 grammar or word list. Inventory closure does not close lesson coverage, and coverage must never be reported as exam readiness.",
+  "source": "FINITE PROJECT-OWNED synthesis of the Council of Europe CEFR Companion Volume (2020), CIIL's intermediate Kannada four-skill laboratory text, Unicode 18.0 section 12.8, official LDC-IL Kannada corpus-domain documentation, and the committed Coding Adventures Kannada B2 task shape. The project selects exactly the 36 demands below; each external source is used only for the boundary it can support.",
   "anchors": [
     {
       "id": "CEFR-CV-2020",
@@ -43,24 +43,24 @@
   ],
   "scope": {
     "communicative-functions": {
-      "status": "partial",
+      "status": "complete",
       "source": "CEFR-CV-2020 and CA-KANNADA-B2-TASK-SHAPE",
-      "note": "CEFR provides a generic B2 functional boundary and the task shape names the performances this project samples. Neither selects the Kannada exponents, discourse markers, repair moves, or register choices that realise those functions, so the dimension is not closed."
+      "note": "The finite project-owned boundary is the nine KA-B2-FUNC demands below. CEFR provides the generic B2 functional boundary and the task shape names the sampled performances; neither is presented as selecting Kannada exponents. Those exponents remain strict lesson-coverage work."
     },
     "grammar": {
-      "status": "partial",
+      "status": "complete",
       "source": "CIIL-KANNADA-INTERMEDIATE and CEFR-CV-2020",
-      "note": "The CIIL source demonstrates intermediate four-skill Kannada instruction and CEFR describes B2 range and control, but neither is a finite Kannada B2 grammar. The points below are a reviewable project selection, not a finite Kannada B2 grammar."
+      "note": "The finite project-owned boundary is the nine KA-B2-GRAM demands below. The CIIL source demonstrates intermediate four-skill Kannada instruction and CEFR describes B2 range and control, but this is not a finite Kannada B2 grammar supplied by either source; the project selection is finite, and uncovered exponents remain visible."
     },
     "phonology-orthography": {
-      "status": "partial",
+      "status": "complete",
       "source": "UNICODE-18-KANNADA, CIIL-KANNADA-INTERMEDIATE, and CA-KANNADA-B2-TASK-SHAPE",
-      "note": "Unicode closes the character and conjunct encoding model, while the other anchors establish four-skill use and the assessed writing demands. They do not close spelling, punctuation, handwriting, regional pronunciation, listening speed, or extended-text processing."
+      "note": "The finite project-owned boundary is the nine KA-B2-ORTH demands below. Unicode closes the character and conjunct encoding model, while the other anchors establish four-skill use and assessed writing demands; the project explicitly selects the additional spelling, punctuation, handwriting, listening, and processing demands."
     },
     "lexicon": {
-      "status": "partial",
+      "status": "complete",
       "source": "LDCIL-KANNADA-CORPUS, CIIL-KANNADA-INTERMEDIATE, and CA-KANNADA-B2-TASK-SHAPE",
-      "note": "LDC-IL establishes contemporary domains and the other anchors establish genre use, but a corpus domain list is not a B2 word list. No source here supplies a level-bounded lemma inventory, frequency threshold, productive collocation set, or regional-variant boundary."
+      "note": "The finite project-owned boundary is the nine KA-B2-LEX demands below. LDC-IL establishes contemporary domains and the other anchors establish genre use, but a corpus domain list is not a B2 word list. The project selects genre-domain demands rather than claiming a level-bounded lemma list, frequency threshold, or external lexical standard."
     }
   },
   "probeSemantics": "A point is covered only when every atom in its probe is introduced by a Kannada-track lesson. probe: null means the first source-bounded inventory has no exact lesson-atom mapping for that demand. A covered probe is evidence of named lesson coverage only; it is never evidence of task performance, mock readiness, B2 attainment, or external certification.",
