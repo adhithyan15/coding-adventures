@@ -20745,3 +20745,14 @@ intervening Mermaid ER upstream-attribute render commit is exact-path-disjoint
 from the six PR paths and touches no workflow. Treat the resulting head as a
 thirteenth reconciliation with fresh local validation, independent review,
 normal push, and an entirely new hosted rollup.
+
+Exact reviewed head `378d8c56120a0a35276063ccfd9b703c676f5c68`
+completed all 42 hosted checks acceptably against that base, including the CI
+gate and metadata-contract job, but protected main advanced before guarded
+auto-merge could be enabled. Merge exact `origin/main`
+`8326ea3697bdd56cc90fc068fa4829093b93585a` normally and conflict-free. The
+two intervening TypeScript SIR exception-test migration and routed responder
+revocation-evidence commits are exact-path-disjoint from the six PR paths and
+touch no workflow. Treat the resulting head as a fourteenth reconciliation
+with fresh local validation, independent review, normal push, and an entirely
+new hosted rollup.
