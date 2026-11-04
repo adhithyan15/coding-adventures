@@ -15,7 +15,11 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { configureLessonCache, suiteLessonCacheOptions } from "../src/lesson-cache.js";
+import {
+  configureLessonCache,
+  hostCachePlatform,
+  suiteLessonCacheOptions,
+} from "../src/lesson-cache.js";
 import {
   loadLessons,
   loadLessonsAsync,
@@ -83,7 +87,9 @@ describe("bounded asynchronous lesson loading", () => {
   it("uses the same content-addressed cache key on a cold and warm read", async () => {
     writeLesson("spanish", "001-uno.md", lesson("uno", "uno"));
     const cacheDir = join(scratch, "cache");
-    expect(configureLessonCache({ root, directory: cacheDir })).toBe(true);
+    // The Windows cache accepts only its configured default directory. Give
+    // this isolated fixture its own simulated default, as cache-policy tests do.
+    expect(configureLessonCache({ root, directory: cacheDir }, hostCachePlatform(cacheDir))).toBe(true);
     const keys: string[] = [];
     const first = await loadLessonsAsync(root, (language, key) => keys.push(`${language}:${key}`));
     expect(keys).toHaveLength(1);

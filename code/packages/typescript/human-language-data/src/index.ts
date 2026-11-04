@@ -187,6 +187,7 @@ export {
   loadMetalanguage,
   loadBookCorpus,
   loadLessons,
+  loadLessonsAsync,
   loadModalityManifest,
   loadGentleRampSnapshotTracks,
   modalityManifestById,
@@ -194,6 +195,7 @@ export {
   loadLetterLedgers,
   loadEverything,
   loadTrackLessons,
+  loadTrackLessonsAsync,
 } from "./loader.js";
 // HL21: a ledger at `X.json` may instead live as the directory `X.d/`, so that
 // many authors can append to it at once without colliding on one file.

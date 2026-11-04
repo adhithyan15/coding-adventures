@@ -11,7 +11,7 @@ import {
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { loadLessons, loadModalityManifest, modalityManifestById } from "../src/loader.js";
+import { loadLessonsAsync, loadModalityManifest, modalityManifestById } from "../src/loader.js";
 import {
   generatedModalityOutputs,
   generatedModalityOutputsFromLessons,
@@ -198,15 +198,17 @@ afterEach(() => {
 // a new array before sorting.
 //
 // The hook loads LESSONS ONLY. It used to call `loadEverything()`, whose lessons are
-// this same `loadLessons()` result, but which also reads the taxonomy, the registry,
+// this same `loadLessonsAsync()` result, but which also reads the taxonomy, the registry,
 // the spine, every language curriculum (about 39,000 membership owner files, each
 // `lstat`ed and parsed), the book corpus, the scripts and the ledgers. None of that
 // reaches the manifest. On a loaded Windows runner those extra file opens were what
 // pushed this hook past its 30 s budget, while the manifest itself built in seconds.
 let realLessons: ParsedLesson[] = [];
 let realManifest: ReturnType<typeof buildModalityManifest>;
-beforeAll(() => {
-  realLessons = loadLessons();
+beforeAll(async () => {
+  // The source bytes still determine each cache key. Bounded overlapping reads
+  // shorten the Windows file-open wall time without trusting mtime or size.
+  realLessons = await loadLessonsAsync();
   realManifest = buildModalityManifest(realLessons);
 });
 

@@ -33,6 +33,7 @@
 // Those are not ledgers and have no sharded form.
 
 import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -687,20 +688,9 @@ export function loadTrackLessons(
   root = defaultCurriculumRoot(),
   onCacheKey?: LessonCacheKeyObserver,
 ): ParsedLesson[] {
-  // Validated FIRST, before the id reaches a path at all. It used to run after
-  // the `join` and after the `existsSync` probe, which left an existence
-  // oracle: a traversing id returned `[]` when the target had no `lessons/`
-  // subdirectory and threw when it did, so the return value answered "does
-  // <arbitrary path>/lessons exist" for any path on the machine. No read
-  // happened past the guard, so this was disclosure only — but a check placed
-  // after the thing it guards is not a check.
-  if (!TRACK_ID.test(language)) throw new Error(`unsafe language id '${language}'`);
-  const lessonsDir = join(root, language, "lessons");
-  if (!existsSync(lessonsDir)) return [];
-  const script = trackScript(root, language);
-  const files = readdirSync(lessonsDir)
-    .sort()
-    .filter((file) => file.endsWith(".md"));
+  const input = trackLessonInputs(language, root);
+  if (input === undefined) return [];
+  const { lessonsDir, script, files } = input;
   // `undefined` everywhere except inside the test suite, and there only for the
   // real curriculum root — see `lesson-cache.ts`. Every CLI process and
   // generator takes the plain branch, which is this function exactly as it was
@@ -712,6 +702,87 @@ export function loadTrackLessons(
     );
   }
   return cachedTrackLessons(cache, lessonsDir, files, language, script, onCacheKey);
+}
+
+/** The shared guards and sorted filename list for both source-reading routes. */
+function trackLessonInputs(language: string, root: string): {
+  lessonsDir: string;
+  script: Script | undefined;
+  files: string[];
+} | undefined {
+  // Validated FIRST, before the id reaches a path at all. It used to run after
+  // the `join` and after the `existsSync` probe, which left an existence
+  // oracle: a traversing id returned `[]` when the target had no `lessons/`
+  // subdirectory and threw when it did, so the return value answered "does
+  // <arbitrary path>/lessons exist" for any path on the machine. No read
+  // happened past the guard, so this was disclosure only — but a check placed
+  // after the thing it guards is not a check.
+  if (!TRACK_ID.test(language)) throw new Error(`unsafe language id '${language}'`);
+  const lessonsDir = join(root, language, "lessons");
+  if (!existsSync(lessonsDir)) return undefined;
+  const script = trackScript(root, language);
+  const files = readdirSync(lessonsDir)
+    .sort()
+    .filter((file) => file.endsWith(".md"));
+  return { lessonsDir, script, files };
+}
+
+/**
+ * Read a track's exact source bytes with a fixed number of in-flight opens.
+ * The indexed writes preserve filename order even when reads finish out of
+ * order. On failure all already-started readers drain before we reject, so a
+ * test teardown or caller never races an abandoned file operation.
+ *
+ * Exported from this filesystem module for a small deterministic bound test;
+ * the package index does not expose this implementation detail.
+ */
+export async function readLessonSourcesBounded(
+  lessonsDir: string,
+  files: readonly string[],
+  reader: (path: string) => Promise<Buffer> = readFile,
+): Promise<{ name: string; bytes: Buffer }[]> {
+  const sources = new Array<{ name: string; bytes: Buffer }>(files.length);
+  let cursor = 0;
+  let failed = false;
+  let firstError: unknown;
+  const readers = Array.from({ length: Math.min(16, files.length) }, async () => {
+    while (!failed && cursor < files.length) {
+      const index = cursor++;
+      const name = files[index]!;
+      try {
+        sources[index] = { name, bytes: await reader(join(lessonsDir, name)) };
+      } catch (error) {
+        if (!failed) firstError = error;
+        failed = true;
+      }
+    }
+  });
+  await Promise.all(readers);
+  if (failed) throw firstError;
+  return sources;
+}
+
+/** Async counterpart of `loadTrackLessons`, with identical guards and keys. */
+export async function loadTrackLessonsAsync(
+  language: string,
+  root = defaultCurriculumRoot(),
+  onCacheKey?: LessonCacheKeyObserver,
+): Promise<ParsedLesson[]> {
+  const input = trackLessonInputs(language, root);
+  if (input === undefined) return [];
+  const { lessonsDir, script, files } = input;
+  const sources = await readLessonSourcesBounded(lessonsDir, files);
+  const cache = lessonCacheFor(root);
+  if (cache === undefined) {
+    return sources.map(({ bytes }) => parseLesson(bytes.toString("utf8"), language, script));
+  }
+  const key = cache.key({ language, script, files: sources });
+  onCacheKey?.(language, key);
+  const hit = cache.read(language, key);
+  if (hit !== undefined && hit.length === sources.length) return hit;
+  const lessons = sources.map(({ bytes }) => parseLesson(bytes.toString("utf8"), language, script));
+  cache.write(language, key, lessons);
+  return lessons;
 }
 
 /**
@@ -775,6 +846,22 @@ export function loadLessons(
 }
 
 /**
+ * The awaitable form of `loadLessons` for consumers that can overlap source
+ * reads. Tracks remain sequential and sorted; only the files inside one track
+ * are read concurrently. It returns the same parsed lessons, not a projection.
+ */
+export async function loadLessonsAsync(
+  root = defaultCurriculumRoot(),
+  onCacheKey?: LessonCacheKeyObserver,
+): Promise<ParsedLesson[]> {
+  const out: ParsedLesson[] = [];
+  for (const language of lessonTrackNames(root)) {
+    out.push(...await loadTrackLessonsAsync(language, root, onCacheKey));
+  }
+  return out;
+}
+
+/**
  * `loadLessons`, handed over one track at a time instead of concatenated.
  *
  * The same tracks, in the same order, through the same guards: `loadLessons` is
@@ -797,6 +884,13 @@ export function forEachTrackLessons(
   visit: (language: string, lessons: ParsedLesson[]) => void,
   onCacheKey?: LessonCacheKeyObserver,
 ): void {
+  for (const language of lessonTrackNames(root)) {
+    visit(language, loadTrackLessons(language, root, onCacheKey));
+  }
+}
+
+/** One guarded, lazy track walk shared by both loaders. */
+function* lessonTrackNames(root: string): Generator<string> {
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) {
       // `Dirent.isDirectory()` is FALSE for a symlink, so a committed
@@ -840,7 +934,7 @@ export function forEachTrackLessons(
       }
       continue;
     }
-    visit(track.name, loadTrackLessons(track.name, root, onCacheKey));
+    yield track.name;
   }
 }
 
