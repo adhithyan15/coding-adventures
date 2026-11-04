@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the exact routed intermediate's supported critical permitted-and-
+  excluded-DNS constraints to the exact routed authenticated responder, under
+  separate caller-owned parse limits and with payload-free failures.
+- Derive both certificates only through the consumed routed anchor-policy proof,
+  retain count-only evidence, and stop before routed no-check, revocation, TLS,
+  HTTP, or OAuth readiness.
 - Apply the selected reviewed root's supported out-of-band DNS constraints to
   the exact authenticated responder retained by the fully routed proof, under
   separate caller-owned parse limits and with payload-free failures.

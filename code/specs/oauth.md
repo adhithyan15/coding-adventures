@@ -2508,6 +2508,25 @@ check responder or intermediate revocation, generalize path construction or
 validation, implement TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
+A second bounded routed-policy follow-up consumes that complete selected-anchor
+responder-policy proof and applies the exact retained intermediate's supported
+critical DNS constraints to the exact authenticated responder certificate. Both
+certificates are derived exclusively through the consumed fully routed proof;
+callers cannot substitute a responder, SAN collection, intermediate, path,
+algorithm, key, signature, or time. An absent intermediate NameConstraints
+extension succeeds without reading Subject Alternative Name. A present
+extension must be critical and decode as the supported permitted-and-excluded-
+DNS subset under separate caller-owned ASN.1 limits, and every responder
+`dNSName` must comply. Success retains only count evidence; stable failures
+expose no certificate, name, constraint, response, key, signature, status, or
+time payload. This pure public-certificate-data policy performs no credential
+access or editing, signing, storage, clock acquisition, provider action, audit
+event, trace emission, I/O, network access, or other external effect. It does
+not validate routed responder no-check policy, check responder or intermediate
+revocation, generalize path construction or validation, implement TLS or HTTP,
+authorize OAuth transport, or grant network authority. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated

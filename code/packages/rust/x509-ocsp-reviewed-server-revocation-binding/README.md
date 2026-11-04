@@ -77,6 +77,15 @@ every responder `dNSName` to comply, and retain only count evidence. Failures
 reuse the stable payload-free anchor-policy categories. No certificate, SAN,
 root, path, algorithm, key, signature, or time can be supplied independently.
 
+`validate_x509_ocsp_routed_issuer_reviewed_responder_intermediate_dns_policy`
+consumes that complete routed anchor-policy proof and derives the exact routed
+authenticated responder and exact routed authenticated intermediate internally.
+An absent intermediate NameConstraints extension succeeds without reading the
+responder SAN. A present extension must be critical and decode as the supported
+permitted-and-excluded-DNS subset under separate caller-owned limits; every
+responder `dNSName` must comply. Success retains only count evidence alongside
+the complete prior proof, and failures reuse stable payload-free categories.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy
@@ -123,8 +132,8 @@ bounded selected-anchor and exact-intermediate responder DNS policies, and the
 RFC 6960 responder no-check branch described above only.
 The complete responder policy sequence applies only to the fully fixed RSA
 SHA-256 proof. The fully routed proof may additionally be reified as a nominal
-responder path and checked against selected-anchor DNS policy, but all
-data-driven routed flows stop before intermediate DNS, no-check, and revocation
+responder path and checked against selected-anchor and exact-intermediate DNS
+policy, but all data-driven routed flows stop before no-check and revocation
 policy.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
