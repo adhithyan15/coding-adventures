@@ -765,6 +765,48 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
                 os.rename(moved, directory)
         self.assertTrue(swapped)
 
+    @unittest.skipUnless(os.name == "nt", "Windows generated-hash pinned batch")
+    def test_generated_hash_batch_pins_owner_namespace_during_swap_attempt(self):
+        from generated_hash_owner_read import _read_windows
+        from sharded_ledger import _windows_open_relative
+
+        directory = self.root / "core" / "generated-book-hashes" / "test.d"
+        write_json(directory / "_meta.json", {"version": 1})
+        write_json(directory / "0001.json", {"source": "inside"})
+        write_json(self.outside / "_meta.json", {"version": 1})
+        write_json(self.outside / "0001.json", {"source": "outside"})
+        moved = directory.with_name("test-moved")
+        swapped = []
+        blocked = []
+
+        def swap_before_owner_open(parent, name, **options):
+            if name == "0001.json" and not swapped and not blocked:
+                try:
+                    os.rename(directory, moved)
+                except PermissionError:
+                    # The Windows boundary intentionally omits SHARE_DELETE;
+                    # an open directory handle may pin the namespace itself.
+                    blocked.append(True)
+                else:
+                    link_directory(self.outside, directory)
+                    swapped.append(True)
+            return _windows_open_relative(parent, name, **options)
+
+        try:
+            with mock.patch("sharded_ledger._windows_open_relative", side_effect=swap_before_owner_open):
+                result = _read_windows(self.root, "generated-book-hashes", "test")
+            self.assertEqual(json.loads(result["files"]["0001.json"])["source"], "inside")
+            self.assertEqual(
+                json.loads((self.outside / "0001.json").read_text(encoding="utf-8"))["source"],
+                "outside",
+            )
+        finally:
+            if swapped and directory.exists():
+                os.rmdir(directory)
+            if moved.exists():
+                os.rename(moved, directory)
+        self.assertTrue(swapped or blocked)
+
     @unittest.skipUnless(os.name == "nt", "Windows native directory batches")
     def test_windows_file_enumeration_drains_multiple_native_batches(self):
         directory = self.root / "spanish" / "chapters.d"

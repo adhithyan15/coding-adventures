@@ -492,30 +492,35 @@ export function loadTrackChapters(root = defaultCurriculumRoot()): TrackChapters
       path,
       (shards) => mergeMetaAndList(shards, "chapters") as unknown as TrackChapters,
     );
-    for (const chapter of track_.chapters ?? []) {
-      // A chapter's `label` is interpolated RAW into `\label{...}` by the book
-      // generator -- the one author-controlled field in that file with no guard,
-      // while titles go through the LaTeX escaper, output paths through
-      // `safeOutput`, activity ids through their own regex, and script commands
-      // through `/^[A-Za-z@]+$/`.
-      //
-      // Left raw, a label of `ch:x}\immediate\write18{id}{` closes the brace and
-      // emits a live control sequence into a generated .tex. Today's builds run
-      // plain `latexmk -xelatex` with no `-shell-escape`, so `\write18` would be
-      // refused -- but `\input` and `\openout` would not be, and "the compiler
-      // flag saves us" is not a property this file can see or keep.
-      //
-      // The allowlist matches every label convention the corpus already uses:
-      // `ch:greetings`, `ch:fa-alefbe`, `ch:persian-greetings`, `ch:zh-components`.
-      if (typeof chapter.label !== "string" || !/^[A-Za-z0-9:_-]+$/.test(chapter.label)) {
-        throw new Error(
-          `${track_.language} chapter ${chapter.chapter}: label must match /^[A-Za-z0-9:_-]+$/, got '${chapter.label}'`,
-        );
-      }
-    }
+    validateTrackChapterLabels(track_);
     out.push(track_);
   }
   return out.sort((left, right) => left.language.localeCompare(right.language));
+}
+
+/** Shared label gate for ordinary loads and a full shard check's reused fold. */
+export function validateTrackChapterLabels(track_: TrackChapters): void {
+  for (const chapter of track_.chapters ?? []) {
+    // A chapter's `label` is interpolated RAW into `\label{...}` by the book
+    // generator -- the one author-controlled field in that file with no guard,
+    // while titles go through the LaTeX escaper, output paths through
+    // `safeOutput`, activity ids through their own regex, and script commands
+    // through `/^[A-Za-z@]+$/`.
+    //
+    // Left raw, a label of `ch:x}\immediate\write18{id}{` closes the brace and
+    // emits a live control sequence into a generated .tex. Today's builds run
+    // plain `latexmk -xelatex` with no `-shell-escape`, so `\write18` would be
+    // refused -- but `\input` and `\openout` would not be, and "the compiler
+    // flag saves us" is not a property this file can see or keep.
+    //
+    // The allowlist matches every label convention the corpus already uses:
+    // `ch:greetings`, `ch:fa-alefbe`, `ch:persian-greetings`, `ch:zh-components`.
+    if (typeof chapter.label !== "string" || !/^[A-Za-z0-9:_-]+$/.test(chapter.label)) {
+      throw new Error(
+        `${track_.language} chapter ${chapter.chapter}: label must match /^[A-Za-z0-9:_-]+$/, got '${chapter.label}'`,
+      );
+    }
+  }
 }
 
 /**

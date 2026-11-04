@@ -1,7 +1,9 @@
+import { spawnSync } from "node:child_process";
 import { lstatSync, mkdirSync, readdirSync, realpathSync } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import { assertRelativeManifestPath } from "./manifest-path.js";
-import { isAbsentErrno, readLedgerFile } from "./shard.js";
+import { isAbsentErrno, parseLedgerText, readLedgerFile } from "./shard.js";
 
 export const GENERATED_BOOK_HASH_DIR = "core/generated-book-hashes";
 export const GENERATED_NARRATION_HASH_DIR = "core/generated-narration-hashes";
@@ -666,16 +668,21 @@ export function readGeneratedBookHashManifest(
       sharded: false,
     };
   }
-  const meta = validateMeta(
-    readLedgerFile<unknown>(join(files.directory, "_meta.json")),
-    files.language,
-    false,
+  return readShardedBook(files, (name) =>
+    readLedgerFile<unknown>(join(files.directory, name)),
   );
+}
+
+function readShardedBook(
+  files: ShardedFiles,
+  read: (name: string) => unknown,
+): LoadedGeneratedHashManifest<GeneratedBookHashManifest> {
+  const meta = validateMeta(read("_meta.json"), files.language, false);
   const chapters = files.names
     .filter((name) => name !== "_meta.json")
     .map((name) =>
       validateBookChapter(
-        readLedgerFile<unknown>(join(files.directory, name)),
+        read(name),
         files.language,
         Number(CHAPTER_OWNER.exec(name)![1]),
         `${files.language}.d/${name}`,
@@ -710,16 +717,21 @@ export function readGeneratedNarrationHashManifest(
       sharded: false,
     };
   }
-  const meta = validateMeta(
-    readLedgerFile<unknown>(join(files.directory, "_meta.json")),
-    files.language,
-    true,
+  return readShardedNarration(files, (name) =>
+    readLedgerFile<unknown>(join(files.directory, name)),
   );
+}
+
+function readShardedNarration(
+  files: ShardedFiles,
+  read: (name: string) => unknown,
+): LoadedGeneratedHashManifest<GeneratedNarrationHashManifest> {
+  const meta = validateMeta(read("_meta.json"), files.language, true);
   const owners = files.names
     .filter((name) => name !== "_meta.json")
     .map((name) =>
       validateNarrationOwner(
-        readLedgerFile<unknown>(join(files.directory, name)),
+        read(name),
         files.language,
         Number(CHAPTER_OWNER.exec(name)![1]),
         `${files.language}.d/${name}`,
@@ -736,6 +748,123 @@ export function readGeneratedNarrationHashManifest(
     sourcePaths: files.sourcePaths,
     sharded: true,
   };
+}
+
+/**
+ * Read every generated hash owner under pinned parents in one bounded batch.
+ * The same validators as the individual readers still parse every owner; the
+ * batch changes only the I/O schedule, not the independent evidence or checks.
+ */
+export function readGeneratedHashManifestsBatch(
+  root: string,
+  languages: readonly string[],
+): {
+  book: Map<string, LoadedGeneratedHashManifest<GeneratedBookHashManifest>>;
+  narration: Map<string, LoadedGeneratedHashManifest<GeneratedNarrationHashManifest>>;
+} {
+  if (languages.length === 0 || languages.length > 32 ||
+      languages.some((language) => !LANGUAGE.test(language)) ||
+      new Set(languages).size !== languages.length) {
+    throw new Error("generated hash batch requires distinct safe languages");
+  }
+  const tasks: Array<{
+    kind: "generated-book-hashes" | "generated-narration-hashes";
+    language: string;
+  }> = [];
+  for (const kind of ["generated-book-hashes", "generated-narration-hashes"] as const) {
+    for (const language of languages) {
+      tasks.push({ kind, language });
+    }
+  }
+  const script = fileURLToPath(new URL(
+    "../../../../learning/human-languages/data/scripts/generated_hash_owner_read.py",
+    import.meta.url,
+  ));
+  const python = process.platform === "win32" ? "python" : "python3";
+  const child = spawnSync(python, [script], {
+    input: JSON.stringify({
+      root,
+      tasks,
+    }),
+    encoding: "utf8",
+    maxBuffer: 64 * 1024 * 1024,
+    windowsHide: true,
+  });
+  if (child.error || child.status !== 0) {
+    // The child may include author-controlled path context in stderr.
+    throw new Error("anchored generated hash owner batch failed", { cause: child.error });
+  }
+  let response: unknown;
+  try {
+    response = JSON.parse(child.stdout);
+  } catch (cause) {
+    throw new Error("anchored generated hash owner batch returned invalid JSON", { cause });
+  }
+  const results = typeof response === "object" && response !== null &&
+    !Array.isArray(response) ? (response as Record<string, unknown>).results : undefined;
+  if (!Array.isArray(results) || results.length !== tasks.length) {
+    throw new Error("anchored generated hash owner batch returned the wrong task count");
+  }
+  const book = new Map<string, LoadedGeneratedHashManifest<GeneratedBookHashManifest>>();
+  const narration = new Map<string, LoadedGeneratedHashManifest<GeneratedNarrationHashManifest>>();
+  for (const [index, task] of tasks.entries()) {
+    const result: unknown = results[index];
+    if (typeof result !== "object" || result === null || Array.isArray(result) ||
+        Object.keys(result).length !== 2) {
+      throw new Error("anchored generated hash owner batch returned an invalid owner set");
+    }
+    const record = result as Record<string, unknown>;
+    const rawNames = record.names;
+    const texts = record.files;
+    if (!Array.isArray(rawNames) || rawNames.length < 2 ||
+        rawNames.some((name) => typeof name !== "string") ||
+        typeof texts !== "object" || texts === null || Array.isArray(texts)) {
+      throw new Error("anchored generated hash owner batch returned invalid names or files");
+    }
+    const names = (rawNames as string[]).sort((left, right) =>
+      left < right ? -1 : left > right ? 1 : 0
+    );
+    if (!names.includes("_meta.json") ||
+        new Set(names).size !== names.length ||
+        new Set(names.map((name) => name.toLowerCase())).size !== names.length ||
+        Object.keys(texts).length !== names.length) {
+      throw new Error("anchored generated hash owner batch returned an inexact owner set");
+    }
+    const ordinals = new Set<number>();
+    for (const name of names) {
+      if (name === "_meta.json") continue;
+      const match = CHAPTER_OWNER.exec(name);
+      if (match === null) {
+        throw new Error(`generated hash owner '${name}' has a malformed name`);
+      }
+      const chapter = Number(match[1]);
+      if (chapter < 1 || ordinals.has(chapter)) {
+        throw new Error(`generated hash owner '${name}' has an invalid or duplicate chapter`);
+      }
+      ordinals.add(chapter);
+    }
+    const directory = join(root, "core", task.kind, `${task.language}.d`);
+    const files: ShardedFiles = {
+      language: task.language,
+      directory,
+      names,
+      sourcePaths: names.map((name) => join(directory, name)),
+    };
+    const ownerTexts = texts as Record<string, unknown>;
+    const read = (name: string): unknown => {
+      const text = ownerTexts[name];
+      if (!Object.hasOwn(ownerTexts, name) || typeof text !== "string") {
+        throw new Error(`anchored generated hash owner batch omitted '${task.language}.d/${name}'`);
+      }
+      return parseLedgerText(text, join(directory, name));
+    };
+    if (task.kind === "generated-book-hashes") {
+      book.set(task.language, readShardedBook(files, read));
+    } else {
+      narration.set(task.language, readShardedNarration(files, read));
+    }
+  }
+  return { book, narration };
 }
 
 function listLanguages(directory: string): string[] {

@@ -57,10 +57,12 @@
 // `statIfPresent` below. Leaving the import out makes the next reach for it a
 // compile error rather than a judgement call.
 import {
+  existsSync,
   lstatSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
+  readdirSync,
   realpathSync,
   renameSync,
   rmSync,
@@ -82,6 +84,7 @@ import {
   loadCurriculumSpine,
   loadLanguageRegistry,
   loadTrackChapters,
+  validateTrackChapterLabels,
 } from "./loader.js";
 import { assertRelativeManifestPath } from "./manifest-path.js";
 import { scriptEntryId } from "./script-shards.js";
@@ -113,6 +116,7 @@ import {
   GENERATED_BOOK_HASH_DIR,
   GENERATED_NARRATION_HASH_DIR,
   readGeneratedBookHashManifest,
+  readGeneratedHashManifestsBatch,
   readGeneratedNarrationHashManifest,
 } from "./generated-hash-shards.js";
 import {
@@ -1601,28 +1605,32 @@ function stableChapterIdentity(language: string, chapter: number): string {
 function assertBookGenerationCrossLedgerIdentities(
   root: string,
   document: BookGenerationDocument,
+  generatedHashes?: ReturnType<typeof readGeneratedHashManifestsBatch>,
+  checkedChapterIdentities?: ReadonlySet<string>,
 ): void {
   const registered = new Set(
     loadLanguageRegistry(root).languages.map((language) => language.id),
   );
-  const capabilities = new Set<string>();
-  for (const track of loadTrackChapters(root)) {
-    for (const chapter of track.chapters) {
-      capabilities.add(stableChapterIdentity(track.language, chapter.chapter));
+  const capabilities = new Set<string>(checkedChapterIdentities);
+  if (checkedChapterIdentities === undefined) {
+    for (const track of loadTrackChapters(root)) {
+      for (const chapter of track.chapters) {
+        capabilities.add(stableChapterIdentity(track.language, chapter.chapter));
+      }
     }
   }
   const generatedBook = new Set<string>();
   const generatedNarration = new Set<string>();
   const generatedReferenceAppendices = new Set<string>();
   for (const language of [...registered].sort()) {
-    for (const chapter of readGeneratedBookHashManifest(
-      join(root, GENERATED_BOOK_HASH_DIR, `${language}.json`),
-    ).manifest.chapters) {
+    const bookHashes = generatedHashes?.book.get(language) ??
+      readGeneratedBookHashManifest(join(root, GENERATED_BOOK_HASH_DIR, `${language}.json`));
+    for (const chapter of bookHashes.manifest.chapters) {
       generatedBook.add(stableChapterIdentity(language, chapter.chapter));
     }
-    for (const chapter of readGeneratedNarrationHashManifest(
-      join(root, GENERATED_NARRATION_HASH_DIR, `${language}.json`),
-    ).manifest.chapters) {
+    const narrationHashes = generatedHashes?.narration.get(language) ??
+      readGeneratedNarrationHashManifest(join(root, GENERATED_NARRATION_HASH_DIR, `${language}.json`));
+    for (const chapter of narrationHashes.manifest.chapters) {
       generatedNarration.add(stableChapterIdentity(language, chapter.chapter));
     }
     const appendix = join(
@@ -1893,6 +1901,7 @@ function assertIndependentOwnerCompleteness(
   document: Record<string, unknown>,
   plan: ShardPlan,
   cache: Map<string, readonly string[]>,
+  generatedHashes?: ReturnType<typeof readGeneratedHashManifestsBatch>,
 ): void {
   const completeness = plan.completeness;
   if (completeness === undefined) {
@@ -1925,9 +1934,10 @@ function assertIndependentOwnerCompleteness(
     }
     expected.set(
       "chapters",
-      readGeneratedNarrationHashManifest(
-        join(root, GENERATED_NARRATION_HASH_DIR, `${completeness.language}.json`),
-      ).manifest.chapters.map((chapter) => String(chapter.chapter)),
+      (generatedHashes?.narration.get(completeness.language) ??
+        readGeneratedNarrationHashManifest(
+          join(root, GENERATED_NARRATION_HASH_DIR, `${completeness.language}.json`),
+        )).manifest.chapters.map((chapter) => String(chapter.chapter)),
     );
   } else if (completeness.kind === "curriculum-cross-references") {
     if (document.language !== completeness.language) {
@@ -2026,12 +2036,12 @@ export function runShardCli(
   }
 
   const requested = args[1];
-  const plans = requested
+  const selectedPlans = requested
     ? SHARD_PLANS.filter(
         (plan) => plan.path === requested.replaceAll("\\", "/"),
       )
     : SHARD_PLANS;
-  if (requested && plans.length === 0) {
+  if (requested && selectedPlans.length === 0) {
     process.stderr.write(
       `shard-cli: '${requested}' is not a sharded ledger. Known: ${SHARD_PLANS.map((p) => p.path).join(", ")}\n`,
     );
@@ -2040,6 +2050,39 @@ export function runShardCli(
 
   let failed = false;
   const independentIdentityCache = new Map<string, readonly string[]>();
+  const curriculumSpineKeys = new Set<string>();
+  const checkedChapterIdentities = new Set<string>();
+  // The full check reads every curriculum independently of core/spine. Check
+  // those owners first, then reuse their validated identities for the spine
+  // completeness comparison rather than opening the same corpus a second
+  // time. Single-plan checks retain the standalone source loader.
+  const plans = mode === "--check" && requested === undefined
+    ? [
+        ...selectedPlans.filter((plan) => plan.projection === "curriculum"),
+        ...selectedPlans.filter((plan) => plan.projection !== "curriculum"),
+      ]
+    : selectedPlans;
+  const unplannedCurriculumExists = mode === "--check" && requested === undefined &&
+    readdirSync(root, { withFileTypes: true }).some((entry) => {
+      if (!entry.isDirectory() || CURRICULUM_SHARDED_TRACKS.includes(entry.name)) return false;
+      const path = join(root, entry.name, "curriculum.json");
+      return existsSync(path) || isSharded(path);
+    });
+  const unplannedChaptersExist = mode === "--check" && requested === undefined &&
+    readdirSync(root, { withFileTypes: true }).some((entry) => {
+      if (!entry.isDirectory() || CHAPTER_SHARDED_TRACKS.includes(entry.name)) return false;
+      const path = join(root, entry.name, "chapters.json");
+      return existsSync(path) || isSharded(path);
+    });
+  // A full check needs every generated hash owner, often more than 24,000
+  // files. Read them once through pinned parents with bounded concurrent I/O;
+  // per-plan checks retain the ordinary individual readers.
+  const generatedHashes = mode === "--check" && requested === undefined
+    ? readGeneratedHashManifestsBatch(
+        root,
+        loadLanguageRegistry(root).languages.map((language) => language.id),
+      )
+    : undefined;
   for (const plan of plans) {
     if (mode === "--shard") {
       const written = shardLedger(root, plan);
@@ -2064,10 +2107,36 @@ export function runShardCli(
     }
     const expected = unshardContents(root, plan);
     const rebuilt = JSON.parse(expected) as Record<string, unknown>;
+    if (mode === "--check" && requested === undefined &&
+        CHAPTER_SHARDED_TRACKS.some((track) => plan.path === `${track}/chapters.json`)) {
+      const chapters = rebuilt as unknown as Parameters<typeof validateTrackChapterLabels>[0];
+      validateTrackChapterLabels(chapters);
+      for (const chapter of chapters.chapters ?? []) {
+        checkedChapterIdentities.add(
+          stableChapterIdentity(chapters.language, chapter.chapter),
+        );
+      }
+    }
+    if (plan.projection === "curriculum") {
+      for (const node of Object.keys(ownerRecord(rebuilt.spine, `${plan.path}: spine`))) {
+        curriculumSpineKeys.add(node);
+      }
+    }
+    if (plan.path === "core/spine.json" && !unplannedCurriculumExists &&
+        requested === undefined) {
+      independentIdentityCache.set(
+        "curriculum-spine-union",
+        [...curriculumSpineKeys],
+      );
+    }
     if (plan.projection === "book-generation") {
       assertBookGenerationCrossLedgerIdentities(
         root,
         rebuilt as unknown as BookGenerationDocument,
+        generatedHashes,
+        !unplannedChaptersExist && requested === undefined
+          ? checkedChapterIdentities
+          : undefined,
       );
     }
 
@@ -2106,6 +2175,7 @@ export function runShardCli(
           rebuilt,
           plan,
           independentIdentityCache,
+          generatedHashes,
         );
       } else {
         const present = new Set(listShardNames(monolith));
