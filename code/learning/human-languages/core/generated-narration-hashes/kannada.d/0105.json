@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 105,
-  "sourceHash": "fnv1a64:5b362485c2602c74",
+  "sourceHash": "fnv1a64:f73308c4888c2136",
   "lessonIds": [
     "KA-C105-wishes",
     "KA-C105-festival",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch105.txt",
   "json": "kannada/narration/ch105.json",
-  "textHash": "fnv1a64:f0ef126913b2aae2",
-  "jsonHash": "fnv1a64:5b061873232e2569",
+  "textHash": "fnv1a64:13466b4b5988d6f2",
+  "jsonHash": "fnv1a64:2150bbd3a7a1daf7",
   "findings": []
 }

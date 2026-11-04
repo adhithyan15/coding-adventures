@@ -4,7 +4,7 @@
   "chapter": 105,
   "title": "Wishes and Warmth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5b362485c2602c74",
+  "sourceHash": "fnv1a64:f73308c4888c2136",
   "lessons": [
     {
       "id": "KA-C105-wishes",
@@ -563,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69408f4692aa56d2",
+      "sourceHash": "fnv1a64:24ab807ff3f9ac1d",
       "notice": null,
       "blocks": [
         {
@@ -579,7 +579,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Kannada for hospitality, then the Kannada for love."
+              "text": "Say hospitality and love. Then ask where somebody is from, answer “from Bengaluru”, and recognise the Karnataka relation question."
             }
           ]
         },
@@ -653,6 +653,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: say *meccuge*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? and ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?** and **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.**]"
             },
             {
               "kind": "prompt",

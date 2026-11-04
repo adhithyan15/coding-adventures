@@ -132,6 +132,26 @@ Everything below this line is about how the track is built and checked. It is
 here for people working on the curriculum; nothing in it is needed to learn the
 language.
 
+## Kannada A1 origin-cluster status
+
+Chapter 103 now supplies a slow ask-and-answer path for the six related A1
+inventory demands around personal origin. The 2026-11-04 audit found that
+**ಊರು**, **ನಗರ**, **ದೇಶ**, and **ರಾಜ್ಯ** already had direct lesson owners; the
+gap was joining those words to a person and a source place. The new
+[`KA-C103-origin`](./lessons/KA-C103-origin.md) lesson teaches **-ಇಂದ** only in
+that concrete place-source job, the respectful **ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?**
+question, and **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ** as its answer. Chapters 104,
+105, and 108 retrieve the exchange across the R1, R2, and R3 windows before the
+established A1 boundary.
+
+The exact Kannada surfaces are bounded to official Government of India
+transcripts. They do not set a CEFR level or supply an external Kannada A1
+syllabus. Strict inventory coverage moves from **198/258 to 204/258**; the
+remaining 54 points stay open, including four structurally untransferable
+Spanish-proxy demands. This is a repository coverage measurement, not a claim
+of certification, standard setting, human validation, learner readiness or
+learner attainment.
+
 ## Kannada B2 content inventory status
 
 [`core/exam-inventory-kannada-b2.json`](../core/exam-inventory-kannada-b2.json)

@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "Below, Outside, In front, In the middle, Road",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:41ea84e65932222f",
+  "sourceHash": "fnv1a64:cd91d3c7e704ca8a",
   "lessons": [
     {
       "id": "KA-C108-kelage",
@@ -555,7 +555,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73c4888b3f84a777",
+      "sourceHash": "fnv1a64:248a0d5b593edeb6",
       "notice": null,
       "blocks": [
         {
@@ -571,7 +571,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: say the Kannada for in front, then the Kannada for in the middle."
+              "text": "Say the Kannada for in front and in the middle. Then ask where somebody is from, answer “from Bengaluru”, and recognise the Karnataka relation question."
             }
           ]
         },
@@ -645,6 +645,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: say *rastē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? and ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: **ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?** and **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.**]"
             },
             {
               "kind": "prompt",

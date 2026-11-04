@@ -59,8 +59,12 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
   // diff showed atomChapterSpikes 3 -> 4. Splitting into chapter 79 (the three
   // vowel signs plus nna, sha and ssa) and chapter 80 (the seven breathy
   // consonants) removed the spike and put one idea in each chapter.
-  expect(coverage.covered).toBe(198);
-  expect(coverage.unmapped).toBe(60);
+  // 198 -> 204: the chapter-103 origin lesson closes the exact place-name,
+  // relational, ablative, question, answer and geography points. The generic
+  // place vocabulary was already owned; this tranche adds the missing
+  // composition path and does not move any other point.
+  expect(coverage.covered).toBe(204);
+  expect(coverage.unmapped).toBe(54);
   expect(coverage.partial).toBe(0);
   // KA-A1-NUM-07 was one of the thirteen ordinal points HL-C354 left open, and
   // the one it priced cheapest: Kannada's -aneya has no exceptions, so ten
@@ -72,6 +76,6 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
     covered: 7,
   });
   expect(formatExamCoverage(coverage)).toContain(
-    "kannada A1 (partial inventory): 198/258 points covered (77%)",
+    "kannada A1 (partial inventory): 204/258 points covered (79%)",
   );
 }, 60_000);

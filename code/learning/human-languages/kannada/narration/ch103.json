@@ -3,8 +3,8 @@
   "language": "kannada",
   "chapter": 103,
   "title": "Where I Live",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7f3b998e967b8449",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:fe025301fa9e6bc7",
   "lessons": [
     {
       "id": "KA-C103-house",
@@ -679,6 +679,177 @@
             {
               "kind": "speech",
               "text": "What does ರಾಜ್ಯ (rājya) mean? (\"State (of a country)\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C103-origin",
+      "sequence": 4125,
+      "title": "ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? (nīvu ellinda bandiddīri?) — where are you from?",
+      "headword": "ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?",
+      "romanization": "nīvu ellinda bandiddīri?",
+      "gloss": "where are you from? — ask and answer with -ಇಂದ",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ef1ca20370259e25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask ನಿಮ್ಮ ಊರು ಯಾವುದು? Then say city, country and state."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "grammar",
+          "title": "Grammar Lens: -ಇಂದ means “from”",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Change Chapter 5's ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli, “in Bengaluru”):"
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆಂಗಳೂರಿನಿಂದ — Beṅgaḷūrininda — from Bengaluru."
+            },
+            {
+              "kind": "speech",
+              "text": "-ಇಂದ (-inda) marks a starting place. ಎಲ್ಲಿ (elli, “where?”) becomes ಎಲ್ಲಿಂದ (ellinda), “from where?”"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "You'll want to know: ask it as one respectful frame",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? nīvu ellinda bandiddīri? — “Where are you from?”"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep ಬಂದಿದ್ದೀರಿ (bandiddīri) inside this fixed frame."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ. nānu Beṅgaḷūrininda bandiddēne. — “I am from Bengaluru.”"
+            },
+            {
+              "kind": "speech",
+              "text": "ಎಲ್ಲಿಂದ asks; ಬೆಂಗಳೂರಿನಿಂದ answers."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "input",
+          "title": "The exchange: a second shape to recognise",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Recognise this attested short exchange:"
+            },
+            {
+              "kind": "speech",
+              "text": "ನೀನು ಕರ್ನಾಟಕದವನೇ? — “Are you from Karnataka?” ಹೌದು ಸರ್, ಬೆಂಗಳೂರಿನಿಂದ. — “Yes sir, from Bengaluru.”"
+            },
+            {
+              "kind": "speech",
+              "text": "ಕರ್ನಾಟಕದವನೇ describes a male addressee, so keep it for recognition. Produce the respectful ಎಲ್ಲಿಂದ question and an -ಇಂದ answer."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Beṅgaḷūru — Bengaluru; Beṅgaḷūrininda — from Bengaluru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *Beṅgaḷūru* — Bengaluru; *Beṅgaḷūrininda* — from Bengaluru]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? (nīvu ellinda bandiddīri?)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: **ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ANSWER",
+              "instruction": "ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ANSWER: **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECOGNISE",
+              "instruction": "ಕರ್ನಾಟಕದವನೇ? asks whether a male addressee is from Karnataka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECOGNISE: **ಕರ್ನಾಟಕದವನೇ?** asks whether a male addressee is from Karnataka]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask for a home town, then say city, country and state",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask for a home town, then say city, country and state]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask “Where are you from?” Answer “I am from Bengaluru.” Which ending does both pieces turn on? (-ಇಂದ, “from”.)"
             }
           ]
         }
