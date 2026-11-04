@@ -273,6 +273,14 @@ const ER_UPSTREAM_TOPOLOGY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-upstream-topology-11.16.1-visual-corpus.json"
 ));
+const ER_UPSTREAM_ATTRIBUTES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-attributes-11.16.1-corpus.json"
+));
+const ER_UPSTREAM_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-attributes-11.16.1-visual-corpus.json"
+));
 const ER_STYLES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
@@ -2553,6 +2561,39 @@ fn pinned_er_upstream_topologies_reach_semantic_ir() {
     assert_eq!(diagrams[2].relationships.len(), 2);
     assert_eq!(diagrams[3].relationships.len(), 3);
     assert_eq!(diagrams[4].relationships.len(), 8);
+}
+
+#[test]
+fn pinned_er_upstream_attributes_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_UPSTREAM_ATTRIBUTES_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(ER_UPSTREAM_ATTRIBUTES_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), visual_names.len());
+
+    let diagrams = fixtures
+        .iter()
+        .zip(visual_names)
+        .map(|(fixture, visual_name)| {
+            assert_eq!(fixture["name"], *visual_name);
+            parse_er_diagram(fixture["source"].as_str().unwrap()).unwrap()
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(diagrams[0].nodes.len(), 4);
+    assert_eq!(diagrams[1].nodes.iter().find(|node| node.id == "BOOK").unwrap().compartments[0].entries.len(), 2);
+    assert_eq!(diagrams[2].nodes[0].compartments[0].entries.len(), 3);
+    assert_eq!(diagrams[3].nodes[0].compartments[0].entries.len(), 2);
+    assert!(diagrams[4].nodes.iter().any(|node| node.id == "PRIVATE_FINANCIAL_INSTITUTION"));
+    assert_eq!(
+        diagrams[5]
+            .nodes
+            .iter()
+            .flat_map(|node| &node.compartments)
+            .map(|compartment| compartment.entries.len())
+            .sum::<usize>(),
+        6
+    );
 }
 
 #[test]
