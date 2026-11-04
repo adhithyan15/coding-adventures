@@ -40,6 +40,11 @@ consumers.
   sound-tag, taxonomy, and dataset assembly stays the responsibility of their
   own validation gates. Its queue and error behavior for plan inputs must not
   change.
+* The direct completion-plan command may await bounded canonical lesson and
+  curriculum-membership reads. Keep the synchronous library entrypoint and
+  factor only the shared pure planning tail; parse failures, inventory
+  diagnostics, output bytes, and exit status must remain equivalent. Do not
+  cache source data across invocations or suppress a corrupt owner.
 * Track-progress `--check` and `--report` may await the same bounded source
   loader while keeping the historical synchronous library exports available.
   The CLI still validates every output identity, derives every registered
