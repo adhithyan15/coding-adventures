@@ -1,21 +1,29 @@
 # x509-ocsp-issuer-bound-responder
 
 `x509-ocsp-issuer-bound-responder` binds one exact authenticated OCSP responder
-candidate to one exact candidate issuer. It consumes the complete responder
-authentication proof and an RSA SHA-256 issuer link, rejects evidence whose
-responder certificates are distinct decoded objects, and retains both proofs.
+candidate to one exact candidate issuer. Its fixed entry point consumes the
+complete RSA SHA-256 responder-authentication proof. Its additive routed entry
+point consumes responder authentication whose response signature was selected
+from caller-owned SHA-256, SHA-384, or SHA-512 routes. Both consume an RSA
+SHA-256 responder-certificate issuer link, reject evidence whose responder
+certificates are distinct decoded objects, and retain both proofs.
 
 Together, the consumed evidence proves that the candidate issuer has an
 issuing-CA role, signed the policy-approved OCSP-signing responder certificate,
 and that the responder certificate's key signed the exact response. Errors
 expose only stable categories and retain no response, certificate, key, or
-signature bytes.
+signature bytes. The routed entry point does not claim that the responder-
+certificate issuer-link algorithm is routed; that link remains explicitly RSA
+SHA-256.
 
 This package does not establish that the candidate issuer issued any particular
 target certificate, bind an OCSP `CertID` or revocation decision, construct or
 validate a responder path, establish trust, check responder-certificate
 revocation, fetch or cache data, read a clock, perform TLS or HTTP, authorize
-OAuth transport, or open a network connection.
+OAuth transport, or open a network connection. It is a pure public-data
+composition with no credential access, edit, signing operation, provider
+action, audit or trace emission, I/O, or external effect. Concrete HTTPS and
+live-provider readiness remain unavailable.
 
 ## Test-vector provenance
 

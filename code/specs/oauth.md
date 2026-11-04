@@ -2255,19 +2255,24 @@ data, read a clock, perform TLS or HTTP, authorize OAuth transport, or grant
 network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
-A bounded `x509-ocsp-issuer-bound-responder` composition now consumes that
-exact authenticated-responder evidence and one exact repository-owned RSA
-SHA-256 issuer link for the responder certificate. It rejects evidence whose
-responder certificates are distinct decoded objects, including byte-equal
-re-decodes, before returning non-copyable evidence retaining both proofs.
-Together, those proofs establish that one exact candidate issuer with an
-issuing-CA role signed the policy-approved OCSP-signing responder certificate,
-whose key signed the exact response. This does not establish that the candidate
+A bounded `x509-ocsp-issuer-bound-responder` composition now consumes either
+the fixed RSA SHA-256 or the data-driven authenticated-responder evidence and
+one exact repository-owned RSA SHA-256 issuer link for the responder
+certificate. The additive data-driven result preserves the caller-selected
+SHA-256, SHA-384, or SHA-512 response-signature route without claiming that the
+responder-certificate issuer-link algorithm is routed. Both entry points reject
+evidence whose responder certificates are distinct decoded objects, including
+byte-equal re-decodes, before returning non-copyable evidence retaining both
+proofs. Together, those proofs establish that one exact candidate issuer with
+an issuing-CA role signed the policy-approved OCSP-signing responder certificate,
+whose key signed the exact response. This pure public-data composition performs
+no credential access, edit, signing operation, provider action, audit or trace
+emission, I/O, or external effect. It does not establish that the candidate
 issuer issued any particular target certificate, bind a `CertID` or revocation
 decision, construct or validate a responder path, establish trust, check the
 responder certificate's revocation, fetch or cache data, read a clock, perform
 TLS or HTTP, authorize OAuth transport, or grant network authority. Concrete
-HTTPS remains unavailable.
+HTTPS and live-provider readiness remain unavailable.
 
 A bounded `x509-ocsp-cert-id-binding` prerequisite now binds one exact
 structurally decoded `SingleResponse` to one exact target certificate and one
