@@ -22,10 +22,11 @@
 //! a distinct retained type. That composition can reify the added status
 //! proof's own direct delegated responder-to-reviewed-root path for subsequent
 //! policy without accepting substitute evidence, then apply the exact selected
-//! root's supported out-of-band DNS constraints to that added responder.
-//! Routed flows still stop before no-check or separately authenticated
-//! revocation policy for the added responder and before the authenticated
-//! responder-revocation branch is composed with intermediate status.
+//! root's supported out-of-band DNS constraints and RFC 6960 no-check policy
+//! to that added responder. Routed flows still stop before the separately
+//! authenticated revocation alternative for the added responder and before
+//! the authenticated responder-revocation branch is composed with intermediate
+//! status.
 //! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -1937,6 +1938,40 @@ impl<Proof, Revocation> fmt::Debug
     }
 }
 
+/// Non-copyable added-status responder evidence after RFC 6960 no-check policy.
+///
+/// Success retains the complete reviewed-root DNS proof and proves that the
+/// added intermediate-status proof's exact authenticated responder carries one
+/// structurally unique `id-pkix-ocsp-nocheck` extension whose value is exact
+/// DER `NULL`. This covers only RFC 6960's trust-for-certificate-lifetime
+/// responder-revocation branch. It is not evidence for separately authenticated
+/// responder revocation, complete revocation, generalized path validation,
+/// TLS, HTTP, OAuth, or network authority.
+pub struct ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy<Proof, Revocation> {
+    anchor_dns_policy:
+        ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy<Proof, Revocation>,
+}
+
+impl<Proof, Revocation>
+    ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy<Proof, Revocation>
+{
+    /// Return the consumed complete added-status responder DNS proof.
+    pub const fn anchor_dns_policy(
+        &self,
+    ) -> &ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy<Proof, Revocation>
+    {
+        &self.anchor_dns_policy
+    }
+}
+
+impl<Proof, Revocation> fmt::Debug
+    for ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy<Proof, Revocation>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy")
+    }
+}
+
 /// Reify the added intermediate-status proof's exact responder path.
 ///
 /// Earlier safe constructors already enforce every exact-object identity and
@@ -2114,6 +2149,86 @@ pub fn validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_a
             constrained_dns_names,
         },
     )
+}
+
+trait IntermediateStatusResponderEvidence {
+    fn authenticated_responder_certificate(&self) -> &x509_certificate::X509Certificate<'_>;
+}
+
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+    > IntermediateStatusResponderEvidence
+    for AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+    >
+{
+    fn authenticated_responder_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+        self.issuer_bound_responder()
+            .authenticated_responder()
+            .responder_certificate_policy()
+            .certificate()
+    }
+}
+
+/// Require RFC 6960 no-check policy for the added intermediate-status responder.
+///
+/// This consumes the complete reviewed-root DNS proof and derives the responder
+/// certificate only through that retained proof. A structurally unique
+/// `id-pkix-ocsp-nocheck` extension must be present with exact DER `NULL`
+/// contents. RFC 6960 recommends a non-critical extension but does not require
+/// it; a critical instance can reach this semantic gate only when the earlier
+/// certificate-wide role policy explicitly recognized its OID.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before separately authenticated revocation for this responder, complete
+/// revocation policy, generalized path validation, TLS, HTTP, OAuth readiness,
+/// or network authority.
+#[allow(private_bounds)]
+pub fn validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_no_check_policy<
+    Proof,
+    Revocation,
+>(
+    anchor_dns_policy: ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy<
+        Proof,
+        Revocation,
+    >,
+) -> Result<
+    ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy<Proof, Revocation>,
+    X509OcspReviewedResponderNoCheckPolicyError,
+>
+where
+    Revocation: IntermediateStatusResponderEvidence,
+{
+    let responder_certificate = anchor_dns_policy
+        .responder_path()
+        .no_check_intermediate_revocation()
+        .intermediate_revocation()
+        .authenticated_responder_certificate();
+    evaluate_responder_no_check_policy(responder_certificate)?;
+
+    Ok(ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy { anchor_dns_policy })
 }
 
 fn validate_responder_revocation_binding_inputs(
@@ -3554,6 +3669,53 @@ mod tests {
         evaluate_responder_no_check_policy(&responder)
     }
 
+    struct TestIntermediateStatusResponderEvidence<'certificate, 'encoded> {
+        original_responder: &'certificate x509_certificate::X509Certificate<'encoded>,
+        added_responder: &'certificate x509_certificate::X509Certificate<'encoded>,
+    }
+
+    impl IntermediateStatusResponderEvidence for TestIntermediateStatusResponderEvidence<'_, '_> {
+        fn authenticated_responder_certificate(&self) -> &x509_certificate::X509Certificate<'_> {
+            self.added_responder
+        }
+    }
+
+    fn intermediate_status_anchor_dns_policy<'certificate, 'encoded>(
+        original_responder: &'certificate x509_certificate::X509Certificate<'encoded>,
+        added_responder: &'certificate x509_certificate::X509Certificate<'encoded>,
+    ) -> ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy<
+        &'certificate x509_certificate::X509Certificate<'encoded>,
+        TestIntermediateStatusResponderEvidence<'certificate, 'encoded>,
+    > {
+        let responder_no_check_policy = ValidatedX509OcspReviewedResponderNoCheckPolicy {
+            intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+                anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+                    responder_path: BoundX509OcspReviewedResponderPath {
+                        reviewed_server_revocation: original_responder,
+                    },
+                    constrained_dns_names: None,
+                },
+                constrained_dns_names: None,
+            },
+        };
+        let no_check_intermediate_revocation = BoundX509OcspReviewedNoCheckIntermediateRevocation {
+            responder_no_check_policy,
+            intermediate_revocation: TestIntermediateStatusResponderEvidence {
+                original_responder,
+                added_responder,
+            },
+        };
+        let responder_path =
+            reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path(
+                no_check_intermediate_revocation,
+            );
+
+        ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy {
+            responder_path,
+            constrained_dns_names: None,
+        }
+    }
+
     #[test]
     fn target_expiry_fails_before_issuer_validity_is_evaluated() {
         let encoded = fixture(LEAF_HEX);
@@ -3841,6 +4003,75 @@ mod tests {
             format!("{error:?} {error}"),
             "X509OcspReviewedResponderNoCheckPolicyError { kind: InvalidNoCheckExtensionValue } X.509 OCSP reviewed-responder no-check policy error InvalidNoCheckExtensionValue"
         );
+    }
+
+    #[test]
+    fn intermediate_status_no_check_constructor_selects_the_added_responder() {
+        let original_encoded = certificate(&[]);
+        let added_encoded = certificate(&[extension(OCSP_NO_CHECK_OID_DER, NULL_DER)]);
+        let original = decode_x509_certificate(&original_encoded, Asn1Limits::default()).unwrap();
+        let added = decode_x509_certificate(&added_encoded, Asn1Limits::default()).unwrap();
+        let anchor_dns_policy = intermediate_status_anchor_dns_policy(&original, &added);
+
+        let no_check_policy =
+            validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_no_check_policy(
+                anchor_dns_policy,
+            )
+            .unwrap();
+
+        let retained = no_check_policy
+            .anchor_dns_policy()
+            .responder_path()
+            .no_check_intermediate_revocation()
+            .intermediate_revocation();
+        assert!(std::ptr::eq(retained.original_responder, &original));
+        assert!(std::ptr::eq(retained.added_responder, &added));
+        assert_eq!(
+            format!("{no_check_policy:?}"),
+            "ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy"
+        );
+    }
+
+    #[test]
+    fn intermediate_status_no_check_constructor_rejects_only_original_no_check() {
+        let original_encoded = certificate(&[extension(OCSP_NO_CHECK_OID_DER, NULL_DER)]);
+        let added_encoded = certificate(&[]);
+        let original = decode_x509_certificate(&original_encoded, Asn1Limits::default()).unwrap();
+        let added = decode_x509_certificate(&added_encoded, Asn1Limits::default()).unwrap();
+        let anchor_dns_policy = intermediate_status_anchor_dns_policy(&original, &added);
+
+        let error =
+            validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_no_check_policy(
+                anchor_dns_policy,
+            )
+            .expect_err("the original responder's no-check must not satisfy the added responder");
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderNoCheckPolicyErrorKind::MissingNoCheckExtension
+        );
+        assert!(!format!("{error:?} {error}").contains("responder.example.test"));
+    }
+
+    #[test]
+    fn intermediate_status_no_check_constructor_redacts_malformed_added_extension() {
+        let original_encoded = certificate(&[extension(OCSP_NO_CHECK_OID_DER, NULL_DER)]);
+        let added_encoded = certificate(&[extension(OCSP_NO_CHECK_OID_DER, &[0x05, 0x01, 0x00])]);
+        let original = decode_x509_certificate(&original_encoded, Asn1Limits::default()).unwrap();
+        let added = decode_x509_certificate(&added_encoded, Asn1Limits::default()).unwrap();
+        let anchor_dns_policy = intermediate_status_anchor_dns_policy(&original, &added);
+
+        let error =
+            validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_no_check_policy(
+                anchor_dns_policy,
+            )
+            .expect_err("malformed no-check on the added responder must fail closed");
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderNoCheckPolicyErrorKind::InvalidNoCheckExtensionValue
+        );
+        assert!(!format!("{error:?} {error}").contains("responder.example.test"));
     }
 
     #[test]
@@ -4208,6 +4439,65 @@ mod tests {
         assert_eq!(
             format!("{anchor_policy:?}"),
             "ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy"
+        );
+    }
+
+    #[test]
+    fn intermediate_status_responder_no_check_policy_retains_the_complete_dns_proof() {
+        let responder_no_check_policy = ValidatedX509OcspReviewedResponderNoCheckPolicy {
+            intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+                anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+                    responder_path: BoundX509OcspReviewedResponderPath {
+                        reviewed_server_revocation: (),
+                    },
+                    constrained_dns_names: None,
+                },
+                constrained_dns_names: None,
+            },
+        };
+        let no_check_intermediate_revocation = BoundX509OcspReviewedNoCheckIntermediateRevocation {
+            responder_no_check_policy,
+            intermediate_revocation: 7_u8,
+        };
+        let responder_path =
+            reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path(
+                no_check_intermediate_revocation,
+            );
+        let anchor_dns_policy =
+            ValidatedX509OcspReviewedIntermediateStatusResponderAnchorDnsPolicy {
+                responder_path,
+                constrained_dns_names: None,
+            };
+        let no_check_policy =
+            ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy { anchor_dns_policy };
+
+        assert_eq!(
+            no_check_policy.anchor_dns_policy().constrained_dns_names(),
+            None
+        );
+        assert_eq!(
+            *no_check_policy
+                .anchor_dns_policy()
+                .responder_path()
+                .no_check_intermediate_revocation()
+                .intermediate_revocation(),
+            7
+        );
+        assert_eq!(
+            no_check_policy
+                .anchor_dns_policy()
+                .responder_path()
+                .no_check_intermediate_revocation()
+                .responder_no_check_policy()
+                .intermediate_dns_policy()
+                .anchor_policy()
+                .responder_path()
+                .reviewed_server_revocation(),
+            &()
+        );
+        assert_eq!(
+            format!("{no_check_policy:?}"),
+            "ValidatedX509OcspReviewedIntermediateStatusResponderNoCheckPolicy"
         );
     }
 }
