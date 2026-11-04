@@ -24,6 +24,11 @@
 - Make the completion-plan runner load only the registry, lessons, curricula,
   and spine it consumes. Focused validation still shows high Windows I/O cost;
   the complete suite remains the acceptance gate for this optimization.
+- Add an anchored, bounded reader for every direct curriculum-membership owner
+  and an awaitable curriculum loader. Fixture parity, corruption, and
+  redirected-directory tests cover the new path. The track-progress command
+  uses it, but the full-corpus Windows run still exceeds the unchanged
+  30-second case budget; this is not yet a release-ready fix.
 - Keep the 30-second default, explicit per-case timeouts, every corpus
   assertion, and the 85% line-coverage threshold unchanged. Full Windows
   coverage and final-head CI remain required before release.

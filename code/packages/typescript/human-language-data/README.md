@@ -174,6 +174,7 @@ import {
   languagesForConcept,
   loadEverything,
   loadEverythingAsync,
+  loadLanguageCurriculaAsync,
   mixedCurriculumFrontier,
   compileLessonActivities,
   validate,
@@ -186,6 +187,10 @@ const { curricula, dataset, lessons, registry, scripts, soundTags, spine, taxono
 // track. It returns the same validated result and remains content-keyed when
 // the test-only lesson cache is configured:
 const asynchronousCorpus = await loadEverythingAsync();
+
+// Large curriculum-membership owner sets can also be read through bounded,
+// pinned directory handles without changing their canonical owner checks:
+const asynchronousCurricula = await loadLanguageCurriculaAsync();
 
 // Typed activities compile directly from block metadata, never from prose.
 const activities = compileLessonActivities(lessons[0].blocks);

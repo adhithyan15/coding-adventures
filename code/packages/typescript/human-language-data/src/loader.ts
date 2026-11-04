@@ -69,7 +69,10 @@ import {
   attachCurriculumLessonMemberships,
   type AuthoredLanguageCurriculum,
 } from "./curriculum-membership.js";
-import { readCurriculumMembershipOwners } from "./curriculum-membership-shards.js";
+import {
+  readCurriculumMembershipOwners,
+  readCurriculumMembershipOwnersBatchAsync,
+} from "./curriculum-membership-shards.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import { mergeScriptInventoryShards } from "./script-shards.js";
 import {
@@ -418,13 +421,7 @@ export function loadAuthoredLanguageCurricula(
   root = defaultCurriculumRoot(),
 ): AuthoredLanguageCurriculum[] {
   const out: AuthoredLanguageCurriculum[] = [];
-  for (const track of sortedEntries(root)) {
-    if (!track.isDirectory()) continue;
-    const path = join(root, track.name, "curriculum.json");
-    // `|| isSharded`, for the same load-bearing reason as `loadTrackChapters`:
-    // a migrated track's monolith may not be here, and `continue` means "this
-    // track has no authored curriculum", which would drop it from every gate.
-    if (!existsSync(path) && !isSharded(path)) continue;
+  for (const { path } of authoredCurriculumSources(root)) {
     out.push(
       readMaybeSharded<AuthoredLanguageCurriculum>(
         path,
@@ -435,6 +432,18 @@ export function loadAuthoredLanguageCurricula(
   return out.sort((left, right) => left.language.localeCompare(right.language));
 }
 
+function authoredCurriculumSources(root: string): Array<{ name: string; path: string }> {
+  const out: Array<{ name: string; path: string }> = [];
+  for (const track of sortedEntries(root)) {
+    if (!track.isDirectory()) continue;
+    const path = join(root, track.name, "curriculum.json");
+    // A migrated track may have only curriculum.d; never silently drop it.
+    if (!existsSync(path) && !isSharded(path)) continue;
+    out.push({ name: track.name, path });
+  }
+  return out;
+}
+
 /** Read each track's executable shared-spine map with derived lesson arrays. */
 export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageCurriculum[] {
   return loadAuthoredLanguageCurricula(root).map((authored) =>
@@ -443,6 +452,35 @@ export function loadLanguageCurricula(root = defaultCurriculumRoot()): LanguageC
       readCurriculumMembershipOwners(root, authored.language).owners,
     ),
   );
+}
+
+/** Read every canonical membership owner through bounded pinned directory handles. */
+export async function loadLanguageCurriculaAsync(
+  root = defaultCurriculumRoot(),
+): Promise<LanguageCurriculum[]> {
+  const sources = authoredCurriculumSources(root);
+  if (sources.length === 0) return [];
+  // Pin/read owner directories while authored shards are being parsed. These
+  // independent source sets are validated against each other before assembly.
+  const ownersPromise = readCurriculumMembershipOwnersBatchAsync(
+    root, sources.map((source) => source.name),
+  );
+  let authored: AuthoredLanguageCurriculum[];
+  try {
+    authored = loadAuthoredLanguageCurricula(root);
+  } catch (cause) {
+    await ownersPromise.catch(() => undefined);
+    throw cause;
+  }
+  const owners = await ownersPromise;
+  if (authored.length !== sources.length ||
+      authored.some((curriculum) => !owners.has(curriculum.language))) {
+    throw new Error("authored curriculum languages do not match owner directories");
+  }
+  return authored.map((curriculum) => attachCurriculumLessonMemberships(
+    curriculum,
+    owners.get(curriculum.language)!.owners,
+  ));
 }
 
 /** Read one track's curriculum without scanning every other track's owners. */

@@ -11,8 +11,10 @@ import {
   defaultCurriculumRoot,
   loadBookCorpus,
   loadLanguageCurricula,
+  loadLanguageCurriculaAsync,
   loadLanguageRegistry,
   loadLessons,
+  loadLessonsAsync,
 } from "./loader.js";
 import {
   buildTrackProgress,
@@ -79,6 +81,29 @@ function generatedTrackProgress(
   );
 }
 
+/** Same canonical owners and order, with only lesson source reads bounded. */
+async function generatedTrackProgressAsync(
+  root = defaultCurriculumRoot(),
+): Promise<TrackProgress[]> {
+  const registry = loadLanguageRegistry(root);
+  const [lessons, curricula, books, bookRefs] = await Promise.all([
+    loadLessonsAsync(root),
+    loadLanguageCurriculaAsync(root),
+    Promise.resolve().then(() => loadBookCorpus(root)),
+    Promise.resolve().then(() => loadGeneratedBookChapterRefs(
+      root,
+      new Set(registry.languages.map((language) => language.id)),
+    )),
+  ]);
+  return buildTrackProgress(
+    registry,
+    lessons,
+    curricula,
+    books,
+    bookRefs,
+  );
+}
+
 function progressOutputs(
   tracks: TrackProgress[],
   root: string,
@@ -100,6 +125,13 @@ export function generatedTrackProgressOutputs(
   root = defaultCurriculumRoot(),
 ): Map<string, string> {
   return progressOutputs(generatedTrackProgress(root), root);
+}
+
+/** Awaitable cards for corpus-sized callers; identity/path checks are shared. */
+export async function generatedTrackProgressOutputsAsync(
+  root = defaultCurriculumRoot(),
+): Promise<Map<string, string>> {
+  return progressOutputs(await generatedTrackProgressAsync(root), root);
 }
 
 /** Render the same rows as one on-demand Markdown report. */
@@ -127,17 +159,12 @@ export function progressDirectoryIsAbsent(root: string): boolean {
   }
 }
 
-export function runTrackProgress(
-  args = process.argv.slice(2),
-  root = defaultCurriculumRoot(),
+/** Shared final gate: both source readers produce the same rows for this path. */
+function finishTrackProgress(
+  mode: "--check" | "--report",
+  tracks: TrackProgress[],
+  root: string,
 ): number {
-  const mode = args.length === 1 ? args[0] : undefined;
-  if (mode !== "--check" && mode !== "--report") {
-    process.stderr.write("usage: track-progress-cli (--check | --report)\n");
-    return 2;
-  }
-
-  const tracks = generatedTrackProgress(root);
   if (mode === "--report") {
     process.stdout.write(`${renderTrackProgressTable(tracks)}\n`);
     return 0;
@@ -158,9 +185,36 @@ export function runTrackProgress(
   return 0;
 }
 
+export function runTrackProgress(
+  args = process.argv.slice(2),
+  root = defaultCurriculumRoot(),
+): number {
+  const mode = args.length === 1 ? args[0] : undefined;
+  if (mode !== "--check" && mode !== "--report") {
+    process.stderr.write("usage: track-progress-cli (--check | --report)\n");
+    return 2;
+  }
+
+  return finishTrackProgress(mode, generatedTrackProgress(root), root);
+}
+
+/** Awaitable CLI path, retaining every output and resurrection check above. */
+export async function runTrackProgressAsync(
+  args = process.argv.slice(2),
+  root = defaultCurriculumRoot(),
+): Promise<number> {
+  const mode = args.length === 1 ? args[0] : undefined;
+  if (mode !== "--check" && mode !== "--report") {
+    process.stderr.write("usage: track-progress-cli (--check | --report)\n");
+    return 2;
+  }
+
+  return finishTrackProgress(mode, await generatedTrackProgressAsync(root), root);
+}
+
 if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
 ) {
-  process.exitCode = runTrackProgress();
+  process.exitCode = await runTrackProgressAsync();
 }

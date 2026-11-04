@@ -12,9 +12,9 @@ import { describe, expect, it, vi } from "vitest";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import type { ParsedLesson } from "../src/parse.js";
 import {
-  generatedTrackProgressOutputs,
+  generatedTrackProgressOutputsAsync,
   progressDirectoryIsAbsent,
-  runTrackProgress,
+  runTrackProgressAsync,
   TRACK_PROGRESS_DIR,
 } from "../src/track-progress-cli.js";
 import {
@@ -46,7 +46,7 @@ const directoryLinksAvailable = canCreateDirectoryLinks();
 // each test body is what pushed the first of them toward the 30s per-test
 // budget as the corpus grew. Import time carries no per-test budget, and no
 // test mutates the map (the one that edits a card copies it first).
-const REAL_OUTPUTS = generatedTrackProgressOutputs(defaultCurriculumRoot());
+const REAL_OUTPUTS = await generatedTrackProgressOutputsAsync(defaultCurriculumRoot());
 
 describe("track progress", () => {
   it("derives registry-ordered counts from lessons, maps, and book data", () => {
@@ -90,7 +90,7 @@ describe("track progress", () => {
     expect(renderTrackProgressCard(tracks[1]!)).toContain("# Alpha progress");
   });
 
-  it("keeps every per-language card in memory and the tracked directory absent", () => {
+  it("keeps every per-language card in memory and the tracked directory absent", async () => {
     const root = defaultCurriculumRoot();
     const outputs = REAL_OUTPUTS;
     expect(outputs.size).toBe(23);
@@ -101,13 +101,13 @@ describe("track progress", () => {
       expect(expected, relative).toContain("Book progress:");
     }
     expect(() => lstatSync(join(root, TRACK_PROGRESS_DIR))).toThrow(/ENOENT/);
-    expect(runTrackProgress(["--check"], root)).toBe(0);
+    expect(await runTrackProgressAsync(["--check"], root)).toBe(0);
   });
 
-  it("prints the registry-ordered table on demand without writing a card", () => {
+  it("prints the registry-ordered table on demand without writing a card", async () => {
     const root = defaultCurriculumRoot();
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-    expect(runTrackProgress(["--report"], root)).toBe(0);
+    expect(await runTrackProgressAsync(["--report"], root)).toBe(0);
     expect(stdout).toHaveBeenCalledWith(expect.stringContaining("| [Arabic]"));
     expect(stdout).toHaveBeenCalledWith(
       expect.stringContaining("| [Marwadi (Marwari)]"),
