@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add a distinct binder from the routed RSA SHA-256/SHA-384/SHA-512 OCSP
+  response-signature proof to the routed constructed reviewed-server path.
+- Retain both complete proofs and exact-observation target/intermediate
+  validity without implying routed OCSP certificate links, routed responder
+  policy, external effects, or transport readiness.
 - Bind the authenticated OCSP target-revocation proof to the data-driven routed
   constructed reviewed-server path only when both retain the same exact target
   and intermediate certificate objects.

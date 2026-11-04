@@ -31,6 +31,8 @@ x509-ocsp-responder-certificate-policy = { path = "../x509-ocsp-responder-certif
 x509-ocsp-responder-id-binding = { path = "../x509-ocsp-responder-id-binding" }
 x509-ocsp-response = { path = "../x509-ocsp-response" }
 x509-ocsp-revocation-policy = { path = "../x509-ocsp-revocation-policy" }
+x509-ocsp-rsa-algorithm-policy = { path = "../x509-ocsp-rsa-algorithm-policy" }
+x509-ocsp-rsa-signature-routing = { path = "../x509-ocsp-rsa-signature-routing" }
 x509-rsa-algorithm-policy = { path = "../x509-rsa-algorithm-policy" }
 x509-rsa-public-key = { path = "../x509-rsa-public-key" }
 x509-rsa-sha256-issuer-link = { path = "../x509-rsa-sha256-issuer-link" }
