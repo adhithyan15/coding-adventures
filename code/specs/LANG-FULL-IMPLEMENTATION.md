@@ -84,7 +84,8 @@ is exact. Fractional coefficients, rooted divisors, zero divisors, overflow,
 multiple roots, overrides, and dynamic roots remain outside the proof.
 Checked integer divisors may also leave a reduced rational coefficient. Exact
 integer arithmetic supplies the mathematical floor or negative ceiling while
-rooted divisors, zero divisors, overflow, multiple roots, overrides, and
+products of nonnegative static roots combine their radicands under the same
+checked `u128` proof. Rooted divisors, zero divisors, overflow, overrides, and
 dynamic roots remain outside the proof.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
