@@ -88,7 +88,7 @@
 //    there. loader.ts makes the same call for the modality manifest, in the same
 //    words: a missing manifest throws rather than returning an empty one.
 
-import { constants, lstatSync, readFileSync, readdirSync, type Stats } from "node:fs";
+import { constants, lstatSync, readFileSync, readdirSync, type BigIntStats } from "node:fs";
 import { open } from "node:fs/promises";
 import { basename, join } from "node:path";
 
@@ -496,10 +496,10 @@ export function mergeScriptInventoryShards<T = Record<string, unknown>>(shards: 
  * target's contents and `writeFileSync` put shards there. Reading past a
  * symlink is a disclosure; writing past one is destruction.
  */
-function realFileStat(path: string, what = "ledger"): Stats {
+function realFileStat(path: string, what = "ledger"): BigIntStats {
   let stat;
   try {
-    stat = lstatSync(path);
+    stat = lstatSync(path, { bigint: true });
   } catch (cause) {
     throw new Error(`'${path}': cannot be read — ${describe(cause)}`, { cause });
   }
@@ -628,9 +628,10 @@ export async function readLedgerFileWithSourceAsync<T = unknown>(
   try {
     const handle = await open(path, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0));
     try {
-      const opened = await handle.stat();
+      const opened = await handle.stat({ bigint: true });
       if (
-        before.ino === 0 || opened.ino === 0 ||
+        before.dev === 0n || opened.dev === 0n ||
+        before.ino === 0n || opened.ino === 0n ||
         before.dev !== opened.dev || before.ino !== opened.ino || !opened.isFile()
       ) {
         throw new Error(`'${path}': file identity changed while opening the ledger`);

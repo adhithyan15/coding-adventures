@@ -672,7 +672,9 @@ export async function readModalityOwnerBatch<T>(
   if (paths.length < 1 || paths.length > 16) {
     throw new Error(`modality owner batch must contain 1–16 files, got ${paths.length}`);
   }
-  const settled = await Promise.allSettled(paths.map((path) => read(path)));
+  const settled = await Promise.allSettled(
+    paths.map((path) => Promise.resolve().then(() => read(path))),
+  );
   return settled.map((result) => {
     if (result.status === "rejected") throw result.reason;
     return result.value;
