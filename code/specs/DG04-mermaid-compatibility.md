@@ -164,6 +164,10 @@ titles reserve line-aware vertical geometry after semantic normalization. ER
 layout and lowers to PaintScene metadata without changing intrinsic geometry.
 The shared `flowchart.htmlLabels` policy follows the same pipeline for ER edge
 labels while native backends continue to receive portable shaped text.
+The first five active classic Cypress rendering cases are pinned together as a
+topology acceptance corpus, covering simple, recursive, parallel, cyclical, and
+multi-entity relationship graphs through semantic IR, obstacle-aware structural
+layout, portable PaintInstructions, and native Metal rendering.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
