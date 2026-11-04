@@ -18,6 +18,7 @@ import os
 import re
 import secrets
 import stat
+from concurrent.futures import ThreadPoolExecutor, wait
 from contextlib import contextmanager
 
 if os.name == "nt":
@@ -57,6 +58,7 @@ BOOK_OUTPUT_OWNER = re.compile(r"^([a-z][a-z0-9-]*)-([a-z0-9][a-z0-9-]*)\.json$"
 BOOK_CHAPTER_IDENTITY = re.compile(r"^([a-z][a-z0-9-]*)/(\d{4})$")
 SAFE_BOOK_SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 WINDOWS_RESERVED = re.compile(r"^(con|prn|aux|nul|com[1-9]|lpt[1-9])$", re.IGNORECASE)
+MODALITY_OWNER_NAME = re.compile(r"^(?:_meta|[A-Za-z0-9][A-Za-z0-9-]*)\.json$")
 NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
 DIRECTORY = getattr(os, "O_DIRECTORY", 0)
 REPARSE_POINT = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
@@ -594,6 +596,64 @@ def read_track_regular_text(root, track, relative_path, *, reject_sharded_siblin
             if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
                 raise ValueError(f"refusing non-file mock evidence: {relative_path}")
             return handle.read()
+
+
+def read_track_regular_texts(root, track, directory_parts, names):
+    """Read one exact direct-owner set relative to a pinned parent handle.
+
+    The directory remains pinned across listing and all at-most-16 concurrent
+    file opens. A concurrent junction/symlink replacement of its pathname
+    cannot redirect any open to an outside directory. The exact-name check
+    refuses missing, extra, or newly sharded owners before returning bytes.
+    """
+    _safe_track(track)
+    if not isinstance(directory_parts, (tuple, list)) or not directory_parts:
+        raise ValueError("modality owner directory parts must be nonempty")
+    for part in directory_parts:
+        if (
+            not isinstance(part, str) or not part or part in (".", "..")
+            or "/" in part or "\\" in part or ":" in part or "\x00" in part
+            or part.endswith((".", " "))
+        ):
+            raise ValueError(f"unsafe modality owner directory component: {part!r}")
+    if not isinstance(names, (tuple, list)) or not names:
+        raise ValueError("modality owner names must be nonempty")
+    if any(not isinstance(name, str) or not MODALITY_OWNER_NAME.fullmatch(name) for name in names):
+        raise ValueError("unsafe modality owner filename")
+    if len(names) != len(set(names)) or len(names) != len({name.lower() for name in names}):
+        raise ValueError("duplicate or case-folded modality owner filename")
+    if any(WINDOWS_RESERVED.fullmatch(name[:-5]) for name in names):
+        raise ValueError("reserved modality owner filename")
+
+    def read_all(directory_handle, read_one):
+        with ThreadPoolExecutor(max_workers=16) as executor:
+            futures = [executor.submit(read_one, directory_handle, name) for name in names]
+            wait(futures)  # Drain every started open before propagating a failure.
+            return {name: future.result() for name, future in zip(names, futures)}
+
+    if os.name == "nt":
+        with _windows_directory(root, track, *directory_parts, list_entries=True) as directory_handle:
+            entries = _windows_query_directory(directory_handle)
+            actual = {name for name, _attributes in entries}
+            if len(actual) != len(entries) or actual != set(names):
+                raise ValueError("modality owner set has missing or extra files")
+            if any(attributes & (REPARSE_POINT | _DIRECTORY_ATTRIBUTE) for _, attributes in entries):
+                raise ValueError("modality owner set has a non-regular file")
+            return read_all(directory_handle, _windows_read_regular)
+
+    with _unix_directory(root, track, *directory_parts) as directory_fd:
+        entries = os.listdir(directory_fd)
+        if len(entries) != len(set(entries)) or set(entries) != set(names):
+            raise ValueError("modality owner set has missing or extra files")
+
+        def read_unix(directory_fd, name):
+            descriptor = os.open(name, os.O_RDONLY | NOFOLLOW, dir_fd=directory_fd)
+            with os.fdopen(descriptor, encoding="utf-8") as handle:
+                if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                    raise ValueError(f"refusing non-file modality owner: {name}")
+                return handle.read()
+
+        return read_all(directory_fd, read_unix)
 
 
 if os.name == "nt":
