@@ -42,6 +42,11 @@ The remaining measured cost is synchronous file opens, not JSON work: on a
 text reads but less than 0.2 seconds each in parsing and canonical
 serialization. Add an awaitable direct-owner route that performs at most 16
 guarded reads at once per track, retaining exact text for canonical comparison.
+On Windows the parent `<language>.d` must be pinned as a real directory and
+each owner opened relative to that handle (on Unix, `dir_fd` with no-follow);
+final-file `lstat`/`fstat` identity alone cannot stop a swapped parent junction.
+Node's Windows filesystem API does not expose this handle-relative open, so an
+async path-based `readFile` route is not acceptable, even when it is faster.
 The existing synchronous API stays available. Both routes share the same
 preflight directory and identity checks, same parser, same ordering and final
 manifest validation. Every started read must settle before a failure rejects;
@@ -69,6 +74,9 @@ open; a passing focused subcase is not full-suite acceptance.
   source, a symlink refusal, malformed JSON, dangerous keys, missing/extra
   identities, and noncanonical bytes. A test proves the 16-read bound and
   failure drain without depending on filesystem timing.
+- Deterministic parent-swap tests prove the async read cannot follow a swapped
+  language-directory junction outside the checkout; the anchored reader's
+  response is checked for missing and extra requested owner names.
 - A test verifies that the value and canonical text are judged from one
   guarded source read, not two potentially different file versions.
 - The awaitable `--check` passes on a current fixture and fails on missing,
