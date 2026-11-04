@@ -1,0 +1,27 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 classic ER Cypress aliases, titles, and labels rendering corpus",
+  "fixtures": [
+    {
+      "name": "cardinality-aliases",
+      "source": "erDiagram\nT1 one or zero to one or more T2 : test\nT2 one or many optionally to zero or one T3 : test\nT3 zero or more to zero or many T4 : test\nT4 many(0) to many(1) T5 : test\nT5 many optionally to one T6 : test\nT6 only one optionally to only one T1 : test\nT4 0+ to 1+ T6 : test\nT1 1 to 1 T3 : test"
+    },
+    {
+      "name": "frontmatter-title",
+      "source": "---\ntitle: simple ER diagram\n---\nerDiagram\nCUSTOMER ||--o{ ORDER : places\nORDER ||--|{ LINE-ITEM : contains"
+    },
+    {
+      "name": "entity-name-aliases",
+      "source": "erDiagram\np[Person] {\n  varchar(64) firstName\n  varchar(64) lastName\n}\nc[\"Customer Account\"] {\n  varchar(128) email\n}\np ||--o| c : has"
+    },
+    {
+      "name": "relationship-label-line-breaks",
+      "source": "erDiagram\np[Person] {\n  string firstName\n  string lastName\n}\na[\"Customer Account\"] { string email }\nb[\"Customer Account Secondary\"] { string email }\nc[\"Customer Account Tertiary\"] { string email }\nd[\"Customer Account Nth\"] { string email }\np ||--o| a : \"has<br />one\"\np ||--o| b : \"has<br />one<br />two\"\np ||--o| c : \"has<br />one<br/>two<br />three\"\np ||--o| d : \"has<br />one<br />two<br/>three<br />...<br/>Nth\""
+    },
+    {
+      "name": "graph-substring-in-alias",
+      "source": "erDiagram\np[Photograph] {\n  varchar(12) jobId\n  date dateCreated\n}"
+    }
+  ]
+}

@@ -174,6 +174,9 @@ and leading-asterisk attributes through the same backend-neutral pipeline.
 The following five classic Cypress cases pin escaped attribute names, comma and
 period-bearing attribute forms, key markers, comments, and combined key/comment
 metadata through semantic IR, structural layout, and native Metal rendering.
+The next five classic Cypress cases pin cardinality aliases, front-matter titles,
+entity aliases, multiline relationship labels, and keyword substrings in alias
+text through the same backend-neutral pipeline.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
