@@ -43,8 +43,24 @@ must also resolve at or before chapter 275. Chapters 276–277 re-teach related
 grammar at the B1 seam under separate B1-required C276/C277 extensions and
 the B1 `SPINE-NARRATE-EVENTS` path; C278–C279 complete that connected-story
 capability. The derived A2 lesson slice excludes every C276/C277 lesson, so the
-seam cannot be used to bless A2 evidence. Its two timed mock bundles
-and every later-rung mock bundle remain backlog.
+seam cannot be used to bless A2 evidence. The task shape now also has two distinct
+timed learner papers, separate keys and examiner scripts, a shared rung-owned
+rubric, and fail-closed manifests covering all eleven published A2 parts. These
+papers reject later-rung past, causal, conditional, connective, travel,
+experience, comparison, passive, future-copula, habitual, impersonal-ability,
+subjunctive, concessive, discourse, replacement, negative-conjunctive,
+agreeing-participle, nominalized-time, attributive-postposition, reciprocal,
+unowned-compound, later-list-noun, collective-numeral, reflexive, partitive,
+attributive-locative, abstract-noun, father-noun, attention-collocation, awkward-notice,
+later-use/drive/finish/depart/appear, future-copula, unowned-summon, sentence-noun,
+start/previous/quality/completeness/new/ready/en-route/attributive-last,
+productive-dative-infinitive, reading-noun, market-held-sense, people-noun,
+change-noun, possessive-agreement,
+verbal-adjective/deontic, and
+inclusive-pronoun surfaces as well as
+lexical or structural reuse of the complete excluded B1 grammar/story seam. They remain source-bounded
+project forms, not external certification or learner
+attainment evidence. Every later-rung mock bundle remains backlog.
 
 ## Progress
 

@@ -1,0 +1,87 @@
+# Marathi A2 mock 1 — examiner script
+
+Keep this file away from the learner. It supplies examiner-read listening and
+speaking prompts; it is not recording-provenance evidence and does not imply a
+qualified speaker or trained rater.
+
+Deliver each complete listening part at 110–130 words per minute with two plays.
+The announcement must occupy exactly 90 seconds per play; the conversation and
+connected account must each occupy exactly 120 seconds per play. Start the timer
+with the first word and, after the final word, keep silence until the exact
+90-second or 120-second window ends. Preserve the words, order, pace, and silence
+on the second play. Do not add answer-bearing words or a learner-selected third
+play. A technical restart replaces the affected play.
+
+## Listening
+
+### Announcements — items 1–7
+
+Read as one announcement:
+
+**प्रवाशांनो, पुण्याची सकाळची गाडी वीस मिनिटे
+उशिरा येत आहे. ही गाडी तिसऱ्या फलाटावरून जाणार नाही. ती पाचव्या फलाटावरून
+जाईल. प्रवाशांनो, पुन्हा पैसे देऊ नका.
+पाचव्या फलाटावर सध्या पाणी मिळत नाही. पाणी पहिल्या फलाटाच्या दुकानात
+मिळेल. मदतीसाठी स्टेशनच्या खोलीजवळ गाडीचे कर्मचारी आहेत.
+गाडी येणार आहे. कृपया पाचव्या फलाटावर जा आणि
+तिथे थांबा.**
+
+### Everyday conversation — items 8–14
+
+Read as one conversation:
+
+**मीरा: अरुण, सहलीची बस सात वाजता जाणार होती. ती आता आठ वाजता
+जाणार आहे. मी सात वाजता बसस्थानकावर येते. अरुण: बरोबर. मीही सात वाजता
+येईन. मी कालच बसचे पैसे दिले आहेत. खिडकीजवळ बसू या. मीरा: बरोबर. बस मध्ये कुठे थांबेल?
+अरुण: अकरा वाजता एका गावात वीस मिनिटे थांबेल. तिथे चहा आणि नाश्ता मिळेल.
+मीरा: हवामान थंड आहे. मी छत्री आणि गरम कपडे आणते. अरुण: बरोबर. बस
+संध्याकाळी पाच वाजता गावात पोहोचेल. मी घरी कळवेन.**
+
+### Connected account — items 15–20
+
+Read as one account:
+
+**एका रविवारी मी मीराबरोबर सायकलने लांब गेलो. आम्ही सकाळी सहा वाजता
+घरातून निघालो. मुख्य रस्त्यावर गाड्या खूप होत्या.
+आम्ही गावाच्या लहान रस्त्याने गेलो. थोड्या वेळाने मला माझी पिशवी
+तिथे नव्हती. मला काळजी वाटली, पण मीराने पिशवी शोधण्यासाठी मदत केली. पिशवी
+चहाच्या दुकानाजवळ होती. त्या दुकानातून आम्ही फळं आणि पाणी घेतलं.
+डोंगराजवळ पोहोचलो तेव्हा हलका पाऊस आला. आम्ही थोडा वेळ
+झाडाखाली थांबलो. परत आल्यावर मी थकलो होतो. पुढच्या महिन्यात मी पुन्हा
+सायकलने जाणार आहे.**
+
+## Speaking
+
+Allow five-minute preparation before the speaking paper. Read the six interview
+questions in one 10–45-second stimulus window and allow one combined 120–180-second response window.
+Use the learner's keyword notes only for the prepared account,
+whose response window is 90–120 seconds. Deliver the role-play card in one
+20–40-word stimulus and allow a 120–180-second response window. Do not provide
+an answer model, translation, or coaching.
+
+### Personal interview
+
+1. **तुमच्या घराजवळ कोणतं ठिकाण तुम्हाला आवडते? का?**
+2. **तुम्ही सध्या काय शिकता किंवा कोणते काम करता?**
+3. **तुम्ही नेहमी कुठे आणि कसे प्रवास करता?**
+4. **काल किंवा परवा तुम्ही काय केले?**
+5. **तुम्हाला शहरात राहणे आवडते की गावात? एक कारण सांगा.**
+6. **पुढच्या आठवड्यात तुम्ही काय करणार आहात?**
+
+### Prepared account
+
+Show only this card: **तुम्ही कुठे गेलात ते सांगा: ते ठिकाण कुठे आहे,
+तुम्ही कधी आणि कोणाबरोबर गेलात, प्रवासात काय झालं, तिथे काय केलं आणि
+तुम्हाला कसं वाटलं?**
+
+### Information-exchange role-play
+
+Show and read only this Marathi card: **तुम्ही बसने गावाला जाणार आहात.
+गाव आणि प्रवासाचा दिवस सांगा. जाण्याची आणि परत येण्याची वेळ विचारा. बसचे
+पैसे विचारा. ही माहिती मिळाली? नाही? पुन्हा विचारा आणि शेवटी धन्यवाद द्या.**
+If asked about the outward time, reply **जाण्याची बस सकाळी आठ वाजता आहे**.
+When asked about the return time, first reply **परतीची बस संध्याकाळी आहे**
+without giving a time so the learner must clarify; after the clarification,
+reply **ती सहा वाजता आहे**. If asked about the fare, reply **पन्नास रुपये**.
+Answer those questions in the order the learner asks them. Do not supply an
+answer model.
