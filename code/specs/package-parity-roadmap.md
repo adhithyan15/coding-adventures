@@ -20819,3 +20819,15 @@ render, and reified intermediate-status responder-path commits are exact-path-
 disjoint from the six PR paths and touch no workflow. Treat the resulting head
 as a twenty-first reconciliation with fresh local validation, independent
 review, normal push, and an entirely new hosted rollup.
+
+Five Unicode 17 generated-runtime conformance jobs on the twenty-first head
+failed while downloading the pinned upstream Unicode license because the
+upstream endpoint returned HTTP 522. Record the external-fetch failure for
+future retry/resilience prioritization if it recurs; do not treat the rollup
+as acceptable. Protected main also advanced. Merge exact `origin/main`
+`ef7d69ef3e399785d65ca62dad8cd65f2aa95839` normally and conflict-free. The
+three intervening constrained intermediate-status responder-DNS, TypeScript
+SHA-256 test migration, and TypeScript X25519 test migration commits are exact-
+path-disjoint from the six PR paths and touch no workflow. Treat the resulting
+head as a twenty-second reconciliation with fresh local validation,
+independent review, normal push, and an entirely new hosted rollup.
