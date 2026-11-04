@@ -2609,6 +2609,28 @@ Generalized path construction or validation, complete revocation policy, TLS,
 HTTP, OAuth transport, and network authority remain unavailable. Concrete
 HTTPS and live-provider readiness remain unavailable.
 
+A subsequent bounded projection consumes that complete no-check plus
+intermediate-status composition and reifies the added status proof's exact
+delegated responder-to-reviewed-root path as a distinct non-copyable type.
+The consumed inputs already prove that the added proof's exact responder
+certificate passed certificate-wide critical-extension and end-entity role
+policy, caller-selected algorithm/key policy, OCSP-signing purpose, and
+validity at the exact observation time; that its response signature and
+responder certificate signature selected repository-owned routed RSA
+verifiers; and that its exact issuer is the same selected Mozilla-reviewed
+root retained by the original proof. The infallible projection retains the
+complete prior composition without accepting a substitute certificate, path,
+root, algorithm, key, signature, status, or time and performs no additional
+parsing or validation. This pure public-certificate-data composition performs
+no credential access or editing, signing, storage, clock acquisition,
+provider action, audit event, trace emission, I/O, network access, or other
+external effect. It does not yet apply the selected root's supported
+out-of-band DNS constraints to that responder, establish no-check or
+separately authenticated revocation policy for it, generalize path
+construction or validation, implement complete revocation policy, TLS, HTTP,
+OAuth transport, or network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated
