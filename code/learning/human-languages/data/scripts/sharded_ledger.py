@@ -598,6 +598,14 @@ def read_track_regular_text(root, track, relative_path, *, reject_sharded_siblin
             return handle.read()
 
 
+def _read_pinned_regular_batch(directory_handle, names, read_one):
+    """Bound opens and wait for every started read before propagating failure."""
+    with ThreadPoolExecutor(max_workers=16) as executor:
+        futures = [executor.submit(read_one, directory_handle, name) for name in names]
+        wait(futures)
+        return {name: future.result() for name, future in zip(names, futures)}
+
+
 def read_track_regular_texts(root, track, directory_parts, names):
     """Read one exact direct-owner set relative to a pinned parent handle.
 
@@ -625,12 +633,6 @@ def read_track_regular_texts(root, track, directory_parts, names):
     if any(WINDOWS_RESERVED.fullmatch(name[:-5]) for name in names):
         raise ValueError("reserved modality owner filename")
 
-    def read_all(directory_handle, read_one):
-        with ThreadPoolExecutor(max_workers=16) as executor:
-            futures = [executor.submit(read_one, directory_handle, name) for name in names]
-            wait(futures)  # Drain every started open before propagating a failure.
-            return {name: future.result() for name, future in zip(names, futures)}
-
     if os.name == "nt":
         with _windows_directory(root, track, *directory_parts, list_entries=True) as directory_handle:
             entries = _windows_query_directory(directory_handle)
@@ -639,7 +641,7 @@ def read_track_regular_texts(root, track, directory_parts, names):
                 raise ValueError("modality owner set has missing or extra files")
             if any(attributes & (REPARSE_POINT | _DIRECTORY_ATTRIBUTE) for _, attributes in entries):
                 raise ValueError("modality owner set has a non-regular file")
-            return read_all(directory_handle, _windows_read_regular)
+            return _read_pinned_regular_batch(directory_handle, names, _windows_read_regular)
 
     with _unix_directory(root, track, *directory_parts) as directory_fd:
         entries = os.listdir(directory_fd)
@@ -653,7 +655,7 @@ def read_track_regular_texts(root, track, directory_parts, names):
                     raise ValueError(f"refusing non-file modality owner: {name}")
                 return handle.read()
 
-        return read_all(directory_fd, read_unix)
+        return _read_pinned_regular_batch(directory_fd, names, read_unix)
 
 
 if os.name == "nt":

@@ -53,6 +53,7 @@ import {
   defaultCurriculumRoot,
   loadLanguageRegistry,
   loadLessons,
+  loadLessonsAsync,
 } from "./loader.js";
 import {
   MODALITY_MANIFEST_DIR,
@@ -65,6 +66,7 @@ import {
   assertModalityManifestLanguages,
   modalityOwnerContents,
   readModalityManifestOwners,
+  readModalityManifestOwnersWithSourcesAsync,
 } from "./modality-shards.js";
 import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
 import type { ModalityOptions } from "./modality.js";
@@ -503,6 +505,47 @@ export function runModalityManifest(
   }
 }
 
+/**
+ * Awaitable read-only gate. The anchored owner read supplies both exact source
+ * bytes for the generated-output comparison and parsed rows for the independent
+ * source/narration reconstruction check. No gate is skipped or made stat-only.
+ */
+export async function runModalityManifestAsync(
+  args = process.argv.slice(2),
+  root = defaultCurriculumRoot(),
+  faultHooks: ModalityInstallFaultHooks = {},
+): Promise<number> {
+  if (args.length !== 1 || args[0] !== "--check") {
+    return runModalityManifest(args, root, faultHooks);
+  }
+  try {
+    const lessons = await loadLessonsAsync(root);
+    const manifest = buildModalityManifest(lessons);
+    const languages = loadLanguageRegistry(root).languages.map((language) => language.id);
+    assertModalityManifestLanguages(manifest, languages);
+    const sourceIds = expectedLessonIds(manifest);
+    const narrationIds = narrationLessonIdentityIndex(root, languages);
+    const outputs = generatedModalityOutputsFromManifest(manifest);
+    const { manifest: loaded, sourceTexts } = await readModalityManifestOwnersWithSourcesAsync(root, {
+      expectedLanguages: languages,
+      expectedLessonIds: sourceIds,
+      expectedNarrationLessonIds: narrationIds,
+    });
+    const diagnostics = compareOutputMaps(outputs, sourceTexts);
+    if (
+      diagnostics.length === 0 &&
+      serializeModalityManifest(loaded) !== serializeModalityManifest(manifest)
+    ) {
+      diagnostics.push("modality direct owners do not reconstruct the lesson-derived manifest");
+    }
+    for (const diagnostic of diagnostics) process.stderr.write(`${diagnostic}\n`);
+    return diagnostics.length === 0 ? 0 : 1;
+  } catch (cause) {
+    process.stderr.write(`${cause instanceof Error ? cause.message : String(cause)}\n`);
+    return 1;
+  }
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
-  process.exitCode = runModalityManifest();
+  process.exitCode = await runModalityManifestAsync();
 }

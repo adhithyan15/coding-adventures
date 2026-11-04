@@ -1,11 +1,12 @@
 import { lstatSync, readdirSync, realpathSync } from "node:fs";
-import { join, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import {
   isAbsentErrno,
+  parseLedgerText,
   readLedgerFileWithSource,
-  readLedgerFileWithSourceAsync,
   type ReadLedgerSource,
 } from "./shard.js";
+import { readAnchoredModalityTrack } from "./modality-owner-read.js";
 import {
   MODALITY_MANIFEST_DIR,
   MODALITY_MANIFEST_VERSION,
@@ -664,37 +665,49 @@ export function readModalityManifestOwners(
   return step.value;
 }
 
-/** Testable drain boundary; the production caller always supplies the guarded reader. */
-export async function readModalityOwnerBatch<T>(
-  paths: readonly string[],
-  read: (path: string) => Promise<T>,
-): Promise<T[]> {
-  if (paths.length < 1 || paths.length > 16) {
-    throw new Error(`modality owner batch must contain 1–16 files, got ${paths.length}`);
+/**
+ * Awaitable route through the same preflight, parser, byte check, and final
+ * validation as the synchronous reader. A pinned-parent Python boundary reads
+ * one exact track at a time; no Node path-based await can follow a swapped
+ * language-directory junction outside the checkout.
+ */
+export async function readModalityManifestOwnersWithSourcesAsync(
+  root: string,
+  options: ModalityOwnerReadOptions,
+): Promise<{ manifest: ModalityManifest; sourceTexts: ReadonlyMap<string, string> }> {
+  const plan = modalityOwnerReadPlan(root, options, 16);
+  const tracks = new Map<string, Map<string, string>>();
+  const sourceTexts = new Map<string, string>();
+  let step = plan.next();
+  while (!step.done) {
+    const language = basename(dirname(step.value[0]!)).slice(0, -2);
+    let track = tracks.get(language);
+    if (track === undefined) {
+      const ids = options.expectedLessonIds.get(language) ?? [];
+      track = await readAnchoredModalityTrack(root, language, [
+        MODALITY_META_OWNER,
+        ...ids.map((id) => `${id}.json`),
+      ]);
+      tracks.set(language, track);
+      for (const [name, text] of track) {
+        sourceTexts.set(`${MODALITY_MANIFEST_DIR}/${language}.d/${name}`, text);
+      }
+    }
+    const sources = step.value.map((path) => {
+      const name = basename(path);
+      const text = track.get(name);
+      if (text === undefined) throw new Error(`modality anchored owner '${language}.d/${name}' is missing`);
+      return { value: parseLedgerText(text, path), text };
+    });
+    step = plan.next(sources);
   }
-  const settled = await Promise.allSettled(
-    paths.map((path) => Promise.resolve().then(() => read(path))),
-  );
-  return settled.map((result) => {
-    if (result.status === "rejected") throw result.reason;
-    return result.value;
-  });
+  return { manifest: step.value, sourceTexts };
 }
 
-/**
- * Bounded awaitable route through the same preflight, parser, byte check, and
- * final manifest validation as the synchronous reader. allSettled drains every
- * started handle operation before an error can escape to caller teardown.
- */
+/** Consumer-facing manifest-only form of the same anchored read. */
 export async function readModalityManifestOwnersAsync(
   root: string,
   options: ModalityOwnerReadOptions,
 ): Promise<ModalityManifest> {
-  const plan = modalityOwnerReadPlan(root, options, 16);
-  let step = plan.next();
-  while (!step.done) {
-    const sources = await readModalityOwnerBatch(step.value, readLedgerFileWithSourceAsync);
-    step = plan.next(sources);
-  }
-  return step.value;
+  return (await readModalityManifestOwnersWithSourcesAsync(root, options)).manifest;
 }

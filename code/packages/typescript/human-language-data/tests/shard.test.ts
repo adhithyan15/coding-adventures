@@ -7,8 +7,6 @@ import {
   isSharded,
   listShardNames,
   mergeMetaAndList,
-  readLedgerFileWithSource,
-  readLedgerFileWithSourceAsync,
   readMaybeSharded,
   readShards,
   shardDirectoryFor,
@@ -106,50 +104,6 @@ describe("falling back to the monolith", () => {
     const monolith = join(root, "spine.json");
     writeFileSync(monolith, "{ not json", "utf8");
     expect(() => readMaybeSharded(monolith, mergeItems)).toThrow(/spine\.json.*malformed JSON/s);
-  });
-});
-
-describe("guarded awaitable ledger source reads", () => {
-  it("returns the same parsed value and exact text as the synchronous reader", async () => {
-    const path = join(root, "owner.json");
-    writeFileSync(path, '{ "version": 1, "items": ["hello"] }\n', "utf8");
-    expect(await readLedgerFileWithSourceAsync(path)).toEqual(readLedgerFileWithSource(path));
-  });
-
-  it("refuses a symlinked ledger without reading the target", async (ctx) => {
-    const path = join(root, "owner.json");
-    const target = join(root, "target.json");
-    writeFileSync(target, '{"version":1}\n', "utf8");
-    try {
-      symlinkSync(target, path, "file");
-    } catch (error) {
-      // Creating file symlinks requires elevation or Developer Mode on Windows.
-      if (process.platform === "win32" && (error as NodeJS.ErrnoException).code === "EPERM") {
-        ctx.skip();
-      }
-      throw error;
-    }
-    await expect(readLedgerFileWithSourceAsync(path)).rejects.toThrow(/symbolic link/);
-  });
-
-  it("keeps stale-monolith, malformed-JSON, and unsafe-key refusals", async () => {
-    const path = join(root, "owner.json");
-    writeFileSync(path, '{"version":1}\n', "utf8");
-    mkdirSync(join(root, "owner.d"));
-    await expect(readLedgerFileWithSourceAsync(path)).rejects.toThrow(/is sharded into/);
-    rmSync(join(root, "owner.d"), { recursive: true });
-
-    writeFileSync(path, 'AWS_SECRET_ACCESS_KEY=hunter2\n', "utf8");
-    await expect(readLedgerFileWithSourceAsync(path)).rejects.toThrow(/malformed JSON/);
-    try {
-      await readLedgerFileWithSourceAsync(path);
-    } catch (error) {
-      expect(inspect(error)).not.toMatch(/hunter2|AWS_SECRET/);
-    }
-
-    writeFileSync(path, '{"__proto__":{"polluted":true}}\n', "utf8");
-    await expect(readLedgerFileWithSourceAsync(path)).rejects.toThrow(/must not carry '__proto__'/);
-    expect(Object.prototype).not.toHaveProperty("polluted");
   });
 });
 

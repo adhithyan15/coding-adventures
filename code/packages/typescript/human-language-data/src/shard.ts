@@ -88,8 +88,7 @@
 //    there. loader.ts makes the same call for the modality manifest, in the same
 //    words: a missing manifest throws rather than returning an empty one.
 
-import { constants, lstatSync, readFileSync, readdirSync, type BigIntStats } from "node:fs";
-import { open } from "node:fs/promises";
+import { lstatSync, readFileSync, readdirSync } from "node:fs";
 import { basename, join } from "node:path";
 
 /** The suffix that turns a monolith path into its shard directory. */
@@ -496,10 +495,10 @@ export function mergeScriptInventoryShards<T = Record<string, unknown>>(shards: 
  * target's contents and `writeFileSync` put shards there. Reading past a
  * symlink is a disclosure; writing past one is destruction.
  */
-function realFileStat(path: string, what = "ledger"): BigIntStats {
+export function assertRealFile(path: string, what = "ledger"): void {
   let stat;
   try {
-    stat = lstatSync(path, { bigint: true });
+    stat = lstatSync(path);
   } catch (cause) {
     throw new Error(`'${path}': cannot be read — ${describe(cause)}`, { cause });
   }
@@ -509,11 +508,6 @@ function realFileStat(path: string, what = "ledger"): BigIntStats {
   if (!stat.isFile()) {
     throw new Error(`'${path}' is not a regular file`);
   }
-  return stat;
-}
-
-export function assertRealFile(path: string, what = "ledger"): void {
-  realFileStat(path, what);
 }
 
 /** How to treat a monolith whose `X.d/` is sitting right next to it. */
@@ -579,10 +573,11 @@ export interface ReadLedgerSource<T> {
   text: string;
 }
 
-function assertLedgerSourceIsCurrent(
+/** Guarded ledger parse that also retains the exact bytes for canonical checks. */
+export function readLedgerFileWithSource<T = unknown>(
   path: string,
-  options: ReadLedgerOptions,
-): void {
+  options: ReadLedgerOptions = {},
+): ReadLedgerSource<T> {
   // Only for a `.json` path, because only a `.json` path HAS an `X.d`:
   // `shardDirectoryFor` refuses anything else outright, and this guard must not
   // turn "you passed a .tex" into the confusing error that would produce.
@@ -594,52 +589,10 @@ function assertLedgerSourceIsCurrent(
         `reading the monolith directly.`,
     );
   }
-}
-
-/** Guarded ledger parse that also retains the exact bytes for canonical checks. */
-export function readLedgerFileWithSource<T = unknown>(
-  path: string,
-  options: ReadLedgerOptions = {},
-): ReadLedgerSource<T> {
-  assertLedgerSourceIsCurrent(path, options);
   assertRealFile(path);
   let text: string;
   try {
     text = readFileSync(path, "utf8");
-  } catch (cause) {
-    throw new Error(`'${path}': cannot be read — ${describe(cause)}`, { cause });
-  }
-  return { value: parseLedgerText<T>(text, path), text };
-}
-
-/**
- * Awaitable counterpart for bounded corpus reads. The file is opened once and
- * pinned to a handle; matching its identity to the pre-open lstat refuses a
- * link or path swap during the await. O_NOFOLLOW closes that race at open on
- * platforms that expose it; Windows does not, so the identity check is needed.
- */
-export async function readLedgerFileWithSourceAsync<T = unknown>(
-  path: string,
-  options: ReadLedgerOptions = {},
-): Promise<ReadLedgerSource<T>> {
-  assertLedgerSourceIsCurrent(path, options);
-  const before = realFileStat(path);
-  let text: string;
-  try {
-    const handle = await open(path, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0));
-    try {
-      const opened = await handle.stat({ bigint: true });
-      if (
-        before.dev === 0n || opened.dev === 0n ||
-        before.ino === 0n || opened.ino === 0n ||
-        before.dev !== opened.dev || before.ino !== opened.ino || !opened.isFile()
-      ) {
-        throw new Error(`'${path}': file identity changed while opening the ledger`);
-      }
-      text = await handle.readFile({ encoding: "utf8" });
-    } finally {
-      await handle.close();
-    }
   } catch (cause) {
     throw new Error(`'${path}': cannot be read — ${describe(cause)}`, { cause });
   }

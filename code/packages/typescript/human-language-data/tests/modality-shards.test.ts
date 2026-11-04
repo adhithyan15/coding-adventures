@@ -12,9 +12,9 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   assertModalityManifestLanguages,
   modalityOwnerContents,
-  readModalityOwnerBatch,
   readModalityManifestOwners,
   readModalityManifestOwnersAsync,
+  readModalityManifestOwnersWithSourcesAsync,
 } from "../src/modality-shards.js";
 import {
   buildModalityManifest,
@@ -125,31 +125,24 @@ afterEach(() => {
 });
 
 describe("modality direct owners", () => {
-  it("bounds and drains a failed async owner batch before rejecting", async () => {
-    let releaseSlow: (() => void) | undefined;
-    const slow = new Promise<string>((resolve) => {
-      releaseSlow = () => resolve("done");
-    });
-    const batch = readModalityOwnerBatch(["bad", "slow"], (path) => {
-      if (path === "bad") throw new Error("bad owner");
-      return slow;
-    });
-    let finished = false;
-    void batch.finally(() => { finished = true; }).catch(() => {});
-    await Promise.resolve();
-    expect(finished).toBe(false);
-    releaseSlow!();
-    await expect(batch).rejects.toThrow(/bad owner/);
-    expect(finished).toBe(true);
-    await expect(readModalityOwnerBatch(Array(17).fill("owner"), async () => "ok"))
-      .rejects.toThrow(/1–16/);
-  });
-
   it("matches the synchronous two-track fold and rejects edited owner bytes", async () => {
     const root = temporaryRoot();
     const value = manifest();
     writeOwners(root, value);
     expect(await readOwnersAsync(root, value)).toEqual(readOwners(root, value));
+    const ids = expectedIds(value);
+    const { manifest: readBack, sourceTexts } = await readModalityManifestOwnersWithSourcesAsync(
+      root,
+      {
+        expectedLanguages: [...ids.keys()].sort(),
+        expectedLessonIds: ids,
+        expectedNarrationLessonIds: ids,
+      },
+    );
+    expect(readBack).toEqual(value);
+    expect(sourceTexts).toEqual(new Map(
+      [...modalityOwnerContents(value)].map(([name, text]) => [`core/lesson-modality/${name}`, text]),
+    ));
 
     const path = owner(root, "spanish", "ES-C01-hola.json");
     writeFileSync(path, JSON.stringify(JSON.parse(readFileSync(path, "utf8"))), "utf8");

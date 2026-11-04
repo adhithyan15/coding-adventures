@@ -3,6 +3,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -10,6 +11,7 @@ from unittest import mock
 from sharded_ledger import (
     _files,
     _read,
+    _read_pinned_regular_batch,
     _remove,
     _strict_directory_entries,
     _write_if_changed,
@@ -89,6 +91,51 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
                 self.root, "core", ("lesson-modality", "spanish.d"), ["../outside.json"],
             )
 
+    def test_modality_batch_bounds_workers_and_drains_a_failed_read(self):
+        release = threading.Event()
+        enough_started = threading.Event()
+        lock = threading.Lock()
+        active = 0
+        peak = 0
+        finished = []
+        outcome = []
+
+        def reader(_parent, name):
+            nonlocal active, peak
+            with lock:
+                active += 1
+                peak = max(peak, active)
+                if peak == 16:
+                    enough_started.set()
+            try:
+                if name == "bad":
+                    raise ValueError("bad owner")
+                release.wait(5)
+                finished.append(name)
+                return name
+            finally:
+                with lock:
+                    active -= 1
+
+        def run():
+            try:
+                _read_pinned_regular_batch(None, ["bad"] + [str(i) for i in range(20)], reader)
+            except ValueError as cause:
+                outcome.append(str(cause))
+
+        worker = threading.Thread(target=run)
+        worker.start()
+        try:
+            self.assertTrue(enough_started.wait(5))
+            self.assertTrue(worker.is_alive())
+            self.assertLessEqual(peak, 16)
+        finally:
+            release.set()
+            worker.join(5)
+        self.assertFalse(worker.is_alive())
+        self.assertEqual(len(finished), 20)
+        self.assertEqual(outcome, ["bad owner"])
+
     def test_modality_batch_refuses_swapped_parent_junction_after_audit(self):
         directory = self.root / "core" / "lesson-modality" / "spanish.d"
         directory.mkdir(parents=True)
@@ -110,6 +157,42 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
             else:
                 os.unlink(directory)
             os.rename(moved, directory)
+
+    def test_modality_batch_stays_on_pinned_parent_during_swap_attempt(self):
+        import sharded_ledger
+
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text("inside", encoding="utf-8")
+        (self.outside / "_meta.json").write_text("outside sentinel", encoding="utf-8")
+        moved = directory.with_name("spanish-moved")
+        original = sharded_ledger._read_pinned_regular_batch
+        swapped = []
+
+        def attempt_swap_after_open(handle, names, read_one):
+            try:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            except OSError:
+                # Windows may deny rename while its pinned directory handle is
+                # open; that is also a safe answer to the swap attempt.
+                pass
+            return original(handle, names, read_one)
+
+        try:
+            with mock.patch("sharded_ledger._read_pinned_regular_batch", side_effect=attempt_swap_after_open):
+                self.assertEqual(read_track_regular_texts(
+                    self.root, "core", ("lesson-modality", "spanish.d"), ["_meta.json"],
+                ), {"_meta.json": "inside"})
+            self.assertEqual((self.outside / "_meta.json").read_text(encoding="utf-8"), "outside sentinel")
+        finally:
+            if swapped:
+                if os.name == "nt":
+                    os.rmdir(directory)
+                else:
+                    os.unlink(directory)
+                os.rename(moved, directory)
 
     def test_modality_owner_cli_transports_exact_unicode_bytes_and_scrubs_errors(self):
         directory = self.root / "core" / "lesson-modality" / "spanish.d"

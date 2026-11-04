@@ -84,6 +84,12 @@ Generated lesson modality uses the finer
 `core/lesson-modality/<language>.d/{_meta.json,<lesson-id>.json}` boundary. The
 metadata owner holds only stable derivation policy and each lesson file holds its
 own row and findings; flat per-language aggregates are forbidden.
+`npm run check:modality` now bounds the corpus lesson reads and opens each
+track's exact owner set beneath a pinned directory handle through Python 3
+(`python` on Windows, `python3` on Unix). It still compares every generated
+owner byte and independently reconstructs the manifest against lesson and
+narration identities; a missing Python reader fails the check. The synchronous
+loader and `--write`/recovery path remain available.
 Curriculum path-to-spine membership is owned only by the new path shard's
 `spine_node`. Do not edit an existing `curriculum.d/spine/*.json` owner when
 adding a path segment: those files contain only stable `omits`/`relocates`
