@@ -132,6 +132,27 @@ describe("modality direct owners", () => {
     ).toThrow(/missing.*urdu|urdu.*missing/i);
   });
 
+  it("checks a corpus-sized identity set without scanning it once per member", () => {
+    // No 60,000 files are needed to test this pure set contract. The old
+    // sorted-array `includes` loop was quadratic and could consume a full
+    // corpus test budget before any direct-owner file was opened.
+    const languages = Array.from(
+      { length: 60_000 },
+      (_, index) => `track-${String(index).padStart(5, "0")}`,
+    );
+    const value = manifest();
+    const exemplar = value.tracks[0]!;
+    value.tracks = languages.map((language) => ({ ...exemplar, language }));
+    expect(() => assertModalityManifestLanguages(value, languages)).not.toThrow();
+
+    // Diagnostics still sort their missing and extra identities, rather than
+    // inheriting whichever insertion order the caller happened to provide.
+    const expected = [...languages.slice(0, -2), "track-z", "track-y"];
+    expect(() => assertModalityManifestLanguages(value, expected)).toThrow(
+      /missing: track-y, track-z; extra: track-59998, track-59999/,
+    );
+  });
+
   it("checks the exact language set before opening owner bytes", () => {
     const root = temporaryRoot();
     writeOwners(root);
