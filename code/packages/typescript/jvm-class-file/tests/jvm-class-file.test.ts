@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 
 import {
   ACC_PUBLIC,
@@ -113,65 +114,66 @@ describe("jvm-class-file", () => {
     });
 
     const parsed = parseClassFile(bytes);
-    expect(parsed.thisClassName).toBe("Example");
-    expect(parsed.superClassName).toBe("java/lang/Object");
-    expect(parsed.findMethod("_start", "()I")?.codeAttribute()?.code).toEqual(
+    assert.equal(parsed.thisClassName, "Example");
+    assert.equal(parsed.superClassName, "java/lang/Object");
+    assert.deepEqual(
+      parsed.findMethod("_start", "()I")?.codeAttribute()?.code,
       Uint8Array.of(0x03, 0xac),
     );
   });
 
   it("rejects invalid magic", () => {
-    expect(() => parseClassFile(Uint8Array.of(0, 1, 2, 3))).toThrow(ClassFileFormatError);
+    assert.throws(() => parseClassFile(Uint8Array.of(0, 1, 2, 3)), ClassFileFormatError);
   });
 
   it("resolves constants and method lookups", () => {
     const parsed = parseClassFile(helloWorldFixture());
     const method = parsed.findMethod("main", "([Ljava/lang/String;)V");
-    expect(method).not.toBeNull();
-    expect(method?.codeAttribute()?.name).toBe("Code");
+    assert.notEqual(method, null);
+    assert.equal(method?.codeAttribute()?.name, "Code");
   });
 
   it("resolves class, field, method, and loadable constants", () => {
     const parsed = parseClassFile(richFixture());
-    expect(parsed.resolveClassName(2)).toBe("demo/Rich");
-    expect(parsed.resolveFieldref(14)).toEqual({
+    assert.equal(parsed.resolveClassName(2), "demo/Rich");
+    assert.deepEqual(parsed.resolveFieldref(14), {
       className: "java/io/PrintStream",
       name: "message",
       descriptor: "Ljava/lang/String;",
     });
-    expect(parsed.resolveMethodref(15)).toEqual({
+    assert.deepEqual(parsed.resolveMethodref(15), {
       className: "java/io/PrintStream",
       name: "println",
       descriptor: "(I)V",
     });
-    expect(parsed.resolveConstant(17)).toBe("hello");
-    expect(parsed.resolveConstant(18)).toBe(7);
-    expect(parsed.ldcConstants().get(17)).toBe("hello");
-    expect(parsed.findMethod("missing")).toBeNull();
+    assert.equal(parsed.resolveConstant(17), "hello");
+    assert.equal(parsed.resolveConstant(18), 7);
+    assert.equal(parsed.ldcConstants().get(17), "hello");
+    assert.equal(parsed.findMethod("missing"), null);
   });
 
   it("parses nested non-Code attributes inside Code", () => {
     const parsed = parseClassFile(richFixture());
     const nested = parsed.findMethod("main")?.codeAttribute()?.nestedAttributes;
-    expect(nested).toHaveLength(1);
-    expect(nested?.[0]?.name).toBe("Code");
-    expect(nested?.[0]?.info.length).toBe(0);
+    assert.equal(nested?.length, 1);
+    assert.equal(nested?.[0]?.name, "Code");
+    assert.equal(nested?.[0]?.info.length, 0);
   });
 
   it("raises format errors for bad constant lookups", () => {
     const parsed = parseClassFile(richFixture());
-    expect(() => parsed.getUtf8(2)).toThrow(ClassFileFormatError);
-    expect(() => parsed.resolveClassName(1)).toThrow(ClassFileFormatError);
-    expect(() => parsed.resolveNameAndType(17)).toThrow(ClassFileFormatError);
-    expect(() => parsed.resolveConstant(14)).toThrow(ClassFileFormatError);
-    expect(() => parsed.resolveFieldref(15)).toThrow(ClassFileFormatError);
-    expect(() => parsed.resolveMethodref(14)).toThrow(ClassFileFormatError);
+    assert.throws(() => parsed.getUtf8(2), ClassFileFormatError);
+    assert.throws(() => parsed.resolveClassName(1), ClassFileFormatError);
+    assert.throws(() => parsed.resolveNameAndType(17), ClassFileFormatError);
+    assert.throws(() => parsed.resolveConstant(14), ClassFileFormatError);
+    assert.throws(() => parsed.resolveFieldref(15), ClassFileFormatError);
+    assert.throws(() => parsed.resolveMethodref(14), ClassFileFormatError);
   });
 
   it("rejects malformed attribute bodies", () => {
     const malformed = richFixture().slice();
     malformed[malformed.length - 1] = 1;
-    expect(() => parseClassFile(malformed)).toThrow(ClassFileFormatError);
+    assert.throws(() => parseClassFile(malformed), ClassFileFormatError);
   });
 });
 

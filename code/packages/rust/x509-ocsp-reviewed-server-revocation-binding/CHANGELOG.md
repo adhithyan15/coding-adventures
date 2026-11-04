@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Bind a separate fully routed authenticated OCSP proof to the exact retained
+  intermediate, selected reviewed root, and original server-status observation
+  time, with stable payload-free target, issuer, and time mismatch failures.
+- Retain both complete non-copyable proofs without new cryptography or external
+  effects, while leaving responder-policy composition, the second proof's own
+  responder revocation, generalized path validation, TLS, HTTP, and OAuth
+  unresolved.
 - Bind a separate fully routed authenticated OCSP proof to the exact routed
   responder, retained intermediate, and original server-status observation
   time, with stable payload-free target, issuer, and time mismatch failures.
