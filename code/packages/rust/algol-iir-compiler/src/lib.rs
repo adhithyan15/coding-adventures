@@ -3770,19 +3770,51 @@ impl Compiler {
                         } else if let Some((power_coefficient, power_radicand)) =
                             self.exact_static_sqrt_power_factors(operand)
                         {
-                            if operator != "*" {
-                                return None;
+                            match operator {
+                                "*" => {
+                                    coefficient = i64::try_from(
+                                        (coefficient as i128)
+                                            .checked_mul(power_coefficient as i128)?,
+                                    )
+                                    .ok()?;
+                                    radicand = Some(
+                                        radicand
+                                            .unwrap_or(1_u128)
+                                            .checked_mul(power_radicand)?,
+                                    );
+                                }
+                                "/" if power_coefficient != 0 => {
+                                    let magnitude = power_coefficient.unsigned_abs();
+                                    let cancelled =
+                                        integer_gcd(coefficient.unsigned_abs(), magnitude);
+                                    coefficient = i64::try_from(
+                                        (coefficient as i128) / (cancelled as i128),
+                                    )
+                                    .ok()?;
+                                    denominator = denominator
+                                        .checked_mul(magnitude / cancelled)?;
+
+                                    if power_radicand != 1 {
+                                        let root_divisor = u64::try_from(power_radicand).ok()?;
+                                        let cancelled = integer_gcd(
+                                            coefficient.unsigned_abs(),
+                                            root_divisor,
+                                        );
+                                        coefficient = i64::try_from(
+                                            (coefficient as i128) / (cancelled as i128),
+                                        )
+                                        .ok()?;
+                                        denominator = denominator
+                                            .checked_mul(root_divisor / cancelled)?;
+                                        radicand = Some(
+                                            radicand
+                                                .unwrap_or(1_u128)
+                                                .checked_mul(power_radicand)?,
+                                        );
+                                    }
+                                }
+                                _ => return None,
                             }
-                            coefficient = i64::try_from(
-                                (coefficient as i128)
-                                    .checked_mul(power_coefficient as i128)?,
-                            )
-                            .ok()?;
-                            radicand = Some(
-                                radicand
-                                    .unwrap_or(1_u128)
-                                    .checked_mul(power_radicand)?,
-                            );
                         } else {
                             let value = self
                                 .exact_static_integer_normalizer_operand_value(operand)?;
@@ -3964,6 +3996,12 @@ impl Compiler {
         if let Some((sign, child)) = single_signed_child(node) {
             return (sign == "+")
                 .then(|| self.exact_static_sqrt_power_factors(child))?;
+        }
+        if direct_tokens(node).is_empty() {
+            let children = direct_nodes(node);
+            if children.len() == 1 {
+                return self.exact_static_sqrt_power_factors(children[0]);
+            }
         }
         if node.rule_name != "expr_pow" {
             return None;
@@ -17703,10 +17741,38 @@ mod tests {
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ (-1))) * sign(pick())) mod 5); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(2)) ^ 65)) * sign(pick())) mod 5); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(9223372036854775807)) ^ 3)) * sign(pick())) mod 5); output(result) end",
-            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / (sqrt(entier(5)) ^ 3))) * sign(pick())) mod 5); output(result) end",
         ] {
             compile_source(source, "test").expect_err(
-                "dynamic, negative, oversized, overflowing, and divisor root powers must fail closed",
+                "dynamic, negative, oversized, and overflowing root powers must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_powered_floor_root_quotients_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ 3 / (sqrt(entier(5)) ^ 3))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(6 * sqrt(entier(80)) / (sqrt(entier(5)) ^ 2))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-(sqrt(entier(15)) ^ 3 / (sqrt(entier(6)) ^ 3)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(5)) / (sqrt(entier(80)) ^ 3))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(2)) ^ 2 ^ 2 / (sqrt(entier(2)) ^ 3))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "bounded static root powers may divide checked root products for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin integer procedure dynamic; dynamic := 3; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / (sqrt(entier(5)) ^ dynamic()))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / (sqrt(entier(5)) ^ (-1)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / (sqrt(entier(5)) ^ 65))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / (sqrt(entier(0)) ^ 3))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(2)) / (sqrt(entier(9223372036854775807)) ^ 3))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "dynamic, negative, oversized, zero, and overflowing divisor powers must fail closed",
             );
         }
     }
