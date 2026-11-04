@@ -379,6 +379,10 @@ remain legal through distinct ordered path segments.
 
 ## Completion-plan assessment readiness
 
+The direct `npm run plan` command awaits bounded canonical lesson and
+curriculum-membership reads. Its synchronous `runCompletionPlan` library API
+remains available; both paths use the same planner and output contract.
+
 The completion plan keeps a missing seven-rung `assessment.json` visible as
 debt, but does not put it in the actionable head while its task shapes or timed
 mock source papers, answer keys, and rubrics are absent. Its `blocked` output

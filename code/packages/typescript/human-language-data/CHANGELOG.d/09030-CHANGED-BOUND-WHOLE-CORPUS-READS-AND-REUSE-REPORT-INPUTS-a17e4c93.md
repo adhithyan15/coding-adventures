@@ -29,6 +29,10 @@
   redirected-directory tests cover the new path. The track-progress command
   uses it, but the full-corpus Windows run still exceeds the unchanged
   30-second case budget; this is not yet a release-ready fix.
+- Let the direct completion-plan command await the same bounded canonical
+  lesson and membership reads while retaining the synchronous library API and
+  byte-identical planning tail. The clean-corpus equivalence test remains the
+  gate for this path.
 - Keep the 30-second default, explicit per-case timeouts, every corpus
   assertion, and the 85% line-coverage threshold unchanged. Full Windows
   coverage and final-head CI remain required before release.
