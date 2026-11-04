@@ -2470,6 +2470,24 @@ fetch or cache data, implement TLS or HTTP, authorize OAuth transport, or grant
 network authority. Concrete HTTPS and live-provider readiness remain
 unavailable.
 
+An additive routed-responder projection in the same package now consumes that
+complete fully routed reviewed-server revocation proof and reifies its already-
+proven delegated responder-to-reviewed-root path as the existing distinct non-
+copyable responder-path type. The consumed proof already retains the exact
+responder certificate, its routed issuer-signature proof, the shared exact
+intermediate, that intermediate's routed reviewed-root adjacency, responder and
+intermediate validity at the OCSP observation time, and the complete routed
+target-revocation and reviewed-server-path evidence. The infallible nominal
+projection retains that proof intact and accepts no caller-supplied certificate,
+issuer, path, algorithm, key, signature, time, or policy input. It performs no
+new parsing, cryptography, credential access, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, or external
+effect. It does not apply selected-anchor or intermediate DNS constraints to
+the routed responder, validate responder no-check policy, check responder or
+intermediate revocation, generalize certificate-path validation, implement TLS
+or HTTP, authorize OAuth transport, or grant network authority. Concrete HTTPS
+and live-provider readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated
