@@ -36,6 +36,7 @@ import {
   loadLanguageRegistry,
   listExamInventories,
   loadLessons,
+  loadLessonsAsync,
   loadScripts,
   loadTaxonomy,
   loadTrackChapters,
@@ -256,7 +257,7 @@ describe("track ids that reach a path", () => {
     }
   });
 
-  it("still walks the real corpus, whose root holds seven non-track directories", () => {
+  it("still walks the real corpus, whose root holds seven non-track directories", async () => {
     // The reorder above has a trap, and this is the test for it. `loadLessons`
     // enumerates EVERY directory under the root — `_assets`, `_fonts`,
     // `_shared`, `concepts`, `core`, `data` and `progress` are all down there —
@@ -267,7 +268,7 @@ describe("track ids that reach a path", () => {
     const here = dirname(fileURLToPath(import.meta.url));
     const realRoot = join(here, "..", "..", "..", "..", "learning", "human-languages");
 
-    const lessons = loadLessons(realRoot);
+    const lessons = await loadLessonsAsync(realRoot);
     expect(lessons.length).toBeGreaterThan(1000);
     expect(new Set(lessons.map((l) => l.language)).size).toBeGreaterThanOrEqual(20);
   });
