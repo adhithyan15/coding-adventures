@@ -106,6 +106,18 @@ proofs fail with payload-free categories. Success retains both complete
 non-copyable inputs. The boundary does not claim revocation policy for the
 second proof's own signer or for the intermediate.
 
+`bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation` is an
+independent branch for the routed path's issuing CA. It consumes the complete
+fully routed reviewed server-revocation proof plus a separate fully routed,
+authenticated OCSP target-revocation proof. The second proof must target the
+same exact decoded intermediate, name the same exact selected reviewed root,
+and use the original server-status OCSP observation time. Target, issuer, then
+time are checked in stable order; byte-equal independent decodes and
+cross-time proofs fail with payload-free categories. Success retains both
+complete non-copyable inputs. This status evidence does not substitute for
+the responder no-check or authenticated responder-revocation branch and does
+not establish revocation policy for the second proof's own responder.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy
@@ -150,17 +162,24 @@ malformed values fail with stable payload-free categories.
 This crate performs evidence composition, exact-time validity checks, the
 bounded selected-anchor and exact-intermediate responder DNS policies, and the
 RFC 6960 responder no-check or exact authenticated responder-revocation
-branches described above only.
+branches plus the independent exact intermediate-revocation branch described
+above only.
 The complete responder DNS and no-check policy sequence applies to both the
 fully fixed RSA SHA-256 proof and the fully routed proof. The routed proof
 retains every selected signature route through these semantic gates. The new
 alternative branch binds one complete authenticated revocation proof to that
 exact routed responder, intermediate, and observation time, but stops before
 revocation policy for the second proof's signer and for the intermediate.
+The independent intermediate branch binds another complete authenticated proof
+to the exact retained intermediate, selected reviewed root, and observation
+time, but does not compose that result with either responder-policy branch and
+stops before revocation policy for its own responder.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
-intermediate constraints to the responder certificate, check intermediate revocation,
+intermediate constraints to the responder certificate, compose the independent
+intermediate-status evidence with either responder-policy branch into complete
+revocation policy, validate the additional proof's own responder revocation,
 interpret unsupported OCSP extensions, acquire or cache OCSP data,
 read a clock, implement TLS or HTTP, authorize OAuth transport, open a network
 connection, or access a credential. The reviewed Mozilla root snapshot excludes OS,

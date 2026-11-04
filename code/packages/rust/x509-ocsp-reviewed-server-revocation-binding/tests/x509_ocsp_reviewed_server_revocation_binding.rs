@@ -39,6 +39,7 @@ use x509_ocsp_response::{
 use x509_ocsp_reviewed_server_revocation_binding::{
     bind_x509_ocsp_revocation_to_reviewed_server_path,
     bind_x509_ocsp_revocation_to_routed_reviewed_server_path,
+    bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation,
     bind_x509_ocsp_routed_issuer_reviewed_responder_revocation,
     bind_x509_ocsp_routed_issuer_to_routed_reviewed_server_path,
     bind_x509_ocsp_routed_response_to_routed_reviewed_server_path,
@@ -49,6 +50,7 @@ use x509_ocsp_reviewed_server_revocation_binding::{
     validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_intermediate_dns_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_no_check_policy,
+    X509OcspReviewedIntermediateRevocationBindingErrorKind,
     X509OcspReviewedResponderRevocationBindingErrorKind,
     X509OcspReviewedServerRevocationBindingErrorKind,
 };
@@ -1467,6 +1469,64 @@ fn routed_responder_revocation_binding_rejects_another_exact_target_inner() {
     assert_eq!(
         error.to_string(),
         "X.509 OCSP reviewed-responder revocation binding error TargetMismatch"
+    );
+    let diagnostic = format!("{error:?} {error}");
+    assert!(!diagnostic.contains("apple"));
+    assert!(!diagnostic.contains("6c869e"));
+    let _ = server_binding;
+    let _ = detached_binding;
+    let _ = path;
+}
+
+#[test]
+fn routed_intermediate_revocation_binding_rejects_another_exact_target() {
+    run_fixture_proof_test(
+        routed_intermediate_revocation_binding_rejects_another_exact_target_inner,
+    );
+}
+
+#[allow(clippy::err_expect)] // The non-copyable success proof deliberately has no Debug.
+fn routed_intermediate_revocation_binding_rejects_another_exact_target_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_routed_issuer_revocation!(
+        server_binding,
+        server_revocation,
+        &response,
+        &leaf,
+        &candidates[0]
+    );
+    authenticate_routed_issuer_revocation!(
+        detached_binding,
+        detached_revocation,
+        &response,
+        &leaf,
+        &candidates[0]
+    );
+    routed_reviewed_server_path!(reviewed_server, path, &leaf, &candidates);
+
+    let bound = bind_x509_ocsp_routed_issuer_to_routed_reviewed_server_path(
+        server_revocation,
+        reviewed_server,
+    )
+    .unwrap();
+    let error =
+        bind_x509_ocsp_routed_issuer_reviewed_intermediate_revocation(bound, detached_revocation)
+            .err()
+            .expect("the leaf revocation proof must not bind to the retained intermediate");
+
+    assert_eq!(
+        error.kind(),
+        X509OcspReviewedIntermediateRevocationBindingErrorKind::TargetMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 OCSP reviewed-intermediate revocation binding error TargetMismatch"
     );
     let diagnostic = format!("{error:?} {error}");
     assert!(!diagnostic.contains("apple"));
