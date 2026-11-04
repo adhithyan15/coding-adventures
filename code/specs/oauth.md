@@ -2448,6 +2448,28 @@ intermediate revocation, interpret unsupported OCSP extensions, fetch or cache
 data, implement TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
+An additive routed-issuer follow-up in the same package now joins the fully
+routed OCSP target-revocation evidence to that same routed constructed
+reviewed-intermediate server-path evidence. The OCSP proof retains the
+caller-selected repository-owned RSA PKCS #1 v1.5 SHA-256, SHA-384, or SHA-512
+verifier for the response signature, responder-certificate issuer signature,
+and target-certificate issuer signature. The server-path proof independently
+retains the selected verifier for each exact target-to-intermediate and
+intermediate-to-root adjacency. Binding requires both complete non-copyable
+inputs to retain the same exact decoded target and intermediate objects,
+rejects byte-equal independent decodes, revalidates both path certificates at
+the OCSP proof's retained observation time, and keeps both fresh validity
+tokens with both complete proofs. Existing fixed-response, routed-response,
+and routed-path entry points remain unchanged. This pure public-data
+composition performs no new cryptography, credential access, signing, storage,
+clock acquisition, provider action, audit event, trace emission, I/O, or
+external effect. It does not reify a routed responder path, apply responder
+name or no-check policy, generalize certificate-path validation, check
+responder or intermediate revocation, interpret unsupported OCSP extensions,
+fetch or cache data, implement TLS or HTTP, authorize OAuth transport, or grant
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated
