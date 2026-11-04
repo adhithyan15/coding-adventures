@@ -10,13 +10,13 @@ use diagram_ir::{
     resolve_style_with_base, ArchitectureConfig, DiagramDirection, LayoutedCompartment,
     LayoutedStructuralDiagram,
     LayoutedStructuralGroup, LayoutedStructuralNode, LayoutedStructuralRelationship, Point,
-    StructuralAlignmentAxis, StructuralDiagram, StructuralNode, StructuralNodeKind,
+    StructuralAlignmentAxis, StructuralDiagram, StructuralKind, StructuralNode, StructuralNodeKind,
     StructuralGroupMetadata, StructuralNodeMetadata, StructuralPort, StructuralRelationship,
     StructuralRelationshipMetadata, StructuralRouting,
 };
 use std::collections::{HashMap, HashSet};
 
-pub const VERSION: &str = "0.40.0";
+pub const VERSION: &str = "0.41.0";
 
 const MIN_NODE_W: f64 = 160.0;
 const HEADER_H: f64 = 40.0;
@@ -206,6 +206,7 @@ pub fn layout_structural_diagram(diagram: &StructuralDiagram) -> LayoutedStructu
         Some(direction) => layout_directional_nodes(diagram, direction),
         None => layout_nodes(diagram),
     };
+    apply_c4_boundary_rows(&mut nodes, diagram);
     apply_alignments(&mut nodes, diagram);
     if let Some(title) = &diagram.title {
         let title_height = structural_title_height(title);
@@ -530,6 +531,122 @@ fn layout_nodes(diagram: &StructuralDiagram) -> Vec<LayoutedStructuralNode> {
     }
     positioned.sort_by_key(|(index, _)| *index);
     positioned.into_iter().map(|(_, node)| node).collect()
+}
+
+fn apply_c4_boundary_rows(nodes: &mut [LayoutedStructuralNode], diagram: &StructuralDiagram) {
+    if diagram.kind != StructuralKind::C4 || diagram.direction.is_some() {
+        return;
+    }
+    let boundary_columns = diagram.render_config.c4_boundary_in_row.unwrap_or(2);
+    let shape_columns = diagram.render_config.c4_shape_in_row.unwrap_or(4);
+    let top_level_groups = diagram
+        .groups
+        .iter()
+        .filter(|group| group.parent_group.is_none())
+        .collect::<Vec<_>>();
+    if top_level_groups.is_empty() {
+        return;
+    }
+
+    let padding = group_padding(diagram);
+    let horizontal_gap = horizontal_gap(diagram.architecture_config.as_ref());
+    let vertical_gap = vertical_gap(diagram.architecture_config.as_ref());
+    let mut blocks = Vec::new();
+    for group in top_level_groups {
+        let member_indices = diagram
+            .nodes
+            .iter()
+            .enumerate()
+            .filter(|(_, node)| {
+                c4_node_in_group(node.parent_group.as_deref(), &group.id, &diagram.groups)
+            })
+            .map(|(index, _)| index)
+            .collect::<Vec<_>>();
+        if member_indices.is_empty() {
+            continue;
+        }
+
+        let mut row_y = padding + GROUP_HEADER_H;
+        let mut max_x = 0.0_f64;
+        let mut row_height = 0.0_f64;
+        for (slot, index) in member_indices.iter().copied().enumerate() {
+            if slot > 0 && slot % shape_columns == 0 {
+                row_y += row_height + vertical_gap;
+                row_height = 0.0;
+            }
+            let column = slot % shape_columns;
+            let x = padding + column as f64 * (nodes[index].width + horizontal_gap);
+            nodes[index].x = x;
+            nodes[index].y = row_y
+                + group_depth(diagram.nodes[index].parent_group.as_deref(), &diagram.groups)
+                    .saturating_sub(1) as f64
+                    * GROUP_HEADER_H;
+            max_x = max_x.max(x + nodes[index].width + padding);
+            row_height = row_height.max(nodes[index].height);
+        }
+        blocks.push((member_indices, max_x, row_y + row_height + padding));
+    }
+
+    let outer_padding = outer_padding(diagram.architecture_config.as_ref());
+    let mut row_x = outer_padding;
+    let mut row_y = outer_padding;
+    let mut row_height = 0.0_f64;
+    for (slot, (member_indices, width, height)) in blocks.into_iter().enumerate() {
+        if slot > 0 && slot % boundary_columns == 0 {
+            row_x = outer_padding;
+            row_y += row_height + vertical_gap;
+            row_height = 0.0;
+        }
+        for index in member_indices {
+            nodes[index].x += row_x;
+            nodes[index].y += row_y;
+        }
+        row_x += width + horizontal_gap;
+        row_height = row_height.max(height);
+    }
+
+    let ungrouped = diagram
+        .nodes
+        .iter()
+        .enumerate()
+        .filter(|(_, node)| node.parent_group.is_none())
+        .map(|(index, _)| index)
+        .collect::<Vec<_>>();
+    let ungrouped_y = row_y + row_height + vertical_gap;
+    let mut ungrouped_row_height = 0.0_f64;
+    let mut ungrouped_row_y = ungrouped_y;
+    for (slot, index) in ungrouped.into_iter().enumerate() {
+        if slot > 0 && slot % shape_columns == 0 {
+            ungrouped_row_y += ungrouped_row_height + vertical_gap;
+            ungrouped_row_height = 0.0;
+        }
+        nodes[index].x = outer_padding
+            + (slot % shape_columns) as f64 * (nodes[index].width + horizontal_gap);
+        nodes[index].y = ungrouped_row_y;
+        ungrouped_row_height = ungrouped_row_height.max(nodes[index].height);
+    }
+}
+
+fn c4_node_in_group(
+    parent_group: Option<&str>,
+    top_level_group: &str,
+    groups: &[diagram_ir::StructuralGroup],
+) -> bool {
+    let mut current = parent_group;
+    let mut visited = HashSet::new();
+    while let Some(group_id) = current {
+        if group_id == top_level_group {
+            return true;
+        }
+        if !visited.insert(group_id) {
+            return false;
+        }
+        current = groups
+            .iter()
+            .find(|group| group.id == group_id)
+            .and_then(|group| group.parent_group.as_deref());
+    }
+    false
 }
 
 fn layout_directional_nodes(
@@ -1648,7 +1765,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.40.0");
+        assert_eq!(crate::VERSION, "0.41.0");
     }
 
     #[test]

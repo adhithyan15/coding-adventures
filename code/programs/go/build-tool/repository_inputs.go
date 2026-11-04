@@ -82,6 +82,21 @@ type repositoryInputConsumer struct {
 
 var repositoryInputConsumers = []repositoryInputConsumer{
 	{
+		name: "perl/conduit", language: "perl",
+		inputs:  "the native Perl build helper and shared Rust XS bridge",
+		matches: isNativePerlBuildInput,
+	},
+	{
+		name: "perl/irc-server-native", language: "perl",
+		inputs:  "the native Perl build helper and shared Rust XS bridge",
+		matches: isNativePerlBuildInput,
+	},
+	{
+		name: "perl/programs/conduit-hello", language: "perl",
+		inputs:  "the native Perl build helper and shared Rust XS bridge",
+		matches: isNativePerlBuildInput,
+	},
+	{
 		name:     "rust/ct-compare",
 		language: "rust",
 		inputs:   "the CT01 corpus, L0 transport and independent projection",
@@ -201,6 +216,37 @@ var repositoryInputConsumers = []repositoryInputConsumer{
 		inputs:   "the TF01 self-corpus and its Python reference",
 		matches:  isTestBootstrapInput,
 	},
+	{
+		name:     "rust/warrant-grammar",
+		language: "rust",
+		inputs:   "canonical Warrant grammars, syntax corpus and transport gate",
+		matches:  isWarrantGrammarInput,
+	},
+}
+
+// Canonical inputs live outside the Rust artifact package. Exact file paths
+// and slash-delimited prefixes avoid selecting lookalike versions/directories.
+// Validator-test edits select the consumer too: its BUILD runs those tests.
+func isWarrantGrammarInput(changed string) bool {
+	return strings.HasPrefix(changed, "code/grammars/warrant/") ||
+		strings.HasPrefix(changed, "code/specs/fixtures/warrant-syntax-v1/") ||
+		changed == "code/scripts/warrant_syntax_corpus.py" ||
+		changed == "code/scripts/tests/test_warrant_syntax_corpus.py" ||
+		changed == "code/scripts/tfv.py" ||
+		changed == "code/specs/VER04-warrant-language.md"
+}
+
+// These Perl packages load Rust cdylibs and share a helper outside their own
+// roots. Editing only the helper or bridge must still exercise the real XS
+// consumers, rather than produce an empty incremental build plan.
+func isNativePerlBuildInput(changed string) bool {
+	switch changed {
+	case "code/scripts/check-perl-extension-windows.ps1",
+		"code/packages/rust/perl-bridge/Cargo.toml",
+		"code/packages/rust/perl-bridge/build.rs":
+		return true
+	}
+	return strings.HasPrefix(changed, "code/packages/rust/perl-bridge/src/")
 }
 
 // CT01 is embedded in an L0 test, so edits outside the crate must still run it.

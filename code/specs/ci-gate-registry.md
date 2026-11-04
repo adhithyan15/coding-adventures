@@ -56,6 +56,27 @@ must reach these oracles even when it maps to no native package. Native fixture
 readers and their build-plan scheduling are separate conformance owners; a
 green neutral check does not establish native lane parity.
 
+## Metadata checkout and historical evidence
+
+The unconditional `contracts` job MUST keep the full commit/tree history and
+all branch/tag refs (`fetch-depth: 0`), including `origin/main`. Its checkout
+MUST materialize the complete tracked working tree. Barcode adoption evidence
+still compares pinned package trees and available implementation revisions;
+dependency-policy checks still read their trusted `origin/main` baseline.
+
+Use `filter: blob:none` to defer historical file contents until Git needs
+them. Commit/tree identities and ancestry remain available, current source
+files are fetched during checkout, and historical baseline blobs are fetched
+on demand with the existing read-only repository permission. An unavailable
+required blob MUST fail its consumer; it MUST NOT be treated as a missing
+baseline or accepted provenance. Do not replace this with shallow history,
+sparse source selection, skipped contracts, or a larger job timeout. The
+existing 30-minute metadata-job budget remains in force.
+
+Validate this checkout with the barcode evidence tests, an initially absent
+historical baseline blob that loads on demand, a failed lazy-fetch control,
+and the complete metadata CI job on the final PR head.
+
 ## Registry file
 
 `code/specs/data/ci-gates.json`.

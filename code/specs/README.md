@@ -57,7 +57,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | [VER26](VER26-ct-compare-pilot.md) | Rust ct-compare pilot and evidence requirements |
 | [TF01](TF01-bootstrap-harness.md) | Implemented Rust L0 harness, TFV transport and closed failure vocabulary |
 | [CT01](CT01-constant-time-compare.md) | Portable operations and corpus; logical work is not a timing proof |
-| [VER04](VER04-warrant-language.md) | Warrant v0 language/binding specification; parser, checker and generated tests follow separately |
+| [VER04](VER04-warrant-language.md) | Warrant v0 specification and [grammar artifacts](../packages/rust/warrant-grammar/README.md); guarded source frontend, checker and generation follow separately |
 | [Warrant design inventory](fixtures/warrant-v0/README.md) | Named future acceptance cases; not an executed conformance corpus |
 | [Delivery backlog](VER-BACKLOG.md) | Current bounded work, prerequisites and deferred ownership |
 

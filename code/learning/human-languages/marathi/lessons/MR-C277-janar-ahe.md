@@ -4,7 +4,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 id: MR-C277-janar-ahe
-spine_node: SPINE-TALK-ABOUT-FUTURE
+spine_node: SPINE-NARRATE-EVENTS
 sequence: 16050
 chapter: 277
 type: grammar

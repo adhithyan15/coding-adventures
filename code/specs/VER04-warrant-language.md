@@ -508,3 +508,56 @@ and source span. Cross-language adoption remains owned by package parity.
   operations. Separates logical Bytes equality from fresh-output ownership.
 - Defines hostile-input checks, secrecy projections and fail-closed incomplete
   solver/binding/observer evidence without claiming these tools already exist.
+
+## 11. Grammar artifacts and syntax-corpus staging (P006)
+
+P006 is delivered in bounded slices. **P006a** supplies canonical
+`code/grammars/warrant/warrant.tokens` / `warrant.grammar`, compiled Rust grammar
+data in `code/packages/rust/warrant-grammar`, and a data-only syntax corpus.
+Its public functions return TokenGrammar/ParserGrammar data; they do not accept
+untrusted source or claim to be a protected Warrant compiler front end.
+**P006b** supplies the guarded source reader/parser, original UTF-8 byte spans,
+admission/work budgets and multi-shape parser-stack validation. Rule-call depth
+in the shared parser is not Warrant AST depth; a small successful tooling probe
+does not discharge this obligation. Typing, bindings and semantic checking
+remain P007+. No slice may report another slice's missing evidence as live.
+
+Canonical grammar compilation uses the existing grammar-tools emitter.
+Regeneration compares emitted bytes, and tests compare runtime-loaded and
+compiled grammar behavior. No handwritten parser is introduced by the artifact
+package. Conditionals, matches and quantifiers are compound expression forms;
+parenthesize them when used as arithmetic/Boolean operands. A match arm's `|`
+belongs to the nearest unparenthesized match; parentheses delimit an inner
+match when returning to an outer arm list. These rules make the previously
+sketched compound-expression boundary explicit before grammar implementation.
+
+The syntax corpus is `code/specs/fixtures/warrant-syntax-v1/cases.json` with
+exact root fields `format` (the string `warrant-syntax-v1`) and `cases` (a list).
+Each case has exactly `id`, `feature`, `source`, `accept` and `witnesses`:
+
+- `id`: unique TF01 record identifier, at most 128 ASCII bytes;
+- `feature`: a declared syntax-feature group, not a semantic evidence label;
+- `source`: UTF-8 Warrant source, at most 4 KiB per case;
+- `accept`: an actual JSON Bool, the independently authored syntax verdict;
+- `witnesses`: distinct exact subtree witnesses for accepted cases, empty for
+  rejected cases. A witness is `rule_name=token values joined by one space`,
+  omitting layout/EOF leaves. Match whole entries, never substrings. Curate
+  operator/subtree witnesses that distinguish precedence and grouping; a root
+  `file` name or acceptance Bool alone cannot establish those properties.
+
+The corpus has at most 128 cases and a 2-MiB serialized JSON limit. Reject
+unknown fields, duplicate keys/IDs, invalid strings/Bool kinds, missing positive
+or negative baselines, and missing required feature coverage before generation.
+The emitter does not derive expected verdicts/witnesses by running the subject
+parser. It projects each authored case to TFV fields `source` (text), `accept`
+(Bool) and `witnesses` (list of text), preserving source bytes and LF transport.
+Runtime tests embed/read TFV rather than parse JSON. A byte-level regeneration
+test, malformed-corpus controls and a deliberately wrong-precedence grammar
+must demonstrate that the guards can fail; the L0 sabotage run must be nonzero.
+
+This is syntax-level evidence only. Type-invalid but syntactically valid
+examples remain parser positives, while later-phase corpus entries belong to
+their own checker. Public error IDs/spans, source normalization and the full
+hostile-source budgets are not implemented by an artifact-only package's test
+adapter. Its bounded test use of the shared parser must not be advertised as
+complete source-frontend safety or full VER04 conformance.

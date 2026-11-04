@@ -97,6 +97,22 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-accessibility-11.16.1-visual-corpus.json"
     ));
+    const C4_KEYWORD_ARGUMENTS_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-keyword-arguments-11.16.1-corpus.json"
+    ));
+    const C4_KEYWORD_ARGUMENTS_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-keyword-arguments-11.16.1-visual-corpus.json"
+    ));
+    const C4_UPSTREAM_RENDERING_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-upstream-rendering-11.16.1-corpus.json"
+    ));
+    const C4_UPSTREAM_RENDERING_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/c4-upstream-rendering-11.16.1-visual-corpus.json"
+    ));
     const C4_LEGACY_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/c4-legacy-accessibility-11.16.1-corpus.json"
@@ -4949,6 +4965,83 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_pinned_mermaid_c4_keyword_arguments_to_png() {
+        let syntax: Value = serde_json::from_str(C4_KEYWORD_ARGUMENTS_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_KEYWORD_ARGUMENTS_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+        let diagram =
+            parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+        let layout = layout_structural_diagram(&diagram);
+        assert_eq!(layout.nodes.len(), 2);
+        assert_eq!(layout.relationships.len(), 1);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_c4_keyword_arguments_0_e2e.png").unwrap();
+        assert!(pixels.width > 0 && pixels.height > 0);
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::GlyphRun(_)
+        )));
+    }
+
+    #[test]
+    fn render_pinned_mermaid_c4_upstream_rendering_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(C4_UPSTREAM_RENDERING_CORPUS).unwrap();
+        let visual: Value = serde_json::from_str(C4_UPSTREAM_RENDERING_VISUAL_CORPUS).unwrap();
+        assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().unwrap();
+        let visual_names = visual["fixtures"].as_array().unwrap();
+        assert_eq!(fixtures.len(), visual_names.len());
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for (index, (fixture, visual_name)) in fixtures.iter().zip(visual_names).enumerate() {
+            assert_eq!(fixture["name"], *visual_name);
+            let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+            let layout = layout_structural_diagram(&diagram);
+            assert!(!layout.nodes.is_empty());
+            assert!(!layout.relationships.is_empty());
+            let scene = diagram_to_paint_structural(
+                &layout,
+                &DiagramToPaintOptions {
+                    background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                    device_pixel_ratio: 2.0,
+                    label_font: font_spec("Helvetica", 12.0),
+                    title_font: font_spec("Helvetica", 16.0),
+                    shaper: &shaper,
+                    metrics: &metrics,
+                    resolver: &resolver,
+                },
+            );
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_c4_upstream_rendering_{index}_e2e.png");
+            write_png(&pixels, &path).unwrap();
+            assert!(pixels.width > 0 && pixels.height > 0);
+            assert!(scene.instructions.iter().any(|instruction| matches!(
+                instruction,
+                PaintInstruction::GlyphRun(_)
+            )));
+        }
+    }
+
+    #[test]
     fn render_pinned_mermaid_c4_accessibility_to_png() {
         let syntax: Value = serde_json::from_str(C4_ACCESSIBILITY_CORPUS)
             .expect("C4 accessibility corpus JSON");
@@ -5358,11 +5451,19 @@ line "Target" [35, 50, 68, 82]"##,
             let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
             let columns = diagram.render_config.c4_shape_in_row.unwrap();
             let layout = layout_structural_diagram(&diagram);
-            if columns == 1 {
-                assert!(layout.nodes[1].y > layout.nodes[0].y);
+            if fixture["name"] == "boundary-row-layout" {
+                let one = layout.groups.iter().find(|group| group.id == "one").unwrap();
+                let two = layout.groups.iter().find(|group| group.id == "two").unwrap();
+                let three = layout.groups.iter().find(|group| group.id == "three").unwrap();
+                assert_eq!(one.y, two.y);
+                assert!(three.y > one.y);
             } else {
-                assert_eq!(layout.nodes[0].y, layout.nodes[1].y);
-                assert!(layout.nodes[2].y > layout.nodes[0].y);
+                for node in layout.nodes.iter().take(columns) {
+                    assert_eq!(node.y, layout.nodes[0].y);
+                }
+                if let Some(next_row) = layout.nodes.get(columns) {
+                    assert!(next_row.y > layout.nodes[0].y);
+                }
             }
             let shaper = CoreTextShaper;
             let metrics = CoreTextMetrics;

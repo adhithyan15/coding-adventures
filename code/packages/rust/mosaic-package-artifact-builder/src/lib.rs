@@ -446,6 +446,8 @@ pub enum BuildError {
     /// The manifest at `<package_root>/mosaic-package.toml` did not parse
     /// or was invalid. The wrapped string is the rendered `ManifestError`.
     Manifest(String),
+    /// An experiment was selected for an unsupported backend.
+    InvalidExperiment(String),
     /// A backend was requested that this crate version does not yet wire.
     /// All six UI29 §4.3 backends are wired since v0.2; this variant
     /// remains as a future-proof guard against new `Backend::Foo`
@@ -534,6 +536,7 @@ pub enum BuildError {
 impl std::fmt::Display for BuildError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            BuildError::InvalidExperiment(e) => write!(f, "invalid experiment: {e}"),
             BuildError::Manifest(e) => write!(f, "manifest error: {e}"),
             BuildError::UnsupportedBackend(b) => {
                 write!(f, "backend {b:?} is not yet wired in this build")
@@ -2557,6 +2560,28 @@ pub fn build_package_with_ios_ui_tests(
     tokens: &mosstyle_compiler::TokenOverrides,
     ios_ui_tests: &[PathBuf],
 ) -> Result<BuildResult, BuildError> {
+    build_package_with_experiments(opts, profile, runtime_library, tokens, ios_ui_tests, &BuildExperiments::default())
+}
+
+/// Explicit opt-ins for native compatibility experiments. Existing entry points
+/// remain eager; experiments must never silently become production defaults.
+#[derive(Debug, Clone, Copy, Default)]
+pub struct BuildExperiments {
+    pub xaml_deferred_conditionals: bool,
+}
+
+/// Build through the ordinary package pipeline with explicitly selected experiments.
+pub fn build_package_with_experiments(
+    opts: &BuildOptions,
+    profile: BuildProfile,
+    runtime_library: Option<&Path>,
+    tokens: &mosstyle_compiler::TokenOverrides,
+    ios_ui_tests: &[PathBuf],
+    experiments: &BuildExperiments,
+) -> Result<BuildResult, BuildError> {
+    if experiments.xaml_deferred_conditionals && opts.backend != Backend::Xaml {
+        return Err(BuildError::InvalidExperiment("deferred conditionals require the XAML backend".into()));
+    }
     validate_runtime_library_selection(opts, runtime_library)?;
     validate_ios_ui_tests(opts, runtime_library, ios_ui_tests)?;
     let report = analyze_package_degradations_with_runtime_and_tokens(
@@ -2579,7 +2604,7 @@ pub fn build_package_with_ios_ui_tests(
     }
 
     let mut result =
-        build_package_inner(opts, Some(profile), runtime_library, tokens, ios_ui_tests)?;
+        build_package_inner(opts, Some(profile), runtime_library, tokens, ios_ui_tests, experiments)?;
     // Filled in after emission, from what the build actually overwrote — the
     // analysis pass above cannot know, because it writes nothing.
     let mut report = report;
@@ -3443,7 +3468,7 @@ pub fn build_package_with_tokens(
     opts: &BuildOptions,
     tokens: &mosstyle_compiler::TokenOverrides,
 ) -> Result<BuildResult, BuildError> {
-    build_package_inner(opts, None, None, tokens, &[])
+    build_package_inner(opts, None, None, tokens, &[], &BuildExperiments::default())
 }
 
 fn build_package_inner(
@@ -3452,6 +3477,7 @@ fn build_package_inner(
     runtime_library: Option<&Path>,
     tokens: &mosstyle_compiler::TokenOverrides,
     ios_ui_tests: &[PathBuf],
+    experiments: &BuildExperiments,
 ) -> Result<BuildResult, BuildError> {
     // ----- 1. Validate the backend up front --------------------------------
     //
@@ -3609,6 +3635,7 @@ fn build_package_inner(
                 opts.backend,
                 &package_search_paths,
                 &manifest.components.exports,
+                experiments,
             )?;
             // Deduped across variants, not inside the call: each variant gets
             // its own artifact vector, so a component-scoped file emitted by
@@ -3689,6 +3716,7 @@ fn build_package_inner(
                 mosaic_ios_project::default_bundle_identifier(&manifest.package.name)
             });
             let shell_artifacts = emit_project_shell(ProjectShellOptions {
+                experiments,
                 component: first_component,
                 components: &components_built,
                 src_dir: &src_dir,
@@ -5500,6 +5528,7 @@ fn load_package_tokens(
 /// through `mosaic-compile` directly, bypassing the artifact-builder.
 /// Unifying the two paths is queued as UI32-M.1.
 struct ProjectShellOptions<'a> {
+    experiments: &'a BuildExperiments,
     component: &'a str,
     components: &'a [String],
     src_dir: &'a Path,
@@ -5539,6 +5568,7 @@ struct ProjectShellOptions<'a> {
 
 fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, BuildError> {
     let ProjectShellOptions {
+        experiments,
         component,
         components,
         src_dir,
@@ -6344,6 +6374,7 @@ fn emit_project_shell(options: ProjectShellOptions<'_>) -> Result<Vec<PathBuf>, 
                 &root_variants,
             )?;
             let xaml_opts = mosaic_emit_xaml::pipeline::EmitOptions {
+                experimental_deferred_conditionals: experiments.xaml_deferred_conditionals,
                 emit_project: true,
                 require_runtime: project_shell_requires_runtime(profile, runtime_library),
                 layout_variants,
@@ -9790,6 +9821,7 @@ fn compile_one_component(
     backend: Backend,
     package_search_paths: &[PathBuf],
     package_exports: &[String],
+    experiments: &BuildExperiments,
 ) -> Result<Vec<PathBuf>, BuildError> {
     // ----- 1. Locate the three source files --------------------------------
     //
@@ -9951,6 +9983,7 @@ fn compile_one_component(
             // another export already names: every export lands in one C#
             // namespace (UI48 §7.11).
             let opts = mosaic_emit_xaml::pipeline::EmitOptions {
+                experimental_deferred_conditionals: experiments.xaml_deferred_conditionals,
                 package_exports: package_exports.to_vec(),
                 ..Default::default()
             };
@@ -25674,5 +25707,51 @@ mod style_language_version_tests {
         let (result, _out) = build(&strict);
         let err = result.expect_err("v2 names it").to_string();
         assert!(err.contains("src/Card.zz.msl: not a regular file"), "{err}");
+    }
+}
+
+#[cfg(test)]
+mod deferred_package_experiment_tests {
+    use super::*;
+
+    #[test]
+    fn deferred_package_experiment_reaches_exports_variants_and_project() {
+        let pkg = tempfile::tempdir().unwrap();
+        let src = pkg.path().join("src");
+        fs::create_dir_all(&src).unwrap();
+        fs::write(pkg.path().join("mosaic-package.toml"),
+            "[package]\nname = \"mosaic-pkg-probe\"\nversion = \"0.1.0\"\ndescription = \"probe\"\nlicense = \"MIT\"\n[components]\nexports = [\"Card\", \"Editor\"]\n[dependencies]\n[kernel]\nversion = \"1\"\n").unwrap();
+        for name in ["Card", "Editor"] {
+            fs::write(src.join(format!("{name}.mil")), format!("component {name} {{ slot visible : bool ; slot draft : text ; }}")).unwrap();
+            let layout = format!("layout {name} {{ Column [ root ] {{ If (when: slot: visible) {{ HostInput (value: slot: draft) }} }} }}");
+            fs::write(src.join(format!("{name}.mll")), &layout).unwrap();
+            fs::write(src.join(format!("{name}.touch.mll")), &layout).unwrap();
+        }
+        for emit_project in [false, true] {
+            for enabled in [false, true] {
+                let out = tempfile::tempdir().unwrap();
+                let opts = BuildOptions { package_root: pkg.path().into(), output_root: out.path().into(), backend: Backend::Xaml, emit_project, theme: None };
+                if enabled {
+                    build_package_with_experiments(&opts, BuildProfile::Permissive, None, &Default::default(), &[], &BuildExperiments { xaml_deferred_conditionals: true }).unwrap();
+                } else {
+                    build_package_with_profile(&opts, BuildProfile::Permissive).unwrap();
+                }
+                for file in ["Card.xaml", "Card.touch.xaml", "Editor.xaml", "Editor.touch.xaml"] {
+                    let xaml = fs::read_to_string(out.path().join("xaml").join(file)).unwrap();
+                    assert_eq!(xaml.contains("x:Load="), enabled, "{file}, project={emit_project}");
+                    assert_eq!(xaml.contains("UpdateSourceTrigger=PropertyChanged"), enabled, "{file}");
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn deferred_package_experiment_rejects_other_backends_before_io() {
+        let temp = tempfile::tempdir().unwrap();
+        let output = temp.path().join("not-created");
+        let opts = BuildOptions { package_root: temp.path().join("missing-package"), output_root: output.clone(), backend: Backend::Html, emit_project: false, theme: None };
+        let result = build_package_with_experiments(&opts, BuildProfile::Permissive, None, &Default::default(), &[], &BuildExperiments { xaml_deferred_conditionals: true });
+        assert!(matches!(result, Err(BuildError::InvalidExperiment(_))));
+        assert!(!output.exists());
     }
 }

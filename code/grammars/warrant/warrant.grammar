@@ -1,0 +1,49 @@
+# VER04 pure-profile canonical EBNF draft, through existing grammar-tools.
+# Semantic names/types/contracts and protected source admission follow later.
+file = "warrant" NAME NEWLINE INDENT { declaration | NEWLINE } DEDENT ;
+declaration = model_declaration | error_declaration | operation | example | claim | assumptions | labels | input | bound ;
+
+model_declaration = "model" NAME ( EQUALS type NEWLINE | LPAREN [ parameters ] RPAREN ARROW type EQUALS expression NEWLINE ) ;
+error_declaration = "error" NAME EQUALS NAME { PIPE NAME } NEWLINE ;
+operation = "op" NAME [ LT static_parameters GT ] LPAREN [ parameters ] RPAREN ARROW type [ "fresh" ] NEWLINE ;
+static_parameters = NAME COLON "Nat" { COMMA NAME COLON "Nat" } ;
+parameters = parameter { COMMA parameter } ;
+parameter = NAME COLON type [ PIPE expression ] ;
+type = "Bytes" [ LT width GT ] | "List" LT type GT | "Option" LT type GT | "Result" LT type COMMA NAME GT | NAME ;
+width = INT | NAME ;
+
+example = "example" NAME COLON NEWLINE INDENT expression NEWLINE DEDENT ;
+claim = "claim" NAME COLON NEWLINE INDENT expression NEWLINE DEDENT ;
+assumptions = "assume" ( "platform" COLON NEWLINE INDENT platform_rows DEDENT | "environment" COLON NEWLINE INDENT environment_rows DEDENT ) ;
+platform_rows = "none" NEWLINE | platform_row { platform_row } ;
+platform_row = qualified_name NEWLINE ;
+environment_rows = "none" NEWLINE | environment_row { environment_row } ;
+environment_row = NAME COLON expression NEWLINE ;
+labels = "labels" NAME COLON NEWLINE INDENT label_row { label_row } DEDENT ;
+label_row = qualified_name ( "public" | "secret" ) NEWLINE ;
+input = "input" QNAME COLON NEWLINE INDENT "hostile" NEWLINE { rejection } "ensures" NAME { COMMA NAME } NEWLINE DEDENT ;
+rejection = "rejects" expression "with" QNAME NEWLINE ;
+bound = "bound" NAME COLON NEWLINE INDENT bound_row { bound_row } DEDENT ;
+bound_row = NAME LE expression NEWLINE ;
+
+expression = quantified | conditional | match_expression | implication ;
+quantified = ( "forall" | "exists" ) binders @space_after_next DOT expression ;
+binders = parameter { COMMA parameter } ;
+conditional = "if" expression "then" expression "else" expression ;
+match_expression = "match" expression "with" match_arm { PIPE match_arm } ;
+match_arm = pattern ARROW expression ;
+pattern = "None" | "Some" LPAREN NAME RPAREN | "Ok" LPAREN NAME RPAREN | "Err" LPAREN NAME RPAREN ;
+implication = disjunction [ IMPLIES expression ] ;
+disjunction = conjunction { "or" conjunction } ;
+conjunction = comparison { "and" comparison } ;
+comparison = sum [ comparison_operator sum ] ;
+comparison_operator = EQEQ | NOTEQ | LT | GT | LE | GE ;
+sum = product { ( PLUS | MINUS ) product } ;
+product = unary { STAR unary } ;
+unary = ( "not" | MINUS ) unary | primary ;
+primary = literal | list_literal | reference | LPAREN expression RPAREN ;
+literal = "true" | "false" | U64_LITERAL | U8_LITERAL | BYTES_LITERAL | INT ;
+list_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET ;
+reference = qualified_name [ LT widths GT ] [ LPAREN [ expression { COMMA expression } ] RPAREN ] ;
+qualified_name = QNAME | NAME ;
+widths = width { COMMA width } ;

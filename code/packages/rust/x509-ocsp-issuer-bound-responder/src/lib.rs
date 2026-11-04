@@ -6,17 +6,22 @@
 //! and returns non-copyable evidence retaining the exact authenticated response,
 //! responder certificate, and candidate issuer relationship.
 //!
-//! The result proves that one candidate issuer signed the policy-approved
-//! responder certificate whose key signed one exact OCSP response. It does not
-//! establish that the candidate issuer issued a particular target certificate,
-//! bind a `CertID` or revocation decision, validate a responder path, establish
-//! trust, check responder revocation, or grant TLS, HTTP, OAuth-transport, or
-//! network authority.
+//! The fixed result retains fixed SHA-256 response authentication. The additive
+//! routed result retains caller-selected SHA-256, SHA-384, or SHA-512 response-
+//! signature evidence. Both keep the responder-certificate issuer link fixed
+//! to RSA SHA-256 and prove that one candidate issuer signed the policy-approved
+//! responder certificate whose key signed one exact OCSP response. Neither
+//! establishes that the candidate issuer issued a particular target certificate,
+//! binds a `CertID` or revocation decision, validates a responder path,
+//! establishes trust, checks responder revocation, or grants TLS, HTTP,
+//! OAuth-transport, or network authority.
 
 #![deny(unsafe_code)]
 
 use core::fmt;
-use x509_ocsp_authenticated_responder::AuthenticatedX509OcspRsaSha256Responder;
+use x509_ocsp_authenticated_responder::{
+    AuthenticatedX509OcspRsaResponder, AuthenticatedX509OcspRsaSha256Responder,
+};
 use x509_rsa_sha256_issuer_link::VerifiedX509RsaSha256IssuerLink;
 
 /// Stable failures that retain no response, certificate, key, or signature bytes.
@@ -116,6 +121,69 @@ impl fmt::Debug for IssuerBoundX509OcspRsaSha256Responder<'_, '_, '_, '_, '_, '_
     }
 }
 
+/// Non-copyable evidence binding one routed authenticated responder to one issuer.
+///
+/// The retained responder proof covers exact `ResponderID`, certificate policy,
+/// and caller-routed SHA-256, SHA-384, or SHA-512 response-signature evidence.
+/// The retained issuer link is deliberately narrower: it proves that the same
+/// responder certificate was signed by the exact candidate issuer through the
+/// existing fixed RSA SHA-256 issuer-link boundary. This type does not claim
+/// that the responder-certificate issuer-link algorithm is data-driven.
+pub struct IssuerBoundX509OcspRsaResponder<
+    'response,
+    'response_encoded,
+    'responder,
+    'responder_encoded,
+    'issuer,
+    'issuer_encoded,
+> {
+    authenticated_responder: AuthenticatedX509OcspRsaResponder<
+        'response,
+        'response_encoded,
+        'responder,
+        'responder_encoded,
+    >,
+    responder_issuer_link:
+        VerifiedX509RsaSha256IssuerLink<'responder, 'responder_encoded, 'issuer, 'issuer_encoded>,
+}
+
+impl<'response, 'response_encoded, 'responder, 'responder_encoded, 'issuer, 'issuer_encoded>
+    IssuerBoundX509OcspRsaResponder<
+        'response,
+        'response_encoded,
+        'responder,
+        'responder_encoded,
+        'issuer,
+        'issuer_encoded,
+    >
+{
+    /// Return routed authentication for the exact response and responder certificate.
+    pub const fn authenticated_responder(
+        &self,
+    ) -> &AuthenticatedX509OcspRsaResponder<
+        'response,
+        'response_encoded,
+        'responder,
+        'responder_encoded,
+    > {
+        &self.authenticated_responder
+    }
+
+    /// Return the fixed RSA SHA-256 responder-certificate issuer link.
+    pub const fn responder_issuer_link(
+        &self,
+    ) -> &VerifiedX509RsaSha256IssuerLink<'responder, 'responder_encoded, 'issuer, 'issuer_encoded>
+    {
+        &self.responder_issuer_link
+    }
+}
+
+impl fmt::Debug for IssuerBoundX509OcspRsaResponder<'_, '_, '_, '_, '_, '_> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("IssuerBoundX509OcspRsaResponder")
+    }
+}
+
 /// Bind one exact authenticated responder to its exact candidate issuer link.
 ///
 /// Object identity is checked before evidence is returned. Byte-equal but
@@ -164,6 +232,60 @@ pub fn bind_x509_ocsp_authenticated_responder_to_issuer<
     }
 
     Ok(IssuerBoundX509OcspRsaSha256Responder {
+        authenticated_responder,
+        responder_issuer_link,
+    })
+}
+
+/// Bind one exact routed authenticated responder to its exact fixed issuer link.
+///
+/// Object identity is checked before evidence is returned. Byte-equal but
+/// separately decoded responder certificates are rejected. The response
+/// signature route remains retained by the authentication proof, while the
+/// certificate issuer link remains explicitly fixed to RSA SHA-256.
+pub fn bind_x509_ocsp_authenticated_rsa_responder_to_issuer<
+    'response,
+    'response_encoded,
+    'responder,
+    'responder_encoded,
+    'issuer,
+    'issuer_encoded,
+>(
+    authenticated_responder: AuthenticatedX509OcspRsaResponder<
+        'response,
+        'response_encoded,
+        'responder,
+        'responder_encoded,
+    >,
+    responder_issuer_link: VerifiedX509RsaSha256IssuerLink<
+        'responder,
+        'responder_encoded,
+        'issuer,
+        'issuer_encoded,
+    >,
+) -> Result<
+    IssuerBoundX509OcspRsaResponder<
+        'response,
+        'response_encoded,
+        'responder,
+        'responder_encoded,
+        'issuer,
+        'issuer_encoded,
+    >,
+    X509OcspIssuerBoundResponderError,
+> {
+    if !std::ptr::eq(
+        authenticated_responder
+            .responder_certificate_policy()
+            .certificate(),
+        responder_issuer_link.child(),
+    ) {
+        return Err(X509OcspIssuerBoundResponderError::new(
+            X509OcspIssuerBoundResponderErrorKind::EvidenceMismatch,
+        ));
+    }
+
+    Ok(IssuerBoundX509OcspRsaResponder {
         authenticated_responder,
         responder_issuer_link,
     })

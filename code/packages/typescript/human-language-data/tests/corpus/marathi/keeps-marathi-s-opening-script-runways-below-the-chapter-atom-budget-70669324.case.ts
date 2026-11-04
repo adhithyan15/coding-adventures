@@ -310,8 +310,11 @@ it("keeps Marathi's opening script runways below the chapter atom budget", () =>
     // Chapters 159-161: the A2 spine chapters (the past, the future, practical
     // texts), five word lessons each. Chapter 161 also carries their two
     // reviews.
-    ["159", 5],
-    ["160", 5],
+    // HL18889 puts the missing A2 past and future grammar where the track first
+    // claims those spine nodes: three owned lessons in chapter 159 and two in
+    // chapter 160. The additions are grammar lessons, not script atoms.
+    ["159", 8],
+    ["160", 7],
     ["161", 7],
     // Chapters 162-192: A2 vocabulary tranche 1, five word lessons each, in runs
     // of at most nine chapters. The last chapter of each run (170, 179, 188, 192) also

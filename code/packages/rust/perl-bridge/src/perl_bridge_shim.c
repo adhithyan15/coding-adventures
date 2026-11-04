@@ -168,7 +168,7 @@ void perl_bridge_xs_boot_finish(I32 ax) {
  *
  * Returns the result SV (reference count incremented — the caller owns it), or
  * NULL if the sub died. On death, *err_out is set to a malloc'd NUL-terminated
- * copy of $@ stringified (the caller must free() it); on success *err_out is
+ * copy of $@ stringified (release with perl_bridge_free_error); on success *err_out is
  * left NULL. The arguments are passed through unchanged (mortalised copies are
  * pushed so the callee can't disturb the caller's refcounts).
  *
@@ -218,6 +218,13 @@ SV *perl_bridge_call_coderef(SV *coderef, SV **argv, int argc, char **err_out) {
     FREETMPS;
     LEAVE;
     return result;
+}
+
+/* XSUB.h may replace malloc/free with Perl's host allocator on Windows.
+ * Release in this translation unit so allocation and release always match. */
+void perl_bridge_free_error(char *message) {
+    dTHX;
+    free(message);
 }
 
 HV *perl_bridge_newHV(void) {

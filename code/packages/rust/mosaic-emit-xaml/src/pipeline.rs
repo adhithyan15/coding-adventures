@@ -11752,7 +11752,15 @@ fn emit_host_input(
     match find_prop_value(node, "value") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            attrs.push_str(&format!(" Text=\"{{x:Bind {pascal}, Mode=TwoWay}}\""));
+            // Deferred teardown can clear the generated TextBox reference before
+            // its LostFocus source-update callback runs (#18515). Update while
+            // the editor is live; keep the eager compatibility path unchanged.
+            let trigger = if ctx.experimental_deferred_conditionals {
+                ", UpdateSourceTrigger=PropertyChanged"
+            } else {
+                ""
+            };
+            attrs.push_str(&format!(" Text=\"{{x:Bind {pascal}, Mode=TwoWay{trigger}}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" Text=\"{}\"", escape_xaml_attr(s)));
@@ -19425,6 +19433,18 @@ mod tests {
             "got:\n{}",
             r.xaml
         );
+    }
+
+    #[test]
+    fn deferred_input_updates_text_before_focus_teardown() {
+        let c = component("Foo", vec![slot("formula", SlotType::Text, true)], vec![]);
+        let l = layout_with_root("Foo", host_input_node(None, vec![LayoutProp {
+            name: "value".to_string(),
+            value: LayoutPropValue::SlotRef("formula".to_string()),
+        }]));
+        let r = from_pipeline(&c, &l, &empty_style("Foo"), None,
+            &EmitOptions { experimental_deferred_conditionals: true, ..opts() }).unwrap();
+        assert!(r.xaml.contains("Text=\"{x:Bind Formula, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}\""));
     }
 
     #[test]

@@ -21,6 +21,22 @@ const C4_ACCESSIBILITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-accessibility-11.16.1-visual-corpus.json"
 ));
+const C4_KEYWORD_ARGUMENTS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-keyword-arguments-11.16.1-corpus.json"
+));
+const C4_KEYWORD_ARGUMENTS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-keyword-arguments-11.16.1-visual-corpus.json"
+));
+const C4_UPSTREAM_RENDERING_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-upstream-rendering-11.16.1-corpus.json"
+));
+const C4_UPSTREAM_RENDERING_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/c4-upstream-rendering-11.16.1-visual-corpus.json"
+));
 const C4_LEGACY_ACCESSIBILITY_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/c4-legacy-accessibility-11.16.1-corpus.json"
@@ -2661,6 +2677,52 @@ fn pinned_c4_accessibility_metadata_reaches_semantic_ir() {
 }
 
 #[test]
+fn pinned_c4_keywords_remain_valid_arguments() {
+    let syntax: Value = serde_json::from_str(C4_KEYWORD_ARGUMENTS_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_KEYWORD_ARGUMENTS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    assert_eq!(visual["fixtures"][0], syntax["fixtures"][0]["name"]);
+
+    let diagram =
+        parse_c4_diagram(syntax["fixtures"][0]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(diagram.title.as_deref(), Some("title"));
+    assert_eq!(diagram.nodes[0].id, "Person");
+    assert_eq!(diagram.nodes[0].label, "Person");
+    assert_eq!(diagram.nodes[1].id, "System");
+    assert_eq!(diagram.relationships[0].from, "Person");
+    assert_eq!(diagram.relationships[0].to, "System");
+}
+
+#[test]
+fn pinned_c4_upstream_rendering_corpus_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(C4_UPSTREAM_RENDERING_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(C4_UPSTREAM_RENDERING_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), 6);
+    assert_eq!(fixtures.len(), visual_names.len());
+
+    for (fixture, visual_name) in fixtures.iter().zip(visual_names) {
+        assert_eq!(fixture["name"], *visual_name);
+        let diagram = parse_c4_diagram(fixture["source"].as_str().unwrap()).unwrap();
+        assert!(diagram.title.is_some());
+        assert!(!diagram.nodes.is_empty());
+        assert!(!diagram.relationships.is_empty());
+    }
+
+    let container = parse_c4_diagram(fixtures[1]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(container.nodes.iter().find(|node| node.id == "customer").unwrap().label, "Customer");
+    let queue = parse_c4_diagram(fixtures[5]["source"].as_str().unwrap()).unwrap();
+    let queue_metadata = &queue.nodes.iter().find(|node| node.id == "msgQueue").unwrap().metadata;
+    assert!(matches!(
+        queue_metadata,
+        Some(diagram_ir::StructuralNodeMetadata::C4(metadata))
+            if metadata.element_type == "external_component_queue"
+    ));
+}
+
+#[test]
 fn pinned_c4_legacy_accessibility_reaches_semantic_ir() {
     let syntax: Value = serde_json::from_str(C4_LEGACY_ACCESSIBILITY_CORPUS).unwrap();
     let visual: Value =
@@ -2938,6 +3000,12 @@ fn pinned_c4_layout_config_reaches_semantic_ir() {
     let positional = parse_c4_diagram(fixtures[1]["source"].as_str().unwrap()).unwrap();
     assert_eq!(positional.render_config.c4_shape_in_row, Some(1));
     assert_eq!(positional.render_config.c4_boundary_in_row, Some(2));
+    let defaults = parse_c4_diagram(fixtures[2]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(defaults.render_config.c4_shape_in_row, Some(4));
+    assert_eq!(defaults.render_config.c4_boundary_in_row, Some(2));
+    let boundaries = parse_c4_diagram(fixtures[3]["source"].as_str().unwrap()).unwrap();
+    assert_eq!(boundaries.groups.len(), 3);
+    assert_eq!(boundaries.render_config.c4_boundary_in_row, Some(2));
 }
 
 #[test]

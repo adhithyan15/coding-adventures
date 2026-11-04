@@ -34,8 +34,17 @@ examiner scripts, shared rung-owned rubrics, and fail-closed manifests covering
 all twelve published pre-A1 parts and all eleven published A1 parts. They are
 structural project evidence only: recording provenance, qualified review,
 standard setting, calibration, and book-only human validation remain explicit
-backlog. The project-defined A2 four-skill task shape is also published, but its
-two timed mock bundles and every later-rung mock bundle remain backlog.
+backlog. The project-defined A2 four-skill task shape is also published.
+Chapters 159 and 160 now own its bounded past/future grammar path before the
+chapter-275 A2 source gate. The same boundary contract pins the earlier
+**नको**, **कारण**, **आधी / नंतर**, and **मग / शेवटी** lessons as the permitted
+refusal, reason, and sequencing path. Every required A2 curriculum extension
+must also resolve at or before chapter 275. Chapters 276–277 re-teach related
+grammar at the B1 seam under separate B1-required C276/C277 extensions and
+the B1 `SPINE-NARRATE-EVENTS` path; C278–C279 complete that connected-story
+capability. The derived A2 lesson slice excludes every C276/C277 lesson, so the
+seam cannot be used to bless A2 evidence. Its two timed mock bundles
+and every later-rung mock bundle remain backlog.
 
 ## Progress
 
@@ -371,10 +380,21 @@ first-person can-do sentence and the lesson that pays it off.
   carries all four inherited ordinals as headwords and none of the built ones.
   A1 exam coverage 161/301 → **162/301**.
 
+- **Chapters 159–160 — the owned A2 past and future path**
+  ([`lessons/MR-C159-*`](./lessons/), [`lessons/MR-C160-*`](./lessons/)):
+  three short past lessons make **मी गेलो**, the ergative **त्याने काम केलं**
+  with object agreement, and **होता / नव्हता** independently retrievable;
+  two future lessons do the same for **मी जाईन** and **-णार आहे / नाही**.
+  [`assessment-boundaries/a2.json`](./assessment-boundaries/a2.json) keeps the
+  source gate at chapter 275, pins the already-owned refusal, reason, and
+  sequencing forms, and excludes the later B1 seam. Two chapter-161 review
+  passes retrieve every new grammar atom again.
 - **Chapters 276–287 — the B1 core** ([`lessons/`](./lessons/), `MR-C276-*`
-  to `MR-W287-six-lines`): 276–277 bridge the A2 past and future the track
-  had left empty (मी गेलो, the ergative त्याने काम केलं with the verb agreeing
-  with the object, होता; मी जाईन and -णार आहे), then two chapters for each of
+  to `MR-W287-six-lines`): 276–277 re-teach related past and future forms at
+  the seam under their own B1-seam atoms as tense-contrast preparation on the
+  `SPINE-NARRATE-EVENTS` path; C278–C279 complete the connected-story
+  capability. They do not constitute A2 source evidence. The run then gives
+  two chapters to each of
   the five B1 spine nodes. Narrating (-त होतो, असताना, the habitual -ायचो, आधी
   / मग / त्यानंतर / शेवटी, the -ऊन form, an eighty-six-word reading), giving
   reasons (मला वाटतं की, म्हणून / त्यामुळे, -ायला पाहिजे / हवं, -ऊ नये, -मुळे

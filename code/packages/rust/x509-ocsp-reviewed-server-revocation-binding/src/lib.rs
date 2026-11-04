@@ -1,12 +1,16 @@
 //! # Reviewed-server OCSP revocation binding
 //!
 //! This crate composes one complete authenticated OCSP target-revocation proof
-//! with the strongest existing constructed reviewed-server path evidence. The
-//! target and issuer must be the same exact decoded certificate objects in
-//! both inputs. Byte-equal independent decodes are rejected.
+//! with either the fixed RSA SHA-256 or the data-driven routed constructed
+//! reviewed-server path evidence. The routed path can now consume either the
+//! fixed RSA SHA-256 OCSP response proof or its data-driven RSA SHA-256,
+//! SHA-384, or SHA-512 response-signature counterpart. The target and issuer
+//! must be the same exact decoded certificate objects in both inputs.
+//! Byte-equal independent decodes are rejected.
 //!
 //! This is an evidence-composition, exact-time validity, bounded responder
-//! DNS-policy, and exact responder no-check boundary. It performs no new
+//! DNS-policy, and exact responder no-check boundary for the fixed path. Both
+//! routed bindings stop before responder-path policy. They perform no new
 //! cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -27,7 +31,10 @@ use x509_name_constraints::{
     decode_name_constraints, decode_name_constraints_contents, evaluate_dns_names,
     ConstrainedDnsNames, DnsConstraintErrorKind, NameConstraintsErrorKind, NAME_CONSTRAINTS_OID,
 };
-use x509_ocsp_authenticated_target_revocation::AuthenticatedX509OcspRsaSha256TargetRevocation;
+use x509_ocsp_authenticated_target_revocation::{
+    AuthenticatedX509OcspRsaSha256TargetRevocation, AuthenticatedX509OcspRsaTargetRevocation,
+};
+use x509_rsa_constructed_path_signature_routing::ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy;
 use x509_rsa_sha256_reviewed_server_link::ValidatedX509RsaSha256ConstructedReviewedIntermediateServerNameConstraintsPolicy;
 use x509_subject_alt_name::{
     decode_subject_alt_name, SubjectAltNameErrorKind, SUBJECT_ALT_NAME_OID,
@@ -281,6 +288,347 @@ impl fmt::Debug
     }
 }
 
+/// Non-copyable evidence joining exact revocation to one routed server path.
+///
+/// The retained revocation input proves one exact authenticated RSA SHA-256
+/// OCSP status. The retained routed path proves target-server policy, two
+/// data-driven RSA SHA-256, SHA-384, or SHA-512 links to an exact reviewed
+/// Mozilla root, path-length policy, selected-anchor DNS policy, and supported
+/// intermediate DNS/IP constraints for the same exact target and issuer.
+///
+/// This wrapper does not reify routed responder-path policy, check responder or
+/// intermediate revocation, generalize certificate-path validation, or grant
+/// TLS, HTTP, OAuth, or network authority.
+pub struct BoundX509OcspRoutedReviewedServerRevocation<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    authenticated_revocation: AuthenticatedX509OcspRsaSha256TargetRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+    >,
+    routed_reviewed_server_path:
+        ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    target_validity_at_observation: ValidatedCertificateValidity,
+    issuer_validity_at_observation: ValidatedCertificateValidity,
+}
+
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+    BoundX509OcspRoutedReviewedServerRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the consumed complete authenticated target-revocation proof.
+    #[must_use]
+    pub const fn authenticated_revocation(
+        &self,
+    ) -> &AuthenticatedX509OcspRsaSha256TargetRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+    > {
+        &self.authenticated_revocation
+    }
+
+    /// Return the consumed complete routed reviewed-server path proof.
+    #[must_use]
+    pub const fn routed_reviewed_server_path(
+        &self,
+    ) -> &ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.routed_reviewed_server_path
+    }
+
+    /// Return target-certificate validity at the OCSP observation time.
+    #[must_use]
+    pub const fn target_validity_at_observation(&self) -> ValidatedCertificateValidity {
+        self.target_validity_at_observation
+    }
+
+    /// Return issuer-certificate validity at the OCSP observation time.
+    #[must_use]
+    pub const fn issuer_validity_at_observation(&self) -> ValidatedCertificateValidity {
+        self.issuer_validity_at_observation
+    }
+}
+
+impl fmt::Debug
+    for BoundX509OcspRoutedReviewedServerRevocation<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509OcspRoutedReviewedServerRevocation")
+    }
+}
+
+/// Non-copyable evidence joining routed OCSP revocation to one routed path.
+///
+/// The retained revocation input proves one exact authenticated OCSP status
+/// whose response signature was selected by data-driven RSA SHA-256,
+/// SHA-384, or SHA-512 policy. Its responder and target certificate issuer
+/// links remain fixed RSA SHA-256 proofs. The retained routed path proves
+/// target-server policy plus independently routed RSA SHA-256, SHA-384, or
+/// SHA-512 verification for both exact certificate adjacencies to one reviewed
+/// Mozilla root.
+///
+/// This wrapper does not route the OCSP certificate links, reify routed
+/// responder-path policy, check responder or intermediate revocation,
+/// generalize certificate-path validation, or grant TLS, HTTP, OAuth, or
+/// network authority.
+pub struct BoundX509OcspRoutedResponseReviewedServerRevocation<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    authenticated_revocation: AuthenticatedX509OcspRsaTargetRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+    >,
+    routed_reviewed_server_path:
+        ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    target_validity_at_observation: ValidatedCertificateValidity,
+    issuer_validity_at_observation: ValidatedCertificateValidity,
+}
+
+impl<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+    BoundX509OcspRoutedResponseReviewedServerRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >
+{
+    /// Return the consumed routed authenticated target-revocation proof.
+    #[must_use]
+    pub const fn authenticated_revocation(
+        &self,
+    ) -> &AuthenticatedX509OcspRsaTargetRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+    > {
+        &self.authenticated_revocation
+    }
+
+    /// Return the consumed routed reviewed-server path proof.
+    #[must_use]
+    pub const fn routed_reviewed_server_path(
+        &self,
+    ) -> &ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    > {
+        &self.routed_reviewed_server_path
+    }
+
+    /// Return target-certificate validity at the OCSP observation time.
+    #[must_use]
+    pub const fn target_validity_at_observation(&self) -> ValidatedCertificateValidity {
+        self.target_validity_at_observation
+    }
+
+    /// Return issuer-certificate validity at the OCSP observation time.
+    #[must_use]
+    pub const fn issuer_validity_at_observation(&self) -> ValidatedCertificateValidity {
+        self.issuer_validity_at_observation
+    }
+}
+
+impl fmt::Debug
+    for BoundX509OcspRoutedResponseReviewedServerRevocation<
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+        '_,
+    >
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509OcspRoutedResponseReviewedServerRevocation")
+    }
+}
+
 /// Bind authenticated revocation to the same exact reviewed server path.
 ///
 /// Failure order is stable: target identity, issuer identity, target validity,
@@ -388,6 +736,230 @@ pub fn bind_x509_ocsp_revocation_to_reviewed_server_path<
     Ok(BoundX509OcspReviewedServerRevocation {
         authenticated_revocation,
         reviewed_server_path,
+        target_validity_at_observation,
+        issuer_validity_at_observation,
+    })
+}
+
+/// Bind authenticated revocation to the same exact routed reviewed path.
+///
+/// Failure order is stable: target identity, issuer identity, target validity,
+/// then issuer validity. Object identity is required so independently decoded
+/// byte-equal certificates cannot cross this boundary. Success retains both
+/// complete non-copyable inputs plus validity of those exact path certificates
+/// at the OCSP observation time, without external effects.
+#[allow(clippy::type_complexity)]
+pub fn bind_x509_ocsp_revocation_to_routed_reviewed_server_path<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    authenticated_revocation: AuthenticatedX509OcspRsaSha256TargetRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+    >,
+    routed_reviewed_server_path:
+        ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+) -> Result<
+    BoundX509OcspRoutedReviewedServerRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509OcspReviewedServerRevocationBindingError,
+> {
+    let revocation_target = authenticated_revocation.target_issuer_link().child();
+    let server_path = routed_reviewed_server_path
+        .anchor_policy()
+        .reviewed_server_path();
+    let path_target = server_path.server_policy().certificate();
+    if !std::ptr::eq(revocation_target, path_target) {
+        return Err(X509OcspReviewedServerRevocationBindingError::target_mismatch());
+    }
+
+    let revocation_issuer = authenticated_revocation
+        .target_issuer_link()
+        .candidate_issuer();
+    let path_issuer = server_path
+        .reviewed_path()
+        .authenticated_intermediate()
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    if !std::ptr::eq(revocation_issuer, path_issuer) {
+        return Err(X509OcspReviewedServerRevocationBindingError::issuer_mismatch());
+    }
+
+    let observation_time = authenticated_revocation.revocation().observation_time();
+    let (target_validity_at_observation, issuer_validity_at_observation) =
+        retain_path_validity_at_observation(
+            validate_certificate_validity_at(path_target, &observation_time)
+                .map_err(|error| error.kind()),
+            || {
+                validate_certificate_validity_at(path_issuer, &observation_time)
+                    .map_err(|error| error.kind())
+            },
+        )?;
+
+    Ok(BoundX509OcspRoutedReviewedServerRevocation {
+        authenticated_revocation,
+        routed_reviewed_server_path,
+        target_validity_at_observation,
+        issuer_validity_at_observation,
+    })
+}
+
+/// Bind routed authenticated revocation to the same exact routed path.
+///
+/// Failure order is stable: target identity, issuer identity, target validity,
+/// then issuer validity. Object identity is required so independently decoded
+/// byte-equal certificates cannot cross this boundary. Success retains both
+/// complete non-copyable routed inputs plus validity of those exact path
+/// certificates at the OCSP observation time, without external effects.
+#[allow(clippy::type_complexity)]
+pub fn bind_x509_ocsp_routed_response_to_routed_reviewed_server_path<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    authenticated_revocation: AuthenticatedX509OcspRsaTargetRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+    >,
+    routed_reviewed_server_path:
+        ValidatedX509RsaConstructedReviewedIntermediateServerNameConstraintsPolicy<
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+) -> Result<
+    BoundX509OcspRoutedResponseReviewedServerRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+    X509OcspReviewedServerRevocationBindingError,
+> {
+    let revocation_target = authenticated_revocation.target_issuer_link().child();
+    let server_path = routed_reviewed_server_path
+        .anchor_policy()
+        .reviewed_server_path();
+    let path_target = server_path.server_policy().certificate();
+    if !std::ptr::eq(revocation_target, path_target) {
+        return Err(X509OcspReviewedServerRevocationBindingError::target_mismatch());
+    }
+
+    let revocation_issuer = authenticated_revocation
+        .target_issuer_link()
+        .candidate_issuer();
+    let path_issuer = server_path
+        .reviewed_path()
+        .authenticated_intermediate()
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    if !std::ptr::eq(revocation_issuer, path_issuer) {
+        return Err(X509OcspReviewedServerRevocationBindingError::issuer_mismatch());
+    }
+
+    let observation_time = authenticated_revocation.revocation().observation_time();
+    let (target_validity_at_observation, issuer_validity_at_observation) =
+        retain_path_validity_at_observation(
+            validate_certificate_validity_at(path_target, &observation_time)
+                .map_err(|error| error.kind()),
+            || {
+                validate_certificate_validity_at(path_issuer, &observation_time)
+                    .map_err(|error| error.kind())
+            },
+        )?;
+
+    Ok(BoundX509OcspRoutedResponseReviewedServerRevocation {
+        authenticated_revocation,
+        routed_reviewed_server_path,
         target_validity_at_observation,
         issuer_validity_at_observation,
     })

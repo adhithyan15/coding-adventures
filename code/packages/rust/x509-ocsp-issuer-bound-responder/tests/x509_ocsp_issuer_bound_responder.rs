@@ -7,15 +7,21 @@ use x509_certificate_policy::{
     X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile, X509CertificateRole,
 };
 use x509_ocsp_authenticated_responder::{
-    authenticate_x509_ocsp_rsa_sha256_responder, AuthenticatedX509OcspRsaSha256Responder,
-    X509OcspRsaSha256ResponderPolicy,
+    authenticate_x509_ocsp_rsa_responder, authenticate_x509_ocsp_rsa_sha256_responder,
+    AuthenticatedX509OcspRsaResponder, AuthenticatedX509OcspRsaSha256Responder,
+    X509OcspRsaResponderPolicy, X509OcspRsaSha256ResponderPolicy,
 };
 use x509_ocsp_basic_response::{decode_x509_ocsp_basic_response, X509OcspBasicResponse};
 use x509_ocsp_issuer_bound_responder::{
-    bind_x509_ocsp_authenticated_responder_to_issuer, X509OcspIssuerBoundResponderErrorKind,
+    bind_x509_ocsp_authenticated_responder_to_issuer,
+    bind_x509_ocsp_authenticated_rsa_responder_to_issuer, X509OcspIssuerBoundResponderErrorKind,
 };
 use x509_ocsp_responder_certificate_policy::validate_x509_ocsp_responder_certificate_policy;
 use x509_ocsp_responder_id_binding::bind_x509_ocsp_responder_id_to_certificate;
+use x509_ocsp_rsa_algorithm_policy::{
+    X509OcspRsaAlgorithmParametersPolicy, X509OcspRsaAlgorithmProfile,
+};
+use x509_ocsp_rsa_signature_routing::{X509OcspRsaSignatureRoute, X509OcspRsaSignatureVerifier};
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_sha256_issuer_link::{
     verify_x509_rsa_sha256_issuer_link, VerifiedX509RsaSha256IssuerLink,
@@ -164,6 +170,59 @@ fn authenticate<'response, 'response_encoded, 'responder, 'responder_encoded>(
     .unwrap()
 }
 
+fn authenticate_routed<'response, 'response_encoded, 'responder, 'responder_encoded>(
+    response: &'response X509OcspBasicResponse<'response_encoded>,
+    responder: &'responder X509Certificate<'responder_encoded>,
+) -> AuthenticatedX509OcspRsaResponder<'response, 'response_encoded, 'responder, 'responder_encoded>
+{
+    let responder_id =
+        bind_x509_ocsp_responder_id_to_certificate(response, responder, |left, right| {
+            left.encoded() == right.encoded()
+        })
+        .unwrap();
+    let role_policy = validate_certificate_role_policy(
+        responder,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(responder, &algorithm_profiles()).unwrap();
+    let certificate_policy = validate_x509_ocsp_responder_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        &observed_time(),
+    )
+    .unwrap();
+    let response_profiles = [X509OcspRsaAlgorithmProfile::new(
+        SHA256_WITH_RSA_ENCRYPTION_OID,
+        X509OcspRsaAlgorithmParametersPolicy::ExactDer(NULL_DER),
+        2_048,
+        4_096,
+        2_048,
+        4_096,
+        ALLOWED_EXPONENTS,
+    )
+    .unwrap()];
+    let response_routes = [X509OcspRsaSignatureRoute::new(
+        0,
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha256,
+    )];
+    authenticate_x509_ocsp_rsa_responder(
+        responder_id,
+        certificate_policy,
+        X509OcspRsaResponderPolicy::new(
+            RsaPublicKeyPolicy::new(2_048, 4_096, ALLOWED_EXPONENTS).unwrap(),
+            Asn1Limits::default(),
+            &response_profiles,
+            &response_routes,
+            RsaPublicOperationLimits::new(512).unwrap(),
+        ),
+    )
+    .unwrap()
+}
+
 fn issuer_link<'responder, 'responder_encoded, 'issuer, 'issuer_encoded>(
     responder: &'responder X509Certificate<'responder_encoded>,
     issuer: &'issuer X509Certificate<'issuer_encoded>,
@@ -256,5 +315,68 @@ fn rejects_a_byte_equal_distinct_responder_object() {
     assert_eq!(
         error.to_string(),
         "X.509 OCSP issuer-bound responder error EvidenceMismatch"
+    );
+}
+
+#[test]
+fn binds_one_exact_routed_authenticated_responder_to_its_sha256_candidate_issuer() {
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature();
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+
+    let bound = bind_x509_ocsp_authenticated_rsa_responder_to_issuer(
+        authenticate_routed(&response, &responder),
+        issuer_link(&responder, &issuer),
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        bound
+            .authenticated_responder()
+            .responder_certificate_policy()
+            .certificate(),
+        bound.responder_issuer_link().child()
+    ));
+    assert_eq!(
+        bound
+            .authenticated_responder()
+            .response_signature()
+            .verifier(),
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha256
+    );
+    assert!(std::ptr::eq(
+        bound.responder_issuer_link().candidate_issuer(),
+        &issuer
+    ));
+    assert_eq!(format!("{bound:?}"), "IssuerBoundX509OcspRsaResponder");
+}
+
+#[test]
+fn routed_binding_rejects_a_byte_equal_distinct_responder_object() {
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let distinct_responder =
+        decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature();
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+
+    let error = bind_x509_ocsp_authenticated_rsa_responder_to_issuer(
+        authenticate_routed(&response, &responder),
+        issuer_link(&distinct_responder, &issuer),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspIssuerBoundResponderErrorKind::EvidenceMismatch
     );
 }

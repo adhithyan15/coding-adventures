@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add an explicit default-off deferred XAML package experiment, routed through all exports, layout variants and project roots; reject it for other backends before emission. Existing builder calls remain eager.
+
 ### Added — `mosaic-compile backends`
 
 - New `mosaic-compile backends [--native]` prints the package backends, one per line, in build order; build scripts read it instead of keeping their own list. `--backend` is an enum in the CLI spec (pinned to `Backend::ALL` by `cli_spec_backend_values_are_backend_all`), and `pkg`'s parser, its error message and single-file mode's allowed list are derived from `Backend` instead of three hand-kept copies.

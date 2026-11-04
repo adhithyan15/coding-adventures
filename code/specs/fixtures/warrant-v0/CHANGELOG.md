@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Link the P006a executed syntax corpus while preserving this later-phase
+  design inventory and its separate typing/binding/evidence acceptance work.
+
 - Add the VER04 design acceptance inventory: eight phase-specific positive
   cases and twenty-four negative cases covering source, typing, contracts,
   bindings, vacuity and evidence/generation boundaries.

@@ -37,7 +37,7 @@ use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_package_artifact_builder::{
-    build_package_with_ios_ui_tests, compose_component_with_model,
+    build_package_with_experiments, compose_component_with_model, BuildExperiments,
     compose_component_with_model_in_package, Backend, BuildOptions, BuildProfile,
 };
 use mosaic_vm::MosaicVM;
@@ -1675,12 +1675,18 @@ fn run_pkg(result: &cli_builder::types::ParseResult) {
         theme: theme.map(|s| s.to_string()),
     };
 
-    match build_package_with_ios_ui_tests(
+    match build_package_with_experiments(
         &opts,
         profile,
         runtime_library.as_deref(),
         &token_palette,
         &ios_ui_tests,
+        &BuildExperiments {
+            xaml_deferred_conditionals: result.flags
+                .get("experimental-deferred-conditionals")
+                .and_then(|v| v.as_bool())
+                .unwrap_or(false),
+        },
     ) {
         Ok(result) => {
             for path in &result.artifacts {

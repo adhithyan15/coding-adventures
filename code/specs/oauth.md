@@ -1438,20 +1438,22 @@ or non-DNS anchor constraints, derive the initial path-length cap, check
 revocation, generalize path validation, perform TLS or HTTP, authorize OAuth
 transport, or grant network authority. Concrete HTTPS and live-provider
 readiness remain unavailable.
-An additive bounded intermediate DNS-policy follow-up now consumes that exact
-anchor-policy proof. It derives the intermediate certificate, target
+An additive bounded intermediate name-constraints follow-up now consumes that
+exact anchor-policy proof. It derives the intermediate certificate, target
 certificate, and already-validated target SAN extension index only through the
 retained routed construction. An absent NameConstraints extension succeeds
 without manufacturing evidence; a present extension must be critical and must
-decode under a separate caller-owned limit before every target dNSName is
-checked against the supported permitted-and-excluded-DNS subset. Success keeps
-the complete target policy, both routed signatures, complete intermediate
-policy, advanced caller-owned path-length state, reviewed root selection,
-anchor-policy evidence, and optional payload-free intermediate constrained-
-name evidence together. This pure public-certificate composition performs no
+decode under a separate caller-owned limit before every retained target
+dNSName and IPv4 or IPv6 iPAddress is evaluated together against the supported
+permitted-and-excluded DNS and IP subsets. Success keeps the complete target
+policy, both routed signatures, complete intermediate policy, advanced
+construction-derived path-length state, reviewed root selection, anchor-policy
+evidence, and optional payload-free DNS/IP counts together. The earlier DNS
+count remains available as compatibility evidence only after the combined
+evaluation succeeds. This pure public-certificate composition performs no
 credential access, signing, storage, clock acquisition, audit event, trace
 emission, I/O, or external effect. It does not support additional
-intermediates, derive the initial path-length cap, apply IP or other name-form
+intermediates, apply other GeneralName forms or excluded or non-DNS anchor
 constraints, verify a hostname, check revocation, generalize path validation,
 perform TLS or HTTP, authorize OAuth transport, or grant network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
@@ -1676,10 +1678,15 @@ terminal issuer must be the exact decoded certificate retained by the reviewed
 root evidence. Distinct non-copyable success evidence keeps all three inputs,
 including complete intermediate policy and the advanced path-length state, so
 callers cannot splice authenticated links from separately constructed paths or
-discard the reviewed terminal. The caller-supplied initial path-length state
-still is not derived from anchor policy, and this fixed-shape composition does
-not apply anchor constraints, target policy, revocation, generalized path
-validation, TLS, HTTP, OAuth transport, or network authority.
+discard the reviewed terminal. The fixed-shape binder no longer accepts caller-
+supplied initial path-length state: after the exact two-link shape and retained
+endpoint identities are checked, it derives the RFC 5280 initial capacity of
+one intermediate from that construction and advances it using only the
+complete retained intermediate policy. The lower-level caller-owned transition
+remains available for future generalized traversal, but it cannot directly
+create this fixed reviewed-path proof. This composition does not apply anchor
+constraints, target policy, revocation, generalized path validation, TLS,
+HTTP, OAuth transport, or network authority.
 A bounded construction-bound target-policy follow-up now consumes that complete
 authenticated reviewed path together with complete validated server-certificate
 policy. It fails closed unless the server-policy certificate is the same exact
@@ -1687,11 +1694,10 @@ decoded target object retained by the constructed path, then returns distinct
 non-copyable evidence retaining both complete inputs. This prevents callers
 from attaching hostname, validity, purpose, end-entity role, critical-extension,
 and algorithm policy for one certificate to a separately constructed and
-authenticated target, including a byte-equal re-decode. The result still uses
-the caller-supplied initial path-length state retained by the prior proof and
-does not apply anchor or intermediate name constraints, other anchor policy,
-revocation, generalized path validation, TLS, HTTP, OAuth transport, or network
-authority.
+authenticated target, including a byte-equal re-decode. The result retains the
+construction-derived fixed-shape path-length state and does not apply anchor or
+intermediate name constraints, other anchor policy, revocation, generalized
+path validation, TLS, HTTP, OAuth transport, or network authority.
 A bounded construction-bound anchor-policy follow-up now consumes that exact
 target-policy result and applies the selected reviewed terminal's exact
 supported DNS constraints to the exact target certificate retained by the
@@ -1701,10 +1707,10 @@ repository-owned bounded NameConstraints and Subject Alternative Name decoders,
 require every target dNSName to satisfy at least one permitted DNS subtree, and
 retain optional payload-free count evidence. Callers cannot substitute another
 constructed path, reviewed terminal, target certificate, or SAN collection.
-The result still retains caller-supplied initial path-length state and does not
-apply intermediate name constraints, excluded or non-DNS anchor constraints,
-other anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
-transport, or network authority.
+The result retains the construction-derived fixed-shape path-length state and
+does not apply intermediate name constraints, excluded or non-DNS anchor
+constraints, other anchor policy, revocation, generalized path validation,
+TLS, HTTP, OAuth transport, or network authority.
 A bounded construction-bound intermediate-policy follow-up now consumes that
 complete anchor-policy result and applies the exact retained intermediate's
 NameConstraints extension to the exact retained target. An absent extension
@@ -1715,9 +1721,9 @@ permitted policy, excluded names take precedence, and wildcard targets that
 overlap an excluded subtree fail closed. The target, intermediate, constructed
 path, reviewed terminal, and SAN collection are all derived through the one
 retained proof, so callers cannot splice policy evidence from another path or
-certificate. This fixed two-link boundary still retains caller-supplied initial
-path-length state and does not apply excluded or non-DNS anchor constraints,
-other anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
+certificate. This fixed two-link boundary retains construction-derived path-
+length state and does not apply excluded or non-DNS anchor constraints, other
+anchor policy, revocation, generalized path validation, TLS, HTTP, OAuth
 transport, or network authority.
 Certificate-wide role policy can now bind caller-owned critical-extension
 recognition and algorithm-independent role semantics to the same exact decoded
@@ -2176,8 +2182,8 @@ network authority. Concrete HTTPS remains unavailable.
 A bounded `x509-ocsp-rsa-signature-routing` prerequisite now consumes the
 non-copyable response/key evidence from `x509-ocsp-rsa-algorithm-policy` and
 routes its selected profile index through an explicit caller-owned table to
-one reviewed fixed repository-owned verifier. The initial table vocabulary is
-limited to the RSA PKCS #1 v1.5 SHA-256 and SHA-512 OCSP verifiers. Missing and
+one reviewed fixed repository-owned verifier. The table vocabulary covers the
+RSA PKCS #1 v1.5 SHA-256, SHA-384, and SHA-512 OCSP verifiers. Missing and
 duplicate routes fail before cryptography, while a route that names a verifier
 inconsistent with the selected profile fails that verifier's exact algorithm
 identifier and parameter checks. Success retains both the consumed algorithm
@@ -2189,7 +2195,8 @@ action, audit or trace emission, I/O, or external effect. It does not authorize
 or match a responder, bind `CertID` or status to a certificate or constructed
 path, apply certificate role or extension policy, decide freshness or
 revocation, establish trust, fetch data, read a clock, or grant TLS, HTTP,
-OAuth transport, or network authority. Concrete HTTPS remains unavailable.
+OAuth transport, or network authority. Concrete HTTPS and live-provider
+readiness remain unavailable.
 
 A bounded `x509-ocsp-responder-id-binding` prerequisite now matches one exact
 structurally decoded `BasicOCSPResponse` to one exact decoded candidate
@@ -2230,31 +2237,42 @@ exact `ResponderID`-to-certificate binding and complete responder-certificate
 policy. It rejects evidence retained from distinct decoded certificate objects
 before cryptographic work, derives and validates the RSA public key from that
 same policy-retained certificate under caller-owned strength and resource
-limits, and uses the repository-owned RSA PKCS #1 v1.5 SHA-256 verifier on the
-exact response retained by the identifier binding. Its non-copyable result
-retains the identifier, certificate-policy, and response-signature evidence so
-the matched response, policy-approved candidate, or verified key cannot be
-silently substituted. This authenticates only one policy-approved delegated
-responder candidate to one response. It does not prove that the target
-certificate's issuer signed or authorized the responder certificate, construct
-or validate a responder path, establish trust, check responder-certificate
-revocation, bind a `CertID` or revocation decision, fetch or cache data, read a
-clock, perform TLS or HTTP, authorize OAuth transport, or grant network
-authority. Concrete HTTPS remains unavailable.
+limits. A new data-driven entry point then validates the exact retained response
+and derived key against caller-owned RSA algorithm profiles and routes the
+selected profile through the repository-owned SHA-256, SHA-384, or SHA-512
+PKCS #1 v1.5 verifier. The original fixed SHA-256 entry point remains as a
+compatibility surface for current callers. Both non-copyable results retain the
+identifier, certificate-policy, and response-signature evidence so the matched
+response, policy-approved candidate, selected profile, route, or verified key
+cannot be silently substituted. This public-data composition performs no
+credential access, edit, signing operation, provider action, audit or trace
+emission, I/O, or external effect. It authenticates only one policy-approved
+delegated responder candidate to one response. It does not prove that the
+target certificate's issuer signed or authorized the responder certificate,
+construct or validate a responder path, establish trust, check responder-
+certificate revocation, bind a `CertID` or revocation decision, fetch or cache
+data, read a clock, perform TLS or HTTP, authorize OAuth transport, or grant
+network authority. Concrete HTTPS and live-provider readiness remain
+unavailable.
 
-A bounded `x509-ocsp-issuer-bound-responder` composition now consumes that
-exact authenticated-responder evidence and one exact repository-owned RSA
-SHA-256 issuer link for the responder certificate. It rejects evidence whose
-responder certificates are distinct decoded objects, including byte-equal
-re-decodes, before returning non-copyable evidence retaining both proofs.
-Together, those proofs establish that one exact candidate issuer with an
-issuing-CA role signed the policy-approved OCSP-signing responder certificate,
-whose key signed the exact response. This does not establish that the candidate
+A bounded `x509-ocsp-issuer-bound-responder` composition now consumes either
+the fixed RSA SHA-256 or the data-driven authenticated-responder evidence and
+one exact repository-owned RSA SHA-256 issuer link for the responder
+certificate. The additive data-driven result preserves the caller-selected
+SHA-256, SHA-384, or SHA-512 response-signature route without claiming that the
+responder-certificate issuer-link algorithm is routed. Both entry points reject
+evidence whose responder certificates are distinct decoded objects, including
+byte-equal re-decodes, before returning non-copyable evidence retaining both
+proofs. Together, those proofs establish that one exact candidate issuer with
+an issuing-CA role signed the policy-approved OCSP-signing responder certificate,
+whose key signed the exact response. This pure public-data composition performs
+no credential access, edit, signing operation, provider action, audit or trace
+emission, I/O, or external effect. It does not establish that the candidate
 issuer issued any particular target certificate, bind a `CertID` or revocation
 decision, construct or validate a responder path, establish trust, check the
 responder certificate's revocation, fetch or cache data, read a clock, perform
 TLS or HTTP, authorize OAuth transport, or grant network authority. Concrete
-HTTPS remains unavailable.
+HTTPS and live-provider readiness remain unavailable.
 
 A bounded `x509-ocsp-cert-id-binding` prerequisite now binds one exact
 structurally decoded `SingleResponse` to one exact target certificate and one
@@ -2304,12 +2322,15 @@ trust, perform TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS remains unavailable.
 
 A bounded `x509-ocsp-authenticated-target-revocation` composition now consumes
-that exact good-and-fresh target/issuer result, one issuer-bound authenticated
-RSA SHA-256 responder, and one repository-owned RSA SHA-256 issuer link for the
-target certificate. It requires the revocation result's exact `SingleResponse`
-object to occur inside the signed `BasicOCSPResponse`, requires the target link
-to retain the exact target certificate, and requires both certificate links and
-the `CertID` binding to retain the same exact issuer certificate object.
+that exact good-and-fresh target/issuer result, either a fixed RSA SHA-256 or a
+data-driven issuer-bound authenticated responder, and one repository-owned RSA
+SHA-256 issuer link for the target certificate. The additive data-driven result
+preserves the caller-selected SHA-256, SHA-384, or SHA-512 response-signature
+route without claiming that either certificate issuer-link algorithm is routed.
+Both entry points require the revocation result's exact `SingleResponse` object
+to occur inside the signed `BasicOCSPResponse`, require the target link to retain
+the exact target certificate, and require both certificate links and the
+`CertID` binding to retain the same exact issuer certificate object.
 It requires the signed response to contain exactly one `SingleResponse`, so an
 unexamined entry encoded under another hash algorithm cannot conflict with the
 selected target status, and revalidates the responder certificate at the exact
@@ -2319,9 +2340,10 @@ is rejected. Non-copyable success evidence retains all three complete proofs
 and the exact-time responder-validity result, establishing only that the same
 candidate issuer signed the target and authorized the then-valid delegated
 responder whose key signed the exact unambiguous response containing the good-
-and-fresh target status. This fixed RSA SHA-256 composition does not construct
-or validate a
-certificate path, establish issuer trust, apply responder-path or responder-
+and-fresh target status. This public-data composition performs no credential
+access, edit, signing operation, provider action, audit or trace emission, I/O,
+or external effect. It does not construct or validate a certificate path,
+establish issuer trust, apply responder-path or responder-
 revocation policy, interpret any OCSP extension, fetch or cache data, read a
 clock, perform TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS remains unavailable.
@@ -2348,6 +2370,50 @@ validation, establish a reviewed responder path, check responder-certificate
 or intermediate revocation, interpret unsupported OCSP extensions, fetch or
 cache data, read a clock, implement TLS or HTTP, authorize OAuth transport, or
 grant network authority. Concrete HTTPS remains unavailable.
+
+A bounded data-driven follow-up in the same package now joins that exact
+authenticated OCSP target-revocation evidence to the routed constructed
+reviewed-intermediate server-path evidence. The routed input retains
+certificate-bound child algorithm policy, certificate-wide issuer role policy,
+certificate-bound issuer RSA algorithm/key policy, and the selected
+repository-owned RSA PKCS #1 v1.5 SHA-256, SHA-384, or SHA-512 verifier for each
+of the two exact constructed adjacencies. Binding still requires both inputs to
+retain the same exact decoded target and intermediate objects; independently
+decoded byte-equal certificates fail closed. It then revalidates those exact
+path certificates at the OCSP proof's retained observation time and keeps both
+fresh validity tokens with both complete non-copyable proofs. Stable failures
+preserve target-before-issuer identity and validity ordering without exposing
+certificate, response, key, signature, status, hostname, algorithm, or time
+payloads. This pure public-data composition performs no new cryptography,
+credential access, signing, storage, clock acquisition, audit event, trace
+emission, I/O, or external effect. It does not yet reify the routed responder
+path, apply routed responder name or no-check policy, generalize certificate-
+path validation, check responder or intermediate revocation, interpret
+unsupported OCSP extensions, fetch or cache data, implement TLS or HTTP,
+authorize OAuth transport, or grant network authority. Concrete HTTPS and
+live-provider readiness remain unavailable.
+
+An additive routed-response follow-up in the same package now joins the
+data-driven authenticated OCSP target-revocation evidence to that same routed
+constructed reviewed-intermediate server-path evidence. The OCSP proof retains
+the caller-selected RSA PKCS #1 v1.5 SHA-256, SHA-384, or SHA-512 response-
+signature verifier, while its responder-certificate and target-certificate
+issuer links remain deliberately fixed to repository-owned RSA SHA-256. The
+server-path proof independently retains the selected SHA-256, SHA-384, or
+SHA-512 verifier for each exact target-to-intermediate and intermediate-to-root
+adjacency. Binding requires the two complete non-copyable inputs to retain the
+same exact decoded target and intermediate objects, rejects byte-equal
+independent decodes, revalidates both path certificates at the OCSP proof's
+retained observation time, and keeps both fresh validity tokens with both
+complete proofs. Existing fixed-response and fixed-path entry points remain
+unchanged. This pure public-data composition performs no new cryptography,
+credential access, signing, storage, clock acquisition, audit event, trace
+emission, I/O, or external effect. It does not route either certificate link
+inside the OCSP proof, reify a routed responder path, apply responder name or
+no-check policy, generalize certificate-path validation, check responder or
+intermediate revocation, interpret unsupported OCSP extensions, fetch or cache
+data, implement TLS or HTTP, authorize OAuth transport, or grant network
+authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete

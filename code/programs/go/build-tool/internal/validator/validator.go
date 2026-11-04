@@ -165,6 +165,7 @@ func ValidateBuildFilesAgainst(packages, known []discovery.Package, graph *direc
 	problems = append(problems, validateNoSilentlyTruncatedCommands(packages)...)
 	problems = append(problems, validateWindowsEnvAssignments(packages)...)
 	problems = append(problems, validateWindowsBuildLines(packages)...)
+	problems = append(problems, validateWindowsPOSIXSyntax(packages)...)
 	problems = append(problems, validateLuaIsolatedBuildFiles(packages)...)
 	problems = append(problems, validatePerlBuildFiles(packages)...)
 	problems = append(problems, validateRustWorkspaceMembers(packages)...)
@@ -830,9 +831,8 @@ func unquoted(command string) string {
 // powershellAfterSemicolon matches a PowerShell statement after a `;`:
 // `if (` or a Verb-Noun cmdlet in any case. PowerShell variables are caught by
 // powershellVariable wherever they are; a bare `$` or `exit` after `;` is as
-// likely POSIX. (A POSIX `if ...; then ...; fi` also has `;`s;
-// BUILD_windows files written that way are a separate, shell-specific
-// problem this check leaves alone.)
+// likely POSIX. (A POSIX `if ...; then ...; fi` also has `;`s; that is
+// validateWindowsPOSIXSyntax's concern, in windows_posix_syntax.go.)
 var powershellAfterSemicolon = regexp.MustCompile(`(?i);\s*(if\s*\(|[a-z]+-[a-z]+\b)`)
 
 // windowsBuildLineProblem says why a `BUILD_windows` line cannot run under

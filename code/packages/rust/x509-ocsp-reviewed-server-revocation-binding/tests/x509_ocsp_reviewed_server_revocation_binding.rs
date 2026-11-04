@@ -10,29 +10,57 @@ use x509_certificate_path_construction::{
 use x509_certificate_path_length_policy::X509CertificatePathLengthState;
 use x509_certificate_policy::{
     classify_certificate_self_issued, validate_certificate_algorithm_policy,
-    validate_certificate_role_policy, ValidatedCertificateValidity, X509AlgorithmParametersPolicy,
-    X509CertificateAlgorithmProfile, X509CertificatePurposePolicy, X509CertificateRole,
+    validate_certificate_role_policy, ValidatedCertificateAlgorithmPolicy,
+    ValidatedCertificateValidity, X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile,
+    X509CertificatePurposePolicy, X509CertificateRole,
 };
 use x509_intermediate_certificate_policy::validate_x509_intermediate_certificate_policy;
 use x509_ocsp_authenticated_responder::{
-    authenticate_x509_ocsp_rsa_sha256_responder, X509OcspRsaSha256ResponderPolicy,
+    authenticate_x509_ocsp_rsa_responder, authenticate_x509_ocsp_rsa_sha256_responder,
+    X509OcspRsaResponderPolicy, X509OcspRsaSha256ResponderPolicy,
 };
-use x509_ocsp_authenticated_target_revocation::authenticate_x509_ocsp_rsa_sha256_target_revocation;
+use x509_ocsp_authenticated_target_revocation::{
+    authenticate_x509_ocsp_rsa_sha256_target_revocation,
+    authenticate_x509_ocsp_rsa_target_revocation,
+};
 use x509_ocsp_cert_id_binding::{bind_x509_ocsp_cert_id_to_certificates, X509OcspCertIdHashInput};
-use x509_ocsp_issuer_bound_responder::bind_x509_ocsp_authenticated_responder_to_issuer;
+use x509_ocsp_issuer_bound_responder::{
+    bind_x509_ocsp_authenticated_responder_to_issuer,
+    bind_x509_ocsp_authenticated_rsa_responder_to_issuer,
+};
 use x509_ocsp_responder_certificate_policy::validate_x509_ocsp_responder_certificate_policy;
 use x509_ocsp_responder_id_binding::bind_x509_ocsp_responder_id_to_certificate;
 use x509_ocsp_response::{
     decode_x509_ocsp_basic_response_bytes, decode_x509_ocsp_response, X509OcspBasicResponse,
 };
 use x509_ocsp_reviewed_server_revocation_binding::{
-    bind_x509_ocsp_revocation_to_reviewed_server_path, reify_x509_ocsp_reviewed_responder_path,
+    bind_x509_ocsp_revocation_to_reviewed_server_path,
+    bind_x509_ocsp_revocation_to_routed_reviewed_server_path,
+    bind_x509_ocsp_routed_response_to_routed_reviewed_server_path,
+    reify_x509_ocsp_reviewed_responder_path,
     validate_x509_ocsp_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_reviewed_responder_intermediate_dns_policy,
     validate_x509_ocsp_reviewed_responder_no_check_policy,
     X509OcspReviewedServerRevocationBindingErrorKind,
 };
 use x509_ocsp_revocation_policy::validate_bound_x509_ocsp_revocation;
+use x509_ocsp_rsa_algorithm_policy::{
+    X509OcspRsaAlgorithmParametersPolicy, X509OcspRsaAlgorithmProfile,
+};
+use x509_ocsp_rsa_signature_routing::{X509OcspRsaSignatureRoute, X509OcspRsaSignatureVerifier};
+use x509_rsa_algorithm_policy::{
+    validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
+};
+use x509_rsa_constructed_path_signature_routing::{
+    bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor,
+    bind_x509_rsa_constructed_path_intermediate_policy,
+    bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor,
+    bind_x509_rsa_constructed_reviewed_intermediate_server_path,
+    validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy,
+    validate_x509_rsa_constructed_reviewed_intermediate_server_name_constraints_policy,
+    verify_x509_rsa_constructed_path_policy_signature,
+    BoundX509RsaConstructedReviewedIntermediatePath,
+};
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_sha256_issuer_link::{
     advance_constructed_x509_rsa_sha256_intermediate_path_length,
@@ -49,6 +77,7 @@ use x509_rsa_sha256_reviewed_server_link::{
     validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_anchor_policy,
     validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_name_constraints_policy,
 };
+use x509_rsa_signature_routing::{X509RsaSignatureRoute, X509RsaSignatureVerifier};
 use x509_server_certificate_policy::validate_x509_server_certificate_policy;
 use x509_time::{decode_x509_time, X509Time};
 use x509_webpki_root_anchor_selection::select_reviewed_webpki_root_anchor;
@@ -138,6 +167,45 @@ fn link_policy() -> X509RsaSha256IssuerLinkPolicy<'static> {
         Asn1Limits::default(),
         RsaPublicOperationLimits::new(512).unwrap(),
     )
+}
+
+fn algorithm_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+    profiles: &[X509CertificateAlgorithmProfile<'static>],
+) -> ValidatedCertificateAlgorithmPolicy<'certificate, 'encoded> {
+    validate_certificate_algorithm_policy(certificate, profiles).unwrap()
+}
+
+fn rsa_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+    profiles: &[X509CertificateAlgorithmProfile<'static>],
+) -> ValidatedX509RsaAlgorithmPolicy<'certificate, 'encoded> {
+    validate_x509_rsa_algorithm_policy(
+        algorithm_policy(certificate, profiles),
+        RsaPublicKeyPolicy::new(2_048, 4_096, ALLOWED_EXPONENTS).unwrap(),
+        Asn1Limits::default(),
+    )
+    .unwrap()
+}
+
+fn issuing_ca_role_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+) -> x509_certificate_policy::ValidatedCertificateRolePolicy<'certificate, 'encoded> {
+    validate_certificate_role_policy(
+        certificate,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |_| true,
+    )
+    .unwrap()
+}
+
+fn route() -> X509RsaSignatureRoute {
+    X509RsaSignatureRoute::new(0, X509RsaSignatureVerifier::RsaPkcs1V15Sha256)
+}
+
+fn operation_limits() -> RsaPublicOperationLimits {
+    RsaPublicOperationLimits::new(512).unwrap()
 }
 
 fn server_policy<'certificate, 'encoded>(
@@ -233,6 +301,61 @@ fn constructed_reviewed_path<'path, 'target, 'target_encoded, 'candidates, 'cand
     .unwrap()
 }
 
+fn routed_constructed_reviewed_path<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    path: &'path ConstructedX509CertificatePath<
+        'target,
+        'target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> BoundX509RsaConstructedReviewedIntermediatePath<
+    'path,
+    'target,
+    'target_encoded,
+    'candidates,
+    'candidate_encoded,
+> {
+    let profiles = algorithm_profiles();
+    let intermediate = path.issuer_certificate(0).unwrap();
+    let root = path.issuer_certificate(1).unwrap();
+    let intermediate_signature = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(0).unwrap(),
+        algorithm_policy(path.target_certificate(), &profiles),
+        issuing_ca_role_policy(intermediate),
+        rsa_policy(intermediate, &profiles),
+        &[route()],
+        operation_limits(),
+    )
+    .unwrap();
+    let intermediate = bind_x509_rsa_constructed_path_intermediate_policy(
+        intermediate_signature,
+        intermediate_policy(intermediate),
+    )
+    .unwrap();
+    let terminal_signature = verify_x509_rsa_constructed_path_policy_signature(
+        path.adjacent_link(1).unwrap(),
+        algorithm_policy(intermediate.intermediate_policy().certificate(), &profiles),
+        issuing_ca_role_policy(root),
+        rsa_policy(root, &profiles),
+        &[route()],
+        operation_limits(),
+    )
+    .unwrap();
+    let terminal = bind_x509_rsa_constructed_path_terminal_to_reviewed_anchor(
+        terminal_signature,
+        select_reviewed_webpki_root_anchor(root).unwrap(),
+    )
+    .unwrap();
+
+    bind_x509_rsa_constructed_intermediate_path_to_reviewed_anchor(intermediate, terminal).unwrap()
+}
+
 fn issuer_link<'child, 'child_encoded, 'issuer, 'issuer_encoded>(
     child: &'child X509Certificate<'child_encoded>,
     issuer: &'issuer X509Certificate<'issuer_encoded>,
@@ -301,6 +424,75 @@ fn issuer_bound_responder<'response, 'response_encoded, 'issuer, 'issuer_encoded
         .unwrap()
 }
 
+fn issuer_bound_routed_responder<'response, 'response_encoded, 'issuer, 'issuer_encoded>(
+    response: &'response X509OcspBasicResponse<'response_encoded>,
+    issuer: &'issuer X509Certificate<'issuer_encoded>,
+) -> x509_ocsp_issuer_bound_responder::IssuerBoundX509OcspRsaResponder<
+    'response,
+    'response_encoded,
+    'response,
+    'response_encoded,
+    'issuer,
+    'issuer_encoded,
+> {
+    let responder = response.get(0).unwrap();
+    let responder_id =
+        bind_x509_ocsp_responder_id_to_certificate(response, responder, |left, right| {
+            left.encoded() == right.encoded()
+        })
+        .unwrap();
+    let role_policy = validate_certificate_role_policy(
+        responder,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| {
+            oid.equals(&[2, 5, 29, 15])
+                || oid.equals(&[2, 5, 29, 19])
+                || oid.equals(&[2, 5, 29, 37])
+        },
+    )
+    .unwrap();
+    let profiles = algorithm_profiles();
+    let algorithm_policy = validate_certificate_algorithm_policy(responder, &profiles).unwrap();
+    let certificate_policy = validate_x509_ocsp_responder_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        &observed_time(),
+    )
+    .unwrap();
+    let response_profiles = [X509OcspRsaAlgorithmProfile::new(
+        SHA256_WITH_RSA_ENCRYPTION_OID,
+        X509OcspRsaAlgorithmParametersPolicy::ExactDer(NULL_DER),
+        2_048,
+        8_192,
+        2_048,
+        4_096,
+        ALLOWED_EXPONENTS,
+    )
+    .unwrap()];
+    let response_routes = [X509OcspRsaSignatureRoute::new(
+        0,
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha256,
+    )];
+    let authenticated = authenticate_x509_ocsp_rsa_responder(
+        responder_id,
+        certificate_policy,
+        X509OcspRsaResponderPolicy::new(
+            RsaPublicKeyPolicy::new(2_048, 4_096, ALLOWED_EXPONENTS).unwrap(),
+            Asn1Limits::default(),
+            &response_profiles,
+            &response_routes,
+            RsaPublicOperationLimits::new(512).unwrap(),
+        ),
+    )
+    .unwrap();
+    bind_x509_ocsp_authenticated_rsa_responder_to_issuer(
+        authenticated,
+        issuer_link(responder, issuer),
+    )
+    .unwrap()
+}
+
 macro_rules! authenticate_revocation {
     ($binding:ident, $authenticated:ident, $response:expr, $target:expr, $issuer:expr) => {
         let issuer_bound = issuer_bound_responder($response, $issuer);
@@ -318,6 +510,31 @@ macro_rules! authenticate_revocation {
         .unwrap();
         let revocation = validate_bound_x509_ocsp_revocation(&$binding, observed_time()).unwrap();
         let $authenticated = authenticate_x509_ocsp_rsa_sha256_target_revocation(
+            issuer_bound,
+            revocation,
+            issuer_link($target, $issuer),
+        )
+        .unwrap();
+    };
+}
+
+macro_rules! authenticate_routed_revocation {
+    ($binding:ident, $authenticated:ident, $response:expr, $target:expr, $issuer:expr) => {
+        let issuer_bound = issuer_bound_routed_responder($response, $issuer);
+        let $binding = bind_x509_ocsp_cert_id_to_certificates(
+            $response.response_data().get(0).unwrap(),
+            $target,
+            $issuer,
+            |algorithm, input: X509OcspCertIdHashInput<'_>| {
+                algorithm
+                    .algorithm()
+                    .equals(SHA1_OID)
+                    .then(|| sum1(input.bytes()))
+            },
+        )
+        .unwrap();
+        let revocation = validate_bound_x509_ocsp_revocation(&$binding, observed_time()).unwrap();
+        let $authenticated = authenticate_x509_ocsp_rsa_target_revocation(
             issuer_bound,
             revocation,
             issuer_link($target, $issuer),
@@ -353,6 +570,39 @@ macro_rules! reviewed_server_path {
         .unwrap();
         let $validated =
             validate_x509_rsa_sha256_constructed_reviewed_intermediate_server_name_constraints_policy(
+                anchor,
+                Asn1Limits::default(),
+                Asn1Limits::default(),
+            )
+            .unwrap();
+    };
+}
+
+macro_rules! routed_reviewed_server_path {
+    ($validated:ident, $path:ident, $target:expr, $candidates:expr) => {
+        let $path = construct_unique_x509_certificate_path_by(
+            $target,
+            $candidates,
+            2,
+            3,
+            |certificate| std::ptr::eq(certificate, &$candidates[1]),
+            |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+        )
+        .unwrap();
+        let reviewed = routed_constructed_reviewed_path(&$path);
+        let server = bind_x509_rsa_constructed_reviewed_intermediate_server_path(
+            server_policy($target),
+            reviewed,
+        )
+        .unwrap();
+        let anchor = validate_x509_rsa_constructed_reviewed_intermediate_server_anchor_policy(
+            server,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+        let $validated =
+            validate_x509_rsa_constructed_reviewed_intermediate_server_name_constraints_policy(
                 anchor,
                 Asn1Limits::default(),
                 Asn1Limits::default(),
@@ -586,6 +836,276 @@ fn rejects_a_byte_equal_distinct_issuer_after_matching_target_inner() {
         error.to_string(),
         "X.509 OCSP reviewed-server revocation binding error IssuerMismatch"
     );
+    let _ = binding;
+    let _ = path;
+}
+
+#[test]
+fn binds_authenticated_ocsp_to_the_same_exact_routed_reviewed_server_path() {
+    run_fixture_proof_test(
+        binds_authenticated_ocsp_to_the_same_exact_routed_reviewed_server_path_inner,
+    );
+}
+
+fn binds_authenticated_ocsp_to_the_same_exact_routed_reviewed_server_path_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_revocation!(binding, authenticated, &response, &leaf, &candidates[0]);
+    routed_reviewed_server_path!(reviewed_server, path, &leaf, &candidates);
+
+    let bound =
+        bind_x509_ocsp_revocation_to_routed_reviewed_server_path(authenticated, reviewed_server)
+            .unwrap();
+
+    assert!(std::ptr::eq(
+        bound
+            .authenticated_revocation()
+            .target_issuer_link()
+            .child(),
+        &leaf
+    ));
+    assert!(std::ptr::eq(
+        bound
+            .routed_reviewed_server_path()
+            .anchor_policy()
+            .reviewed_server_path()
+            .reviewed_path()
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundX509OcspRoutedReviewedServerRevocation"
+    );
+    assert_eq!(
+        format!("{:?}", bound.target_validity_at_observation()),
+        "ValidatedCertificateValidity { private: () }"
+    );
+    assert_eq!(
+        bound.issuer_validity_at_observation(),
+        ValidatedCertificateValidity::clone(&bound.issuer_validity_at_observation())
+    );
+    let _ = binding;
+    let _ = path;
+}
+
+#[test]
+fn routed_binding_rejects_a_byte_equal_distinct_target_before_issuer_comparison() {
+    run_fixture_proof_test(
+        routed_binding_rejects_a_byte_equal_distinct_target_before_issuer_comparison_inner,
+    );
+}
+
+fn routed_binding_rejects_a_byte_equal_distinct_target_before_issuer_comparison_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let ocsp_leaf = decode(&leaf_encoded);
+    let path_leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_revocation!(
+        binding,
+        authenticated,
+        &response,
+        &ocsp_leaf,
+        &candidates[0]
+    );
+    routed_reviewed_server_path!(reviewed_server, path, &path_leaf, &candidates);
+
+    let error =
+        bind_x509_ocsp_revocation_to_routed_reviewed_server_path(authenticated, reviewed_server)
+            .expect_err("byte-equal distinct target objects must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509OcspReviewedServerRevocationBindingErrorKind::TargetMismatch
+    );
+    let diagnostic = format!("{error:?} {error}");
+    assert!(!diagnostic.contains("apple"));
+    assert!(!diagnostic.contains("6c869e"));
+    let _ = binding;
+    let _ = path;
+}
+
+#[test]
+fn routed_binding_rejects_a_byte_equal_distinct_issuer_after_matching_target() {
+    run_fixture_proof_test(
+        routed_binding_rejects_a_byte_equal_distinct_issuer_after_matching_target_inner,
+    );
+}
+
+fn routed_binding_rejects_a_byte_equal_distinct_issuer_after_matching_target_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let leaf = decode(&leaf_encoded);
+    let ocsp_issuer = decode(&intermediate_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_revocation!(binding, authenticated, &response, &leaf, &ocsp_issuer);
+    routed_reviewed_server_path!(reviewed_server, path, &leaf, &candidates);
+
+    let error =
+        bind_x509_ocsp_revocation_to_routed_reviewed_server_path(authenticated, reviewed_server)
+            .expect_err("byte-equal distinct issuer objects must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509OcspReviewedServerRevocationBindingErrorKind::IssuerMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 OCSP reviewed-server revocation binding error IssuerMismatch"
+    );
+    let _ = binding;
+    let _ = path;
+}
+
+#[test]
+fn binds_routed_response_to_the_same_exact_routed_reviewed_server_path() {
+    run_fixture_proof_test(
+        binds_routed_response_to_the_same_exact_routed_reviewed_server_path_inner,
+    );
+}
+
+fn binds_routed_response_to_the_same_exact_routed_reviewed_server_path_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_routed_revocation!(binding, authenticated, &response, &leaf, &candidates[0]);
+    routed_reviewed_server_path!(reviewed_server, path, &leaf, &candidates);
+
+    let bound = bind_x509_ocsp_routed_response_to_routed_reviewed_server_path(
+        authenticated,
+        reviewed_server,
+    )
+    .unwrap();
+
+    assert_eq!(
+        bound
+            .authenticated_revocation()
+            .issuer_bound_responder()
+            .authenticated_responder()
+            .response_signature()
+            .verifier(),
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha256
+    );
+    assert!(std::ptr::eq(
+        bound
+            .authenticated_revocation()
+            .target_issuer_link()
+            .child(),
+        &leaf
+    ));
+    assert!(std::ptr::eq(
+        bound
+            .routed_reviewed_server_path()
+            .anchor_policy()
+            .reviewed_server_path()
+            .reviewed_path()
+            .reviewed_terminal()
+            .reviewed_anchor()
+            .candidate_certificate(),
+        &candidates[1]
+    ));
+    assert_eq!(
+        format!("{bound:?}"),
+        "BoundX509OcspRoutedResponseReviewedServerRevocation"
+    );
+    let _ = bound.target_validity_at_observation();
+    let _ = bound.issuer_validity_at_observation();
+    let _ = binding;
+    let _ = path;
+}
+
+#[test]
+fn routed_response_binding_rejects_a_byte_equal_distinct_target() {
+    run_fixture_proof_test(routed_response_binding_rejects_a_byte_equal_distinct_target_inner);
+}
+
+fn routed_response_binding_rejects_a_byte_equal_distinct_target_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let ocsp_leaf = decode(&leaf_encoded);
+    let path_leaf = decode(&leaf_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_routed_revocation!(
+        binding,
+        authenticated,
+        &response,
+        &ocsp_leaf,
+        &candidates[0]
+    );
+    routed_reviewed_server_path!(reviewed_server, path, &path_leaf, &candidates);
+
+    let error = bind_x509_ocsp_routed_response_to_routed_reviewed_server_path(
+        authenticated,
+        reviewed_server,
+    )
+    .expect_err("byte-equal distinct target objects must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509OcspReviewedServerRevocationBindingErrorKind::TargetMismatch
+    );
+    let diagnostic = format!("{error:?} {error}");
+    assert!(!diagnostic.contains("apple"));
+    assert!(!diagnostic.contains("6c869e"));
+    let _ = binding;
+    let _ = path;
+}
+
+#[test]
+fn routed_response_binding_rejects_a_byte_equal_distinct_issuer() {
+    run_fixture_proof_test(routed_response_binding_rejects_a_byte_equal_distinct_issuer_inner);
+}
+
+fn routed_response_binding_rejects_a_byte_equal_distinct_issuer_inner() {
+    let leaf_encoded = fixture(LEAF_HEX);
+    let intermediate_encoded = fixture(INTERMEDIATE_HEX);
+    let root_encoded = fixture(ROOT_HEX);
+    let response_encoded = fixture(OCSP_RESPONSE_HEX);
+    let leaf = decode(&leaf_encoded);
+    let ocsp_issuer = decode(&intermediate_encoded);
+    let candidates = vec![decode(&intermediate_encoded), decode(&root_encoded)];
+    let response = decode_response(&response_encoded);
+    authenticate_routed_revocation!(binding, authenticated, &response, &leaf, &ocsp_issuer);
+    routed_reviewed_server_path!(reviewed_server, path, &leaf, &candidates);
+
+    let error = bind_x509_ocsp_routed_response_to_routed_reviewed_server_path(
+        authenticated,
+        reviewed_server,
+    )
+    .expect_err("byte-equal distinct issuer objects must not bind");
+
+    assert_eq!(
+        error.kind(),
+        X509OcspReviewedServerRevocationBindingErrorKind::IssuerMismatch
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 OCSP reviewed-server revocation binding error IssuerMismatch"
+    );
+    let diagnostic = format!("{error:?} {error}");
+    assert!(!diagnostic.contains("apple"));
+    assert!(!diagnostic.contains("6c869e"));
     let _ = binding;
     let _ = path;
 }

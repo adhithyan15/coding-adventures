@@ -1,1 +1,3 @@
-if command -v mise >/dev/null 2>&1; then PERL_BIN=$(mise which perl 2>/dev/null || true); fi && if [ -z "${PERL_BIN:-}" ]; then PERL_BIN=$(command -v perl); fi && cargo build --release && dlext=$("$PERL_BIN" -MConfig -e 'print $Config{dlext}') && mkdir -p lib/auto/CodingAdventures/Conduit && cp target/release/Conduit.dll lib/auto/CodingAdventures/Conduit/Conduit.$dlext && prove -I"$PWD/lib" -v t/
+# needs-toolchain: rust
+# Keep Cargo, staging and prove on the same native Windows Perl under Git Bash.
+powershell -NoProfile -ExecutionPolicy Bypass -File ..\..\..\scripts\check-perl-extension-windows.ps1 -ExtensionName Conduit

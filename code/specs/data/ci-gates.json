@@ -532,8 +532,11 @@
     },
     "build-windows-os-suites": {
       "scope": "step",
-      "description": "Native Windows suites: Closure compiler publication/ACL regressions, the D18S AppContainer applier and the Windows broker (key files, key adoption, launch, supervised end to end), independent of any toolchain flag.",
+      "description": "Native Windows suites: Closure compiler publication/ACL regressions, native Perl XS consumers, the D18S AppContainer applier and the Windows broker (key files, key adoption, launch, supervised end to end), independent of any toolchain flag.",
       "packages": [
+        "perl/conduit",
+        "perl/irc-server-native",
+        "perl/programs/conduit-hello",
         "rust/chief-of-staff-agent-broker",
         "rust/chief-of-staff-broker-e2e",
         "rust/chief-of-staff-broker-launcher",
@@ -551,6 +554,7 @@
         "code/scripts/tests/test_adj_stdlib_provenance.py",
         "code/scripts/setup_msvc_dev_cmd.py",
         "code/scripts/tests/test_setup_msvc_dev_cmd.py",
+        "code/scripts/check-perl-extension-windows.ps1",
         "code/specs/CV02-checked-bounded-provenance-graphs.md",
         "code/specs/FM02-forme-plugin-host.md"
       ]

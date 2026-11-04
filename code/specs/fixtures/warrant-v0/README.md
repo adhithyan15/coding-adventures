@@ -2,8 +2,9 @@
 
 This is the acceptance inventory for [VER04](../../VER04-warrant-language.md),
 not an executed parser corpus. No Warrant parser/type checker or generated Rust
-tests are supplied here. P006 will materialize syntax cases as data, generate
-TFV and pin parse trees with independent negative controls. P007/P008 add the
+tests are supplied here. P006a's [syntax corpus](../warrant-syntax-v1/README.md)
+materializes syntax cases as data/TFV and pins subtrees with negative controls.
+P006b supplies the guarded public source frontend. P007/P008 add the
 later-phase checks below; they must not claim those checks from parse success.
 
 An expected acceptance is always **phase specific**. A syntactically accepted

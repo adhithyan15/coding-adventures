@@ -1,2 +1,2 @@
 REM # build-tool: deps=rust/conduit-capi
-( cd ../../rust/conduit-capi && cargo build --release ) && (where swift >/dev/null 2>/dev/null && ( copy ..\..\rust\target\release\conduit_capi.lib Sources\CConduit\ && swift test ) || echo Swift not available on this runner — conduit-capi built, skipping swift test)
+( cd ../../rust/conduit-capi && cargo build --release ) && (where swift >nul 2>nul && ( copy ..\..\rust\target\release\conduit_capi.lib Sources\CConduit\ && swift test ) || echo Swift not available on this runner — conduit-capi built, skipping swift test)

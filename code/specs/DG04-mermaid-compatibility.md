@@ -170,6 +170,11 @@ is incomplete.
 C4 accessibility titles and legacy, single-line, or block descriptions are grammar-first
 and survive semantic IR plus structural layout into backend-neutral PaintScene
 metadata. Metal-to-PNG fixtures cover the pinned Mermaid 11.16.1 forms. C4
+macro keywords remain valid as aliases and argument values, matching the pinned
+lexical-state behavior through semantic IR, structural layout, and native paint.
+All six active upstream C4 Cypress rendering fixtures are also pinned as an
+acceptance corpus across grammar-first parsing, semantic IR, structural layout,
+portable PaintInstructions, and native Metal-to-PNG rendering. C4
 diagram titles may come from YAML front matter or an inline `title` statement,
 with inline titles taking precedence. Standard Mermaid init directives and comments
 are removed before C4 grammar parsing while preserving source line positions; the
@@ -218,9 +223,11 @@ Person and external-person elements also reserve dedicated header geometry and
 lower to backend-neutral head-and-body instructions rather than a backend icon.
 Core `UpdateRelStyle` text and line
 colors plus keyed or positional label offsets likewise survive semantic IR,
-layout, and backend-neutral PaintInstructions. `UpdateLayoutConfig` shape and boundary row limits survive
-semantic IR; shape row limits control structural layout while both values lower
-to backend-neutral PaintScene metadata. C4 directional relationship macros,
+layout, and backend-neutral PaintInstructions. C4 defaults to Mermaid's pinned four
+shapes and two boundaries per row. `UpdateLayoutConfig` shape and boundary row
+limits override those defaults in semantic IR; shape row limits control structural
+layout, boundary row limits arrange top-level C4 groups, and both values lower to
+backend-neutral PaintScene metadata. C4 directional relationship macros,
 including their short and long spellings, preserve typed direction hints through
 semantic and layout IR into PaintScene metadata while retaining the pinned
 renderer's ordinary portable relationship geometry. Keyed and positional custom

@@ -315,56 +315,47 @@ try {
         Write-Host '  adaptive Projects pane collapsed and restored; detail stayed visible'
     }
 
-    # TaskApp once crashed inside Microsoft.UI.Xaml.dll as soon as the Board
-    # option was invoked. The ordinary smoke stayed green because it exercised
-    # only the initial List view. Enter the Board through the same UI Automation
-    # path a user takes, require the selected state to reach the screen, and then
-    # return to List before continuing the task-flow assertions below.
-    $boardButton = Find-ByNameAndAutomationId $root 'Board' 'segmented-option' ([System.Windows.Automation.ControlType]::Button)
-    if (-not $boardButton) {
-        throw "Could not find the Board view option. Buttons present: $((Get-ButtonNames $root) -join ', ')"
-    }
-    $boardButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
-
-    $selectedView = $null
-    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
-    while ((Get-Date) -lt $deadline) {
-        Start-Sleep -Milliseconds 500
-        $proc.Refresh()
-        if ($proc.HasExited) {
-            throw "TaskApp exited with code $($proc.ExitCode) while opening the Board view."
+    # A focused composer can be torn down by a view change. Repeat with distinct
+    # drafts so a retained initial value cannot masquerade as live state. Read
+    # from the newly resolved editor after each round trip; never repair a lost
+    # draft by writing it back before asserting (#18515).
+    $nameInputIds = 'name-input', 'name-input-corrected', 'name-input-error'
+    $editType = [System.Windows.Automation.ControlType]::Edit
+    foreach ($cycle in 1..3) {
+        $draft = "Navigation draft $cycle"
+        $null = Set-InputValue $root $nameInputIds $editType $draft $TimeoutSeconds
+        foreach ($view in 'Board', 'List') {
+            $option = Find-ByNameAndAutomationId $root $view 'segmented-option' ([System.Windows.Automation.ControlType]::Button)
+            if (-not $option) { throw "Could not find the $view view option in cycle $cycle." }
+            $option.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
+            $selectedView = $null
+            $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+            while ((Get-Date) -lt $deadline) {
+                Start-Sleep -Milliseconds 500
+                $proc.Refresh()
+                if ($proc.HasExited) {
+                    throw "TaskApp exited with code $($proc.ExitCode) opening $view in cycle $cycle."
+                }
+                $selectedView = Find-ByAutomationId $root 'segmented-option-selected' ([System.Windows.Automation.ControlType]::Button)
+                if ($selectedView -and $selectedView.Current.Name -eq $view) { break }
+            }
+            if (-not $selectedView -or $selectedView.Current.Name -ne $view) {
+                throw "The $view event did not render its selected state in cycle $cycle."
+            }
         }
-        $selectedView = Find-ByAutomationId $root 'segmented-option-selected' ([System.Windows.Automation.ControlType]::Button)
-        if ($selectedView -and $selectedView.Current.Name -eq 'Board') { break }
-    }
-    if (-not $selectedView -or $selectedView.Current.Name -ne 'Board') {
-        $failures += 'The Board event did not render Board as the selected view.'
-    } else {
-        Write-Host '  Board view activated without a process exit'
-    }
-
-    $listButton = Find-ByNameAndAutomationId $root 'List' 'segmented-option' ([System.Windows.Automation.ControlType]::Button)
-    if (-not $listButton) {
-        throw 'Could not find the List view option after entering Board.'
-    }
-    $listButton.GetCurrentPattern([System.Windows.Automation.InvokePattern]::Pattern).Invoke()
-
-    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
-    while ((Get-Date) -lt $deadline) {
-        Start-Sleep -Milliseconds 500
-        $proc.Refresh()
-        if ($proc.HasExited) {
-            throw "TaskApp exited with code $($proc.ExitCode) while returning to the List view."
+        $actual = '<no live editor>'
+        $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+        while ((Get-Date) -lt $deadline) {
+            $composer = Find-LiveByAutomationId $root $nameInputIds $editType
+            if ($composer) {
+                $actual = $composer.GetCurrentPattern([System.Windows.Automation.ValuePattern]::Pattern).Current.Value
+                if ($actual -eq $draft) { break }
+            }
+            Start-Sleep -Milliseconds 150
         }
-        $selectedView = Find-ByAutomationId $root 'segmented-option-selected' ([System.Windows.Automation.ControlType]::Button)
-        if ($selectedView -and $selectedView.Current.Name -eq 'List') {
-            break
-        }
+        if ($actual -ne $draft) { throw "Draft lost in cycle ${cycle}: expected '$draft', saw '$actual'." }
+        Write-Host "  Board/List cycle $cycle preserved the edited draft"
     }
-    if (-not $selectedView -or $selectedView.Current.Name -ne 'List') {
-        $failures += 'Returning from Board did not render List as the selected view.'
-    }
-
     # ── 3. A dispatched event changes what is on screen ──────────────────
     #
     # This is the assertion the headless harness cannot make. Props reaching

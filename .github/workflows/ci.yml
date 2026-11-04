@@ -601,8 +601,12 @@ jobs:
         uses: actions/checkout@v7
         with:
           # Barcode adoption evidence binds the checked-out package tree to the
-          # exact pre-publication implementation commit.
+          # exact pre-publication implementation commit. Keep every commit/tree
+          # and the complete working tree, but fetch old file blobs only when a
+          # historical baseline needs them. Full blob history consumed 21-28
+          # minutes of this job's 30-minute budget before contracts could run.
           fetch-depth: 0
+          filter: blob:none
 
       - name: Set up Go
         uses: actions/setup-go@v7

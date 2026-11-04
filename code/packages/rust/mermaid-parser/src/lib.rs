@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.171.0";
+pub const VERSION: &str = "0.172.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{BTreeMap, HashMap, HashSet};
@@ -14069,6 +14069,8 @@ pub fn parse_c4_diagram(source: &str) -> Result<StructuralDiagram, ParseError> {
     let mut accessibility_description = None;
     let mut render_config = StructuralRenderConfig {
         c4_diagram_type: Some(c4_diagram_type),
+        c4_shape_in_row: Some(4),
+        c4_boundary_in_row: Some(2),
         ..StructuralRenderConfig::default()
     };
     let mut nodes = Vec::new();
@@ -14295,7 +14297,8 @@ fn parse_c4_arguments(cursor: &mut TokenCursor) -> Result<Vec<String>, ParseErro
                 let value = parse_c4_argument_value(cursor)?;
                 format!("{}={value}", token.value)
             }
-            "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION" => {
+            "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION" | "HEADER"
+            | "ELEMENT_MACRO" | "RELATION_MACRO" | "BOUNDARY_MACRO" | "CONFIG_MACRO" => {
                 parse_c4_argument_value(cursor)?
             }
             _ => return Err(token_error(&token, "expected C4 argument")),
@@ -14311,7 +14314,8 @@ fn parse_c4_argument_value(cursor: &mut TokenCursor) -> Result<String, ParseErro
     let token = cursor.current().clone();
     if !matches!(
         token_name(&token),
-        "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION"
+        "STRING" | "IDENTIFIER" | "NUMBER" | "STYLE_FUNCTION" | "HEADER"
+            | "ELEMENT_MACRO" | "RELATION_MACRO" | "BOUNDARY_MACRO" | "CONFIG_MACRO"
     ) {
         return Err(token_error(&token, "expected C4 argument value"));
     }
@@ -20200,7 +20204,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.171.0");
+        assert_eq!(crate::VERSION, "0.172.0");
     }
 
     #[test]

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Add a distinct binder from the routed RSA SHA-256/SHA-384/SHA-512 OCSP
+  response-signature proof to the routed constructed reviewed-server path.
+- Retain both complete proofs and exact-observation target/intermediate
+  validity without implying routed OCSP certificate links, routed responder
+  policy, external effects, or transport readiness.
+- Bind the authenticated OCSP target-revocation proof to the data-driven routed
+  constructed reviewed-server path only when both retain the same exact target
+  and intermediate certificate objects.
+- Retain both complete non-copyable proofs plus fresh target/intermediate
+  validity at the OCSP observation time, with stable payload-free failures and
+  without claiming routed responder policy, TLS, HTTP, or OAuth readiness.
 - Require and semantically validate exact DER `NULL` for the authenticated
   responder's RFC 6960 `id-pkix-ocsp-nocheck` extension after reviewed-path and
   responder DNS policy, without allowing certificate or proof substitution.

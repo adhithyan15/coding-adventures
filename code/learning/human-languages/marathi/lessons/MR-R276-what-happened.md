@@ -4,7 +4,7 @@ introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 id: MR-R276-what-happened
-spine_node: SPINE-TALK-ABOUT-PAST
+spine_node: SPINE-NARRATE-EVENTS
 sequence: 16030
 chapter: 276
 type: review

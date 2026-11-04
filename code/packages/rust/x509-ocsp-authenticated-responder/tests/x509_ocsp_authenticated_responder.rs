@@ -7,19 +7,29 @@ use x509_certificate_policy::{
     X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile, X509CertificateRole,
 };
 use x509_ocsp_authenticated_responder::{
-    authenticate_x509_ocsp_rsa_sha256_responder, X509OcspAuthenticatedResponderErrorKind,
+    authenticate_x509_ocsp_rsa_responder, authenticate_x509_ocsp_rsa_sha256_responder,
+    X509OcspAuthenticatedResponderErrorKind, X509OcspRsaResponderPolicy,
     X509OcspRsaSha256ResponderPolicy,
 };
 use x509_ocsp_basic_response::decode_x509_ocsp_basic_response;
 use x509_ocsp_responder_certificate_policy::validate_x509_ocsp_responder_certificate_policy;
 use x509_ocsp_responder_id_binding::bind_x509_ocsp_responder_id_to_certificate;
+use x509_ocsp_rsa_algorithm_policy::{
+    X509OcspRsaAlgorithmParametersPolicy, X509OcspRsaAlgorithmPolicyErrorKind,
+    X509OcspRsaAlgorithmProfile,
+};
 use x509_ocsp_rsa_pkcs1_v1_5_sha256_signature::X509OcspRsaSha256SignatureErrorKind;
+use x509_ocsp_rsa_signature_routing::{
+    VerifiedX509OcspRsaPolicySignature, X509OcspRsaSignatureRoute,
+    X509OcspRsaSignatureRoutingErrorKind, X509OcspRsaSignatureVerifier,
+};
 use x509_rsa_public_key::{RsaPublicKeyErrorKind, RsaPublicKeyPolicy};
 use x509_time::{decode_x509_time, X509Time};
 
 const SHA256_WITH_RSA_ENCRYPTION_OID_DER: &[u8] =
     &[0x2a, 0x86, 0x48, 0x86, 0xf7, 0x0d, 0x01, 0x01, 0x0b];
 const SHA256_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 11];
+const SHA384_WITH_RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 12];
 const RSA_ENCRYPTION_OID: &[u64] = &[1, 2, 840, 113_549, 1, 1, 1];
 const KEY_USAGE_OID_DER: &[u8] = &[0x55, 0x1d, 0x0f];
 const EXTENDED_KEY_USAGE_OID_DER: &[u8] = &[0x55, 0x1d, 0x25];
@@ -181,6 +191,31 @@ fn responder_policy(minimum_modulus_bits: usize) -> X509OcspRsaSha256ResponderPo
         Asn1Limits::default(),
         RsaPublicOperationLimits::new(512).unwrap(),
     )
+}
+
+fn response_algorithm_profiles() -> [X509OcspRsaAlgorithmProfile<'static>; 2] {
+    [
+        X509OcspRsaAlgorithmProfile::new(
+            SHA384_WITH_RSA_ENCRYPTION_OID,
+            X509OcspRsaAlgorithmParametersPolicy::ExactDer(NULL_DER),
+            2_048,
+            4_096,
+            2_048,
+            4_096,
+            ALLOWED_EXPONENTS,
+        )
+        .unwrap(),
+        X509OcspRsaAlgorithmProfile::new(
+            SHA256_WITH_RSA_ENCRYPTION_OID,
+            X509OcspRsaAlgorithmParametersPolicy::ExactDer(NULL_DER),
+            2_048,
+            4_096,
+            2_048,
+            4_096,
+            ALLOWED_EXPONENTS,
+        )
+        .unwrap(),
+    ]
 }
 
 #[test]
@@ -414,4 +449,203 @@ fn maps_tampered_response_signature_without_disclosing_signature_bytes() {
         )
     ));
     assert!(!error.to_string().contains("6f9afb10"));
+}
+
+#[test]
+fn authenticates_with_caller_owned_response_algorithm_and_route_policy() {
+    let certificate_encoded = responder_certificate();
+    let certificate = decode_x509_certificate(&certificate_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature(&decode_hex(SIGNATURE_HEX));
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+    let responder_id =
+        bind_x509_ocsp_responder_id_to_certificate(&response, &certificate, |left, right| {
+            left.encoded() == right.encoded()
+        })
+        .unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &certificate,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&certificate, &algorithm_profiles()).unwrap();
+    let certificate_policy = validate_x509_ocsp_responder_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        &decode_time(b"261025120000Z"),
+    )
+    .unwrap();
+    let profiles = response_algorithm_profiles();
+    let routes = [
+        X509OcspRsaSignatureRoute::new(0, X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha384),
+        X509OcspRsaSignatureRoute::new(1, X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha256),
+    ];
+    let policy = X509OcspRsaResponderPolicy::new(
+        RsaPublicKeyPolicy::new(2_048, 4_096, ALLOWED_EXPONENTS).unwrap(),
+        Asn1Limits::default(),
+        &profiles,
+        &routes,
+        RsaPublicOperationLimits::new(512).unwrap(),
+    );
+
+    assert_eq!(policy.response_algorithm_profiles(), &profiles);
+    assert_eq!(policy.response_signature_routes(), &routes);
+    let authenticated =
+        authenticate_x509_ocsp_rsa_responder(responder_id, certificate_policy, policy).unwrap();
+
+    assert!(std::ptr::eq(
+        authenticated.responder_id_binding().response(),
+        match authenticated.response_signature() {
+            VerifiedX509OcspRsaPolicySignature::Sha256(verified) => {
+                assert_eq!(verified.algorithm_policy().profile_index(), 1);
+                assert_eq!(
+                    verified
+                        .algorithm_policy()
+                        .responder_public_key()
+                        .modulus_bits(),
+                    2_048
+                );
+                verified.signature().response()
+            }
+            VerifiedX509OcspRsaPolicySignature::Sha384(_)
+            | VerifiedX509OcspRsaPolicySignature::Sha512(_) => {
+                panic!("selected the wrong response signature verifier")
+            }
+        }
+    ));
+    assert!(std::ptr::eq(
+        authenticated.responder_id_binding().certificate(),
+        authenticated.responder_certificate_policy().certificate()
+    ));
+    assert_eq!(
+        authenticated.response_signature().verifier(),
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha256
+    );
+    assert_eq!(
+        format!("{authenticated:?}"),
+        "AuthenticatedX509OcspRsaResponder"
+    );
+}
+
+#[test]
+fn maps_data_driven_response_policy_failures_without_disclosing_inputs() {
+    let certificate_encoded = responder_certificate();
+    let certificate = decode_x509_certificate(&certificate_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature(&decode_hex(SIGNATURE_HEX));
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+    let responder_id =
+        bind_x509_ocsp_responder_id_to_certificate(&response, &certificate, |left, right| {
+            left.encoded() == right.encoded()
+        })
+        .unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &certificate,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&certificate, &algorithm_profiles()).unwrap();
+    let certificate_policy = validate_x509_ocsp_responder_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        &decode_time(b"261025120000Z"),
+    )
+    .unwrap();
+    let unsupported_profiles = [X509OcspRsaAlgorithmProfile::new(
+        SHA384_WITH_RSA_ENCRYPTION_OID,
+        X509OcspRsaAlgorithmParametersPolicy::ExactDer(NULL_DER),
+        2_048,
+        4_096,
+        2_048,
+        4_096,
+        ALLOWED_EXPONENTS,
+    )
+    .unwrap()];
+    let routes = [X509OcspRsaSignatureRoute::new(
+        0,
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha384,
+    )];
+    let policy = X509OcspRsaResponderPolicy::new(
+        RsaPublicKeyPolicy::new(2_048, 4_096, ALLOWED_EXPONENTS).unwrap(),
+        Asn1Limits::default(),
+        &unsupported_profiles,
+        &routes,
+        RsaPublicOperationLimits::new(512).unwrap(),
+    );
+
+    let error =
+        authenticate_x509_ocsp_rsa_responder(responder_id, certificate_policy, policy).unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509OcspAuthenticatedResponderErrorKind::ResponseAlgorithmPolicy(
+            X509OcspRsaAlgorithmPolicyErrorKind::UnsupportedAlgorithmProfile
+        )
+    );
+    let rendered = format!("{error:?} {error}");
+    assert!(!rendered.contains(RESPONSE_DATA_HEX));
+    assert!(!rendered.contains(PUBLIC_SPKI_HEX));
+    assert!(!rendered.contains(SIGNATURE_HEX));
+}
+
+#[test]
+fn maps_data_driven_route_failures_without_disclosing_inputs() {
+    let certificate_encoded = responder_certificate();
+    let certificate = decode_x509_certificate(&certificate_encoded, Asn1Limits::default()).unwrap();
+    let response_encoded = response_with_signature(&decode_hex(SIGNATURE_HEX));
+    let mut decoder = Asn1Decoder::new(Asn1Limits::default());
+    let root = decoder.decode_exact(&response_encoded).unwrap();
+    let response = decode_x509_ocsp_basic_response(&mut decoder, root).unwrap();
+    let responder_id =
+        bind_x509_ocsp_responder_id_to_certificate(&response, &certificate, |left, right| {
+            left.encoded() == right.encoded()
+        })
+        .unwrap();
+    let role_policy = validate_certificate_role_policy(
+        &certificate,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(&certificate, &algorithm_profiles()).unwrap();
+    let certificate_policy = validate_x509_ocsp_responder_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        &decode_time(b"261025120000Z"),
+    )
+    .unwrap();
+    let profiles = response_algorithm_profiles();
+    let routes = [X509OcspRsaSignatureRoute::new(
+        0,
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha384,
+    )];
+    let policy = X509OcspRsaResponderPolicy::new(
+        RsaPublicKeyPolicy::new(2_048, 4_096, ALLOWED_EXPONENTS).unwrap(),
+        Asn1Limits::default(),
+        &profiles,
+        &routes,
+        RsaPublicOperationLimits::new(512).unwrap(),
+    );
+
+    let error =
+        authenticate_x509_ocsp_rsa_responder(responder_id, certificate_policy, policy).unwrap_err();
+    assert_eq!(
+        error.kind(),
+        X509OcspAuthenticatedResponderErrorKind::ResponseSignatureRouting(
+            X509OcspRsaSignatureRoutingErrorKind::UnsupportedProfileRoute,
+        )
+    );
+    let rendered = format!("{error:?} {error}");
+    assert!(!rendered.contains(RESPONSE_DATA_HEX));
+    assert!(!rendered.contains(PUBLIC_SPKI_HEX));
+    assert!(!rendered.contains(SIGNATURE_HEX));
 }
