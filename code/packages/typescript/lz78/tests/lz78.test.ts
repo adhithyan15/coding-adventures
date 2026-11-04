@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
 import {
   type Token,
   compress,
@@ -20,20 +21,20 @@ const rt = (s: string): string => str(decompress(compress(enc(s))));
 
 describe("Spec vectors", () => {
   it("empty input", () => {
-    expect(encode(new Uint8Array())).toEqual([]);
-    expect(decode([], 0)).toEqual(new Uint8Array());
+    assert.deepEqual(encode(new Uint8Array()), []);
+    assert.deepEqual(decode([], 0), new Uint8Array());
   });
 
   it("single byte", () => {
     const tokens = encode(enc("A"));
-    expect(tokens).toEqual([{ dictIndex: 0, nextChar: 65 }]);
-    expect(decode(tokens, 1)).toEqual(enc("A"));
+    assert.deepEqual(tokens, [{ dictIndex: 0, nextChar: 65 }]);
+    assert.deepEqual(decode(tokens, 1), enc("A"));
   });
 
   it("no repetition — all literals", () => {
     const tokens = encode(enc("ABCDE"));
-    expect(tokens.length).toBe(5);
-    for (const t of tokens) expect(t.dictIndex).toBe(0);
+    assert.equal(tokens.length, 5);
+    for (const t of tokens) assert.equal(t.dictIndex, 0);
   });
 
   it("AABCBBABC", () => {
@@ -45,8 +46,8 @@ describe("Spec vectors", () => {
       { dictIndex: 4, nextChar: 65 },
       { dictIndex: 4, nextChar: 67 },
     ];
-    expect(encode(enc("AABCBBABC"))).toEqual(want);
-    expect(rt("AABCBBABC")).toBe("AABCBBABC");
+    assert.deepEqual(encode(enc("AABCBBABC")), want);
+    assert.equal(rt("AABCBBABC"), "AABCBBABC");
   });
 
   it("ABABAB — flush token", () => {
@@ -56,22 +57,22 @@ describe("Spec vectors", () => {
       { dictIndex: 1, nextChar: 66 },
       { dictIndex: 3, nextChar: 0 },
     ];
-    expect(encode(enc("ABABAB"))).toEqual(want);
-    expect(rt("ABABAB")).toBe("ABABAB");
+    assert.deepEqual(encode(enc("ABABAB")), want);
+    assert.equal(rt("ABABAB"), "ABABAB");
   });
 
   it("all identical bytes — AAAAAAA", () => {
     const tokens = encode(enc("AAAAAAA"));
-    expect(tokens.length).toBe(4);
-    expect(tokens[0]).toEqual({ dictIndex: 0, nextChar: 65 });
-    expect(tokens[1]).toEqual({ dictIndex: 1, nextChar: 65 });
-    expect(tokens[2]).toEqual({ dictIndex: 2, nextChar: 65 });
-    expect(tokens[3]).toEqual({ dictIndex: 1, nextChar: 0 });
+    assert.equal(tokens.length, 4);
+    assert.deepEqual(tokens[0], { dictIndex: 0, nextChar: 65 });
+    assert.deepEqual(tokens[1], { dictIndex: 1, nextChar: 65 });
+    assert.deepEqual(tokens[2], { dictIndex: 2, nextChar: 65 });
+    assert.deepEqual(tokens[3], { dictIndex: 1, nextChar: 0 });
   });
 
   it("repeated pair ABABABAB compresses", () => {
-    expect(rt("ABABABAB")).toBe("ABABABAB");
-    expect(encode(enc("ABABABAB")).length).toBeLessThan(8);
+    assert.equal(rt("ABABABAB"), "ABABABAB");
+    assert.ok(encode(enc("ABABABAB")).length < 8);
   });
 });
 
@@ -93,33 +94,33 @@ describe("Round-trip", () => {
 
   for (const s of cases) {
     it(`ascii: ${JSON.stringify(s)}`, () => {
-      expect(rt(s)).toBe(s);
+      assert.equal(rt(s), s);
     });
   }
 
   it("binary zeros", () => {
     const d = new Uint8Array(3);
-    expect(decompress(compress(d))).toEqual(d);
+    assert.deepEqual(decompress(compress(d)), d);
   });
 
   it("binary 255s", () => {
     const d = new Uint8Array([255, 255, 255]);
-    expect(decompress(compress(d))).toEqual(d);
+    assert.deepEqual(decompress(compress(d)), d);
   });
 
   it("full byte range", () => {
     const d = new Uint8Array(256).map((_, i) => i);
-    expect(decompress(compress(d))).toEqual(d);
+    assert.deepEqual(decompress(compress(d)), d);
   });
 
   it("binary repeat", () => {
     const d = new Uint8Array([0, 1, 2, 0, 1, 2]);
-    expect(decompress(compress(d))).toEqual(d);
+    assert.deepEqual(decompress(compress(d)), d);
   });
 
   it("binary nulls mix", () => {
     const d = new Uint8Array([0, 0, 0, 255, 255]);
-    expect(decompress(compress(d))).toEqual(d);
+    assert.deepEqual(decompress(compress(d)), d);
   });
 });
 
@@ -128,12 +129,12 @@ describe("Round-trip", () => {
 describe("Parameters", () => {
   it("maxDictSize respected", () => {
     const tokens = encode(enc("ABCABCABCABCABC"), 10);
-    for (const t of tokens) expect(t.dictIndex).toBeLessThan(10);
+    for (const t of tokens) assert.ok(t.dictIndex < 10);
   });
 
   it("maxDictSize=1 → all literals", () => {
     const tokens = encode(enc("AAAA"), 1);
-    for (const t of tokens) expect(t.dictIndex).toBe(0);
+    for (const t of tokens) assert.equal(t.dictIndex, 0);
   });
 });
 
@@ -141,26 +142,28 @@ describe("Parameters", () => {
 
 describe("Edge cases", () => {
   it("single byte literal", () => {
-    expect(encode(enc("X"))).toEqual([{ dictIndex: 0, nextChar: 88 }]);
+    assert.deepEqual(encode(enc("X")), [{ dictIndex: 0, nextChar: 88 }]);
   });
 
   it("two bytes", () => {
-    expect(decode([{ dictIndex: 0, nextChar: 65 }, { dictIndex: 0, nextChar: 66 }]))
-      .toEqual(enc("AB"));
+    assert.deepEqual(
+      decode([{ dictIndex: 0, nextChar: 65 }, { dictIndex: 0, nextChar: 66 }]),
+      enc("AB"),
+    );
   });
 
   it("flush token round-trip", () => {
-    expect(rt("ABABAB")).toBe("ABABAB");
+    assert.equal(rt("ABABAB"), "ABABAB");
   });
 
   it("all null bytes", () => {
     const d = new Uint8Array(100);
-    expect(decompress(compress(d))).toEqual(d);
+    assert.deepEqual(decompress(compress(d)), d);
   });
 
   it("all max bytes", () => {
     const d = new Uint8Array(100).fill(255);
-    expect(decompress(compress(d))).toEqual(d);
+    assert.deepEqual(decompress(compress(d)), d);
   });
 
   it("very long input", () => {
@@ -171,7 +174,7 @@ describe("Edge cases", () => {
     const data = new Uint8Array(parts.reduce((a, p) => a + p.length, 0));
     let off = 0;
     for (const p of parts) { data.set(p, off); off += p.length; }
-    expect(decompress(compress(data))).toEqual(data);
+    assert.deepEqual(decompress(compress(data)), data);
   });
 });
 
@@ -181,7 +184,7 @@ describe("Serialisation", () => {
   it("format size: 8 + 4×tokens", () => {
     const compressed = compress(enc("AB"));
     const tokens = encode(enc("AB"));
-    expect(compressed.length).toBe(8 + tokens.length * 4);
+    assert.equal(compressed.length, 8 + tokens.length * 4);
   });
 
   it("deserialise round-trip", () => {
@@ -190,18 +193,18 @@ describe("Serialisation", () => {
       { dictIndex: 1, nextChar: 66 },
     ];
     const [got] = deserialiseTokens(serialiseTokens(tokens, 3));
-    expect(got).toEqual(tokens);
+    assert.deepEqual(got, tokens);
   });
 
   it("all spec vectors", () => {
     for (const v of ["", "A", "ABCDE", "AAAAAAA", "ABABABAB", "AABCBBABC"]) {
-      expect(rt(v)).toBe(v);
+      assert.equal(rt(v), v);
     }
   });
 
   it("deterministic", () => {
     const d = enc("hello world test data repeated");
-    expect(compress(d)).toEqual(compress(d));
+    assert.deepEqual(compress(d), compress(d));
   });
 });
 
@@ -210,17 +213,17 @@ describe("Serialisation", () => {
 describe("Behaviour", () => {
   it("repetitive data compresses", () => {
     const d = enc("ABC".repeat(1000));
-    expect(compress(d).length).toBeLessThan(d.length);
+    assert.ok(compress(d).length < d.length);
   });
 
   it("incompressible data does not expand excessively", () => {
     const d = new Uint8Array(256).map((_, i) => i);
-    expect(compress(d).length).toBeLessThanOrEqual(4 * d.length + 10);
+    assert.ok(compress(d).length <= 4 * d.length + 10);
   });
 
   it("all-same-byte compresses", () => {
     const d = new Uint8Array(10000).fill(65);
-    expect(compress(d).length).toBeLessThan(d.length);
-    expect(decompress(compress(d))).toEqual(d);
+    assert.ok(compress(d).length < d.length);
+    assert.deepEqual(decompress(compress(d)), d);
   });
 });
