@@ -180,6 +180,9 @@ text through the same backend-neutral pipeline.
 The following six classic Cypress cases pin integer, decimal, and standalone
 numeric entities plus the ambiguous `u` entity/cardinality forms through semantic
 IR, structural layout, portable paint, and native Metal rendering.
+The final three classic Cypress cases pin the non-HTML relationship-label render
+and numeric `1` cardinalities across every solid and dotted operator form through
+the same backend-neutral pipeline.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 

@@ -1,0 +1,19 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 classic ER Cypress htmlLabels=false and numeric one cardinality rendering corpus",
+  "fixtures": [
+    {
+      "name": "html-labels-false",
+      "source": "erDiagram\n    CUSTOMER ||--o{ ORDER : places\n    ORDER ||--|{ LINE-ITEM : contains\n    CUSTOMER ||--|{ ADDRESS : \"invoiced at\"\n    CUSTOMER ||--|{ ADDRESS : \"receives goods at\"\n    ORDER ||--o{ INVOICE : \"liable for\""
+    },
+    {
+      "name": "numeric-one-cardinality-aliases",
+      "source": "erDiagram\n  CUSTOMER 1--1 ORDER : \"exactly one\"\n  ORDER 1--o{ LINE-ITEM : \"one to many\"\n  PRODUCT 1--|{ CATEGORY : \"one or more\"\n  USER 1..1 PROFILE : \"exactly one optional\""
+    },
+    {
+      "name": "numeric-one-all-operator-styles",
+      "source": "erDiagram\n  A 1--1 B : \"solid-solid\"\n  C 1..1 D : \"dotted-dotted\"\n  E 1.-1 F : \"dotted-solid\"\n  G 1-.1 H : \"solid-dotted\""
+    }
+  ]
+}
