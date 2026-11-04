@@ -13,8 +13,14 @@
 //
 // No number produced by walking our own lessons can answer that, because every
 // such number rises when you add a lesson — including a lesson on something the
-// exam does not test. The answer has to be measured against an EXTERNAL,
-// FINITE list of what a candidate is expected to hold.
+// assessment does not test. Coverage has to be measured against a FINITE,
+// independently reviewable target list. Prefer a finite external inventory when
+// one exists. When none exists, a checked-in project-owned boundary is honest
+// only if it names the exact finite selection, its assessment purpose, every
+// external anchor, and what those anchors do NOT supply. That closes this
+// repository's enumeration, not an external syllabus, and proves neither
+// lesson coverage nor task performance, readiness, validation, certification,
+// standard setting, or attainment.
 //
 // The Plan Curricular del Instituto Cervantes publishes exactly that: a grammar
 // inventory in 15 categories, with separate A1 and A2 columns. `core/
@@ -51,9 +57,9 @@ export type ExamContentDimension = (typeof EXAM_CONTENT_DIMENSIONS)[number];
 export interface ExamInventoryScopeEntry {
   /** Partial evidence remains useful, but may never suppress the backlog item. */
   status: "complete" | "partial";
-  /** Exact awarding-body or checked-in project source for this dimension. */
+  /** Exact finite external source or checked-in finite project boundary. */
   source: string;
-  /** What this source does and does not enumerate, in the project's own words. */
+  /** What this boundary and its anchors do and do not enumerate. */
   note: string;
 }
 
@@ -79,7 +85,10 @@ export interface ExamInventory {
   level: string;
   about: string;
   source: string;
-  /** Completeness is derived: every required dimension must say `complete`. */
+  /**
+   * Completeness is derived: every required dimension must say `complete`
+   * against the finite external or explicit checked-in project boundary above.
+   */
   scope: Record<ExamContentDimension, ExamInventoryScopeEntry>;
   probeSemantics: string;
   points: ExamPoint[];

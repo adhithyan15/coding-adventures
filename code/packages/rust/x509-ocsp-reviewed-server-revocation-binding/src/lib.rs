@@ -13,8 +13,8 @@
 //! This is an evidence-composition, exact-time validity, bounded responder
 //! DNS-policy, and exact responder no-check boundary for the fixed path. A
 //! fully routed binding can also be reified as one exact responder path and
-//! checked against its selected anchor's supported DNS constraints, but routed
-//! flows stop before intermediate DNS, no-check, and revocation policy.
+//! checked against its selected anchor's and exact intermediate's supported
+//! DNS constraints, but routed flows stop before no-check and revocation policy.
 //! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -2017,6 +2017,116 @@ pub fn validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy<
 
     Ok(ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
         responder_path,
+        constrained_dns_names,
+    })
+}
+
+/// Apply the exact routed intermediate's supported critical DNS policy.
+///
+/// This consumes the complete routed selected-anchor responder-policy proof.
+/// The responder and intermediate are derived only through that retained
+/// proof, preventing certificate, SAN, intermediate, or path substitution.
+/// An absent extension succeeds without new evidence; a present extension
+/// must be critical and decode as the supported permitted-and-excluded-DNS
+/// subset under separate caller-owned limits.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before routed no-check or revocation policy, generalized path validation,
+/// TLS, HTTP, OAuth readiness, or network authority.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_routed_issuer_reviewed_responder_intermediate_dns_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy<
+        BoundX509OcspRoutedIssuerReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspRoutedIssuerReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+    X509OcspReviewedResponderIntermediateDnsPolicyError,
+> {
+    let reviewed_server_revocation = anchor_policy.responder_path().reviewed_server_revocation();
+    let responder_certificate = reviewed_server_revocation
+        .authenticated_revocation()
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    let intermediate_certificate = reviewed_server_revocation
+        .routed_reviewed_server_path()
+        .anchor_policy()
+        .reviewed_server_path()
+        .reviewed_path()
+        .authenticated_intermediate()
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    let constrained_dns_names = evaluate_responder_intermediate_dns_policy(
+        responder_certificate,
+        intermediate_certificate,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+        anchor_policy,
         constrained_dns_names,
     })
 }
