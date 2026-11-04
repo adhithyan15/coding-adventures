@@ -1,0 +1,31 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 classic ER Cypress entity and attribute rendering corpus",
+  "fixtures": [
+    {
+      "name": "standalone-entities",
+      "source": "erDiagram\nDEAD_PARROT\nHERMIT\nRECLUSE\nSOCIALITE }o--o{ SOCIALITE : \"interacts with\"\nRECLUSE }o--o{ SOCIALITE : avoids"
+    },
+    {
+      "name": "split-attribute-blocks",
+      "source": "erDiagram\nBOOK { string title }\nAUTHOR }|..|{ BOOK : writes\nBOOK { float price }"
+    },
+    {
+      "name": "generic-and-array-attributes",
+      "source": "erDiagram\nBOOK {\n  string title\n  string[] authors\n  type~T~ type\n}"
+    },
+    {
+      "name": "length-limited-attributes",
+      "source": "erDiagram\nCLUSTER {\n  varchar(99) name\n  string(255) description\n}"
+    },
+    {
+      "name": "variable-entity-widths",
+      "source": "erDiagram\nPRIVATE_FINANCIAL_INSTITUTION {\n  string name\n  int turnover\n}\nPRIVATE_FINANCIAL_INSTITUTION ||..|{ EMPLOYEE : employs\nEMPLOYEE { bool officer_of_firm }"
+    },
+    {
+      "name": "leading-asterisk-attributes",
+      "source": "erDiagram\nBOOK {\n  int *id\n  string name\n  varchar(99) summary\n}\nBOOK }o..o{ STORE : soldBy\nSTORE {\n  int *id\n  string name\n  varchar(50) address\n}"
+    }
+  ]
+}

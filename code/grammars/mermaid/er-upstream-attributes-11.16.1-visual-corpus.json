@@ -1,0 +1,13 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "native Metal rendering coverage for classic upstream ER entities and attributes",
+  "fixtures": [
+    "standalone-entities",
+    "split-attribute-blocks",
+    "generic-and-array-attributes",
+    "length-limited-attributes",
+    "variable-entity-widths",
+    "leading-asterisk-attributes"
+  ]
+}
