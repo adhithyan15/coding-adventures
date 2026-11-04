@@ -1,0 +1,16 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "native Metal rendering coverage for the upstream ER neo-look source corpus without claiming neo theme fidelity",
+  "fixtures": [
+    "neo-basic-relationships",
+    "neo-relationship-types",
+    "neo-entities-and-attributes",
+    "neo-keys-and-comments",
+    "neo-entity-aliases",
+    "neo-complex-relationships",
+    "neo-recursive-relationships",
+    "neo-standalone-entities",
+    "neo-attribute-types"
+  ]
+}
