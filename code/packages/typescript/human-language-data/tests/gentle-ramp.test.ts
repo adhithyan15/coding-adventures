@@ -4,9 +4,10 @@ import { buildCurriculumGapReport } from "../src/report.js";
 import { GENTLE_RAMP_PRIORITIES, renderGentleRamp } from "../src/gentle-ramp.js";
 import { runGentleRampReport } from "../src/gentle-ramp-cli.js";
 import {
+  defaultCurriculumRoot,
+  deriveGentleRampSnapshotTracks,
   loadChapterPolicy,
-  loadEverything,
-  loadGentleRampSnapshotTracks,
+  loadEverythingAsync,
   loadTrackChapters,
 } from "../src/loader.js";
 import type { BookCorpus, ChapterPolicy, LanguageRegistry } from "../src/types.js";
@@ -95,9 +96,9 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(error).toContain("--root requires a value");
   });
 
-  it("derives the real corpus as debt rather than mistaking unmeasured tracks for gentle ones", () => {
-    const { registry, lessons, books, curricula, spine } = loadEverything();
-    const report = buildCurriculumGapReport({
+  it("derives the real corpus as debt rather than mistaking unmeasured tracks for gentle ones", async () => {
+    const { registry, lessons, books, curricula, spine } = await loadEverythingAsync();
+    const inputs = {
       registry,
       lessons,
       books,
@@ -105,9 +106,10 @@ describe("the corpus-wide super-gentle ramp", () => {
       spine,
       chapterPolicy: loadChapterPolicy(),
       trackChapters: loadTrackChapters(),
-    }).gentleRamp!;
+    };
+    const report = buildCurriculumGapReport(inputs).gentleRamp!;
 
-    const derivedTracks = loadGentleRampSnapshotTracks();
+    const derivedTracks = deriveGentleRampSnapshotTracks(defaultCurriculumRoot(), inputs);
     const priority = new Map(GENTLE_RAMP_PRIORITIES.map((kind, index) => [kind, index]));
     const derivedQueue = derivedTracks.flatMap((track) => track.findings).sort(
       (a, b) =>

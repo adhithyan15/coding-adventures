@@ -173,6 +173,7 @@ rank/slug/digest fragment instead.
 import {
   languagesForConcept,
   loadEverything,
+  loadEverythingAsync,
   mixedCurriculumFrontier,
   compileLessonActivities,
   validate,
@@ -180,6 +181,11 @@ import {
 } from "@coding-adventures/human-language-data";
 
 const { curricula, dataset, lessons, registry, scripts, soundTags, spine, taxonomy } = loadEverything();
+
+// An awaitable twin reads lesson sources in bounded groups of at most 16 per
+// track. It returns the same validated result and remains content-keyed when
+// the test-only lesson cache is configured:
+const asynchronousCorpus = await loadEverythingAsync();
 
 // Typed activities compile directly from block metadata, never from prose.
 const activities = compileLessonActivities(lessons[0].blocks);

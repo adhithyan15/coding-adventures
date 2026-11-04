@@ -191,10 +191,12 @@ export {
   loadModalityManifest,
   loadModalityManifestAsync,
   loadGentleRampSnapshotTracks,
+  deriveGentleRampSnapshotTracks,
   modalityManifestById,
   loadScripts,
   loadLetterLedgers,
   loadEverything,
+  loadEverythingAsync,
   loadTrackLessons,
   loadTrackLessonsAsync,
 } from "./loader.js";

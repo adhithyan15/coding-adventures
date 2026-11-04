@@ -23,6 +23,11 @@ consumers.
 * Move genuinely whole-corpus async-capable tests and commands to this API only
   where their behavior remains identical. Keep every lesson, assertion,
   security guard, per-test timeout, and >=85% coverage gate.
+* For the gentle-ramp parity test, expose the existing snapshot-retirement and
+  report-derivation operation over already-loaded source inputs. Both sides of
+  the comparison still derive the complete report independently; only the
+  redundant second filesystem traversal is removed. The public no-argument
+  snapshot loader keeps reading and validating canonical sources itself.
 * Verify sync/async result parity on a small fixture and real-track lesson
   identity/hash parity. Confirm isolated failing cases and then the unweakened
   full Windows suite on the exact final source before considering PR #18960

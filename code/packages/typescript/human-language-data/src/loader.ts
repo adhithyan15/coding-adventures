@@ -47,7 +47,7 @@ import {
 import type { TrackGentleRamp } from "./gentle-ramp.js";
 import { assertGentleRampSnapshotsRetired } from "./gentle-ramp-retirement.js";
 import { narrationLessonIdentityIndex } from "./generated-hash-shards.js";
-import { buildCurriculumGapReport } from "./report.js";
+import { buildCurriculumGapReport, type CurriculumGapReportInput } from "./report.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import { lessonCacheFor, type LessonCache } from "./lesson-cache.js";
 import {
@@ -995,8 +995,9 @@ export function loadGentleRampSnapshotTracks(
   root = defaultCurriculumRoot(),
   registry = loadLanguageRegistry(root),
 ): TrackGentleRamp[] {
+  // Preserve the old refusal order before any canonical owner is opened.
   assertGentleRampSnapshotsRetired(root);
-  const report = buildCurriculumGapReport({
+  return deriveGentleRampSnapshotTracks(root, {
     registry,
     lessons: loadLessons(root),
     books: loadBookCorpus(root),
@@ -1004,7 +1005,24 @@ export function loadGentleRampSnapshotTracks(
     spine: loadCurriculumSpine(root),
     chapterPolicy: loadChapterPolicy(root),
     trackChapters: loadTrackChapters(root),
-  }).gentleRamp;
+  });
+}
+
+/**
+ * The source-derived part of the retired-snapshot compatibility contract.
+ *
+ * A caller that already loaded the same canonical inputs can reuse those
+ * arrays rather than traverse 63,000 source files again. This is still a fresh
+ * full report computation, and the retired artifact path is checked on every
+ * call. The historical loader above does not accept caller-supplied data: it
+ * continues to open every canonical owner itself.
+ */
+export function deriveGentleRampSnapshotTracks(
+  root: string,
+  input: CurriculumGapReportInput,
+): TrackGentleRamp[] {
+  assertGentleRampSnapshotsRetired(root);
+  const report = buildCurriculumGapReport(input).gentleRamp;
   if (report === undefined) {
     throw new Error("chapter policy was not loaded; cannot derive the gentle ramp");
   }
@@ -1159,6 +1177,41 @@ export function loadEverything(root = defaultCurriculumRoot()): {
   const curricula = loadLanguageCurricula(root);
   const books = loadBookCorpus(root);
   const lessons = loadLessons(root);
+  const scripts = loadScripts(root);
+  const soundTags = loadSoundTagRegistry(root, registry);
+  const letterLedgers = loadLetterLedgers(root);
+  return {
+    taxonomy,
+    registry,
+    spine,
+    curricula,
+    books,
+    lessons,
+    scripts,
+    soundTags,
+    letterLedgers,
+    dataset: buildDataset(taxonomy, lessons),
+  };
+}
+
+/**
+ * Awaitable twin of `loadEverything` for whole-corpus consumers.
+ *
+ * The metadata order is deliberately the same as the synchronous function.
+ * Only lessons cross an await: `loadLessonsAsync` reads at most 16 source files
+ * at once inside a track, then parses and validates those exact bytes in the
+ * original sorted order. In particular, this does not trust a generated
+ * manifest or an mtime to shortcut a source edit.
+ */
+export async function loadEverythingAsync(
+  root = defaultCurriculumRoot(),
+): Promise<ReturnType<typeof loadEverything>> {
+  const taxonomy = loadTaxonomy(root);
+  const registry = loadLanguageRegistry(root);
+  const spine = loadCurriculumSpine(root);
+  const curricula = loadLanguageCurricula(root);
+  const books = loadBookCorpus(root);
+  const lessons = await loadLessonsAsync(root);
   const scripts = loadScripts(root);
   const soundTags = loadSoundTagRegistry(root, registry);
   const letterLedgers = loadLetterLedgers(root);
