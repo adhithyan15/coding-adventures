@@ -361,8 +361,10 @@ multiple roots, overrides, and dynamic roots remain conservative.
 Checked integer divisors may also leave a reduced rational coefficient. The
 compiler floors or ceilings the resulting scaled root with exact integer
 arithmetic. Products of nonnegative static roots may combine their radicands
-under the same checked `u128` proof. Rooted divisors, zero divisors, overflow,
-overrides, and dynamic roots remain conservative.
+under the same checked `u128` proof. A nonzero static root divisor may be
+rationalized into that radicand and the checked denominator, with exact common
+factors cancelled first. Zero or dynamic root divisors, overflow, overrides,
+and dynamic roots remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.

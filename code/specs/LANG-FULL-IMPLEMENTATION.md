@@ -85,8 +85,10 @@ multiple roots, overrides, and dynamic roots remain outside the proof.
 Checked integer divisors may also leave a reduced rational coefficient. Exact
 integer arithmetic supplies the mathematical floor or negative ceiling while
 products of nonnegative static roots combine their radicands under the same
-checked `u128` proof. Rooted divisors, zero divisors, overflow, overrides, and
-dynamic roots remain outside the proof.
+checked `u128` proof. Nonzero static root divisors are rationalized into that
+radicand and the checked denominator after exact common-factor cancellation.
+Zero or dynamic root divisors, overflow, overrides, and dynamic roots remain
+outside the proof.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
