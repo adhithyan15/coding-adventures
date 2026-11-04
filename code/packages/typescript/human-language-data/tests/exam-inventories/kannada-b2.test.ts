@@ -10,13 +10,13 @@ import {
 describe("the committed Kannada B2 inventory", () => {
   const inventory = loadExamInventory("kannada", "B2");
 
-  it("is a source-bounded partial project inventory, not a borrowed certificate", () => {
+  it("is a closed project-owned inventory boundary, not a borrowed certificate", () => {
     expect(inventory.about).toContain("PROJECT-DEFINED");
     expect(inventory.about).toContain("NOT AN EXTERNAL KANNADA QUALIFICATION");
-    expect(isExamInventoryComplete(inventory)).toBe(false);
+    expect(isExamInventoryComplete(inventory)).toBe(true);
     expect(Object.keys(inventory.scope).sort()).toEqual([...EXAM_CONTENT_DIMENSIONS].sort());
     for (const dimension of EXAM_CONTENT_DIMENSIONS) {
-      expect(inventory.scope[dimension].status, dimension).toBe("partial");
+      expect(inventory.scope[dimension].status, dimension).toBe("complete");
       expect(inventory.scope[dimension].source.trim().length, dimension).toBeGreaterThan(20);
       expect(inventory.scope[dimension].note.trim().length, dimension).toBeGreaterThan(40);
     }
@@ -39,6 +39,7 @@ describe("the committed Kannada B2 inventory", () => {
     }
     expect(inventory.scope.lexicon.note).toContain("not a B2 word list");
     expect(inventory.scope.grammar.note).toContain("not a finite Kannada B2 grammar");
+    expect(inventory.about).toContain("finite project-owned boundary");
   });
 
   it("enumerates all four content dimensions with stable Kannada-owned ids", () => {
@@ -82,7 +83,7 @@ describe("the committed Kannada B2 inventory", () => {
       covered: 0,
       unmapped: 36,
       percent: 0,
-      inventoryComplete: false,
+      inventoryComplete: true,
       byCategory: {
         "Communicative functions and discourse": { enumerated: 9, covered: 0 },
         "Kannada grammar and register": { enumerated: 9, covered: 0 },
@@ -90,6 +91,6 @@ describe("the committed Kannada B2 inventory", () => {
         "Lexicon and genre domains": { enumerated: 9, covered: 0 },
       },
     });
-    expect(formatExamCoverage(coverage)).toContain("kannada B2 (partial inventory)");
+    expect(formatExamCoverage(coverage)).toContain("kannada B2: 0/36 points covered (0%)");
   }, 60_000);
 });
