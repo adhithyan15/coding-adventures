@@ -1,8 +1,8 @@
 Kannada, chapter 103: Where I Live.
-6 lessons. All 6 can be done entirely by ear.
+7 lessons. All 7 can be done entirely by ear.
 
 
-Lesson 1 of 6.
+Lesson 1 of 7.
 ಮನೆ (mane) — house, home.
 
 Warm-up.
@@ -35,7 +35,7 @@ Wrap-up Recall.
 What does ಮನೆ (mane) mean? ("House, home".) Say it once more.
 
 
-Lesson 2 of 6.
+Lesson 2 of 7.
 ಬೀದಿ (bīdi) — street.
 
 Warm-up.
@@ -67,7 +67,7 @@ Wrap-up Recall.
 What does ಬೀದಿ (bīdi) mean? ("Street".) Say it once more.
 
 
-Lesson 3 of 6.
+Lesson 3 of 7.
 ನಗರ (nagara) — city.
 
 Warm-up.
@@ -99,7 +99,7 @@ Wrap-up Recall.
 What does ನಗರ (nagara) mean? ("City".) Say it once more.
 
 
-Lesson 4 of 6.
+Lesson 4 of 7.
 ದೇಶ (dēśa) — country.
 
 Warm-up.
@@ -132,7 +132,7 @@ Wrap-up Recall.
 What does ದೇಶ (dēśa) mean? ("Country".) Say it once more.
 
 
-Lesson 5 of 6.
+Lesson 5 of 7.
 ರಾಜ್ಯ (rājya) — state (of a country).
 
 Warm-up.
@@ -164,7 +164,7 @@ Wrap-up Recall.
 What does ರಾಜ್ಯ (rājya) mean? ("State (of a country)".) Say it once more.
 
 
-Lesson 6 of 6.
+Lesson 6 of 7.
 ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? (nīvu ellinda bandiddīri?) — where are you from?
 
 Warm-up.
@@ -179,8 +179,31 @@ Change Chapter 5's ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli,
 You'll want to know: ask it as one respectful frame.
 ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? nīvu ellinda bandiddīri? — “Where are you from?”
 Keep ಬಂದಿದ್ದೀರಿ (bandiddīri) inside this fixed frame.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: Beṅgaḷūru — Bengaluru; Beṅgaḷūrininda — from Bengaluru]
+[pause 8 seconds for the answer]
+[your turn — ask: ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? (nīvu ellinda bandiddīri?)]
+[pause 8 seconds for the answer]
+[your turn — recall: ask for a home town, then say city, country and state]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Ask “Where are you from?” Which ending turns ಎಲ್ಲಿ into “from where”? (-ಇಂದ, “from”.)
+
+
+Lesson 7 of 7.
+ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ. (nānu Beṅgaḷūrininda bandiddēne) — I am from Bengaluru.
+
+Warm-up.
+[pause 2 seconds]
+Ask ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? (nīvu ellinda bandiddīri?) Then say ಬೆಂಗಳೂರಿನಿಂದ.
+
+You'll want to know: the answer.
 ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ. nānu Beṅgaḷūrininda bandiddēne. — “I am from Bengaluru.”
-ಎಲ್ಲಿಂದ asks; ಬೆಂಗಳೂರಿನಿಂದ answers.
+ಎಲ್ಲಿಂದ asks; ಬೆಂಗಳೂರಿನಿಂದ answers. Keep the whole answer as one frame.
 
 The exchange: a second shape to recognise.
 Recognise this attested short exchange:
@@ -189,17 +212,13 @@ Recognise this attested short exchange:
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: Beṅgaḷūru — Bengaluru; Beṅgaḷūrininda — from Bengaluru]
-[pause 8 seconds for the answer]
 [your turn — ask: ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? (nīvu ellinda bandiddīri?)]
 [pause 8 seconds for the answer]
-[your turn — answer: ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.]
+[your turn — answer: ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ. (nānu Beṅgaḷūrininda bandiddēne)]
 [pause 8 seconds for the answer]
 [your turn — recognise: ಕರ್ನಾಟಕದವನೇ? asks whether a male addressee is from Karnataka]
-[pause 8 seconds for the answer]
-[your turn — recall: ask for a home town, then say city, country and state]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Ask “Where are you from?” Answer “I am from Bengaluru.” Which ending does both pieces turn on? (-ಇಂದ, “from”.)
+Ask “Where are you from?” Answer “I am from Bengaluru.” Then recognise the Karnataka relation question.

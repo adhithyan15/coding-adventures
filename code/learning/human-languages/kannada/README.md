@@ -137,12 +137,14 @@ language.
 Chapter 103 now supplies a slow ask-and-answer path for the six related A1
 inventory demands around personal origin. The 2026-11-04 audit found that
 **ಊರು**, **ನಗರ**, **ದೇಶ**, and **ರಾಜ್ಯ** already had direct lesson owners; the
-gap was joining those words to a person and a source place. The new
-[`KA-C103-origin`](./lessons/KA-C103-origin.md) lesson teaches **-ಇಂದ** only in
-that concrete place-source job, the respectful **ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?**
-question, and **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ** as its answer. Chapters 104,
-105, and 108 retrieve the exchange across the R1, R2, and R3 windows before the
-established A1 boundary.
+gap was joining those words to a person and a source place. Two short lessons
+keep that composition within the gentle atom budget:
+[`KA-C103-origin`](./lessons/KA-C103-origin.md) teaches **-ಇಂದ** only in its
+concrete place-source job and the respectful **ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?**
+question; [`KA-C103-origin-answer`](./lessons/KA-C103-origin-answer.md) adds
+**ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ** and scoped relation recognition. Chapters
+104, 105, and 108 retrieve the complete exchange across the R1, R2, and R3
+windows before the established A1 boundary.
 
 The exact Kannada surfaces are bounded to official Government of India
 transcripts. They do not set a CEFR level or supply an external Kannada A1

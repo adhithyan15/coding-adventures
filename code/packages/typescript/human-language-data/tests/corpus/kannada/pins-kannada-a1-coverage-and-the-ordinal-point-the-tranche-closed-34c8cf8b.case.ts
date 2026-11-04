@@ -4,6 +4,7 @@ import {
   defaultCurriculumRoot,
   loadEverything,
   loadExamInventory,
+  loadTrackChapters,
   loadTrackLessons,
 } from "../../../src/loader.js";
 import {
@@ -78,4 +79,16 @@ it("pins Kannada A1 coverage, and the ordinal point the tranche closed", () => {
   expect(formatExamCoverage(coverage)).toContain(
     "kannada A1 (partial inventory): 204/258 points covered (79%)",
   );
+
+  const chapter103 = loadTrackChapters()
+    .find((track) => track.language === "kannada")
+    ?.chapters.find((chapter) => chapter.chapter === 103);
+  expect(chapter103?.payoff.lesson).toBe("KA-C103-origin-answer");
+  expect(chapter103?.payoff.assesses).toEqual([
+    "KA-LEX-C103-ORIGIN-06",
+    "KA-GRAMMAR-C103-ORIGIN-RELATION-07",
+    "KA-GRAMMAR-C103-ABLATIVE-INDA-08",
+    "KA-FUNCTION-C103-ASK-ORIGIN-09",
+    "KA-FUNCTION-C103-SAY-ORIGIN-10",
+  ]);
 }, 60_000);

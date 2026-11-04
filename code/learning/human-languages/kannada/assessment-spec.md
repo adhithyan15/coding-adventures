@@ -81,7 +81,8 @@ Two contemporary official sources supply a narrow primary-source boundary for
 the exact forms. The Ministry of Tourism's *Aaj Ka Vakya* gives **ನೀವು ಎಲ್ಲಿಂದ
 ಬಂದಿದ್ದೀರಿ?** for “Where are you from?”, and a Press Information Bureau
 transcript gives **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ** for “I am from Bengaluru.”
-The Government of India's Kannada record of *Pariksha Pe Charcha 2023* also
+The Prime Minister's Office Kannada record of the Prime Minister's surprise
+interaction with twelfth-grade students and their parents on 3 June 2021 also
 prints the recognition pair **ನೀನು ಕರ್ನಾಟಕದವನೇ?** and **ಹೌದು ಸರ್,
 ಬೆಂಗಳೂರಿನಿಂದ**. The lesson may teach the respectful question and first-person
 answer as fixed A1 frames, and may use the gendered recognition pair only with
@@ -90,8 +91,9 @@ finite Kannada syllabus, certify the project, or establish learner readiness.
 
 Sources checked 2026-11-04:
 
-- [Government of India, Prime Minister's Office, *Pariksha Pe Charcha 2023*
-  Kannada transcript](https://www.pmindia.gov.in/kn/news_updates/%E0%B2%AA%E0%B2%B0%E0%B3%80%E0%B2%95%E0%B3%8D%E0%B2%B7%E0%B2%BE-%E0%B2%AA%E0%B3%87-%E0%B2%9A%E0%B2%B0%E0%B3%8D%E0%B2%9A%E0%B2%BE-2023-%E0%B2%A8%E0%B2%B2%E0%B3%8D%E0%B2%B2%E0%B2%BF-%E0%B2%B5/)
+- [Government of India, Prime Minister's Office, *Surprise interaction with
+  twelfth-grade students and their parents*, Kannada transcript, 3 June
+  2021](https://www.pmindia.gov.in/kn/news_updates/%E0%B2%B9%E0%B2%A8%E0%B3%8D%E0%B2%A8%E0%B3%86%E0%B2%B0%E0%B2%A1%E0%B2%A8%E0%B3%87-%E0%B2%A4%E0%B2%B0%E0%B2%97%E0%B2%A4%E0%B2%BF%E0%B2%AF-%E0%B2%B5%E0%B2%BF%E0%B2%A6%E0%B3%8D%E0%B2%AF%E0%B2%BE%E0%B2%B0/)
 - [Ministry of Tourism, *Aaj Ka Vakya*, sentence 12: “Where are you
   from?”](https://tourism.gov.in/sites/default/files/2020-10/12.pdf)
 - [Press Information Bureau, Kannada transcript of *Mann Ki Baat*, episode

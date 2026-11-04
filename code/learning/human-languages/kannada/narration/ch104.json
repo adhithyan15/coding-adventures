@@ -4,7 +4,7 @@
   "chapter": 104,
   "title": "People at Work",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b48366610a8136b9",
+  "sourceHash": "fnv1a64:0228ea930f0aa6e5",
   "lessons": [
     {
       "id": "KA-C104-business",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a77cbfab298d5491",
+      "sourceHash": "fnv1a64:c663d860308445eb",
       "notice": null,
       "blocks": [
         {

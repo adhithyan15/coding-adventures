@@ -9,7 +9,7 @@ headword: "ವ್ಯಾಪಾರ"
 gloss: "business, trade"
 romanization: "vyāpāra"
 concept_tag: KA-JOBS-BUSINESS
-prerequisites: [KA-C103-state, KA-C103-origin]
+prerequisites: [KA-C103-state, KA-C103-origin-answer]
 sounds: []
 roots: [sanskrit-vyapara]
 etymology_hook: "vyāpāra ← Sanskrit vyāpāra 'occupation, business', a tatsama (CDIAL 12205)"
@@ -26,7 +26,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-C103-state, KA-C103-origin]
+reviews_of: [KA-C103-state, KA-C103-origin-answer]
 ---
 
 # ವ್ಯಾಪಾರ (vyāpāra) — business, trade

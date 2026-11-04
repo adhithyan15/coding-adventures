@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 104,
-  "sourceHash": "fnv1a64:b48366610a8136b9",
+  "sourceHash": "fnv1a64:0228ea930f0aa6e5",
   "lessonIds": [
     "KA-C104-business",
     "KA-C104-worker",
@@ -14,6 +14,6 @@
   "text": "kannada/narration/ch104.txt",
   "json": "kannada/narration/ch104.json",
   "textHash": "fnv1a64:b0c11a7008ef0d1b",
-  "jsonHash": "fnv1a64:ae861421babe1260",
+  "jsonHash": "fnv1a64:9864c278b78b11e4",
   "findings": []
 }

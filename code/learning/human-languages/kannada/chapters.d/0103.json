@@ -7,10 +7,12 @@
     "SPINE-EXCHANGE-NAMES"
   ],
   "payoff": {
-    "lesson": "KA-C103-origin",
+    "lesson": "KA-C103-origin-answer",
     "kind": "production",
     "summary": "Complete the last lesson of chapter 103: I can ask and say where somebody is from.",
     "assesses": [
+      "KA-LEX-C103-ORIGIN-06",
+      "KA-GRAMMAR-C103-ORIGIN-RELATION-07",
       "KA-GRAMMAR-C103-ABLATIVE-INDA-08",
       "KA-FUNCTION-C103-ASK-ORIGIN-09",
       "KA-FUNCTION-C103-SAY-ORIGIN-10"
