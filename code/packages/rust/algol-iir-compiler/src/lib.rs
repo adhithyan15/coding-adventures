@@ -3725,6 +3725,14 @@ impl Compiler {
                 _ => None,
             };
         }
+        if let Some((coefficient, radicand)) = self.exact_static_sqrt_power_factors(node) {
+            let coefficient = if negative {
+                coefficient.checked_neg()?
+            } else {
+                coefficient
+            };
+            return self.exact_scaled_floor_root_value(coefficient, 1, radicand);
+        }
         if node.rule_name != "proc_call" {
             let sequence = pieces(node);
             if sequence.len() >= 3 && !sequence.len().is_multiple_of(2) {
@@ -3758,6 +3766,22 @@ impl Compiler {
                                 radicand
                                     .unwrap_or(1_u128)
                                     .checked_mul(value as u128)?,
+                            );
+                        } else if let Some((power_coefficient, power_radicand)) =
+                            self.exact_static_sqrt_power_factors(operand)
+                        {
+                            if operator != "*" {
+                                return None;
+                            }
+                            coefficient = i64::try_from(
+                                (coefficient as i128)
+                                    .checked_mul(power_coefficient as i128)?,
+                            )
+                            .ok()?;
+                            radicand = Some(
+                                radicand
+                                    .unwrap_or(1_u128)
+                                    .checked_mul(power_radicand)?,
                             );
                         } else {
                             let value = self
@@ -3929,6 +3953,55 @@ impl Compiler {
         }
         let value = self.exact_static_integer_normalizer_operand_value(actuals[0])?;
         u64::try_from(value).ok()
+    }
+
+    /// Reduce a bounded nonnegative power of one static square root to an
+    /// integer coefficient times at most one remaining square root.
+    fn exact_static_sqrt_power_factors(&self, node: &GrammarASTNode) -> Option<(i64, u128)> {
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.exact_static_sqrt_power_factors(child);
+        }
+        if let Some((sign, child)) = single_signed_child(node) {
+            return (sign == "+")
+                .then(|| self.exact_static_sqrt_power_factors(child))?;
+        }
+        if node.rule_name != "expr_pow" {
+            return None;
+        }
+
+        let sequence = pieces(node);
+        if sequence.len() < 3 || sequence.len().is_multiple_of(2) {
+            return None;
+        }
+        let mut operands = Vec::new();
+        for (index, piece) in sequence.iter().enumerate() {
+            if index.is_multiple_of(2) {
+                let Piece::Node(operand) = piece else {
+                    return None;
+                };
+                operands.push(*operand);
+            } else if !matches!(piece, Piece::Op(operator) if matches!(operator.as_str(), "^" | "**"))
+            {
+                return None;
+            }
+        }
+
+        let (base, exponents) = operands.split_first()?;
+        let radicand = self.exact_static_sqrt_radicand(base)?;
+        let exponent = self.static_nonnegative_power_chain_with(exponents, &|operand| {
+            let value = self.exact_static_integer_normalizer_operand_value(operand)?;
+            (0..=MAX_POW_UNROLL_EXPONENT as i64)
+                .contains(&value)
+                .then_some(value as u32)
+        })?;
+        let coefficient = (radicand as u128).checked_pow(exponent / 2)?;
+        let coefficient = i64::try_from(coefficient).ok()?;
+        let remaining_radicand = if exponent.is_multiple_of(2) {
+            1
+        } else {
+            radicand as u128
+        };
+        Some((coefficient, remaining_radicand))
     }
 
     fn exact_scaled_floor_root_value(
@@ -17605,6 +17678,35 @@ mod tests {
         ] {
             compile_source(source, "test").expect_err(
                 "dynamic and zero root divisors plus checked denominator overflow must fail closed",
+            );
+        }
+    }
+
+    #[test]
+    fn al4_powered_floor_root_products_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ 3 / 80)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(entier(8)) ^ 2 / 4)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(2)) ^ 3 * sqrt(entier(8)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-(sqrt(entier(15)) ^ 3 / 15))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(2)) ^ 2 ^ 2)) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "bounded static floor-root powers may reduce to checked root products for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin integer procedure dynamic; dynamic := 3; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ dynamic())) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) ^ (-1))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(2)) ^ 65)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(9223372036854775807)) ^ 3)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / (sqrt(entier(5)) ^ 3))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "dynamic, negative, oversized, overflowing, and divisor root powers must fail closed",
             );
         }
     }

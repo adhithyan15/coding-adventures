@@ -7322,6 +7322,17 @@ fn main() { out(1, VALUE); }\n",
         release: None,
         case: None,
     },
+    // A bounded static power of one square root reduces to an integer
+    // coefficient times at most one remaining root before flooring.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin output(entier(sqrt(entier(80)) ^ 3 / 80)) end",
+        expect: Expect::Stdout("8"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+        release: None,
+        case: None,
+    },
     // ALGOL 60 — a variable-free false body condition makes its dependency
     // write unreachable, so capped while analysis keeps the stable local.
     Prog {
@@ -18673,6 +18684,31 @@ fn algol_rationalized_floor_root_quotients_run_on_every_available_standard_backe
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but rationalized floor-root quotients did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_powered_floor_root_products_run_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("entier(sqrt(entier(80)) ^ 3 / 80)")
+        })
+        .expect("the powered floor-root product ALGOL program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but powered floor-root products did not complete"
             );
             continue;
         };

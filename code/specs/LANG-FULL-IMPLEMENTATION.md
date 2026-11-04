@@ -89,6 +89,11 @@ checked `u128` proof. Nonzero static root divisors are rationalized into that
 radicand and the checked denominator after exact common-factor cancellation.
 Zero or dynamic root divisors, overflow, overrides, and dynamic roots remain
 outside the proof.
+Bounded nonnegative powers of one static root reduce to an exact integer
+coefficient times at most one remaining root, and may compose through checked
+multiplication and later static coefficient division before flooring. Dynamic
+or negative exponents, exponent chains beyond the existing unroll cap,
+overflow, and powered root divisors remain outside the proof.
 The checked sign-rooted integer-reduction proof additionally accepts exact
 straight-line local integer snapshots as leaves while captured globals,
 by-name actuals, dynamic assignments, and reductions beyond `2^53` fail closed.
