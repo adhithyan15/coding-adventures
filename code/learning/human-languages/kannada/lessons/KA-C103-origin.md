@@ -15,6 +15,7 @@ concept_tag: KA-HOME-ORIGIN
 prerequisites: [KA-C01-haudu, KA-C05-iru, KA-C41-where, KA-C91-hometown, KA-C103-city, KA-C103-country, KA-C103-state]
 sounds: []
 roots: []
+etymology_hook: "ellinda: Kannada elli 'where' + -inda 'from'; the earlier origin of elli is not settled"
 duration:
   max_seconds: 299
 requires:
@@ -41,12 +42,18 @@ reviews_of: [KA-C41-where, KA-C91-hometown, KA-C103-state, KA-C05-iru]
 ## Grammar Lens: -ಇಂದ means “from”
 <!-- hl-knowledge: introduces=[KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-LEX-C103-ORIGIN-06]; assesses=[KA-LEX-C05-IRU-01, KA-GRAMMAR-C05-IRU-02, KA-LEX-C41-DEIXIS-06] -->
 
-Change Chapter 5's **ಬೆಂಗಳೂರಿನಲ್ಲಿ** (*Beṅgaḷūrinalli*, “in Bengaluru”):
+Start with the place form **ಬೆಂಗಳೂರಿನಲ್ಲಿ** (*Beṅgaḷūrinalli*, “in Bengaluru”):
 
 > **ಬೆಂಗಳೂರಿನಿಂದ** — *Beṅgaḷūrininda* — **from Bengaluru**
 
 **-ಇಂದ** (*-inda*) marks a starting place. **ಎಲ್ಲಿ** (*elli*, “where?”) becomes
 **ಎಲ್ಲಿಂದ** (*ellinda*), “from where?”
+
+## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C103-ORIGIN-06, KA-GRAMMAR-C103-ABLATIVE-INDA-08] -->
+
+**ಎಲ್ಲಿಂದ** (*ellinda*) is built in Kannada from **ಎಲ್ಲಿ** (*elli*, “where?”)
+and **-ಇಂದ** (*-inda*, “from”). The earlier origin of **ಎಲ್ಲಿ** is not settled.
 
 ## You'll want to know: ask it as one respectful frame
 <!-- hl-knowledge: introduces=[KA-FUNCTION-C103-ASK-ORIGIN-09]; assesses=[KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-LEX-C103-ORIGIN-06, KA-LEX-C41-DEIXIS-06] -->

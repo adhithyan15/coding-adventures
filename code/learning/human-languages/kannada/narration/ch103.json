@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "Where I Live",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ef1d823bc091e8e9",
+  "sourceHash": "fnv1a64:df7424e3b6460329",
   "lessons": [
     {
       "id": "KA-C103-house",
@@ -697,7 +697,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:455b916171dec88a",
+      "sourceHash": "fnv1a64:3d1846de92631e5d",
       "notice": null,
       "blocks": [
         {
@@ -724,7 +724,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Change Chapter 5's ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli, “in Bengaluru”):"
+              "text": "Start with the place form ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli, “in Bengaluru”):"
             },
             {
               "kind": "speech",
@@ -738,6 +738,17 @@
         },
         {
           "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಎಲ್ಲಿಂದ (ellinda) is built in Kannada from ಎಲ್ಲಿ (elli, “where?”) and -ಇಂದ (-inda, “from”). The earlier origin of ಎಲ್ಲಿ is not settled."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "input",
           "title": "You'll want to know: ask it as one respectful frame",
           "segments": [
@@ -752,7 +763,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -792,7 +803,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -823,7 +834,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59900384b09e447c",
+      "sourceHash": "fnv1a64:e589cfc9daa571ba",
       "notice": null,
       "blocks": [
         {
@@ -908,12 +919,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECOGNISE",
+              "action": "IDENTIFY",
               "instruction": "ಕರ್ನಾಟಕದವನೇ? asks whether a male addressee is from Karnataka",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECOGNISE: **ಕರ್ನಾಟಕದವನೇ?** asks whether a male addressee is from Karnataka]"
+              "source": "[YOU IDENTIFY: **ಕರ್ನಾಟಕದವನೇ?** asks whether a male addressee is from Karnataka]"
             }
           ]
         },

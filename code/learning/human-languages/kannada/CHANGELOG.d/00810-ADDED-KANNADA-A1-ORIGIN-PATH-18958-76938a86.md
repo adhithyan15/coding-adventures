@@ -13,6 +13,10 @@
 - Added R1, R2, and R3 retrieval in chapters 104, 105, and 108, changed the
   chapter-103 payoff to the origin exchange, and regenerated the Kannada book,
   narration and modality owners.
+- The full corpus gate also caught three integration details that the focused
+  checks did not: the new word now has a visible, explicit unknown-origin note;
+  its spoken recognition cue uses the established classified action; and its
+  prose no longer adds a moving cross-chapter number reference.
 - Closed exactly six Kannada A1 inventory points: place names, the origin
   relation, ablative source, asking origin, stating origin, and geography
   vocabulary. Strict coverage moves from 198/258 to 204/258 and uncovered

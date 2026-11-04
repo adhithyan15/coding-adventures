@@ -172,9 +172,12 @@ Warm-up.
 Ask ನಿಮ್ಮ ಊರು ಯಾವುದು? Then say city, country and state.
 
 Grammar Lens: -ಇಂದ means “from”.
-Change Chapter 5's ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli, “in Bengaluru”):
+Start with the place form ಬೆಂಗಳೂರಿನಲ್ಲಿ (Beṅgaḷūrinalli, “in Bengaluru”):
 ಬೆಂಗಳೂರಿನಿಂದ — Beṅgaḷūrininda — from Bengaluru.
 -ಇಂದ (-inda) marks a starting place. ಎಲ್ಲಿ (elli, “where?”) becomes ಎಲ್ಲಿಂದ (ellinda), “from where?”
+
+The word, taken apart.
+ಎಲ್ಲಿಂದ (ellinda) is built in Kannada from ಎಲ್ಲಿ (elli, “where?”) and -ಇಂದ (-inda, “from”). The earlier origin of ಎಲ್ಲಿ is not settled.
 
 You'll want to know: ask it as one respectful frame.
 ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ? nīvu ellinda bandiddīri? — “Where are you from?”
@@ -216,7 +219,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — answer: ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ. (nānu Beṅgaḷūrininda bandiddēne)]
 [pause 8 seconds for the answer]
-[your turn — recognise: ಕರ್ನಾಟಕದವನೇ? asks whether a male addressee is from Karnataka]
+[your turn — identify: ಕರ್ನಾಟಕದವನೇ? asks whether a male addressee is from Karnataka]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.

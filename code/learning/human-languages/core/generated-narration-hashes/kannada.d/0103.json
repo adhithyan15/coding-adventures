@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 103,
-  "sourceHash": "fnv1a64:ef1d823bc091e8e9",
+  "sourceHash": "fnv1a64:df7424e3b6460329",
   "lessonIds": [
     "KA-C103-house",
     "KA-C103-street",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch103.txt",
   "json": "kannada/narration/ch103.json",
-  "textHash": "fnv1a64:6540f394dbae9351",
-  "jsonHash": "fnv1a64:6583a17bfe17147e",
+  "textHash": "fnv1a64:f9f36fe032478f5e",
+  "jsonHash": "fnv1a64:57eb831083785e3f",
   "findings": []
 }

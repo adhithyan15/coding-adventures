@@ -65,7 +65,7 @@ the respectful **ಎಲ್ಲಿಂದ** question and an **-ಇಂದ** answer.
 [PAUSE 1s]
 - [YOU ASK: **ನೀವು ಎಲ್ಲಿಂದ ಬಂದಿದ್ದೀರಿ?**]
 - [YOU ANSWER: **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ.**]
-- [YOU RECOGNISE: **ಕರ್ನಾಟಕದವನೇ?** asks whether a male addressee is from Karnataka]
+- [YOU IDENTIFY: **ಕರ್ನಾಟಕದವನೇ?** asks whether a male addressee is from Karnataka]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C103-ORIGIN-06, KA-GRAMMAR-C103-ORIGIN-RELATION-07, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-ASK-ORIGIN-09, KA-FUNCTION-C103-SAY-ORIGIN-10] -->
