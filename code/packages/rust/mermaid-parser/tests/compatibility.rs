@@ -289,6 +289,14 @@ const ER_UPSTREAM_ATTRIBUTE_METADATA_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-upstream-attribute-metadata-11.16.1-visual-corpus.json"
 ));
+const ER_UPSTREAM_LABELS_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-labels-11.16.1-corpus.json"
+));
+const ER_UPSTREAM_LABELS_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-labels-11.16.1-visual-corpus.json"
+));
 const ER_STYLES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
@@ -2658,6 +2666,37 @@ fn pinned_er_upstream_attribute_metadata_reaches_semantic_ir() {
             "author: string [FK]"
         ]
     );
+}
+
+#[test]
+fn pinned_er_upstream_labels_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_UPSTREAM_LABELS_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(ER_UPSTREAM_LABELS_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), visual_names.len());
+
+    let diagrams = fixtures
+        .iter()
+        .zip(visual_names)
+        .map(|(fixture, visual_name)| {
+            assert_eq!(fixture["name"], *visual_name);
+            parse_er_diagram(fixture["source"].as_str().unwrap()).unwrap()
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(diagrams[0].relationships.len(), 8);
+    assert_eq!(diagrams[1].title.as_deref(), Some("simple ER diagram"));
+    assert_eq!(diagrams[2].nodes.iter().find(|node| node.id == "p").unwrap().label, "Person");
+    assert_eq!(
+        diagrams[2].nodes.iter().find(|node| node.id == "c").unwrap().label,
+        "Customer Account"
+    );
+    assert_eq!(
+        diagrams[3].relationships.last().unwrap().label.as_deref(),
+        Some("has\none\ntwo\nthree\n...\nNth")
+    );
+    assert_eq!(diagrams[4].nodes[0].label, "Photograph");
 }
 
 #[test]
