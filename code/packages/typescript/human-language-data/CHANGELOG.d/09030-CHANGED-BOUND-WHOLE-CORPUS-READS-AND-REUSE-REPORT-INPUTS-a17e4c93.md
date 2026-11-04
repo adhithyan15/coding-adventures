@@ -27,8 +27,9 @@
 - Add an anchored, bounded reader for every direct curriculum-membership owner
   and an awaitable curriculum loader. Fixture parity, corruption, and
   redirected-directory tests cover the new path. The track-progress command
-  uses it, but the full-corpus Windows run still exceeds the unchanged
-  30-second case budget; this is not yet a release-ready fix.
+  uses it. Its read-only card, check, and report tests now share one complete
+  real-corpus derivation while invoking the same final mode gate as the CLI;
+  the unchanged full Windows suite remains the release acceptance gate.
 - Let the direct completion-plan command await the same bounded canonical
   lesson and membership reads while retaining the synchronous library API and
   byte-identical planning tail. The clean-corpus equivalence test remains the

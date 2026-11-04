@@ -82,7 +82,7 @@ function generatedTrackProgress(
 }
 
 /** Same canonical owners and order, with only lesson source reads bounded. */
-async function generatedTrackProgressAsync(
+export async function generatedTrackProgressAsync(
   root = defaultCurriculumRoot(),
 ): Promise<TrackProgress[]> {
   const registry = loadLanguageRegistry(root);
@@ -104,7 +104,7 @@ async function generatedTrackProgressAsync(
   );
 }
 
-function progressOutputs(
+export function progressOutputs(
   tracks: TrackProgress[],
   root: string,
 ): Map<string, string> {
@@ -160,7 +160,7 @@ export function progressDirectoryIsAbsent(root: string): boolean {
 }
 
 /** Shared final gate: both source readers produce the same rows for this path. */
-function finishTrackProgress(
+export function finishTrackProgress(
   mode: "--check" | "--report",
   tracks: TrackProgress[],
   root: string,

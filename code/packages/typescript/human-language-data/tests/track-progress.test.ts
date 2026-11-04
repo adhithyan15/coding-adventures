@@ -12,7 +12,9 @@ import { describe, expect, it, vi } from "vitest";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import type { ParsedLesson } from "../src/parse.js";
 import {
-  generatedTrackProgressOutputsAsync,
+  finishTrackProgress,
+  generatedTrackProgressAsync,
+  progressOutputs,
   progressDirectoryIsAbsent,
   runTrackProgressAsync,
   TRACK_PROGRESS_DIR,
@@ -41,12 +43,12 @@ function canCreateDirectoryLinks(): boolean {
 
 const directoryLinksAvailable = canCreateDirectoryLinks();
 
-// Every progress card for the REAL corpus, rendered once at import. Rendering
-// parses all 23 tracks, and two tests below read the result; building it inside
-// each test body is what pushed the first of them toward the 30s per-test
-// budget as the corpus grew. Import time carries no per-test budget, and no
-// test mutates the map (the one that edits a card copies it first).
-const REAL_OUTPUTS = await generatedTrackProgressOutputsAsync(defaultCurriculumRoot());
+// Derive every REAL track once from canonical sources. The read-only card,
+// check, and report cases below use the same rows; the check/report cases call
+// the exact final gate used by the direct CLI. No case edits canonical sources,
+// and the card-change case copies the map before changing its projection.
+const REAL_TRACKS = await generatedTrackProgressAsync(defaultCurriculumRoot());
+const REAL_OUTPUTS = progressOutputs(REAL_TRACKS, defaultCurriculumRoot());
 
 describe("track progress", () => {
   it("derives registry-ordered counts from lessons, maps, and book data", () => {
@@ -101,13 +103,13 @@ describe("track progress", () => {
       expect(expected, relative).toContain("Book progress:");
     }
     expect(() => lstatSync(join(root, TRACK_PROGRESS_DIR))).toThrow(/ENOENT/);
-    expect(await runTrackProgressAsync(["--check"], root)).toBe(0);
+    expect(finishTrackProgress("--check", REAL_TRACKS, root)).toBe(0);
   });
 
   it("prints the registry-ordered table on demand without writing a card", async () => {
     const root = defaultCurriculumRoot();
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-    expect(await runTrackProgressAsync(["--report"], root)).toBe(0);
+    expect(finishTrackProgress("--report", REAL_TRACKS, root)).toBe(0);
     expect(stdout).toHaveBeenCalledWith(expect.stringContaining("| [Arabic]"));
     expect(stdout).toHaveBeenCalledWith(
       expect.stringContaining("| [Marwadi (Marwari)]"),
@@ -152,9 +154,9 @@ describe("track progress", () => {
     ]);
   });
 
-  it("rejects an unknown CLI mode", () => {
+  it("rejects an unknown CLI mode", async () => {
     const stderr = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-    expect(runTrackProgress(["--wat"])).toBe(2);
+    expect(await runTrackProgressAsync(["--wat"])).toBe(2);
     expect(stderr).toHaveBeenCalledWith(expect.stringContaining("usage:"));
     stderr.mockRestore();
   });
