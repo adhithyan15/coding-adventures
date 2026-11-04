@@ -1,6 +1,6 @@
-import { lstatSync, readFileSync, readdirSync, realpathSync } from "node:fs";
+import { lstatSync, readdirSync, realpathSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
-import { isAbsentErrno, readLedgerFile } from "./shard.js";
+import { isAbsentErrno, readLedgerFileWithSource } from "./shard.js";
 import {
   MODALITY_MANIFEST_DIR,
   MODALITY_MANIFEST_VERSION,
@@ -149,8 +149,14 @@ function assertIdentitySet(
   assertNoCaseFoldCollisions(actual, `${label} owner identities`);
   const found = [...actual].sort();
   const wanted = [...expected].sort();
-  const missing = wanted.filter((identity) => !found.includes(identity));
-  const extra = found.filter((identity) => !wanted.includes(identity));
+  // Keep the sorted arrays for stable diagnostics, but index membership once.
+  // A per-identity `includes` walked the same ~60,000-element list thousands
+  // of times in the direct-owner reader, after every duplicate had already
+  // been rejected above. That quadratic check outgrew the Windows test budget.
+  const foundSet = new Set(found);
+  const wantedSet = new Set(wanted);
+  const missing = wanted.filter((identity) => !foundSet.has(identity));
+  const extra = found.filter((identity) => !wantedSet.has(identity));
   if (missing.length > 0 || extra.length > 0) {
     throw new Error(
       `${label} do not match` +
@@ -595,7 +601,11 @@ export function readModalityManifestOwners(
     }
 
     const metaPath = join(languageDirectory, MODALITY_META_OWNER);
-    const meta = parseMeta(readLedgerFile(metaPath), language);
+    // Keep the guarded parse and its exact source text together. Reopening the
+    // file solely to check canonical formatting doubles whole-corpus I/O and
+    // can compare a different version if an owner changes between the reads.
+    const metaSource = readLedgerFileWithSource(metaPath);
+    const meta = parseMeta(metaSource.value, language);
     if (
       firstMeta !== undefined &&
       (meta.version !== firstMeta.version ||
@@ -607,17 +617,18 @@ export function readModalityManifestOwners(
       throw new Error(`incompatible modality metadata for '${language}'`);
     }
     firstMeta ??= meta;
-    if (options.requireCanonicalBytes !== false && readFileSync(metaPath, "utf8") !== canonical(meta)) {
+    if (options.requireCanonicalBytes !== false && metaSource.text !== canonical(meta)) {
       throw new Error(`modality owner '${language}.d/${MODALITY_META_OWNER}' is not canonical`);
     }
 
     for (const id of expectedIds) {
       const filename = `${id}.json`;
       const path = join(languageDirectory, filename);
-      const parsed = parseLessonOwner(readLedgerFile(path), language, filename);
+      const source = readLedgerFileWithSource(path);
+      const parsed = parseLessonOwner(source.value, language, filename);
       if (options.requireCanonicalBytes !== false) {
         const expected = canonical(parsed);
-        if (readFileSync(path, "utf8") !== expected) {
+        if (source.text !== expected) {
           throw new Error(`modality owner '${language}.d/${filename}' is not canonical`);
         }
       }
