@@ -86,6 +86,15 @@ permitted-and-excluded-DNS subset under separate caller-owned limits; every
 responder `dNSName` must comply. Success retains only count evidence alongside
 the complete prior proof, and failures reuse stable payload-free categories.
 
+`validate_x509_ocsp_routed_issuer_reviewed_responder_no_check_policy` then
+consumes that complete routed intermediate-DNS proof and derives the exact
+authenticated responder certificate internally. It applies the same RFC 6960
+semantic gate as the fixed path: one structurally unique
+`id-pkix-ocsp-nocheck` extension whose value is exact DER `NULL`. Success
+retains the complete fully routed proof, while missing or malformed values
+reuse stable payload-free categories. A critical instance can reach this gate
+only when certificate-wide role policy already recognized the OID.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy
@@ -130,11 +139,10 @@ malformed values fail with stable payload-free categories.
 This crate performs evidence composition, exact-time validity checks, the
 bounded selected-anchor and exact-intermediate responder DNS policies, and the
 RFC 6960 responder no-check branch described above only.
-The complete responder policy sequence applies only to the fully fixed RSA
-SHA-256 proof. The fully routed proof may additionally be reified as a nominal
-responder path and checked against selected-anchor and exact-intermediate DNS
-policy, but all data-driven routed flows stop before no-check and revocation
-policy.
+The complete responder DNS and no-check policy sequence applies to both the
+fully fixed RSA SHA-256 proof and the fully routed proof. The routed proof
+retains every selected signature route through these semantic gates, but all
+flows stop before responder or intermediate revocation policy.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS

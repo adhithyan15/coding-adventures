@@ -47,6 +47,7 @@ use x509_ocsp_reviewed_server_revocation_binding::{
     validate_x509_ocsp_reviewed_responder_no_check_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_routed_issuer_reviewed_responder_intermediate_dns_policy,
+    validate_x509_ocsp_routed_issuer_reviewed_responder_no_check_policy,
     X509OcspReviewedServerRevocationBindingErrorKind,
 };
 use x509_ocsp_revocation_policy::validate_bound_x509_ocsp_revocation;
@@ -1319,7 +1320,30 @@ fn binds_routed_issuer_revocation_to_the_same_exact_routed_reviewed_server_path_
             .certificate(),
         &candidates[0]
     ));
-    let bound = responder_intermediate_policy
+    let responder_no_check_policy =
+        validate_x509_ocsp_routed_issuer_reviewed_responder_no_check_policy(
+            responder_intermediate_policy,
+        )
+        .unwrap();
+    assert_eq!(
+        format!("{responder_no_check_policy:?}"),
+        "ValidatedX509OcspReviewedResponderNoCheckPolicy"
+    );
+    assert!(std::ptr::eq(
+        responder_no_check_policy
+            .intermediate_dns_policy()
+            .anchor_policy()
+            .responder_path()
+            .reviewed_server_revocation()
+            .authenticated_revocation()
+            .issuer_bound_responder()
+            .authenticated_responder()
+            .responder_certificate_policy()
+            .certificate(),
+        response.get(0).unwrap()
+    ));
+    let bound = responder_no_check_policy
+        .intermediate_dns_policy()
         .anchor_policy()
         .responder_path()
         .reviewed_server_revocation();

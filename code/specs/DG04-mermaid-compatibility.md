@@ -168,6 +168,9 @@ The first five active classic Cypress rendering cases are pinned together as a
 topology acceptance corpus, covering simple, recursive, parallel, cyclical, and
 multi-entity relationship graphs through semantic IR, obstacle-aware structural
 layout, portable PaintInstructions, and native Metal rendering.
+The next six classic Cypress cases pin standalone entities, repeated attribute
+blocks, generic and array types, length-limited types, variable entity widths,
+and leading-asterisk attributes through the same backend-neutral pipeline.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
