@@ -20601,3 +20601,28 @@ PR #18899 ready at GitHub's authoritative ready-for-review event time
 `2026-11-03T16:48:46Z`. Commit and push this ready receipt normally, then
 require fresh independent review and terminal acceptable hosted qualification
 on the resulting exact head before guarded squash auto-merge.
+
+#### Test-trigger fixture selector hosted-timeout and current-main reconciliation
+
+Three hosted attempts on exact independently reviewed head
+`18763dbce2008dbc4f4c5495188342b7cf4a4279` completed every other check
+acceptably, but the repo-wide metadata-contract job reached its hard 30-minute
+budget each time. The third attempt completed all metadata validators before
+the cancellation occurred during Java Gradle startup; the aggregate CI gate
+failed only because that job was cancelled. An earlier macOS arm64 capacity
+cancellation was external and the third macOS attempt succeeded. Auto-merge
+remained disabled.
+
+Merge exact current `origin/main`
+`71161251ab03a08c23bcecb4f9d41edd14ad7049` normally and conflict-free.
+The only exact-path overlap is the Go README and CI-gate registry
+documentation, where both semantic additions are retained. Current main also
+includes the path-disjoint metadata-checkout optimization from PR #18844.
+Focused routing tests, Go vet, Go build, strict JSON parsing, diff hygiene, and
+the unique dependency-complete acyclic 1,572-item state graph pass after the
+reconciliation. Product implementation revision
+`d19754aafe24f4ee7de37706113fd4b527882296` remains unchanged. Commit and push
+this receipt normally, then require fresh independent correctness and security
+review plus new hosted qualification on the resulting exact head. Record a
+separate workflow-budget owner only if the optimized checkout still exhausts
+the job budget; do not grant an exception or bypass the failed gate.
