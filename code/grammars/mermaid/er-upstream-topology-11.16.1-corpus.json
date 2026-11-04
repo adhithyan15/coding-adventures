@@ -1,0 +1,27 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 classic ER Cypress topology rendering corpus",
+  "fixtures": [
+    {
+      "name": "simple-topology",
+      "source": "erDiagram\nCUSTOMER ||--o{ ORDER : places\nORDER ||--|{ LINE-ITEM : contains"
+    },
+    {
+      "name": "recursive-topology",
+      "source": "erDiagram\nCUSTOMER ||..o{ CUSTOMER : refers\nCUSTOMER ||--o{ ORDER : places\nORDER ||--|{ LINE-ITEM : contains"
+    },
+    {
+      "name": "parallel-topology",
+      "source": "erDiagram\nCUSTOMER ||--|{ ADDRESS : \"invoiced at\"\nCUSTOMER ||--|{ ADDRESS : \"receives goods at\""
+    },
+    {
+      "name": "cyclical-topology",
+      "source": "erDiagram\nA ||--|{ B : likes\nB ||--|{ C : likes\nC ||--|{ A : likes"
+    },
+    {
+      "name": "complex-topology",
+      "source": "erDiagram\nCUSTOMER }|..|{ DELIVERY-ADDRESS : has\nCUSTOMER ||--o{ ORDER : places\nCUSTOMER ||--o{ INVOICE : \"liable for\"\nDELIVERY-ADDRESS ||--o{ ORDER : receives\nINVOICE ||--|{ ORDER : covers\nORDER ||--|{ ORDER-ITEM : includes\nPRODUCT-CATEGORY ||--|{ PRODUCT : contains\nPRODUCT ||--o{ ORDER-ITEM : \"ordered in\""
+    }
+  ]
+}
