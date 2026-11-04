@@ -1,19 +1,21 @@
 {
   "language": "kannada",
   "chapter": 103,
-  "sourceHash": "fnv1a64:7f3b998e967b8449",
+  "sourceHash": "fnv1a64:df7424e3b6460329",
   "lessonIds": [
     "KA-C103-house",
     "KA-C103-street",
     "KA-C103-city",
     "KA-C103-country",
-    "KA-C103-state"
+    "KA-C103-state",
+    "KA-C103-origin",
+    "KA-C103-origin-answer"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 7,
+  "drivablePrefix": 7,
   "text": "kannada/narration/ch103.txt",
   "json": "kannada/narration/ch103.json",
-  "textHash": "fnv1a64:06accb4cb251ce37",
-  "jsonHash": "fnv1a64:833b5b1b1feeebb0",
+  "textHash": "fnv1a64:f9f36fe032478f5e",
+  "jsonHash": "fnv1a64:57eb831083785e3f",
   "findings": []
 }

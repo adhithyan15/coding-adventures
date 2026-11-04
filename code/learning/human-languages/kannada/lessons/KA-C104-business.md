@@ -9,32 +9,33 @@ headword: "ವ್ಯಾಪಾರ"
 gloss: "business, trade"
 romanization: "vyāpāra"
 concept_tag: KA-JOBS-BUSINESS
-prerequisites: [KA-C103-country, KA-C103-state]
+prerequisites: [KA-C103-state, KA-C103-origin-answer]
 sounds: []
 roots: [sanskrit-vyapara]
 etymology_hook: "vyāpāra ← Sanskrit vyāpāra 'occupation, business', a tatsama (CDIAL 12205)"
 duration:
   max_seconds: 200
 requires:
-  knowledge: [KA-LEX-C103-HOME-04, KA-LEX-C103-HOME-05]
+  knowledge: [KA-LEX-C103-HOME-05, KA-FUNCTION-C103-ASK-ORIGIN-09, KA-FUNCTION-C103-SAY-ORIGIN-10]
 introduces:
   knowledge: [KA-LEX-C104-JOBS-01]
 practises:
-  knowledge: [KA-LEX-C104-JOBS-01, KA-LEX-C103-HOME-04, KA-LEX-C103-HOME-05]
+  knowledge: [KA-LEX-C104-JOBS-01, KA-LEX-C103-HOME-05, KA-LEX-C103-ORIGIN-06, KA-GRAMMAR-C103-ORIGIN-RELATION-07, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-ASK-ORIGIN-09, KA-FUNCTION-C103-SAY-ORIGIN-10]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
 register: neutral
 variety: standard-colloquial
-reviews_of: [KA-C103-state]
+reviews_of: [KA-C103-state, KA-C103-origin-answer]
 ---
 
 # ವ್ಯಾಪಾರ (vyāpāra) — business, trade
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C103-HOME-04, KA-LEX-C103-HOME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C103-HOME-05, KA-LEX-C103-ORIGIN-06, KA-GRAMMAR-C103-ORIGIN-RELATION-07, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-ASK-ORIGIN-09, KA-FUNCTION-C103-SAY-ORIGIN-10] -->
 
-[PAUSE 2s] Before the new one: say the Kannada for country, then the Kannada for state.
+[PAUSE 2s] Before the new one: ask where somebody is from, answer “from Bengaluru”,
+then recognise the question that asks whether a male addressee is from Karnataka.
 
 ## You'll want to know: ವ್ಯಾಪಾರ
 <!-- hl-knowledge: introduces=[KA-LEX-C104-JOBS-01]; assesses=[] -->
@@ -55,15 +56,15 @@ reviews_of: [KA-C103-state]
 One answer to what do you do.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C104-JOBS-01, KA-LEX-C103-HOME-04, KA-LEX-C103-HOME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C104-JOBS-01, KA-LEX-C103-HOME-05, KA-LEX-C103-ORIGIN-06, KA-GRAMMAR-C103-ORIGIN-RELATION-07, KA-GRAMMAR-C103-ABLATIVE-INDA-08, KA-FUNCTION-C103-ASK-ORIGIN-09, KA-FUNCTION-C103-SAY-ORIGIN-10] -->
 
 [PAUSE 1s]
 - [YOU SAY: *vyāpāra*]
 - [YOU SAY: *vyāpāra*, once more]
 - [YOU SAY: say *nannadu vyāpāra*]
-- [YOU RECALL: say the Kannada for country, then the Kannada for state, then say *vyāpāra* again]
+- [YOU RECALL: ask where somebody is from, answer “from Bengaluru”, then say *vyāpāra* again]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C104-JOBS-01, KA-LEX-C103-HOME-04, KA-LEX-C103-HOME-05] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C104-JOBS-01, KA-FUNCTION-C103-ASK-ORIGIN-09, KA-FUNCTION-C103-SAY-ORIGIN-10] -->
 
 [PAUSE 3s] What does ವ್ಯಾಪಾರ mean? ("Business, trade".) Say it once more.

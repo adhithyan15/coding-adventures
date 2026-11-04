@@ -58,6 +58,49 @@ Sources checked 2026-09-13:
 - [Council of Europe introduction and certification caveat](https://www.coe.int/en/web/common-european-framework-reference-languages/introduction-and-context)
 - [Kannada Sahitya Parishat's Kannada Exams — Star of Mysore](https://starofmysore.com/kannada-sahitya-parishats-kannada-exams/)
 
+### A1 origin-cluster source plan
+
+The A1 inventory's place and origin cluster is a project-defined teaching
+boundary, not an externally certified Kannada syllabus. Its functional level is
+bounded by the CEFR A1 ability to ask and answer simple personal-detail
+questions and by this project's shared Spanish A1 proxy for structure only.
+Kannada forms remain owned by the Kannada track and by competent Kannada
+sources; Spanish does not select or validate them.
+
+A fresh corpus audit on 2026-11-04 found that the inventory notes had understated
+what the book already teaches. Chapter 91 owns **ಊರು** (*ūru*, home town) and
+**ನಿಮ್ಮ ಊರು ಯಾವುದು?** (*nimma ūru yāvudu?*, “what is your home town?”), while
+Chapter 103 owns **ನಗರ** (*nagara*, city), **ದೇಶ** (*dēśa*, country), and
+**ರಾಜ್ಯ** (*rājya*, state). The remaining six-point gap is therefore not a new
+list of generic place words. It is a slow composition path that relates a
+person to a place, asks where somebody is from, and answers with the ablative
+**-ಇಂದ** (*-inda*), while retrieving the existing town, city, country, and
+state vocabulary.
+
+Two contemporary official sources supply a narrow primary-source boundary for
+the exact forms. The Ministry of Tourism's *Aaj Ka Vakya* gives **ನೀವು ಎಲ್ಲಿಂದ
+ಬಂದಿದ್ದೀರಿ?** for “Where are you from?”, and a Press Information Bureau
+transcript gives **ನಾನು ಬೆಂಗಳೂರಿನಿಂದ ಬಂದಿದ್ದೇನೆ** for “I am from Bengaluru.”
+The Prime Minister's Office Kannada record of the Prime Minister's surprise
+interaction with twelfth-grade students and their parents on 3 June 2021 also
+prints the recognition pair **ನೀನು ಕರ್ನಾಟಕದವನೇ?** and **ಹೌದು ಸರ್,
+ಬೆಂಗಳೂರಿನಿಂದ**. The lesson may teach the respectful question and first-person
+answer as fixed A1 frames, and may use the gendered recognition pair only with
+its scope made explicit. These sources do not assign a CEFR level, define a
+finite Kannada syllabus, certify the project, or establish learner readiness.
+
+Sources checked 2026-11-04:
+
+- [Government of India, Prime Minister's Office, *Surprise interaction with
+  twelfth-grade students and their parents*, Kannada transcript, 3 June
+  2021](https://www.pmindia.gov.in/kn/news_updates/%E0%B2%B9%E0%B2%A8%E0%B3%8D%E0%B2%A8%E0%B3%86%E0%B2%B0%E0%B2%A1%E0%B2%A8%E0%B3%87-%E0%B2%A4%E0%B2%B0%E0%B2%97%E0%B2%A4%E0%B2%BF%E0%B2%AF-%E0%B2%B5%E0%B2%BF%E0%B2%A6%E0%B3%8D%E0%B2%AF%E0%B2%BE%E0%B2%B0/)
+- [Ministry of Tourism, *Aaj Ka Vakya*, sentence 12: “Where are you
+  from?”](https://tourism.gov.in/sites/default/files/2020-10/12.pdf)
+- [Press Information Bureau, Kannada transcript of *Mann Ki Baat*, episode
+  108](https://www.pib.gov.in/PressReleasePage.aspx?PRID=2189569&lang=2&reg=48)
+- [Council of Europe CEFR Companion Volume and language
+  versions](https://www.coe.int/en/web/common-european-framework-reference-languages/cefr-companion-volume-and-its-language-versions)
+
 ### B2 content-inventory source plan
 
 The B2 task shape fixes **how** performance is sampled; it does not define the

@@ -1,0 +1,11 @@
+{
+  "id": "KA-C103-origin",
+  "pathSegment": "KA-PATH-103-HOME",
+  "pathOrder": 5,
+  "extensions": [
+    {
+      "id": "KA-EXT-103-HOME",
+      "order": 5
+    }
+  ]
+}
