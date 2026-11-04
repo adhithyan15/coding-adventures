@@ -130,9 +130,10 @@ describe("modality direct owners", () => {
     const slow = new Promise<string>((resolve) => {
       releaseSlow = () => resolve("done");
     });
-    const batch = readModalityOwnerBatch(["bad", "slow"], (path) =>
-      path === "bad" ? Promise.reject(new Error("bad owner")) : slow,
-    );
+    const batch = readModalityOwnerBatch(["bad", "slow"], (path) => {
+      if (path === "bad") throw new Error("bad owner");
+      return slow;
+    });
     let finished = false;
     void batch.finally(() => { finished = true; }).catch(() => {});
     await Promise.resolve();
