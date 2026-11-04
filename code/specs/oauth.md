@@ -2351,7 +2351,16 @@ data-driven issuer-bound authenticated responder, and one repository-owned RSA
 SHA-256 issuer link for the target certificate. The additive data-driven result
 preserves the caller-selected SHA-256, SHA-384, or SHA-512 response-signature
 route without claiming that either certificate issuer-link algorithm is routed.
-Both entry points require the revocation result's exact `SingleResponse` object
+An additional routed-issuer result consumes the exact data-driven responder-
+certificate issuer proof plus exact target-certificate and candidate-issuer
+algorithm policy. It requires the responder proof, revocation binding, target
+policy, and issuer policy to retain the same exact certificate objects before
+invoking caller-owned target-to-issuer Name policy once, then routes the target
+certificate signature through the repository-owned RSA PKCS #1 v1.5 SHA-256,
+SHA-384, or SHA-512 verifier. The distinct non-copyable result therefore retains
+data-driven response, responder-certificate, and target-certificate signature
+evidence without widening either existing API.
+All entry points require the revocation result's exact `SingleResponse` object
 to occur inside the signed `BasicOCSPResponse`, require the target link to retain
 the exact target certificate, and require both certificate links and the
 `CertID` binding to retain the same exact issuer certificate object.
