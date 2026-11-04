@@ -3,10 +3,12 @@
 `x509-ocsp-authenticated-target-revocation` closes one evidence-mixing gap
 between the repository-owned delegated-responder, certificate-identifier,
 revocation, and issuer-link primitives. Its fixed entry point retains RSA
-SHA-256 response authentication. Its additive routed entry point retains the
-caller-selected RSA SHA-256, SHA-384, or SHA-512 response-signature route. Both
-consume three complete proofs and require them to retain the same exact decoded
-objects:
+SHA-256 response authentication. One additive entry point routes the response
+signature while retaining fixed RSA SHA-256 certificate links. A second
+additive entry point consumes the routed responder-certificate issuer proof and
+routes the target-certificate issuer signature through caller-owned SHA-256,
+SHA-384, or SHA-512 policy. All results require their complete proofs to retain
+the same exact decoded objects:
 
 - the issuer-authorized delegated responder signed the `BasicOCSPResponse`;
 - one `SingleResponse` inside that exact signed response names an exact target
@@ -22,14 +24,17 @@ Byte-equal re-decodes do not satisfy the identity checks. Outer
 extension or nonce policy. Errors expose only stable categories and retain no
 response, certificate, key, status, time, or signature bytes.
 
-Both responder and target certificate issuer links remain deliberately fixed to
-RSA SHA-256; the routed response result does not generalize either certificate
-link. This pure public-data composition performs no credential access, edit,
-signing operation, provider action, audit or trace emission, I/O, or external
-effect. It does not construct or validate a certificate path, establish trust
-in the candidate issuer, validate a responder path, check responder-certificate
-revocation, interpret OCSP extensions, fetch or cache data, read a clock,
-perform TLS or HTTP, authorize OAuth transport, or open a network connection.
+The response-only routed result deliberately keeps both certificate issuer
+links fixed to RSA SHA-256. The fully routed result instead retains the
+repository-owned selected verifier and certificate-bound algorithm/key policy
+for both certificate signatures. This pure public-data composition performs no
+credential access, edit, signing operation, provider action, audit or trace
+emission, I/O, or external effect. It does not construct or validate a
+certificate path, establish trust in the candidate issuer, validate a responder
+path, check responder-certificate revocation, interpret OCSP extensions, fetch
+or cache data, read a clock, perform TLS or HTTP, authorize OAuth transport, or
+open a network connection. Concrete HTTPS and live-provider readiness remain
+unavailable.
 
 ## Test-vector signing trace
 

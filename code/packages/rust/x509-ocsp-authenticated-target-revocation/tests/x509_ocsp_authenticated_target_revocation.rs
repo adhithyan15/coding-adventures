@@ -1,10 +1,12 @@
+use core::cell::Cell;
 use der_asn1::{Asn1Decoder, Asn1Limits};
 use rsa_public_operation::RsaPublicOperationLimits;
 use sha256::sha256;
 use x509_certificate::{decode_x509_certificate, X509Certificate};
 use x509_certificate_policy::{
     validate_certificate_algorithm_policy, validate_certificate_role_policy,
-    X509AlgorithmParametersPolicy, X509CertificateAlgorithmProfile, X509CertificateRole,
+    ValidatedCertificateAlgorithmPolicy, X509AlgorithmParametersPolicy,
+    X509CertificateAlgorithmProfile, X509CertificateIssuerLinkErrorKind, X509CertificateRole,
     X509CertificateValidityErrorKind,
 };
 use x509_ocsp_authenticated_responder::{
@@ -13,8 +15,10 @@ use x509_ocsp_authenticated_responder::{
     X509OcspRsaResponderPolicy, X509OcspRsaSha256ResponderPolicy,
 };
 use x509_ocsp_authenticated_target_revocation::{
+    authenticate_x509_ocsp_rsa_routed_issuer_target_revocation,
     authenticate_x509_ocsp_rsa_sha256_target_revocation,
     authenticate_x509_ocsp_rsa_target_revocation, X509OcspAuthenticatedTargetRevocationErrorKind,
+    X509OcspRoutedIssuerTargetRevocationErrorKind,
 };
 use x509_ocsp_basic_response::{decode_x509_ocsp_basic_response, X509OcspBasicResponse};
 use x509_ocsp_cert_id_binding::{bind_x509_ocsp_cert_id_to_certificates, X509OcspCertIdHashInput};
@@ -22,6 +26,8 @@ use x509_ocsp_cert_status::X509OcspCertStatus;
 use x509_ocsp_issuer_bound_responder::{
     bind_x509_ocsp_authenticated_responder_to_issuer,
     bind_x509_ocsp_authenticated_rsa_responder_to_issuer,
+    verify_x509_ocsp_authenticated_rsa_responder_routed_issuer_link,
+    IssuerBoundX509OcspRsaRoutedIssuerResponder,
 };
 use x509_ocsp_responder_certificate_policy::validate_x509_ocsp_responder_certificate_policy;
 use x509_ocsp_responder_id_binding::bind_x509_ocsp_responder_id_to_certificate;
@@ -30,10 +36,16 @@ use x509_ocsp_rsa_algorithm_policy::{
     X509OcspRsaAlgorithmParametersPolicy, X509OcspRsaAlgorithmProfile,
 };
 use x509_ocsp_rsa_signature_routing::{X509OcspRsaSignatureRoute, X509OcspRsaSignatureVerifier};
+use x509_rsa_algorithm_policy::{
+    validate_x509_rsa_algorithm_policy, ValidatedX509RsaAlgorithmPolicy,
+};
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_sha256_issuer_link::{
     verify_x509_rsa_sha256_issuer_link, VerifiedX509RsaSha256IssuerLink,
     X509RsaSha256IssuerLinkPolicy,
+};
+use x509_rsa_signature_routing::{
+    X509RsaSignatureRoute, X509RsaSignatureRoutingErrorKind, X509RsaSignatureVerifier,
 };
 use x509_time::{decode_x509_time, X509Time};
 
@@ -273,6 +285,73 @@ fn issuer_link<'child, 'child_encoded, 'issuer, 'issuer_encoded>(
     .unwrap()
 }
 
+fn certificate_algorithm_policy<'certificate, 'encoded>(
+    certificate: &'certificate X509Certificate<'encoded>,
+) -> ValidatedCertificateAlgorithmPolicy<'certificate, 'encoded> {
+    validate_certificate_algorithm_policy(certificate, &algorithm_profiles()).unwrap()
+}
+
+fn issuer_role_policy<'issuer, 'issuer_encoded>(
+    issuer: &'issuer X509Certificate<'issuer_encoded>,
+) -> x509_certificate_policy::ValidatedCertificateRolePolicy<'issuer, 'issuer_encoded> {
+    validate_certificate_role_policy(
+        issuer,
+        X509CertificateRole::IssuingCertificateAuthority,
+        Asn1Limits::default(),
+        |oid| oid.equals(&[2, 5, 29, 19]) || oid.equals(&[2, 5, 29, 15]),
+    )
+    .unwrap()
+}
+
+fn issuer_rsa_algorithm_policy<'issuer, 'issuer_encoded>(
+    issuer: &'issuer X509Certificate<'issuer_encoded>,
+) -> ValidatedX509RsaAlgorithmPolicy<'issuer, 'issuer_encoded> {
+    validate_x509_rsa_algorithm_policy(
+        certificate_algorithm_policy(issuer),
+        RsaPublicKeyPolicy::new(2_048, 4_096, ALLOWED_EXPONENTS).unwrap(),
+        Asn1Limits::default(),
+    )
+    .unwrap()
+}
+
+fn certificate_signature_routes() -> [X509RsaSignatureRoute; 1] {
+    [X509RsaSignatureRoute::new(
+        0,
+        X509RsaSignatureVerifier::RsaPkcs1V15Sha256,
+    )]
+}
+
+fn routed_issuer_bound_responder<
+    'response,
+    'response_encoded,
+    'responder,
+    'responder_encoded,
+    'issuer,
+    'issuer_encoded,
+>(
+    response: &'response X509OcspBasicResponse<'response_encoded>,
+    responder: &'responder X509Certificate<'responder_encoded>,
+    issuer: &'issuer X509Certificate<'issuer_encoded>,
+) -> IssuerBoundX509OcspRsaRoutedIssuerResponder<
+    'response,
+    'response_encoded,
+    'responder,
+    'responder_encoded,
+    'issuer,
+    'issuer_encoded,
+> {
+    verify_x509_ocsp_authenticated_rsa_responder_routed_issuer_link(
+        authenticate_routed(response, responder),
+        certificate_algorithm_policy(responder),
+        issuer_role_policy(issuer),
+        issuer_rsa_algorithm_policy(issuer),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap()
+}
+
 #[test]
 fn checked_in_public_fixtures_match_the_generation_trace() {
     for (fixture, expected) in [
@@ -453,6 +532,281 @@ fn authenticates_one_exact_routed_target_revocation_result() {
     assert_eq!(
         format!("{authenticated:?}"),
         "AuthenticatedX509OcspRsaTargetRevocation"
+    );
+}
+
+#[test]
+fn routes_the_exact_responder_and_target_certificate_issuer_links() {
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let target_encoded = decode_hex(include_str!("fixtures/target.der.hex"));
+    let response_encoded = response_with_signature(
+        include_str!("fixtures/response-data.der.hex"),
+        include_str!("fixtures/response-signature.hex"),
+    );
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let response = decode_response(&response_encoded);
+    let issuer_bound = routed_issuer_bound_responder(&response, &responder, &issuer);
+    let binding = bind_x509_ocsp_cert_id_to_certificates(
+        response.response_data().get(0).unwrap(),
+        &target,
+        &issuer,
+        |_, input| match input {
+            X509OcspCertIdHashInput::TargetIssuerNameDer(_) => Some(NAME_HASH),
+            X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => Some(KEY_HASH),
+        },
+    )
+    .unwrap();
+    let revocation = validate_bound_x509_ocsp_revocation(&binding, observed_time()).unwrap();
+    let name_calls = Cell::new(0);
+
+    let authenticated = authenticate_x509_ocsp_rsa_routed_issuer_target_revocation(
+        issuer_bound,
+        revocation,
+        certificate_algorithm_policy(&target),
+        issuer_rsa_algorithm_policy(&issuer),
+        |child_issuer, candidate_subject| {
+            name_calls.set(name_calls.get() + 1);
+            child_issuer.encoded() == candidate_subject.encoded()
+        },
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap();
+
+    assert_eq!(name_calls.get(), 1);
+    assert!(std::ptr::eq(
+        authenticated.revocation().cert_id_binding(),
+        &binding
+    ));
+    assert!(std::ptr::eq(
+        authenticated
+            .target_issuer_signature()
+            .child_algorithm_policy()
+            .certificate(),
+        &target
+    ));
+    assert!(std::ptr::eq(
+        authenticated
+            .target_issuer_signature()
+            .issuer_rsa_algorithm_policy()
+            .certificate(),
+        &issuer
+    ));
+    assert_eq!(
+        authenticated
+            .issuer_bound_responder()
+            .responder_issuer_signature()
+            .verifier(),
+        X509RsaSignatureVerifier::RsaPkcs1V15Sha256
+    );
+    assert_eq!(
+        authenticated.target_issuer_signature().verifier(),
+        X509RsaSignatureVerifier::RsaPkcs1V15Sha256
+    );
+    let _ = authenticated.responder_validity_at_observation();
+    assert_eq!(
+        format!("{authenticated:?}"),
+        "AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation"
+    );
+}
+
+#[test]
+fn routed_issuer_target_rejects_a_distinct_target_before_name_policy() {
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let target_encoded = decode_hex(include_str!("fixtures/target.der.hex"));
+    let response_encoded = response_with_signature(
+        include_str!("fixtures/response-data.der.hex"),
+        include_str!("fixtures/response-signature.hex"),
+    );
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let distinct_target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let response = decode_response(&response_encoded);
+    let binding = bind_x509_ocsp_cert_id_to_certificates(
+        response.response_data().get(0).unwrap(),
+        &target,
+        &issuer,
+        |_, input| match input {
+            X509OcspCertIdHashInput::TargetIssuerNameDer(_) => Some(NAME_HASH),
+            X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => Some(KEY_HASH),
+        },
+    )
+    .unwrap();
+    let revocation = validate_bound_x509_ocsp_revocation(&binding, observed_time()).unwrap();
+    let name_calls = Cell::new(0);
+
+    let error = authenticate_x509_ocsp_rsa_routed_issuer_target_revocation(
+        routed_issuer_bound_responder(&response, &responder, &issuer),
+        revocation,
+        certificate_algorithm_policy(&distinct_target),
+        issuer_rsa_algorithm_policy(&issuer),
+        |_, _| {
+            name_calls.set(name_calls.get() + 1);
+            true
+        },
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(name_calls.get(), 0);
+    assert_eq!(
+        error.kind(),
+        X509OcspRoutedIssuerTargetRevocationErrorKind::TargetRevocation(
+            X509OcspAuthenticatedTargetRevocationErrorKind::TargetMismatch
+        )
+    );
+}
+
+#[test]
+fn routed_issuer_target_rejects_a_distinct_issuer_before_name_policy() {
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let target_encoded = decode_hex(include_str!("fixtures/target.der.hex"));
+    let response_encoded = response_with_signature(
+        include_str!("fixtures/response-data.der.hex"),
+        include_str!("fixtures/response-signature.hex"),
+    );
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let distinct_issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let response = decode_response(&response_encoded);
+    let binding = bind_x509_ocsp_cert_id_to_certificates(
+        response.response_data().get(0).unwrap(),
+        &target,
+        &issuer,
+        |_, input| match input {
+            X509OcspCertIdHashInput::TargetIssuerNameDer(_) => Some(NAME_HASH),
+            X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => Some(KEY_HASH),
+        },
+    )
+    .unwrap();
+    let revocation = validate_bound_x509_ocsp_revocation(&binding, observed_time()).unwrap();
+    let name_calls = Cell::new(0);
+
+    let error = authenticate_x509_ocsp_rsa_routed_issuer_target_revocation(
+        routed_issuer_bound_responder(&response, &responder, &issuer),
+        revocation,
+        certificate_algorithm_policy(&target),
+        issuer_rsa_algorithm_policy(&distinct_issuer),
+        |_, _| {
+            name_calls.set(name_calls.get() + 1);
+            true
+        },
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(name_calls.get(), 0);
+    assert_eq!(
+        error.kind(),
+        X509OcspRoutedIssuerTargetRevocationErrorKind::TargetRevocation(
+            X509OcspAuthenticatedTargetRevocationErrorKind::IssuerMismatch
+        )
+    );
+}
+
+#[test]
+fn routed_issuer_target_reports_name_policy_failure_once_and_redacts_display() {
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let target_encoded = decode_hex(include_str!("fixtures/target.der.hex"));
+    let response_encoded = response_with_signature(
+        include_str!("fixtures/response-data.der.hex"),
+        include_str!("fixtures/response-signature.hex"),
+    );
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let response = decode_response(&response_encoded);
+    let binding = bind_x509_ocsp_cert_id_to_certificates(
+        response.response_data().get(0).unwrap(),
+        &target,
+        &issuer,
+        |_, input| match input {
+            X509OcspCertIdHashInput::TargetIssuerNameDer(_) => Some(NAME_HASH),
+            X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => Some(KEY_HASH),
+        },
+    )
+    .unwrap();
+    let revocation = validate_bound_x509_ocsp_revocation(&binding, observed_time()).unwrap();
+    let name_calls = Cell::new(0);
+
+    let error = authenticate_x509_ocsp_rsa_routed_issuer_target_revocation(
+        routed_issuer_bound_responder(&response, &responder, &issuer),
+        revocation,
+        certificate_algorithm_policy(&target),
+        issuer_rsa_algorithm_policy(&issuer),
+        |_, _| {
+            name_calls.set(name_calls.get() + 1);
+            false
+        },
+        &certificate_signature_routes(),
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(name_calls.get(), 1);
+    assert_eq!(
+        error.kind(),
+        X509OcspRoutedIssuerTargetRevocationErrorKind::TargetIssuerName(
+            X509CertificateIssuerLinkErrorKind::NameMismatch
+        )
+    );
+    assert_eq!(
+        error.to_string(),
+        "X.509 OCSP routed-issuer target revocation error TargetIssuerName(NameMismatch)"
+    );
+}
+
+#[test]
+fn routed_issuer_target_preserves_target_signature_route_failures() {
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let target_encoded = decode_hex(include_str!("fixtures/target.der.hex"));
+    let response_encoded = response_with_signature(
+        include_str!("fixtures/response-data.der.hex"),
+        include_str!("fixtures/response-signature.hex"),
+    );
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let response = decode_response(&response_encoded);
+    let binding = bind_x509_ocsp_cert_id_to_certificates(
+        response.response_data().get(0).unwrap(),
+        &target,
+        &issuer,
+        |_, input| match input {
+            X509OcspCertIdHashInput::TargetIssuerNameDer(_) => Some(NAME_HASH),
+            X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => Some(KEY_HASH),
+        },
+    )
+    .unwrap();
+    let revocation = validate_bound_x509_ocsp_revocation(&binding, observed_time()).unwrap();
+
+    let error = authenticate_x509_ocsp_rsa_routed_issuer_target_revocation(
+        routed_issuer_bound_responder(&response, &responder, &issuer),
+        revocation,
+        certificate_algorithm_policy(&target),
+        issuer_rsa_algorithm_policy(&issuer),
+        |child_issuer, candidate_subject| child_issuer.encoded() == candidate_subject.encoded(),
+        &[],
+        RsaPublicOperationLimits::new(512).unwrap(),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspRoutedIssuerTargetRevocationErrorKind::TargetIssuerSignature(
+            X509RsaSignatureRoutingErrorKind::UnsupportedProfileRoute
+        )
     );
 }
 
