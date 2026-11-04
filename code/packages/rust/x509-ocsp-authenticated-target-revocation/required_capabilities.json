@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/x509-ocsp-authenticated-target-revocation",
   "capabilities": [],
-  "justification": "Pure composition over public non-copyable OCSP responder, revocation-policy, and certificate issuer-link evidence. No filesystem, network, process, environment, ambient clock, secret-key, credential, signing, revocation fetching, HTTP, or TLS access is required."
+  "justification": "Pure composition over public non-copyable OCSP responder and revocation-policy evidence plus repository-owned public-key signature verification. No filesystem, network, process, environment, ambient clock, secret-key, credential, signing, revocation fetching, HTTP, or TLS access is required."
 }

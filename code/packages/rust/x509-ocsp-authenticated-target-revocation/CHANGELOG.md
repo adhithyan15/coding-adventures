@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add a distinct non-copyable target-revocation result that consumes routed
+  response and responder-certificate issuer evidence, then routes the exact
+  target-certificate issuer signature through caller-owned policy to a
+  repository-owned RSA SHA-256, SHA-384, or SHA-512 verifier.
+- Reject byte-equal target and issuer substitutions before target Name policy,
+  invoke that policy exactly once, and preserve redacted routing failures.
 - Add non-copyable routed target-revocation evidence that preserves the
   caller-selected RSA SHA-256, SHA-384, or SHA-512 OCSP response-signature
   route while keeping both certificate issuer links explicitly fixed to RSA
