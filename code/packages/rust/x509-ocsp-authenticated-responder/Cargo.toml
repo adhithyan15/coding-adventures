@@ -9,7 +9,9 @@ der-asn1 = { path = "../der-asn1" }
 rsa-public-operation = { path = "../rsa-public-operation" }
 x509-ocsp-responder-certificate-policy = { path = "../x509-ocsp-responder-certificate-policy" }
 x509-ocsp-responder-id-binding = { path = "../x509-ocsp-responder-id-binding" }
+x509-ocsp-rsa-algorithm-policy = { path = "../x509-ocsp-rsa-algorithm-policy" }
 x509-ocsp-rsa-pkcs1-v1-5-sha256-signature = { path = "../x509-ocsp-rsa-pkcs1-v1-5-sha256-signature" }
+x509-ocsp-rsa-signature-routing = { path = "../x509-ocsp-rsa-signature-routing" }
 x509-rsa-public-key = { path = "../x509-rsa-public-key" }
 
 [dev-dependencies]
