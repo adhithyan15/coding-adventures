@@ -28,6 +28,13 @@ consumers.
   the comparison still derive the complete report independently; only the
   redundant second filesystem traversal is removed. The public no-argument
   snapshot loader keeps reading and validating canonical sources itself.
+* A read-only test file may share one awaited bounded corpus load across its
+  cases. A test that edits corpus sources must not use that shared value:
+  after an edit, the content-addressed loader must read the new bytes again.
+* A one-track assertion may read that track's complete canonical lessons and
+  curriculum directly when the measured function itself filters to that track.
+  Keep independently shared policy and spine inputs, and fail if the track
+  curriculum is absent rather than silently measuring an empty substitute.
 * Verify sync/async result parity on a small fixture and real-track lesson
   identity/hash parity. Confirm isolated failing cases and then the unweakened
   full Windows suite on the exact final source before considering PR #18960

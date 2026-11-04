@@ -9,6 +9,15 @@
   canonical owners itself.
 - Use registry-only loading in the shared progression identity test instead
   of constructing a 63,000-lesson corpus that the assertion never reads.
+- Share one bounded lesson load between the read-only literal-markup gate and
+  its planted non-vacuity control. The complete rendered-book and source
+  assertions remain in place.
+- Scope the Persian writing-ladder assertion to all Persian lessons and its
+  canonical curriculum, retaining the shared assessment policy and spine;
+  unrelated tracks no longer consume its 30-second case budget.
+- Scope six Kannada, Tamil, and Telugu A1 exam assertions to their complete
+  canonical track lessons. The exam functions already filter by language, so
+  every probe, coverage count, and continuity assertion remains unchanged.
 - Keep the 30-second default, explicit per-case timeouts, every corpus
   assertion, and the 85% line-coverage threshold unchanged. Full Windows
   coverage and final-head CI remain required before release.
