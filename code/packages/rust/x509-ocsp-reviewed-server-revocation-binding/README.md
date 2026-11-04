@@ -141,6 +141,20 @@ and performs no new validation or external effect. It stops before applying
 the reviewed root's supported DNS constraints or establishing no-check or
 separately authenticated revocation policy for that responder.
 
+`validate_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_anchor_dns_policy`
+then consumes that exact added-status responder path and derives both policy
+inputs internally: the added proof's fully routed authenticated responder and
+the original proof's exact selected reviewed root, which the composition
+already proves is the responder's issuer. Entries without out-of-band
+constraints succeed without reading responder Subject Alternative Name.
+Constrained entries decode the supported permitted-DNS subset and the exact
+responder SAN under separate caller-owned ASN.1 limits, require every
+responder `dNSName` to comply, and retain only count evidence. Failures reuse
+the existing stable payload-free anchor-policy categories. This does not apply
+excluded or non-DNS root constraints or establish no-check or separately
+authenticated revocation policy for the added responder, complete revocation,
+generalized path validation, TLS, HTTP, OAuth, or network readiness.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the selected reviewed root's supported out-of-band DNS constraints to
+  the added intermediate-status proof's exact fully routed responder under
+  separate caller-owned parse limits and with payload-free failures.
+- Derive the responder and root constraints only through the retained proof,
+  preserve count-only evidence, and stop before added-responder no-check or
+  authenticated revocation, complete revocation, TLS, HTTP, or OAuth readiness.
 - Reify the added intermediate-status proof's exact delegated responder-to-
   reviewed-root path from the complete routed no-check composition.
 - Retain all prior role, algorithm, routed RSA, issuer-identity, and exact-time
