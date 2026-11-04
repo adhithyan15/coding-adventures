@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Bind a separate fully routed authenticated OCSP proof to the added
+  intermediate-status proof's exact responder, selected reviewed root, and
+  original observation time after reviewed-root DNS policy.
+- Retain both complete non-copyable proofs with stable payload-free target,
+  issuer, and time failures, while leaving the second proof's responder policy,
+  complete revocation, TLS, HTTP, and OAuth readiness unresolved.
 - Apply the RFC 6960 no-check semantic gate to the added intermediate-status
   proof's exact authenticated responder after reviewed-root DNS policy.
 - Derive the responder only through the retained proof, reuse exact DER `NULL`
