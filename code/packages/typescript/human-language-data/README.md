@@ -108,6 +108,14 @@ build-time modules. Language Ladder does not import the modality owner corpus.
 npm run check:shards
 ```
 
+The complete check validates every plan. It batches generated book and
+narration hash owner reads beneath pinned directories, then applies the same
+JSON and chapter validators as the individual readers. Already-checked
+curriculum and chapter owners supply their independent identities to later
+cross-ledger comparisons; a standalone plan check reads its independent
+sources directly. On Windows the batch needs `python` on PATH; on Unix it
+needs `python3`. Missing readers fail closed.
+
 CI rebuilds every shard set in memory and rejects a resurrected aggregate. For
 the 47 generic core-spine, chapter, and curriculum plans, it also compares the
 logical owner set with independent graph evidence: curriculum maps prove the
