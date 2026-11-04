@@ -40,6 +40,10 @@ consumers.
   sound-tag, taxonomy, and dataset assembly stays the responsibility of their
   own validation gates. Its queue and error behavior for plan inputs must not
   change.
+* Track-progress `--check` and `--report` may await the same bounded source
+  loader while keeping the historical synchronous library exports available.
+  The CLI still validates every output identity, derives every registered
+  track, and refuses a resurrected tracked progress directory.
 * Verify sync/async result parity on a small fixture and real-track lesson
   identity/hash parity. Confirm isolated failing cases and then the unweakened
   full Windows suite on the exact final source before considering PR #18960
