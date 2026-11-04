@@ -20648,3 +20648,16 @@ second reconciliation, while product implementation revision
 normally, then require fresh independent correctness and security review plus
 fresh hosted qualification on the resulting exact head. Never reuse the
 successful prior check rollup for the new base.
+
+#### Test-trigger fixture selector third current-main reconciliation
+
+While exact head `443d47e52ff94a68dd91482c425973e55ae937af` was still
+qualifying, protected main advanced again. Merge exact current `origin/main`
+`f82d639ef03291d25cc1fb1babc5241cabe02e2b` normally and conflict-free.
+The two intervening window-native backend and routed OCSP target-issuer commits
+are exact-path-disjoint from the six PR paths and touch no workflow. Preserve
+product implementation revision `d19754aafe24f4ee7de37706113fd4b527882296`,
+rerun focused routing, Go vet/build, strict JSON, graph, and diff-hygiene
+validation, and require fresh independent correctness/security review before a
+normal push. The resulting exact head needs an entirely new hosted rollup;
+never reuse partial or completed checks from the superseded base.
