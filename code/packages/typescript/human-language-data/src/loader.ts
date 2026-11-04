@@ -42,6 +42,7 @@ import {
 } from "./modality-manifest.js";
 import {
   readModalityManifestOwners,
+  readModalityManifestOwnersAsync,
 } from "./modality-shards.js";
 import type { TrackGentleRamp } from "./gentle-ramp.js";
 import { assertGentleRampSnapshotsRetired } from "./gentle-ramp-retirement.js";
@@ -963,6 +964,19 @@ export function loadModalityManifest(
   // reparses thousands of Markdown lessons.
   const expectedLessonIds = narrationLessonIdentityIndex(root, languages);
   return readModalityManifestOwners(root, {
+    expectedLanguages: languages,
+    expectedLessonIds,
+  });
+}
+
+/** Awaitable guarded direct-owner read for corpus-sized consumers. */
+export async function loadModalityManifestAsync(
+  root = defaultCurriculumRoot(),
+  registry = loadLanguageRegistry(root),
+): Promise<ModalityManifest> {
+  const languages = registry.languages.map((language) => language.id);
+  const expectedLessonIds = narrationLessonIdentityIndex(root, languages);
+  return readModalityManifestOwnersAsync(root, {
     expectedLanguages: languages,
     expectedLessonIds,
   });

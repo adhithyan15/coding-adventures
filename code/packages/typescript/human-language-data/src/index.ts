@@ -189,6 +189,7 @@ export {
   loadLessons,
   loadLessonsAsync,
   loadModalityManifest,
+  loadModalityManifestAsync,
   loadGentleRampSnapshotTracks,
   modalityManifestById,
   loadScripts,
@@ -357,6 +358,7 @@ export {
   modalityNarrationLessonIds,
   modalityOwnerContents,
   readModalityManifestOwners,
+  readModalityManifestOwnersAsync,
   type ModalityOwnerReadOptions,
 } from "./modality-shards.js";
 export {
