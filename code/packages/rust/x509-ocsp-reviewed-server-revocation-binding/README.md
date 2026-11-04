@@ -118,6 +118,17 @@ complete non-copyable inputs. This status evidence does not substitute for
 the responder no-check or authenticated responder-revocation branch and does
 not establish revocation policy for the second proof's own responder.
 
+`bind_x509_ocsp_routed_issuer_reviewed_no_check_intermediate_revocation`
+composes the routed no-check branch with exact intermediate status without
+duplicating the server proof. It consumes the complete routed responder
+no-check proof plus a separate fully routed, authenticated OCSP proof, derives
+the retained intermediate, selected reviewed root, and original observation
+time internally, and applies the same stable target, issuer, then time checks.
+Success retains both complete non-copyable inputs. It resolves the original
+routed responder through RFC 6960 no-check policy, but does not establish
+revocation policy for the added proof's own responder or complete revocation
+policy.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy
@@ -163,7 +174,7 @@ This crate performs evidence composition, exact-time validity checks, the
 bounded selected-anchor and exact-intermediate responder DNS policies, and the
 RFC 6960 responder no-check or exact authenticated responder-revocation
 branches plus the independent exact intermediate-revocation branch described
-above only.
+above and its exact no-check composition described above only.
 The complete responder DNS and no-check policy sequence applies to both the
 fully fixed RSA SHA-256 proof and the fully routed proof. The routed proof
 retains every selected signature route through these semantic gates. The new
@@ -172,15 +183,16 @@ exact routed responder, intermediate, and observation time, but stops before
 revocation policy for the second proof's signer and for the intermediate.
 The independent intermediate branch binds another complete authenticated proof
 to the exact retained intermediate, selected reviewed root, and observation
-time, but does not compose that result with either responder-policy branch and
-stops before revocation policy for its own responder.
+time. The no-check composition derives those same inputs through the consumed
+no-check proof and retains the added proof, but stops before revocation policy
+for that proof's own responder.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
-intermediate constraints to the responder certificate, compose the independent
-intermediate-status evidence with either responder-policy branch into complete
-revocation policy, validate the additional proof's own responder revocation,
-interpret unsupported OCSP extensions, acquire or cache OCSP data,
+intermediate constraints to the responder certificate, compose intermediate-
+status evidence with the authenticated responder-revocation branch, implement
+complete revocation policy, validate the additional proof's own responder
+revocation, interpret unsupported OCSP extensions, acquire or cache OCSP data,
 read a clock, implement TLS or HTTP, authorize OAuth transport, open a network
 connection, or access a credential. The reviewed Mozilla root snapshot excludes OS,
 enterprise, user-installed, and local roots. `webpki-roots` remains reviewed

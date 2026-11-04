@@ -2588,6 +2588,27 @@ generalized path construction or validation, TLS, HTTP, OAuth transport, and
 network authority remain unavailable. Concrete HTTPS and live-provider
 readiness remain unavailable.
 
+A bounded no-check composition follow-up consumes the complete fully routed
+responder no-check proof plus a separate fully authenticated, fully routed
+OCSP target-revocation proof for the retained intermediate. It derives the
+exact retained intermediate, selected Mozilla-reviewed root, and original
+server-status OCSP observation time exclusively through the consumed no-check
+proof, then requires the second proof to name those exact certificate objects
+and time. Stable target, issuer, and observation-time mismatch categories
+retain no certificate, response, key, signature, status, hostname, root, or
+time payload. Success retains the complete non-copyable no-check proof and
+intermediate-status proof under a distinct type; callers cannot substitute raw
+status, certificates, paths, roots, algorithms, keys, signatures, or time.
+This pure public-certificate-data composition performs no credential access or
+editing, signing, storage, clock acquisition, provider action, audit event,
+trace emission, I/O, network access, or other external effect. It resolves the
+original routed responder through RFC 6960 no-check policy and authenticates
+status for the exact retained intermediate at the same observation time, but
+does not establish revocation policy for the added proof's own responder.
+Generalized path construction or validation, complete revocation policy, TLS,
+HTTP, OAuth transport, and network authority remain unavailable. Concrete
+HTTPS and live-provider readiness remain unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated
