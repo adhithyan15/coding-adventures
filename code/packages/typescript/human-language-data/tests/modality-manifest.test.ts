@@ -21,6 +21,7 @@ import {
   generatedModalityOutputs,
   generatedModalityOutputsFromLessons,
   runModalityManifest,
+  runModalityManifestAsync,
   safeOutput,
 } from "../src/modality-cli.js";
 import {
@@ -595,6 +596,27 @@ describe("block-level modality", () => {
 // ---------------------------------------------------------------------------
 
 describe("the modality manifest CLI", () => {
+  it("keeps the awaitable check byte-for-byte and fail-closed", async () => {
+    const root = simpleRoot();
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runModalityManifest(["--write"], root)).toBe(0);
+    expect(await runModalityManifestAsync(["--check"], root)).toBe(0);
+
+    const lessonPath = join(root, "spanish", "lessons", "hola.md");
+    const lessonSource = readFileSync(lessonPath, "utf8");
+    writeFileSync(lessonPath, `${lessonSource}\n| yo | tú | él | ella |\n`, "utf8");
+    expect(await runModalityManifestAsync(["--check"], root)).toBe(1);
+    writeFileSync(lessonPath, lessonSource, "utf8");
+
+    const ownerPath = join(root, MODALITY_MANIFEST_DIR, "spanish.d", "ES-C01-hola.json");
+    const ownerSource = readFileSync(ownerPath, "utf8");
+    writeFileSync(ownerPath, JSON.stringify(JSON.parse(ownerSource)), "utf8");
+    expect(await runModalityManifestAsync(["--check"], root)).toBe(1);
+    rmSync(ownerPath);
+    expect(await runModalityManifestAsync(["--check"], root)).toBe(1);
+  });
+
   it("writes the manifest, then passes its own check", () => {
     const root = simpleRoot();
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -975,7 +997,7 @@ describe("corpus regression", () => {
     // The gate itself, run against the real curriculum. If this fails, run
     // `npm run generate:modality` and commit the result — exactly what CI will say.
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-    expect(runModalityManifest(["--check"])).toBe(0);
+    expect(await runModalityManifestAsync(["--check"])).toBe(0);
     // The read-back half: what a consumer loads from those files equals what the
     // lessons derive. `--check` only reads, so the shared read is the same bytes a
     // fresh read after it would see.
