@@ -305,6 +305,14 @@ const ER_UPSTREAM_NUMERIC_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-upstream-numeric-11.16.1-visual-corpus.json"
 ));
+const ER_UPSTREAM_ONE_CARDINALITY_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-one-cardinality-11.16.1-corpus.json"
+));
+const ER_UPSTREAM_ONE_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-one-cardinality-11.16.1-visual-corpus.json"
+));
 const ER_STYLES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
@@ -2735,6 +2743,36 @@ fn pinned_er_upstream_numeric_entities_reach_semantic_ir() {
     for expected in ["1.5", "u", "1"] {
         assert!(diagrams[5].nodes.iter().any(|node| node.id == expected));
     }
+}
+
+#[test]
+fn pinned_er_upstream_one_cardinalities_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_UPSTREAM_ONE_CARDINALITY_CORPUS).unwrap();
+    let visual: Value =
+        serde_json::from_str(ER_UPSTREAM_ONE_CARDINALITY_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), visual_names.len());
+
+    let diagrams = fixtures
+        .iter()
+        .zip(visual_names)
+        .map(|(fixture, visual_name)| {
+            assert_eq!(fixture["name"], *visual_name);
+            parse_er_diagram(fixture["source"].as_str().unwrap()).unwrap()
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(diagrams[0].relationships.len(), 5);
+    assert_eq!(diagrams[1].relationships.len(), 4);
+    for relationship in &diagrams[1].relationships {
+        assert_eq!(relationship.from_mult.as_deref(), Some("1"));
+    }
+    assert_eq!(diagrams[2].relationships.len(), 4);
+    assert_eq!(diagrams[2].relationships[0].kind, diagram_ir::RelKind::Association);
+    assert_eq!(diagrams[2].relationships[1].kind, diagram_ir::RelKind::Dependency);
+    assert_eq!(diagrams[2].relationships[2].kind, diagram_ir::RelKind::Dependency);
+    assert_eq!(diagrams[2].relationships[3].kind, diagram_ir::RelKind::Dependency);
 }
 
 #[test]
