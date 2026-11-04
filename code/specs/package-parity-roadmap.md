@@ -20772,3 +20772,12 @@ intervening Mermaid ER upstream-attribute metadata commit is exact-path-
 disjoint from the six PR paths and touches no workflow. Treat the resulting
 head as a sixteenth reconciliation with fresh local validation, independent
 review, normal push, and an entirely new hosted rollup.
+
+Protected main advanced twice before the sixteenth reconciled local head
+could complete review and push. Merge exact `origin/main`
+`f75afee79ac7e1d11735b7d6e686888b5013e9c9` normally and conflict-free. The
+two additional TypeScript JVM class-file test migration and routed
+intermediate revocation-evidence commits are exact-path-disjoint from the six
+PR paths and touch no workflow. Treat the resulting head as a seventeenth
+reconciliation with fresh local validation, independent review, normal push,
+and an entirely new hosted rollup.
