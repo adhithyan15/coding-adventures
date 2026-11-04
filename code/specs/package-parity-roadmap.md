@@ -20703,3 +20703,11 @@ DNS-policy commits are exact-path-disjoint from the six PR paths and touch no
 workflow. Treat the resulting head as an eighth reconciliation with fresh
 local validation, independent review, normal push, and an entirely new hosted
 rollup.
+
+Protected main advanced again before the eighth reconciled local head could be
+reviewed and pushed. Merge exact `origin/main`
+`b5df48eb00096972f831fe8c7739ba7818664083` normally and conflict-free. The
+intervening TypeScript codegen-core `node:test` migration is exact-path-disjoint
+from the six PR paths and touches no workflow. Treat the resulting head as a
+ninth reconciliation with fresh local validation, independent review, normal
+push, and an entirely new hosted rollup.
