@@ -9,7 +9,7 @@ import {
   chapterTitleFromTex,
   loadBookCorpus,
   loadChapterPolicy,
-  loadLessons,
+  loadLessonsAsync,
   loadTrackChapters,
 } from "../src/loader.js";
 import { CHAPTER_GATE_CODES, runChapterGates, runPatternGates } from "../src/chapters.js";
@@ -297,18 +297,23 @@ describe("corpus snapshot", () => {
   // budget exactly once. The memo is per file (Vitest gives each file its own
   // module graph) and no case mutates the lessons or the report it is handed.
   let snapshot:
-    | { lessons: ReturnType<typeof loadLessons>; report: ReturnType<typeof runChapterGates> }
+    | Promise<{
+        lessons: Awaited<ReturnType<typeof loadLessonsAsync>>;
+        report: ReturnType<typeof runChapterGates>;
+      }>
     | undefined;
   const committedSnapshot = () => {
     if (snapshot === undefined) {
-      const lessons = loadLessons();
-      const report = runChapterGates({
-        books: loadBookCorpus(),
-        lessons,
-        trackChapters: loadTrackChapters(),
-        policy: loadChapterPolicy(),
-      });
-      snapshot = { lessons, report };
+      snapshot = (async () => {
+        const lessons = await loadLessonsAsync();
+        const report = runChapterGates({
+          books: loadBookCorpus(),
+          lessons,
+          trackChapters: loadTrackChapters(),
+          policy: loadChapterPolicy(),
+        });
+        return { lessons, report };
+      })();
     }
     return snapshot;
   };
@@ -323,8 +328,8 @@ describe("corpus snapshot", () => {
   // directive, and reading a nested `introduces.knowledge` object returned undefined for
   // every lesson, emptying the "taught so far" set. A gate that reports total failure is
   // reporting on itself.
-  it("pins the first published chapter-gate snapshot", () => {
-    const { report } = committedSnapshot();
+  it("pins the first published chapter-gate snapshot", async () => {
+    const { report } = await committedSnapshot();
     // HL-C63 authored the 98 capabilities that had lagged behind already published,
     // handwritten chapters. The book total therefore stays at 513 while the declared
     // capability total catches up from 415 to 513 and the missing-capability debt falls
@@ -367,8 +372,8 @@ describe("corpus snapshot", () => {
     );
   });
 
-  it("names the tracks whose chapter debt is already zero", () => {
-    const { report } = committedSnapshot();
+  it("names the tracks whose chapter debt is already zero", async () => {
+    const { report } = await committedSnapshot();
     // HL-C156: kannada, telugu left this list — each carried one-character
     // script segments whose typed-atom payoff debt was not yet paid.
     // Capability closure makes nine more tracks clean. Tracks omitted from this list
@@ -482,8 +487,8 @@ describe("corpus snapshot", () => {
     expect(awaitingMigration).toEqual([]);
   });
 
-  it("validates the first canonical pattern lesson", () => {
-    const { lessons, report } = committedSnapshot();
+  it("validates the first canonical pattern lesson", async () => {
+    const { lessons, report } = await committedSnapshot();
     const patternLessons = lessons.filter((lesson) => lesson.realization.type === "pattern");
     // Still one. The friends arc (HL-C88) teaches productive ENDING rules, and
     // they are deliberately `grammar` rather than `pattern`: this corpus
@@ -515,8 +520,8 @@ describe("corpus snapshot", () => {
   // This is the missing check. It is deliberately corpus-wide rather than
   // Spanish-only: the defect is a property of how chapters are inserted, not of
   // one track.
-  it("keeps chapter numbers non-decreasing when lessons are sorted by sequence", () => {
-    const { lessons } = committedSnapshot();
+  it("keeps chapter numbers non-decreasing when lessons are sorted by sequence", async () => {
+    const { lessons } = await committedSnapshot();
     const byTrack = new Map<string, { sequence: number; chapter: number; id: string }[]>();
     for (const lesson of lessons) {
       const sequence = Number(lesson.frontmatter.sequence);
