@@ -2,18 +2,21 @@
 name = "x509-ocsp-issuer-bound-responder"
 version = "0.1.0"
 edition = "2021"
-description = "Exact issuer-link binding for fixed or routed authenticated OCSP responder candidates"
+description = "Exact fixed and data-driven issuer-link binding for authenticated OCSP responders"
 
 [dependencies]
+rsa-public-operation = { path = "../rsa-public-operation" }
+x509-certificate-policy = { path = "../x509-certificate-policy" }
 x509-ocsp-authenticated-responder = { path = "../x509-ocsp-authenticated-responder" }
+x509-rsa-algorithm-policy = { path = "../x509-rsa-algorithm-policy" }
 x509-rsa-sha256-issuer-link = { path = "../x509-rsa-sha256-issuer-link" }
+x509-rsa-signature-routing = { path = "../x509-rsa-signature-routing" }
+x509-name = { path = "../x509-name" }
 
 [dev-dependencies]
 der-asn1 = { path = "../der-asn1" }
-rsa-public-operation = { path = "../rsa-public-operation" }
 sha256 = { package = "coding_adventures_sha256", path = "../sha256" }
 x509-certificate = { path = "../x509-certificate" }
-x509-certificate-policy = { path = "../x509-certificate-policy" }
 x509-ocsp-basic-response = { path = "../x509-ocsp-basic-response" }
 x509-ocsp-rsa-algorithm-policy = { path = "../x509-ocsp-rsa-algorithm-policy" }
 x509-ocsp-rsa-signature-routing = { path = "../x509-ocsp-rsa-signature-routing" }
