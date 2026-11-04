@@ -47,6 +47,14 @@ preflight directory and identity checks, same parser, same ordering and final
 manifest validation. Every started read must settle before a failure rejects;
 the loader must not leave background file operations racing caller teardown.
 
+The CLI's read-only `--check` path also needs an awaitable entrypoint. It must
+still derive from source lessons, compare every generated owner byte against
+the on-disk output map, independently reconstruct direct owners against source
+and narration identities, and compare that reconstruction to the derived
+manifest. Bound the output-map reads as well; do not turn the check into a
+manifest-only or stat-only shortcut. Keep the synchronous public entrypoint
+for existing callers and write/recovery behavior.
+
 Measure the reader and end-to-end check after this single-read change. If
 either still exceeds its budget, profile the remaining phases and keep #18941
 open; a passing focused subcase is not full-suite acceptance.
@@ -63,5 +71,8 @@ open; a passing focused subcase is not full-suite acceptance.
   failure drain without depending on filesystem timing.
 - A test verifies that the value and canonical text are judged from one
   guarded source read, not two potentially different file versions.
+- The awaitable `--check` passes on a current fixture and fails on missing,
+  stale, noncanonical, and unsafe owner outputs, with the same exit verdict as
+  the synchronous check. The real-corpus 60-second integration gate remains.
 - Focused modality tests, the unweakened Windows/macOS package suites, and
   Ubuntu CI pass on the exact final head before #18941 or its parents close.
