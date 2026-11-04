@@ -313,6 +313,14 @@ const ER_UPSTREAM_ONE_CARDINALITY_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-upstream-one-cardinality-11.16.1-visual-corpus.json"
 ));
+const ER_NEO_SOURCE_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-neo-source-11.16.1-corpus.json"
+));
+const ER_NEO_SOURCE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-neo-source-11.16.1-visual-corpus.json"
+));
 const ER_STYLES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
@@ -2773,6 +2781,38 @@ fn pinned_er_upstream_one_cardinalities_reach_semantic_ir() {
     assert_eq!(diagrams[2].relationships[1].kind, diagram_ir::RelKind::Dependency);
     assert_eq!(diagrams[2].relationships[2].kind, diagram_ir::RelKind::Dependency);
     assert_eq!(diagrams[2].relationships[3].kind, diagram_ir::RelKind::Dependency);
+}
+
+#[test]
+fn pinned_er_neo_sources_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_NEO_SOURCE_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(ER_NEO_SOURCE_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), 9);
+    assert_eq!(fixtures.len(), visual_names.len());
+
+    let diagrams = fixtures
+        .iter()
+        .zip(visual_names)
+        .map(|(fixture, visual_name)| {
+            assert_eq!(fixture["name"], *visual_name);
+            parse_er_diagram(fixture["source"].as_str().unwrap()).unwrap()
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(diagrams[1].relationships.len(), 5);
+    assert_eq!(diagrams[2].nodes[0].compartments[0].entries.len(), 3);
+    assert!(diagrams[3].nodes.iter().find(|node| node.id == "BOOK").unwrap().compartments[0]
+        .entries
+        .iter()
+        .any(|entry| entry.contains("Author reference")));
+    assert_eq!(diagrams[4].nodes.iter().find(|node| node.id == "c").unwrap().label, "Customer Account");
+    assert_eq!(diagrams[5].relationships.len(), 8);
+    assert_eq!(diagrams[6].relationships[0].from, "EMPLOYEE");
+    assert_eq!(diagrams[6].relationships[0].to, "EMPLOYEE");
+    assert!(diagrams[7].nodes.iter().any(|node| node.id == "ACTIVE_ENTITY"));
+    assert_eq!(diagrams[8].nodes[0].compartments[0].entries.len(), 6);
 }
 
 #[test]
