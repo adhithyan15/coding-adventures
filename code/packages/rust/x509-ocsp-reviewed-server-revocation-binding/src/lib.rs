@@ -19,9 +19,12 @@
 //! the original observation time. A separate routed proof can bind exact
 //! intermediate status to the selected reviewed root at that same time, and
 //! the routed no-check branch can consume that status evidence directly under
-//! a distinct retained type. Routed flows still stop before revocation policy
-//! for each additional proof's own responder and before the authenticated
-//! responder-revocation branch is composed with intermediate status.
+//! a distinct retained type. That composition can reify the added status
+//! proof's own direct delegated responder-to-reviewed-root path for subsequent
+//! policy without accepting substitute evidence. Routed flows still stop
+//! before reviewed-root DNS or revocation policy for each additional proof's
+//! own responder and before the authenticated responder-revocation branch is
+//! composed with intermediate status.
 //! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -1855,6 +1858,72 @@ impl<Proof, Revocation> fmt::Debug
 {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("BoundX509OcspReviewedNoCheckIntermediateRevocation")
+    }
+}
+
+/// Non-copyable evidence reifying the added status responder's reviewed path.
+///
+/// The retained no-check plus intermediate-status composition already proves
+/// that the added proof's exact delegated responder passed certificate-wide
+/// role, algorithm, OCSP-signing-purpose, and observation-time validity
+/// policy; that repository-owned routed RSA verification authenticated its
+/// response and responder certificate; and that its exact issuer is the same
+/// selected Mozilla-reviewed root retained by the original proof. This
+/// nominal wrapper reifies that direct responder-to-reviewed-root path without
+/// accepting substitute evidence or performing additional validation.
+///
+/// It does not apply the selected root's supported DNS constraints to the
+/// responder, establish no-check or separately authenticated revocation policy
+/// for it, generalize path validation, or grant TLS, HTTP, OAuth, or network
+/// authority.
+pub struct BoundX509OcspReviewedIntermediateStatusResponderPath<Proof, Revocation> {
+    no_check_intermediate_revocation:
+        BoundX509OcspReviewedNoCheckIntermediateRevocation<Proof, Revocation>,
+}
+
+impl<Proof, Revocation> BoundX509OcspReviewedIntermediateStatusResponderPath<Proof, Revocation> {
+    /// Return the complete no-check plus intermediate-status proof intact.
+    pub const fn no_check_intermediate_revocation(
+        &self,
+    ) -> &BoundX509OcspReviewedNoCheckIntermediateRevocation<Proof, Revocation> {
+        &self.no_check_intermediate_revocation
+    }
+}
+
+impl<Proof, Revocation> fmt::Debug
+    for BoundX509OcspReviewedIntermediateStatusResponderPath<Proof, Revocation>
+{
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509OcspReviewedIntermediateStatusResponderPath")
+    }
+}
+
+/// Reify the added intermediate-status proof's exact responder path.
+///
+/// Earlier safe constructors already enforce every exact-object identity and
+/// policy invariant in this direct responder-to-reviewed-root path. This
+/// infallible nominal projection retains the complete prior composition and
+/// accepts no caller-supplied certificate, path, root, algorithm, key,
+/// signature, status, or time.
+///
+/// This pure public-certificate-data composition performs no parsing,
+/// cryptography, credential access or editing, signing, storage, clock
+/// acquisition, provider action, audit or trace emission, I/O, network access,
+/// or other external effect. It stops before reviewed-root DNS policy for the
+/// added responder, that responder's no-check or authenticated-revocation
+/// policy, complete revocation policy, generalized path validation, TLS, HTTP,
+/// OAuth readiness, or network authority.
+pub fn reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path<
+    Proof,
+    Revocation,
+>(
+    no_check_intermediate_revocation: BoundX509OcspReviewedNoCheckIntermediateRevocation<
+        Proof,
+        Revocation,
+    >,
+) -> BoundX509OcspReviewedIntermediateStatusResponderPath<Proof, Revocation> {
+    BoundX509OcspReviewedIntermediateStatusResponderPath {
+        no_check_intermediate_revocation,
     }
 }
 
@@ -3856,6 +3925,49 @@ mod tests {
         assert_eq!(
             format!("{bound:?}"),
             "BoundX509OcspReviewedNoCheckIntermediateRevocation"
+        );
+    }
+
+    #[test]
+    fn intermediate_status_responder_path_retains_the_complete_composition() {
+        let responder_no_check_policy = ValidatedX509OcspReviewedResponderNoCheckPolicy {
+            intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+                anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+                    responder_path: BoundX509OcspReviewedResponderPath {
+                        reviewed_server_revocation: (),
+                    },
+                    constrained_dns_names: None,
+                },
+                constrained_dns_names: None,
+            },
+        };
+        let bound = BoundX509OcspReviewedNoCheckIntermediateRevocation {
+            responder_no_check_policy,
+            intermediate_revocation: 7_u8,
+        };
+
+        let responder_path =
+            reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path(bound);
+
+        assert_eq!(
+            *responder_path
+                .no_check_intermediate_revocation()
+                .intermediate_revocation(),
+            7
+        );
+        assert_eq!(
+            responder_path
+                .no_check_intermediate_revocation()
+                .responder_no_check_policy()
+                .intermediate_dns_policy()
+                .anchor_policy()
+                .responder_path()
+                .reviewed_server_revocation(),
+            &()
+        );
+        assert_eq!(
+            format!("{responder_path:?}"),
+            "BoundX509OcspReviewedIntermediateStatusResponderPath"
         );
     }
 }

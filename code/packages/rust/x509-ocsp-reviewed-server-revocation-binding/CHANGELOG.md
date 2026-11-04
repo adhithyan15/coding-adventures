@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Reify the added intermediate-status proof's exact delegated responder-to-
+  reviewed-root path from the complete routed no-check composition.
+- Retain all prior role, algorithm, routed RSA, issuer-identity, and exact-time
+  evidence without new validation or effects, while leaving reviewed-root DNS
+  and that responder's no-check or authenticated-revocation policy unresolved.
 - Compose the fully routed responder no-check proof with separately
   authenticated intermediate status by deriving the retained intermediate,
   selected reviewed root, and original observation time internally.

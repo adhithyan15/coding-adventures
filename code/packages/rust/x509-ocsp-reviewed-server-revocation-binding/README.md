@@ -129,6 +129,18 @@ routed responder through RFC 6960 no-check policy, but does not establish
 revocation policy for the added proof's own responder or complete revocation
 policy.
 
+`reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path`
+then consumes that complete composition and nominally reifies the added status
+proof's delegated responder-to-reviewed-root path. The retained proof already
+contains the exact responder's certificate-wide role and critical-extension
+policy, algorithm/key policy, OCSP-signing purpose, observation-time validity,
+routed repository-owned RSA response and certificate-signature verification,
+and the exact selected reviewed-root issuer. The projection accepts no
+substitute certificate, path, root, algorithm, key, signature, status, or time
+and performs no new validation or external effect. It stops before applying
+the reviewed root's supported DNS constraints or establishing no-check or
+separately authenticated revocation policy for that responder.
+
 The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
 the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
 reviewed-root path as a distinct non-copyable type for later policy
@@ -184,8 +196,9 @@ revocation policy for the second proof's signer and for the intermediate.
 The independent intermediate branch binds another complete authenticated proof
 to the exact retained intermediate, selected reviewed root, and observation
 time. The no-check composition derives those same inputs through the consumed
-no-check proof and retains the added proof, but stops before revocation policy
-for that proof's own responder.
+no-check proof and retains the added proof. Its follow-up projection reifies
+that proof's exact delegated responder-to-reviewed-root path, but stops before
+reviewed-root DNS policy or revocation policy for that responder.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS

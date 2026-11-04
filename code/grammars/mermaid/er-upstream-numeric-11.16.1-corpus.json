@@ -1,0 +1,31 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 classic ER Cypress numeric and special entity rendering corpus",
+  "fixtures": [
+    {
+      "name": "numeric-entity-names",
+      "source": "erDiagram\n1 ||--|| ORDER : places\nORDER ||--|{ 2 : contains\n2 ||--o{ 3.5 : references"
+    },
+    {
+      "name": "u-entity-and-cardinality",
+      "source": "erDiagram\nCUSTOMER ||--|| u : has\nu ||--|| ORDER : places\nPROJECT u--o{ TEAM_MEMBER : \"parent\""
+    },
+    {
+      "name": "decimal-relationship-entities",
+      "source": "erDiagram\n2.5 ||--|| 1.5 : has\nCUSTOMER ||--o{ 3.14 : references\n1.0 ||--|{ ORDER : contains"
+    },
+    {
+      "name": "numeric-entity-attributes",
+      "source": "erDiagram\n1 {\n  string name\n  int value\n}\n1 ||--|| ORDER : places\nORDER {\n  float price\n  string description\n}"
+    },
+    {
+      "name": "mixed-special-entities",
+      "source": "erDiagram\nCUSTOMER ||--o{ 1 : places\n1 ||--|{ u : contains\n1.5\nu ||--|| 2.5 : processes\n2.5 {\n  string id\n  float value\n}\nu {\n  varchar(50) name\n  int count\n}"
+    },
+    {
+      "name": "standalone-numeric-entities",
+      "source": "erDiagram\nPRODUCT ||--o{ ORDER-ITEM : has\n1.5\nu\n1"
+    }
+  ]
+}
