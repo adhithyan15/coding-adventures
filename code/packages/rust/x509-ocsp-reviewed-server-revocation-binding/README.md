@@ -57,9 +57,19 @@ non-copyable result preserves both complete inputs and fresh exact-observation
 validity for the same exact target and intermediate objects. It does not enter
 routed responder-path policy.
 
-The follow-up `reify_x509_ocsp_reviewed_responder_path` projection consumes
-that complete result and reifies its delegated responder-to-reviewed-root path
-as a distinct non-copyable type for later policy composition. Earlier safe
+The additive `reify_x509_ocsp_routed_issuer_reviewed_responder_path`
+projection consumes that fully routed bound result and nominally reifies its
+already-proven exact delegated responder-to-reviewed-root path. It retains the
+complete non-copyable proof, including all five selected RSA signature routes
+and responder/intermediate/target validity at the OCSP observation time, without
+accepting caller-supplied certificate, path, algorithm, key, signature, time,
+or policy input. It performs no new validation or external effect and stops
+before routed responder DNS, no-check, or revocation policy.
+
+The fixed-path `reify_x509_ocsp_reviewed_responder_path` projection consumes
+the fully fixed RSA SHA-256 result and reifies its delegated responder-to-
+reviewed-root path as a distinct non-copyable type for later policy
+composition. Earlier safe
 constructors already prove the exact responder-policy, responder-link, shared
 issuer, and reviewed-path identities; this infallible projection performs no
 additional validation. It preserves responder and intermediate validity at the
@@ -100,9 +110,10 @@ malformed values fail with stable payload-free categories.
 This crate performs evidence composition, exact-time validity checks, the
 bounded selected-anchor and exact-intermediate responder DNS policies, and the
 RFC 6960 responder no-check branch described above only.
-The responder policy layers apply only to the fully fixed RSA SHA-256 proof;
-all data-driven routed bindings stop after exact target/intermediate identity
-and observation-time validity.
+The responder policy layers apply only to the fully fixed RSA SHA-256 proof.
+The fully routed proof may additionally be reified as a nominal responder path,
+but all data-driven routed flows stop before responder DNS, no-check, and
+revocation policy.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS

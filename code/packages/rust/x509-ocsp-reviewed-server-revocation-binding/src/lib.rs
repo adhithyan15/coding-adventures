@@ -11,9 +11,10 @@
 //! Byte-equal independent decodes are rejected.
 //!
 //! This is an evidence-composition, exact-time validity, bounded responder
-//! DNS-policy, and exact responder no-check boundary for the fixed path. The
-//! routed bindings stop before responder-path policy. They perform no new
-//! cryptography, path search,
+//! DNS-policy, and exact responder no-check boundary for the fixed path. A
+//! fully routed binding can be nominally reified as one exact responder path,
+//! but routed flows stop before responder DNS, no-check, and revocation policy.
+//! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
 //! that names the delegated responder's already-proven exact path through the
@@ -640,9 +641,10 @@ impl fmt::Debug
 /// SHA-256, SHA-384, or SHA-512 policy. The retained routed path independently
 /// proves both exact certificate adjacencies to one reviewed Mozilla root.
 ///
-/// This wrapper does not reify routed responder-path policy, check responder
-/// or intermediate revocation, generalize certificate-path validation, or
-/// grant TLS, HTTP, OAuth, or network authority.
+/// This wrapper can be nominally reified as one exact routed responder path by
+/// a separate type-restricted constructor. It does not apply routed responder
+/// DNS, no-check, or revocation policy, generalize certificate-path validation,
+/// or grant TLS, HTTP, OAuth, or network authority.
 pub struct BoundX509OcspRoutedIssuerReviewedServerRevocation<
     'binding,
     'basic_response,
@@ -1260,16 +1262,20 @@ pub fn bind_x509_ocsp_routed_issuer_to_routed_reviewed_server_path<
 /// authenticated responder-to-issuer link, the same issuer's complete
 /// intermediate policy and path-length state, its authenticated link to the
 /// exact Mozilla-reviewed root, and responder/issuer validity at the OCSP
-/// observation time. The consumed type's safe constructors already prove that
-/// the responder-policy object is the responder-link child and that the
-/// responder-link issuer is the reviewed-path intermediate. This wrapper
-/// reifies that transitive invariant for later path-policy composition; it
-/// performs no additional validation.
+/// observation time. Routed inputs additionally retain every selected RSA
+/// signature route across the OCSP response, responder and target certificate
+/// issuer links, and reviewed server path. The consumed type's safe
+/// constructors already prove that the responder-policy object is the
+/// responder-link child and that the responder-link issuer is the reviewed-path
+/// intermediate. This wrapper reifies that transitive invariant for later
+/// path-policy composition; it performs no additional validation.
 ///
-/// This fixed RSA SHA-256 responder path does not apply name constraints to
-/// the responder certificate, check responder or intermediate revocation,
-/// generalize path construction or validation, perform TLS or HTTP, authorize
-/// OAuth transport, or grant network authority.
+/// The fixed RSA SHA-256 constructor does not apply name constraints to the
+/// responder certificate. The routed constructor additionally stops before
+/// responder DNS and no-check policy. Neither form checks responder or
+/// intermediate revocation, generalizes path construction or validation,
+/// performs TLS or HTTP, authorizes OAuth transport, or grants network
+/// authority.
 pub struct BoundX509OcspReviewedResponderPath<Proof> {
     reviewed_server_revocation: Proof,
 }
@@ -1334,6 +1340,86 @@ pub fn reify_x509_ocsp_reviewed_responder_path<
     >,
 ) -> BoundX509OcspReviewedResponderPath<
     BoundX509OcspReviewedServerRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+> {
+    BoundX509OcspReviewedResponderPath {
+        reviewed_server_revocation,
+    }
+}
+
+/// Reify the fully routed authenticated responder's exact reviewed path suffix.
+///
+/// Earlier safe constructors already enforce every exact-object identity in
+/// the responder-to-issuer and issuer-to-reviewed-root path. This infallible
+/// nominal projection retains the complete proof, all five selected RSA
+/// signature routes, and responder, intermediate, and target validity at the
+/// OCSP observation time. It accepts no caller-supplied certificate, path,
+/// algorithm, key, signature, time, or policy input.
+///
+/// This pure public-data composition performs no parsing, cryptography,
+/// credential access or editing, signing, storage, clock acquisition, provider
+/// action, audit or trace emission, I/O, network access, or other external
+/// effect. It stops before routed responder DNS, no-check, or revocation policy,
+/// generalized path validation, TLS, HTTP, OAuth readiness, or network
+/// authority.
+#[allow(clippy::type_complexity)]
+pub fn reify_x509_ocsp_routed_issuer_reviewed_responder_path<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    reviewed_server_revocation: BoundX509OcspRoutedIssuerReviewedServerRevocation<
+        'binding,
+        'basic_response,
+        'basic_encoded,
+        'single_response,
+        'single_encoded,
+        'responder,
+        'responder_encoded,
+        'target,
+        'target_encoded,
+        'issuer,
+        'issuer_encoded,
+        'path,
+        'server_certificate,
+        'path_target,
+        'path_target_encoded,
+        'candidates,
+        'candidate_encoded,
+    >,
+) -> BoundX509OcspReviewedResponderPath<
+    BoundX509OcspRoutedIssuerReviewedServerRevocation<
         'binding,
         'basic_response,
         'basic_encoded,

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add an infallible nominal projection from the fully routed reviewed-server
+  revocation proof to the existing non-copyable responder-path evidence type.
+- Preserve every routed signature choice and exact-observation validity token
+  without new validation or effects, while leaving routed responder DNS,
+  no-check, revocation, TLS, HTTP, and OAuth readiness unresolved.
 - Add a distinct binder from the fully routed OCSP proof to the routed
   constructed reviewed-server path, preserving response, responder-certificate,
   target-certificate, and both server-path signature routes.
