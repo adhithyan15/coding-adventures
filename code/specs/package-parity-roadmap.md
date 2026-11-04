@@ -20626,3 +20626,25 @@ this receipt normally, then require fresh independent correctness and security
 review plus new hosted qualification on the resulting exact head. Record a
 separate workflow-budget owner only if the optimized checkout still exhausts
 the job budget; do not grant an exception or bypass the failed gate.
+
+#### Test-trigger fixture selector successful qualification and second reconciliation
+
+All 44 checks on exact independently reviewed head
+`f7cb536d9e29944a54fb8f3f50e534c4c1ae605b` completed terminal acceptable
+against base `71161251ab03a08c23bcecb4f9d41edd14ad7049`: 32 succeeded,
+11 were expected path-gated skips, and the CodeQL aggregate was neutral while
+the relevant Go analysis succeeded. The previously timing-out repo-wide
+metadata-contract job succeeded with the current-main checkout optimization.
+Do not enable guarded auto-merge because protected main advanced before the
+final decision.
+
+Merge exact current `origin/main`
+`06558a38bff6f1ca1fb8f69c4b1de58b8b6e9931` normally and conflict-free.
+The seven intervening Marathi, radix-tree, ALGOL, Mermaid, OCSP, tree-set, and
+trie commits are exact-path-disjoint from the six PR paths. Focused routing
+tests, Go vet, Go build, strict JSON parsing, and diff hygiene pass after this
+second reconciliation, while product implementation revision
+`d19754aafe24f4ee7de37706113fd4b527882296` remains unchanged. Commit and push
+normally, then require fresh independent correctness and security review plus
+fresh hosted qualification on the resulting exact head. Never reuse the
+successful prior check rollup for the new base.
