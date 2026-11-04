@@ -43,7 +43,12 @@ import {
   suiteLessonCacheOptions,
   type CachePlatform,
 } from "../src/lesson-cache.js";
-import { defaultCurriculumRoot, loadLessons, loadTrackLessons } from "../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  loadLessons,
+  loadTrackLessons,
+  loadTrackLessonsAsync,
+} from "../src/loader.js";
 import {
   configureNarrationCache,
   defaultNarrationCacheDirectory,
@@ -494,23 +499,30 @@ describe("the suite's own configuration", () => {
     expect(lessonCacheFor(defaultCurriculumRoot())).toBeDefined();
   });
 
-  // The fixture cases prove the mechanism; this proves it on real data, through
-  // whatever entry this run's global setup wrote. The smallest real track keeps
-  // the fresh narration it is compared against well inside the budget. (The
-  // whole corpus is compared byte for byte, cached, by narration-cli's `--check`
-  // case against files generated without the cache.)
-  it("answers a real track exactly as a fresh narration does", () => {
+  // The fixture cases prove the whole-corpus caller; this checks the real
+  // track entry written by global setup against fresh narration. Reading only
+  // that track avoids re-reading every track to select one cached answer. The
+  // whole corpus is compared byte for byte by narration-cli's `--check` case.
+  it("answers a real track exactly as a fresh narration does", async () => {
     const realRoot = defaultCurriculumRoot();
     const track = "chinese";
     expect(readdirSync(join(realRoot, track, "lessons")).length).toBeGreaterThan(100);
-    const cached = corpusNarration(realRoot).filter((chapter) => chapter.language === track);
+    const lessonKeys = new Map<string, string>();
+    await loadTrackLessonsAsync(track, realRoot, (language, key) => lessonKeys.set(language, key));
+    const lessonKey = lessonKeys.get(track);
+    expect(lessonKey).toBeDefined();
+    const options = corpusNarrationOptions(policyTableWidth(realRoot), chapterTitles(realRoot));
+    const cache = narrationCacheFor(realRoot);
+    expect(cache).toBeDefined();
+    const cached = cache?.read(track, cache.key({ language: track, ...options, lessonKey: lessonKey! }));
+    expect(cached).toBeDefined();
     configureNarrationCache(undefined);
     configureLessonCache(undefined);
     const fresh = narrationChapters(loadTrackLessons(track, realRoot), {
       maxLinearisableTableColumns: policyTableWidth(realRoot),
       titles: chapterTitles(realRoot),
     });
-    expect(cached.length).toBe(fresh.length);
+    expect(cached?.length).toBe(fresh.length);
     expect(cached).toStrictEqual(fresh);
     // It did come from the cache: the entry for this track is on disk.
     expect(
