@@ -135,20 +135,21 @@ language.
 ## Kannada B2 content inventory status
 
 [`core/exam-inventory-kannada-b2.json`](../core/exam-inventory-kannada-b2.json)
-is the first source-bounded content inventory for the committed B2 task shape.
+is the source-bounded content inventory for the committed B2 task shape.
 It enumerates 36 project-defined demands across communicative functions,
 Kannada grammar and register, script/sound/orthography, and lexicon/genres.
 The first strict measurement is **0/36 (0%)**: all 36 points remain deliberately
 unmapped rather than letting foundation atoms or one example word stand in for
 a complete B2 demand.
 
-All four dimensions remain **partial**. CEFR supplies a generic B2 proficiency
+All four inventory dimensions are **complete against this repository's finite
+project-owned 36-demand boundary**. CEFR supplies a generic B2 proficiency
 boundary, CIIL supplies an intermediate Kannada four-skill instructional
 boundary, Unicode supplies the script model, and LDC-IL supplies contemporary
-domains. None supplies a finite Kannada B2 grammar or word list. This inventory
-is therefore a work queue, not a readiness claim: the completion planner must
-keep `exam-inventory/kannada/B2` visible, and only the assessment contract's
-mock and human-validation evidence can support learner-facing readiness.
+domains. None supplies a finite external Kannada B2 grammar or word list, and
+the project does not claim otherwise. Inventory closure removes
+`exam-inventory/kannada/B2`; the 36 uncovered points remain strict planner work.
+This is an inventory boundary, not a readiness, validation, or attainment claim.
 
 ## Chapter capabilities
 

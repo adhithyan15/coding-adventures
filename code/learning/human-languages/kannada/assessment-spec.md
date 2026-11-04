@@ -82,15 +82,21 @@ four primary-source boundaries, checked 2026-10-29:
   aesthetics, commerce, mass media, official documents, science and
   technology, and social sciences.
 
-This evidence is enough to enumerate a useful, reviewable first inventory. It
-is **not** a closed Kannada B2 syllabus. CEFR closes a generic B2 functional
-boundary but does not select Kannada exponents; the CIIL text is an
-intermediate four-skill teaching source rather than a finite B2 grammar; LDC-IL
-measures domains rather than a level-bounded word list; and Unicode closes the
-encoding model rather than all spelling, punctuation, or pronunciation
-demands. Every HL20 dimension therefore remains `partial` in the first tranche.
-The planner must keep `exam-inventory/kannada/B2` visible until later primary
-evidence genuinely closes all four dimensions.
+This evidence does not create a finite external Kannada B2 syllabus. CEFR
+closes a generic B2 functional boundary but does not select Kannada exponents;
+the CIIL text is an intermediate four-skill teaching source rather than a
+finite B2 grammar; LDC-IL measures domains rather than a level-bounded word
+list; and Unicode closes the encoding model rather than every spelling,
+punctuation, or pronunciation demand.
+
+For this repository, the inventory's 36 named demands form a transparent,
+finite **project-owned** boundary: nine demands in each HL20 dimension, tied to
+the published Kannada B2 task shape and bounded by the sources only where each
+source is competent. All four inventory dimensions are therefore `complete`.
+That closes only enumeration. Exact lesson coverage remains 0/36 until full
+labeled demands have probes, so the planner removes the inventory item while
+retaining the uncovered exam-point work. This is not external certification,
+standard setting, learner readiness, human validation, or learner attainment.
 
 ## Pass rule
 

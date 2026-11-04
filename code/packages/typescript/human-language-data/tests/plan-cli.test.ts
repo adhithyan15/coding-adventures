@@ -197,6 +197,43 @@ function committedInventoryPairs(root = defaultCurriculumRoot()): Set<string> {
   );
 }
 
+function committedInventorySummary(root = defaultCurriculumRoot()): {
+  complete: number;
+  partial: number;
+  pairs: Set<string>;
+} {
+  const directory = join(root, "core");
+  const statuses = new Map<string, boolean>();
+  for (const entry of readdirSync(directory, { withFileTypes: true })) {
+    if (
+      !entry.name.startsWith("exam-inventory-") ||
+      !(entry.name.endsWith(".json") || entry.name.endsWith(".d"))
+    ) {
+      continue;
+    }
+    const source = entry.name.endsWith(".d")
+      ? join(directory, entry.name, EXAM_INVENTORY_META_OWNER)
+      : join(directory, entry.name);
+    const doc = JSON.parse(readFileSync(source, "utf8")) as {
+      language?: string;
+      level?: string;
+      scope?: Record<string, { status?: string }>;
+    };
+    const pair = `${doc.language}/${doc.level}`;
+    const complete =
+      doc.scope !== undefined &&
+      Object.keys(doc.scope).length > 0 &&
+      Object.values(doc.scope).every((dimension) => dimension.status === "complete");
+    statuses.set(pair, complete);
+  }
+  const complete = [...statuses.values()].filter(Boolean).length;
+  return {
+    complete,
+    partial: statuses.size - complete,
+    pairs: new Set(statuses.keys()),
+  };
+}
+
 describe("the plan CLI", () => {
   it("leads French and German with their exam gap on a clean corpus", () => {
     // HL16 adds one assessment-contract item per track ahead of content proxy
@@ -293,15 +330,16 @@ describe("the plan CLI", () => {
     // one file. HL-C310 removed the sibling `uncovered point(s)` literal for a
     // milder version of the same problem and left this one standing.
     //
-    // A ratchet is not available: the number rises whenever an inventory lands,
-    // which is the work we most want. So assert what the test actually owns --
-    // NOTHING is complete, and EVERY written inventory is counted exactly once
-    // as partial -- against a count derived from the directory listing, which
-    // the plan engine does not produce. Two authors landing two inventories now
-    // both pass, and an inventory that goes missing from the report fails.
-    const written = committedInventoryPairs();
-    expect(written.size).toBeGreaterThan(0);
-    expect(out).toMatch(new RegExp(`0 complete and ${written.size} partial of 138`));
+    // A ratchet is not available: the numbers move whenever an inventory lands
+    // or a partial inventory is source-closed, which is the work we most want.
+    // Assert what the test actually owns -- every distinct written inventory is
+    // counted exactly once, with its current complete/partial status -- against
+    // a summary derived independently from the directory listing.
+    const written = committedInventorySummary();
+    expect(written.pairs.size).toBeGreaterThan(0);
+    expect(out).toMatch(
+      new RegExp(`${written.complete} complete and ${written.partial} partial of 138`),
+    );
   }, 120_000);
 
   // Split out of the case above, which used to plan the WHOLE corpus twice in
@@ -337,7 +375,8 @@ describe("the plan CLI", () => {
     expect(err).toMatch(/french A1 inventory exists but could not be read/);
     // It comes BACK as an inventory to write, which is what the old comment
     // falsely claimed already happened.
-    expect(out).toMatch(/138\s+exam-inventory/);
+    const written = committedInventorySummary();
+    expect(out).toMatch(new RegExp(`${138 - written.complete}\\s+exam-inventory`));
     // 3 -> 4: French is the one made unreadable here, and Hindi A1 now sits
     // alongside Spanish and the two German files in the readable remainder.
     // 3 -> 4: Spanish A1, German A1, German A2 and Marathi A1 still parse; only
@@ -356,8 +395,10 @@ describe("the plan CLI", () => {
     // the same reason. `- 1` because this test corrupts exactly one file, which
     // is the property the sentence above has been asserting in prose since the
     // fourth entry; it is now asserted in code.
-    const readable = committedInventoryPairs().size - 1;
-    expect(out).toMatch(new RegExp(`0 complete and ${readable} partial of 138`));
+    const readablePartial = written.partial - 1;
+    expect(out).toMatch(
+      new RegExp(`${written.complete} complete and ${readablePartial} partial of 138`),
+    );
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
