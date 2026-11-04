@@ -18,6 +18,7 @@ from sharded_ledger import (
     load_script,
     load_script_inventory,
     read_track_regular_text,
+    read_track_regular_texts,
     write_book_generation_language,
     write_chapters,
     write_curriculum,
@@ -62,6 +63,53 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             read_track_regular_text(self.root, "spanish", "../outside/paper.md")
+
+    def test_modality_batch_reads_exact_owner_set_beneath_one_pinned_parent(self):
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text('{"language":"spanish"}\n', encoding="utf-8")
+        (directory / "ES-C01-hola.json").write_text('{"lesson":"¡hola!"}\n', encoding="utf-8")
+        names = ["_meta.json", "ES-C01-hola.json"]
+        self.assertEqual(read_track_regular_texts(
+            self.root, "core", ("lesson-modality", "spanish.d"), names,
+        ), {
+            "_meta.json": '{"language":"spanish"}\n',
+            "ES-C01-hola.json": '{"lesson":"¡hola!"}\n',
+        })
+        with self.assertRaisesRegex(ValueError, "missing|extra"):
+            read_track_regular_texts(
+                self.root, "core", ("lesson-modality", "spanish.d"), names[:1],
+            )
+        with self.assertRaisesRegex(ValueError, "missing|extra"):
+            read_track_regular_texts(
+                self.root, "core", ("lesson-modality", "spanish.d"), names + ["ES-C01-ghost.json"],
+            )
+        with self.assertRaises(ValueError):
+            read_track_regular_texts(
+                self.root, "core", ("lesson-modality", "spanish.d"), ["../outside.json"],
+            )
+
+    def test_modality_batch_refuses_swapped_parent_junction_after_audit(self):
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text("inside", encoding="utf-8")
+        (self.outside / "_meta.json").write_text("outside sentinel", encoding="utf-8")
+        self.assertEqual((directory / "_meta.json").read_text(encoding="utf-8"), "inside")
+        moved = directory.with_name("spanish-moved")
+        os.rename(directory, moved)
+        link_directory(self.outside, directory)
+        try:
+            with self.assertRaises((OSError, ValueError)):
+                read_track_regular_texts(
+                    self.root, "core", ("lesson-modality", "spanish.d"), ["_meta.json"],
+                )
+            self.assertEqual((self.outside / "_meta.json").read_text(encoding="utf-8"), "outside sentinel")
+        finally:
+            if os.name == "nt":
+                os.rmdir(directory)
+            else:
+                os.unlink(directory)
+            os.rename(moved, directory)
 
     def test_mock_manifest_refuses_sharded_sibling_under_pinned_parent(self):
         directory = self.root / "spanish" / "mocks"
