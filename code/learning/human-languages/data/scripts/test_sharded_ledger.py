@@ -111,6 +111,35 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
                 os.unlink(directory)
             os.rename(moved, directory)
 
+    def test_modality_owner_cli_transports_exact_unicode_bytes_and_scrubs_errors(self):
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text('{"text":"¡hola!"}\n', encoding="utf-8")
+        script = Path(__file__).with_name("modality_owner_read.py")
+        request = {"root": str(self.root), "language": "spanish", "names": ["_meta.json"]}
+        result = subprocess.run(
+            [sys.executable, str(script)], input=json.dumps(request).encode("utf-8"),
+            capture_output=True, check=True,
+        )
+        self.assertEqual(json.loads(result.stdout)["files"]["_meta.json"], '{"text":"¡hola!"}\n')
+
+        (directory / "_meta.json").write_text("SECRET_SENTINEL", encoding="utf-8")
+        # The transport handles text, not JSON parsing, so a malformed owner is
+        # returned exactly; the TypeScript parser must scrub its own failure.
+        result = subprocess.run(
+            [sys.executable, str(script)], input=json.dumps(request).encode("utf-8"),
+            capture_output=True, check=True,
+        )
+        self.assertEqual(json.loads(result.stdout)["files"]["_meta.json"], "SECRET_SENTINEL")
+
+        request["names"] = ["../SECRET_SENTINEL.json"]
+        result = subprocess.run(
+            [sys.executable, str(script)], input=json.dumps(request).encode("utf-8"),
+            capture_output=True,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertNotIn(b"SECRET_SENTINEL", result.stdout + result.stderr)
+
     def test_mock_manifest_refuses_sharded_sibling_under_pinned_parent(self):
         directory = self.root / "spanish" / "mocks"
         write_json(directory / "manifest.json", {"version": 1})
