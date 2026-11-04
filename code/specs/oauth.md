@@ -2545,6 +2545,27 @@ check responder or intermediate revocation, generalize path construction or
 validation, implement TLS or HTTP, authorize OAuth transport, or grant network
 authority. Concrete HTTPS and live-provider readiness remain unavailable.
 
+An alternative bounded routed revocation follow-up consumes that same complete
+intermediate-DNS proof plus a separate fully authenticated, fully routed OCSP
+target-revocation proof. The second proof must name the exact routed responder
+certificate as its target, the exact retained intermediate as its issuer, and
+the original server-status OCSP observation time as its own explicit
+observation time. Every certificate comparison uses decoded-object identity,
+so byte-equal independent decodes fail closed, and stable target, issuer, and
+observation-time mismatch categories retain no certificate, response, key,
+signature, status, hostname, or time payload. Success retains both complete
+non-copyable inputs under a distinct type; callers cannot substitute raw
+status, freshness endpoints, certificates, paths, algorithms, keys,
+signatures, or time. This pure public-certificate-data composition performs no
+credential access or editing, signing, storage, clock acquisition, provider
+action, audit event, trace emission, I/O, network access, or other external
+effect. It proves only authenticated revocation status for the exact routed
+responder at the original observation time. Revocation policy for the second
+proof's own responder and for the retained intermediate, generalized path
+construction or validation, TLS, HTTP, OAuth transport, and network authority
+remain unavailable. Concrete HTTPS and live-provider readiness remain
+unavailable.
+
 A bounded follow-up in
 `x509-ocsp-reviewed-server-revocation-binding` now consumes that complete
 reviewed server-revocation proof and reifies its delegated

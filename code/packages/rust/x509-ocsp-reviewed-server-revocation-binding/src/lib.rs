@@ -14,8 +14,10 @@
 //! DNS-policy, and exact responder no-check boundary for the fixed path. A
 //! fully routed binding can also be reified as one exact responder path,
 //! checked against its selected anchor's and exact intermediate's supported
-//! DNS constraints, and checked for exact responder no-check policy. Routed
-//! flows stop before responder or intermediate revocation policy.
+//! DNS constraints, checked for exact responder no-check policy, or joined to
+//! separately authenticated revocation evidence for that exact responder at
+//! the original observation time. Routed flows still stop before revocation
+//! policy for the second proof's signer and for the retained intermediate.
 //! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -1575,6 +1577,46 @@ impl fmt::Display for X509OcspReviewedResponderNoCheckPolicyError {
 
 impl std::error::Error for X509OcspReviewedResponderNoCheckPolicyError {}
 
+/// Stable payload-free routed responder-revocation binding failures.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum X509OcspReviewedResponderRevocationBindingErrorKind {
+    /// The authenticated revocation proof targets another decoded certificate.
+    TargetMismatch,
+    /// The authenticated revocation proof names another decoded issuer.
+    IssuerMismatch,
+    /// The proof was evaluated at a different explicit observation time.
+    ObservationTimeMismatch,
+}
+
+/// A redacted exact routed responder-revocation binding failure.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct X509OcspReviewedResponderRevocationBindingError {
+    kind: X509OcspReviewedResponderRevocationBindingErrorKind,
+}
+
+impl X509OcspReviewedResponderRevocationBindingError {
+    const fn new(kind: X509OcspReviewedResponderRevocationBindingErrorKind) -> Self {
+        Self { kind }
+    }
+
+    /// Return the stable payload-free failure category.
+    pub const fn kind(self) -> X509OcspReviewedResponderRevocationBindingErrorKind {
+        self.kind
+    }
+}
+
+impl fmt::Display for X509OcspReviewedResponderRevocationBindingError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            formatter,
+            "X.509 OCSP reviewed-responder revocation binding error {:?}",
+            self.kind
+        )
+    }
+}
+
+impl std::error::Error for X509OcspReviewedResponderRevocationBindingError {}
+
 /// Non-copyable reviewed responder-path evidence after selected-anchor DNS policy.
 ///
 /// Success proves either that the exact reviewed terminal selected by the
@@ -1665,6 +1707,68 @@ impl<Proof> fmt::Debug for ValidatedX509OcspReviewedResponderNoCheckPolicy<Proof
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("ValidatedX509OcspReviewedResponderNoCheckPolicy")
     }
+}
+
+/// Non-copyable routed responder evidence with authenticated revocation status.
+///
+/// Success retains the complete intermediate-DNS responder proof and one
+/// independently authenticated, fully routed OCSP target-revocation proof.
+/// The safe constructor requires that proof to target the same exact responder,
+/// name the same exact intermediate issuer, and use the original server-status
+/// OCSP observation time. It does not establish revocation policy for the
+/// second proof's own responder or for the retained intermediate, generalize
+/// path validation, or grant TLS, HTTP, OAuth, or network authority.
+pub struct BoundX509OcspReviewedResponderRevocation<Proof, Revocation> {
+    intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<Proof>,
+    responder_revocation: Revocation,
+}
+
+impl<Proof, Revocation> BoundX509OcspReviewedResponderRevocation<Proof, Revocation> {
+    /// Return the complete routed responder proof retained intact.
+    pub const fn intermediate_dns_policy(
+        &self,
+    ) -> &ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<Proof> {
+        &self.intermediate_dns_policy
+    }
+
+    /// Return the exact authenticated responder-revocation proof.
+    pub const fn responder_revocation(&self) -> &Revocation {
+        &self.responder_revocation
+    }
+}
+
+impl<Proof, Revocation> fmt::Debug for BoundX509OcspReviewedResponderRevocation<Proof, Revocation> {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("BoundX509OcspReviewedResponderRevocation")
+    }
+}
+
+fn validate_responder_revocation_binding_inputs(
+    expected_responder: &x509_certificate::X509Certificate<'_>,
+    expected_issuer: &x509_certificate::X509Certificate<'_>,
+    expected_observation_time: x509_time::X509Time,
+    revocation_target: &x509_certificate::X509Certificate<'_>,
+    revocation_issuer: &x509_certificate::X509Certificate<'_>,
+    revocation_observation_time: x509_time::X509Time,
+) -> Result<(), X509OcspReviewedResponderRevocationBindingError> {
+    if !std::ptr::eq(expected_responder, revocation_target) {
+        return Err(X509OcspReviewedResponderRevocationBindingError::new(
+            X509OcspReviewedResponderRevocationBindingErrorKind::TargetMismatch,
+        ));
+    }
+    if !std::ptr::eq(expected_issuer, revocation_issuer) {
+        return Err(X509OcspReviewedResponderRevocationBindingError::new(
+            X509OcspReviewedResponderRevocationBindingErrorKind::IssuerMismatch,
+        ));
+    }
+    if expected_observation_time.cmp_fields(&revocation_observation_time)
+        != core::cmp::Ordering::Equal
+    {
+        return Err(X509OcspReviewedResponderRevocationBindingError::new(
+            X509OcspReviewedResponderRevocationBindingErrorKind::ObservationTimeMismatch,
+        ));
+    }
+    Ok(())
 }
 
 fn evaluate_responder_anchor_dns_policy(
@@ -2332,6 +2436,159 @@ pub fn validate_x509_ocsp_routed_issuer_reviewed_responder_no_check_policy<
     })
 }
 
+/// Bind authenticated revocation to the exact routed-path responder.
+///
+/// This alternative to the no-check branch consumes the complete routed
+/// responder intermediate-DNS proof and a separate fully routed authenticated
+/// OCSP target-revocation proof. The second proof must target the same decoded
+/// responder object, name the same decoded intermediate issuer, and use the
+/// original server-status OCSP observation time. Failure order is stable:
+/// target identity, issuer identity, then observation time.
+///
+/// This pure public-certificate-data composition performs no credential access
+/// or editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before revocation policy for the second proof's own responder or the
+/// retained intermediate, generalized path validation, TLS, HTTP, OAuth
+/// readiness, or network authority.
+#[allow(clippy::type_complexity)]
+pub fn bind_x509_ocsp_routed_issuer_reviewed_responder_revocation<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+    'responder_revocation_binding,
+    'responder_revocation_basic_response,
+    'responder_revocation_basic_encoded,
+    'responder_revocation_single_response,
+    'responder_revocation_single_encoded,
+    'responder_revocation_responder,
+    'responder_revocation_responder_encoded,
+>(
+    intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspRoutedIssuerReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+    responder_revocation: AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+        'responder_revocation_binding,
+        'responder_revocation_basic_response,
+        'responder_revocation_basic_encoded,
+        'responder_revocation_single_response,
+        'responder_revocation_single_encoded,
+        'responder_revocation_responder,
+        'responder_revocation_responder_encoded,
+        'responder,
+        'responder_encoded,
+        'issuer,
+        'issuer_encoded,
+    >,
+) -> Result<
+    BoundX509OcspReviewedResponderRevocation<
+        BoundX509OcspRoutedIssuerReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+        AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation<
+            'responder_revocation_binding,
+            'responder_revocation_basic_response,
+            'responder_revocation_basic_encoded,
+            'responder_revocation_single_response,
+            'responder_revocation_single_encoded,
+            'responder_revocation_responder,
+            'responder_revocation_responder_encoded,
+            'responder,
+            'responder_encoded,
+            'issuer,
+            'issuer_encoded,
+        >,
+    >,
+    X509OcspReviewedResponderRevocationBindingError,
+> {
+    let reviewed_server_revocation = intermediate_dns_policy
+        .anchor_policy()
+        .responder_path()
+        .reviewed_server_revocation();
+    let expected_responder = reviewed_server_revocation
+        .authenticated_revocation()
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    let expected_issuer = reviewed_server_revocation
+        .routed_reviewed_server_path()
+        .anchor_policy()
+        .reviewed_server_path()
+        .reviewed_path()
+        .authenticated_intermediate()
+        .authenticated_intermediate()
+        .intermediate_policy()
+        .certificate();
+    let expected_observation_time = reviewed_server_revocation
+        .authenticated_revocation()
+        .revocation()
+        .observation_time();
+    let revocation_binding = responder_revocation.revocation().cert_id_binding();
+
+    validate_responder_revocation_binding_inputs(
+        expected_responder,
+        expected_issuer,
+        expected_observation_time,
+        revocation_binding.target(),
+        revocation_binding.issuer(),
+        responder_revocation.revocation().observation_time(),
+    )?;
+
+    Ok(BoundX509OcspReviewedResponderRevocation {
+        intermediate_dns_policy,
+        responder_revocation,
+    })
+}
+
 /// Require RFC 6960 no-check policy for the exact reviewed-path responder.
 ///
 /// This consumes the complete responder intermediate-DNS proof and derives the
@@ -2882,6 +3139,132 @@ mod tests {
         assert_eq!(
             format!("{error:?} {error}"),
             "X509OcspReviewedResponderNoCheckPolicyError { kind: InvalidNoCheckExtensionValue } X.509 OCSP reviewed-responder no-check policy error InvalidNoCheckExtensionValue"
+        );
+    }
+
+    #[test]
+    fn exact_responder_revocation_binding_inputs_succeed() {
+        let responder_encoded = certificate(&[]);
+        let issuer_encoded = certificate(&[]);
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+        let observation_time = time(b"\x17\x0d261025120000Z");
+
+        validate_responder_revocation_binding_inputs(
+            &responder,
+            &issuer,
+            observation_time,
+            &responder,
+            &issuer,
+            observation_time,
+        )
+        .unwrap();
+    }
+
+    #[test]
+    fn responder_revocation_binding_rejects_target_before_issuer_and_time() {
+        let responder_encoded = certificate(&[]);
+        let other_encoded = certificate(&[]);
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let other = decode_x509_certificate(&other_encoded, Asn1Limits::default()).unwrap();
+
+        let error = validate_responder_revocation_binding_inputs(
+            &responder,
+            &responder,
+            time(b"\x17\x0d261025120000Z"),
+            &other,
+            &other,
+            time(b"\x17\x0d271025120000Z"),
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderRevocationBindingErrorKind::TargetMismatch
+        );
+    }
+
+    #[test]
+    fn responder_revocation_binding_rejects_issuer_before_time() {
+        let responder_encoded = certificate(&[]);
+        let issuer_encoded = certificate(&[]);
+        let other_issuer_encoded = certificate(&[]);
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+        let other_issuer =
+            decode_x509_certificate(&other_issuer_encoded, Asn1Limits::default()).unwrap();
+
+        let error = validate_responder_revocation_binding_inputs(
+            &responder,
+            &issuer,
+            time(b"\x17\x0d261025120000Z"),
+            &responder,
+            &other_issuer,
+            time(b"\x17\x0d271025120000Z"),
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderRevocationBindingErrorKind::IssuerMismatch
+        );
+    }
+
+    #[test]
+    fn responder_revocation_binding_rejects_a_different_observation_time() {
+        let responder_encoded = certificate(&[]);
+        let issuer_encoded = certificate(&[]);
+        let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+        let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+
+        let error = validate_responder_revocation_binding_inputs(
+            &responder,
+            &issuer,
+            time(b"\x17\x0d261025120000Z"),
+            &responder,
+            &issuer,
+            time(b"\x17\x0d271025120000Z"),
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error.kind(),
+            X509OcspReviewedResponderRevocationBindingErrorKind::ObservationTimeMismatch
+        );
+        assert_eq!(
+            format!("{error:?} {error}"),
+            "X509OcspReviewedResponderRevocationBindingError { kind: ObservationTimeMismatch } X.509 OCSP reviewed-responder revocation binding error ObservationTimeMismatch"
+        );
+    }
+
+    #[test]
+    fn responder_revocation_wrapper_retains_both_noncopyable_inputs() {
+        let intermediate_dns_policy = ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
+            anchor_policy: ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+                responder_path: BoundX509OcspReviewedResponderPath {
+                    reviewed_server_revocation: (),
+                },
+                constrained_dns_names: None,
+            },
+            constrained_dns_names: None,
+        };
+        let bound = BoundX509OcspReviewedResponderRevocation {
+            intermediate_dns_policy,
+            responder_revocation: 7_u8,
+        };
+
+        assert_eq!(*bound.responder_revocation(), 7);
+        assert_eq!(
+            bound
+                .intermediate_dns_policy()
+                .anchor_policy()
+                .responder_path()
+                .reviewed_server_revocation(),
+            &()
+        );
+        assert_eq!(
+            format!("{bound:?}"),
+            "BoundX509OcspReviewedResponderRevocation"
         );
     }
 }
