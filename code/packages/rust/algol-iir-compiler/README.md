@@ -360,7 +360,8 @@ is exact. Fractional coefficients, rooted divisors, zero divisors, overflow,
 multiple roots, overrides, and dynamic roots remain conservative.
 Checked integer divisors may also leave a reduced rational coefficient. The
 compiler floors or ceilings the resulting scaled root with exact integer
-arithmetic; rooted divisors, zero divisors, overflow, multiple roots,
+arithmetic. Products of nonnegative static roots may combine their radicands
+under the same checked `u128` proof. Rooted divisors, zero divisors, overflow,
 overrides, and dynamic roots remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values

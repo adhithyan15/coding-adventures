@@ -3743,9 +3743,11 @@ impl Compiler {
                             if operator != "*" {
                                 return None;
                             }
-                            if radicand.replace(value).is_some() {
-                                return None;
-                            }
+                            radicand = Some(
+                                radicand
+                                    .unwrap_or(1_u128)
+                                    .checked_mul(value as u128)?,
+                            );
                         } else {
                             let value = self
                                 .exact_static_integer_normalizer_operand_value(operand)?;
@@ -3922,11 +3924,11 @@ impl Compiler {
         &self,
         coefficient: i64,
         denominator: u64,
-        radicand: u64,
+        radicand: u128,
     ) -> Option<i64> {
         let magnitude = coefficient.unsigned_abs() as u128;
         let squared = magnitude.checked_mul(magnitude)?;
-        let value = squared.checked_mul(radicand as u128)?;
+        let value = squared.checked_mul(radicand)?;
         let root = value.isqrt();
         let denominator = denominator as u128;
         let quotient = root / denominator;
@@ -17500,12 +17502,11 @@ mod tests {
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(entier(-1)))) * sign(pick())) mod 5); output(result) end",
             "begin real procedure sqrt(x); value x; real x; sqrt := 8; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
             "begin integer procedure dynamic; dynamic := 80; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
-            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) * sqrt(entier(3)))) * sign(pick())) mod 5); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(9223372036854775807 * 2 * sqrt(entier(2)))) * sign(pick())) mod 5); output(result) end",
             "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(9223372036854775807 * sqrt(entier(9223372036854775807)))) * sign(pick())) mod 5); output(result) end",
         ] {
             compile_source(source, "test").expect_err(
-                "negative radicands, overridden or dynamic roots, multiple roots, and overflow must fail closed",
+                "negative radicands, overridden or dynamic roots, and overflow must fail closed",
             );
         }
     }
@@ -17554,6 +17555,31 @@ mod tests {
         ] {
             compile_source(source, "test")
                 .expect_err("dynamic divisors and checked denominator overflow must fail closed");
+        }
+    }
+
+    #[test]
+    fn al4_rational_floor_root_products_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) * sqrt(entier(5)) / 2)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 * sqrt(entier(8)) * sqrt(entier(2)) / 4)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-(sqrt(entier(15)) * sqrt(entier(6)) / 2))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "checked products of static roots may preserve rational floor roots for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) / sqrt(entier(5)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 5; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) * sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(9223372036854775807)) * sqrt(entier(9223372036854775807)) * sqrt(entier(9223372036854775807)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").expect_err(
+                "rooted divisors, dynamic roots, and checked radicand overflow must fail closed",
+            );
         }
     }
 
