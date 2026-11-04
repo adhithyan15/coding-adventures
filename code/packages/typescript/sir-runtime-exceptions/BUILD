@@ -5,6 +5,6 @@ _targets = [
         name = "sir-runtime-exceptions",
         srcs = ["src/**/*.ts", "tests/**/*.ts"],
         deps = [],
-        test_runner = "vitest",
+        test_runner = "node",
     ),
 ]
