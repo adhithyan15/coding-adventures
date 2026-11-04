@@ -177,6 +177,9 @@ metadata through semantic IR, structural layout, and native Metal rendering.
 The next five classic Cypress cases pin cardinality aliases, front-matter titles,
 entity aliases, multiline relationship labels, and keyword substrings in alias
 text through the same backend-neutral pipeline.
+The following six classic Cypress cases pin integer, decimal, and standalone
+numeric entities plus the ambiguous `u` entity/cardinality forms through semantic
+IR, structural layout, portable paint, and native Metal rendering.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
