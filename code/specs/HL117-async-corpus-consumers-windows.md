@@ -35,6 +35,11 @@ consumers.
   curriculum directly when the measured function itself filters to that track.
   Keep independently shared policy and spine inputs, and fail if the track
   curriculum is absent rather than silently measuring an empty substitute.
+* The completion-plan CLI reads only the registry, lessons, curricula, and
+  spine it actually passes to its level-gate sections. Unrelated book, script,
+  sound-tag, taxonomy, and dataset assembly stays the responsibility of their
+  own validation gates. Its queue and error behavior for plan inputs must not
+  change.
 * Verify sync/async result parity on a small fixture and real-track lesson
   identity/hash parity. Confirm isolated failing cases and then the unweakened
   full Windows suite on the exact final source before considering PR #18960

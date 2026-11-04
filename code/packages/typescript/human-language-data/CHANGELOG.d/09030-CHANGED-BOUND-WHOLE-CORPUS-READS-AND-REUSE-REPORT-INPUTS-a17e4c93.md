@@ -18,6 +18,12 @@
 - Scope six Kannada, Tamil, and Telugu A1 exam assertions to their complete
   canonical track lessons. The exam functions already filter by language, so
   every probe, coverage count, and continuity assertion remains unchanged.
+- Use a shared bounded source load for the read-only lost-script gate and its
+  planted damage control, and for both committed metalanguage measurements.
+  Their complete source and rendered-book scans are retained.
+- Make the completion-plan runner load only the registry, lessons, curricula,
+  and spine it consumes. Focused validation still shows high Windows I/O cost;
+  the complete suite remains the acceptance gate for this optimization.
 - Keep the 30-second default, explicit per-case timeouts, every corpus
   assertion, and the 85% line-coverage threshold unchanged. Full Windows
   coverage and final-head CI remain required before release.
