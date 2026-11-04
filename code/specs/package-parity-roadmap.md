@@ -20661,3 +20661,11 @@ rerun focused routing, Go vet/build, strict JSON, graph, and diff-hygiene
 validation, and require fresh independent correctness/security review before a
 normal push. The resulting exact head needs an entirely new hosted rollup;
 never reuse partial or completed checks from the superseded base.
+
+Protected main advanced once more immediately after the third reconciled head
+was pushed. Merge exact `origin/main`
+`735518ae484e6570e05dfd47be76f6dc57019a79` normally and conflict-free. The
+single intervening music-machine native-backend commit is exact-path-disjoint
+from the six PR paths and touches no workflow. Treat the resulting head as a
+fourth reconciliation: rerun local validation, obtain fresh independent
+review, push normally, and require an entirely new hosted rollup.
