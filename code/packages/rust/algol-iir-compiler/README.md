@@ -367,9 +367,11 @@ factors cancelled first. Zero or dynamic root divisors, overflow, overrides,
 and dynamic roots remain conservative.
 Bounded nonnegative powers of one static root may reduce to an exact integer
 coefficient times at most one remaining root. Those factors compose through
-checked multiplication and later static coefficient division before flooring;
-dynamic or negative exponents, exponent chains beyond the existing unroll cap,
-overflow, and powered root divisors remain conservative.
+checked multiplication and static division before flooring. Powered root
+divisors split into that integer coefficient and optional remaining root; the
+latter is rationalized with exact common-factor cancellation. Dynamic or
+negative exponents, exponent chains beyond the existing unroll cap, zero
+divisors, and overflow remain conservative.
 Exact local integer snapshots may also supply leaves of those checked
 reductions. Captured globals, by-name actuals, dynamic assignments, and values
 whose composed reduction exceeds `2^53` remain conservative.
