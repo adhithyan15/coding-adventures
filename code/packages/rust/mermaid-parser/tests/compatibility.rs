@@ -281,6 +281,14 @@ const ER_UPSTREAM_ATTRIBUTES_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-upstream-attributes-11.16.1-visual-corpus.json"
 ));
+const ER_UPSTREAM_ATTRIBUTE_METADATA_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-attribute-metadata-11.16.1-corpus.json"
+));
+const ER_UPSTREAM_ATTRIBUTE_METADATA_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-upstream-attribute-metadata-11.16.1-visual-corpus.json"
+));
 const ER_STYLES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
@@ -2593,6 +2601,62 @@ fn pinned_er_upstream_attributes_reach_semantic_ir() {
             .map(|compartment| compartment.entries.len())
             .sum::<usize>(),
         6
+    );
+}
+
+#[test]
+fn pinned_er_upstream_attribute_metadata_reaches_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_UPSTREAM_ATTRIBUTE_METADATA_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(ER_UPSTREAM_ATTRIBUTE_METADATA_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), visual_names.len());
+
+    let diagrams = fixtures
+        .iter()
+        .zip(visual_names)
+        .map(|(fixture, visual_name)| {
+            assert_eq!(fixture["name"], *visual_name);
+            parse_er_diagram(fixture["source"].as_str().unwrap()).unwrap()
+        })
+        .collect::<Vec<_>>();
+    let entries = |diagram: &diagram_ir::StructuralDiagram, node_id: &str| {
+        diagram
+            .nodes
+            .iter()
+            .find(|node| node.id == node_id)
+            .unwrap()
+            .compartments[0]
+            .entries
+            .clone()
+    };
+    assert_eq!(
+        entries(&diagrams[0], "HOTEL"),
+        [
+            "address: string",
+            "geo.accuracy: string",
+            "check-in date: string [PK] - ISO 8601"
+        ]
+    );
+    assert_eq!(
+        entries(&diagrams[1], "HOTEL"),
+        [
+            "address: string",
+            "location: GEOMETRY(point,4326)",
+            "price_per_night: DECIMAL(10,2)"
+        ]
+    );
+    assert_eq!(entries(&diagrams[2], "AUTHOR_WITH_LONG_ENTITY_NAME"), ["name: string [PK]"]);
+    assert_eq!(entries(&diagrams[3], "AUTHOR_WITH_LONG_ENTITY_NAME"), ["name: string - comment"]);
+    assert_eq!(
+        entries(&diagrams[4], "BOOK"),
+        [
+            "description: string",
+            "price: float - price comment",
+            "title: string [PK] - title comment",
+            "author: string [FK]"
+        ]
     );
 }
 
