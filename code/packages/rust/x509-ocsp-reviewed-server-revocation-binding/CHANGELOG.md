@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Bind a separate fully routed authenticated OCSP proof to the exact routed
+  responder, retained intermediate, and original server-status observation
+  time, with stable payload-free target, issuer, and time mismatch failures.
+- Retain both complete non-copyable proofs without new cryptography or external
+  effects, while leaving the second proof's signer revocation, intermediate
+  revocation, generalized path validation, TLS, HTTP, and OAuth unresolved.
 - Apply the RFC 6960 no-check semantic gate to the exact authenticated
   responder retained by the fully routed intermediate-DNS proof.
 - Reuse exact DER `NULL` validation and stable payload-free failures, preserve
