@@ -12,8 +12,9 @@
 //!
 //! This is an evidence-composition, exact-time validity, bounded responder
 //! DNS-policy, and exact responder no-check boundary for the fixed path. A
-//! fully routed binding can be nominally reified as one exact responder path,
-//! but routed flows stop before responder DNS, no-check, and revocation policy.
+//! fully routed binding can also be reified as one exact responder path and
+//! checked against its selected anchor's supported DNS constraints, but routed
+//! flows stop before intermediate DNS, no-check, and revocation policy.
 //! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -1898,6 +1899,113 @@ pub fn validate_x509_ocsp_reviewed_responder_anchor_dns_policy<
         .anchor_policy()
         .reviewed_intermediate_server_path()
         .reviewed_intermediate_path()
+        .reviewed_anchor()
+        .name_constraints();
+    let constrained_dns_names = evaluate_responder_anchor_dns_policy(
+        responder_certificate,
+        name_constraints,
+        constraint_limits,
+        subject_alt_name_limits,
+    )?;
+
+    Ok(ValidatedX509OcspReviewedResponderAnchorDnsPolicy {
+        responder_path,
+        constrained_dns_names,
+    })
+}
+
+/// Apply the selected reviewed anchor's supported DNS policy to a routed responder.
+///
+/// The exact responder certificate and selected reviewed terminal are derived
+/// only through the consumed fully routed responder-path proof. Separate
+/// caller-owned limits bound both ASN.1 parses. Entries without constraints
+/// succeed without reading the responder SAN or manufacturing DNS evidence.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before intermediate DNS, no-check, or revocation policy, generalized path
+/// validation, TLS, HTTP, OAuth readiness, or network authority.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    responder_path: BoundX509OcspReviewedResponderPath<
+        BoundX509OcspRoutedIssuerReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+    constraint_limits: Asn1Limits,
+    subject_alt_name_limits: Asn1Limits,
+) -> Result<
+    ValidatedX509OcspReviewedResponderAnchorDnsPolicy<
+        BoundX509OcspRoutedIssuerReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+    X509OcspReviewedResponderAnchorDnsPolicyError,
+> {
+    let reviewed_server_revocation = responder_path.reviewed_server_revocation();
+    let responder_certificate = reviewed_server_revocation
+        .authenticated_revocation()
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    let name_constraints = reviewed_server_revocation
+        .routed_reviewed_server_path()
+        .anchor_policy()
+        .reviewed_server_path()
+        .reviewed_path()
+        .reviewed_terminal()
         .reviewed_anchor()
         .name_constraints();
     let constrained_dns_names = evaluate_responder_anchor_dns_policy(

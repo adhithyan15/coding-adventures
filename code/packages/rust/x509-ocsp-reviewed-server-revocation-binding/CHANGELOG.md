@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Apply the selected reviewed root's supported out-of-band DNS constraints to
+  the exact authenticated responder retained by the fully routed proof, under
+  separate caller-owned parse limits and with payload-free failures.
+- Derive both certificate inputs exclusively from the consumed routed proof,
+  retain count-only DNS evidence, and stop before routed intermediate DNS,
+  no-check, revocation, TLS, HTTP, or OAuth readiness.
 - Add an infallible nominal projection from the fully routed reviewed-server
   revocation proof to the existing non-copyable responder-path evidence type.
 - Preserve every routed signature choice and exact-observation validity token
