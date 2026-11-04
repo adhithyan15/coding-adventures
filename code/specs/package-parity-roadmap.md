@@ -20721,6 +20721,15 @@ are exact-path-disjoint from the six PR paths and touch no workflow. Treat the
 resulting head as a tenth reconciliation with fresh local validation,
 independent review, normal push, and an entirely new hosted rollup.
 
+Protected main advanced again while the eleventh reconciled head was
+qualifying. Merge exact `origin/main`
+`57f46f2e4c2605c0dd3c7482cc84f8a6dcd8f1de` normally and conflict-free. The
+two intervening TypeScript multi-directed-graph `node:test` migration and
+routed OCSP responder no-check commits are exact-path-disjoint from the six PR
+paths and touch no workflow. Treat the resulting head as a twelfth
+reconciliation with fresh local validation, independent review, normal push,
+and an entirely new hosted rollup.
+
 Protected main advanced again while the tenth reconciled head was qualifying.
 Merge exact `origin/main`
 `e3463970aaa22e1ba39536bbb676641f159d41a4` normally and conflict-free. The
