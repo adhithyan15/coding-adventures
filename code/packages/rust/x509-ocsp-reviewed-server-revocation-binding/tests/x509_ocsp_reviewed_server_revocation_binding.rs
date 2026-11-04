@@ -41,7 +41,7 @@ use x509_ocsp_reviewed_server_revocation_binding::{
     bind_x509_ocsp_revocation_to_routed_reviewed_server_path,
     bind_x509_ocsp_routed_issuer_to_routed_reviewed_server_path,
     bind_x509_ocsp_routed_response_to_routed_reviewed_server_path,
-    reify_x509_ocsp_reviewed_responder_path,
+    reify_x509_ocsp_reviewed_responder_path, reify_x509_ocsp_routed_issuer_reviewed_responder_path,
     validate_x509_ocsp_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_reviewed_responder_intermediate_dns_policy,
     validate_x509_ocsp_reviewed_responder_no_check_policy,
@@ -1249,6 +1249,13 @@ fn binds_routed_issuer_revocation_to_the_same_exact_routed_reviewed_server_path_
     let bound =
         bind_x509_ocsp_routed_issuer_to_routed_reviewed_server_path(authenticated, reviewed_server)
             .unwrap();
+    let responder_path = reify_x509_ocsp_routed_issuer_reviewed_responder_path(bound);
+
+    assert_eq!(
+        format!("{responder_path:?}"),
+        "BoundX509OcspReviewedResponderPath"
+    );
+    let bound = responder_path.reviewed_server_revocation();
 
     assert_eq!(
         bound
