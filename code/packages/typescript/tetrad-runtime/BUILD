@@ -2,4 +2,6 @@ cd ../interpreter-ir && npm ci --quiet
 cd ../vm-core && npm ci --quiet
 cd ../codegen-core && npm ci --quiet
 cd ../jit-core && npm ci --quiet
-npm ci --quiet && npx vitest run --coverage
+npm ci --quiet
+npm run build --silent
+npm run test:coverage --silent
