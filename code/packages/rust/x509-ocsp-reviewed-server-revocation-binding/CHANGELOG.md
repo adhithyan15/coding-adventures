@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Apply the RFC 6960 no-check semantic gate to the exact authenticated
+  responder retained by the fully routed intermediate-DNS proof.
+- Reuse exact DER `NULL` validation and stable payload-free failures, preserve
+  every routed signature choice, and stop before responder or intermediate
+  revocation, TLS, HTTP, or OAuth readiness.
 - Apply the exact routed intermediate's supported critical permitted-and-
   excluded-DNS constraints to the exact routed authenticated responder, under
   separate caller-owned parse limits and with payload-free failures.

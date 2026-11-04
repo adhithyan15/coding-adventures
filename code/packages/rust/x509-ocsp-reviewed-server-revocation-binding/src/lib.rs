@@ -12,9 +12,10 @@
 //!
 //! This is an evidence-composition, exact-time validity, bounded responder
 //! DNS-policy, and exact responder no-check boundary for the fixed path. A
-//! fully routed binding can also be reified as one exact responder path and
+//! fully routed binding can also be reified as one exact responder path,
 //! checked against its selected anchor's and exact intermediate's supported
-//! DNS constraints, but routed flows stop before no-check and revocation policy.
+//! DNS constraints, and checked for exact responder no-check policy. Routed
+//! flows stop before responder or intermediate revocation policy.
 //! They perform no new cryptography, path search,
 //! revocation lookup, clock, TLS, HTTP, OAuth, network, or external-provider
 //! operation. A projection retains the complete proof under a distinct type
@@ -2232,6 +2233,102 @@ pub fn validate_x509_ocsp_reviewed_responder_intermediate_dns_policy<
     Ok(ValidatedX509OcspReviewedResponderIntermediateDnsPolicy {
         anchor_policy,
         constrained_dns_names,
+    })
+}
+
+/// Require RFC 6960 no-check policy for the exact routed-path responder.
+///
+/// This consumes the complete routed responder intermediate-DNS proof and
+/// derives the responder certificate only through that retained proof. A
+/// structurally unique `id-pkix-ocsp-nocheck` extension must be present with
+/// exact DER `NULL` contents. RFC 6960 recommends a non-critical extension but
+/// does not require it; a critical instance can reach this semantic gate only
+/// when the prerequisite certificate-wide role policy explicitly recognized
+/// its OID.
+///
+/// This pure public-certificate-data policy performs no credential access or
+/// editing, signing, storage, clock acquisition, provider action, audit or
+/// trace emission, I/O, network access, or other external effect. It stops
+/// before responder or intermediate revocation policy, generalized path
+/// validation, TLS, HTTP, OAuth readiness, or network authority.
+#[allow(clippy::type_complexity)]
+pub fn validate_x509_ocsp_routed_issuer_reviewed_responder_no_check_policy<
+    'binding,
+    'basic_response,
+    'basic_encoded,
+    'single_response,
+    'single_encoded,
+    'responder,
+    'responder_encoded,
+    'target,
+    'target_encoded,
+    'issuer,
+    'issuer_encoded,
+    'path,
+    'server_certificate,
+    'path_target,
+    'path_target_encoded,
+    'candidates,
+    'candidate_encoded,
+>(
+    intermediate_dns_policy: ValidatedX509OcspReviewedResponderIntermediateDnsPolicy<
+        BoundX509OcspRoutedIssuerReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+) -> Result<
+    ValidatedX509OcspReviewedResponderNoCheckPolicy<
+        BoundX509OcspRoutedIssuerReviewedServerRevocation<
+            'binding,
+            'basic_response,
+            'basic_encoded,
+            'single_response,
+            'single_encoded,
+            'responder,
+            'responder_encoded,
+            'target,
+            'target_encoded,
+            'issuer,
+            'issuer_encoded,
+            'path,
+            'server_certificate,
+            'path_target,
+            'path_target_encoded,
+            'candidates,
+            'candidate_encoded,
+        >,
+    >,
+    X509OcspReviewedResponderNoCheckPolicyError,
+> {
+    let responder_certificate = intermediate_dns_policy
+        .anchor_policy()
+        .responder_path()
+        .reviewed_server_revocation()
+        .authenticated_revocation()
+        .issuer_bound_responder()
+        .authenticated_responder()
+        .responder_certificate_policy()
+        .certificate();
+    evaluate_responder_no_check_policy(responder_certificate)?;
+
+    Ok(ValidatedX509OcspReviewedResponderNoCheckPolicy {
+        intermediate_dns_policy,
     })
 }
 
