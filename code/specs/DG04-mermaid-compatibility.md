@@ -171,6 +171,9 @@ layout, portable PaintInstructions, and native Metal rendering.
 The next six classic Cypress cases pin standalone entities, repeated attribute
 blocks, generic and array types, length-limited types, variable entity widths,
 and leading-asterisk attributes through the same backend-neutral pipeline.
+The following five classic Cypress cases pin escaped attribute names, comma and
+period-bearing attribute forms, key markers, comments, and combined key/comment
+metadata through semantic IR, structural layout, and native Metal rendering.
 ER remains partial while the rest of the pinned upstream syntax and visual corpus
 is incomplete.
 
