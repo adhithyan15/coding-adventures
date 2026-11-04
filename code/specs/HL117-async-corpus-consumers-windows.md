@@ -49,6 +49,12 @@ consumers.
   loader while keeping the historical synchronous library exports available.
   The CLI still validates every output identity, derives every registered
   track, and refuses a resurrected tracked progress directory.
+* The read-only progress test file may derive the complete real track set once
+  and reuse it for its card, check, and report assertions. The shared final
+  gate must be the exact gate called by the direct CLI for each mode; no test
+  edits the canonical corpus between those assertions. CLI argument validation
+  remains exercised separately. Do not replace the full real-track derivation
+  with a fixture, mock, stored snapshot, or generated card files.
 * Verify sync/async result parity on a small fixture and real-track lesson
   identity/hash parity. Confirm isolated failing cases and then the unweakened
   full Windows suite on the exact final source before considering PR #18960
