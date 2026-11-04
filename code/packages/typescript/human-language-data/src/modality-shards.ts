@@ -1,6 +1,11 @@
 import { lstatSync, readdirSync, realpathSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
-import { isAbsentErrno, readLedgerFileWithSource } from "./shard.js";
+import {
+  isAbsentErrno,
+  readLedgerFileWithSource,
+  readLedgerFileWithSourceAsync,
+  type ReadLedgerSource,
+} from "./shard.js";
 import {
   MODALITY_MANIFEST_DIR,
   MODALITY_MANIFEST_VERSION,
@@ -510,10 +515,11 @@ export function assertModalityManifestLanguages(
  * Completeness is established from independent identities before any owner bytes are
  * opened. There is deliberately no flat-aggregate fallback.
  */
-export function readModalityManifestOwners(
+function* modalityOwnerReadPlan(
   root: string,
   options: ModalityOwnerReadOptions,
-): ModalityManifest {
+  batchSize: number,
+): Generator<readonly string[], ModalityManifest, readonly ReadLedgerSource<unknown>[]> {
   for (const language of options.expectedLanguages) {
     if (!safeLanguage(language)) throw new Error(`modality expected language '${language}' is unsafe`);
   }
@@ -604,7 +610,7 @@ export function readModalityManifestOwners(
     // Keep the guarded parse and its exact source text together. Reopening the
     // file solely to check canonical formatting doubles whole-corpus I/O and
     // can compare a different version if an owner changes between the reads.
-    const metaSource = readLedgerFileWithSource(metaPath);
+    const metaSource = (yield [metaPath])[0]!;
     const meta = parseMeta(metaSource.value, language);
     if (
       firstMeta !== undefined &&
@@ -621,23 +627,72 @@ export function readModalityManifestOwners(
       throw new Error(`modality owner '${language}.d/${MODALITY_META_OWNER}' is not canonical`);
     }
 
-    for (const id of expectedIds) {
-      const filename = `${id}.json`;
-      const path = join(languageDirectory, filename);
-      const source = readLedgerFileWithSource(path);
-      const parsed = parseLessonOwner(source.value, language, filename);
-      if (options.requireCanonicalBytes !== false) {
-        const expected = canonical(parsed);
-        if (source.text !== expected) {
-          throw new Error(`modality owner '${language}.d/${filename}' is not canonical`);
+    for (let offset = 0; offset < expectedIds.length; offset += batchSize) {
+      const ids = expectedIds.slice(offset, offset + batchSize);
+      const sources = yield ids.map((id) => join(languageDirectory, `${id}.json`));
+      for (let index = 0; index < ids.length; index++) {
+        const filename = `${ids[index]!}.json`;
+        const source = sources[index]!;
+        const parsed = parseLessonOwner(source.value, language, filename);
+        if (options.requireCanonicalBytes !== false) {
+          const expected = canonical(parsed);
+          if (source.text !== expected) {
+            throw new Error(`modality owner '${language}.d/${filename}' is not canonical`);
+          }
         }
+        lessons.push(parsed.lesson);
+        findings.push(...parsed.findings);
       }
-      lessons.push(parsed.lesson);
-      findings.push(...parsed.findings);
     }
   }
   if (firstMeta === undefined) throw new Error("no modality owner metadata found");
   const manifest = buildModalityManifestFromRows(firstMeta, lessons, findings);
   assertModalityManifestLanguages(manifest, options.expectedLanguages);
   return manifest;
+}
+
+/** Synchronous compatibility route through the shared strict owner plan. */
+export function readModalityManifestOwners(
+  root: string,
+  options: ModalityOwnerReadOptions,
+): ModalityManifest {
+  const plan = modalityOwnerReadPlan(root, options, 1);
+  let step = plan.next();
+  while (!step.done) {
+    step = plan.next(step.value.map((path) => readLedgerFileWithSource(path)));
+  }
+  return step.value;
+}
+
+/** Testable drain boundary; the production caller always supplies the guarded reader. */
+export async function readModalityOwnerBatch<T>(
+  paths: readonly string[],
+  read: (path: string) => Promise<T>,
+): Promise<T[]> {
+  if (paths.length < 1 || paths.length > 16) {
+    throw new Error(`modality owner batch must contain 1–16 files, got ${paths.length}`);
+  }
+  const settled = await Promise.allSettled(paths.map((path) => read(path)));
+  return settled.map((result) => {
+    if (result.status === "rejected") throw result.reason;
+    return result.value;
+  });
+}
+
+/**
+ * Bounded awaitable route through the same preflight, parser, byte check, and
+ * final manifest validation as the synchronous reader. allSettled drains every
+ * started handle operation before an error can escape to caller teardown.
+ */
+export async function readModalityManifestOwnersAsync(
+  root: string,
+  options: ModalityOwnerReadOptions,
+): Promise<ModalityManifest> {
+  const plan = modalityOwnerReadPlan(root, options, 16);
+  let step = plan.next();
+  while (!step.done) {
+    const sources = await readModalityOwnerBatch(step.value, readLedgerFileWithSourceAsync);
+    step = plan.next(sources);
+  }
+  return step.value;
 }
