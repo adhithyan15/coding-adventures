@@ -12,7 +12,9 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   assertModalityManifestLanguages,
   modalityOwnerContents,
+  readModalityOwnerBatch,
   readModalityManifestOwners,
+  readModalityManifestOwnersAsync,
 } from "../src/modality-shards.js";
 import {
   buildModalityManifest,
@@ -100,6 +102,18 @@ function readOwners(root: string, value: ModalityManifest = manifest()): Modalit
   });
 }
 
+function readOwnersAsync(
+  root: string,
+  value: ModalityManifest = manifest(),
+): Promise<ModalityManifest> {
+  const ids = expectedIds(value);
+  return readModalityManifestOwnersAsync(root, {
+    expectedLanguages: [...ids.keys()].sort(),
+    expectedLessonIds: ids,
+    expectedNarrationLessonIds: ids,
+  });
+}
+
 function owner(root: string, language: string, name: string): string {
   return join(root, "core", "lesson-modality", `${language}.d`, name);
 }
@@ -111,6 +125,58 @@ afterEach(() => {
 });
 
 describe("modality direct owners", () => {
+  it("bounds and drains a failed async owner batch before rejecting", async () => {
+    let releaseSlow: (() => void) | undefined;
+    const slow = new Promise<string>((resolve) => {
+      releaseSlow = () => resolve("done");
+    });
+    const batch = readModalityOwnerBatch(["bad", "slow"], (path) =>
+      path === "bad" ? Promise.reject(new Error("bad owner")) : slow,
+    );
+    let finished = false;
+    void batch.finally(() => { finished = true; }).catch(() => {});
+    await Promise.resolve();
+    expect(finished).toBe(false);
+    releaseSlow!();
+    await expect(batch).rejects.toThrow(/bad owner/);
+    expect(finished).toBe(true);
+    await expect(readModalityOwnerBatch(Array(17).fill("owner"), async () => "ok"))
+      .rejects.toThrow(/1–16/);
+  });
+
+  it("matches the synchronous two-track fold and rejects edited owner bytes", async () => {
+    const root = temporaryRoot();
+    const value = manifest();
+    writeOwners(root, value);
+    expect(await readOwnersAsync(root, value)).toEqual(readOwners(root, value));
+
+    const path = owner(root, "spanish", "ES-C01-hola.json");
+    writeFileSync(path, JSON.stringify(JSON.parse(readFileSync(path, "utf8"))), "utf8");
+    await expect(readOwnersAsync(root, value)).rejects.toThrow(/canonical/i);
+
+    writeFileSync(path, "AWS_SECRET_ACCESS_KEY=hunter2\n", "utf8");
+    await expect(readOwnersAsync(root, value)).rejects.toThrow(/malformed JSON/);
+
+    writeOwners(root, value);
+    const original = readFileSync(path, "utf8");
+    writeFileSync(path, original.replace("{\n", '{\n  "__proto__": {},\n'), "utf8");
+    await expect(readOwnersAsync(root, value)).rejects.toThrow(/__proto__|dangerous/i);
+  });
+
+  it("checks source and narration identity sets before async owner reads", async () => {
+    const root = temporaryRoot();
+    writeOwners(root);
+    writeFileSync(owner(root, "spanish", "_meta.json"), "not json\n", "utf8");
+    const sourceIds = expectedIds();
+    const narrationIds = new Map(sourceIds);
+    narrationIds.set("spanish", ["ES-C01-hola"]);
+    await expect(readModalityManifestOwnersAsync(root, {
+      expectedLanguages: ["spanish", "tamil"],
+      expectedLessonIds: sourceIds,
+      expectedNarrationLessonIds: narrationIds,
+    })).rejects.toThrow(/narration.*ES-C01-adios|ES-C01-adios.*narration/i);
+  });
+
   it("folds direct lesson owners into the exact public aggregate", () => {
     const root = temporaryRoot();
     const value = manifest();
