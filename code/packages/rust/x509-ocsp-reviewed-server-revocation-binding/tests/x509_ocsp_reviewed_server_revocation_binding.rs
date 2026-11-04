@@ -45,6 +45,7 @@ use x509_ocsp_reviewed_server_revocation_binding::{
     validate_x509_ocsp_reviewed_responder_anchor_dns_policy,
     validate_x509_ocsp_reviewed_responder_intermediate_dns_policy,
     validate_x509_ocsp_reviewed_responder_no_check_policy,
+    validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy,
     X509OcspReviewedServerRevocationBindingErrorKind,
 };
 use x509_ocsp_revocation_policy::validate_bound_x509_ocsp_revocation;
@@ -1255,7 +1256,32 @@ fn binds_routed_issuer_revocation_to_the_same_exact_routed_reviewed_server_path_
         format!("{responder_path:?}"),
         "BoundX509OcspReviewedResponderPath"
     );
-    let bound = responder_path.reviewed_server_revocation();
+    let responder_anchor_policy =
+        validate_x509_ocsp_routed_issuer_reviewed_responder_anchor_dns_policy(
+            responder_path,
+            Asn1Limits::default(),
+            Asn1Limits::default(),
+        )
+        .unwrap();
+    assert_eq!(responder_anchor_policy.constrained_dns_names(), None);
+    assert_eq!(
+        format!("{responder_anchor_policy:?}"),
+        "ValidatedX509OcspReviewedResponderAnchorDnsPolicy"
+    );
+    assert!(std::ptr::eq(
+        responder_anchor_policy
+            .responder_path()
+            .reviewed_server_revocation()
+            .authenticated_revocation()
+            .issuer_bound_responder()
+            .authenticated_responder()
+            .responder_certificate_policy()
+            .certificate(),
+        response.get(0).unwrap()
+    ));
+    let bound = responder_anchor_policy
+        .responder_path()
+        .reviewed_server_revocation();
 
     assert_eq!(
         bound
