@@ -1,0 +1,13 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "native Metal rendering coverage for the pinned C4 Cypress corpus",
+  "fixtures": [
+    "c4-context-upstream-render",
+    "c4-container-upstream-render",
+    "c4-component-upstream-render",
+    "c4-dynamic-upstream-render",
+    "c4-deployment-upstream-render",
+    "c4-external-component-queue-upstream-render"
+  ]
+}

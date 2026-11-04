@@ -1,0 +1,31 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 C4 Cypress rendering corpus",
+  "fixtures": [
+    {
+      "name": "c4-context-upstream-render",
+      "source": "C4Context\naccTitle: C4 context demo\naccDescr: Many large C4 diagrams\ntitle System Context diagram for Internet Banking System\nEnterprise_Boundary(b0, \"BankBoundary0\") {\n  Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")\n  System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")\n  Enterprise_Boundary(b1, \"BankBoundary\") {\n    System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")\n  }\n}\nBiRel(customerA, SystemAA, \"Uses\")\nRel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")\nRel(SystemC, customerA, \"Sends e-mails to\")\nUpdateElementStyle(customerA, $fontColor=\"red\", $bgColor=\"grey\", $borderColor=\"red\")\nUpdateRelStyle(customerA, SystemAA, $textColor=\"blue\", $lineColor=\"blue\", $offsetX=\"5\")\nUpdateRelStyle(SystemC, customerA, $textColor=\"red\", $lineColor=\"red\", $offsetX=\"-50\", $offsetY=\"20\")"
+    },
+    {
+      "name": "c4-container-upstream-render",
+      "source": "C4Container\ntitle Container diagram for Internet Banking System\nSystem_Ext(email_system, \"E-Mail System\", \"The internal Microsoft Exchange system\", $tags=\"v1.0\")\nPerson(customer, Customer, \"A customer of the bank, with personal bank accounts\", $tags=\"v1.0\")\nContainer_Boundary(c1, \"Internet Banking\") {\n  Container(spa, \"Single-Page App\", \"JavaScript, Angular\", \"Provides all the Internet banking functionality to customers via their web browser\")\n}\nRel(customer, spa, \"Uses\", \"HTTPS\")\nRel(email_system, customer, \"Sends e-mails to\")"
+    },
+    {
+      "name": "c4-component-upstream-render",
+      "source": "C4Component\ntitle Component diagram for Internet Banking System - API Application\nContainer(spa, \"Single Page Application\", \"javascript and angular\", \"Provides all the internet banking functionality to customers via their web browser.\")\nContainer_Boundary(api, \"API Application\") {\n  Component(sign, \"Sign In Controller\", \"MVC Rest Controller\", \"Allows users to sign in to the internet banking system\")\n}\nRel_Back(spa, sign, \"Uses\", \"JSON/HTTPS\")\nUpdateRelStyle(spa, sign, $offsetY=\"-40\")"
+    },
+    {
+      "name": "c4-dynamic-upstream-render",
+      "source": "C4Dynamic\ntitle Dynamic diagram for Internet Banking System - API Application\nContainerDb(c4, \"Database\", \"Relational Database Schema\", \"Stores user registration information, hashed authentication credentials, access logs, etc.\")\nContainer(c1, \"Single-Page Application\", \"JavaScript and Angular\", \"Provides all of the Internet banking functionality to customers via their web browser.\")\nContainer_Boundary(b, \"API Application\") {\n  Component(c3, \"Security Component\", \"Spring Bean\", \"Provides functionality Related to signing in, changing passwords, etc.\")\n  Component(c2, \"Sign In Controller\", \"Spring MVC Rest Controller\", \"Allows users to sign in to the Internet Banking System.\")\n}\nRel(c1, c2, \"Submits credentials to\", \"JSON/HTTPS\")\nRel(c2, c3, \"Calls isAuthenticated() on\")\nRel(c3, c4, \"select * from users where username = ?\", \"JDBC\")\nUpdateRelStyle(c1, c2, $textColor=\"red\", $offsetY=\"-40\")\nUpdateRelStyle(c2, c3, $textColor=\"red\", $offsetX=\"-40\", $offsetY=\"60\")\nUpdateRelStyle(c3, c4, $textColor=\"red\", $offsetY=\"-40\", $offsetX=\"10\")"
+    },
+    {
+      "name": "c4-deployment-upstream-render",
+      "source": "C4Deployment\ntitle Deployment Diagram for Internet Banking System - Live\nDeployment_Node(mob, \"Customer's mobile device\", \"Apple IOS or Android\") {\n  Container(mobile, \"Mobile App\", \"Xamarin\", \"Provides a limited subset of the Internet Banking functionality to customers via their mobile device.\")\n}\nDeployment_Node(plc, \"Big Bank plc\", \"Big Bank plc data center\") {\n  Deployment_Node(dn, \"bigbank-api*** x8\", \"Ubuntu 16.04 LTS\") {\n    Deployment_Node(apache, \"Apache Tomcat\", \"Apache Tomcat 8.x\") {\n      Container(api, \"API Application\", \"Java and Spring MVC\", \"Provides Internet Banking functionality via a JSON/HTTPS API.\")\n    }\n  }\n}\nRel(mobile, api, \"Makes API calls to\", \"json/HTTPS\")"
+    },
+    {
+      "name": "c4-external-component-queue-upstream-render",
+      "source": "C4Context\ntitle System Context diagram with ComponentQueue_Ext\nEnterprise_Boundary(b0, \"BankBoundary0\") {\n  Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")\n  System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")\n  Enterprise_Boundary(b1, \"BankBoundary\") {\n    ComponentQueue_Ext(msgQueue, \"Message Queue\", \"RabbitMQ\", \"External message queue system for processing banking transactions\")\n    System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")\n  }\n}\nBiRel(customerA, SystemAA, \"Uses\")\nRel(SystemAA, msgQueue, \"Sends messages to\")\nRel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")"
+    }
+  ]
+}
