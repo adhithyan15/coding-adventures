@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Apply the RFC 6960 no-check semantic gate to the added intermediate-status
+  proof's exact authenticated responder after reviewed-root DNS policy.
+- Derive the responder only through the retained proof, reuse exact DER `NULL`
+  validation and payload-free failures, and stop before the authenticated
+  revocation alternative, complete revocation, TLS, HTTP, or OAuth readiness.
 - Apply the selected reviewed root's supported out-of-band DNS constraints to
   the added intermediate-status proof's exact fully routed responder under
   separate caller-owned parse limits and with payload-free failures.
