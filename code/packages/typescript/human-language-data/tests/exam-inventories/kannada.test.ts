@@ -110,6 +110,29 @@ describe("the committed Kannada A1 inventory", () => {
     }
   });
 
+  it("teaches the six-part A1 origin cluster before the A1 boundary", () => {
+    // The 2026-11-04 source audit found that the old inventory notes were stale:
+    // uuru, nagara, deesha and raajya already have direct owners. The missing
+    // work is the composition path -- place names, the person/place relation,
+    // ablative -inda, and the ask/answer pair. Keep the exact six-point effect
+    // pinned so a broad new lesson cannot receive accidental credit here.
+    const originIds = [
+      "KA-A1-N-02",
+      "KA-A1-ADJ-04",
+      "KA-A1-CASE-07",
+      "KA-A1-Q-09",
+      "KA-A1-F-05",
+      "KA-A1-LEX-55",
+    ];
+    const lessons = loadTrackLessons("kannada");
+    const coverage = measureExamCoverage(inventory, lessons);
+    const origin = coverage.points.filter((point) => originIds.includes(point.id));
+    expect(origin.map((point) => point.id)).toEqual(originIds);
+    expect(origin.every((point) => point.covered)).toBe(true);
+    expect(coverage.covered).toBe(204);
+    expect(coverage.unmapped).toBe(54);
+  }, 60_000);
+
   it("reports a CLOSED joining column and a script still 19 characters short", () => {
     // Pinned so a future tranche has to say which points it moved. It may rise;
     // a fall means coverage was lost and wants explaining.
