@@ -8,20 +8,28 @@ use x509_certificate_policy::{
     X509CertificateValidityErrorKind,
 };
 use x509_ocsp_authenticated_responder::{
-    authenticate_x509_ocsp_rsa_sha256_responder, AuthenticatedX509OcspRsaSha256Responder,
-    X509OcspRsaSha256ResponderPolicy,
+    authenticate_x509_ocsp_rsa_responder, authenticate_x509_ocsp_rsa_sha256_responder,
+    AuthenticatedX509OcspRsaResponder, AuthenticatedX509OcspRsaSha256Responder,
+    X509OcspRsaResponderPolicy, X509OcspRsaSha256ResponderPolicy,
 };
 use x509_ocsp_authenticated_target_revocation::{
     authenticate_x509_ocsp_rsa_sha256_target_revocation,
-    X509OcspAuthenticatedTargetRevocationErrorKind,
+    authenticate_x509_ocsp_rsa_target_revocation, X509OcspAuthenticatedTargetRevocationErrorKind,
 };
 use x509_ocsp_basic_response::{decode_x509_ocsp_basic_response, X509OcspBasicResponse};
 use x509_ocsp_cert_id_binding::{bind_x509_ocsp_cert_id_to_certificates, X509OcspCertIdHashInput};
 use x509_ocsp_cert_status::X509OcspCertStatus;
-use x509_ocsp_issuer_bound_responder::bind_x509_ocsp_authenticated_responder_to_issuer;
+use x509_ocsp_issuer_bound_responder::{
+    bind_x509_ocsp_authenticated_responder_to_issuer,
+    bind_x509_ocsp_authenticated_rsa_responder_to_issuer,
+};
 use x509_ocsp_responder_certificate_policy::validate_x509_ocsp_responder_certificate_policy;
 use x509_ocsp_responder_id_binding::bind_x509_ocsp_responder_id_to_certificate;
 use x509_ocsp_revocation_policy::validate_bound_x509_ocsp_revocation;
+use x509_ocsp_rsa_algorithm_policy::{
+    X509OcspRsaAlgorithmParametersPolicy, X509OcspRsaAlgorithmProfile,
+};
+use x509_ocsp_rsa_signature_routing::{X509OcspRsaSignatureRoute, X509OcspRsaSignatureVerifier};
 use x509_rsa_public_key::RsaPublicKeyPolicy;
 use x509_rsa_sha256_issuer_link::{
     verify_x509_rsa_sha256_issuer_link, VerifiedX509RsaSha256IssuerLink,
@@ -190,6 +198,63 @@ fn authenticate<'response, 'response_encoded, 'responder, 'responder_encoded>(
     .unwrap()
 }
 
+fn authenticate_routed<'response, 'response_encoded, 'responder, 'responder_encoded>(
+    response: &'response X509OcspBasicResponse<'response_encoded>,
+    responder: &'responder X509Certificate<'responder_encoded>,
+) -> AuthenticatedX509OcspRsaResponder<'response, 'response_encoded, 'responder, 'responder_encoded>
+{
+    let responder_id =
+        bind_x509_ocsp_responder_id_to_certificate(response, responder, |left, right| {
+            left.encoded() == right.encoded()
+        })
+        .unwrap();
+    let role_policy = validate_certificate_role_policy(
+        responder,
+        X509CertificateRole::EndEntity,
+        Asn1Limits::default(),
+        |oid| {
+            oid.equals(&[2, 5, 29, 19])
+                || oid.equals(&[2, 5, 29, 15])
+                || oid.equals(&[2, 5, 29, 37])
+        },
+    )
+    .unwrap();
+    let algorithm_policy =
+        validate_certificate_algorithm_policy(responder, &algorithm_profiles()).unwrap();
+    let certificate_policy = validate_x509_ocsp_responder_certificate_policy(
+        role_policy,
+        algorithm_policy,
+        &observed_time(),
+    )
+    .unwrap();
+    let response_profiles = [X509OcspRsaAlgorithmProfile::new(
+        SHA256_WITH_RSA_ENCRYPTION_OID,
+        X509OcspRsaAlgorithmParametersPolicy::ExactDer(NULL_DER),
+        2_048,
+        4_096,
+        2_048,
+        4_096,
+        ALLOWED_EXPONENTS,
+    )
+    .unwrap()];
+    let response_routes = [X509OcspRsaSignatureRoute::new(
+        0,
+        X509OcspRsaSignatureVerifier::RsaPkcs1V15Sha256,
+    )];
+    authenticate_x509_ocsp_rsa_responder(
+        responder_id,
+        certificate_policy,
+        X509OcspRsaResponderPolicy::new(
+            RsaPublicKeyPolicy::new(2_048, 4_096, ALLOWED_EXPONENTS).unwrap(),
+            Asn1Limits::default(),
+            &response_profiles,
+            &response_routes,
+            RsaPublicOperationLimits::new(512).unwrap(),
+        ),
+    )
+    .unwrap()
+}
+
 fn issuer_link<'child, 'child_encoded, 'issuer, 'issuer_encoded>(
     child: &'child X509Certificate<'child_encoded>,
     issuer: &'issuer X509Certificate<'issuer_encoded>,
@@ -324,6 +389,114 @@ fn authenticates_one_exact_target_revocation_result() {
     assert_eq!(
         format!("{authenticated:?}"),
         "AuthenticatedX509OcspRsaSha256TargetRevocation"
+    );
+}
+
+#[test]
+fn authenticates_one_exact_routed_target_revocation_result() {
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let target_encoded = decode_hex(include_str!("fixtures/target.der.hex"));
+    let response_encoded = response_with_signature(
+        include_str!("fixtures/response-data.der.hex"),
+        include_str!("fixtures/response-signature.hex"),
+    );
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let response = decode_response(&response_encoded);
+    let issuer_bound = bind_x509_ocsp_authenticated_rsa_responder_to_issuer(
+        authenticate_routed(&response, &responder),
+        issuer_link(&responder, &issuer),
+    )
+    .unwrap();
+    let binding = bind_x509_ocsp_cert_id_to_certificates(
+        response.response_data().get(0).unwrap(),
+        &target,
+        &issuer,
+        |_, input| match input {
+            X509OcspCertIdHashInput::TargetIssuerNameDer(_) => Some(NAME_HASH),
+            X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => Some(KEY_HASH),
+        },
+    )
+    .unwrap();
+    let revocation = validate_bound_x509_ocsp_revocation(&binding, observed_time()).unwrap();
+
+    let authenticated = authenticate_x509_ocsp_rsa_target_revocation(
+        issuer_bound,
+        revocation,
+        issuer_link(&target, &issuer),
+    )
+    .unwrap();
+
+    assert!(std::ptr::eq(
+        authenticated
+            .issuer_bound_responder()
+            .authenticated_responder()
+            .responder_id_binding()
+            .response(),
+        &response
+    ));
+    assert!(std::ptr::eq(
+        authenticated.revocation().cert_id_binding(),
+        &binding
+    ));
+    assert!(std::ptr::eq(
+        authenticated.target_issuer_link().child(),
+        &target
+    ));
+    assert!(std::ptr::eq(
+        authenticated.target_issuer_link().candidate_issuer(),
+        &issuer
+    ));
+    let _ = authenticated.responder_validity_at_observation();
+    assert_eq!(
+        format!("{authenticated:?}"),
+        "AuthenticatedX509OcspRsaTargetRevocation"
+    );
+}
+
+#[test]
+fn routed_result_rejects_a_revocation_from_a_byte_equal_distinct_response() {
+    let issuer_encoded = decode_hex(include_str!("fixtures/issuer.der.hex"));
+    let responder_encoded = decode_hex(include_str!("fixtures/responder.der.hex"));
+    let target_encoded = decode_hex(include_str!("fixtures/target.der.hex"));
+    let response_encoded = response_with_signature(
+        include_str!("fixtures/response-data.der.hex"),
+        include_str!("fixtures/response-signature.hex"),
+    );
+    let issuer = decode_x509_certificate(&issuer_encoded, Asn1Limits::default()).unwrap();
+    let responder = decode_x509_certificate(&responder_encoded, Asn1Limits::default()).unwrap();
+    let target = decode_x509_certificate(&target_encoded, Asn1Limits::default()).unwrap();
+    let response = decode_response(&response_encoded);
+    let distinct_response = decode_response(&response_encoded);
+    let issuer_bound = bind_x509_ocsp_authenticated_rsa_responder_to_issuer(
+        authenticate_routed(&response, &responder),
+        issuer_link(&responder, &issuer),
+    )
+    .unwrap();
+    let binding = bind_x509_ocsp_cert_id_to_certificates(
+        distinct_response.response_data().get(0).unwrap(),
+        &target,
+        &issuer,
+        |_, input| match input {
+            X509OcspCertIdHashInput::TargetIssuerNameDer(_) => Some(NAME_HASH),
+            X509OcspCertIdHashInput::IssuerSubjectPublicKey(_) => Some(KEY_HASH),
+        },
+    )
+    .unwrap();
+    let revocation = validate_bound_x509_ocsp_revocation(&binding, observed_time()).unwrap();
+
+    let error = authenticate_x509_ocsp_rsa_target_revocation(
+        issuer_bound,
+        revocation,
+        issuer_link(&target, &issuer),
+    )
+    .unwrap_err();
+
+    assert_eq!(
+        error.kind(),
+        X509OcspAuthenticatedTargetRevocationErrorKind::ResponseMismatch
     );
 }
 

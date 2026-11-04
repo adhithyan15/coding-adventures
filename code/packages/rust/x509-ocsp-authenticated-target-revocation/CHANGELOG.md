@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Add non-copyable routed target-revocation evidence that preserves the
+  caller-selected RSA SHA-256, SHA-384, or SHA-512 OCSP response-signature
+  route while keeping both certificate issuer links explicitly fixed to RSA
+  SHA-256.
+- Share the exact response, target, issuer, extension, cardinality, and
+  observation-time validation path between fixed and routed constructors.
+- Add routed success and byte-equal distinct-response rejection coverage.
+
 ## 0.1.0 - 2026-10-25
 
 - Add non-copyable evidence that binds an issuer-authorized authenticated OCSP

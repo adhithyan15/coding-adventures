@@ -2,10 +2,12 @@
 name = "x509-ocsp-authenticated-target-revocation"
 version = "0.1.0"
 edition = "2021"
-description = "Exact target and issuer binding for an authenticated OCSP revocation result"
+description = "Exact target and issuer binding for fixed and routed authenticated OCSP revocation results"
 
 [dependencies]
+x509-certificate = { path = "../x509-certificate" }
 x509-certificate-policy = { path = "../x509-certificate-policy" }
+x509-ocsp-basic-response = { path = "../x509-ocsp-basic-response" }
 x509-ocsp-issuer-bound-responder = { path = "../x509-ocsp-issuer-bound-responder" }
 x509-ocsp-revocation-policy = { path = "../x509-ocsp-revocation-policy" }
 x509-rsa-sha256-issuer-link = { path = "../x509-rsa-sha256-issuer-link" }
@@ -22,5 +24,7 @@ x509-ocsp-cert-id-binding = { path = "../x509-ocsp-cert-id-binding" }
 x509-ocsp-cert-status = { path = "../x509-ocsp-cert-status" }
 x509-ocsp-responder-certificate-policy = { path = "../x509-ocsp-responder-certificate-policy" }
 x509-ocsp-responder-id-binding = { path = "../x509-ocsp-responder-id-binding" }
+x509-ocsp-rsa-algorithm-policy = { path = "../x509-ocsp-rsa-algorithm-policy" }
+x509-ocsp-rsa-signature-routing = { path = "../x509-ocsp-rsa-signature-routing" }
 x509-rsa-public-key = { path = "../x509-rsa-public-key" }
 x509-time = { path = "../x509-time" }
