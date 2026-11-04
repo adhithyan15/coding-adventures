@@ -45,6 +45,18 @@ distinct non-copyable result preserves both complete inputs and fresh exact-
 observation validity for the same exact target and intermediate objects. It
 does not route the OCSP certificate links or enter responder-path policy.
 
+The additive
+`bind_x509_ocsp_routed_issuer_to_routed_reviewed_server_path` boundary consumes
+the fully routed
+`AuthenticatedX509OcspRsaRoutedIssuerTargetRevocation`. That proof retains
+data-driven repository-owned RSA PKCS #1 v1.5 SHA-256, SHA-384, or SHA-512
+selection for the response signature, responder-certificate issuer signature,
+and target-certificate issuer signature. The routed reviewed-server path
+independently retains its two selected adjacency verifiers. The distinct
+non-copyable result preserves both complete inputs and fresh exact-observation
+validity for the same exact target and intermediate objects. It does not enter
+routed responder-path policy.
+
 The follow-up `reify_x509_ocsp_reviewed_responder_path` projection consumes
 that complete result and reifies its delegated responder-to-reviewed-root path
 as a distinct non-copyable type for later policy composition. Earlier safe
@@ -89,7 +101,7 @@ This crate performs evidence composition, exact-time validity checks, the
 bounded selected-anchor and exact-intermediate responder DNS policies, and the
 RFC 6960 responder no-check branch described above only.
 The responder policy layers apply only to the fully fixed RSA SHA-256 proof;
-both data-driven routed bindings stop after exact target/intermediate identity
+all data-driven routed bindings stop after exact target/intermediate identity
 and observation-time validity.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete

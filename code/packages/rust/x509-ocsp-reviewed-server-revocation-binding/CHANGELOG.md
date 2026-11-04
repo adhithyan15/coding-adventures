@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add a distinct binder from the fully routed OCSP proof to the routed
+  constructed reviewed-server path, preserving response, responder-certificate,
+  target-certificate, and both server-path signature routes.
+- Retain exact target/intermediate identity and observation-time validity with
+  stable payload-free failures, no ambient capabilities or external effects,
+  and no responder-path, TLS, HTTP, or OAuth-readiness claim.
 - Add a distinct binder from the routed RSA SHA-256/SHA-384/SHA-512 OCSP
   response-signature proof to the routed constructed reviewed-server path.
 - Retain both complete proofs and exact-observation target/intermediate
