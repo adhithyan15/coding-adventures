@@ -233,7 +233,8 @@ func isWarrantGrammarInput(changed string) bool {
 		changed == "code/scripts/warrant_syntax_corpus.py" ||
 		changed == "code/scripts/tests/test_warrant_syntax_corpus.py" ||
 		changed == "code/scripts/tfv.py" ||
-		changed == "code/specs/VER04-warrant-language.md"
+		changed == "code/specs/VER04-warrant-language.md" ||
+		changed == "code/specs/VER04a-warrant-source-admission.md"
 }
 
 // These Perl packages load Rust cdylibs and share a helper outside their own

@@ -42,8 +42,10 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | P2 / VER-CI001 | Retain diagnostics for intermittent macOS iPad UI failure | original job125811351687 failed; bounded same-head retry125843044183 and run41602352046 attempt2 passed; root cause and missing UI-state artifacts remain unresolved; no assertions weakened |
 | done / VER-I004 | Enforce TF01's closed failure vocabulary at the Rust harness boundary | #18875 merged as 089fb8e7bf7 at expected d2b5ae4db2c; verified on fetched main; all 39 checks acceptable |
 | done / VER-P005 | Warrant v0 specification | #18890 merged as 655b99e5e27 at expected 5a60550f9d1; verified on fetched main; all 37 checks acceptable; no implemented compiler claimed |
-| P1 / VER-P006a | Canonical Warrant grammars, compiled Rust grammar data and syntax corpus | local implementation:57 authored cases +3 adapter controls,5 native unit checks,12 Python falsification tests; wrong-precedence and byte-drift mutations rejected; awaiting final review/publication/hosted CI; protected frontend remains P006b |
-| P1 / VER-P006b | Guarded Warrant source lexer/parser | after P006a; original-byte spans, admission/work quotas and measured multi-shape native-stack guard; no unguarded public parser in P006a |
+| done / VER-P006a | Canonical Warrant grammars, compiled Rust grammar data and syntax corpus | #18898 merged as ce9ab9e57d48 at expected 4271246dbe7; verified on fetched main; all 40 checks acceptable; protected frontend remains P006b |
+| P1 / VER-P006b1 | Bounded source admission and CRLF/original-byte mapping | local implementation; [VER04a](VER04a-warrant-source-admission.md) before tests/code;11 source tests, two real mutants rejected,177/183 source lines covered; final review/publication/hosted CI pending; no public parser |
+| P1 / VER-P006b2 | Exact bounded significant-layout capture | after b1; additive matcher/synthetic-token origin contract, pre-allocation budgets and consumer audit; existing CV04a capture deliberately refuses indentation |
+| P1 / VER-P006b3 | Guarded Warrant source lexer/parser | after b2; source/token/literal/declaration/AST limits, original-byte spans and measured multi-shape native-stack guard; no unguarded public parser in earlier slices |
 | P1 / VER-P007 | Warrant type checker/Rust bindings | waiting P006; missing exports, wrong types and vacuous bindings reject |
 | P1 / VER-P008 | Rust backend and ct-compare.warrant | waiting P007; generated tests through L0, checked regeneration |
 | P1 / VER-P009 | Property spec and pbt-v1 corpus | waiting P008; VER05 generation, integrated shrinking, coverage/negative cases |
@@ -83,6 +85,42 @@ can progress independently once their prerequisites are available.
 | VER26 follow-on | Busicom-to-gates, a capability-bearing pilot, then other languages |
 
 ## Discoveries and current plan
+
+P006b1 local proof: eleven source tests pass, including authored CRLF/Unicode
+coordinates, exhaustive small scalar ranges, invalid encoding/forbidden-byte
+rejection and exact source/work/capacity limits. Replacing raw offsets with
+normalized offsets makes two tests fail; bypassing NUL admission makes two
+tests fail. Actual recompilation was used for both mutants and the restored
+source. LLVM measures 177/183 executable source-module lines (96.72%); overflow
+and allocation-failure closures remain unexecuted, not declared tested. Package
+tests (60 L0 plus16 native units), strict Clippy/fmt and exact grammar generation
+pass. Full Go tests/vet pass with source-contract routing. These are local
+source-stage results; public layout capture, parser quotas and semantic checks
+remain separate pending work, as does hosted acceptance of the final head.
+
+Post-P006a prioritization: #18898's expected head 4271246dbe7 merged as
+ce9ab9e57d48 and is reachable on fetched main. Eight live open PRs had no
+overlapping Warrant/source/range item. Log the source/layout gaps before
+selecting the next slice: the actual shared range API accepts a standard NAME
+grammar but returns typed Unsupported("indentation/layout synthesis") for
+valid Warrant indentation source. This is its documented CV04a boundary,
+not a defect or completed frontend in the P006a artifacts.
+
+Split P006b into source admission/normalization (b1), significant-layout origin
+capture (b2), then the protected parser (b3). Select the source foundation before
+type checking/backends/property engines; b1 is confined to warrant-grammar and
+can preserve the original source-domain relation without changing shared lexer
+consumers. No lexer range may be inferred from transformed Token.value lengths.
+Synthetic INDENT/DEDENT/NEWLINE need a separate origin contract, not fictitious
+positive-width raw lexemes. CRLF normalization must retain a distinct buffer
+and original-byte mapping; no relabelled transformed offsets.
+
+CV04a landed as #17803. CV04b/compiler ingestion and F12 snapshot/relex behavior
+belong to separate Closure work; F12 phase1 still awaits its owner's decision.
+Refresh ownership before b2 and audit every affected consumer, including
+committed spreadsheet-wasm/bundle regeneration if shared lexer/parser inputs
+change. Do not resume the Closure loop or claim provenance/Miri completion.
+Publishing/approval and package-parity ownership boundaries remain unchanged.
 
 P006a local proof: both dynamic and compiled grammars agree on the authored
 syntax corpus, including exact precedence witnesses. Bool/Int mismatches,

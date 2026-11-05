@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/warrant-grammar",
   "capabilities": [],
-  "justification": "Pure construction of embedded token/parser grammar data. Public functions accept no source and perform no filesystem, network, clock, random, process or thread operations. The source frontend is separate P006b work."
+  "justification": "Pure embedded grammar construction plus bounded in-memory source admission/normalization and original-byte range mapping. No filesystem, network, clock, random, process or thread operations. Significant-layout capture and the guarded parser remain P006b2/b3 work."
 }

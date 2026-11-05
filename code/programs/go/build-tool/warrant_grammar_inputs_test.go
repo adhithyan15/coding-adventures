@@ -21,6 +21,7 @@ func TestWarrantGrammarInputsSelectOnlyTheirConsumer(t *testing.T) {
 		"code/scripts/warrant_syntax_corpus.py",
 		"code/scripts/tests/test_warrant_syntax_corpus.py",
 		"code/specs/VER04-warrant-language.md",
+		"code/specs/VER04a-warrant-source-admission.md",
 	} {
 		if !isWarrantGrammarInput(input) {
 			t.Fatalf("missing Warrant input: %s", input)
