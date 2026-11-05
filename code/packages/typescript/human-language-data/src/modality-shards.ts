@@ -1,6 +1,12 @@
-import { lstatSync, readFileSync, readdirSync, realpathSync } from "node:fs";
-import { join, relative, resolve, sep } from "node:path";
-import { isAbsentErrno, readLedgerFile } from "./shard.js";
+import { lstatSync, readdirSync, realpathSync } from "node:fs";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
+import {
+  isAbsentErrno,
+  parseLedgerText,
+  readLedgerFileWithSource,
+  type ReadLedgerSource,
+} from "./shard.js";
+import { readAnchoredModalityTrack } from "./modality-owner-read.js";
 import {
   MODALITY_MANIFEST_DIR,
   MODALITY_MANIFEST_VERSION,
@@ -149,8 +155,14 @@ function assertIdentitySet(
   assertNoCaseFoldCollisions(actual, `${label} owner identities`);
   const found = [...actual].sort();
   const wanted = [...expected].sort();
-  const missing = wanted.filter((identity) => !found.includes(identity));
-  const extra = found.filter((identity) => !wanted.includes(identity));
+  // Keep the sorted arrays for stable diagnostics, but index membership once.
+  // A per-identity `includes` walked the same ~60,000-element list thousands
+  // of times in the direct-owner reader, after every duplicate had already
+  // been rejected above. That quadratic check outgrew the Windows test budget.
+  const foundSet = new Set(found);
+  const wantedSet = new Set(wanted);
+  const missing = wanted.filter((identity) => !foundSet.has(identity));
+  const extra = found.filter((identity) => !wantedSet.has(identity));
   if (missing.length > 0 || extra.length > 0) {
     throw new Error(
       `${label} do not match` +
@@ -504,10 +516,11 @@ export function assertModalityManifestLanguages(
  * Completeness is established from independent identities before any owner bytes are
  * opened. There is deliberately no flat-aggregate fallback.
  */
-export function readModalityManifestOwners(
+function* modalityOwnerReadPlan(
   root: string,
   options: ModalityOwnerReadOptions,
-): ModalityManifest {
+  batchSize: number,
+): Generator<readonly string[], ModalityManifest, readonly ReadLedgerSource<unknown>[]> {
   for (const language of options.expectedLanguages) {
     if (!safeLanguage(language)) throw new Error(`modality expected language '${language}' is unsafe`);
   }
@@ -595,7 +608,11 @@ export function readModalityManifestOwners(
     }
 
     const metaPath = join(languageDirectory, MODALITY_META_OWNER);
-    const meta = parseMeta(readLedgerFile(metaPath), language);
+    // Keep the guarded parse and its exact source text together. Reopening the
+    // file solely to check canonical formatting doubles whole-corpus I/O and
+    // can compare a different version if an owner changes between the reads.
+    const metaSource = (yield [metaPath])[0]!;
+    const meta = parseMeta(metaSource.value, language);
     if (
       firstMeta !== undefined &&
       (meta.version !== firstMeta.version ||
@@ -607,26 +624,90 @@ export function readModalityManifestOwners(
       throw new Error(`incompatible modality metadata for '${language}'`);
     }
     firstMeta ??= meta;
-    if (options.requireCanonicalBytes !== false && readFileSync(metaPath, "utf8") !== canonical(meta)) {
+    if (options.requireCanonicalBytes !== false && metaSource.text !== canonical(meta)) {
       throw new Error(`modality owner '${language}.d/${MODALITY_META_OWNER}' is not canonical`);
     }
 
-    for (const id of expectedIds) {
-      const filename = `${id}.json`;
-      const path = join(languageDirectory, filename);
-      const parsed = parseLessonOwner(readLedgerFile(path), language, filename);
-      if (options.requireCanonicalBytes !== false) {
-        const expected = canonical(parsed);
-        if (readFileSync(path, "utf8") !== expected) {
-          throw new Error(`modality owner '${language}.d/${filename}' is not canonical`);
+    for (let offset = 0; offset < expectedIds.length; offset += batchSize) {
+      const ids = expectedIds.slice(offset, offset + batchSize);
+      const sources = yield ids.map((id) => join(languageDirectory, `${id}.json`));
+      for (let index = 0; index < ids.length; index++) {
+        const filename = `${ids[index]!}.json`;
+        const source = sources[index]!;
+        const parsed = parseLessonOwner(source.value, language, filename);
+        if (options.requireCanonicalBytes !== false) {
+          const expected = canonical(parsed);
+          if (source.text !== expected) {
+            throw new Error(`modality owner '${language}.d/${filename}' is not canonical`);
+          }
         }
+        lessons.push(parsed.lesson);
+        findings.push(...parsed.findings);
       }
-      lessons.push(parsed.lesson);
-      findings.push(...parsed.findings);
     }
   }
   if (firstMeta === undefined) throw new Error("no modality owner metadata found");
   const manifest = buildModalityManifestFromRows(firstMeta, lessons, findings);
   assertModalityManifestLanguages(manifest, options.expectedLanguages);
   return manifest;
+}
+
+/** Synchronous compatibility route through the shared strict owner plan. */
+export function readModalityManifestOwners(
+  root: string,
+  options: ModalityOwnerReadOptions,
+): ModalityManifest {
+  const plan = modalityOwnerReadPlan(root, options, 1);
+  let step = plan.next();
+  while (!step.done) {
+    step = plan.next(step.value.map((path) => readLedgerFileWithSource(path)));
+  }
+  return step.value;
+}
+
+/**
+ * Awaitable route through the same preflight, parser, byte check, and final
+ * validation as the synchronous reader. A pinned-parent Python boundary reads
+ * one exact track at a time; no Node path-based await can follow a swapped
+ * language-directory junction outside the checkout.
+ */
+export async function readModalityManifestOwnersWithSourcesAsync(
+  root: string,
+  options: ModalityOwnerReadOptions,
+): Promise<{ manifest: ModalityManifest; sourceTexts: ReadonlyMap<string, string> }> {
+  const plan = modalityOwnerReadPlan(root, options, 16);
+  const tracks = new Map<string, Map<string, string>>();
+  const sourceTexts = new Map<string, string>();
+  let step = plan.next();
+  while (!step.done) {
+    const language = basename(dirname(step.value[0]!)).slice(0, -2);
+    let track = tracks.get(language);
+    if (track === undefined) {
+      const ids = options.expectedLessonIds.get(language) ?? [];
+      track = await readAnchoredModalityTrack(root, language, [
+        MODALITY_META_OWNER,
+        ...ids.map((id) => `${id}.json`),
+      ]);
+      tracks.set(language, track);
+      for (const [name, text] of track) {
+        sourceTexts.set(`${MODALITY_MANIFEST_DIR}/${language}.d/${name}`, text);
+      }
+    }
+    const sources = step.value.map((path) => {
+      const name = basename(path);
+      const text = track.get(name);
+      if (text === undefined) throw new Error(`modality anchored owner '${language}.d/${name}' is missing`);
+      return { value: parseLedgerText(text, path), text };
+    });
+    step = plan.next(sources);
+  }
+  return { manifest: step.value, sourceTexts };
+}
+
+/** Consumer-facing manifest-only form of the same anchored read. */
+export async function readModalityManifestOwnersAsync(
+  root: string,
+  options: ModalityOwnerReadOptions,
+): Promise<ModalityManifest> {
+  return (await readModalityManifestOwnersWithSourcesAsync(root, options)).manifest;
 }

@@ -84,6 +84,12 @@ Generated lesson modality uses the finer
 `core/lesson-modality/<language>.d/{_meta.json,<lesson-id>.json}` boundary. The
 metadata owner holds only stable derivation policy and each lesson file holds its
 own row and findings; flat per-language aggregates are forbidden.
+`npm run check:modality` now bounds the corpus lesson reads and opens each
+track's exact owner set beneath a pinned directory handle through Python 3
+(`python` on Windows, `python3` on Unix). It still compares every generated
+owner byte and independently reconstructs the manifest against lesson and
+narration identities; a missing Python reader fails the check. The synchronous
+loader and `--write`/recovery path remain available.
 Curriculum path-to-spine membership is owned only by the new path shard's
 `spine_node`. Do not edit an existing `curriculum.d/spine/*.json` owner when
 adding a path segment: those files contain only stable `omits`/`relocates`
@@ -101,6 +107,14 @@ build-time modules. Language Ladder does not import the modality owner corpus.
 ```bash
 npm run check:shards
 ```
+
+The complete check validates every plan. It batches generated book and
+narration hash owner reads beneath pinned directories, then applies the same
+JSON and chapter validators as the individual readers. Already-checked
+curriculum and chapter owners supply their independent identities to later
+cross-ledger comparisons; a standalone plan check reads its independent
+sources directly. On Windows the batch needs `python` on PATH; on Unix it
+needs `python3`. Missing readers fail closed.
 
 CI rebuilds every shard set in memory and rejects a resurrected aggregate. For
 the 47 generic core-spine, chapter, and curriculum plans, it also compares the

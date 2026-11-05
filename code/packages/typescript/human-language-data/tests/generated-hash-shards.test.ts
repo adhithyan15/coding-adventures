@@ -18,6 +18,7 @@ import {
   narrationLessonIdentityIndex,
   prepareGeneratedHashOwnerWrite,
   readGeneratedBookHashManifest,
+  readGeneratedHashManifestsBatch,
   readGeneratedNarrationHashManifest,
   type GeneratedBookHashManifest,
   type GeneratedNarrationHashManifest,
@@ -177,6 +178,34 @@ describe("generated chapter hash shard loader", () => {
       join(root, "core", "generated-narration-hashes", "test.json"),
     );
     expect(narration.manifest).toEqual(narrationManifest());
+    const batch = readGeneratedHashManifestsBatch(root, ["test"]);
+    expect(batch.book.get("test")).toEqual(book);
+    expect(batch.narration.get("test")).toEqual(narration);
+  });
+
+  it("keeps exact owner-set and dangerous-key refusals in the pinned batch", () => {
+    const root = fixture();
+    writeOwners(root, generatedBookHashOwnerContents("test", bookManifest()));
+    writeOwners(root, generatedNarrationHashOwnerContents("test", narrationManifest()));
+    const directory = join(root, "core", "generated-book-hashes", "test.d");
+    writeFileSync(join(directory, "notes.json"), "{}\n");
+    expect(() => readGeneratedHashManifestsBatch(root, ["test"])).toThrow(
+      /anchored generated hash owner batch failed/,
+    );
+    rmSync(join(directory, "notes.json"));
+    const owner = join(directory, "0002.json");
+    writeFileSync(owner, '{"__proto__":{"polluted":true}}\n');
+    expect(() => readGeneratedHashManifestsBatch(root, ["test"])).toThrow(/must not carry '__proto__'/);
+  });
+
+  it("refuses a resurrected flat manifest from the pinned parent", () => {
+    const root = fixture();
+    writeOwners(root, generatedBookHashOwnerContents("test", bookManifest()));
+    writeOwners(root, generatedNarrationHashOwnerContents("test", narrationManifest()));
+    writeFileSync(join(root, "core", "generated-book-hashes", "test.json"), "{}\n");
+    expect(() => readGeneratedHashManifestsBatch(root, ["test"])).toThrow(
+      /anchored generated hash owner batch failed/,
+    );
   });
 
   it("binds the four-digit filename to the owned chapter and rejects duplicates", () => {
@@ -239,6 +268,7 @@ describe("generated chapter hash shard loader", () => {
   it("rejects a symlinked chapter owner file", (ctx) => {
     const root = fixture();
     writeOwners(root, generatedBookHashOwnerContents("test", bookManifest()));
+    writeOwners(root, generatedNarrationHashOwnerContents("test", narrationManifest()));
     const directory = join(root, "core", "generated-book-hashes", "test.d");
     try {
       symlinkSync(join(directory, "0002.json"), join(directory, "0003.json"), "file");
@@ -252,6 +282,9 @@ describe("generated chapter hash shard loader", () => {
         join(root, "core", "generated-book-hashes", "test.json"),
       ),
     ).toThrow(/regular file/);
+    expect(() => readGeneratedHashManifestsBatch(root, ["test"])).toThrow(
+      /anchored generated hash owner batch failed/,
+    );
   });
 
   it("rejects dangerous JSON keys and traversal-shaped payload paths", () => {

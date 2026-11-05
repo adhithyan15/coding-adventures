@@ -2,6 +2,13 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
+    // Windows' per-file corpus readers contend on the same tens of thousands of
+    // small owner and lesson files. On the measured Windows host, the complete
+    // chapter and grouped-shard cases pass alone but exceed their unchanged
+    // 30-second budgets with two or more workers (#18751). Keep every test,
+    // assertion, coverage threshold, and timeout; schedule one file at a time
+    // on Windows so the suite measures package work rather than disk thrash.
+    maxWorkers: process.platform === "win32" ? 1 : undefined,
     // 30s, not vitest's 5s default. This package's tests walk the WHOLE corpus — 1,385
     // lessons across 22 tracks — and several build the entire gap report (modality,
     // levels, verbs, chapters, ramp, continuity, level-gate) to assert one number on it.

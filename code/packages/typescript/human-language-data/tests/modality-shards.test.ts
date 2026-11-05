@@ -13,6 +13,8 @@ import {
   assertModalityManifestLanguages,
   modalityOwnerContents,
   readModalityManifestOwners,
+  readModalityManifestOwnersAsync,
+  readModalityManifestOwnersWithSourcesAsync,
 } from "../src/modality-shards.js";
 import {
   buildModalityManifest,
@@ -100,6 +102,18 @@ function readOwners(root: string, value: ModalityManifest = manifest()): Modalit
   });
 }
 
+function readOwnersAsync(
+  root: string,
+  value: ModalityManifest = manifest(),
+): Promise<ModalityManifest> {
+  const ids = expectedIds(value);
+  return readModalityManifestOwnersAsync(root, {
+    expectedLanguages: [...ids.keys()].sort(),
+    expectedLessonIds: ids,
+    expectedNarrationLessonIds: ids,
+  });
+}
+
 function owner(root: string, language: string, name: string): string {
   return join(root, "core", "lesson-modality", `${language}.d`, name);
 }
@@ -111,6 +125,52 @@ afterEach(() => {
 });
 
 describe("modality direct owners", () => {
+  it("matches the synchronous two-track fold and rejects edited owner bytes", async () => {
+    const root = temporaryRoot();
+    const value = manifest();
+    writeOwners(root, value);
+    expect(await readOwnersAsync(root, value)).toEqual(readOwners(root, value));
+    const ids = expectedIds(value);
+    const { manifest: readBack, sourceTexts } = await readModalityManifestOwnersWithSourcesAsync(
+      root,
+      {
+        expectedLanguages: [...ids.keys()].sort(),
+        expectedLessonIds: ids,
+        expectedNarrationLessonIds: ids,
+      },
+    );
+    expect(readBack).toEqual(value);
+    expect(sourceTexts).toEqual(new Map(
+      [...modalityOwnerContents(value)].map(([name, text]) => [`core/lesson-modality/${name}`, text]),
+    ));
+
+    const path = owner(root, "spanish", "ES-C01-hola.json");
+    writeFileSync(path, JSON.stringify(JSON.parse(readFileSync(path, "utf8"))), "utf8");
+    await expect(readOwnersAsync(root, value)).rejects.toThrow(/canonical/i);
+
+    writeFileSync(path, "AWS_SECRET_ACCESS_KEY=hunter2\n", "utf8");
+    await expect(readOwnersAsync(root, value)).rejects.toThrow(/malformed JSON/);
+
+    writeOwners(root, value);
+    const original = readFileSync(path, "utf8");
+    writeFileSync(path, original.replace("{\n", '{\n  "__proto__": {},\n'), "utf8");
+    await expect(readOwnersAsync(root, value)).rejects.toThrow(/__proto__|dangerous/i);
+  });
+
+  it("checks source and narration identity sets before async owner reads", async () => {
+    const root = temporaryRoot();
+    writeOwners(root);
+    writeFileSync(owner(root, "spanish", "_meta.json"), "not json\n", "utf8");
+    const sourceIds = expectedIds();
+    const narrationIds = new Map(sourceIds);
+    narrationIds.set("spanish", ["ES-C01-hola"]);
+    await expect(readModalityManifestOwnersAsync(root, {
+      expectedLanguages: ["spanish", "tamil"],
+      expectedLessonIds: sourceIds,
+      expectedNarrationLessonIds: narrationIds,
+    })).rejects.toThrow(/narration.*ES-C01-adios|ES-C01-adios.*narration/i);
+  });
+
   it("folds direct lesson owners into the exact public aggregate", () => {
     const root = temporaryRoot();
     const value = manifest();
@@ -130,6 +190,27 @@ describe("modality direct owners", () => {
     expect(() =>
       assertModalityManifestLanguages(value, ["spanish", "tamil", "urdu"]),
     ).toThrow(/missing.*urdu|urdu.*missing/i);
+  });
+
+  it("checks a corpus-sized identity set without scanning it once per member", () => {
+    // No 60,000 files are needed to test this pure set contract. The old
+    // sorted-array `includes` loop was quadratic and could consume a full
+    // corpus test budget before any direct-owner file was opened.
+    const languages = Array.from(
+      { length: 60_000 },
+      (_, index) => `track-${String(index).padStart(5, "0")}`,
+    );
+    const value = manifest();
+    const exemplar = value.tracks[0]!;
+    value.tracks = languages.map((language) => ({ ...exemplar, language }));
+    expect(() => assertModalityManifestLanguages(value, languages)).not.toThrow();
+
+    // Diagnostics still sort their missing and extra identities, rather than
+    // inheriting whichever insertion order the caller happened to provide.
+    const expected = [...languages.slice(0, -2), "track-z", "track-y"];
+    expect(() => assertModalityManifestLanguages(value, expected)).toThrow(
+      /missing: track-y, track-z; extra: track-59998, track-59999/,
+    );
   });
 
   it("checks the exact language set before opening owner bytes", () => {

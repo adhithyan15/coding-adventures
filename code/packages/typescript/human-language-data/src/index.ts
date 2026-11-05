@@ -187,13 +187,16 @@ export {
   loadMetalanguage,
   loadBookCorpus,
   loadLessons,
+  loadLessonsAsync,
   loadModalityManifest,
+  loadModalityManifestAsync,
   loadGentleRampSnapshotTracks,
   modalityManifestById,
   loadScripts,
   loadLetterLedgers,
   loadEverything,
   loadTrackLessons,
+  loadTrackLessonsAsync,
 } from "./loader.js";
 // HL21: a ledger at `X.json` may instead live as the directory `X.d/`, so that
 // many authors can append to it at once without colliding on one file.
@@ -355,6 +358,7 @@ export {
   modalityNarrationLessonIds,
   modalityOwnerContents,
   readModalityManifestOwners,
+  readModalityManifestOwnersAsync,
   type ModalityOwnerReadOptions,
 } from "./modality-shards.js";
 export {

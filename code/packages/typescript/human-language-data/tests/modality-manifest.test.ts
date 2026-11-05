@@ -11,11 +11,17 @@ import {
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { loadLessons, loadModalityManifest, modalityManifestById } from "../src/loader.js";
+import {
+  loadLessonsAsync,
+  loadModalityManifest,
+  loadModalityManifestAsync,
+  modalityManifestById,
+} from "../src/loader.js";
 import {
   generatedModalityOutputs,
   generatedModalityOutputsFromLessons,
   runModalityManifest,
+  runModalityManifestAsync,
   safeOutput,
 } from "../src/modality-cli.js";
 import {
@@ -198,21 +204,23 @@ afterEach(() => {
 // a new array before sorting.
 //
 // The hook loads LESSONS ONLY. It used to call `loadEverything()`, whose lessons are
-// this same `loadLessons()` result, but which also reads the taxonomy, the registry,
+// this same `loadLessonsAsync()` result, but which also reads the taxonomy, the registry,
 // the spine, every language curriculum (about 39,000 membership owner files, each
 // `lstat`ed and parsed), the book corpus, the scripts and the ledgers. None of that
 // reaches the manifest. On a loaded Windows runner those extra file opens were what
 // pushed this hook past its 30 s budget, while the manifest itself built in seconds.
 let realLessons: ParsedLesson[] = [];
 let realManifest: ReturnType<typeof buildModalityManifest>;
-beforeAll(() => {
-  realLessons = loadLessons();
+beforeAll(async () => {
+  // The source bytes still determine each cache key. Bounded overlapping reads
+  // shorten the Windows file-open wall time without trusting mtime or size.
+  realLessons = await loadLessonsAsync();
   realManifest = buildModalityManifest(realLessons);
 });
 
 // The COMMITTED manifest, read from disk at most once per file.
 //
-// `loadModalityManifest()` is not a cheap getter: it opens, `lstat`s and parses one
+// `loadModalityManifestAsync()` is not a cheap getter: it opens, `lstat`s and parses one
 // owner file per lesson — 39,484 of them in October 2026 — plus the narration
 // identity ledgers it is checked against. That measured 2.3 s on a quiet 4-core
 // Linux machine, and it is file-system-bound, so it grows fastest exactly where
@@ -221,12 +229,13 @@ beforeAll(() => {
 // in this file writes; the two reads inside "carries the marker into the committed
 // manifest" were that case's entire cost, and it timed out at 30 s on CI.
 //
-// Lazy rather than in `beforeAll`, so the cost stays with the cases that use it
+// The guarded async route bounds those opens. Lazy rather than in `beforeAll`,
+// so the cost stays with the cases that use it
 // (and inside their budgets) instead of moving into the shared hook. Read-only for
 // the same reason as `realManifest` above: every use filters or maps a copy.
-let committedManifestOnce: ModalityManifest | undefined;
-function committedManifest(): ModalityManifest {
-  committedManifestOnce ??= loadModalityManifest();
+let committedManifestOnce: Promise<ModalityManifest> | undefined;
+function committedManifest(): Promise<ModalityManifest> {
+  committedManifestOnce ??= loadModalityManifestAsync();
   return committedManifestOnce;
 }
 
@@ -587,6 +596,27 @@ describe("block-level modality", () => {
 // ---------------------------------------------------------------------------
 
 describe("the modality manifest CLI", () => {
+  it("keeps the awaitable check byte-for-byte and fail-closed", async () => {
+    const root = simpleRoot();
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    expect(runModalityManifest(["--write"], root)).toBe(0);
+    expect(await runModalityManifestAsync(["--check"], root)).toBe(0);
+
+    const lessonPath = join(root, "spanish", "lessons", "hola.md");
+    const lessonSource = readFileSync(lessonPath, "utf8");
+    writeFileSync(lessonPath, `${lessonSource}\n| yo | tú | él | ella |\n`, "utf8");
+    expect(await runModalityManifestAsync(["--check"], root)).toBe(1);
+    writeFileSync(lessonPath, lessonSource, "utf8");
+
+    const ownerPath = join(root, MODALITY_MANIFEST_DIR, "spanish.d", "ES-C01-hola.json");
+    const ownerSource = readFileSync(ownerPath, "utf8");
+    writeFileSync(ownerPath, JSON.stringify(JSON.parse(ownerSource)), "utf8");
+    expect(await runModalityManifestAsync(["--check"], root)).toBe(1);
+    rmSync(ownerPath);
+    expect(await runModalityManifestAsync(["--check"], root)).toBe(1);
+  });
+
   it("writes the manifest, then passes its own check", () => {
     const root = simpleRoot();
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -819,12 +849,13 @@ describe("the output path guard", () => {
 // ---------------------------------------------------------------------------
 
 describe("reading the manifest back", () => {
-  it("loads what the CLI wrote", () => {
+  it("loads what the CLI wrote through sync and async guarded routes", async () => {
     const root = simpleRoot();
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     runModalityManifest(["--write"], root);
 
     const manifest = loadModalityManifest(root);
+    expect(await loadModalityManifestAsync(root)).toEqual(manifest);
     expect(manifest.version).toBe(MODALITY_MANIFEST_VERSION);
     expect(manifest.lessons.map((entry) => entry.id)).toEqual(["ES-C01-hola", "ES-C01-ser"]);
   });
@@ -911,15 +942,16 @@ describe("the script strand is declared, not inferred", () => {
     }
   });
 
-  it("carries the marker into the committed manifest, not just a freshly built one", () => {
+  it("carries the marker into the committed manifest, not just a freshly built one", async () => {
     const fresh = built().lessons.filter((entry) => entry.delivery === "script").map((e) => e.id);
-    const committed = committedManifest()
+    const committedValue = await committedManifest();
+    const committed = committedValue
       .lessons.filter((entry) => entry.delivery === "script")
       .map((entry) => entry.id);
     expect(fresh.length).toBeGreaterThan(0);
     expect(committed.sort()).toEqual([...fresh].sort());
     // Absent, not empty, on everything else — the manifest's house rule for optionals.
-    expect(committedManifest().lessons.filter((entry) => "delivery" in entry).length).toBe(
+    expect(committedValue.lessons.filter((entry) => "delivery" in entry).length).toBe(
       fresh.length,
     );
   });
@@ -961,15 +993,15 @@ describe("corpus regression", () => {
   // the path under test, so the shared parse above cannot absorb it. It keeps a
   // file-local integration budget, like narration-cli's "is in sync" gate: under
   // full-suite parallel load on CI it measured 35.3s against the 30s default.
-  it("keeps the committed manifest in step with the lessons", { timeout: 60_000 }, () => {
+  it("keeps the committed manifest in step with the lessons", { timeout: 60_000 }, async () => {
     // The gate itself, run against the real curriculum. If this fails, run
     // `npm run generate:modality` and commit the result — exactly what CI will say.
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-    expect(runModalityManifest(["--check"])).toBe(0);
+    expect(await runModalityManifestAsync(["--check"])).toBe(0);
     // The read-back half: what a consumer loads from those files equals what the
     // lessons derive. `--check` only reads, so the shared read is the same bytes a
     // fresh read after it would see.
-    expect(committedManifest()).toEqual(realManifest);
+    expect(await committedManifest()).toEqual(realManifest);
   });
 
   it("carries no unexplained overrides", () => {

@@ -3,6 +3,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -10,6 +11,7 @@ from unittest import mock
 from sharded_ledger import (
     _files,
     _read,
+    _read_pinned_regular_batch,
     _remove,
     _strict_directory_entries,
     _write_if_changed,
@@ -18,6 +20,7 @@ from sharded_ledger import (
     load_script,
     load_script_inventory,
     read_track_regular_text,
+    read_track_regular_texts,
     write_book_generation_language,
     write_chapters,
     write_curriculum,
@@ -62,6 +65,163 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
         )
         with self.assertRaises(ValueError):
             read_track_regular_text(self.root, "spanish", "../outside/paper.md")
+
+    def test_modality_batch_reads_exact_owner_set_beneath_one_pinned_parent(self):
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text('{"language":"spanish"}\n', encoding="utf-8")
+        (directory / "ES-C01-hola.json").write_text('{"lesson":"¡hola!"}\n', encoding="utf-8")
+        names = ["_meta.json", "ES-C01-hola.json"]
+        self.assertEqual(read_track_regular_texts(
+            self.root, "core", ("lesson-modality", "spanish.d"), names,
+        ), {
+            "_meta.json": '{"language":"spanish"}\n',
+            "ES-C01-hola.json": '{"lesson":"¡hola!"}\n',
+        })
+        with self.assertRaisesRegex(ValueError, "missing|extra"):
+            read_track_regular_texts(
+                self.root, "core", ("lesson-modality", "spanish.d"), names[:1],
+            )
+        with self.assertRaisesRegex(ValueError, "missing|extra"):
+            read_track_regular_texts(
+                self.root, "core", ("lesson-modality", "spanish.d"), names + ["ES-C01-ghost.json"],
+            )
+        with self.assertRaises(ValueError):
+            read_track_regular_texts(
+                self.root, "core", ("lesson-modality", "spanish.d"), ["../outside.json"],
+            )
+
+    def test_modality_batch_bounds_workers_and_drains_a_failed_read(self):
+        release = threading.Event()
+        enough_started = threading.Event()
+        lock = threading.Lock()
+        active = 0
+        peak = 0
+        finished = []
+        outcome = []
+
+        def reader(_parent, name):
+            nonlocal active, peak
+            with lock:
+                active += 1
+                peak = max(peak, active)
+                if peak == 16:
+                    enough_started.set()
+            try:
+                if name == "bad":
+                    raise ValueError("bad owner")
+                release.wait(5)
+                finished.append(name)
+                return name
+            finally:
+                with lock:
+                    active -= 1
+
+        def run():
+            try:
+                _read_pinned_regular_batch(None, ["bad"] + [str(i) for i in range(20)], reader)
+            except ValueError as cause:
+                outcome.append(str(cause))
+
+        worker = threading.Thread(target=run)
+        worker.start()
+        try:
+            self.assertTrue(enough_started.wait(5))
+            self.assertTrue(worker.is_alive())
+            self.assertLessEqual(peak, 16)
+        finally:
+            release.set()
+            worker.join(5)
+        self.assertFalse(worker.is_alive())
+        self.assertEqual(len(finished), 20)
+        self.assertEqual(outcome, ["bad owner"])
+
+    def test_modality_batch_refuses_swapped_parent_junction_after_audit(self):
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text("inside", encoding="utf-8")
+        (self.outside / "_meta.json").write_text("outside sentinel", encoding="utf-8")
+        self.assertEqual((directory / "_meta.json").read_text(encoding="utf-8"), "inside")
+        moved = directory.with_name("spanish-moved")
+        os.rename(directory, moved)
+        link_directory(self.outside, directory)
+        try:
+            with self.assertRaises((OSError, ValueError)):
+                read_track_regular_texts(
+                    self.root, "core", ("lesson-modality", "spanish.d"), ["_meta.json"],
+                )
+            self.assertEqual((self.outside / "_meta.json").read_text(encoding="utf-8"), "outside sentinel")
+        finally:
+            if os.name == "nt":
+                os.rmdir(directory)
+            else:
+                os.unlink(directory)
+            os.rename(moved, directory)
+
+    def test_modality_batch_stays_on_pinned_parent_during_swap_attempt(self):
+        import sharded_ledger
+
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text("inside", encoding="utf-8")
+        (self.outside / "_meta.json").write_text("outside sentinel", encoding="utf-8")
+        moved = directory.with_name("spanish-moved")
+        original = sharded_ledger._read_pinned_regular_batch
+        swapped = []
+
+        def attempt_swap_after_open(handle, names, read_one):
+            try:
+                os.rename(directory, moved)
+                link_directory(self.outside, directory)
+                swapped.append(True)
+            except OSError:
+                # Windows may deny rename while its pinned directory handle is
+                # open; that is also a safe answer to the swap attempt.
+                pass
+            return original(handle, names, read_one)
+
+        try:
+            with mock.patch("sharded_ledger._read_pinned_regular_batch", side_effect=attempt_swap_after_open):
+                self.assertEqual(read_track_regular_texts(
+                    self.root, "core", ("lesson-modality", "spanish.d"), ["_meta.json"],
+                ), {"_meta.json": "inside"})
+            self.assertEqual((self.outside / "_meta.json").read_text(encoding="utf-8"), "outside sentinel")
+        finally:
+            if swapped:
+                if os.name == "nt":
+                    os.rmdir(directory)
+                else:
+                    os.unlink(directory)
+                os.rename(moved, directory)
+
+    def test_modality_owner_cli_transports_exact_unicode_bytes_and_scrubs_errors(self):
+        directory = self.root / "core" / "lesson-modality" / "spanish.d"
+        directory.mkdir(parents=True)
+        (directory / "_meta.json").write_text('{"text":"¡hola!"}\n', encoding="utf-8")
+        script = Path(__file__).with_name("modality_owner_read.py")
+        request = {"root": str(self.root), "language": "spanish", "names": ["_meta.json"]}
+        result = subprocess.run(
+            [sys.executable, str(script)], input=json.dumps(request).encode("utf-8"),
+            capture_output=True, check=True,
+        )
+        self.assertEqual(json.loads(result.stdout)["files"]["_meta.json"], '{"text":"¡hola!"}\n')
+
+        (directory / "_meta.json").write_text("SECRET_SENTINEL", encoding="utf-8")
+        # The transport handles text, not JSON parsing, so a malformed owner is
+        # returned exactly; the TypeScript parser must scrub its own failure.
+        result = subprocess.run(
+            [sys.executable, str(script)], input=json.dumps(request).encode("utf-8"),
+            capture_output=True, check=True,
+        )
+        self.assertEqual(json.loads(result.stdout)["files"]["_meta.json"], "SECRET_SENTINEL")
+
+        request["names"] = ["../SECRET_SENTINEL.json"]
+        result = subprocess.run(
+            [sys.executable, str(script)], input=json.dumps(request).encode("utf-8"),
+            capture_output=True,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertNotIn(b"SECRET_SENTINEL", result.stdout + result.stderr)
 
     def test_mock_manifest_refuses_sharded_sibling_under_pinned_parent(self):
         directory = self.root / "spanish" / "mocks"
@@ -604,6 +764,48 @@ class ShardedLedgerSafetyTest(unittest.TestCase):
             if moved.exists():
                 os.rename(moved, directory)
         self.assertTrue(swapped)
+
+    @unittest.skipUnless(os.name == "nt", "Windows generated-hash pinned batch")
+    def test_generated_hash_batch_pins_owner_namespace_during_swap_attempt(self):
+        from generated_hash_owner_read import _read_windows
+        from sharded_ledger import _windows_open_relative
+
+        directory = self.root / "core" / "generated-book-hashes" / "test.d"
+        write_json(directory / "_meta.json", {"version": 1})
+        write_json(directory / "0001.json", {"source": "inside"})
+        write_json(self.outside / "_meta.json", {"version": 1})
+        write_json(self.outside / "0001.json", {"source": "outside"})
+        moved = directory.with_name("test-moved")
+        swapped = []
+        blocked = []
+
+        def swap_before_owner_open(parent, name, **options):
+            if name == "0001.json" and not swapped and not blocked:
+                try:
+                    os.rename(directory, moved)
+                except PermissionError:
+                    # The Windows boundary intentionally omits SHARE_DELETE;
+                    # an open directory handle may pin the namespace itself.
+                    blocked.append(True)
+                else:
+                    link_directory(self.outside, directory)
+                    swapped.append(True)
+            return _windows_open_relative(parent, name, **options)
+
+        try:
+            with mock.patch("sharded_ledger._windows_open_relative", side_effect=swap_before_owner_open):
+                result = _read_windows(self.root, "generated-book-hashes", "test")
+            self.assertEqual(json.loads(result["files"]["0001.json"])["source"], "inside")
+            self.assertEqual(
+                json.loads((self.outside / "0001.json").read_text(encoding="utf-8"))["source"],
+                "outside",
+            )
+        finally:
+            if swapped and directory.exists():
+                os.rmdir(directory)
+            if moved.exists():
+                os.rename(moved, directory)
+        self.assertTrue(swapped or blocked)
 
     @unittest.skipUnless(os.name == "nt", "Windows native directory batches")
     def test_windows_file_enumeration_drains_multiple_native_batches(self):
