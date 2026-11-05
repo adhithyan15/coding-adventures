@@ -5,14 +5,15 @@
  * implementation. Every BigInt seed is passed with the `n` suffix.
  */
 
-import { describe, it, expect } from "vitest";
+import assert from "node:assert/strict";
+import { describe, test as it } from "node:test";
 import { VERSION, LCG, Xorshift64, PCG32 } from "../src/index.js";
 
 // ── Package sanity ────────────────────────────────────────────────────────────
 
 describe("package", () => {
-  it("exports VERSION 0.1.0", () => {
-    expect(VERSION).toBe("0.2.0");
+  it("exports VERSION 0.2.0", () => {
+    assert.equal(VERSION, "0.2.0");
   });
 });
 
@@ -21,27 +22,27 @@ describe("package", () => {
 describe("LCG known values", () => {
   it("matches Go reference for seed=1", () => {
     const g = new LCG(1n);
-    expect(g.nextU32()).toBe(1817669548);
-    expect(g.nextU32()).toBe(2187888307);
-    expect(g.nextU32()).toBe(2784682393);
+    assert.equal(g.nextU32(), 1817669548);
+    assert.equal(g.nextU32(), 2187888307);
+    assert.equal(g.nextU32(), 2784682393);
   });
 });
 
 describe("Xorshift64 known values", () => {
   it("matches Go reference for seed=1", () => {
     const g = new Xorshift64(1n);
-    expect(g.nextU32()).toBe(1082269761);
-    expect(g.nextU32()).toBe(201397313);
-    expect(g.nextU32()).toBe(1854285353);
+    assert.equal(g.nextU32(), 1082269761);
+    assert.equal(g.nextU32(), 201397313);
+    assert.equal(g.nextU32(), 1854285353);
   });
 });
 
 describe("PCG32 known values", () => {
   it("matches Go reference for seed=1", () => {
     const g = new PCG32(1n);
-    expect(g.nextU32()).toBe(1412771199);
-    expect(g.nextU32()).toBe(1791099446);
-    expect(g.nextU32()).toBe(124312908);
+    assert.equal(g.nextU32(), 1412771199);
+    assert.equal(g.nextU32(), 1791099446);
+    assert.equal(g.nextU32(), 124312908);
   });
 });
 
@@ -53,15 +54,15 @@ function seq32(gen: LCG | Xorshift64 | PCG32, n = 10): number[] {
 
 describe("determinism", () => {
   it("LCG: same seed → same sequence", () => {
-    expect(seq32(new LCG(42n))).toEqual(seq32(new LCG(42n)));
+    assert.deepEqual(seq32(new LCG(42n)), seq32(new LCG(42n)));
   });
 
   it("Xorshift64: same seed → same sequence", () => {
-    expect(seq32(new Xorshift64(42n))).toEqual(seq32(new Xorshift64(42n)));
+    assert.deepEqual(seq32(new Xorshift64(42n)), seq32(new Xorshift64(42n)));
   });
 
   it("PCG32: same seed → same sequence", () => {
-    expect(seq32(new PCG32(42n))).toEqual(seq32(new PCG32(42n)));
+    assert.deepEqual(seq32(new PCG32(42n)), seq32(new PCG32(42n)));
   });
 });
 
@@ -69,15 +70,15 @@ describe("determinism", () => {
 
 describe("different seeds diverge", () => {
   it("LCG", () => {
-    expect(seq32(new LCG(1n), 5)).not.toEqual(seq32(new LCG(2n), 5));
+    assert.notDeepEqual(seq32(new LCG(1n), 5), seq32(new LCG(2n), 5));
   });
 
   it("Xorshift64", () => {
-    expect(seq32(new Xorshift64(1n), 5)).not.toEqual(seq32(new Xorshift64(2n), 5));
+    assert.notDeepEqual(seq32(new Xorshift64(1n), 5), seq32(new Xorshift64(2n), 5));
   });
 
   it("PCG32", () => {
-    expect(seq32(new PCG32(1n), 5)).not.toEqual(seq32(new PCG32(2n), 5));
+    assert.notDeepEqual(seq32(new PCG32(1n), 5), seq32(new PCG32(2n), 5));
   });
 });
 
@@ -87,14 +88,14 @@ describe("Xorshift64 seed=0", () => {
   it("is not stuck at zero", () => {
     const g = new Xorshift64(0n);
     for (let i = 0; i < 100; i++) {
-      expect(g.nextU32()).not.toBe(0);
+      assert.notEqual(g.nextU32(), 0);
     }
   });
 
   it("seed 0n produces same as seed 1n (0 replaced by 1)", () => {
     const g0 = new Xorshift64(0n);
     const g1 = new Xorshift64(1n);
-    expect(g0.nextU32()).toBe(g1.nextU32());
+    assert.equal(g0.nextU32(), g1.nextU32());
   });
 });
 
@@ -105,8 +106,8 @@ describe("nextFloat range", () => {
     const g = new LCG(7n);
     for (let i = 0; i < 1000; i++) {
       const f = g.nextFloat();
-      expect(f).toBeGreaterThanOrEqual(0.0);
-      expect(f).toBeLessThan(1.0);
+      assert.ok(f >= 0.0);
+      assert.ok(f < 1.0);
     }
   });
 
@@ -114,8 +115,8 @@ describe("nextFloat range", () => {
     const g = new Xorshift64(7n);
     for (let i = 0; i < 1000; i++) {
       const f = g.nextFloat();
-      expect(f).toBeGreaterThanOrEqual(0.0);
-      expect(f).toBeLessThan(1.0);
+      assert.ok(f >= 0.0);
+      assert.ok(f < 1.0);
     }
   });
 
@@ -123,8 +124,8 @@ describe("nextFloat range", () => {
     const g = new PCG32(7n);
     for (let i = 0; i < 1000; i++) {
       const f = g.nextFloat();
-      expect(f).toBeGreaterThanOrEqual(0.0);
-      expect(f).toBeLessThan(1.0);
+      assert.ok(f >= 0.0);
+      assert.ok(f < 1.0);
     }
   });
 });
@@ -136,8 +137,8 @@ describe("nextIntInRange bounds", () => {
     const g = new LCG(999n);
     for (let i = 0; i < 1000; i++) {
       const v = g.nextIntInRange(1, 6);
-      expect(v).toBeGreaterThanOrEqual(1);
-      expect(v).toBeLessThanOrEqual(6);
+      assert.ok(v >= 1);
+      assert.ok(v <= 6);
     }
   });
 
@@ -145,8 +146,8 @@ describe("nextIntInRange bounds", () => {
     const g = new Xorshift64(999n);
     for (let i = 0; i < 1000; i++) {
       const v = g.nextIntInRange(1, 6);
-      expect(v).toBeGreaterThanOrEqual(1);
-      expect(v).toBeLessThanOrEqual(6);
+      assert.ok(v >= 1);
+      assert.ok(v <= 6);
     }
   });
 
@@ -154,32 +155,32 @@ describe("nextIntInRange bounds", () => {
     const g = new PCG32(999n);
     for (let i = 0; i < 1000; i++) {
       const v = g.nextIntInRange(1, 6);
-      expect(v).toBeGreaterThanOrEqual(1);
-      expect(v).toBeLessThanOrEqual(6);
+      assert.ok(v >= 1);
+      assert.ok(v <= 6);
     }
   });
 
   it("LCG: single-value range always returns 42", () => {
     const g = new LCG(5n);
-    for (let i = 0; i < 20; i++) expect(g.nextIntInRange(42, 42)).toBe(42);
+    for (let i = 0; i < 20; i++) assert.equal(g.nextIntInRange(42, 42), 42);
   });
 
   it("Xorshift64: single-value range always returns 42", () => {
     const g = new Xorshift64(5n);
-    for (let i = 0; i < 20; i++) expect(g.nextIntInRange(42, 42)).toBe(42);
+    for (let i = 0; i < 20; i++) assert.equal(g.nextIntInRange(42, 42), 42);
   });
 
   it("PCG32: single-value range always returns 42", () => {
     const g = new PCG32(5n);
-    for (let i = 0; i < 20; i++) expect(g.nextIntInRange(42, 42)).toBe(42);
+    for (let i = 0; i < 20; i++) assert.equal(g.nextIntInRange(42, 42), 42);
   });
 
   it("LCG: negative range [-10,-1]", () => {
     const g = new LCG(11n);
     for (let i = 0; i < 500; i++) {
       const v = g.nextIntInRange(-10, -1);
-      expect(v).toBeGreaterThanOrEqual(-10);
-      expect(v).toBeLessThanOrEqual(-1);
+      assert.ok(v >= -10);
+      assert.ok(v <= -1);
     }
   });
 });
@@ -190,8 +191,8 @@ describe("nextIntInRange bounds", () => {
 
 function checkDistribution(counts: number[], label: string): void {
   for (let i = 0; i < counts.length; i++) {
-    expect(counts[i], `${label}: face ${i + 1}`).toBeGreaterThanOrEqual(1400);
-    expect(counts[i], `${label}: face ${i + 1}`).toBeLessThanOrEqual(2600);
+    assert.ok(counts[i]! >= 1400, `${label}: face ${i + 1}`);
+    assert.ok(counts[i]! <= 2600, `${label}: face ${i + 1}`);
   }
 }
 
@@ -230,7 +231,7 @@ describe("nextU64 composition", () => {
       const u64 = gU64.nextU64();
       const hi = BigInt(gU32.nextU32());
       const lo = BigInt(gU32.nextU32());
-      expect(u64).toBe((hi << 32n) | lo);
+      assert.equal(u64, (hi << 32n) | lo);
     }
   });
 
@@ -241,7 +242,7 @@ describe("nextU64 composition", () => {
       const u64 = gU64.nextU64();
       const hi = BigInt(gU32.nextU32());
       const lo = BigInt(gU32.nextU32());
-      expect(u64).toBe((hi << 32n) | lo);
+      assert.equal(u64, (hi << 32n) | lo);
     }
   });
 
@@ -252,7 +253,7 @@ describe("nextU64 composition", () => {
       const u64 = gU64.nextU64();
       const hi = BigInt(gU32.nextU32());
       const lo = BigInt(gU32.nextU32());
-      expect(u64).toBe((hi << 32n) | lo);
+      assert.equal(u64, (hi << 32n) | lo);
     }
   });
 });
@@ -264,7 +265,7 @@ describe("nextU32 output fits in 32 bits", () => {
     const g = new LCG(77n);
     for (let i = 0; i < 200; i++) {
       const v = g.nextU32();
-      expect(v >>> 0).toBe(v); // >>> 0 is identity on valid uint32
+      assert.equal(v >>> 0, v); // >>> 0 is identity on valid uint32
     }
   });
 
@@ -272,7 +273,7 @@ describe("nextU32 output fits in 32 bits", () => {
     const g = new Xorshift64(77n);
     for (let i = 0; i < 200; i++) {
       const v = g.nextU32();
-      expect(v >>> 0).toBe(v);
+      assert.equal(v >>> 0, v);
     }
   });
 
@@ -280,7 +281,7 @@ describe("nextU32 output fits in 32 bits", () => {
     const g = new PCG32(77n);
     for (let i = 0; i < 200; i++) {
       const v = g.nextU32();
-      expect(v >>> 0).toBe(v);
+      assert.equal(v >>> 0, v);
     }
   });
 });
