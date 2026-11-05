@@ -195,6 +195,7 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json"
 const duplicateDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-duplicate-identity.json"
 const ciGateFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-"
+const testTriggerFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/test-trigger-selection-"
 const toolchainDetectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/toolchain-detection-"
 const sourceCollectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/source-collection-"
 const graphFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/graph-"
@@ -243,6 +244,14 @@ var ciGateFixtureConsumers = []struct{ name, language string }{
 	{"dotnet/programs/build-tool-fsharp", "fsharp"},
 	{"go/programs/build-tool", "go"},
 	{"python/programs/build-tool", "python"},
+}
+
+// These package BUILD fronts run the native test-trigger selection fixture
+// readers. Keep this relation separate from graph/diff and CI-gate fixtures:
+// only Go and Rust currently consume this authority-free case family.
+var testTriggerFixtureConsumers = []struct{ name, language string }{
+	{"go/programs/build-tool", "go"},
+	{"rust/programs/build-tool", "rust"},
 }
 
 // These native test fronts read the flat toolchain-detection case family.
@@ -454,6 +463,16 @@ func planFixtureCase(changed string) string {
 func hasCIGateFixturePath(changedFiles []string) bool {
 	for _, changed := range changedFiles {
 		name, ok := strings.CutPrefix(changed, ciGateFixturePrefix)
+		if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
+			return true
+		}
+	}
+	return false
+}
+
+func hasTestTriggerFixturePath(changedFiles []string) bool {
+	for _, changed := range changedFiles {
+		name, ok := strings.CutPrefix(changed, testTriggerFixturePrefix)
 		if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
 			return true
 		}
@@ -674,6 +693,7 @@ func changedPackageRootsForPlatformAndLanguage(
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	duplicateDiscoveryFixtureChanged := containsPath(changedFiles, duplicateDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
+	testTriggerFixtureChanged := hasTestTriggerFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
 	graphDiffFixtureChanged := hasGraphDiffFixturePath(changedFiles)
 	resolutionCases := map[string]bool{}
@@ -718,7 +738,7 @@ func changedPackageRootsForPlatformAndLanguage(
 			sourceFixtureFamilies[family] = true
 		}
 	}
-	if !discoveryFixtureChanged && !duplicateDiscoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(planCases) == 0 && len(sourceFixtureFamilies) == 0 {
+	if !discoveryFixtureChanged && !duplicateDiscoveryFixtureChanged && !ciGateFixtureChanged && !testTriggerFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(planCases) == 0 && len(sourceFixtureFamilies) == 0 {
 		return changed, nil
 	}
 
@@ -757,6 +777,17 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 			if !available[consumer.name] {
 				return nil, fmt.Errorf("CI-gate fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	if testTriggerFixtureChanged {
+		for _, consumer := range testTriggerFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("test-trigger fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}
