@@ -1528,16 +1528,27 @@ impl Lowerer {
                 ASTNodeOrToken::Node(_) => None,
             })
             .ok_or_else(|| self.err_at(op_node, "malformed augmented operator".to_string()))?;
-        // `+=` → `+`: the augmented spelling is the binary one plus `=`.
-        let binary = op_text.strip_suffix('=').unwrap_or(&op_text);
-        let Some(builtin) = arith_builtin(binary) else {
-            return Err(self.err_at(
-                op_node,
-                format!(
-                    "unsupported: augmented assignment `{op_text}` (the `{binary}` operator \
-                     is not lowered yet) (deferred)"
-                ),
-            ));
+        // Python's `+=` invokes in-place addition (`__iadd__`). On mutable collections
+        // such as lists, `xs += [1]` extends `xs` in place, preserving object identity
+        // across any aliases (`ys = xs; xs += [1]` modifies both `xs` and `ys`). On
+        // immutable objects (ints, floats, strings), it falls back to binary `+`.
+        // We lower `+=` to the builtin `"+="` so that code generators can emit in-place
+        // mutation for sequences and normal addition otherwise. Other augmented operators
+        // (`-=`, `*=`, etc.) map to their respective binary builtins.
+        let builtin = if op_text == "+=" {
+            "+="
+        } else {
+            let binary = op_text.strip_suffix('=').unwrap_or(&op_text);
+            let Some(builtin) = arith_builtin(binary) else {
+                return Err(self.err_at(
+                    op_node,
+                    format!(
+                        "unsupported: augmented assignment `{op_text}` (the `{binary}` operator \
+                         is not lowered yet) (deferred)"
+                    ),
+                ));
+            };
+            builtin
         };
         let value_list = self
             .first_child_named(aug, "expression_list")

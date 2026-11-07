@@ -56,6 +56,23 @@ def add(*args: Any) -> Any:
     return total
 
 
+def iadd(a: Any, b: Any) -> Any:
+    """In-place addition for ``+=``.
+
+    When ``a`` is a mutable sequence (``list``), mutates it in place by
+    extending with ``b`` (if ``b`` is a list) or appending ``b``,
+    preserving object identity across aliases (Python's ``__iadd__`` /
+    Ruby's ``concat``). Non-lists fall back to standard binary ``add(a, b)``.
+    """
+    if isinstance(a, list):
+        if isinstance(b, list):
+            a.extend(b)
+        else:
+            a.append(b)
+        return a
+    return add(a, b)
+
+
 def shift_left(*args: Any) -> Any:
     """Ruby's ``<<`` (shift operator) — polymorphic like ``add``, but Python's
     own ``<<`` doesn't line up for every receiver type the way ``+`` did, so

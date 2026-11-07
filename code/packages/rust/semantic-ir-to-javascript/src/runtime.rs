@@ -649,6 +649,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     "div_trunc": (a, b) => truncDiv(a, b),
     "udiv_trunc": (a, b) => utruncDiv(a, b),
     "div_true": (a, b) => trueDiv(a, b),
+    "+=": (a, b) => iadd(a, b),
     "=": (x, y) => eq(x, y),
     // `==` is a synonym for `=`; `!=` its negation.  Present in this table (not
     // only the emitter's infix map) so a first-class `:==`/`:!=` symbol
@@ -932,6 +933,21 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     // Numeric fold (unchanged): int/float promotion via native `+`.
     return numFold(args.slice(1), first, (x, y) => x + y);
   }
+  // In-place addition for `+=`. When the target operand is an Array,
+  // mutates it in place by pushing the elements of `b` (or `b` itself if not an Array),
+  // preserving object identity across aliases (Python's `__iadd__` / Ruby's `concat`).
+  // Non-array operands fall back to standard addition (`plus(a, b)`).
+  function iadd(a, b) {
+    if (Array.isArray(a)) {
+      if (Array.isArray(b)) {
+        for (let i = 0; i < b.length; i++) { a.push(b[i]); }
+      } else {
+        a.push(b);
+      }
+      return a;
+    }
+    return plus(a, b);
+  }
   // `*` — Ruby `*` is BINARY (receiver * arg).  We handle the binary
   // string/array arms explicitly and keep the variadic numeric fold for
   // the ≥2-arg numeric case (`(* 2 3 4)`).
@@ -1093,7 +1109,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // must live here (the frontend denylist is defense in depth in front of it).
   const METHOD_ALLOWLIST = new Set([
     // Array
-    "push", "pop", "shift", "unshift", "slice", "splice", "concat",
+    "push", "append", "pop", "shift", "unshift", "slice", "splice", "concat",
     "map", "filter", "reduce", "reduceRight", "forEach", "includes",
     "indexOf", "lastIndexOf", "join", "sort", "reverse", "find",
     "findIndex", "some", "every", "flat", "flatMap", "fill", "at",
@@ -1977,6 +1993,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // mirrors these labels for `respond_to?`.
   const ARR_MISS = Symbol("arr-miss");
   const ARRAY_METHODS = new Set([
+    "push", "append",
     "each", "each_with_index", "map", "collect", "select", "filter", "reject",
     "find", "detect", "reduce", "inject", "any?", "all?", "none?", "count",
     "sort", "sort_by", "min", "max", "minmax", "min_by", "max_by", "group_by",
@@ -2061,6 +2078,16 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
       ? args[args.length - 1]
       : null;
     switch (name) {
+      // In-place mutation: `push` and `append`. Appends all argument items to `recv`
+      // in place and returns `recv` (mirroring Python/C/Ruby chaining semantics, rather
+      // than native JS push's return of the new integer length).
+      case "push":
+      case "append": {
+        for (let i = 0; i < args.length; i++) {
+          recv.push(args[i]);
+        }
+        return recv;
+      }
       // #18798 (item 13) — `a[i]`, `a[i] = v` and `a.size`.  The Ruby
       // frontend lowers indexing to the method calls `[]` / `[]=` (it cannot
       // tell an Array from a Hash), and none of the three was here, so
@@ -6645,7 +6672,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   return {
     Sym, Pair, Closure,
     intern, applyClosure, truthy, matlabTruthy, format, toS, strConcat, write,
-    plus, times, divide, shiftLeft,
+    plus, times, divide, shiftLeft, iadd,
     // SIR21 T3b-2: `div_trunc`/`udiv_trunc`/`div_true` — the three
     // genuinely-new division ops (`div_floor` is `divide` above, exported
     // under its existing name).

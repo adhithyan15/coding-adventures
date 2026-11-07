@@ -297,6 +297,25 @@ func _sir_plus(args []Value) Value {
 	return total
 }
 
+// In-place addition for `+=`. When the first operand is a *Seq,
+// mutates it in place by appending the elements of `b` (or `b` itself if not *Seq),
+// preserving pointer identity across aliases (Python's `__iadd__`).
+// Non-sequence operands fall back to standard `_sir_plus`.
+func _sir_iadd(args []Value) Value {
+	if len(args) < 2 {
+		return _sir_plus(args)
+	}
+	if aSeq, ok := args[0].(*Seq); ok {
+		if bSeq, ok := args[1].(*Seq); ok {
+			aSeq.Items = append(aSeq.Items, bSeq.Items...)
+		} else {
+			aSeq.Items = append(aSeq.Items, args[1])
+		}
+		return aSeq
+	}
+	return _sir_plus(args)
+}
+
 // Coerce an operand to a Go string for the string `+` arm.  A genuine
 // string passes through; anything else is a controlled panic (Ruby would
 // raise TypeError — the typed-runtime-errors cascade will refine this).
@@ -1499,6 +1518,8 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_true_div(args)
 	case "%":
 		return _sir_mod(args)
+	case "+=":
+		return _sir_iadd(args)
 	case "neg":
 		return _sir_neg(args)
 	case "not":

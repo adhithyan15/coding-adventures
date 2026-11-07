@@ -2834,7 +2834,7 @@ fn is_builtin_method(name: &str) -> bool {
         | "each" | "map" | "select" | "reject" | "any?" | "all?" | "none?"
         | "sort_by" | "each_with_index" | "reduce" | "inject"
         // slice 4 — Array mutation + 1-arg query methods
-        | "push" | "pop" | "shift" | "fetch" | "values_at" | "rotate" | "zip"
+        | "push" | "append" | "pop" | "shift" | "fetch" | "values_at" | "rotate" | "zip"
         // slice 6 — Hash non-block methods
         | "keys" | "values" | "to_h" | "dig" | "merge" | "delete" | "clear" | "invert"
         // slice 7 — Hash block methods
@@ -3533,6 +3533,7 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         "tmod" => ("_sir_itmod", 2),
         "utmod" => ("_sir_utmod", 2),
         "%" => ("_sir_mod", 2),
+        "+=" => ("_sir_iadd", 2),
         // SIR21 T3b-2: `div_trunc`/`udiv_trunc` are `tdiv`/`utdiv` under
         // their new canonical names (same `_sir_itdiv`/`_sir_utdiv` helpers,
         // zero behaviour change). The old bare `"tdiv"`/`"utdiv"` dispatch

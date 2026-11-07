@@ -1867,6 +1867,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "*" => "_sir_times",
         "/" => "_sir_divide",
         "%" => "_sir_mod",
+        "+=" => "_sir_iadd",
         // SIR21 T3b-2: div_floor is `/` under its canonical name (same
         // helper, zero behaviour change) -- bare `/` stays too, as Twig's
         // permanent fallback (see the SIR21 spec's §E3). div_trunc/

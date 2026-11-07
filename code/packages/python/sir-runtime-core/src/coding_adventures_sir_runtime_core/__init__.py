@@ -22,6 +22,7 @@ from .arithmetic import (
     div,
     ge,
     gt,
+    iadd,
     le,
     lt,
     mod,
@@ -86,6 +87,7 @@ __all__ = [
     "is_pair",
     # arithmetic
     "add",
+    "iadd",
     "shift_left",
     "sub",
     "mul",

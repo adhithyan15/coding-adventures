@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **Array `append` and `push`.** Added `sir_append` helper to runtime and mapped `"append"` and `"push"` in `collection_access`. Appends elements in place and returns the receiver.
+- **In-place addition `+=`.** Added `sir_iadd` helper and mapped `BuiltinCall("+=", [lhs, rhs])` to it. Mutates arrays in place, preserving object identity across aliases, and delegates to `+` otherwise.
+
 ## Unreleased — Python display convention for booleans and None (#18496 item 1)
 
 - **Python display convention.** When `source_language == Some("python")`,

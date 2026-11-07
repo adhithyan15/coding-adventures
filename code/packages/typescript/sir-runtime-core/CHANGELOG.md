@@ -4,6 +4,10 @@ All notable changes to `@coding-adventures/sir-runtime-core` are documented here
 
 ## [Unreleased]
 
+### Added (#18496 item 4)
+
+- `iadd(a, b)` — in-place addition for `+=`. Mutates arrays in place, preserving object identity across aliases, and delegates to `add(a, b)` otherwise. Registered under `"+=" : iadd` in `builtins` table.
+
 ### Added (#18496 item 2)
 
 - `mod(a, b)` — floored binary modulo matching Python and Ruby `%` semantics (`r = a - b * floor(a / b)`).
