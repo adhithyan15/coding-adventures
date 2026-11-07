@@ -2711,6 +2711,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "-" => "__Sir.sub",
         "*" => "__Sir.mul",
         "/" => "__Sir.div",
+        "%" => "__Sir.mod",
         // SIR21 T3b-2: `div_floor` is a bare alias for `div` (a documented
         // pre-existing limitation — this runtime's untagged `Val` model
         // cannot distinguish Ruby Integer from Ruby Float at runtime, so
@@ -3538,6 +3539,31 @@ mod tests {
             0,
         );
         assert_eq!(out, "__Sir.add(1, 2)");
+    }
+
+    #[test]
+    fn emit_builtin_call_mod() {
+        let mut out = String::new();
+        emit_expr(
+            &mut out,
+            &Expr::BuiltinCall {
+                name: "%".into(),
+                args: vec![
+                    Expr::IntLit {
+                        value: 7,
+                        span: s(),
+                    },
+                    Expr::IntLit {
+                        value: 3,
+                        span: s(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: s(),
+            },
+            0,
+        );
+        assert_eq!(out, "__Sir.mod(7, 3)");
     }
 
     #[test]

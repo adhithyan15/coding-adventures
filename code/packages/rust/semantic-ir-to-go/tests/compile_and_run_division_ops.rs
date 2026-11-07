@@ -148,6 +148,22 @@ fn e3_worked_example() {
     }
 }
 
+#[test]
+fn mod_signs_computes_floored_modulo() {
+    match run(
+        &div_module(vec![
+            print_stmt(bin("%", ilit(7), ilit(3))),
+            print_stmt(bin("%", ilit(-7), ilit(3))),
+            print_stmt(bin("%", ilit(7), ilit(-3))),
+            print_stmt(bin("%", ilit(-7), ilit(-3))),
+        ]),
+        "mod_signs",
+    ) {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["1", "2", "-2", "-1"]),
+        None => eprintln!("skip: no go"),
+    }
+}
+
 // ── div_floor: a rename of `_sir_divide`'s int path ──────────────────────
 
 #[test]

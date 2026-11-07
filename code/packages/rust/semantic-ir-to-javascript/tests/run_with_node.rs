@@ -4100,6 +4100,50 @@ fn array_tally() {
     }
 }
 
+#[test]
+fn floored_modulo_signs() {
+    let main = Function {
+        name: "main".into(),
+        params: vec![],
+        return_type: None,
+        captures: vec![],
+        body: Block {
+            stmts: vec![
+                print(bc("%", vec![int(7), int(3)])),
+                print(bc("%", vec![int(-7), int(3)])),
+                print(bc("%", vec![int(7), int(-3)])),
+                print(bc("%", vec![int(-7), int(-3)])),
+            ],
+            value: Expr::NilLit { span: sp() },
+            span: sp(),
+        },
+        effects: EffectSet::PURE,
+        metadata: Metadata::new(),
+        span: sp(),
+    };
+    let module = Module {
+        name: "mod_signs".into(),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![main],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("handbuilt")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&module, "mod_signs") {
+        assert_eq!(
+            stdout,
+            "1\n\
+             2\n\
+             -2\n\
+             -1"
+        );
+    }
+}
+
 /// A per-call unique part for this file's temp-file names.  The process id
 /// keeps parallel test binaries apart, and the counter keeps apart the tests
 /// of this binary, which run on parallel threads under one process id

@@ -238,6 +238,19 @@ fn udiv_trunc_matches_div_trunc_on_positive_operands() {
 // ── div_true: genuinely new — always coerces to float, never floors ─────
 
 #[test]
+fn mod_signs_computes_floored_modulo() {
+    match run(&div_module(vec![
+        puts(bin("%", ilit(7), ilit(3))),
+        puts(bin("%", ilit(-7), ilit(3))),
+        puts(bin("%", ilit(7), ilit(-3))),
+        puts(bin("%", ilit(-7), ilit(-3))),
+    ])) {
+        Some(out) => assert_eq!(out, "1\n2\n-2\n-1\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
 fn div_true_always_true_divides_even_on_integer_operands() {
     match run(&div_module(vec![
         puts(bin("div_true", ilit(7), ilit(2))),   // 3.5, not 3

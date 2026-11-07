@@ -186,6 +186,7 @@ from coding_adventures_sir_runtime_core import (
     sub as _sir_minus,
     mul as _sir_times,
     div as _sir_divide,
+    mod as _sir_mod,
     trunc_div as _sir_trunc_div,
     utrunc_div as _sir_utrunc_div,
     true_div as _sir_true_div,

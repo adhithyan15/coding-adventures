@@ -4,6 +4,12 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18496 item 2)
+
+- Conformance program `py_mod_signs` in `tests/python_statement_forms.rs`,
+  verifying that binary `%` computes floored modulo across all sign combinations
+  (`(+, +)`, `(-, +)`, `(+, -)`, `(-, -)`) matching CPython across all backends.
+
 ### Added (#18496 item 3)
 
 - Conformance programs `py_list_concat_plus` and `py_list_concat_multiple` in

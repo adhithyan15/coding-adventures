@@ -534,6 +534,31 @@ def test_true_div_by_zero_raises_typed_zero_division_error() -> None:
     assert excinfo.value.args[0] == "divided by 0"
 
 
+def test_mod_computes_floored_modulo_across_all_signs() -> None:
+    assert sir.mod(7, 3) == 1
+    assert sir.mod(-7, 3) == 2
+    assert sir.mod(7, -3) == -2
+    assert sir.mod(-7, -3) == -1
+    assert sir.mod(6, 3) == 0
+    assert sir.mod(-6, 3) == 0
+
+
+def test_mod_dispatches_via_call_builtin() -> None:
+    assert sir.call_builtin("%", [7, 3]) == 1
+    assert sir.call_builtin("%", [-7, 3]) == 2
+    assert sir.call_builtin("%", [7, -3]) == -2
+    assert sir.call_builtin("%", [-7, -3]) == -1
+
+
+def test_mod_by_zero_raises_typed_zero_division_error() -> None:
+    from coding_adventures_sir_runtime_exceptions import SirError
+
+    with pytest.raises(SirError) as excinfo:
+        sir.mod(1, 0)
+    assert excinfo.value.sir_class == "ZeroDivisionError"
+    assert excinfo.value.args[0] == "divided by 0"
+
+
 def test_comparisons() -> None:
     assert sir.lt(1, 2) is True
     assert sir.gt(2, 1) is True

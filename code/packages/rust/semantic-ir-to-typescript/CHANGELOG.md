@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Floored binary `%` routing (#18496 item 2)
+
+- **`%` Builtin.** `BuiltinCall("%", [lhs, rhs])` now routes directly to `__Sir.mod`
+  in `emit_builtin_call`.
+
+
 ## Unreleased — Python display convention for booleans and None (#18496 item 1)
 
 - **Python display convention.** When `source_language == Some("python")`,
