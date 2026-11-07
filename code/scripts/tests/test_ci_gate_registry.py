@@ -225,7 +225,7 @@ class CIGateRegistryTests(unittest.TestCase):
     def test_forme_release_runs_every_supported_host_and_composes_one_verdict(self) -> None:
         body = self._job_body("forme-release-platform")
         for host, runner in (
-            ("linux", "ubuntu-latest"),
+            ("linux", "ubuntu-24.04"),
             ("macos", "macos-latest"),
             ("windows", "windows-latest"),
         ):
