@@ -27,6 +27,11 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: gh-pages-deployment
+  cancel-in-progress: false
+  queue: max
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
