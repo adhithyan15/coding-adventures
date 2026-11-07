@@ -896,3 +896,32 @@ fn a_hoisted_method_skips_names_in_the_source() {
     names.sort_unstable();
     assert_eq!(names, ["A__b__c", "A__b__c_1", "C__m_1", "main"]);
 }
+
+/// Single subscript assignment evaluates value before index (Python §6.3).
+#[test]
+fn single_subscript_evaluates_value_before_index() {
+    let m = lower("xs = [0]\ndef f():\n    return 1\ndef g():\n    return 0\nxs[g()] = f()\n");
+    let stmts = &main_body(&m).stmts;
+    // The lowered sequence for `xs[g()] = f()` evaluates the RHS value `f()`
+    // into a `__subval_0` temporary first, followed by the `SeqSet` whose index
+    // evaluates `g()` and whose value references `__subval_0`.
+    let last_two = &stmts[stmts.len() - 2..];
+    match (&last_two[0], &last_two[1]) {
+        (
+            Stmt::LetStarBinding { name, value, .. },
+            Stmt::SeqSet {
+                seq,
+                index,
+                value: val_ref,
+                ..
+            },
+        ) => {
+            assert_eq!(name, "__subval_0");
+            assert!(matches!(value, Expr::DirectCall { fn_name, .. } if fn_name == "f"));
+            assert!(matches!(seq, Expr::VarRef { name, .. } if name == "xs"));
+            assert!(matches!(index, Expr::DirectCall { fn_name, .. } if fn_name == "g"));
+            assert!(matches!(val_ref, Expr::VarRef { name, .. } if name == "__subval_0"));
+        }
+        other => panic!("expected [LetStarBinding, SeqSet], got {other:?}"),
+    }
+}

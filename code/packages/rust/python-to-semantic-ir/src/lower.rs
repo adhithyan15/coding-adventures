@@ -1438,8 +1438,7 @@ impl Lowerer {
 
         if let [only] = target_lists {
             let target = self.classify_target(self.single_expr(only)?, ctx)?;
-            let stmt = self.store_target(target, value, ctx, span)?;
-            return Ok(Lowered::Stmt(Box::new(stmt)));
+            return self.store_single_target(target, value, ctx, span);
         }
 
         // A chain: evaluate once into a temporary, then store it into
@@ -1658,8 +1657,7 @@ impl Lowerer {
             Some(value_list) => {
                 let value = self.lower_expr(self.single_expr(value_list)?, ctx)?;
                 let target = self.classify_target(target_node, ctx)?;
-                let stmt = self.store_target(target, value, ctx, span)?;
-                Ok(Lowered::Stmt(Box::new(stmt)))
+                self.store_single_target(target, value, ctx, span)
             }
             None => match self.target_name(target_node)? {
                 Some(_) => Ok(Lowered::Stmts(vec![])),
@@ -1670,6 +1668,50 @@ impl Lowerer {
                         .to_string(),
                 )),
             },
+        }
+    }
+
+    /// Store an already-lowered `value` into a single `target`, handling
+    /// evaluation order for subscriptions.
+    ///
+    /// ## Subscript assignment evaluation order (Python Reference §6.3)
+    ///
+    /// In Python, an assignment `target[index] = value` strictly evaluates the
+    /// RHS `value` *before* evaluating `target` or `index`. Because backends
+    /// typically evaluate `(seq)[index] = val;` left-to-right (container, then
+    /// index, then value), inlining `value` into `Stmt::SeqSet` or `Stmt::MapSet`
+    /// would execute index side effects before value side effects (`xs[g()] = f()`).
+    ///
+    /// We preserve Python's evaluation order by binding `value` into a fresh
+    /// temporary local binding (`let* __subval_N = value`) *before* emitting the
+    /// subscript store statement, so that `value`'s evaluation precedes the
+    /// container and index expressions.
+    fn store_single_target(
+        &mut self,
+        target: Target<'_>,
+        value: Expr,
+        ctx: &mut FunctionCtx,
+        span: Span,
+    ) -> Result<Lowered, PythonLowerError> {
+        if matches!(target, Target::Subscript { .. }) {
+            let tmp = self.fresh_temp_name("subval");
+            let val_binding = Stmt::LetStarBinding {
+                name: tmp.clone(),
+                sir_type: None,
+                value,
+                span: span.clone(),
+            };
+            ctx.locals.push(tmp.clone());
+            let read_tmp = Expr::VarRef {
+                name: tmp,
+                scope: Scope::Local,
+                span: span.clone(),
+            };
+            let store = self.store_target(target, read_tmp, ctx, span)?;
+            Ok(Lowered::Stmts(vec![val_binding, store]))
+        } else {
+            let stmt = self.store_target(target, value, ctx, span)?;
+            Ok(Lowered::Stmt(Box::new(stmt)))
         }
     }
 

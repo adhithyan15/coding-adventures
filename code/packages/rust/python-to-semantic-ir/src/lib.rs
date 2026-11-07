@@ -2302,11 +2302,13 @@ mod tests {
     #[test]
     fn list_subscript_assignment_lowers_to_seq_set() {
         let m = lower("xs = [1, 2]\nxs[0] = 9\n");
-        match &main_stmts(&m)[1] {
+        let stmts = main_stmts(&m);
+        assert!(matches!(&stmts[1], Stmt::LetStarBinding { name, value, .. } if name == "__subval_0" && matches!(value, Expr::IntLit { value: 9, .. })));
+        match &stmts[2] {
             Stmt::SeqSet { seq, index, value, .. } => {
-                assert!(matches!(seq, Expr::VarRef { .. }));
+                assert!(matches!(seq, Expr::VarRef { name, .. } if name == "xs"));
                 assert!(matches!(index, Expr::IntLit { value: 0, .. }));
-                assert!(matches!(value, Expr::IntLit { value: 9, .. }));
+                assert!(matches!(value, Expr::VarRef { name, .. } if name == "__subval_0"));
             }
             other => panic!("expected SeqSet, got {other:?}"),
         }
@@ -2316,11 +2318,13 @@ mod tests {
     #[test]
     fn dict_subscript_assignment_lowers_to_map_set() {
         let m = lower("d = {}\nd[\"k\"] = 5\n");
-        match &main_stmts(&m)[1] {
+        let stmts = main_stmts(&m);
+        assert!(matches!(&stmts[1], Stmt::LetStarBinding { name, value, .. } if name == "__subval_0" && matches!(value, Expr::IntLit { value: 5, .. })));
+        match &stmts[2] {
             Stmt::MapSet { map, key, value, .. } => {
-                assert!(matches!(map, Expr::VarRef { .. }));
+                assert!(matches!(map, Expr::VarRef { name, .. } if name == "d"));
                 assert!(matches!(key, Expr::StrLit { value, .. } if value == "k"));
-                assert!(matches!(value, Expr::IntLit { value: 5, .. }));
+                assert!(matches!(value, Expr::VarRef { name, .. } if name == "__subval_0"));
             }
             other => panic!("expected MapSet, got {other:?}"),
         }
@@ -2334,7 +2338,7 @@ mod tests {
         match main_stmts(&m).last().expect("a stmt") {
             Stmt::SeqSet { seq, value, .. } => {
                 assert!(matches!(seq, Expr::SeqIndex { .. }), "base is the inner index");
-                assert!(matches!(value, Expr::IntLit { value: 7, .. }));
+                assert!(matches!(value, Expr::VarRef { name, .. } if name == "__subval_0"));
             }
             other => panic!("expected SeqSet with SeqIndex base, got {other:?}"),
         }
