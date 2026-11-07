@@ -373,7 +373,9 @@ pub fn capture_layout<'a>(
                     let str_start = idx;
                     while idx < line_bytes.len() && line_bytes[idx] != b'"' {
                         if line_bytes[idx] == b'\\' && idx + 1 < line_bytes.len() {
-                            idx += 2;
+                            idx += 1;
+                            let ch = source[line_start + idx..].chars().next().unwrap();
+                            idx += ch.len_utf8();
                         } else {
                             // Safe Unicode advance
                             let ch = source[line_start + idx..].chars().next().unwrap();

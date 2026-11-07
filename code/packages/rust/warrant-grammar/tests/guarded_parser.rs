@@ -93,6 +93,81 @@ fn error_diagnostics_never_echo_source() {
 }
 
 #[test]
+fn unterminated_byte_literal_fails_closed_without_panic() {
+    let source = "warrant test\n  claim bad:\n    b\"\n";
+    let doc = SourceDocument::admit(source.as_bytes(), SourceLimits::default()).unwrap();
+    let tokens = capture_layout(&doc, LayoutLimits::default()).unwrap();
+    let err = parse_document(&tokens, &doc, ParserLimits::default()).unwrap_err();
+    assert_eq!(err.code(), "W0001");
+    assert_eq!(err.kind(), ParserErrorKind::UnexpectedToken);
+}
+
+#[test]
+fn multibyte_escapes_never_panic() {
+    let source = "warrant test\n  claim bad:\n    \"\\世界\"\n";
+    let doc = SourceDocument::admit(source.as_bytes(), SourceLimits::default()).unwrap();
+    let tokens = capture_layout(&doc, LayoutLimits::default()).unwrap();
+    let err = parse_document(&tokens, &doc, ParserLimits::default()).unwrap_err();
+    assert_eq!(err.code(), "W0001");
+}
+
+#[test]
+fn ast_spans_preserved_faithfully() {
+    let source = "warrant test\n  assume platform:\n    u64.wraps\n  claim c:\n    match x with None -> 0 | Some(y) -> y\n";
+    let doc = SourceDocument::admit(source.as_bytes(), SourceLimits::default()).unwrap();
+    let tokens = capture_layout(&doc, LayoutLimits::default()).unwrap();
+    let file = parse_document(&tokens, &doc, ParserLimits::default()).unwrap();
+
+    // Check platform assumptions span encompasses the entire body
+    match &file.declarations[0] {
+        Declaration::Assumptions(
+            coding_adventures_warrant_grammar::parser::AssumptionsDecl::Platform { rows, span },
+        ) => {
+            assert!(span.0 < span.1);
+            assert_eq!(span.1, rows[0].span.1);
+            assert_eq!(rows[0].segments, ["u64", "wraps"]);
+        }
+        _ => panic!("expected assumptions"),
+    }
+
+    // Check match arm span start matches pattern start (not hardcoded 0)
+    match &file.declarations[1] {
+        Declaration::Claim(c) => match &c.body {
+            coding_adventures_warrant_grammar::parser::Expression::Match { arms, .. } => {
+                assert!(arms[0].span.0 > 0);
+                assert!(arms[1].span.0 > arms[0].span.1);
+            }
+            _ => panic!("expected match expression"),
+        },
+        _ => panic!("expected claim"),
+    }
+}
+
+#[test]
+fn binary_expression_allocations_counted_against_node_budget() {
+    let source = "warrant test\n  claim add:\n    1 + 2 + 3 + 4 + 5\n";
+    let limits = ParserLimits {
+        max_depth: 64,
+        max_nodes: 3,
+        max_parse_work: 100_000,
+    };
+    let doc = SourceDocument::admit(source.as_bytes(), SourceLimits::default()).unwrap();
+    let tokens = capture_layout(&doc, LayoutLimits::default()).unwrap();
+    let err = parse_document(&tokens, &doc, limits).unwrap_err();
+    assert_eq!(err.code(), "W0001");
+    assert_eq!(err.kind(), ParserErrorKind::NodeBudget);
+}
+
+#[test]
+fn quantifier_with_space_before_dot_preserves_refinement_identifier() {
+    let source = "warrant test\n  claim q:\n    forall x: Nat | x > 0 . x == x\n";
+    let doc = SourceDocument::admit(source.as_bytes(), SourceLimits::default()).unwrap();
+    let tokens = capture_layout(&doc, LayoutLimits::default()).unwrap();
+    let file = parse_document(&tokens, &doc, ParserLimits::default()).unwrap();
+    assert_eq!(file.declarations.len(), 1);
+}
+
+#[test]
 fn all_57_canonical_cases_validated() {
     use coding_adventures_test_bootstrap::tfv::{self, Value};
     const CORPUS: &str = include_str!("../../../../specs/fixtures/warrant-syntax-v1/cases.tfv");

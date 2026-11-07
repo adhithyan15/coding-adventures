@@ -539,9 +539,10 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn is_widths_ahead(&self) -> bool {
+    fn is_widths_ahead(&mut self) -> Result<bool, ParserError> {
         let mut i = self.pos + 1;
         while i < self.tokens.len() {
+            self.check_work()?;
             match self.tokens[i].kind {
                 LayoutTokenKind::Number(_) | LayoutTokenKind::Word(_) => {
                     i += 1;
@@ -554,14 +555,14 @@ impl<'a> Parser<'a> {
                     if i < self.tokens.len()
                         && matches!(self.tokens[i].kind, LayoutTokenKind::Symbol(">"))
                     {
-                        return true;
+                        return Ok(true);
                     }
-                    return false;
+                    return Ok(false);
                 }
-                _ => return false,
+                _ => return Ok(false),
             }
         }
-        false
+        Ok(false)
     }
 
     fn expect_newline(&mut self) -> Result<(), ParserError> {
@@ -889,9 +890,10 @@ impl<'a> Parser<'a> {
                     }
                 }
                 self.expect_dedent()?;
+                let end_pos = rows.last().map(|r| r.span.1).unwrap_or(start_span.1);
                 Ok(AssumptionsDecl::Platform {
                     rows,
-                    span: (start_span.0, self.token_span_range(start_tok).1),
+                    span: (start_span.0, end_pos),
                 })
             }
             Some(LayoutTokenKind::Word("environment")) => {
@@ -922,9 +924,10 @@ impl<'a> Parser<'a> {
                     }
                 }
                 self.expect_dedent()?;
+                let end_pos = rows.last().map(|r| r.span.1).unwrap_or(start_span.1);
                 Ok(AssumptionsDecl::Environment {
                     rows,
-                    span: (start_span.0, self.token_span_range(start_tok).1),
+                    span: (start_span.0, end_pos),
                 })
             }
             _ => Err(ParserError::new(
@@ -974,10 +977,11 @@ impl<'a> Parser<'a> {
         }
         self.expect_dedent()?;
 
+        let end_pos = rows.last().map(|r| r.span.1).unwrap_or(start_span.1);
         Ok(LabelsDecl {
             name,
             rows,
-            span: (start_span.0, self.token_span_range(start_tok).1),
+            span: (start_span.0, end_pos),
         })
     }
 
@@ -1022,12 +1026,14 @@ impl<'a> Parser<'a> {
 
         self.expect_word("ensures")?;
         let mut ensures = Vec::new();
-        let (first_ens, _) = self.expect_name()?;
+        let (first_ens, first_ens_span) = self.expect_name()?;
         ensures.push(first_ens);
+        let mut last_span = first_ens_span;
         while matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(","))) {
             self.advance()?;
-            let (ens, _) = self.expect_name()?;
+            let (ens, sp) = self.expect_name()?;
             ensures.push(ens);
+            last_span = sp;
         }
         self.expect_newline()?;
         self.expect_dedent()?;
@@ -1037,7 +1043,7 @@ impl<'a> Parser<'a> {
             is_hostile: true,
             rejections,
             ensures,
-            span: (start_span.0, self.token_span_range(start_tok).1),
+            span: (start_span.0, last_span.1),
         })
     }
 
@@ -1067,10 +1073,11 @@ impl<'a> Parser<'a> {
         }
         self.expect_dedent()?;
 
+        let end_pos = rows.last().map(|r| r.span.1).unwrap_or(start_span.1);
         Ok(BoundDecl {
             name,
             rows,
-            span: (start_span.0, self.token_span_range(start_tok).1),
+            span: (start_span.0, end_pos),
         })
     }
 
@@ -1217,6 +1224,26 @@ impl<'a> Parser<'a> {
         let mut end_span = start_span;
 
         while matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol("."))) {
+            let dot_tok = self.peek().unwrap();
+            let dot_span = match dot_tok.span {
+                TokenSpan::Real { start, end } => (start, end),
+                TokenSpan::Synthetic { at } => (at, at),
+            };
+            if dot_span.0 != end_span.1 {
+                break;
+            }
+            if let Some(next_tok) = self.tokens.get(self.pos + 1) {
+                let next_start = match next_tok.span {
+                    TokenSpan::Real { start, .. } => start,
+                    TokenSpan::Synthetic { at } => at,
+                };
+                if next_start != dot_span.1 || !matches!(next_tok.kind, LayoutTokenKind::Word(_)) {
+                    break;
+                }
+            } else {
+                break;
+            }
+
             self.advance()?;
             let (next_seg, next_span) = self.expect_name()?;
             segments.push(next_seg);
@@ -1340,7 +1367,7 @@ impl<'a> Parser<'a> {
 
     fn parse_match_arm(&mut self) -> Result<MatchArm<'a>, ParserError> {
         self.count_node()?;
-        let pattern = self.parse_pattern()?;
+        let (pattern, pattern_span) = self.parse_pattern()?;
         self.expect_symbol("->")?;
         let body = self.parse_expression()?;
         let end_span = self.expr_span(&body);
@@ -1348,36 +1375,43 @@ impl<'a> Parser<'a> {
         Ok(MatchArm {
             pattern,
             body,
-            span: (0, end_span.1),
+            span: (pattern_span.0, end_span.1),
         })
     }
 
-    fn parse_pattern(&mut self) -> Result<Pattern<'a>, ParserError> {
+    fn parse_pattern(&mut self) -> Result<(Pattern<'a>, (usize, usize)), ParserError> {
         match self.peek_kind() {
             Some(LayoutTokenKind::Word("None")) => {
-                self.advance()?;
-                Ok(Pattern::None)
+                let tok = self.advance()?.unwrap();
+                let sp = self.token_span_range(tok);
+                Ok((Pattern::None, sp))
             }
             Some(LayoutTokenKind::Word("Some")) => {
-                self.advance()?;
+                let tok = self.advance()?.unwrap();
+                let start_span = self.token_span_range(tok);
                 self.expect_symbol("(")?;
                 let (name, _) = self.expect_name()?;
-                self.expect_symbol(")")?;
-                Ok(Pattern::Some(name))
+                let close = self.expect_symbol(")")?;
+                let end_span = self.token_span_range(close);
+                Ok((Pattern::Some(name), (start_span.0, end_span.1)))
             }
             Some(LayoutTokenKind::Word("Ok")) => {
-                self.advance()?;
+                let tok = self.advance()?.unwrap();
+                let start_span = self.token_span_range(tok);
                 self.expect_symbol("(")?;
                 let (name, _) = self.expect_name()?;
-                self.expect_symbol(")")?;
-                Ok(Pattern::Ok(name))
+                let close = self.expect_symbol(")")?;
+                let end_span = self.token_span_range(close);
+                Ok((Pattern::Ok(name), (start_span.0, end_span.1)))
             }
             Some(LayoutTokenKind::Word("Err")) => {
-                self.advance()?;
+                let tok = self.advance()?.unwrap();
+                let start_span = self.token_span_range(tok);
                 self.expect_symbol("(")?;
                 let (name, _) = self.expect_name()?;
-                self.expect_symbol(")")?;
-                Ok(Pattern::Err(name))
+                let close = self.expect_symbol(")")?;
+                let end_span = self.token_span_range(close);
+                Ok((Pattern::Err(name), (start_span.0, end_span.1)))
             }
             _ => Err(ParserError::new(
                 ParserErrorKind::UnexpectedToken,
@@ -1395,6 +1429,7 @@ impl<'a> Parser<'a> {
             let right = self.parse_expression()?; // Right associative
             let sp_start = self.expr_span(&left).0;
             let sp_end = self.expr_span(&right).1;
+            self.count_node()?;
             Ok(Expression::Binary {
                 op: BinaryOp::Implies,
                 left: Box::new(left),
@@ -1415,6 +1450,7 @@ impl<'a> Parser<'a> {
             let right = self.parse_conjunction()?;
             let sp_start = self.expr_span(&left).0;
             let sp_end = self.expr_span(&right).1;
+            self.count_node()?;
             left = Expression::Binary {
                 op: BinaryOp::Or,
                 left: Box::new(left),
@@ -1435,6 +1471,7 @@ impl<'a> Parser<'a> {
             let right = self.parse_comparison()?;
             let sp_start = self.expr_span(&left).0;
             let sp_end = self.expr_span(&right).1;
+            self.count_node()?;
             left = Expression::Binary {
                 op: BinaryOp::And,
                 left: Box::new(left),
@@ -1482,6 +1519,7 @@ impl<'a> Parser<'a> {
                 ));
             }
 
+            self.count_node()?;
             Ok(Expression::Binary {
                 op: bin_op,
                 left: Box::new(left),
@@ -1506,6 +1544,7 @@ impl<'a> Parser<'a> {
             let right = self.parse_product()?;
             let sp_start = self.expr_span(&left).0;
             let sp_end = self.expr_span(&right).1;
+            self.count_node()?;
             left = Expression::Binary {
                 op,
                 left: Box::new(left),
@@ -1526,6 +1565,7 @@ impl<'a> Parser<'a> {
             let right = self.parse_unary()?;
             let sp_start = self.expr_span(&left).0;
             let sp_end = self.expr_span(&right).1;
+            self.count_node()?;
             left = Expression::Binary {
                 op: BinaryOp::Mul,
                 left: Box::new(left),
@@ -1635,8 +1675,8 @@ impl<'a> Parser<'a> {
                 let tok = self.advance()?.unwrap();
                 let span = self.token_span_range(tok);
 
-                // Validate: must start with b" and end with ", and inner content must be valid hex pairs
-                if !raw.starts_with("b\"") || !raw.ends_with('"') {
+                // Validate: must start with b" and end with ", length >= 3 (b""), and inner content must be valid hex pairs
+                if raw.len() < 3 || !raw.starts_with("b\"") || !raw.ends_with('"') {
                     return Err(ParserError::new(
                         ParserErrorKind::UnexpectedToken,
                         Some(span),
@@ -1722,7 +1762,7 @@ impl<'a> Parser<'a> {
                 let mut end_span = qname.span;
 
                 if matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol("<")))
-                    && self.is_widths_ahead()
+                    && self.is_widths_ahead()?
                 {
                     self.advance()?;
                     if matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(">"))) {
@@ -1755,11 +1795,12 @@ impl<'a> Parser<'a> {
                     args = Some(arg_list);
                 }
 
+                let start_pos = qname.span.0;
                 Ok(Expression::Reference {
                     name: qname,
                     widths,
                     args,
-                    span: (0, end_span.1),
+                    span: (start_pos, end_span.1),
                 })
             }
             _ => Err(ParserError::new(
