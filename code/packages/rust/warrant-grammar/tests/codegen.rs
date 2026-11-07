@@ -288,6 +288,7 @@ fn test_evaluator_limits_and_diagnostics() {
             CodegenLimits {
                 max_depth: 5,
                 max_work: 10_000,
+                max_value_bytes: 65_536,
             },
         );
         let call = Expression::Reference {
@@ -312,6 +313,7 @@ fn test_evaluator_limits_and_diagnostics() {
             CodegenLimits {
                 max_depth: 100,
                 max_work: 4,
+                max_value_bytes: 65_536,
             },
         );
         let err = work_evaluator.eval(&call, &HashMap::new()).unwrap_err();
@@ -1597,4 +1599,356 @@ fn test_extract_and_compile_example_error_cases() {
         expected: EvalValue::Bool(true),
     };
     assert!(compile_example_to_tfv("mod", &bad_op).is_err());
+}
+
+#[test]
+fn test_security_remediations() {
+    let src = r#"warrant sec_test
+  model add_overflow(a: Int, b: Int) -> Int = a + b
+  model sub_overflow(a: Int, b: Int) -> Int = a - b
+  model mul_overflow(a: Int, b: Int) -> Int = a * b
+  model neg_overflow(a: Int) -> Int = -a
+  model div_overflow(a: Int, b: Int) -> Option<Int> = div(a, b)
+  model concat_bytes(a: Bytes, b: Bytes) -> Bytes = concat(a, b)
+  model concat_list(a: List<Int>, b: List<Int>) -> List<Int> = concat(a, b)
+
+  op dummy() -> Bool
+  assume platform:
+    none
+  assume environment:
+    none
+  bound dummy:
+    steps <= 1
+  example ex:
+    dummy() == true
+"#;
+
+    with_parsed(src, |file| {
+        let env = HashMap::new();
+
+        // 1. max_value_bytes limit on concat and list
+        let mut ev_small = Evaluator::new(
+            file,
+            CodegenLimits {
+                max_depth: 32,
+                max_work: 10_000,
+                max_value_bytes: 5,
+            },
+        );
+
+        let concat_b = Expression::Reference {
+            name: QualifiedName {
+                segments: vec!["concat_bytes"],
+                span: (0, 0),
+            },
+            widths: vec![],
+            args: Some(vec![
+                Expression::Literal {
+                    lit: Literal::Bytes("001122"),
+                    span: (0, 0),
+                },
+                Expression::Literal {
+                    lit: Literal::Bytes("334455"),
+                    span: (0, 0),
+                },
+            ]),
+            span: (0, 0),
+        };
+        let err = ev_small.eval(&concat_b, &env).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0703);
+
+        let concat_l = Expression::Reference {
+            name: QualifiedName {
+                segments: vec!["concat_list"],
+                span: (0, 0),
+            },
+            widths: vec![],
+            args: Some(vec![
+                Expression::List {
+                    elements: vec![
+                        Expression::Literal {
+                            lit: Literal::Int(1),
+                            span: (0, 0),
+                        },
+                        Expression::Literal {
+                            lit: Literal::Int(2),
+                            span: (0, 0),
+                        },
+                        Expression::Literal {
+                            lit: Literal::Int(3),
+                            span: (0, 0),
+                        },
+                    ],
+                    span: (0, 0),
+                },
+                Expression::List {
+                    elements: vec![
+                        Expression::Literal {
+                            lit: Literal::Int(4),
+                            span: (0, 0),
+                        },
+                        Expression::Literal {
+                            lit: Literal::Int(5),
+                            span: (0, 0),
+                        },
+                        Expression::Literal {
+                            lit: Literal::Int(6),
+                            span: (0, 0),
+                        },
+                    ],
+                    span: (0, 0),
+                },
+            ]),
+            span: (0, 0),
+        };
+        let err = ev_small.eval(&concat_l, &env).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0703);
+
+        let huge_list = Expression::List {
+            elements: (0..10)
+                .map(|i| Expression::Literal {
+                    lit: Literal::Int(i),
+                    span: (0, 0),
+                })
+                .collect(),
+            span: (0, 0),
+        };
+        let err = ev_small.eval(&huge_list, &env).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0703);
+
+        // 2. Arithmetic overflow
+        let mut ev = Evaluator::new(file, CodegenLimits::default());
+        let mut ovf_env = HashMap::new();
+        ovf_env.insert("max_i128", EvalValue::Int(i128::MAX));
+        ovf_env.insert("min_i128", EvalValue::Int(i128::MIN));
+        ovf_env.insert("one", EvalValue::Int(1));
+        ovf_env.insert("two", EvalValue::Int(2));
+        ovf_env.insert("neg_one", EvalValue::Int(-1));
+
+        // Add overflow
+        let add_ovf = Expression::Reference {
+            name: QualifiedName {
+                segments: vec!["add_overflow"],
+                span: (0, 0),
+            },
+            widths: vec![],
+            args: Some(vec![
+                Expression::Reference {
+                    name: QualifiedName {
+                        segments: vec!["max_i128"],
+                        span: (0, 0),
+                    },
+                    widths: vec![],
+                    args: None,
+                    span: (0, 0),
+                },
+                Expression::Reference {
+                    name: QualifiedName {
+                        segments: vec!["one"],
+                        span: (0, 0),
+                    },
+                    widths: vec![],
+                    args: None,
+                    span: (0, 0),
+                },
+            ]),
+            span: (0, 0),
+        };
+        let err = ev.eval(&add_ovf, &ovf_env).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0702);
+
+        // Sub overflow
+        let sub_ovf = Expression::Reference {
+            name: QualifiedName {
+                segments: vec!["sub_overflow"],
+                span: (0, 0),
+            },
+            widths: vec![],
+            args: Some(vec![
+                Expression::Reference {
+                    name: QualifiedName {
+                        segments: vec!["min_i128"],
+                        span: (0, 0),
+                    },
+                    widths: vec![],
+                    args: None,
+                    span: (0, 0),
+                },
+                Expression::Reference {
+                    name: QualifiedName {
+                        segments: vec!["one"],
+                        span: (0, 0),
+                    },
+                    widths: vec![],
+                    args: None,
+                    span: (0, 0),
+                },
+            ]),
+            span: (0, 0),
+        };
+        let err = ev.eval(&sub_ovf, &ovf_env).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0702);
+
+        // Mul overflow
+        let mul_ovf = Expression::Reference {
+            name: QualifiedName {
+                segments: vec!["mul_overflow"],
+                span: (0, 0),
+            },
+            widths: vec![],
+            args: Some(vec![
+                Expression::Reference {
+                    name: QualifiedName {
+                        segments: vec!["max_i128"],
+                        span: (0, 0),
+                    },
+                    widths: vec![],
+                    args: None,
+                    span: (0, 0),
+                },
+                Expression::Reference {
+                    name: QualifiedName {
+                        segments: vec!["two"],
+                        span: (0, 0),
+                    },
+                    widths: vec![],
+                    args: None,
+                    span: (0, 0),
+                },
+            ]),
+            span: (0, 0),
+        };
+        let err = ev.eval(&mul_ovf, &ovf_env).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0702);
+
+        // Neg overflow
+        let neg_ovf = Expression::Reference {
+            name: QualifiedName {
+                segments: vec!["neg_overflow"],
+                span: (0, 0),
+            },
+            widths: vec![],
+            args: Some(vec![Expression::Reference {
+                name: QualifiedName {
+                    segments: vec!["min_i128"],
+                    span: (0, 0),
+                },
+                widths: vec![],
+                args: None,
+                span: (0, 0),
+            }]),
+            span: (0, 0),
+        };
+        let err = ev.eval(&neg_ovf, &ovf_env).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0702);
+
+        // Div overflow: i128::MIN / -1
+        let div_ovf = Expression::Reference {
+            name: QualifiedName {
+                segments: vec!["div_overflow"],
+                span: (0, 0),
+            },
+            widths: vec![],
+            args: Some(vec![
+                Expression::Reference {
+                    name: QualifiedName {
+                        segments: vec!["min_i128"],
+                        span: (0, 0),
+                    },
+                    widths: vec![],
+                    args: None,
+                    span: (0, 0),
+                },
+                Expression::Reference {
+                    name: QualifiedName {
+                        segments: vec!["neg_one"],
+                        span: (0, 0),
+                    },
+                    widths: vec![],
+                    args: None,
+                    span: (0, 0),
+                },
+            ]),
+            span: (0, 0),
+        };
+        let err = ev.eval(&div_ovf, &ovf_env).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0702);
+
+        // 3. Reset work
+        ev.reset_work();
+
+        // 4. Unsupported op in harness codegen
+        let unsupp_src = r#"warrant unsupp_test
+  op unsupported_op() -> Bool
+  assume platform:
+    none
+  assume environment:
+    none
+  bound unsupported_op:
+    steps <= 1
+  example ex_bad:
+    unsupported_op() == true
+"#;
+        with_parsed(unsupp_src, |unsupp_file| {
+            let checked = check_warrant(unsupp_file).unwrap();
+            let mut bindings = BTreeMap::new();
+            bindings.insert(
+                "unsupported_op".to_string(),
+                OpBinding {
+                    export: "test_export".to_string(),
+                    static_params: vec![],
+                    fresh: false,
+                    error_normalization: None,
+                    negative_controls: vec![],
+                },
+            );
+            let manifest = BindingManifest {
+                package: "test_pkg".to_string(),
+                revision: "0.1.0".to_string(),
+                bindings,
+            };
+            let opts = RustL0Options {
+                package_crate: "test_pkg".to_string(),
+                spec_path: "test.warrant".to_string(),
+            };
+            let err = compile_rust_l0_harness(unsupp_file, &checked, &manifest, &opts).unwrap_err();
+            assert_eq!(err.code, DiagnosticCode::W0701);
+        });
+
+        // 5. Harness contents: silent panic hook, pre-call snapshot, dynamic exports
+        with_parsed(CT_COMPARE_WARRANT, |ct_file| {
+            let checked = check_warrant(ct_file).unwrap();
+            let mut manifest = ct_compare_bindings();
+            manifest.bindings.get_mut("eq").unwrap().export = "custom_eq_export".to_string();
+            manifest.bindings.get_mut("select_bytes").unwrap().export =
+                "custom_select_export".to_string();
+            manifest
+                .bindings
+                .get_mut("select_bytes")
+                .unwrap()
+                .error_normalization = Some(
+                coding_adventures_warrant_grammar::binding::ErrorNormalization {
+                    kind: "panic_to_error".to_string(),
+                    error_case: "CUSTOM_ERR".to_string(),
+                },
+            );
+            let opts = RustL0Options {
+                package_crate: "test_pkg".to_string(),
+                spec_path: "test.warrant".to_string(),
+            };
+            let code = compile_rust_l0_harness(ct_file, &checked, &manifest, &opts).unwrap();
+            assert!(code.contains("std::panic::set_hook(Box::new(|_| ()));"));
+            assert!(code.contains("custom_eq_export(left, right);"));
+            assert!(code.contains("custom_select_export(left, right, effective_choice);"));
+            assert!(code.contains("\"CUSTOM_ERR\""));
+
+            // Verify snapshot ordering in check_select
+            let left_snap = code.find("let left_before = left.to_vec();").unwrap();
+            let sel_call = code.find("custom_select_export(left, right").unwrap();
+            assert!(
+                left_snap < sel_call,
+                "Snapshot must occur before the function call"
+            );
+        });
+    });
 }

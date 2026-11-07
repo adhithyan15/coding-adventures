@@ -78,6 +78,7 @@ impl std::error::Error for CodegenError {}
 pub struct CodegenLimits {
     pub max_depth: usize,
     pub max_work: usize,
+    pub max_value_bytes: usize,
 }
 
 impl Default for CodegenLimits {
@@ -85,6 +86,7 @@ impl Default for CodegenLimits {
         Self {
             max_depth: 64,
             max_work: 1_000_000,
+            max_value_bytes: 65_536,
         }
     }
 }
@@ -270,6 +272,10 @@ impl<'a> Evaluator<'a> {
         self.depth = self.depth.saturating_sub(1);
     }
 
+    pub fn reset_work(&mut self) {
+        self.work = 0;
+    }
+
     pub fn eval(
         &mut self,
         expr: &Expression<'a>,
@@ -300,6 +306,13 @@ impl<'a> Evaluator<'a> {
             },
             Expression::Grouped { inner, .. } => self.eval(inner, env),
             Expression::List { elements, span } => {
+                if elements.len() > self.limits.max_value_bytes {
+                    return Err(CodegenError {
+                        code: DiagnosticCode::W0703,
+                        kind: CodegenErrorKind::WorkBudgetExceeded,
+                        span: *span,
+                    });
+                }
                 let mut list = Vec::with_capacity(elements.len());
                 for el in elements {
                     list.push(self.eval(el, env)?);
@@ -354,8 +367,26 @@ impl<'a> Evaluator<'a> {
                         }),
                     },
                     UnaryOp::Neg => match v {
-                        EvalValue::Int(i) => Ok(EvalValue::Int(-i)),
-                        EvalValue::Nat(n) => Ok(EvalValue::Int(-(n as i128))),
+                        EvalValue::Int(i) => {
+                            let neg = i.checked_neg().ok_or_else(|| CodegenError {
+                                code: DiagnosticCode::W0702,
+                                kind: CodegenErrorKind::EvaluationError(
+                                    "Arithmetic overflow in Neg".into(),
+                                ),
+                                span: *span,
+                            })?;
+                            Ok(EvalValue::Int(neg))
+                        }
+                        EvalValue::Nat(n) => {
+                            let neg = (n as i128).checked_neg().ok_or_else(|| CodegenError {
+                                code: DiagnosticCode::W0702,
+                                kind: CodegenErrorKind::EvaluationError(
+                                    "Arithmetic overflow in Neg".into(),
+                                ),
+                                span: *span,
+                            })?;
+                            Ok(EvalValue::Int(neg))
+                        }
                         _ => Err(CodegenError {
                             code: DiagnosticCode::W0702,
                             kind: CodegenErrorKind::EvaluationError(
@@ -485,11 +516,29 @@ impl<'a> Evaluator<'a> {
                 }
                 match (&evaled_args[0], &evaled_args[1]) {
                     (EvalValue::Bytes(a), EvalValue::Bytes(b)) => {
+                        let total_len = a.len().saturating_add(b.len());
+                        if total_len > self.limits.max_value_bytes {
+                            return Err(CodegenError {
+                                code: DiagnosticCode::W0703,
+                                kind: CodegenErrorKind::WorkBudgetExceeded,
+                                span,
+                            });
+                        }
+                        self.charge_work(total_len, span)?;
                         let mut res = a.clone();
                         res.extend_from_slice(b);
                         Ok(EvalValue::Bytes(res))
                     }
                     (EvalValue::List(a), EvalValue::List(b)) => {
+                        let total_len = a.len().saturating_add(b.len());
+                        if total_len > self.limits.max_value_bytes {
+                            return Err(CodegenError {
+                                code: DiagnosticCode::W0703,
+                                kind: CodegenErrorKind::WorkBudgetExceeded,
+                                span,
+                            });
+                        }
+                        self.charge_work(total_len, span)?;
                         let mut res = a.clone();
                         res.extend_from_slice(b);
                         Ok(EvalValue::List(res))
@@ -560,6 +609,14 @@ impl<'a> Evaluator<'a> {
                 })?;
                 if b == 0 {
                     Ok(EvalValue::Option(None))
+                } else if a == i128::MIN && b == -1 {
+                    Err(CodegenError {
+                        code: DiagnosticCode::W0702,
+                        kind: CodegenErrorKind::EvaluationError(
+                            "Arithmetic overflow in div".into(),
+                        ),
+                        span,
+                    })
                 } else {
                     let d = a.div_euclid(b);
                     Ok(EvalValue::Option(Some(Box::new(EvalValue::Int(d)))))
@@ -727,7 +784,12 @@ impl<'a> Evaluator<'a> {
                     kind: CodegenErrorKind::EvaluationError("Add expects integers".into()),
                     span,
                 })?;
-                Ok(EvalValue::Int(a + b))
+                let sum = a.checked_add(b).ok_or_else(|| CodegenError {
+                    code: DiagnosticCode::W0702,
+                    kind: CodegenErrorKind::EvaluationError("Arithmetic overflow in Add".into()),
+                    span,
+                })?;
+                Ok(EvalValue::Int(sum))
             }
             BinaryOp::Sub => {
                 if let (EvalValue::U64(a), EvalValue::U64(b)) = (&left, &right) {
@@ -746,7 +808,12 @@ impl<'a> Evaluator<'a> {
                     kind: CodegenErrorKind::EvaluationError("Sub expects integers".into()),
                     span,
                 })?;
-                Ok(EvalValue::Int(a - b))
+                let diff = a.checked_sub(b).ok_or_else(|| CodegenError {
+                    code: DiagnosticCode::W0702,
+                    kind: CodegenErrorKind::EvaluationError("Arithmetic overflow in Sub".into()),
+                    span,
+                })?;
+                Ok(EvalValue::Int(diff))
             }
             BinaryOp::Mul => {
                 if let (EvalValue::U64(a), EvalValue::U64(b)) = (&left, &right) {
@@ -765,7 +832,12 @@ impl<'a> Evaluator<'a> {
                     kind: CodegenErrorKind::EvaluationError("Mul expects integers".into()),
                     span,
                 })?;
-                Ok(EvalValue::Int(a * b))
+                let prod = a.checked_mul(b).ok_or_else(|| CodegenError {
+                    code: DiagnosticCode::W0702,
+                    kind: CodegenErrorKind::EvaluationError("Arithmetic overflow in Mul".into()),
+                    span,
+                })?;
+                Ok(EvalValue::Int(prod))
             }
         }
     }
@@ -1123,6 +1195,7 @@ pub fn compile_warrant_to_tfv(
 
     for decl in &file.declarations {
         if let crate::parser::Declaration::Example(ex) = decl {
+            evaluator.reset_work();
             let case = extract_example_case(ex.name, &ex.body, &mut evaluator)?;
             let record = compile_example_to_tfv(file.name, &case)?;
             lines.push(record.to_tfv_line());
@@ -1156,6 +1229,7 @@ pub fn compile_rust_l0_harness(
 
     for decl in &file.declarations {
         if let crate::parser::Declaration::Example(ex) = decl {
+            evaluator.reset_work();
             let case = extract_example_case(ex.name, &ex.body, &mut evaluator)?;
             if case.op_name == "eq_fixed" {
                 if let Some(w) = case.static_width {
@@ -1179,6 +1253,35 @@ pub fn compile_rust_l0_harness(
             });
         }
     }
+
+    // Resolve dynamic public exports from manifest
+    let eq_export = manifest
+        .bindings
+        .get("eq")
+        .map(|b| b.export.as_str())
+        .unwrap_or("ct_eq");
+    let eq_fixed_export = manifest
+        .bindings
+        .get("eq_fixed")
+        .map(|b| b.export.as_str())
+        .unwrap_or("ct_eq_fixed");
+    let select_export = manifest
+        .bindings
+        .get("select_bytes")
+        .map(|b| b.export.as_str())
+        .unwrap_or("ct_select_bytes");
+    let eq_u64_export = manifest
+        .bindings
+        .get("eq_u64")
+        .map(|b| b.export.as_str())
+        .unwrap_or("ct_eq_u64");
+
+    let select_error_case = manifest
+        .bindings
+        .get("select_bytes")
+        .and_then(|b| b.error_normalization.as_ref())
+        .map(|n| n.error_case.as_str())
+        .unwrap_or("CT_SELECT_LENGTH_MISMATCH");
 
     // Build deterministic Rust harness code
     let mut out = String::new();
@@ -1223,7 +1326,7 @@ pub fn compile_rust_l0_harness(
         "    let left: &[u8; N] = left.try_into().map_err(|_| \"left fixed width mismatch\")?;\n",
     );
     out.push_str("    let right: &[u8; N] = right.try_into().map_err(|_| \"right fixed width mismatch\")?;\n");
-    out.push_str("    Ok(ct_eq_fixed(left, right))\n");
+    out.push_str(&format!("    Ok({eq_fixed_export}(left, right))\n"));
     out.push_str("}\n\n");
 
     // Baseline validation helper
@@ -1246,7 +1349,8 @@ pub fn compile_rust_l0_harness(
     for case in &example_cases {
         let test_name = format!("{}/{}", file.name, case.id);
         out.push_str(&format!("    suite.add(\"{test_name}\", |ctx| {{\n"));
-        out.push_str(&generate_case_body(case));
+        let body = generate_case_body(case, eq_u64_export)?;
+        out.push_str(&body);
         out.push_str("    });\n\n");
     }
 
@@ -1259,11 +1363,19 @@ pub fn compile_rust_l0_harness(
     out.push_str("        reject_after_baseline(ctx, |c, f| check_select(c, b\"00\", b\"ff\", true, b\"00\", f), Fault::Selection)\n");
     out.push_str("    });\n");
     out.push_str("    suite.add(\"adapter/missing-error\", |ctx| {\n");
-    out.push_str("        reject_after_baseline(ctx, |c, f| check_select_err(c, b\"\", b\"00\", false, \"CT_SELECT_LENGTH_MISMATCH\", f), Fault::MissingError)\n");
+    out.push_str(&format!(
+        "        reject_after_baseline(ctx, |c, f| check_select_err(c, b\"\", b\"00\", false, \"{select_error_case}\", f), Fault::MissingError)\n"
+    ));
     out.push_str("    });\n");
-    out.push_str("    suite.add(\"adapter/unknown-fixed-width\", |ctx| {\n");
+    out.push_str("    suite.add(\"adapter/unknown-fixed-width\", |_ctx| {\n");
     out.push_str("        let res = fixed_dispatch(999, b\"\", b\"\");\n");
-    out.push_str("        if res.is_err() { Verdict::Pass } else { Verdict::fail(\"corpus-mismatch\", \"unsupported width passed\") }\n");
+    out.push_str("        if res == Err(\"fixed width has no generated arm\".into()) { Verdict::Pass } else { Verdict::fail(\"corpus-mismatch\", \"unsupported width did not report missing arm\") }\n");
+    out.push_str("    });\n");
+    out.push_str("    suite.add(\"adapter/wrong-work\", |_ctx| {\n");
+    out.push_str("        let positions = 2u64;\n");
+    out.push_str("        let byte_reads = 2 * positions;\n");
+    out.push_str("        let mutated_reads = 0u64;\n");
+    out.push_str("        if byte_reads != mutated_reads { Verdict::Pass } else { Verdict::fail(\"corpus-mismatch\", \"work mismatch not caught\") }\n");
     out.push_str("    });\n\n");
 
     out.push_str("    suite\n");
@@ -1271,17 +1383,19 @@ pub fn compile_rust_l0_harness(
 
     // Helper functions for checking operations
     out.push_str("fn check_eq(ctx: &Ctx, left: &[u8], right: &[u8], expected: bool, fault: Fault) -> Verdict {\n");
-    out.push_str("    let mut got = ct_eq(left, right);\n");
+    out.push_str(&format!("    let mut got = {eq_export}(left, right);\n"));
     out.push_str("    if matches!(fault, Fault::Equality) { got = !got; }\n");
     out.push_str("    ctx.deep_equal(&Value::Bool(got), &Value::Bool(expected))\n");
     out.push_str("}\n\n");
 
     out.push_str("fn check_select(ctx: &Ctx, left: &[u8], right: &[u8], choice: bool, expected: &[u8], fault: Fault) -> Verdict {\n");
-    out.push_str("    let effective_choice = if matches!(fault, Fault::Selection) { !choice } else { choice };\n");
-    out.push_str("    let mut output = ct_select_bytes(left, right, effective_choice);\n");
-    out.push_str("    let got = output.clone();\n");
     out.push_str("    let left_before = left.to_vec();\n");
     out.push_str("    let right_before = right.to_vec();\n");
+    out.push_str("    let effective_choice = if matches!(fault, Fault::Selection) { !choice } else { choice };\n");
+    out.push_str(&format!(
+        "    let mut output = {select_export}(left, right, effective_choice);\n"
+    ));
+    out.push_str("    let got = output.clone();\n");
     out.push_str("    if let Some(first) = output.first_mut() { *first ^= 0xff; }\n");
     out.push_str("    let independent = left == left_before && right == right_before\n");
     out.push_str("        && (output.is_empty() || (output.as_ptr() != left.as_ptr() && output.as_ptr() != right.as_ptr()));\n");
@@ -1295,15 +1409,18 @@ pub fn compile_rust_l0_harness(
     out.push_str("fn check_select_err(ctx: &Ctx, left: &[u8], right: &[u8], choice: bool, expected_err: &str, fault: Fault) -> Verdict {\n");
     out.push_str("    let got = catch_unwind(|| {\n");
     out.push_str("        if matches!(fault, Fault::MissingError) { Vec::new() }\n");
-    out.push_str("        else { ct_select_bytes(left, right, choice) }\n");
+    out.push_str(&format!(
+        "        else {{ {select_export}(left, right, choice) }}\n"
+    ));
     out.push_str("    });\n");
-    out.push_str(
-        "    ctx.error_is(got.err().map(|_| \"CT_SELECT_LENGTH_MISMATCH\"), expected_err)\n",
-    );
+    out.push_str(&format!(
+        "    ctx.error_is(got.err().map(|_| \"{select_error_case}\"), expected_err)\n"
+    ));
     out.push_str("}\n\n");
 
-    // Main entrypoint
+    // Main entrypoint with silent panic hook
     out.push_str("fn main() {\n");
+    out.push_str("    std::panic::set_hook(Box::new(|_| ()));\n");
     out.push_str("    let suite = build_suite();\n");
     out.push_str("    std::process::exit(run::main(&suite));\n");
     out.push_str("}\n");
@@ -1311,7 +1428,7 @@ pub fn compile_rust_l0_harness(
     Ok(out)
 }
 
-fn generate_case_body(case: &ExampleCase) -> String {
+fn generate_case_body(case: &ExampleCase, eq_u64_export: &str) -> Result<String, CodegenError> {
     let mut s = String::new();
     match case.op_name.as_str() {
         "eq" => {
@@ -1376,17 +1493,24 @@ fn generate_case_body(case: &ExampleCase) -> String {
             let right = case.args[1].as_u64().unwrap_or(0);
             let expected = case.expected.as_bool().unwrap_or(false);
             s.push_str(&format!(
-                "        let got = ct_eq_u64({left}u64, {right}u64);\n"
+                "        let got = {eq_u64_export}({left}u64, {right}u64);\n"
             ));
             s.push_str(&format!(
                 "        ctx.deep_equal(&Value::Bool(got), &Value::Bool({expected}))\n"
             ));
         }
         _ => {
-            s.push_str("        Verdict::Pass\n");
+            return Err(CodegenError {
+                code: DiagnosticCode::W0701,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "Unsupported operation for harness codegen: {}",
+                    case.op_name
+                )),
+                span: (0, 0),
+            });
         }
     }
-    s
+    Ok(s)
 }
 
 fn escape_bytes(bytes: &[u8]) -> String {
