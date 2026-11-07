@@ -45,6 +45,10 @@ pub fn is_registered_failure_id(id: &str) -> bool {
             | "panic"
             | "corpus-mismatch"
             | "corpus-malformed"
+            | "property-counterexample"
+            | "property-exhausted"
+            | "property-timeout"
+            | "property-panic"
     )
 }
 

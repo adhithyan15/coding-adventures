@@ -48,8 +48,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P006b3 | Guarded Warrant source lexer/parser | #18996 merged as 2f1e8361a38; [VER04c](VER04c-guarded-warrant-parser.md) specified; bounded recursive descent over layout tokens, node quotas, recursion depth guards (depth <= 64), 90%+ line/branch coverage |
 | done / VER-P007 | Warrant type checker/Rust bindings | #18997 merged as f471a7195f3; [VER04d](VER04d-warrant-type-system.md) specified; scope/symbol resolution, acyclic models, static typing, contract verification and closed Rust binding schema; 90%+ line/branch cov |
 | done / VER-P008 | Rust backend and ct-compare.warrant | #19002 merged as 652207f348d; [VER04e](VER04e-warrant-codegen.md) specified; bounded pure model evaluator, TFV test vector compiler, Rust L0 harness generator, checked regeneration |
-| P1 / VER-P009 | Property spec and pbt-v1 corpus | in progress; [VER05](VER05-property-engine.md) generation, integrated shrinking, coverage/negative cases |
-| P1 / VER-P010 | Rust property engine | waiting P009; deterministic replay, shrink quality, bounded work |
+| done / VER-P009 | Property spec and pbt-v1 corpus | #19004 merged as 5b1fcef8b2e at expected c6f4c29e61c; verified on fetched main; all checks acceptable |
+| done / VER-P010 | Rust property engine | [VER05](VER05-property-engine.md) generator algebra, integrated shrinking, deterministic replay, pbt-v1 corpus (25 cases), zero third-party deps, 92%+ line/branch cov |
 | P1 / VER-P011 | Warrant claims to properties | waiting P010; public API calls and broken implementations detected |
 | P1 / VER-P012 | Stateful properties | waiting P011; select only if pilot needs them, otherwise explicitly defer |
 | P2 / VER-P013 | Fuzz spec and fuzz-v1 corpus | waiting P011; VER06, private failure-output policy |
@@ -86,18 +86,25 @@ can progress independently once their prerequisites are available.
 
 ## Discoveries and current plan
 
-P008 merged in #19002 (commit 652207f348d) with all matrix checks passing on main.
-The pure model evaluator, TFV vector compiler, and Rust L0 harness generator are
-active in `warrant-grammar::codegen`. 14 integration tests and checked regeneration
-passed, exceeding 90% line and region coverage with zero external dependencies.
+P009 merged in #19004 (commit 5b1fcef8b2e) with all matrix checks passing on main.
+The formal property engine specification ([VER05](VER05-property-engine.md)),
+canonical `pbt-v1` conformance corpus (25 cases in `cases.json` and `cases.tfv`),
+standard-library Python reference validator (`code/scripts/pbt_conformance.py`),
+and 40 falsification tests passed with 97% line and 93% branch coverage.
+An Ubuntu 26 runner migration issue on `forme-release-platform` was identified
+and resolved by runner pinning to `ubuntu-24.04`.
 
-Post-P008 prioritization: #19002 merged cleanly at expected head. Prioritize VER-P009
-([VER05](VER05-property-engine.md) property testing engine specification and `pbt-v1`
-conformance corpus). P009 establishes the formal generator algebra, integrated shrinking
-protocol (Hypothesis-style, preserving refinements), PRNG seed determinism via SplitMix64,
-bounded search/shrink budgets, private failure reporting policies (§7.3), the canonical
-`pbt-v1` corpus (`cases.json` & `cases.tfv`), and an independent stdlib-only Python reference
-validator and falsification suite before native engine implementation in P010.
+Post-P009 prioritization: #19004 merged cleanly at expected head. VER-P010
+(Rust property engine implementation) implemented the VER05 Level 2 property-based
+testing engine directly within `code/packages/rust/test-bootstrap` (`pbt.rs`), extending the
+L0 harness with the full generator algebra (`Gen<T>`), integrated shrinking preserving
+type refinements and invariants, deterministic `SplitMix64` PRNG replay with isolated
+sub-seeds, step/shrink budgets, private failure reporting policies (§7.3), and end-to-end
+execution of the `pbt-v1` conformance corpus (25 tests) with zero third-party dependencies and >=92% line and region coverage.
+
+Post-P010 prioritization: Prioritize VER-P011 (Warrant claims to properties). VER-P011 connects
+Warrant claim evaluation with the PBT engine, allowing Warrant contracts and claims to be executed
+as generative property tests across arbitrary input spaces with automatic counterexample shrinking.
 
 P006b1 merged in #18913 (commit 964dc3df7bc) with all checks passing on main.
 The source admission contract is active in `rust/warrant-grammar`. Eleven source
