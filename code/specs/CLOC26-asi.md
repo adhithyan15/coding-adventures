@@ -331,6 +331,19 @@ must preserve the statement boundary with a `;`:
 - `async function f(){if(a){await⏎using⏎x}}`: `using [no LineTerminator here] BindingList` (§14.3.1) and `await [no LineTerminator here] using` forbid newlines inside declarations. An `await using` expression followed by a line break ends the expression statement, requiring `;` before `x`.
 - In `javascript-parser` and `closurec`, these boundaries are identified and spliced with synthetic semicolons so that node-backed execution round-trips correctly.
 
+**Follow-on: Keyword property names at statement boundary (#18125).** When a
+member access property name is spelled like a keyword (e.g. `x=y.if\nl:;`), the
+token after `.` or `?.` is classified by the lexer as `TokenType::Keyword`. In
+ECMAScript (§13.3.7), property identifiers following member dots are `IdentifierNames`
+(which permit any keyword or reserved word). To enable `GrammarParser` (which
+requires `DOT NAME`) to parse keyword properties during Phase-1 ASI and compute
+correct insertion points before newline-led statements:
+- `javascript-parser/src/asi.rs` normalizes member access keyword tokens after `.`
+  or `?.` to `TokenType::Name` during Phase-1 ASI parsing.
+- `closurec/src/whitespace_only.rs` ensures `contextual_asi_points` and
+  `is_statement_start_token` recognize keyword property terminations across line
+  breaks followed by statements.
+
 
 ## Non-goals
 

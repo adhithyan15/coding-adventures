@@ -265,7 +265,8 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Still open, filed from the review.** #18123: a *method* named
   `if`/`while`/`for`/`with` still gets body-slot rules (`class C{if(){}}`
   → `class C{if();}`). #18124: gap-032/gap-076 flatten a lone `let`/`const`
-  into a body slot. #18125: a newline after `y.if` loses its boundary.
+  into a body slot. #18125: resolved — a newline after `y.if` preserves its
+  statement boundary with a spliced `;`.
 - **Tests.** Eight unit tests, and
   `closurec/tests/regression_ws_empty_body_semi.rs`. It pins 25 shapes to
   the jar's bytes, and checks with `node` that those shapes, plus 11
