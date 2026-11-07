@@ -152,6 +152,17 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "xs = [0, 0]\nn = xs[1] = m = 4\nprint(n + xs[1] + m)\n",
         "12",
     ),
+    // ── list concatenation on binary `+` (#18496 item 3) ──────────────
+    (
+        "py_list_concat_plus",
+        "print([1] + [2])\n",
+        "[1, 2]",
+    ),
+    (
+        "py_list_concat_multiple",
+        "print([1, 2] + [3, 4] + [5])\n",
+        "[1, 2, 3, 4, 5]",
+    ),
     // ── `for` over an already-bound variable ──────────────────────────
     // The variable keeps the last item after the loop.
     (

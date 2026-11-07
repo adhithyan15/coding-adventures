@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — List concatenation on polymorphic `+` (#18496 item 3)
+
+- **Polymorphic `+` sequence concatenation.** `_sir_plus_v` now handles operands
+  with `xs[0].tag == SIR_SEQ`. It verifies all operands are `SIR_SEQ` (raising a
+  rescuable `TypeError` with message `"no implicit conversion into Array"` otherwise)
+  and allocates a fresh `SirSeq` with items copied from each operand, matching Ruby's
+  `Array#+` and Python's `list + list` without aliasing operand buffers. In the numeric
+  path, non-floats safely accumulate through `_sir_as_int` instead of reading raw union memory.
+
 ## Unreleased — Python display convention for booleans and None (#18496 item 1)
 
 - **Python display convention.** When `source_language == Some("python")`,
