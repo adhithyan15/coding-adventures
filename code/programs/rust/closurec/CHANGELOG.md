@@ -4,6 +4,18 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - ADVANCED inline substitution soundness: deferred closure reads, missing statement arms, computed keys (#18144)
+
+Parameters captured in nested closures now require literal arguments at call sites
+to prevent deferred execution observing subsequent mutations. Parameters mutated inside
+nested closures are prohibited from candidate selection. Computed class method keys
+are correctly substituted in the enclosing scope, and `substitute_in_stmt` now covers
+all statement variants (`ReturnStatement`, `ThrowStatement`, `TryStatement`, loops, etc.)
+while preserving shadowing by inner lexical declarations.
+
+`tests/regression_inline_substitution_18144.rs` pins 10 program shapes and compares
+runtime output under `node` against `SIMPLE` and `ADVANCED` compilation.
+
 ### Fixed - WHITESPACE_ONLY no longer moves an argument IIFE's call outside the call (#18114)
 
 `console.log(function(){return 1}())` prints `1` in node. closurec's
