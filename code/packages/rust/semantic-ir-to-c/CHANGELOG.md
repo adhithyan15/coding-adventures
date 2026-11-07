@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — Floored binary `%` operator (#18496 item 2)
+
+- **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `_sir_mod`
+  in `fixed_helper` (and `_sir_call_builtin_by_name`). It computes floored modulo
+  matching Python and Ruby semantics, avoiding `INT64_MIN % -1` undefined behavior
+  and intermediate product overflow.
+- **ZeroDivisionError.** Modulo by zero raises a catchable `ZeroDivisionError`
+  with message `"divided by 0"`.
+
+
 ## Unreleased — List concatenation on polymorphic `+` (#18496 item 3)
 
 - **Polymorphic `+` sequence concatenation.** `_sir_plus_v` now handles operands

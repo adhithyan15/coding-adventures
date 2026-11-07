@@ -387,6 +387,28 @@ export function trueDiv(a: Val, b: Val): Val {
   return num(a) / bn;
 }
 
+/**
+ * Floored binary modulo — `r = a - b * floor(a / b)`.
+ *
+ * The remainder has the sign of `b` (or is zero), matching Python and Ruby `%`.
+ * Raises `ZeroDivisionError` when `b === 0`.
+ */
+export function mod(a: Val, b: Val): Val {
+  const an = num(a);
+  const bn = num(b);
+  if (bn === 0) {
+    raiseError("ZeroDivisionError", "divided by 0");
+  }
+  let r = an % bn;
+  if (r !== 0 && ((r < 0) !== (bn < 0))) {
+    r += bn;
+  }
+  if (r === 0) {
+    r = 0;
+  }
+  return r;
+}
+
 /** Less-than. */
 export function lt(a: Val, b: Val): boolean {
   return num(a) < num(b);

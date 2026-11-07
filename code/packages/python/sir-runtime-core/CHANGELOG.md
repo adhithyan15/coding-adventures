@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Floored binary `%` operator (#18496 item 2)
+
+- Added `mod(a, b)` computing floored modulo matching Python and Ruby `%`.
+  Registered under `"%" : arithmetic.mod` in `_builtins` table.
+  Raises typed `ZeroDivisionError: divided by 0` on zero divisor.
+
+
 ## Unreleased — Python display convention for booleans and None (#18496 item 1)
 
 `set_display_convention("python")` sets `to_display(True)` to `"True"`,

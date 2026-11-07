@@ -201,6 +201,22 @@ fn div_floor_floors_toward_negative_infinity() {
     }
 }
 
+#[test]
+fn mod_signs_computes_floored_modulo() {
+    match run(
+        &div_module(vec![
+            print_stmt(bin("%", ilit(7), ilit(3))),
+            print_stmt(bin("%", ilit(-7), ilit(3))),
+            print_stmt(bin("%", ilit(7), ilit(-3))),
+            print_stmt(bin("%", ilit(-7), ilit(-3))),
+        ]),
+        "mod_signs",
+    ) {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["1", "2", "-2", "-1"]),
+        None => eprintln!("skip: no rustc/linker"),
+    }
+}
+
 // ── div_trunc/udiv_trunc: truncate toward zero ───────────────────────────
 
 #[test]

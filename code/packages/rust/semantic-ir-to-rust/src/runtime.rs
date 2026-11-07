@@ -730,6 +730,37 @@ pub const RUNTIME: &str = r##"mod __sir {
         Value::Float(as_f64(&a) / y)
     }
 
+    /// Floored binary modulo (`%`). Matches Python and Ruby `%` semantics:
+    /// remainder has the sign of the divisor `b` (or 0).
+    /// Raises `ZeroDivisionError` on zero divisor.
+    /// Handles `i64::MIN % -1` wrapping safely.
+    pub fn modulo(a: Value, b: Value) -> Value {
+        if matches!(a, Value::Float(_)) || matches!(b, Value::Float(_)) {
+            let y = as_f64(&b);
+            if y == 0.0 {
+                raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+            }
+            let x = as_f64(&a);
+            let q = (x / y).floor();
+            return Value::Float(x - q * y);
+        }
+        let y = as_i64(&b);
+        if y == 0 {
+            raise("ZeroDivisionError", Value::Str(Rc::from("divided by 0")));
+        }
+        if y == -1 {
+            return Value::Int(0);
+        }
+        let x = as_i64(&a);
+        let r = x % y;
+        let floored_r = if r != 0 && ((r < 0) != (y < 0)) {
+            r + y
+        } else {
+            r
+        };
+        Value::Int(floored_r)
+    }
+
     // ── comparison ────────────────────────────────────────────────
     pub fn eq(a: Value, b: Value) -> Value {
         Value::Bool(value_eq(&a, &b))
@@ -2556,6 +2587,10 @@ pub const RUNTIME: &str = r##"mod __sir {
             "div_true" => {
                 let mut it = args.into_iter();
                 true_div(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
+            }
+            "%" => {
+                let mut it = args.into_iter();
+                modulo(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
             }
             // Ruby unary minus (`-x`) lowers to `BuiltinCall("neg", [x])`. It
             // was UNIMPLEMENTED here, so any negative literal panicked with

@@ -20,6 +20,7 @@ from __future__ import annotations
 from .arithmetic import (
     add,
     div,
+    mod,
     ge,
     gt,
     le,
@@ -89,6 +90,7 @@ __all__ = [
     "sub",
     "mul",
     "div",
+    "mod",
     "trunc_div",
     "utrunc_div",
     "true_div",

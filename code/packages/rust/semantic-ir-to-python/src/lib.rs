@@ -2985,6 +2985,19 @@ mod tests {
         }
     }
 
+    #[test]
+    fn mod_signs_computes_floored_modulo() {
+        let m = division_module(vec![
+            division_print_stmt(division_bin("%", int_lit(7), int_lit(3))),
+            division_print_stmt(division_bin("%", int_lit(-7), int_lit(3))),
+            division_print_stmt(division_bin("%", int_lit(7), int_lit(-3))),
+            division_print_stmt(division_bin("%", int_lit(-7), int_lit(-3))),
+        ]);
+        if let Some(out) = run_division_ok(&m) {
+            assert_eq!(out, "1\n2\n-2\n-1\n");
+        }
+    }
+
     // ── div_trunc/udiv_trunc: truncate toward zero ───────────────────────
 
     #[test]

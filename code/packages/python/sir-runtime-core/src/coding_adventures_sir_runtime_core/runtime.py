@@ -353,6 +353,7 @@ _builtins: dict[str, Callable[..., Any]] = {
     "-": arithmetic.sub,
     "*": arithmetic.mul,
     "/": arithmetic.div,
+    "%": arithmetic.mod,
     # SIR21 T3b-2: `div_floor` is a bare alias for `div` (Ruby's `/` already
     # floors ints / true-divides floats — see `arithmetic.div`'s own
     # docstring). `div_trunc`/`udiv_trunc`/`div_true` are genuinely new —
