@@ -46,8 +46,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P006b1 | Bounded source admission and CRLF/original-byte mapping | #18913 merged as 964dc3df7bc; verified on fetched main; all checks acceptable; no public parser |
 | done / VER-P006b2 | Exact bounded significant-layout capture | #18992 merged as dc360bfb789; verified on fetched main; all checks acceptable; synthetic tokens zero-width |
 | done / VER-P006b3 | Guarded Warrant source lexer/parser | #18996 merged as 2f1e8361a38; [VER04c](VER04c-guarded-warrant-parser.md) specified; bounded recursive descent over layout tokens, node quotas, recursion depth guards (depth <= 64), 90%+ line/branch coverage |
-| P1 / VER-P007 | Warrant type checker/Rust bindings | [VER04d](VER04d-warrant-type-system.md) specified; scope/symbol resolution, acyclic models, static typing, contract verification and closed Rust binding schema; missing exports, wrong types and vacuous bindings reject |
-| P1 / VER-P008 | Rust backend and ct-compare.warrant | waiting P007; generated tests through L0, checked regeneration |
+| done / VER-P007 | Warrant type checker/Rust bindings | #18997 merged as f471a7195f3; [VER04d](VER04d-warrant-type-system.md) specified; scope/symbol resolution, acyclic models, static typing, contract verification and closed Rust binding schema; 90%+ line/branch cov |
+| P1 / VER-P008 | Rust backend and ct-compare.warrant | [VER04e](VER04e-warrant-codegen.md) specified; bounded pure model evaluator, TFV test vector compiler, Rust L0 harness generator, checked regeneration |
 | P1 / VER-P009 | Property spec and pbt-v1 corpus | waiting P008; VER05 generation, integrated shrinking, coverage/negative cases |
 | P1 / VER-P010 | Rust property engine | waiting P009; deterministic replay, shrink quality, bounded work |
 | P1 / VER-P011 | Warrant claims to properties | waiting P010; public API calls and broken implementations detected |
