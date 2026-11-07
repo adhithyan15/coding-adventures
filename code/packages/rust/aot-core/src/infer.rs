@@ -185,22 +185,32 @@ pub fn infer_types(fn_: &IIRFunction) -> HashMap<String, String> {
             continue;   // no output register → nothing to bind
         };
 
-        if instr.type_hint != "any" {
+        let new_ty = if instr.type_hint != "any" {
             // Statically typed instruction — bind directly, but only after
             // validating against the allowlist.  Untrusted IIR (e.g. from a
             // deserialized IIRModule) may carry arbitrary type_hint strings;
             // admitting them would let malicious type strings propagate into
             // the type environment and potentially reach downstream consumers
             // that do not re-validate.  Unknown types fall back to "any".
-            let ty = if ALLOWED_TYPES.contains(&instr.type_hint.as_str()) {
+            if ALLOWED_TYPES.contains(&instr.type_hint.as_str()) {
                 instr.type_hint.clone()
             } else {
                 "any".to_string()
-            };
-            env.insert(dest.clone(), ty);
+            }
         } else {
-            let t = infer_instr(instr, &env);
-            env.insert(dest.clone(), t);
+            infer_instr(instr, &env)
+        };
+
+        // When a variable is assigned multiple times with conflicting types,
+        // the conservative flow-insensitive join is "any" (#18779).
+        match env.get(dest) {
+            Some(existing) if existing != &new_ty => {
+                env.insert(dest.clone(), "any".to_string());
+            }
+            Some(_) => {}
+            None => {
+                env.insert(dest.clone(), new_ty);
+            }
         }
     }
 
@@ -559,5 +569,52 @@ mod tests {
         let env = infer_types(&fn_);
         // No entries except parameters (none in this case).
         assert!(env.is_empty());
+    }
+
+    #[test]
+    fn multiple_definitions_with_conflicting_types_join_to_any() {
+        // Destination defined first as u8, then as i64: join is "any" (#18779)
+        let fn1 = make_fn(
+            vec![],
+            vec![
+                IIRInstr::new("const", Some("x".into()), vec![Operand::Int(5)], "u8"),
+                IIRInstr::new("const", Some("x".into()), vec![Operand::Int(500)], "i64"),
+            ],
+        );
+        let env1 = infer_types(&fn1);
+        assert_eq!(env1["x"], "any");
+
+        // Destination defined first as any (e.g. call), then as i64: join is "any"
+        let fn2 = make_fn(
+            vec![],
+            vec![
+                IIRInstr::new("call", Some("y".into()), vec![Operand::Var("f".into())], "any"),
+                IIRInstr::new("const", Some("y".into()), vec![Operand::Int(42)], "i64"),
+            ],
+        );
+        let env2 = infer_types(&fn2);
+        assert_eq!(env2["y"], "any");
+
+        // Destination defined first as i64, then as any (order independent)
+        let fn3 = make_fn(
+            vec![],
+            vec![
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(42)], "i64"),
+                IIRInstr::new("call", Some("z".into()), vec![Operand::Var("f".into())], "any"),
+            ],
+        );
+        let env3 = infer_types(&fn3);
+        assert_eq!(env3["z"], "any");
+
+        // Multiple definitions with same type preserve that type
+        let fn4 = make_fn(
+            vec![],
+            vec![
+                IIRInstr::new("const", Some("w".into()), vec![Operand::Int(1)], "i64"),
+                IIRInstr::new("const", Some("w".into()), vec![Operand::Int(2)], "i64"),
+            ],
+        );
+        let env4 = infer_types(&fn4);
+        assert_eq!(env4["w"], "i64");
     }
 }

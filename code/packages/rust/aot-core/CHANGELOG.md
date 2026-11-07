@@ -1,5 +1,10 @@
 # Changelog — aot-core
 
+## Unreleased — #18779: conflicting type definitions join to `any` for GC rooting
+
+- `infer_types`: when a register destination is defined multiple times with conflicting types across blocks or instructions, the flow-insensitive join yields `"any"`. This ensures a register defined by both a heap-producing instruction and an integer instruction is classified as a GC root rather than dropping out of the stack map when an integer definition is processed last.
+- Test: `infer::tests::multiple_definitions_with_conflicting_types_join_to_any`.
+
 ## Unreleased — LANG83 PR5b — strings are bytes
 
 - `AOTCore::compile` runs `IIRModule::str_literal_errors()` before `aot_specialise` and returns the new `AOTError::InvalidModule` for a literal over the ceiling or a misplaced raw-byte literal (security re-review L2-a). Test `compile_refuses_a_module_that_breaks_the_string_literal_rules`, which fails on the previous `compile`.

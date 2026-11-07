@@ -1,5 +1,15 @@
 # Changelog — `twig-aot`
 
+## Unreleased — #18779: lower const Str in variables and preserve heap defs in stack maps
+
+- **Lower `const Str` / `const Bytes` literals identically to `str_const`.**
+  `lower_string_literals_for_aot` and `collect_runtime_str_vars_for_aot` now recognize `const` instructions with string or byte slice operands, lowering them to GC buffer allocations (`push_aot_string_literal` + `mov dest = buf_var`) so top-level and local string variables are properly rooted and accepted on native backends.
+- **`AOT_BUILTIN_MAP` maps `"string-length"` to `"str_len"` and runs before string lowering.**
+  `pre_lower_aot_builtins` runs before `lower_string_literals_for_aot` and translates dynamic `call_builtin "string-length"` to `str_len`, which lowers to runtime length header loading (`field_load var, 0`) when not statically folded, avoiding `BackendRefused`.
+- **`root_heap_word_copies` roots all heap-producing definitions.**
+  Heap-producing instructions (`allocates_gc_block`, `call`, `global_load`, and `dyn_pair_first`/`dyn_pair_rest`) retype their destinations to `"any"`, and any instruction defining a variable in `may_hold_heap` receives type `"any"`, ensuring the variable's frame slot remains a GC root even when scalar definitions exist.
+- **Tests:** `heap_valued_defs_with_scalar_defs_in_any_order_get_a_root_type`, `string_held_in_variable_compiles_to_native_object`.
+
 ## Unreleased — #18486: `AOT_BUILTIN_MAP` maps `modulo` to `i64_mod_floor`
 
 - `AOT_BUILTIN_MAP` now recognizes `"modulo"`, `"remainder"`, and `"quotient"`, mapping
