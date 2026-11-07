@@ -174,11 +174,13 @@ fn insertion_points(original: Vec<bool>) -> Vec<usize> {
 /// token vector through every insertion.
 #[allow(clippy::result_large_err)]
 fn parse_with_asi_tracked(
-    tokens: Vec<Token>,
+    mut tokens: Vec<Token>,
     version: EsVersion,
 ) -> Result<(GrammarASTNode, Vec<bool>), GrammarParseError> {
     let grammar = crate::_grammar::parser_grammar(version.as_str())
         .expect("compiled JavaScript parser grammar missing supported version");
+
+    normalize_member_access_keywords(&mut tokens);
 
     // Phase 3 (restricted productions) runs FIRST, as a proactive pre-pass: the
     // offending streams parse successfully into the wrong tree, so the
@@ -375,6 +377,27 @@ fn force_restricted_semicolons(tokens: Vec<Token>) -> (Vec<Token>, Vec<bool>) {
         }
     }
     (out, original)
+}
+
+/// In ECMAScript, property names after `.` or `?.` are IdentifierNames, which
+/// include all reserved words and keywords (§13.3.7). The lexer emits them as
+/// `Keyword` tokens, but the grammar productions specify `DOT NAME` and
+/// `OPTIONAL_CHAIN NAME`. Normalizing them to `TokenType::Name` allows the
+/// grammar parser to parse member accesses on keyword property names.
+fn normalize_member_access_keywords(tokens: &mut [Token]) {
+    for i in 1..tokens.len() {
+        if is_member_access_dot(&tokens[i - 1])
+            && (tokens[i].type_ == TokenType::Keyword
+                || tokens[i].type_name.as_deref() == Some("KEYWORD")
+                || matches!(
+                    tokens[i].value.as_str(),
+                    "this" | "true" | "false" | "null" | "super"
+                ))
+        {
+            tokens[i].type_ = TokenType::Name;
+            tokens[i].type_name = None;
+        }
+    }
 }
 
 /// A `++`/`--` token with a line terminator before it.
@@ -1115,6 +1138,16 @@ mod tests {
         let tokens = tokenize("x = () => {a:1}");
         let original = vec![true; tokens.len()];
         assert_eq!(speculate_line_semicolons(&tokens, &original).0.len(), tokens.len());
+    }
+
+    #[test]
+    fn issue18125_keyword_property_boundary() {
+        let src = "function f(){\nx=y.if\nl:;\n}";
+        let points = asi_insertion_points(tokenize(src), EsVersion::Es2025).unwrap();
+        // Check that ASI insertion points includes the position before `l:;`
+        let tokens = tokenize(src);
+        let l_idx = tokens.iter().position(|t| t.value == "l").unwrap();
+        assert!(points.contains(&l_idx), "points {points:?} must contain l_idx {l_idx}");
     }
 }
 

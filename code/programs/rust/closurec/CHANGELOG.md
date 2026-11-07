@@ -4,6 +4,12 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - WHITESPACE_ONLY keyword property newline boundary (#18125)
+
+- Member access keyword properties ending a line (e.g. `function f(){x=y.if\nl:;}`): Phase-1 ASI parsing in `javascript-parser` now normalizes keyword property names after `.` or `?.` to `TokenType::Name`, allowing `asi_insertion_points` to succeed on keyword property access and accurately splice semicolons before subsequent statements across line terminators.
+- Expanded `is_statement_start_token` in `whitespace_only.rs` to include all valid statement-starting tokens (`await`, `yield`, `true`, `false`, `null`, `!`, `~`, `{`).
+- Added unit tests in `whitespace_only.rs` and regression integration tests in `tests/regression_ws_keyword_prop_boundary_18125.rs` validated against Node.js `new Function(...)`.
+
 ### Fixed - WHITESPACE_ONLY contextual keyword ASI boundaries and script await calls (#18152)
 
 - Contextual keyword ASI: `let⏎new Foo`, `let⏎++x`, `await⏎using⏎x`, and property access `x=y.if⏎l:;` now properly splice `;` statement terminators into minified output.

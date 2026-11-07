@@ -6577,10 +6577,10 @@ fn compute_async_context_mask(kept: &[&lexer::token::Token]) -> Vec<bool> {
     is_async
 }
 
-/// Helper for #18152: returns whether `tok` is a token that can start a new statement
+/// Helper for #18152 / #18125: returns whether `tok` is a token that can start a new statement
 /// across a line terminator (excluding relational operators `in`/`instanceof` and contextual words).
 fn is_statement_start_token(tok: &lexer::token::Token) -> bool {
-    if tok.value == "++" || tok.value == "--" {
+    if tok.value == "++" || tok.value == "--" || tok.value == "!" || tok.value == "~" || tok.value == "{" {
         return true;
     }
     if tok.type_ == lexer::token::TokenType::Keyword {
@@ -6590,6 +6590,7 @@ fn is_statement_start_token(tok: &lexer::token::Token) -> bool {
                 | "throw" | "function" | "class" | "switch" | "try" | "break"
                 | "continue" | "new" | "this" | "typeof" | "void" | "delete"
                 | "debugger" | "super" | "import" | "export" | "async"
+                | "await" | "yield" | "true" | "false" | "null"
         );
     }
     if tok.type_ == lexer::token::TokenType::Number || is_string_literal(tok) {
@@ -11994,5 +11995,53 @@ mod tests {
             "target.element instanceof HTMLInputElement;"
         );
         assert_eq!(minify("target.element\nin obj;"), "target.element in obj;");
+    }
+
+    #[test]
+    fn issue18125_keyword_property_statement_boundary() {
+        assert_eq!(
+            minify("function f(){\nx=y.if\nl:;\n}"),
+            "function f(){x=y.if;l:;};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.if\nl:;}"),
+            "function f(){x=y.if;l:;};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.while\nreturn 1;}"),
+            "function f(){x=y.while;return 1};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.for\nif(a)b();}"),
+            "function f(){x=y.for;if(a)b()};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.default\nvar z=1;}"),
+            "function f(){x=y.default;var z=1};"
+        );
+        assert_eq!(
+            minify("async function f(){x=y.delete\nawait p;}"),
+            "async function f(){x=y.delete;await p};"
+        );
+        assert_eq!(
+            minify("function f(){x=y?.if\nl:;}"),
+            "function f(){x=y?.if;l:;};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.class\n!foo();}"),
+            "function f(){x=y.class;!foo()};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.catch\n{let b=2;}}"),
+            "function f(){x=y.catch;{let b=2}};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.finally\ntrue;}"),
+            "function f(){x=y.finally;true};"
+        );
+        assert_eq!(
+            minify("function f(){x=y.return\n~x;}"),
+            "function f(){x=y.return;~x};"
+        );
     }
 }
