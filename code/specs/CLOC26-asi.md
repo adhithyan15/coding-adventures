@@ -323,6 +323,15 @@ with `endStatement(needSemiColon=true)` for `THROW`. `throw_terminators` marks
 that `;` and gap-030 rule A leaves it in place, so `function f(){throw 1}` →
 `function f(){throw 1;};`. The AST-emitter half is slice 1 (#17839).
 
+**Follow-on: Contextual keywords used as identifiers (#18152).** When a
+contextual keyword or keyword-spelled identifier ends a line, WHITESPACE_ONLY
+must preserve the statement boundary with a `;`:
+- `let⏎new Foo`: `let` at end of line followed by `new` (or another keyword/operator/literal that cannot continue a lexical declaration) is an identifier expression statement `let;`.
+- `let⏎++x`: `let` at end of line followed by `++` or `--` is an identifier expression statement `let;` followed by a prefix increment. A postfix `++`/`--` can never follow a newline (§12.4).
+- `async function f(){if(a){await⏎using⏎x}}`: `using [no LineTerminator here] BindingList` (§14.3.1) and `await [no LineTerminator here] using` forbid newlines inside declarations. An `await using` expression followed by a line break ends the expression statement, requiring `;` before `x`.
+- In `javascript-parser` and `closurec`, these boundaries are identified and spliced with synthetic semicolons so that node-backed execution round-trips correctly.
+
+
 ## Non-goals
 
 * No grammar-file changes (semicolons stay mandatory in `es2025.grammar`).

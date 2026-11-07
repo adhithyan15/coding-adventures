@@ -318,6 +318,8 @@ const RESTRICTED_KEYWORDS: [&str; 5] = ["return", "throw", "break", "continue", 
 /// Rules 1/2 byte-identical keeps Rule 3 byte-identical too.
 /// Also returns, parallel to the output, whether each token is original
 /// (`true`) or an inserted `;` (`false`); see [`asi_insertion_points`].
+/// Scan `tokens` and insert a `;` immediately after restricted keywords or
+/// before newline-led update operators where a newline forces ASI.
 fn force_restricted_semicolons(tokens: Vec<Token>) -> (Vec<Token>, Vec<bool>) {
     // Fast path: a stream with no restricted keyword at all (the common case for
     // expression-heavy minifier input) is returned untouched.
@@ -391,7 +393,7 @@ fn can_end_expression(tok: &Token) -> bool {
         TokenType::Number | TokenType::String => true,
         TokenType::Keyword => matches!(
             tok.value.as_str(),
-            "this" | "true" | "false" | "null" | "super"
+            "this" | "true" | "false" | "null" | "super" | "let" | "await" | "yield"
         ),
         _ => matches!(tok.value.as_str(), ")" | "]" | "}"),
     }
@@ -442,7 +444,7 @@ fn speculate_line_semicolons(tokens: &[Token], original: &[bool]) -> (Vec<Token>
         TokenType::Name if t.type_name.is_none() => !matches!(t.value.as_str(), "of" | "from" | "as"),
         TokenType::Number | TokenType::String => true,
         TokenType::Keyword => STATEMENT_START_KEYWORDS.contains(&t.value.as_str()),
-        _ => false,
+        _ => matches!(t.value.as_str(), "++" | "--"),
     };
     let open_paren = paren_table(tokens);
     // `}` index → its `{` index, in one pass.
@@ -513,10 +515,21 @@ fn speculate_line_semicolons(tokens: &[Token], original: &[bool]) -> (Vec<Token>
                 && i >= 2
                 && tokens[i - 1].flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE == 0
                 && ends_expression_before(tokens, &open_paren, i - 2);
+            let is_contextual = CONTEXTUAL.contains(&prev.value.as_str());
+            let prev_is_property = i >= 2 && is_member_access_dot(&tokens[i - 2]);
+            let is_let_with_non_binding = prev.value == "let"
+                && prev.type_ != TokenType::String
+                && !prev_is_property
+                && tok.value != "in"
+                && tok.value != "instanceof"
+                && (matches!(tok.value.as_str(), "++" | "--")
+                    || tok.type_ == TokenType::Keyword
+                    || tok.type_ == TokenType::Number
+                    || tok.type_ == TokenType::String);
             if ((prev.value != "}" && ends_expression_before(tokens, &open_paren, i - 1))
                 || ends_object_literal
                 || postfix_update)
-                && !CONTEXTUAL.contains(&prev.value.as_str())
+                && (!is_contextual || is_let_with_non_binding)
             {
                 out.push(synthetic_semicolon(tok));
                 flags.push(false);
@@ -544,6 +557,9 @@ fn speculate_line_semicolons(tokens: &[Token], original: &[bool]) -> (Vec<Token>
 /// token.
 fn ends_expression_before(tokens: &[Token], open_paren: &[usize], k: usize) -> bool {
     let tok = &tokens[k];
+    if k > 0 && is_member_access_dot(&tokens[k - 1]) {
+        return true;
+    }
     if !can_end_expression(tok) {
         return false;
     }
