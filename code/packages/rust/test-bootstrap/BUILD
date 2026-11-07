@@ -10,5 +10,6 @@ cargo clippy -p coding_adventures_test_bootstrap --all-targets -- -D warnings
 #    here. The pipeline's status is grep's: no `not ok` line, no pass.
 cargo test -q -p coding_adventures_test_bootstrap --test self_corpus -- --sabotage always-pass 2>/dev/null | grep -q '^not ok '
 # 3. The independent Python reference agrees with cases.json, and cases.tfv
-#    is exactly what cases.json generates.
+#    is exactly what cases.json generates (for both TF01 and VER05 PBT).
 python3 ../../../scripts/bootstrap_harness_conformance.py
+python3 ../../../scripts/pbt_conformance.py

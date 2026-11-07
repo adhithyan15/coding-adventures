@@ -1,8 +1,8 @@
 [package]
 name = "coding_adventures_test_bootstrap"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
-description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure verdict core, seeded shuffled runs, TAP v14 output"
+description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure verdict core, seeded shuffled runs, TAP v14 output, and VER05 property testing engine"
 
 [dependencies]
 
@@ -12,4 +12,9 @@ description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure ver
 [[test]]
 name = "self_corpus"
 path = "tests/self_corpus.rs"
+harness = false
+
+[[test]]
+name = "pbt_corpus"
+path = "tests/pbt_corpus.rs"
 harness = false

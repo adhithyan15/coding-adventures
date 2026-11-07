@@ -33,6 +33,7 @@ It is the first step of the [VER26](../../../specs/VER26-ct-compare-pilot.md)
 | `verdict` | The pure core: `deep_equal` and `error_is`, returning `Pass` or `Fail(failure_id, message)` |
 | `prng`    | SplitMix64, FNV-1a 64, an unbiased bounded draw, the run shuffle, per-test sub-seeds |
 | `run`     | `Suite`, seeded shuffled runs, panic isolation, TAP v14 output, `--seed`, `--sabotage` |
+| `pbt`     | Level 2 property-based testing engine (VER05): generators, integrated shrinking, closed PBT vocabulary |
 
 ## Usage
 
@@ -96,6 +97,7 @@ every normal run, but it fails this check.
 - `tests/self_corpus.rs`: every record of `cases.tfv` run on this harness.
   The corpus is embedded with `include_str!`, so the crate reads no files and
   `required_capabilities.json` is empty.
+- `tests/pbt_corpus.rs`: every record of `specs/fixtures/pbt-v1/cases.tfv` run on this harness.
 - `code/scripts/bootstrap_harness_conformance.py` re-derives every expected
   answer in standard-library Python and checks that `cases.tfv` is exactly
   what `cases.json` generates.
