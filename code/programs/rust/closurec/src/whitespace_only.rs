@@ -6532,10 +6532,8 @@ fn compute_async_context_mask(kept: &[&lexer::token::Token]) -> Vec<bool> {
             };
 
             scope_stack.push(block_async);
-        } else if is_structural_punct(tok, "}") {
-            if scope_stack.len() > 1 {
-                scope_stack.pop();
-            }
+        } else if is_structural_punct(tok, "}") && scope_stack.len() > 1 {
+            scope_stack.pop();
         }
 
         // Check for concise async arrow: `async (...) => expr` or `async x => expr`
@@ -6697,11 +6695,12 @@ fn contextual_asi_points(tokens: &[lexer::token::Token]) -> Vec<usize> {
         }
 
         // Case 4: Property access ending a line: `x=y.if\nl:;` (#18125)
-        if prev_idx > 0 && (tokens[prev_idx - 1].value == "." || tokens[prev_idx - 1].value == "?.") {
-            if is_statement_start_token(tok) {
-                points.push(i);
-                continue;
-            }
+        if prev_idx > 0
+            && (tokens[prev_idx - 1].value == "." || tokens[prev_idx - 1].value == "?.")
+            && is_statement_start_token(tok)
+        {
+            points.push(i);
+            continue;
         }
     }
 
