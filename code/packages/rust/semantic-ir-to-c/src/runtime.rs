@@ -2122,6 +2122,23 @@ static void _sir_array_push_one(SirSeq *s, SirValue v) {
     s->items = ni;
     s->len++;
 }
+/* In-place addition for `+=`.  When `a` is a sequence (Array), appends the
+ * elements of `b` (or `b` itself if not a sequence) into `a` in place,
+ * preserving object identity across aliases (Python's `__iadd__` / Ruby's `concat`).
+ * For other types (integers, floats, strings), falls back to standard binary addition. */
+static inline SirValue _sir_iadd(SirValue a, SirValue b) {
+    if (a.tag == SIR_SEQ) {
+        if (b.tag == SIR_SEQ) {
+            for (int64_t i = 0; i < b.as.seq->len; i++) {
+                _sir_array_push_one(a.as.seq, b.as.seq->items[i]);
+            }
+        } else {
+            _sir_array_push_one(a.as.seq, b);
+        }
+        return a;
+    }
+    return _sir_plus(2, a, b);
+}
 /* #18798 (item 13) — `a[i] = v` on an Array, as Ruby does it.  The strict
  * `_sir_seq_set` (the SIR-native `SeqSet` statement) exits on anything outside
  * `0 <= i < len`, and `[]=` used to share it:
@@ -3683,10 +3700,10 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
             return _sir_hash_partition(recv.as.map, args[0]);
     }
     /* Collections slice 4: Array mutation + 1-arg query methods. */
-    else if (strcmp(m, "push") == 0) {
+    else if (strcmp(m, "push") == 0 || strcmp(m, "append") == 0) {
         if (recv.tag == SIR_SEQ) {
             for (int i = 0; i < argc; i++) _sir_array_push_one(recv.as.seq, args[i]);
-            return recv;  /* Array#push returns the (mutated) receiver */
+            return recv;  /* Array#push / Array#append returns the (mutated) receiver */
         }
     } else if (strcmp(m, "pop") == 0) {
         if (recv.tag == SIR_SEQ && argc == 0) return _sir_array_pop(recv.as.seq);
@@ -4135,6 +4152,7 @@ SirValue _sir_arg(SirValue *args, int argc, int i) {
 SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     const char *name = caps[0].as.s;
     if (strcmp(name, "+") == 0)        return _sir_plus_v(args, argc);
+    if (strcmp(name, "+=") == 0)       return _sir_iadd(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "-") == 0)        return _sir_minus_v(args, argc);
     if (strcmp(name, "*") == 0)        return _sir_times_v(args, argc);
     if (strcmp(name, "/") == 0)        return _sir_divide_v(args, argc);

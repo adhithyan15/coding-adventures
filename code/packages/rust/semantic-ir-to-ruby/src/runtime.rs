@@ -201,6 +201,35 @@ def sir_size(recv)
   end
 end
 
+def sir_append(recv, *args)
+  return recv.public_send(:sir_um_append, *args) if recv.respond_to?(:sir_um_append)
+  return recv.public_send(:sir_um_push, *args) if recv.respond_to?(:sir_um_push)
+
+  case recv
+  when Array
+    args.each { |a| recv.push(a) }
+    recv
+  else raise NoMethodError, "undefined method 'append' for #{recv.inspect}"
+  end
+end
+
+# In-place addition for `+=`. When `a` is an Array, mutates `a` in place
+# by appending the elements of `b` (or `b` itself if not an Array),
+# preserving object identity across aliases (Python's `__iadd__`).
+# For non-arrays, falls back to standard binary addition.
+def sir_iadd(a, b)
+  if a.is_a?(Array)
+    if b.is_a?(Array)
+      b.each { |x| a.push(x) }
+    else
+      a.push(b)
+    end
+    a
+  else
+    a + b
+  end
+end
+
 # `"a#{x}b"` (#18798) — SIR's `StrConcat`: every part shown with `sir_fmt`,
 # joined.
 def sir_str_concat(*parts) = parts.map { |p| sir_fmt(p) }.join

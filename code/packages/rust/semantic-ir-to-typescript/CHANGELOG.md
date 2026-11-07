@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **In-place addition `+=`.** `BuiltinCall("+=", [lhs, rhs])` now routes to `__Sir.iadd` in `emit_builtin_call`.
+
 ## Unreleased — Floored binary `%` routing (#18496 item 2)
 
 - **`%` Builtin.** `BuiltinCall("%", [lhs, rhs])` now routes directly to `__Sir.mod`

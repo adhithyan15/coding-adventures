@@ -4144,6 +4144,43 @@ fn floored_modulo_signs() {
     }
 }
 
+#[test]
+fn node_list_in_place_mutation_and_aliasing() {
+    let stmts = vec![
+        let_("xs", arr(vec![int(1), int(2)])),
+        Stmt::LetStarBinding {
+            name: "ys".into(),
+            sir_type: None,
+            value: local("xs"),
+            span: sp(),
+        },
+        Stmt::ExprStmt {
+            expr: method(local("xs"), "append", vec![int(3)]),
+            span: sp(),
+        },
+        print(local("ys")),
+        Stmt::Assign {
+            name: "xs".into(),
+            scope: Scope::Local,
+            value: bc("+=", vec![local("xs"), arr(vec![int(4), int(5)])]),
+            span: sp(),
+        },
+        print(local("ys")),
+    ];
+    let module = module_with_main(
+        stmts,
+        Expr::NilLit { span: sp() },
+        &[Feature::Sequences, Feature::MutableBindings],
+    );
+    if let Some(stdout) = run_module(&module, "list_mut") {
+        assert_eq!(
+            stdout,
+            "[1, 2, 3]\n\
+             [1, 2, 3, 4, 5]"
+        );
+    }
+}
+
 /// A per-call unique part for this file's temp-file names.  The process id
 /// keeps parallel test binaries apart, and the counter keeps apart the tests
 /// of this binary, which run on parallel threads under one process id

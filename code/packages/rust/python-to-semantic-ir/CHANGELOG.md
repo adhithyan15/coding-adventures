@@ -4,6 +4,8 @@ All notable changes to `python-to-semantic-ir` are documented here.
 
 ## Unreleased
 
+- Lower augmented addition `+=` to builtin `"+="` instead of `"+"` to enable in-place collection mutation and preserve alias semantics (#18496 item 4).
+
 ## Unreleased — Every invented name comes from one pool (#18771)
 
 The lowerer invents names of four kinds: parameter copies

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- Added `iadd(a, b)` for in-place addition `+=`. Mutates lists in place via `.extend()` / `.append()`, preserving object identity across aliases, and falls back to `add(a, b)` otherwise.
+- Registered under `"+=" : arithmetic.iadd` in `_builtins` table.
+
 ## Unreleased — Floored binary `%` operator (#18496 item 2)
 
 - Added `mod(a, b)` computing floored modulo matching Python and Ruby `%`.

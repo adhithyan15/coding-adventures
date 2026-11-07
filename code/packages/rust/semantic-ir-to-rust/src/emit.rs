@@ -2182,6 +2182,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "*" => ("__sir::times", true),
         "/" => ("__sir::divide", true),
         "%" => ("__sir::modulo", false),
+        "+=" => ("__sir::iadd", false),
         // SIR21 T3b-2: `div_floor` is a bare rename of `divide` (Ruby's `/`
         // already floors ints / true-divides floats — see `divide`'s own
         // doc comment). `div_trunc`/`udiv_trunc`/`div_true` are genuinely

@@ -2712,6 +2712,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
         "*" => "__Sir.mul",
         "/" => "__Sir.div",
         "%" => "__Sir.mod",
+        "+=" => "__Sir.iadd",
         // SIR21 T3b-2: `div_floor` is a bare alias for `div` (a documented
         // pre-existing limitation — this runtime's untagged `Val` model
         // cannot distinguish Ruby Integer from Ruby Float at runtime, so

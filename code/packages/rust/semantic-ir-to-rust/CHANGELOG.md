@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **In-place addition `+=`.** Added `__sir::iadd` helper and mapped `BuiltinCall("+=", [lhs, rhs])` to it. Mutates `Value::Seq` in place, preserving pointer identity across aliases, and delegates to `plus` otherwise.
+
 ## Unreleased — Floored binary `%` operator (#18496 item 2)
 
 - **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `__sir::modulo`

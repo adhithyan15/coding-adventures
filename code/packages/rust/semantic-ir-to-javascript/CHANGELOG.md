@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **Array `push` and `append`.** `arrayMethod` now handles `"append"` and `"push"`, appending arguments in-place and returning the array receiver. Added `"append"` to `METHOD_ALLOWLIST` and `ARRAY_METHODS`.
+- **In-place addition `+=`.** Added `__Sir.iadd` which extends arrays in place when the target is an Array (preserving object identity across aliases), and delegates to `plus` otherwise. Mapped `BuiltinCall("+=", ...)` to `__Sir.iadd`.
+
 ## Unreleased — Floored binary `%` semantics and ZeroDivisionError (#18496 item 2)
 
 - **Floored binary `%`.** `__Sir.mod` now computes floored modulo matching Python

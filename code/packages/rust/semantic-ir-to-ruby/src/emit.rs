@@ -43,6 +43,7 @@ const SUPPORTED_BUILTINS: &[&str] = &[
     // [`emit_strict_closure`].
     "lambda",
     "+",
+    "+=",
     "-",
     "*",
     "/",
@@ -2045,6 +2046,7 @@ fn emit_builtin(name: &str, args: &[Expr]) -> String {
     match name {
         // n-ary arithmetic folds to a native chained operator.
         "+" => format!("({})", join_op(&a, " + ", "0")),
+        "+=" => format!("sir_iadd({}, {})", arg(&a, 0), arg(&a, 1)),
         "*" => format!("({})", join_op(&a, " * ", "1")),
         "/" => format!("({})", join_op(&a, " / ", "1")),
         "-" => {
@@ -2330,6 +2332,7 @@ fn collection_access(args: &[Expr]) -> Option<&'static str> {
         ("[]", 3) => Some("sir_index"),
         ("[]=", 4) => Some("sir_index_set"),
         ("size" | "length", 2) => Some("sir_size"),
+        ("append" | "push", _) => Some("sir_append"),
         _ => None,
     }
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **In-place addition `+=`.** `BuiltinCall("+=", [lhs, rhs])` now routes through `_sir_iadd` in `emit_builtin_call`. Emitted runtime preamble imports `iadd as _sir_iadd` from `coding_adventures_sir_runtime_core`.
+
 ## Unreleased — Floored binary `%` operator (#18496 item 2)
 
 - **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `_sir_mod`

@@ -365,6 +365,27 @@ pub const RUNTIME: &str = r##"mod __sir {
         }
     }
 
+    // In-place addition for `+=`. When `a` is a `Value::Seq`, mutates it in place
+    // by appending elements of `b` (or `b` itself if not a `Seq`), preserving
+    // pointer identity across aliases (Python's `__iadd__`). Non-sequences fall
+    // back to standard binary `plus`.
+    pub fn iadd(a: Value, b: Value) -> Value {
+        match &a {
+            Value::Seq(items) => {
+                match &b {
+                    Value::Seq(b_items) => {
+                        items.borrow_mut().extend(b_items.borrow().iter().cloned());
+                    }
+                    other => {
+                        items.borrow_mut().push(other.clone());
+                    }
+                }
+                a
+            }
+            _ => plus(vec![a, b]),
+        }
+    }
+
     // ── polymorphic `<<` (Ruby's shift operator) ────────────────────
     //
     // `<<` -- Ruby's shift operator, polymorphic like `plus`:
@@ -2591,6 +2612,10 @@ pub const RUNTIME: &str = r##"mod __sir {
             "%" => {
                 let mut it = args.into_iter();
                 modulo(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
+            }
+            "+=" => {
+                let mut it = args.into_iter();
+                iadd(it.next().unwrap_or(Value::Int(0)), it.next().unwrap_or(Value::Int(0)))
             }
             // Ruby unary minus (`-x`) lowers to `BuiltinCall("neg", [x])`. It
             // was UNIMPLEMENTED here, so any negative literal panicked with

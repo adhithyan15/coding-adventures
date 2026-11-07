@@ -415,6 +415,23 @@ describe("polymorphic + (string/array concat)", () => {
   });
 });
 
+describe("in-place addition iadd (+=)", () => {
+  it("array in-place mutation and aliasing", () => {
+    const xs = [1, 2];
+    const ys = xs;
+    const r = sir.iadd(xs, [3, 4]);
+    expect(r).toBe(xs);
+    expect(ys).toEqual([1, 2, 3, 4]);
+    expect(sir.callBuiltin("+=", [xs, [5]])).toBe(xs);
+    expect(ys).toEqual([1, 2, 3, 4, 5]);
+  });
+
+  it("non-array fallback to numeric addition", () => {
+    expect(sir.iadd(1, 2)).toBe(3);
+    expect(sir.callBuiltin("+=", [10, 20])).toBe(30);
+  });
+});
+
 describe("polymorphic << (Ruby's shift operator)", () => {
   it("integer left shift", () => {
     expect(sir.shiftLeft(5, 2)).toBe(20);

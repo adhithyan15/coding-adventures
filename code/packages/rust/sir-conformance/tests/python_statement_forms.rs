@@ -319,6 +319,22 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "print(7 % 3)\nprint(-7 % 3)\nprint(7 % -3)\nprint(-7 % -3)\n",
         "1\n2\n-2\n-1",
     ),
+    // ── list in-place mutation and aliasing (#18496 item 4) ────────────
+    (
+        "py_list_append_aliased",
+        "xs = [1, 2]\nys = xs\nxs.append(3)\nprint(ys)\n",
+        "[1, 2, 3]",
+    ),
+    (
+        "py_list_aug_assign_aliased",
+        "xs = [1, 2]\nys = xs\nxs += [3, 4]\nprint(ys)\n",
+        "[1, 2, 3, 4]",
+    ),
+    (
+        "py_number_aug_assign_not_aliased",
+        "n = 1\nm = n\nn += 2\nprint(m)\nprint(n)\n",
+        "1\n3",
+    ),
 ];
 
 /// `(program, backend, why)`: cells that fail for a reason outside what

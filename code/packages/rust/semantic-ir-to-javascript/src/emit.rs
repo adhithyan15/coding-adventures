@@ -1963,6 +1963,7 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             // `runtime::minus` / `runtime::mod`.
             "-" => Some("__Sir.minus"),
             "%" => Some("__Sir.mod"),
+            "+=" => Some("__Sir.iadd"),
             _ => None,
         };
         if let Some(helper) = poly {

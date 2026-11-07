@@ -724,3 +724,18 @@ def test_as_lambda_returns_same_closure_and_sets_flag() -> None:
 
 def test_as_lambda_passes_non_closure_through() -> None:
     assert sir.as_lambda(42) == 42
+
+
+def test_iadd_mutates_list_in_place() -> None:
+    xs = [1, 2]
+    ys = xs
+    res = sir.iadd(xs, [3, 4])
+    assert res is xs
+    assert ys == [1, 2, 3, 4]
+    assert sir.call_builtin("+=", [xs, [5]]) is xs
+    assert ys == [1, 2, 3, 4, 5]
+
+
+def test_iadd_falls_back_for_numbers() -> None:
+    assert sir.iadd(1, 2) == 3
+    assert sir.call_builtin("+=", [5, 10]) == 15

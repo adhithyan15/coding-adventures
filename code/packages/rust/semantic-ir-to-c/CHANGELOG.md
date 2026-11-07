@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
+
+- **Array `append` builtin method.** `is_builtin_method` in `emit.rs` and `_sir_builtin_method` in `runtime.rs` now recognize `"append"`, mutating `SirSeq` in place and returning the receiver pointer.
+- **In-place addition `+=`.** Added `_sir_iadd` and mapped `BuiltinCall("+=", [lhs, rhs])` to it. Appends items to `lhs.as.seq` in place when `lhs` is a sequence, preserving pointer identity across aliases, and falls back to `_sir_plus` for other types.
+
 ## Unreleased — Floored binary `%` operator (#18496 item 2)
 
 - **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `_sir_mod`

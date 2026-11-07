@@ -198,6 +198,27 @@ export function add(...args: Val[]): Val {
   return total;
 }
 
+/**
+ * In-place addition for `+=`.
+ *
+ * When the first operand is an Array, mutates it in place by pushing the elements
+ * of `b` (or `b` itself if not an Array), preserving object identity across aliases
+ * (Python's `__iadd__` / Ruby's `concat`). Non-arrays fall back to standard `add(a, b)`.
+ */
+export function iadd(a: Val, b: Val): Val {
+  if (Array.isArray(a)) {
+    if (Array.isArray(b)) {
+      for (const el of b) {
+        a.push(el);
+      }
+    } else {
+      a.push(b);
+    }
+    return a;
+  }
+  return add(a, b);
+}
+
 /** Variadic difference; `sub(x)` negates, `sub()` is `0`. */
 export function sub(...args: Val[]): Val {
   if (args.length === 0) {

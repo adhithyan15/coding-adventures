@@ -82,7 +82,8 @@ impl Visitor for SeqLits {
 
 // ── augmented assignment ─────────────────────────────────────────────
 
-/// The issue's program: `x += 2` used to lower to the statement `x`.
+/// `x += 2` lowers to the in-place addition builtin `+=`, which backends
+/// implement as mutating mutable operands in place and falling back to addition for primitives.
 #[test]
 fn augmented_add_stores_target_plus_value() {
     let m = lower("x = 1\nx += 2\nprint(x)\n");
@@ -94,7 +95,7 @@ fn augmented_add_stores_target_plus_value() {
             assert_eq!(name, "x");
             assert_eq!(*scope, Scope::Local);
             let (op, args) = builtin(value);
-            assert_eq!(op, "+");
+            assert_eq!(op, "+=");
             assert!(
                 is_var(&args[0], "x", Scope::Local),
                 "reads x first: {args:?}"
@@ -105,11 +106,11 @@ fn augmented_add_stores_target_plus_value() {
     }
 }
 
-/// Each lowered augmented operator uses the same builtin as its binary
-/// operator, so the two cannot disagree (`/=` true-divides like `/`).
+/// Lowered augmented operators match their binary operator, except `+=` which
+/// lowers to the in-place builtin `"+="` to support in-place mutation of collections.
 #[test]
 fn every_lowered_augmented_operator_matches_its_binary_operator() {
-    for op in ["+", "-", "*", "/", "%"] {
+    for op in ["-", "*", "/", "%"] {
         let binary = lower(&format!("x = 7\ny = x {op} 2\n"));
         let augmented = lower(&format!("x = 7\nx {op}= 2\n"));
         let binary_name = match &main_body(&binary).stmts[1] {
@@ -125,6 +126,12 @@ fn every_lowered_augmented_operator_matches_its_binary_operator() {
             }
             other => panic!("`{op}=`: expected `Assign x`, got {other:?}"),
         }
+    }
+    // `+=` uses `"+="` for in-place semantics
+    let add_aug = lower("x = 7\nx += 2\n");
+    match &main_body(&add_aug).stmts[1] {
+        Stmt::Assign { value, .. } => assert_eq!(builtin(value).0, "+="),
+        other => panic!("{other:?}"),
     }
     // The table entry that is not a pass-through spelling.
     let m = lower("x = 7\nx /= 2\n");
@@ -196,7 +203,7 @@ fn augmented_instance_variable_in_a_method() {
         } => {
             assert_eq!((name.as_str(), *scope), ("@n", Scope::Instance));
             let (op, args) = builtin(value);
-            assert_eq!(op, "+");
+            assert_eq!(op, "+=");
             assert!(is_var(&args[0], "@n", Scope::Instance), "{args:?}");
             assert!(is_var(&args[1], "k", Scope::Param), "{args:?}");
         }

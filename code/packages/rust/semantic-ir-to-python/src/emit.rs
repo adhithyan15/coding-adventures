@@ -2350,6 +2350,7 @@ fn emit_builtin_call(
         "*" => "_sir_times",
         "/" => "_sir_divide",
         "%" => "_sir_mod",
+        "+=" => "_sir_iadd",
         // SIR21 T3b-2: `div_floor` is a bare alias for `_sir_divide` (Ruby's
         // `/` already floors ints / true-divides floats — see
         // `arithmetic.div`'s own docstring in sir-runtime-core).
