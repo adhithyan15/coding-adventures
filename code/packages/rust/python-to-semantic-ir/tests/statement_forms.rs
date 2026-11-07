@@ -925,3 +925,27 @@ fn single_subscript_evaluates_value_before_index() {
         other => panic!("expected [LetStarBinding, SeqSet], got {other:?}"),
     }
 }
+
+/// Decorated functions are refused with a positioned error (#18496 item 6, #18482 item 1).
+#[test]
+fn decorated_function_is_refused() {
+    let err = refuse("@my_decorator\ndef f():\n    return 1\n");
+    assert!(err.message.contains("decorated function"), "{err}");
+    assert_eq!(err.line, 1);
+}
+
+/// Decorated nested functions are refused with a positioned error.
+#[test]
+fn decorated_nested_function_is_refused() {
+    let err = refuse("def outer():\n    @inner_dec\n    def inner():\n        return 1\n    return inner()\n");
+    assert!(err.message.contains("decorated function"), "{err}");
+    assert_eq!(err.line, 2);
+}
+
+/// Decorated methods inside classes are refused with a positioned error (#18496 item 6).
+#[test]
+fn decorated_method_is_refused() {
+    let err = refuse("class C:\n    @property\n    def value(self):\n        return 42\n");
+    assert!(err.message.contains("decorated method"), "{err}");
+    assert_eq!(err.line, 2);
+}

@@ -969,6 +969,15 @@ impl Lowerer {
         }
         // Only `statement` nodes carry defs; recurse structurally.
         if let Some(def) = self.as_def_stmt(stmt) {
+            // Function decorators (`@dec\ndef f(): ...`) are not yet lowered to
+            // decorator applications. Reject with a positioned error rather than
+            // silently dropping the decorator (#18496 item 6, #18482 item 1).
+            if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
+                return Err(self.err_at(
+                    def,
+                    "unsupported: decorated function (deferred)".to_string(),
+                ));
+            }
             let name = self.def_name(def)?;
             // Every `def`, nested or not, is lifted into one module-level
             // namespace, and `DefFacts` / `fn_captures` are keyed by name.
@@ -2123,6 +2132,15 @@ impl Lowerer {
                     "unsupported: class body statement other than `def` (deferred)".to_string(),
                 )
             })?;
+            // Method decorators (`@property`, `@staticmethod`, etc.) are not yet
+            // lowered. Reject with a positioned error rather than silently
+            // dropping the decorator (#18496 item 6).
+            if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
+                return Err(self.err_at(
+                    def,
+                    "unsupported: decorated method (deferred)".to_string(),
+                ));
+            }
             stmts.push(self.lower_method_registration(&name, def, depth)?);
         }
 
@@ -2150,6 +2168,12 @@ impl Lowerer {
         def: &GrammarASTNode,
         depth: usize,
     ) -> Result<Stmt, PythonLowerError> {
+        if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
+            return Err(self.err_at(
+                def,
+                "unsupported: decorated method (deferred)".to_string(),
+            ));
+        }
         let py_name = self.def_name(def)?;
         let sir_method_name = if py_name == "__init__" {
             "initialize".to_string()
@@ -2649,6 +2673,12 @@ impl Lowerer {
         enclosing: &mut FunctionCtx,
         depth: usize,
     ) -> Result<Expr, PythonLowerError> {
+        if child_nodes(def).iter().any(|n| n.rule_name == "decorator") {
+            return Err(self.err_at(
+                def,
+                "unsupported: decorated function (deferred)".to_string(),
+            ));
+        }
         let name = self.def_name(def)?;
         // Resolve `(name, optional default-CST)` for each parameter, then
         // lower every default **in the enclosing scope** (Python evaluates
