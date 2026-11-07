@@ -358,6 +358,34 @@ describe("arithmetic", () => {
       expect((e as Error).message).toBe("divided by 0");
     }
   });
+
+  // ── Floored modulo `%` (#18496 item 2) ─────────────────────────────────
+
+  it("mod computes floored modulo across all sign combinations", () => {
+    expect(sir.mod(7, 3)).toBe(1);
+    expect(sir.mod(-7, 3)).toBe(2);
+    expect(sir.mod(7, -3)).toBe(-2);
+    expect(sir.mod(-7, -3)).toBe(-1);
+    expect(sir.mod(6, 3)).toBe(0);
+    expect(sir.mod(-6, 3)).toBe(0);
+  });
+
+  it("mod dispatches through callBuiltin('%', ...)", () => {
+    expect(sir.callBuiltin("%", [7, 3])).toBe(1);
+    expect(sir.callBuiltin("%", [-7, 3])).toBe(2);
+    expect(sir.callBuiltin("%", [7, -3])).toBe(-2);
+    expect(sir.callBuiltin("%", [-7, -3])).toBe(-1);
+  });
+
+  it("mod by zero raises a typed ZeroDivisionError", () => {
+    expect(() => sir.mod(1, 0)).toThrow(SirError);
+    try {
+      sir.mod(1, 0);
+    } catch (e) {
+      expect((e as InstanceType<typeof SirError>).sirClass).toBe("ZeroDivisionError");
+      expect((e as Error).message).toBe("divided by 0");
+    }
+  });
 });
 
 describe("polymorphic + (string/array concat)", () => {

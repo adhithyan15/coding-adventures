@@ -313,6 +313,12 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "def main():\n    return 1\n\ndef g():\n    __py_main = 5\n    return main() * 10 + __py_main\n\nprint(g())\n",
         "15",
     ),
+    // ── floored modulo `%` across all signs (#18496 item 2) ───────────
+    (
+        "py_mod_signs",
+        "print(7 % 3)\nprint(-7 % 3)\nprint(7 % -3)\nprint(-7 % -3)\n",
+        "1\n2\n-2\n-1",
+    ),
 ];
 
 /// `(program, backend, why)`: cells that fail for a reason outside what

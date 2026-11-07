@@ -315,6 +315,17 @@ def true_div(a: Any, b: Any) -> Any:
         raise_error("ZeroDivisionError", "divided by 0")
 
 
+def mod(a: Any, b: Any) -> Any:
+    """Floored binary modulo — matches Python and Ruby `%`.
+
+    Raises :class:`ZeroDivisionError` on a zero divisor.
+    """
+    try:
+        return a % b
+    except ZeroDivisionError:
+        raise_error("ZeroDivisionError", "divided by 0")
+
+
 def lt(a: Any, b: Any) -> bool:
     """Less-than."""
     return bool(a < b)

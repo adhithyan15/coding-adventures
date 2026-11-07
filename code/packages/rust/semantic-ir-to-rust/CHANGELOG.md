@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — Floored binary `%` operator (#18496 item 2)
+
+- **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `__sir::modulo`
+  in `emit_builtin_call` (and `call_builtin_by_name`). It computes floored modulo
+  matching Python and Ruby semantics, avoiding `i64::MIN % -1` integer overflow panic.
+- **ZeroDivisionError.** Modulo by zero raises a typed `ZeroDivisionError: divided by 0`.
+
+
 ## Unreleased — Python display convention for booleans and None (#18496 item 1)
 
 - **Python display convention.** When `source_language == Some("python")`,

@@ -339,7 +339,17 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
     return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
   }
   function mod(a, b) {
-    const r = numOf(a) % numOf(b);
+    const an = numOf(a), bn = numOf(b);
+    if (bn === 0) {
+      raiseError("ZeroDivisionError", "divided by 0");
+    }
+    let r = an % bn;
+    if (r !== 0 && ((r < 0) !== (bn < 0))) {
+      r += bn;
+    }
+    if (r === 0) {
+      r = 0;
+    }
     return (isFloat(a) || isFloat(b)) ? mkFloat(r) : r;
   }
   // Equality is Ruby `==`: by VALUE for numbers, STRUCTURAL for composites.

@@ -3532,6 +3532,7 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         // `utdiv` -> `div_trunc`/`udiv_trunc` below).
         "tmod" => ("_sir_itmod", 2),
         "utmod" => ("_sir_utmod", 2),
+        "%" => ("_sir_mod", 2),
         // SIR21 T3b-2: `div_trunc`/`udiv_trunc` are `tdiv`/`utdiv` under
         // their new canonical names (same `_sir_itdiv`/`_sir_utdiv` helpers,
         // zero behaviour change). The old bare `"tdiv"`/`"utdiv"` dispatch

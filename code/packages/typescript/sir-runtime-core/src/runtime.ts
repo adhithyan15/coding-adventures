@@ -10,7 +10,7 @@
  *   value; `callBuiltin` looks one up by SIR name.
  */
 
-import { add, div, gt, lt, mul, shiftLeft, sub, trueDiv, truncDiv } from "./arithmetic.js";
+import { add, div, gt, lt, mod, mul, shiftLeft, sub, trueDiv, truncDiv } from "./arithmetic.js";
 import { car, cdr, cons, isPair } from "./pairs.js";
 import { Sym } from "./symbols.js";
 import { eq, isNull, isNumber, isSymbol, toDisplay } from "./values.js";
@@ -214,6 +214,7 @@ const builtins: Record<string, (...args: Val[]) => Val> = Object.assign(Object.c
   "-": sub,
   "*": mul,
   "/": div,
+  "%": mod,
   // SIR21 T3b-2: `div_floor` is a bare alias for `div` (a documented,
   // pre-existing limitation — see `div`'s own doc comment in
   // `arithmetic.ts` for why it is NOT fixed here). `div_trunc`/

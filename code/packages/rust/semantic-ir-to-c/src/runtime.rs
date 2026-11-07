@@ -512,6 +512,37 @@ SirValue _sir_utmod(SirValue a, SirValue b) {
     return _sir_int((int64_t)((uint64_t)a.as.i % (uint64_t)b.as.i));
 }
 
+/* Floored binary modulo (`%`).  Matches Python and Ruby `%` semantics:
+ * remainder has the sign of the divisor `b` (or 0).
+ * Division by zero raises `ZeroDivisionError`.
+ * Avoids INT64_MIN % -1 UB (returns 0).
+ * Uses `tr + b` to adjust truncating remainder without multiply overflow. */
+SirValue _sir_mod(SirValue a, SirValue b) {
+    if (a.tag == SIR_INT && b.tag == SIR_INT) {
+        int64_t ai = a.as.i, bi = b.as.i;
+        if (bi == 0) {
+            return _sir_raise(_sir_error("ZeroDivisionError", _sir_str("divided by 0")));
+        }
+        if (bi == -1) {
+            return _sir_int(0);
+        }
+        int64_t tr = ai % bi;
+        if (tr != 0 && ((tr < 0) != (bi < 0))) {
+            tr += bi;
+        }
+        return _sir_int(tr);
+    }
+    {
+        double ad = _sir_as_num(a), bd = _sir_as_num(b);
+        if (bd == 0.0) {
+            return _sir_raise(_sir_error("ZeroDivisionError", _sir_str("divided by 0")));
+        }
+        double q = floor(ad / bd);
+        double r = ad - q * bd;
+        return _sir_float(r);
+    }
+}
+
 /* SIR21 T3b-2: true (float) division -- always coerces both operands to
  * double and divides, regardless of operand tag (unlike `_sir_divide_v`,
  * which floors when both operands happen to be Int -- that's `div_floor`'s
@@ -4135,6 +4166,7 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "u>>") == 0)      return _sir_lshr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "tmod") == 0)     return _sir_itmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "utmod") == 0)    return _sir_utmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
+    if (strcmp(name, "%") == 0)        return _sir_mod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     /* SIR21 T3b-2: div_floor is `_sir_divide_v` under a new name (identical
        floor-int/true-divide-float dispatch, zero new logic). div_trunc/
        udiv_trunc are the OLD `tdiv`/`utdiv` names under their new canonical

@@ -679,6 +679,38 @@ func _sir_true_div(args []Value) Value {
 	return a / b
 }
 
+// Floored binary modulo (`%`).  Matches Python and Ruby `%`:
+// remainder has the sign of the divisor (or 0).
+// Division by zero raises `ZeroDivisionError`.
+// Avoids `math.MinInt64 % -1` integer overflow panic.
+func _sir_mod(args []Value) Value {
+	if len(args) < 2 {
+		return int64(0)
+	}
+	if _sir_any_float(args) {
+		a := _sir_as_float(args[0])
+		b := _sir_as_float(args[1])
+		if b == 0.0 {
+			panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+		}
+		q := math.Floor(a / b)
+		return a - q*b
+	}
+	a := _sir_as_int(args[0])
+	b := _sir_as_int(args[1])
+	if b == 0 {
+		panic(_sir_new_error("ZeroDivisionError", Value("divided by 0")))
+	}
+	if b == -1 {
+		return int64(0)
+	}
+	r := a % b
+	if r != 0 && (r < 0) != (b < 0) {
+		r += b
+	}
+	return r
+}
+
 func _sir_eq(args []Value) Value {
 	if len(args) < 2 {
 		return true
@@ -1465,6 +1497,8 @@ func _sir_call_builtin_by_name(name string, args []Value) Value {
 		return _sir_utrunc_div(args)
 	case "div_true":
 		return _sir_true_div(args)
+	case "%":
+		return _sir_mod(args)
 	case "neg":
 		return _sir_neg(args)
 	case "not":

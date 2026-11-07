@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Floored binary `%` operator (#18496 item 2)
+
+- **Floored binary `%`.** `BuiltinCall("%", [lhs, rhs])` now routes through `_sir_mod`
+  in `emit_builtin_call`. Emitted runtime preamble imports `mod as _sir_mod` from
+  `coding_adventures_sir_runtime_core`.
+
+
 ## Unreleased — Python display convention for booleans and None (#18496 item 1)
 
 - **Python display convention.** When `source_language == Some("python")`,
