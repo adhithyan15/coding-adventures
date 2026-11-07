@@ -20,11 +20,11 @@ from __future__ import annotations
 from .arithmetic import (
     add,
     div,
-    mod,
     ge,
     gt,
     le,
     lt,
+    mod,
     mul,
     shift_left,
     sub,
