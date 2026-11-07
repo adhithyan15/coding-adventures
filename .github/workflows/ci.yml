@@ -1663,7 +1663,7 @@ jobs:
       matrix:
         include:
           - host: linux
-            os: ubuntu-latest
+            os: ubuntu-24.04
           - host: macos
             os: macos-latest
           - host: windows
