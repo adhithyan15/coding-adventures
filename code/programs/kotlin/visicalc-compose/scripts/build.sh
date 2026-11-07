@@ -25,6 +25,10 @@
 
 set -euo pipefail
 
+if [ -d "$HOME/.cargo/bin" ] && ! command -v cargo >/dev/null 2>&1; then
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEMO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(cd "$DEMO_DIR/../../../.." && pwd)"
@@ -137,6 +141,7 @@ RUST="$REPO_ROOT/code/packages/rust"
 mkdir -p "$DEMO_DIR/native"
 case "$(uname -s)" in
   Darwin) LIB="libspreadsheet_capi.dylib" ;;
+  MINGW*|MSYS*|CYGWIN*) LIB="spreadsheet_capi.dll" ;;
   *)      LIB="libspreadsheet_capi.so" ;;
 esac
 cp "$RUST/target/release/$LIB" "$DEMO_DIR/native/$LIB"
@@ -150,6 +155,7 @@ case "$(uname -s)-$(uname -m)" in
   Darwin-x86_64) TARGET_DIR="macos-x64" ;;
   Linux-x86_64)  TARGET_DIR="linux-x64" ;;
   Linux-aarch64) TARGET_DIR="linux-arm64" ;;
+  MINGW*-x86_64|MSYS*-x86_64|CYGWIN*-x86_64) TARGET_DIR="windows-x64" ;;
   *)             TARGET_DIR="" ;;
 esac
 if [ -n "$TARGET_DIR" ]; then
