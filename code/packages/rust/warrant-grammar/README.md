@@ -51,9 +51,22 @@ use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
 let ast = parse_document(&tokens, &source, ParserLimits::default()).unwrap();
 ```
 
-Source admission, layout capture, grammar data and syntax acceptance do not
-establish type/binding validation, solvers, Rust generation, proof or release
-authorization (VER-P007+).
+The additive [VER04d type-checking and binding stage](../../../specs/VER04d-warrant-type-system.md)
+performs semantic analysis, scope resolution, cycle detection, static type checking,
+and host-language binding schema verification. It enforces strict subtyping (`Nat <: Int`,
+`Bytes<N> <: Bytes`), exhaustive pattern matching, operation contracts (`labels`, `bound`,
+`input`, `assume`), and stable diagnostics (`W0201`..`W0602`):
+
+```rust
+use coding_adventures_warrant_grammar::checker::check_warrant;
+use coding_adventures_warrant_grammar::binding::{validate_bindings, BindingManifest};
+
+let checked = check_warrant(&ast).unwrap();
+validate_bindings(&checked, &manifest).unwrap();
+```
+
+Source admission, layout capture, grammar data, parser and type checking do not
+establish solvers, Rust test generation, proof or release authorization (VER-P008+).
 
 ## Tests and regeneration
 

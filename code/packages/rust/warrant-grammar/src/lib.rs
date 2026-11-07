@@ -15,6 +15,8 @@ mod _parser;
 #[rustfmt::skip]
 mod _tokens;
 
+pub mod binding;
+pub mod checker;
 pub mod layout;
 pub mod parser;
 pub mod source;

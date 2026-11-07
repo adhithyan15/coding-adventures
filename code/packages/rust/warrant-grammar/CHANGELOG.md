@@ -2,6 +2,15 @@
 
 ## 0.1.0 — Unreleased
 
+- Add VER04d/P007 Warrant type checker and Rust binding schema: static type checking,
+  scope/symbol resolution, cycle detection on type aliases and pure model functions,
+  minimal subtyping (`Nat <: Int`, `Bytes<N> <: Bytes`), exhaustive match verification,
+  and contract validation (`labels`, `bound`, `input`, `assume`).
+- Enforce closed diagnostic codes (`W0201`, `W0202`, `W0203`, `W0301`, `W0401`, `W0501`, `W0502`, `W0602`)
+  and opaque error messages with zero input secret leakage.
+- Add closed host binding schema (`BindingManifest`, `OpBinding`) validating complete operation
+  coverage, fresh requirements, negative controls, and error normalizations.
+- Achieve ≥90% line and branch/region test coverage with zero third-party dependencies.
 - Add VER04c/P006b3 guarded Warrant source parser: typed AST construction conforming
   to `warrant.grammar`, strict recursion depth guard (`max_depth: 64`) preventing
   call-stack exhaustion (CWE-674), AST node quota (`max_nodes: 65,536`), and work limits.

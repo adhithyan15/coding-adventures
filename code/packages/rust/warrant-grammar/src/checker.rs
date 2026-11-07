@@ -1,0 +1,2060 @@
+//! # Warrant Type Checker and Semantic Analysis (VER04d / VER-P007)
+//!
+//! Enforces scope rules, namespace separation, forward-reference resolution,
+//! acyclic model definitions, strict subtyping (Nat <: Int, Bytes<N> <: Bytes),
+//! operator typing, exhaustive matches, contract admissibility, and stable diagnostics
+//! (`W0201`, `W0202`, `W0203`, `W0301`, `W0401`, `W0602`).
+
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
+use std::fmt;
+
+use crate::parser::{
+    AssumptionsDecl, BinaryOp, BoundDecl, Declaration, Expression, InputDecl, LabelsDecl, Literal,
+    MatchArm, ModelDecl, OpDecl, Pattern, QualifiedName, TypeExpr, UnaryOp, WarrantFile, Width,
+};
+
+/// Defensive limits for semantic checking.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CheckerLimits {
+    pub max_work: usize,
+    pub max_depth: usize,
+}
+
+impl Default for CheckerLimits {
+    fn default() -> Self {
+        Self {
+            max_work: 1_000_000,
+            max_depth: 64,
+        }
+    }
+}
+
+/// Closed diagnostic failure codes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DiagnosticCode {
+    /// W0201: Duplicate symbol / test identity / contract declaration.
+    W0201,
+    /// W0202: Unbound or ambiguous name.
+    W0202,
+    /// W0203: Cyclic model / alias dependency or prohibited shadowing.
+    W0203,
+    /// W0301: Type, arity, width, constructor or match-exhaustiveness error.
+    W0301,
+    /// W0401: Missing or invalid input, bound, label or assumption contract.
+    W0401,
+    /// W0402: Hostile-input assumption, secrecy downgrade or ambiguous rejection.
+    W0402,
+    /// W0501: Invalid/missing export binding, constructor/observer or static instantiation.
+    W0501,
+    /// W0502: Failed binding negative control or fresh-output requirement.
+    W0502,
+    /// W0602: Incomplete mandatory solver/analyzer/observer evidence; budget exhaustion.
+    W0602,
+}
+
+impl fmt::Display for DiagnosticCode {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::W0201 => write!(f, "W0201"),
+            Self::W0202 => write!(f, "W0202"),
+            Self::W0203 => write!(f, "W0203"),
+            Self::W0301 => write!(f, "W0301"),
+            Self::W0401 => write!(f, "W0401"),
+            Self::W0402 => write!(f, "W0402"),
+            Self::W0501 => write!(f, "W0501"),
+            Self::W0502 => write!(f, "W0502"),
+            Self::W0602 => write!(f, "W0602"),
+        }
+    }
+}
+
+/// Detailed error reason without leaking secret inputs.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CheckerErrorKind {
+    DuplicateSymbol(String),
+    DuplicateTestName(String),
+    DuplicateParameter(String),
+    DuplicateContract(String),
+    UnboundName(String),
+    UnboundType(String),
+    UnboundConstructor(String),
+    CyclicDependency(String),
+    ShadowedBinding(String),
+    TypeMismatch {
+        expected: String,
+        actual: String,
+    },
+    ArityMismatch {
+        expected: usize,
+        actual: usize,
+    },
+    IncompatibleBranches {
+        then_type: String,
+        else_type: String,
+    },
+    IncompatibleMatchArms,
+    NonExhaustiveMatch,
+    ModelCallsOperation(String),
+    InvalidBoundExpression,
+    InvalidContract(String),
+    MissingContract(String),
+    MissingBinding(String),
+    UnknownBoundOperation(String),
+    InvalidErrorNormalization(String),
+    MissingNegativeControl(String),
+    MissingFreshRequirement(String),
+    WorkBudgetExceeded,
+    DepthBudgetExceeded,
+}
+
+/// Semantic checking error with source span.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CheckerError {
+    pub code: DiagnosticCode,
+    pub kind: CheckerErrorKind,
+    pub span: (usize, usize),
+}
+
+impl fmt::Display for CheckerError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}: {:?}", self.code, self.kind)
+    }
+}
+
+impl std::error::Error for CheckerError {}
+
+/// Semantic types supported in the Warrant pure v0 profile.
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum Type {
+    Bool,
+    Int,
+    Nat,
+    U8,
+    U64,
+    Bytes,
+    FixedBytes(u64),
+    FixedBytesParam(String),
+    List(Box<Type>),
+    Option(Box<Type>),
+    Result(Box<Type>, String), // String is declared error type name
+    ErrorVariant(String),      // Specific nominal error variant
+}
+
+impl Type {
+    /// Format type representation for error messages.
+    pub fn display_name(&self) -> String {
+        match self {
+            Self::Bool => "Bool".to_string(),
+            Self::Int => "Int".to_string(),
+            Self::Nat => "Nat".to_string(),
+            Self::U8 => "U8".to_string(),
+            Self::U64 => "U64".to_string(),
+            Self::Bytes => "Bytes".to_string(),
+            Self::FixedBytes(n) => format!("Bytes<{n}>"),
+            Self::FixedBytesParam(p) => format!("Bytes<{p}>"),
+            Self::List(inner) => format!("List<{}>", inner.display_name()),
+            Self::Option(inner) => format!("Option<{}>", inner.display_name()),
+            Self::Result(inner, err) => format!("Result<{}, {err}>", inner.display_name()),
+            Self::ErrorVariant(v) => format!("ErrorVariant({v})"),
+        }
+    }
+
+    /// Checks if a value of type `self` can be supplied where `target` is expected.
+    /// Strict subtyping rules in v0:
+    /// - Nat <: Int
+    /// - Bytes<N> <: Bytes
+    pub fn is_assignable_to(&self, target: &Type) -> bool {
+        if self == target {
+            return true;
+        }
+        match (self, target) {
+            (Type::Nat, Type::Int) => true,
+            (Type::FixedBytes(_), Type::Bytes) => true,
+            (Type::FixedBytesParam(_), Type::Bytes) => true,
+            (Type::List(a), Type::List(b)) => a == b,
+            (Type::Option(a), Type::Option(b)) => a.is_assignable_to(b),
+            (Type::Result(ok_a, err_a), Type::Result(ok_b, err_b)) => {
+                err_a == err_b && ok_a.is_assignable_to(ok_b)
+            }
+            _ => false,
+        }
+    }
+
+    /// Computes the least upper bound (common supertype) under widening.
+    pub fn common_type(a: &Type, b: &Type) -> Option<Type> {
+        if a == b {
+            return Some(a.clone());
+        }
+        match (a, b) {
+            (Type::Nat, Type::Int) | (Type::Int, Type::Nat) => Some(Type::Int),
+            (Type::FixedBytes(_), Type::Bytes) | (Type::Bytes, Type::FixedBytes(_)) => {
+                Some(Type::Bytes)
+            }
+            (Type::FixedBytesParam(_), Type::Bytes) | (Type::Bytes, Type::FixedBytesParam(_)) => {
+                Some(Type::Bytes)
+            }
+            (Type::FixedBytes(_), Type::FixedBytes(_)) => Some(Type::Bytes),
+            (Type::FixedBytesParam(_), Type::FixedBytesParam(_)) => Some(Type::Bytes),
+            (Type::Option(inner_a), Type::Option(inner_b)) => {
+                Self::common_type(inner_a, inner_b).map(|t| Type::Option(Box::new(t)))
+            }
+            (Type::Result(ok_a, err_a), Type::Result(ok_b, err_b)) if err_a == err_b => {
+                Self::common_type(ok_a, ok_b).map(|t| Type::Result(Box::new(t), err_a.clone()))
+            }
+            _ => None,
+        }
+    }
+}
+
+/// Checked operation metadata.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CheckedOp {
+    pub name: String,
+    pub static_params: Vec<String>,
+    pub params: Vec<(String, Type)>,
+    pub return_type: Type,
+    pub is_fresh: bool,
+    pub span: (usize, usize),
+}
+
+/// Checked pure model metadata.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CheckedModel {
+    pub name: String,
+    pub params: Vec<(String, Type)>,
+    pub target_type: Type,
+    pub body_type: Type,
+    pub span: (usize, usize),
+}
+
+/// Checked error definition metadata.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CheckedError {
+    pub name: String,
+    pub variants: BTreeSet<String>,
+    pub span: (usize, usize),
+}
+
+/// Successfully checked Warrant module.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CheckedWarrantModule {
+    pub module_name: String,
+    pub type_aliases: BTreeMap<String, Type>,
+    pub errors: BTreeMap<String, CheckedError>,
+    pub models: BTreeMap<String, CheckedModel>,
+    pub operations: BTreeMap<String, CheckedOp>,
+    pub examples: Vec<String>,
+    pub claims: Vec<String>,
+}
+
+/// State tracking for semantic checking.
+pub struct Checker<'a> {
+    file: &'a WarrantFile<'a>,
+    limits: CheckerLimits,
+    work_count: usize,
+    depth: usize,
+
+    // Module namespace symbols
+    type_aliases: BTreeMap<String, TypeExpr<'a>>,
+    resolved_aliases: BTreeMap<String, Type>,
+    errors: BTreeMap<String, (BTreeSet<String>, (usize, usize))>,
+    models: BTreeMap<String, &'a ModelDecl<'a>>,
+    operations: BTreeMap<String, &'a OpDecl<'a>>,
+
+    // Test namespace symbols
+    test_symbols: HashSet<String>,
+
+    // Contracts
+    labels: BTreeMap<String, &'a LabelsDecl<'a>>,
+    bounds: BTreeMap<String, &'a BoundDecl<'a>>,
+    inputs: BTreeMap<String, &'a InputDecl<'a>>,
+}
+
+impl<'a> Checker<'a> {
+    pub fn new(file: &'a WarrantFile<'a>, limits: CheckerLimits) -> Self {
+        Self {
+            file,
+            limits,
+            work_count: 0,
+            depth: limits.max_depth,
+            type_aliases: BTreeMap::new(),
+            resolved_aliases: BTreeMap::new(),
+            errors: BTreeMap::new(),
+            models: BTreeMap::new(),
+            operations: BTreeMap::new(),
+            test_symbols: HashSet::new(),
+            labels: BTreeMap::new(),
+            bounds: BTreeMap::new(),
+            inputs: BTreeMap::new(),
+        }
+    }
+
+    fn charge_work(&mut self, span: (usize, usize)) -> Result<(), CheckerError> {
+        self.work_count += 1;
+        if self.work_count > self.limits.max_work {
+            return Err(CheckerError {
+                code: DiagnosticCode::W0602,
+                kind: CheckerErrorKind::WorkBudgetExceeded,
+                span,
+            });
+        }
+        Ok(())
+    }
+
+    fn enter_scope<F, R>(&mut self, span: (usize, usize), f: F) -> Result<R, CheckerError>
+    where
+        F: FnOnce(&mut Self) -> Result<R, CheckerError>,
+    {
+        if self.depth == 0 {
+            return Err(CheckerError {
+                code: DiagnosticCode::W0602,
+                kind: CheckerErrorKind::DepthBudgetExceeded,
+                span,
+            });
+        }
+        self.depth -= 1;
+        let res = f(self);
+        self.depth += 1;
+        res
+    }
+
+    /// Primary entry point: perform all checking passes.
+    pub fn check(mut self) -> Result<CheckedWarrantModule, CheckerError> {
+        // Pass 1: Catalog declarations into namespaces and detect duplicates
+        self.catalog_declarations()?;
+
+        // Pass 2: Resolve type aliases and detect cycles among types
+        self.resolve_type_aliases()?;
+
+        // Pass 3: Validate model function dependencies (must be acyclic and not call operations)
+        self.validate_model_dependencies()?;
+
+        // Pass 4: Type-check model function bodies
+        let checked_models = self.typecheck_models()?;
+
+        // Pass 5: Type-check examples and claims
+        self.typecheck_examples_and_claims()?;
+
+        // Pass 6: Check contracts (labels, bounds, inputs, assumptions)
+        self.check_contracts()?;
+
+        // Construct CheckedWarrantModule
+        let mut checked_errors = BTreeMap::new();
+        for (name, (variants, span)) in &self.errors {
+            checked_errors.insert(
+                name.clone(),
+                CheckedError {
+                    name: name.clone(),
+                    variants: variants.clone(),
+                    span: *span,
+                },
+            );
+        }
+
+        let mut checked_ops = BTreeMap::new();
+        for (name, op) in &self.operations {
+            let mut static_params = Vec::new();
+            for sp in &op.static_params {
+                static_params.push(sp.name.to_string());
+            }
+            let mut params = Vec::new();
+            for p in &op.params {
+                let ty = self.resolve_type(&p.param_type, &static_params)?;
+                params.push((p.name.to_string(), ty));
+            }
+            let return_type = self.resolve_type(&op.return_type, &static_params)?;
+            checked_ops.insert(
+                name.clone(),
+                CheckedOp {
+                    name: name.clone(),
+                    static_params,
+                    params,
+                    return_type,
+                    is_fresh: op.is_fresh,
+                    span: op.span,
+                },
+            );
+        }
+
+        let mut examples = Vec::new();
+        let mut claims = Vec::new();
+        for decl in &self.file.declarations {
+            match decl {
+                Declaration::Example(e) => examples.push(e.name.to_string()),
+                Declaration::Claim(c) => claims.push(c.name.to_string()),
+                _ => {}
+            }
+        }
+
+        Ok(CheckedWarrantModule {
+            module_name: self.file.name.to_string(),
+            type_aliases: self.resolved_aliases,
+            errors: checked_errors,
+            models: checked_models,
+            operations: checked_ops,
+            examples,
+            claims,
+        })
+    }
+
+    // ── Pass 1: Catalog Declarations ────────────────────────────────────────
+
+    fn catalog_declarations(&mut self) -> Result<(), CheckerError> {
+        let mut module_symbols = HashSet::new();
+
+        // Built-in types and callables reserved in module symbol namespace
+        let builtins = [
+            "Bool", "Int", "Nat", "U8", "U64", "Bytes", "List", "Option", "Result", "len", "at",
+            "concat", "fixed", "div", "Some", "None", "Ok", "Err",
+        ];
+        for b in builtins {
+            module_symbols.insert(b.to_string());
+        }
+
+        for decl in &self.file.declarations {
+            self.charge_work((0, 0))?;
+            match decl {
+                Declaration::Model(m) => {
+                    if !module_symbols.insert(m.name.to_string()) {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateSymbol(m.name.to_string()),
+                            span: m.span,
+                        });
+                    }
+                    if m.body.is_none() {
+                        // Type alias: model Name = type
+                        self.type_aliases
+                            .insert(m.name.to_string(), m.target_type.clone());
+                    } else {
+                        // Pure model function: model Name(...) -> ... = expr
+                        self.models.insert(m.name.to_string(), m);
+                    }
+                }
+                Declaration::Error(e) => {
+                    if !module_symbols.insert(e.name.to_string()) {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateSymbol(e.name.to_string()),
+                            span: e.span,
+                        });
+                    }
+                    let mut variants = BTreeSet::new();
+                    for v in &e.variants {
+                        if !variants.insert(v.to_string()) {
+                            return Err(CheckerError {
+                                code: DiagnosticCode::W0201,
+                                kind: CheckerErrorKind::DuplicateSymbol(format!(
+                                    "{}.{}",
+                                    e.name, v
+                                )),
+                                span: e.span,
+                            });
+                        }
+                    }
+                    self.errors.insert(e.name.to_string(), (variants, e.span));
+                }
+                Declaration::Op(op) => {
+                    if !module_symbols.insert(op.name.to_string()) {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateSymbol(op.name.to_string()),
+                            span: op.span,
+                        });
+                    }
+                    self.operations.insert(op.name.to_string(), op);
+                }
+                Declaration::Example(ex) => {
+                    if !self.test_symbols.insert(ex.name.to_string()) {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateTestName(ex.name.to_string()),
+                            span: ex.span,
+                        });
+                    }
+                }
+                Declaration::Claim(cl) => {
+                    if !self.test_symbols.insert(cl.name.to_string()) {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateTestName(cl.name.to_string()),
+                            span: cl.span,
+                        });
+                    }
+                }
+                Declaration::Labels(lbl) => {
+                    if self.labels.insert(lbl.name.to_string(), lbl).is_some() {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateContract(format!(
+                                "labels {}",
+                                lbl.name
+                            )),
+                            span: lbl.span,
+                        });
+                    }
+                }
+                Declaration::Bound(bnd) => {
+                    if self.bounds.insert(bnd.name.to_string(), bnd).is_some() {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateContract(format!(
+                                "bound {}",
+                                bnd.name
+                            )),
+                            span: bnd.span,
+                        });
+                    }
+                }
+                Declaration::Input(inp) => {
+                    let target_name = inp.target.segments.join(".");
+                    if self.inputs.insert(target_name.clone(), inp).is_some() {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateContract(format!(
+                                "input {target_name}"
+                            )),
+                            span: inp.span,
+                        });
+                    }
+                }
+                Declaration::Assumptions(_) => {}
+            }
+        }
+        Ok(())
+    }
+
+    // ── Pass 2: Type Alias Resolution and Cycle Detection ──────────────────
+
+    fn resolve_type_aliases(&mut self) -> Result<(), CheckerError> {
+        let alias_names: Vec<String> = self.type_aliases.keys().cloned().collect();
+
+        // Detect dependency cycles among aliases using DFS
+        for name in &alias_names {
+            let mut visited = Vec::new();
+            self.check_alias_cycle(name, &mut visited)?;
+        }
+
+        // Topologically resolve all aliases
+        for name in &alias_names {
+            let raw_type = self.type_aliases.get(name).unwrap().clone();
+            let resolved = self.resolve_type(&raw_type, &[])?;
+            self.resolved_aliases.insert(name.clone(), resolved);
+        }
+
+        Ok(())
+    }
+
+    fn check_alias_cycle(&self, current: &str, path: &mut Vec<String>) -> Result<(), CheckerError> {
+        if let Some(pos) = path.iter().position(|x| x == current) {
+            let cycle = path[pos..].join(" -> ") + " -> " + current;
+            return Err(CheckerError {
+                code: DiagnosticCode::W0203,
+                kind: CheckerErrorKind::CyclicDependency(cycle),
+                span: (0, 0),
+            });
+        }
+
+        if let Some(ty_expr) = self.type_aliases.get(current) {
+            path.push(current.to_string());
+            let deps = self.collect_type_dependencies(ty_expr);
+            for dep in deps {
+                if self.type_aliases.contains_key(&dep) {
+                    self.check_alias_cycle(&dep, path)?;
+                }
+            }
+            path.pop();
+        }
+        Ok(())
+    }
+
+    fn collect_type_dependencies(&self, ty: &TypeExpr<'a>) -> Vec<String> {
+        let mut deps = Vec::new();
+        match ty {
+            TypeExpr::Named { name, .. } => deps.push((*name).to_string()),
+            TypeExpr::List { inner, .. } | TypeExpr::Option { inner, .. } => {
+                deps.extend(self.collect_type_dependencies(inner));
+            }
+            TypeExpr::Result {
+                ok_type, err_name, ..
+            } => {
+                deps.extend(self.collect_type_dependencies(ok_type));
+                deps.push((*err_name).to_string());
+            }
+            TypeExpr::Bytes { .. } => {}
+        }
+        deps
+    }
+
+    fn resolve_type(
+        &self,
+        ty: &TypeExpr<'a>,
+        static_params: &[String],
+    ) -> Result<Type, CheckerError> {
+        match ty {
+            TypeExpr::Named { name, span } => match *name {
+                "Bool" => Ok(Type::Bool),
+                "Int" => Ok(Type::Int),
+                "Nat" => Ok(Type::Nat),
+                "U8" => Ok(Type::U8),
+                "U64" => Ok(Type::U64),
+                "Bytes" => Ok(Type::Bytes),
+                other => {
+                    if let Some(resolved) = self.resolved_aliases.get(other) {
+                        return Ok(resolved.clone());
+                    }
+                    if let Some(raw) = self.type_aliases.get(other) {
+                        return self.resolve_type(raw, static_params);
+                    }
+                    if self.errors.contains_key(other) {
+                        return Ok(Type::ErrorVariant(other.to_string()));
+                    }
+                    Err(CheckerError {
+                        code: DiagnosticCode::W0202,
+                        kind: CheckerErrorKind::UnboundType(other.to_string()),
+                        span: *span,
+                    })
+                }
+            },
+            TypeExpr::Bytes { width, span } => match width {
+                None => Ok(Type::Bytes),
+                Some(Width::Literal(n)) => Ok(Type::FixedBytes(*n)),
+                Some(Width::Named(param)) => {
+                    if static_params.contains(&param.to_string()) {
+                        Ok(Type::FixedBytesParam(param.to_string()))
+                    } else {
+                        Err(CheckerError {
+                            code: DiagnosticCode::W0202,
+                            kind: CheckerErrorKind::UnboundName(param.to_string()),
+                            span: *span,
+                        })
+                    }
+                }
+            },
+            TypeExpr::List { inner, .. } => {
+                let inner_ty = self.resolve_type(inner, static_params)?;
+                Ok(Type::List(Box::new(inner_ty)))
+            }
+            TypeExpr::Option { inner, .. } => {
+                let inner_ty = self.resolve_type(inner, static_params)?;
+                Ok(Type::Option(Box::new(inner_ty)))
+            }
+            TypeExpr::Result {
+                ok_type,
+                err_name,
+                span,
+            } => {
+                let ok_ty = self.resolve_type(ok_type, static_params)?;
+                if !self.errors.contains_key(*err_name) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0202,
+                        kind: CheckerErrorKind::UnboundType((*err_name).to_string()),
+                        span: *span,
+                    });
+                }
+                Ok(Type::Result(Box::new(ok_ty), (*err_name).to_string()))
+            }
+        }
+    }
+
+    // ── Pass 3: Model Dependencies and Acyclic Validation ──────────────────
+
+    fn validate_model_dependencies(&mut self) -> Result<(), CheckerError> {
+        let model_names: Vec<String> = self.models.keys().cloned().collect();
+
+        // Build call graph for model functions
+        let mut call_graph: HashMap<String, HashSet<String>> = HashMap::new();
+        for (name, model) in &self.models {
+            let mut calls = HashSet::new();
+            if let Some(body) = &model.body {
+                self.collect_function_calls(body, &mut calls)?;
+            }
+            // Check if any model calls an operation (strictly forbidden in pure models!)
+            for called in &calls {
+                if self.operations.contains_key(called) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ModelCallsOperation(called.clone()),
+                        span: model.span,
+                    });
+                }
+            }
+            call_graph.insert(name.clone(), calls);
+        }
+
+        // Detect recursion or mutual recursion in model functions
+        for name in &model_names {
+            let mut visited = Vec::new();
+            self.check_model_cycle(name, &call_graph, &mut visited)?;
+        }
+
+        Ok(())
+    }
+
+    fn collect_function_calls(
+        &self,
+        expr: &Expression<'a>,
+        calls: &mut HashSet<String>,
+    ) -> Result<(), CheckerError> {
+        match expr {
+            Expression::Reference { name, args, .. } => {
+                if args.is_some() && name.segments.len() == 1 {
+                    calls.insert(name.segments[0].to_string());
+                }
+                if let Some(args_list) = args {
+                    for arg in args_list {
+                        self.collect_function_calls(arg, calls)?;
+                    }
+                }
+            }
+            Expression::Binary { left, right, .. } => {
+                self.collect_function_calls(left, calls)?;
+                self.collect_function_calls(right, calls)?;
+            }
+            Expression::Unary { operand, .. } | Expression::Grouped { inner: operand, .. } => {
+                self.collect_function_calls(operand, calls)?;
+            }
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                ..
+            } => {
+                self.collect_function_calls(condition, calls)?;
+                self.collect_function_calls(then_branch, calls)?;
+                self.collect_function_calls(else_branch, calls)?;
+            }
+            Expression::Match { target, arms, .. } => {
+                self.collect_function_calls(target, calls)?;
+                for arm in arms {
+                    self.collect_function_calls(&arm.body, calls)?;
+                }
+            }
+            Expression::Quantified { body, .. } => {
+                self.collect_function_calls(body, calls)?;
+            }
+            Expression::List { elements, .. } => {
+                for el in elements {
+                    self.collect_function_calls(el, calls)?;
+                }
+            }
+            Expression::Literal { .. } => {}
+        }
+        Ok(())
+    }
+
+    fn check_model_cycle(
+        &self,
+        current: &str,
+        graph: &HashMap<String, HashSet<String>>,
+        path: &mut Vec<String>,
+    ) -> Result<(), CheckerError> {
+        if let Some(pos) = path.iter().position(|x| x == current) {
+            let cycle = path[pos..].join(" -> ") + " -> " + current;
+            return Err(CheckerError {
+                code: DiagnosticCode::W0203,
+                kind: CheckerErrorKind::CyclicDependency(cycle),
+                span: (0, 0),
+            });
+        }
+
+        if let Some(neighbors) = graph.get(current) {
+            path.push(current.to_string());
+            for next in neighbors {
+                if self.models.contains_key(next) {
+                    self.check_model_cycle(next, graph, path)?;
+                }
+            }
+            path.pop();
+        }
+        Ok(())
+    }
+
+    // ── Pass 4: Type-Check Models ──────────────────────────────────────────
+
+    fn typecheck_models(&mut self) -> Result<BTreeMap<String, CheckedModel>, CheckerError> {
+        let mut checked_models = BTreeMap::new();
+        let model_decls: Vec<&ModelDecl<'a>> = self.models.values().copied().collect();
+
+        for model in model_decls {
+            let mut params = Vec::new();
+            let mut env: HashMap<String, Type> = HashMap::new();
+
+            for p in &model.params {
+                if env.contains_key(p.name) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0201,
+                        kind: CheckerErrorKind::DuplicateParameter(p.name.to_string()),
+                        span: p.span,
+                    });
+                }
+                let param_type = self.resolve_type(&p.param_type, &[])?;
+                env.insert(p.name.to_string(), param_type.clone());
+                params.push((p.name.to_string(), param_type));
+            }
+
+            let target_type = self.resolve_type(&model.target_type, &[])?;
+
+            if let Some(body) = &model.body {
+                let body_span = body_span(body);
+                let body_type = self.typecheck_expression(body, &env, Some(&target_type), false)?;
+                if !body_type.is_assignable_to(&target_type) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: target_type.display_name(),
+                            actual: body_type.display_name(),
+                        },
+                        span: body_span,
+                    });
+                }
+
+                checked_models.insert(
+                    model.name.to_string(),
+                    CheckedModel {
+                        name: model.name.to_string(),
+                        params,
+                        target_type,
+                        body_type,
+                        span: model.span,
+                    },
+                );
+            }
+        }
+
+        Ok(checked_models)
+    }
+
+    // ── Pass 5: Type-Check Examples and Claims ─────────────────────────────
+
+    fn typecheck_examples_and_claims(&mut self) -> Result<(), CheckerError> {
+        for decl in &self.file.declarations {
+            match decl {
+                Declaration::Example(ex) => {
+                    let env = HashMap::new();
+                    let ty = self.typecheck_expression(&ex.body, &env, Some(&Type::Bool), true)?;
+                    if ty != Type::Bool {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Bool".to_string(),
+                                actual: ty.display_name(),
+                            },
+                            span: ex.span,
+                        });
+                    }
+                }
+                Declaration::Claim(cl) => {
+                    let env = HashMap::new();
+                    let ty = self.typecheck_expression(&cl.body, &env, Some(&Type::Bool), true)?;
+                    if ty != Type::Bool {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Bool".to_string(),
+                                actual: ty.display_name(),
+                            },
+                            span: cl.span,
+                        });
+                    }
+                }
+                _ => {}
+            }
+        }
+        Ok(())
+    }
+
+    // ── Pass 6: Check Contracts ────────────────────────────────────────────
+
+    fn check_contracts(&mut self) -> Result<(), CheckerError> {
+        // Labels
+        for (op_name, lbl) in &self.labels {
+            let op = self.operations.get(op_name).ok_or(CheckerError {
+                code: DiagnosticCode::W0401,
+                kind: CheckerErrorKind::MissingContract(format!("Unknown op {op_name} in labels")),
+                span: lbl.span,
+            })?;
+
+            let op_param_names: HashSet<&str> = op.params.iter().map(|p| p.name).collect();
+            let mut labeled_params = HashSet::new();
+
+            for row in &lbl.rows {
+                let first_seg = row.name.segments[0];
+                if !op_param_names.contains(first_seg) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0401,
+                        kind: CheckerErrorKind::InvalidContract(format!(
+                            "Unknown parameter {first_seg} in labels for {op_name}"
+                        )),
+                        span: row.span,
+                    });
+                }
+                if row.name.segments.len() > 1 {
+                    let proj = row.name.segments[1];
+                    if proj != "contents" && proj != "length" {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0401,
+                            kind: CheckerErrorKind::InvalidContract(format!(
+                                "Invalid projection .{proj}, expected .contents or .length"
+                            )),
+                            span: row.span,
+                        });
+                    }
+                }
+                labeled_params.insert(first_seg);
+            }
+
+            // All operation parameters must have an explicit secrecy label
+            for param in &op.params {
+                if !labeled_params.contains(param.name) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0401,
+                        kind: CheckerErrorKind::MissingContract(format!(
+                            "Missing secrecy label for parameter {} in {}",
+                            param.name, op_name
+                        )),
+                        span: lbl.span,
+                    });
+                }
+            }
+        }
+
+        // Bounds
+        let bounds_list: Vec<&BoundDecl<'a>> = self.bounds.values().copied().collect();
+        for bnd in bounds_list {
+            let op_name = bnd.name;
+            let op = self.operations.get(op_name).ok_or(CheckerError {
+                code: DiagnosticCode::W0401,
+                kind: CheckerErrorKind::MissingContract(format!("Unknown op {op_name} in bound")),
+                span: bnd.span,
+            })?;
+
+            let mut env = HashMap::new();
+            for p in &op.params {
+                let ty = self.resolve_type(&p.param_type, &[])?;
+                env.insert(p.name.to_string(), ty);
+            }
+
+            for row in &bnd.rows {
+                if row.name != "steps" && row.name != "heap" && row.name != "depth" {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0401,
+                        kind: CheckerErrorKind::InvalidContract(format!(
+                            "Invalid bound metric {}, expected steps, heap, or depth",
+                            row.name
+                        )),
+                        span: row.span,
+                    });
+                }
+                let bound_ty =
+                    self.typecheck_expression(&row.bound, &env, Some(&Type::Int), false)?;
+                if !bound_ty.is_assignable_to(&Type::Int) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::InvalidBoundExpression,
+                        span: row.span,
+                    });
+                }
+            }
+        }
+
+        // Inputs
+        let inputs_list: Vec<&InputDecl<'a>> = self.inputs.values().copied().collect();
+        for inp in inputs_list {
+            let target_name = inp.target.segments.join(".");
+            let parts: Vec<&str> = target_name.split('.').collect();
+            if parts.len() != 2 {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0401,
+                    kind: CheckerErrorKind::InvalidContract(format!(
+                        "Invalid input target {target_name}"
+                    )),
+                    span: inp.span,
+                });
+            }
+            let (op_name, param_name) = (parts[0], parts[1]);
+            let (env, op_return_ty) = {
+                let op = self.operations.get(op_name).ok_or(CheckerError {
+                    code: DiagnosticCode::W0401,
+                    kind: CheckerErrorKind::MissingContract(format!(
+                        "Unknown op {op_name} in input"
+                    )),
+                    span: inp.span,
+                })?;
+
+                if !op.params.iter().any(|p| p.name == param_name) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0401,
+                        kind: CheckerErrorKind::MissingContract(format!(
+                            "Unknown parameter {param_name} in input for {op_name}"
+                        )),
+                        span: inp.span,
+                    });
+                }
+
+                let mut env = HashMap::new();
+                for p in &op.params {
+                    let ty = self.resolve_type(&p.param_type, &[])?;
+                    env.insert(p.name.to_string(), ty);
+                }
+                let ret_ty = self.resolve_type(&op.return_type, &[])?;
+                (env, ret_ty)
+            };
+
+            // Check rejections
+            for rej in &inp.rejections {
+                let cond_ty =
+                    self.typecheck_expression(&rej.condition, &env, Some(&Type::Bool), false)?;
+                if cond_ty != Type::Bool {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "Bool".to_string(),
+                            actual: cond_ty.display_name(),
+                        },
+                        span: rej.span,
+                    });
+                }
+
+                // Verify rejection error variant belongs to op's Result error type
+                if rej.error_variant.segments.len() != 2 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0401,
+                        kind: CheckerErrorKind::InvalidContract(
+                            "Rejection error must be ErrorType.CASE".to_string(),
+                        ),
+                        span: rej.span,
+                    });
+                }
+                let err_type_name = rej.error_variant.segments[0];
+                let err_case = rej.error_variant.segments[1];
+
+                match &op_return_ty {
+                    Type::Result(_, expected_err_name) => {
+                        if expected_err_name != err_type_name {
+                            return Err(CheckerError {
+                                code: DiagnosticCode::W0401,
+                                kind: CheckerErrorKind::InvalidContract(format!(
+                                    "Rejection error {err_type_name} does not match op return error type {expected_err_name}"
+                                )),
+                                span: rej.span,
+                            });
+                        }
+                    }
+                    _ => {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0401,
+                            kind: CheckerErrorKind::InvalidContract(format!(
+                                "Op {op_name} does not return Result, cannot declare rejects"
+                            )),
+                            span: rej.span,
+                        });
+                    }
+                }
+
+                let (variants, _) = self.errors.get(err_type_name).ok_or(CheckerError {
+                    code: DiagnosticCode::W0202,
+                    kind: CheckerErrorKind::UnboundType(err_type_name.to_string()),
+                    span: rej.span,
+                })?;
+
+                if !variants.contains(err_case) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0202,
+                        kind: CheckerErrorKind::UnboundConstructor(format!(
+                            "{err_type_name}.{err_case}"
+                        )),
+                        span: rej.span,
+                    });
+                }
+            }
+        }
+
+        // Assumptions
+        for decl in &self.file.declarations {
+            if let Declaration::Assumptions(AssumptionsDecl::Environment { rows, .. }) = decl {
+                let env = HashMap::new();
+                for row in rows {
+                    let ty = self.typecheck_expression(&row.expr, &env, Some(&Type::Bool), true)?;
+                    if ty != Type::Bool {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Bool".to_string(),
+                                actual: ty.display_name(),
+                            },
+                            span: row.span,
+                        });
+                    }
+                }
+            }
+        }
+
+        Ok(())
+    }
+
+    // ── Expression Type Checker ────────────────────────────────────────────
+
+    fn typecheck_expression(
+        &mut self,
+        expr: &Expression<'a>,
+        env: &HashMap<String, Type>,
+        expected: Option<&Type>,
+        allow_ops: bool,
+    ) -> Result<Type, CheckerError> {
+        let span = body_span(expr);
+        self.charge_work(span)?;
+
+        self.enter_scope(span, |this| match expr {
+            Expression::Literal { lit, span } => this.typecheck_literal(lit, expected, *span),
+            Expression::Reference {
+                name,
+                widths,
+                args,
+                span,
+            } => this.typecheck_reference(
+                name,
+                widths,
+                args.as_deref(),
+                env,
+                expected,
+                allow_ops,
+                *span,
+            ),
+            Expression::Grouped { inner, .. } => {
+                this.typecheck_expression(inner, env, expected, allow_ops)
+            }
+            Expression::Unary { op, operand, span } => {
+                let op_type = this.typecheck_expression(operand, env, None, allow_ops)?;
+                match op {
+                    UnaryOp::Neg => {
+                        if op_type == Type::Int || op_type == Type::Nat {
+                            Ok(Type::Int)
+                        } else {
+                            Err(CheckerError {
+                                code: DiagnosticCode::W0301,
+                                kind: CheckerErrorKind::TypeMismatch {
+                                    expected: "Int or Nat".to_string(),
+                                    actual: op_type.display_name(),
+                                },
+                                span: *span,
+                            })
+                        }
+                    }
+                    UnaryOp::Not => {
+                        if op_type == Type::Bool {
+                            Ok(Type::Bool)
+                        } else {
+                            Err(CheckerError {
+                                code: DiagnosticCode::W0301,
+                                kind: CheckerErrorKind::TypeMismatch {
+                                    expected: "Bool".to_string(),
+                                    actual: op_type.display_name(),
+                                },
+                                span: *span,
+                            })
+                        }
+                    }
+                }
+            }
+            Expression::Binary {
+                op,
+                left,
+                right,
+                span,
+            } => this.typecheck_binary(*op, left, right, env, allow_ops, *span),
+            Expression::Conditional {
+                condition,
+                then_branch,
+                else_branch,
+                span,
+            } => {
+                let cond_ty =
+                    this.typecheck_expression(condition, env, Some(&Type::Bool), allow_ops)?;
+                if cond_ty != Type::Bool {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "Bool".to_string(),
+                            actual: cond_ty.display_name(),
+                        },
+                        span: *span,
+                    });
+                }
+                let then_ty = this.typecheck_expression(then_branch, env, expected, allow_ops)?;
+                let else_ty = this.typecheck_expression(else_branch, env, expected, allow_ops)?;
+
+                Type::common_type(&then_ty, &else_ty).ok_or(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::IncompatibleBranches {
+                        then_type: then_ty.display_name(),
+                        else_type: else_ty.display_name(),
+                    },
+                    span: *span,
+                })
+            }
+            Expression::Match { target, arms, span } => {
+                this.typecheck_match(target, arms, env, expected, allow_ops, *span)
+            }
+            Expression::Quantified {
+                is_forall: _,
+                binders,
+                body,
+                span,
+            } => {
+                let mut local_env = env.clone();
+                for b in binders {
+                    if local_env.contains_key(b.name) {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0203,
+                            kind: CheckerErrorKind::ShadowedBinding(b.name.to_string()),
+                            span: b.span,
+                        });
+                    }
+                    let b_type = this.resolve_type(&b.param_type, &[])?;
+                    if let Some(refinement) = &b.refinement {
+                        let mut ref_env = local_env.clone();
+                        ref_env.insert(b.name.to_string(), b_type.clone());
+                        let ref_ty = this.typecheck_expression(
+                            refinement,
+                            &ref_env,
+                            Some(&Type::Bool),
+                            allow_ops,
+                        )?;
+                        if ref_ty != Type::Bool {
+                            return Err(CheckerError {
+                                code: DiagnosticCode::W0301,
+                                kind: CheckerErrorKind::TypeMismatch {
+                                    expected: "Bool".to_string(),
+                                    actual: ref_ty.display_name(),
+                                },
+                                span: b.span,
+                            });
+                        }
+                    }
+                    local_env.insert(b.name.to_string(), b_type);
+                }
+                let body_ty =
+                    this.typecheck_expression(body, &local_env, Some(&Type::Bool), allow_ops)?;
+                if body_ty != Type::Bool {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "Bool".to_string(),
+                            actual: body_ty.display_name(),
+                        },
+                        span: *span,
+                    });
+                }
+                Ok(Type::Bool)
+            }
+            Expression::List { elements, span } => {
+                if elements.is_empty() {
+                    if let Some(Type::List(inner)) = expected {
+                        return Ok(Type::List(inner.clone()));
+                    }
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "Non-empty list or contextual List<T>".to_string(),
+                            actual: "Empty list".to_string(),
+                        },
+                        span: *span,
+                    });
+                }
+                let elem_expected = match expected {
+                    Some(Type::List(inner)) => Some(inner.as_ref()),
+                    _ => None,
+                };
+                let first_ty =
+                    this.typecheck_expression(&elements[0], env, elem_expected, allow_ops)?;
+                let mut current_elem_ty = first_ty;
+                for el in &elements[1..] {
+                    let el_ty =
+                        this.typecheck_expression(el, env, Some(&current_elem_ty), allow_ops)?;
+                    current_elem_ty =
+                        Type::common_type(&current_elem_ty, &el_ty).ok_or_else(|| {
+                            CheckerError {
+                                code: DiagnosticCode::W0301,
+                                kind: CheckerErrorKind::TypeMismatch {
+                                    expected: current_elem_ty.display_name(),
+                                    actual: el_ty.display_name(),
+                                },
+                                span: *span,
+                            }
+                        })?;
+                }
+                Ok(Type::List(Box::new(current_elem_ty)))
+            }
+        })
+    }
+
+    fn typecheck_literal(
+        &mut self,
+        lit: &Literal<'a>,
+        expected: Option<&Type>,
+        _span: (usize, usize),
+    ) -> Result<Type, CheckerError> {
+        match lit {
+            Literal::Bool(_) => Ok(Type::Bool),
+            Literal::U8(_) => Ok(Type::U8),
+            Literal::U64(_) => Ok(Type::U64),
+            Literal::Int(_) => {
+                if let Some(Type::Nat) = expected {
+                    Ok(Type::Nat)
+                } else {
+                    Ok(Type::Int)
+                }
+            }
+            Literal::Bytes(hex) => {
+                let byte_len = (hex.len() / 2) as u64;
+                if let Some(Type::FixedBytes(n)) = expected {
+                    if byte_len == *n {
+                        return Ok(Type::FixedBytes(*n));
+                    }
+                }
+                Ok(Type::FixedBytes(byte_len))
+            }
+        }
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn typecheck_reference(
+        &mut self,
+        name: &QualifiedName<'a>,
+        widths: &[Width<'a>],
+        args: Option<&[Expression<'a>]>,
+        env: &HashMap<String, Type>,
+        expected: Option<&Type>,
+        allow_ops: bool,
+        span: (usize, usize),
+    ) -> Result<Type, CheckerError> {
+        // Multi-segment name: could be ErrorName.VARIANT
+        if name.segments.len() == 2 {
+            let (err_name, variant) = (name.segments[0], name.segments[1]);
+            if let Some((variants, _)) = self.errors.get(err_name) {
+                if variants.contains(variant) {
+                    return Ok(Type::ErrorVariant(format!("{err_name}.{variant}")));
+                } else {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0202,
+                        kind: CheckerErrorKind::UnboundConstructor(format!("{err_name}.{variant}")),
+                        span,
+                    });
+                }
+            }
+        }
+
+        let first = name.segments[0];
+
+        // 1. Check local environment binders
+        if let Some(ty) = env.get(first) {
+            if args.is_none() && widths.is_empty() {
+                return Ok(ty.clone());
+            }
+        }
+
+        // 2. Built-in constructors and functions
+        match first {
+            "Some" => {
+                let args = args.ok_or(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: 1,
+                        actual: 0,
+                    },
+                    span,
+                })?;
+                if args.len() != 1 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ArityMismatch {
+                            expected: 1,
+                            actual: args.len(),
+                        },
+                        span,
+                    });
+                }
+                let inner_expected = match expected {
+                    Some(Type::Option(inner)) => Some(inner.as_ref()),
+                    _ => None,
+                };
+                let inner_ty =
+                    self.typecheck_expression(&args[0], env, inner_expected, allow_ops)?;
+                return Ok(Type::Option(Box::new(inner_ty)));
+            }
+            "None" => {
+                if let Some(Type::Option(inner)) = expected {
+                    return Ok(Type::Option(inner.clone()));
+                }
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::TypeMismatch {
+                        expected: "Contextual Option<T>".to_string(),
+                        actual: "None".to_string(),
+                    },
+                    span,
+                });
+            }
+            "Ok" => {
+                let args = args.ok_or(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: 1,
+                        actual: 0,
+                    },
+                    span,
+                })?;
+                if args.len() != 1 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ArityMismatch {
+                            expected: 1,
+                            actual: args.len(),
+                        },
+                        span,
+                    });
+                }
+                let (inner_expected, err_name) = match expected {
+                    Some(Type::Result(inner, err)) => (Some(inner.as_ref()), err.clone()),
+                    _ => (None, "UnknownError".to_string()),
+                };
+                let inner_ty =
+                    self.typecheck_expression(&args[0], env, inner_expected, allow_ops)?;
+                return Ok(Type::Result(Box::new(inner_ty), err_name));
+            }
+            "Err" => {
+                let args = args.ok_or(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: 1,
+                        actual: 0,
+                    },
+                    span,
+                })?;
+                if args.len() != 1 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ArityMismatch {
+                            expected: 1,
+                            actual: args.len(),
+                        },
+                        span,
+                    });
+                }
+                let arg_ty = self.typecheck_expression(&args[0], env, None, allow_ops)?;
+                if let Type::ErrorVariant(ev) = arg_ty {
+                    let err_type = ev.split('.').next().unwrap_or(&ev).to_string();
+                    let ok_type = match expected {
+                        Some(Type::Result(ok, _)) => ok.clone(),
+                        _ => Box::new(Type::Bool),
+                    };
+                    return Ok(Type::Result(ok_type, err_type));
+                } else {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "ErrorVariant".to_string(),
+                            actual: arg_ty.display_name(),
+                        },
+                        span,
+                    });
+                }
+            }
+            "len" => {
+                let args = args.ok_or(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: 1,
+                        actual: 0,
+                    },
+                    span,
+                })?;
+                if args.len() != 1 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ArityMismatch {
+                            expected: 1,
+                            actual: args.len(),
+                        },
+                        span,
+                    });
+                }
+                let arg_ty = self.typecheck_expression(&args[0], env, None, allow_ops)?;
+                match arg_ty {
+                    Type::Bytes
+                    | Type::FixedBytes(_)
+                    | Type::FixedBytesParam(_)
+                    | Type::List(_) => {
+                        return Ok(Type::Nat);
+                    }
+                    _ => {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Bytes or List<T>".to_string(),
+                                actual: arg_ty.display_name(),
+                            },
+                            span,
+                        });
+                    }
+                }
+            }
+            "at" => {
+                let args = args.ok_or(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: 2,
+                        actual: 0,
+                    },
+                    span,
+                })?;
+                if args.len() != 2 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ArityMismatch {
+                            expected: 2,
+                            actual: args.len(),
+                        },
+                        span,
+                    });
+                }
+                let seq_ty = self.typecheck_expression(&args[0], env, None, allow_ops)?;
+                let idx_ty =
+                    self.typecheck_expression(&args[1], env, Some(&Type::Nat), allow_ops)?;
+                if !idx_ty.is_assignable_to(&Type::Nat) && idx_ty != Type::Int {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "Nat or Int".to_string(),
+                            actual: idx_ty.display_name(),
+                        },
+                        span,
+                    });
+                }
+                match seq_ty {
+                    Type::List(inner) => return Ok(Type::Option(inner)),
+                    Type::Bytes | Type::FixedBytes(_) | Type::FixedBytesParam(_) => {
+                        return Ok(Type::Option(Box::new(Type::U8)));
+                    }
+                    _ => {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Sequence (Bytes or List<T>)".to_string(),
+                                actual: seq_ty.display_name(),
+                            },
+                            span,
+                        });
+                    }
+                }
+            }
+            "concat" => {
+                let args = args.ok_or(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: 2,
+                        actual: 0,
+                    },
+                    span,
+                })?;
+                if args.len() != 2 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ArityMismatch {
+                            expected: 2,
+                            actual: args.len(),
+                        },
+                        span,
+                    });
+                }
+                let a_ty = self.typecheck_expression(&args[0], env, None, allow_ops)?;
+                let b_ty = self.typecheck_expression(&args[1], env, None, allow_ops)?;
+                match (&a_ty, &b_ty) {
+                    (Type::FixedBytes(m), Type::FixedBytes(n)) => {
+                        return Ok(Type::FixedBytes(m + n));
+                    }
+                    (Type::Bytes, Type::Bytes)
+                    | (Type::FixedBytes(_), Type::Bytes)
+                    | (Type::Bytes, Type::FixedBytes(_)) => {
+                        return Ok(Type::Bytes);
+                    }
+                    (Type::List(ia), Type::List(ib)) => {
+                        let common = Type::common_type(ia, ib).ok_or(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: ia.display_name(),
+                                actual: ib.display_name(),
+                            },
+                            span,
+                        })?;
+                        return Ok(Type::List(Box::new(common)));
+                    }
+                    _ => {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Matching sequences".to_string(),
+                                actual: format!("{}, {}", a_ty.display_name(), b_ty.display_name()),
+                            },
+                            span,
+                        });
+                    }
+                }
+            }
+            "fixed" => {
+                if widths.len() != 1 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ArityMismatch {
+                            expected: 1,
+                            actual: widths.len(),
+                        },
+                        span,
+                    });
+                }
+                let args = args.ok_or(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: 1,
+                        actual: 0,
+                    },
+                    span,
+                })?;
+                if args.len() != 1 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ArityMismatch {
+                            expected: 1,
+                            actual: args.len(),
+                        },
+                        span,
+                    });
+                }
+                let b_ty = self.typecheck_expression(&args[0], env, None, allow_ops)?;
+                if !b_ty.is_assignable_to(&Type::Bytes) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "Bytes".to_string(),
+                            actual: b_ty.display_name(),
+                        },
+                        span,
+                    });
+                }
+                let width_type = match &widths[0] {
+                    Width::Literal(n) => Type::FixedBytes(*n),
+                    Width::Named(name) => Type::FixedBytesParam(name.to_string()),
+                };
+                return Ok(Type::Option(Box::new(width_type)));
+            }
+            "div" => {
+                let args = args.ok_or(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: 2,
+                        actual: 0,
+                    },
+                    span,
+                })?;
+                if args.len() != 2 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::ArityMismatch {
+                            expected: 2,
+                            actual: args.len(),
+                        },
+                        span,
+                    });
+                }
+                let a_ty = self.typecheck_expression(&args[0], env, None, allow_ops)?;
+                let b_ty = self.typecheck_expression(&args[1], env, None, allow_ops)?;
+                if !a_ty.is_assignable_to(&Type::Int) || !b_ty.is_assignable_to(&Type::Int) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "Int or Nat".to_string(),
+                            actual: format!("{}, {}", a_ty.display_name(), b_ty.display_name()),
+                        },
+                        span,
+                    });
+                }
+                return Ok(Type::Option(Box::new(Type::Int)));
+            }
+            _ => {}
+        }
+
+        // 3. Model functions
+        if let Some(model) = self.models.get(first).copied() {
+            let actual_args = args.ok_or(CheckerError {
+                code: DiagnosticCode::W0301,
+                kind: CheckerErrorKind::ArityMismatch {
+                    expected: model.params.len(),
+                    actual: 0,
+                },
+                span,
+            })?;
+            if actual_args.len() != model.params.len() {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: model.params.len(),
+                        actual: actual_args.len(),
+                    },
+                    span,
+                });
+            }
+            for (arg_expr, param) in actual_args.iter().zip(&model.params) {
+                let expected_param_ty = self.resolve_type(&param.param_type, &[])?;
+                let actual_ty =
+                    self.typecheck_expression(arg_expr, env, Some(&expected_param_ty), allow_ops)?;
+                if !actual_ty.is_assignable_to(&expected_param_ty) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: expected_param_ty.display_name(),
+                            actual: actual_ty.display_name(),
+                        },
+                        span,
+                    });
+                }
+            }
+            return self.resolve_type(&model.target_type, &[]);
+        }
+
+        // 4. Public operations
+        if let Some(op) = self.operations.get(first).copied() {
+            if !allow_ops {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ModelCallsOperation(first.to_string()),
+                    span,
+                });
+            }
+            let actual_args = args.ok_or(CheckerError {
+                code: DiagnosticCode::W0301,
+                kind: CheckerErrorKind::ArityMismatch {
+                    expected: op.params.len(),
+                    actual: 0,
+                },
+                span,
+            })?;
+            if actual_args.len() != op.params.len() {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: op.params.len(),
+                        actual: actual_args.len(),
+                    },
+                    span,
+                });
+            }
+
+            // Map static parameters
+            let mut static_map: HashMap<String, u64> = HashMap::new();
+            if widths.len() != op.static_params.len() {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0301,
+                    kind: CheckerErrorKind::ArityMismatch {
+                        expected: op.static_params.len(),
+                        actual: widths.len(),
+                    },
+                    span,
+                });
+            }
+            for (w, sp) in widths.iter().zip(&op.static_params) {
+                if let Width::Literal(n) = w {
+                    static_map.insert(sp.name.to_string(), *n);
+                }
+            }
+
+            for (arg_expr, param) in actual_args.iter().zip(&op.params) {
+                let resolved_param_ty = self.instantiate_type(&param.param_type, &static_map)?;
+                let actual_ty =
+                    self.typecheck_expression(arg_expr, env, Some(&resolved_param_ty), allow_ops)?;
+                if !actual_ty.is_assignable_to(&resolved_param_ty) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: resolved_param_ty.display_name(),
+                            actual: actual_ty.display_name(),
+                        },
+                        span,
+                    });
+                }
+            }
+
+            return self.instantiate_type(&op.return_type, &static_map);
+        }
+
+        Err(CheckerError {
+            code: DiagnosticCode::W0202,
+            kind: CheckerErrorKind::UnboundName(first.to_string()),
+            span,
+        })
+    }
+
+    fn instantiate_type(
+        &self,
+        ty: &TypeExpr<'a>,
+        static_map: &HashMap<String, u64>,
+    ) -> Result<Type, CheckerError> {
+        match ty {
+            TypeExpr::Bytes {
+                width: Some(Width::Named(name)),
+                ..
+            } => {
+                if let Some(n) = static_map.get(*name) {
+                    Ok(Type::FixedBytes(*n))
+                } else {
+                    Ok(Type::Bytes)
+                }
+            }
+            _ => self.resolve_type(ty, &[]),
+        }
+    }
+
+    fn typecheck_binary(
+        &mut self,
+        op: BinaryOp,
+        left: &Expression<'a>,
+        right: &Expression<'a>,
+        env: &HashMap<String, Type>,
+        allow_ops: bool,
+        span: (usize, usize),
+    ) -> Result<Type, CheckerError> {
+        match op {
+            BinaryOp::Add | BinaryOp::Sub | BinaryOp::Mul => {
+                let l_ty = self.typecheck_expression(left, env, None, allow_ops)?;
+                let r_ty = self.typecheck_expression(right, env, Some(&l_ty), allow_ops)?;
+
+                if l_ty.is_assignable_to(&Type::Int) && r_ty.is_assignable_to(&Type::Int) {
+                    Ok(Type::Int)
+                } else if l_ty == Type::U8 && r_ty == Type::U8 {
+                    Ok(Type::U8)
+                } else if l_ty == Type::U64 && r_ty == Type::U64 {
+                    Ok(Type::U64)
+                } else {
+                    Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: format!(
+                                "Matching numeric types (Int, U8, U64), got {}",
+                                l_ty.display_name()
+                            ),
+                            actual: r_ty.display_name(),
+                        },
+                        span,
+                    })
+                }
+            }
+            BinaryOp::Lt | BinaryOp::Le | BinaryOp::Gt | BinaryOp::Ge => {
+                let l_ty = self.typecheck_expression(left, env, None, allow_ops)?;
+                let r_ty = self.typecheck_expression(right, env, Some(&l_ty), allow_ops)?;
+
+                if (l_ty.is_assignable_to(&Type::Int) && r_ty.is_assignable_to(&Type::Int))
+                    || (l_ty == Type::U8 && r_ty == Type::U8)
+                    || (l_ty == Type::U64 && r_ty == Type::U64)
+                {
+                    Ok(Type::Bool)
+                } else {
+                    Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: format!("Comparable types, got {}", l_ty.display_name()),
+                            actual: r_ty.display_name(),
+                        },
+                        span,
+                    })
+                }
+            }
+            BinaryOp::Eq | BinaryOp::NotEq => {
+                let l_ty = self.typecheck_expression(left, env, None, allow_ops)?;
+                let r_ty = self.typecheck_expression(right, env, Some(&l_ty), allow_ops)?;
+
+                if Type::common_type(&l_ty, &r_ty).is_some() {
+                    Ok(Type::Bool)
+                } else {
+                    Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: format!("Comparable type with {}", l_ty.display_name()),
+                            actual: r_ty.display_name(),
+                        },
+                        span,
+                    })
+                }
+            }
+            BinaryOp::And | BinaryOp::Or | BinaryOp::Implies => {
+                let l_ty = self.typecheck_expression(left, env, Some(&Type::Bool), allow_ops)?;
+                let r_ty = self.typecheck_expression(right, env, Some(&Type::Bool), allow_ops)?;
+
+                if l_ty == Type::Bool && r_ty == Type::Bool {
+                    Ok(Type::Bool)
+                } else {
+                    Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::TypeMismatch {
+                            expected: "Bool".to_string(),
+                            actual: format!("{}, {}", l_ty.display_name(), r_ty.display_name()),
+                        },
+                        span,
+                    })
+                }
+            }
+        }
+    }
+
+    fn typecheck_match(
+        &mut self,
+        target: &Expression<'a>,
+        arms: &[MatchArm<'a>],
+        env: &HashMap<String, Type>,
+        expected: Option<&Type>,
+        allow_ops: bool,
+        span: (usize, usize),
+    ) -> Result<Type, CheckerError> {
+        let target_ty = self.typecheck_expression(target, env, None, allow_ops)?;
+
+        match target_ty {
+            Type::Option(inner) => {
+                let mut has_none = false;
+                let mut has_some = false;
+                let mut arm_types = Vec::new();
+
+                for arm in arms {
+                    match arm.pattern {
+                        Pattern::None => {
+                            has_none = true;
+                            let arm_ty =
+                                self.typecheck_expression(&arm.body, env, expected, allow_ops)?;
+                            arm_types.push(arm_ty);
+                        }
+                        Pattern::Some(binder) => {
+                            has_some = true;
+                            let mut local_env = env.clone();
+                            local_env.insert(binder.to_string(), *inner.clone());
+                            let arm_ty = self
+                                .typecheck_expression(&arm.body, &local_env, expected, allow_ops)?;
+                            arm_types.push(arm_ty);
+                        }
+                        _ => {
+                            return Err(CheckerError {
+                                code: DiagnosticCode::W0301,
+                                kind: CheckerErrorKind::IncompatibleMatchArms,
+                                span: arm.span,
+                            });
+                        }
+                    }
+                }
+
+                if !has_none || !has_some {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::NonExhaustiveMatch,
+                        span,
+                    });
+                }
+
+                let mut unified = arm_types[0].clone();
+                for at in &arm_types[1..] {
+                    unified = Type::common_type(&unified, at).ok_or(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::IncompatibleMatchArms,
+                        span,
+                    })?;
+                }
+                Ok(unified)
+            }
+            Type::Result(ok_inner, err_type_name) => {
+                let mut has_ok = false;
+                let mut has_err = false;
+                let mut arm_types = Vec::new();
+
+                for arm in arms {
+                    match arm.pattern {
+                        Pattern::Ok(binder) => {
+                            has_ok = true;
+                            let mut local_env = env.clone();
+                            local_env.insert(binder.to_string(), *ok_inner.clone());
+                            let arm_ty = self
+                                .typecheck_expression(&arm.body, &local_env, expected, allow_ops)?;
+                            arm_types.push(arm_ty);
+                        }
+                        Pattern::Err(binder) => {
+                            has_err = true;
+                            let mut local_env = env.clone();
+                            local_env.insert(
+                                binder.to_string(),
+                                Type::ErrorVariant(err_type_name.clone()),
+                            );
+                            let arm_ty = self
+                                .typecheck_expression(&arm.body, &local_env, expected, allow_ops)?;
+                            arm_types.push(arm_ty);
+                        }
+                        _ => {
+                            return Err(CheckerError {
+                                code: DiagnosticCode::W0301,
+                                kind: CheckerErrorKind::IncompatibleMatchArms,
+                                span: arm.span,
+                            });
+                        }
+                    }
+                }
+
+                if !has_ok || !has_err {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::NonExhaustiveMatch,
+                        span,
+                    });
+                }
+
+                let mut unified = arm_types[0].clone();
+                for at in &arm_types[1..] {
+                    unified = Type::common_type(&unified, at).ok_or(CheckerError {
+                        code: DiagnosticCode::W0301,
+                        kind: CheckerErrorKind::IncompatibleMatchArms,
+                        span,
+                    })?;
+                }
+                Ok(unified)
+            }
+            _ => Err(CheckerError {
+                code: DiagnosticCode::W0301,
+                kind: CheckerErrorKind::TypeMismatch {
+                    expected: "Option or Result".to_string(),
+                    actual: target_ty.display_name(),
+                },
+                span,
+            }),
+        }
+    }
+}
+
+fn body_span(expr: &Expression<'_>) -> (usize, usize) {
+    match expr {
+        Expression::Quantified { span, .. }
+        | Expression::Conditional { span, .. }
+        | Expression::Match { span, .. }
+        | Expression::Binary { span, .. }
+        | Expression::Unary { span, .. }
+        | Expression::Literal { span, .. }
+        | Expression::List { span, .. }
+        | Expression::Reference { span, .. }
+        | Expression::Grouped { span, .. } => *span,
+    }
+}
+
+/// Convenience driver to check an admitted Warrant AST with default limits.
+pub fn check_warrant<'a>(file: &'a WarrantFile<'a>) -> Result<CheckedWarrantModule, CheckerError> {
+    check_warrant_with_limits(file, CheckerLimits::default())
+}
+
+/// Convenience driver to check an admitted Warrant AST with custom limits.
+pub fn check_warrant_with_limits<'a>(
+    file: &'a WarrantFile<'a>,
+    limits: CheckerLimits,
+) -> Result<CheckedWarrantModule, CheckerError> {
+    Checker::new(file, limits).check()
+}
