@@ -2,6 +2,12 @@
 
 All notable changes to `@coding-adventures/sir-runtime-core` are documented here.
 
+## [Unreleased]
+
+### Added (#18496 item 1)
+
+- `setDisplayConvention("python")` sets `toDisplay(true)` to `"True"`, `toDisplay(false)` to `"False"`, and `toDisplay(null)` / `toDisplay(undefined)` to `"None"`.
+
 ## [0.6.0] - 2026-08-17
 
 ### Added — SIR21 T3b-2 Slice 2: `truncDiv`/`trueDiv`

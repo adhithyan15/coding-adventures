@@ -96,10 +96,10 @@ export function eq(a: Val, b: Val): boolean {
 // (each emitted program is its own process) keeps `toDisplay`
 // convention-aware without threading a parameter through the whole display
 // path.
-let _displayConvention: "ruby" | "lisp" | "apl" = "lisp";
+let _displayConvention: "ruby" | "lisp" | "apl" | "python" = "lisp";
 
 /**
- * Select the value-display convention: `"ruby"`, `"apl"`, or `"lisp"`
+ * Select the value-display convention: `"ruby"`, `"apl"`, `"python"`, or `"lisp"`
  * (default). An unrecognised name falls back to the `"lisp"` default rather
  * than throwing, so a forward-compatible emitter can never crash an older
  * runtime.
@@ -109,6 +109,8 @@ export function setDisplayConvention(name: string): void {
     _displayConvention = "ruby";
   } else if (name === "apl") {
     _displayConvention = "apl";
+  } else if (name === "python") {
+    _displayConvention = "python";
   } else {
     _displayConvention = "lisp";
   }
@@ -194,14 +196,14 @@ function displayNdArrayApl(a: NDArrayLike): string {
  * the default Lisp `#t`/`#f`. Everything else falls back to `String(v)`.
  */
 export function toDisplay(v: Val): string {
-  if (v === null) {
-    return "nil";
+  if (v === null || v === undefined) {
+    return _displayConvention === "python" ? "None" : "nil";
   }
   if (v === true) {
-    return _displayConvention === "ruby" ? "true" : "#t";
+    return _displayConvention === "ruby" ? "true" : (_displayConvention === "python" ? "True" : "#t");
   }
   if (v === false) {
-    return _displayConvention === "ruby" ? "false" : "#f";
+    return _displayConvention === "ruby" ? "false" : (_displayConvention === "python" ? "False" : "#f");
   }
   if (v instanceof Sym) {
     return v.name;

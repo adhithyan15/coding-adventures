@@ -602,6 +602,12 @@ pub fn emit_module(m: &Module) -> String {
              set_display_convention as _sir_set_display_convention\n\
              _sir_set_display_convention(\"ruby\")\n",
         );
+    } else if m.metadata.source_language.as_deref() == Some("python") {
+        out.push_str(
+            "from coding_adventures_sir_runtime_core import \
+             set_display_convention as _sir_set_display_convention\n\
+             _sir_set_display_convention(\"python\")\n",
+        );
     }
     // Only OOP-using modules import the OOP runtime, so a pure arithmetic
     // module gains no dependency on it.
@@ -3647,6 +3653,40 @@ mod tests {
         assert!(
             out.contains("_sir_set_display_convention(\"ruby\")"),
             "ruby module must select the Ruby display convention; got:\n{out}"
+        );
+    }
+
+    #[test]
+    fn emit_display_convention_python_selects_python_booleans() {
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("python")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(
+            out.contains("_sir_set_display_convention(\"python\")"),
+            "python module must select the Python display convention; got:\n{out}"
         );
     }
 

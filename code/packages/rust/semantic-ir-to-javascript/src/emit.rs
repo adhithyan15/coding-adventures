@@ -221,6 +221,7 @@ pub fn emit_module(m: &Module) -> String {
     // any other source-controlled field — so this substitution can never
     // inject into the emitted JavaScript.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
+    let display_python = m.metadata.source_language.as_deref() == Some("python");
     let display_apl_high_minus = m.metadata.source_language.as_deref() == Some("apl");
     let display_j_underscore = m.metadata.source_language.as_deref() == Some("j");
     let display_derive = m.metadata.source_language.as_deref() == Some("derive");
@@ -251,6 +252,10 @@ pub fn emit_module(m: &Module) -> String {
             .replace(
                 "__SIR_DISPLAY_AXIOM_BOOLEAN__",
                 if display_axiom_boolean { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_PYTHON__",
+                if display_python { "true" } else { "false" },
             ),
     );
     emit_ancestry_registration(&mut out, m);

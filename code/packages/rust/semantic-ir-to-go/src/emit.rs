@@ -92,10 +92,18 @@ pub fn emit_module(m: &Module) -> String {
     // source-controlled field — so this substitution can never inject into the
     // emitted Go.
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace(
-        "__SIR_DISPLAY_RUBY__",
-        if display_ruby { "true" } else { "false" },
-    ));
+    let display_python = m.metadata.source_language.as_deref() == Some("python");
+    out.push_str(
+        &RUNTIME
+            .replace(
+                "__SIR_DISPLAY_RUBY__",
+                if display_ruby { "true" } else { "false" },
+            )
+            .replace(
+                "__SIR_DISPLAY_PYTHON__",
+                if display_python { "true" } else { "false" },
+            ),
+    );
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
         out.push('\n');

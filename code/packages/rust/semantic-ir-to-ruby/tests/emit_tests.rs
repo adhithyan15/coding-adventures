@@ -93,10 +93,14 @@ fn display_convention_follows_source_language() {
         .contains("SIR_DISPLAY_RUBY = true"));
 
     module.metadata.source_language = Some("twig".into());
-    assert!(compile(&module)
-        .unwrap()
-        .source
-        .contains("SIR_DISPLAY_RUBY = false"));
+    let twig = compile(&module).unwrap().source;
+    assert!(twig.contains("SIR_DISPLAY_RUBY = false"));
+    assert!(twig.contains("SIR_DISPLAY_PYTHON = false"));
+
+    module.metadata.source_language = Some("python".into());
+    let py = compile(&module).unwrap().source;
+    assert!(py.contains("SIR_DISPLAY_PYTHON = true"));
+    assert!(py.contains("SIR_DISPLAY_RUBY = false"));
 }
 
 #[test]

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted TypeScript code invokes `__Sir.setDisplayConvention("python");`.
+
 ## Unreleased — test stubs know the display convention (#18798)
 
 A module lowered from Ruby now says so (`source_language = "ruby"`), so the

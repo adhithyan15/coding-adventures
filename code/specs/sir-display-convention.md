@@ -35,24 +35,26 @@ implementation, per CLAUDE.md.
 For a program whose `source_language == "ruby"`, `puts x` (Ruby `Kernel#puts`, i.e.
 `to_s` semantics) must render:
 
-| value | current (Lisp) | Ruby `puts` (`to_s`) | Ruby `p` (`inspect`) |
-|-------|----------------|----------------------|----------------------|
-| `true` / `false` | `#t` / `#f` | `true` / `false` | `true` / `false` |
-| `nil` | `nil` | *(empty line)* | `nil` |
-| `:foo` (symbol) | `foo` | `foo` | `:foo` |
-| `"hi"` (string) | `hi` | `hi` | `"hi"` (quoted, escaped) |
-| `[1, 2]` | `[1, 2]` | `[1, 2]` | `[1, 2]` |
-| `{"a" => 1}` (hash) | backend-native (`{'a': 1}` / `{a: 1}` / …) | `{"a" => 1}` | `{"a" => 1}` |
-| `1.0` (float) | native | `1.0` | `1.0` |
+| value | current (Lisp) | Ruby `puts` (`to_s`) | Ruby `p` (`inspect`) | Python `print` |
+|-------|----------------|----------------------|----------------------|----------------|
+| `true` / `false` | `#t` / `#f` | `true` / `false` | `true` / `false` | `True` / `False` |
+| `nil` / `None` | `nil` | *(empty line)* | `nil` | `None` |
+| `:foo` (symbol) | `foo` | `foo` | `:foo` | `foo` |
+| `"hi"` (string) | `hi` | `hi` | `"hi"` (quoted, escaped) | `hi` |
+| `[1, 2]` | `[1, 2]` | `[1, 2]` | `[1, 2]` | `[1, 2]` |
+| `[True, None]` | `[#t, nil]` | `[true, nil]` | `[true, nil]` | `[True, None]` |
+| `{"a" => 1}` (hash) | backend-native (`{'a': 1}` / `{a: 1}` / …) | `{"a" => 1}` | `{"a" => 1}` | `{'a': 1}` |
+| `1.0` (float) | native | `1.0` | `1.0` | `1.0` |
 
 Two orthogonal axes fall out:
 
-1. **Convention** — driven by `source_language`: `Lisp` (Twig), `Ruby`, and later
-   `Python` (`True`/`False`/`None`), `JavaScript` (`true`/`null`/`undefined`). Only
-   `Lisp` and `Ruby` are in scope now (the two frontends that exist end-to-end).
+1. **Convention** — driven by `source_language`: `Lisp` (Twig), `Ruby`,
+   `Python` (`True`/`False`/`None`), and later `JavaScript` (`true`/`null`/`undefined`).
+   `Lisp`, `Ruby` and `Python` are in scope now (the three frontends that exist end-to-end).
 2. **Form** — `to_s` (unquoted, `puts`) vs `inspect` (quoted strings, `:sym`, `nil`
    literal; `p` and array/hash *elements*, which Ruby always renders via `inspect`).
-   The current single `to_display` conflates these; Ruby needs both.
+   For Python, `print(None)` prints `"None"`, and collection elements like `[None]`
+   also print as `"None"`.
 
 ## Design
 
@@ -114,8 +116,8 @@ with an in-flight stdlib PR in the same crate:
 
 ## Non-goals / open questions (for review)
 
-- **In scope:** `Lisp` and `Ruby` conventions only (the two end-to-end frontends).
-  `Python`/`JavaScript` source conventions are stubbed in the enum but deferred.
+- **In scope:** `Lisp`, `Ruby`, and `Python` conventions (the frontends that exist
+  end-to-end). `JavaScript` source convention is stubbed in the enum but deferred.
 - **`inspect` string escaping** (Ruby `"a\nb".inspect == "\"a\\nb\""`) — full escape
   tables are a follow-up; first cut handles the quote wrapping + common escapes.
 - **Hash `=>` rendering** for Ruby is the largest element-formatter change; may be its

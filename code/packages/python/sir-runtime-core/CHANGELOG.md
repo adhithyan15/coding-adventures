@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+`set_display_convention("python")` sets `to_display(True)` to `"True"`,
+`to_display(False)` to `"False"`, and `to_display(None)` to `"None"`.
+
 ## Unreleased — Ruby's `nil.to_s` (#18798)
 
 Under the `"ruby"` display convention `to_display(None)` is the empty string,

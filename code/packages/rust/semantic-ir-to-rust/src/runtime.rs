@@ -28,6 +28,7 @@ pub const RUNTIME: &str = r##"mod __sir {
     // away — zero per-call cost — and existing Twig output is byte-for-byte
     // unchanged (the default is the Lisp form).
     pub const SIR_DISPLAY_RUBY: bool = __SIR_DISPLAY_RUBY__;
+    pub const SIR_DISPLAY_PYTHON: bool = __SIR_DISPLAY_PYTHON__;
     use std::cell::Cell;
     use std::cell::RefCell;
     use std::collections::HashMap;
@@ -969,9 +970,9 @@ pub const RUNTIME: &str = r##"mod __sir {
             // matching how Python/Ruby render `3.0`.  Non-finite values
             // print as `NaN` / `inf` / `-inf`.
             Value::Float(x) => format_float(*x),
-            Value::Bool(true) => if SIR_DISPLAY_RUBY { "true" } else { "#t" }.to_string(),
-            Value::Bool(false) => if SIR_DISPLAY_RUBY { "false" } else { "#f" }.to_string(),
-            Value::Nil => "nil".to_string(),
+            Value::Bool(true) => if SIR_DISPLAY_RUBY { "true" } else if SIR_DISPLAY_PYTHON { "True" } else { "#t" }.to_string(),
+            Value::Bool(false) => if SIR_DISPLAY_RUBY { "false" } else if SIR_DISPLAY_PYTHON { "False" } else { "#f" }.to_string(),
+            Value::Nil => if SIR_DISPLAY_PYTHON { "None" } else { "nil" }.to_string(),
             // An exception renders as its MESSAGE, matching Ruby's
             // `Exception#to_s`, so `rescue => e; puts e` prints "boom".  The
             // message is a plain `String`, so unlike an instance/seq/map this

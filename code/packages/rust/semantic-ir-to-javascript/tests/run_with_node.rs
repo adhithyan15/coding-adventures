@@ -3388,6 +3388,39 @@ fn ruby_source_prints_true_false() {
 }
 
 #[test]
+fn python_source_prints_true_false_none() {
+    let stmts = vec![
+        print(Expr::BoolLit { value: true, span: sp() }),
+        print(Expr::BoolLit { value: false, span: sp() }),
+        print(Expr::NilLit { span: sp() }),
+    ];
+    let m = Module {
+        name: "disppy".into(),
+        manifest: FeatureManifest::from_features(&[Feature::ConsoleIO, Feature::Strings]),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: sp() }, span: sp() },
+            effects: EffectSet::PURE,
+            metadata: Metadata::new(),
+            span: sp(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("python")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: sp(),
+    };
+    if let Some(stdout) = run_module(&m, "disppy") {
+        assert_eq!(stdout, "True\nFalse\nNone", "Python source must render booleans and None as True/False/None");
+    }
+}
+
+#[test]
 fn twig_source_keeps_lisp_booleans() {
     if let Some(stdout) = run_module(&bool_display_module("twig"), "disptwig") {
         assert_eq!(stdout, "#t\n#f", "non-Ruby source keeps the default Lisp #t/#f");

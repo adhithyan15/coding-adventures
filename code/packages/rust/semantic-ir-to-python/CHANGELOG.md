@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted Python code invokes `_sir_set_display_convention("python")`.
+
 ## Unreleased — Namespace and test-scratch hygiene (#18788 security-review follow-up)
 
 ### A constant named like a function is renamed; only a user callee's keywords are

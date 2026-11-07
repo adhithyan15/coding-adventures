@@ -4,6 +4,12 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18496 item 1)
+
+- Conformance programs `py_display_booleans_and_none` and `py_display_booleans_and_none_in_list`
+  in `tests/python_statement_forms.rs`, verifying that lowered Python `print(True)`,
+  `print(False)`, and `print(None)` match CPython's display across all backends.
+
 ### Added (#18798, items 11–15 and 19)
 
 - Security review follow-up: `rb_for_over_a_huge_range_stops_at_break_and_locals_between_guards`

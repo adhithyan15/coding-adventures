@@ -134,6 +134,19 @@ def test_display_convention_ruby_booleans() -> None:
     assert sir.to_display(None) == "nil"
 
 
+def test_display_convention_python_booleans_and_none() -> None:
+    try:
+        sir.set_display_convention("python")
+        assert sir.to_display(True) == "True"
+        assert sir.to_display(False) == "False"
+        assert sir.to_display(None) == "None"
+        assert sir.to_display(sir.intern("sym")) == "sym"
+    finally:
+        sir.set_display_convention("lisp")
+    assert sir.to_display(True) == "#t"
+    assert sir.to_display(None) == "nil"
+
+
 def test_ruby_puts_and_print_of_nil(capsys: pytest.CaptureFixture[str]) -> None:
     # #18798: `puts nil` is an empty line, `print nil` prints nothing, and a
     # nil inside a `puts`ed array is an empty line too (`puts` flattens).

@@ -35,10 +35,10 @@
 //!   the validator refused.
 //!
 //! Each program's expected stdout is the value CPython prints.  The run
-//! test re-checks that against a real `python3` when one is on `PATH`, so a
-//! wrong expectation cannot hide a wrong lowering.  Every program prints once and
-//! prints only integers and strings: `print(None)` and `print(True)` do not
-//! yet print CPython's spelling on these backends.
+//! test re-checks that against a real `python3` (or `python`) when one is on `PATH`, so a
+//! wrong expectation cannot hide a wrong lowering.  Booleans and `None`
+//! follow Python's spelling (`True`, `False`, `None`) via the Python
+//! display convention (#18496 item 1).
 //!
 //! `while` loops are bounded by a guard counter, so a regression of the
 //! parameter-shadowing bug fails with a wrong number instead of hanging.
@@ -54,6 +54,17 @@ use sir_conformance::{lower_source_via, run_source_via, Frontend, RunOutcome, Ta
 
 /// `(name, Python source, CPython's stdout)`.
 const PROGRAMS: &[(&str, &str, &str)] = &[
+    // ── display convention: booleans and None (#18496 item 1) ──────────
+    (
+        "py_display_booleans_and_none",
+        "print(True)\nprint(False)\nprint(None)\nprint(True, False, None)\n",
+        "True\nFalse\nNone\nTrue False None",
+    ),
+    (
+        "py_display_booleans_and_none_in_list",
+        "print([True, False, None])\n",
+        "[True, False, None]",
+    ),
     // ── augmented assignment ──────────────────────────────────────────
     // The issue's program, extended over the lowered operators.  (`%=` is
     // lowered too, but the binary `%` itself does not run on every backend
@@ -318,6 +329,14 @@ fn cpython(source: &str) -> Option<String> {
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
+        .or_else(|_| {
+            Command::new("python")
+                .args(["-I", "-"])
+                .stdin(Stdio::piped())
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped())
+                .spawn()
+        })
         .ok()?;
     child
         .stdin

@@ -15,6 +15,7 @@ pub const RUNTIME: &str = r##"// ── inlined SIR runtime ──────�
 // `true`/`false` rather than the Lisp `#t`/`#f`.  A compile-time `const` → the
 // Go compiler folds the branch away; existing Twig output is unchanged.
 const _sir_display_ruby = __SIR_DISPLAY_RUBY__
+const _sir_display_python = __SIR_DISPLAY_PYTHON__
 
 type Value interface{}
 
@@ -1081,6 +1082,9 @@ func _sir_format(v Value) string {
 
 func _sir_format_d(v Value, visited map[Value]bool) string {
 	if v == nil {
+		if _sir_display_python {
+			return "None"
+		}
 		return "nil"
 	}
 	// Defensive: the MISSING sentinel (SIR19 default params) should never
@@ -1096,10 +1100,16 @@ func _sir_format_d(v Value, visited map[Value]bool) string {
 			if _sir_display_ruby {
 				return "true"
 			}
+			if _sir_display_python {
+				return "True"
+			}
 			return "#t"
 		}
 		if _sir_display_ruby {
 			return "false"
+		}
+		if _sir_display_python {
+			return "False"
 		}
 		return "#f"
 	}
