@@ -575,7 +575,10 @@ document.
 The additive [VER04b layout contract](VER04b-warrant-layout-capture.md) specifies
 b2's bounded significant-layout capture and synthetic token origin mapping over
 admitted source documents, ensuring synthetic INDENT/DEDENT/NEWLINE tokens possess
-exact zero-width origins without fictitious positive-width spans. The guarded
-parser and nesting quotas follow as b3. The shared CV04a standard-mode partition
-contract remains unchanged; its indentation refusal must not be treated as complete
-layout capture.
+exact zero-width origins without fictitious positive-width spans.
+
+The additive [VER04c guarded parser contract](VER04c-guarded-warrant-parser.md)
+specifies b3's bounded AST construction over layout token streams, enforcing explicit
+node quotas (`max_nodes`) and recursion stack guards (`max_depth` ≤ 64) against
+stack exhaustion. The shared CV04a standard-mode partition contract remains unchanged;
+its indentation refusal must not be treated as complete layout capture.

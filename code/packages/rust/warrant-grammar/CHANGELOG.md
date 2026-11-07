@@ -2,6 +2,12 @@
 
 ## 0.1.0 — Unreleased
 
+- Add VER04c/P006b3 guarded Warrant source parser: typed AST construction conforming
+  to `warrant.grammar`, strict recursion depth guard (`max_depth: 64`) preventing
+  call-stack exhaustion (CWE-674), AST node quota (`max_nodes: 65,536`), and work limits.
+- Enforce closed `W0001` diagnostics and verify zero source leakage in error Display/Debug.
+- Validate all 57 canonical syntax cases from `cases.tfv` through admitted document,
+  layout capture, and guarded AST parser.
 - Add VER04b/P006b2 bounded significant-layout capture: space-only indentation,
   indentation stack tracking with configurable limits, tabs-in-indentation rejection,
   and exact zero-width synthetic token origins (INDENT/DEDENT/NEWLINE) without

@@ -39,10 +39,21 @@ use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
 let tokens = capture_layout(&source, LayoutLimits::default()).unwrap();
 ```
 
-The guarded lexer/parser with its AST and native-stack quotas remains P006b3.
+The additive [VER04c parser stage](../../../specs/VER04c-guarded-warrant-parser.md)
+constructs a typed, bounded Abstract Syntax Tree (AST) conforming to `warrant.grammar`.
+It operates directly on the `&[LayoutToken]` stream and enforces strict quotas:
+maximum call-stack recursion depth (`max_depth: 64`, ceiling `128`) preventing CWE-674,
+maximum AST node budget (`max_nodes: 65,536`, ceiling `1,048,576`), and work limits.
+All diagnostics return closed `W0001` codes and never leak raw token text.
+
+```rust
+use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
+let ast = parse_document(&tokens, &source, ParserLimits::default()).unwrap();
+```
+
 Source admission, layout capture, grammar data and syntax acceptance do not
 establish type/binding validation, solvers, Rust generation, proof or release
-authorization.
+authorization (VER-P007+).
 
 ## Tests and regeneration
 
