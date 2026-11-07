@@ -335,6 +335,17 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "n = 1\nm = n\nn += 2\nprint(m)\nprint(n)\n",
         "1\n3",
     ),
+    // ── subscript assignment evaluation order (Python §6.3, #18496 review)
+    (
+        "py_subscript_assign_eval_order",
+        "log = []\ndef f():\n    log.append(1)\n    return 42\ndef g():\n    log.append(2)\n    return 0\nxs = [0]\nxs[g()] = f()\nprint(xs[0])\nprint(log)\n",
+        "42\n[1, 2]",
+    ),
+    (
+        "py_chained_subscript_assign_eval_order",
+        "log = []\ndef f():\n    log.append(1)\n    return 99\ndef g():\n    log.append(2)\n    return 0\ndef h():\n    log.append(3)\n    return 1\nxs = [0, 0]\nxs[g()] = xs[h()] = f()\nprint(xs)\nprint(log)\n",
+        "[99, 99]\n[1, 2, 3]",
+    ),
 ];
 
 /// `(program, backend, why)`: cells that fail for a reason outside what

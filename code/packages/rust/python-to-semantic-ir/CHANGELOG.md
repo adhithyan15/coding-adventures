@@ -4,6 +4,7 @@ All notable changes to `python-to-semantic-ir` are documented here.
 
 ## Unreleased
 
+- Preserve subscript assignment evaluation order (Python §6.3): single subscript assignment `target[index] = value` now evaluates `value` into a temporary `LetStarBinding` before the store statement, ensuring `value`'s side effects execute before `target` or `index` on all backends (#18496 review).
 - Lower augmented addition `+=` to builtin `"+="` instead of `"+"` to enable in-place collection mutation and preserve alias semantics (#18496 item 4).
 
 ## Unreleased — Every invented name comes from one pool (#18771)

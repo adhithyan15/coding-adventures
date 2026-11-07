@@ -4,6 +4,10 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18496 review)
+
+- Conformance programs `py_subscript_assign_eval_order` and `py_chained_subscript_assign_eval_order` in `tests/python_statement_forms.rs`, verifying that single and chained subscript assignments evaluate the RHS value strictly before the subscript target and index across all backends.
+
 ### Added (#18496 item 4)
 
 - Conformance programs `py_list_append_aliased`, `py_list_aug_assign_aliased`, and `py_number_aug_assign_not_aliased` in `tests/python_statement_forms.rs`, verifying list in-place mutation and aliasing on `.append()` and `+=` across all backends.
