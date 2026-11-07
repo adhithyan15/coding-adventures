@@ -238,14 +238,19 @@ let consumes_every_shared_fixture () =
                seen :=
                  String_set.add (fixture |> member "id" |> to_string) !seen;
                check_graph fixture
-           | "diff_selection" ->
-               seen :=
-                 String_set.add (fixture |> member "id" |> to_string) !seen;
-               let digest =
-                 fixture |> member "input" |> member "options"
-                 |> member "boundary_sha256" |> to_string_option
-               in
-               check_diff fixture (Option.map (fun _ -> boundary) digest)
+           | "diff_selection" -> (
+               let options = fixture |> member "input" |> member "options" in
+               (* This closed variant uses package-name strings rather than the
+                  legacy path-selection package records consumed here. *)
+               match member "trigger_relations" options with
+               | `Null ->
+                   seen :=
+                     String_set.add (fixture |> member "id" |> to_string) !seen;
+                   let digest =
+                     options |> member "boundary_sha256" |> to_string_option
+                   in
+                   check_diff fixture (Option.map (fun _ -> boundary) digest)
+               | _ -> ())
            | _ -> ());
   Alcotest.(check (list string))
     "exact shared case roster"
