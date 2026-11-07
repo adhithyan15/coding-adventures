@@ -47,8 +47,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P006b2 | Exact bounded significant-layout capture | #18992 merged as dc360bfb789; verified on fetched main; all checks acceptable; synthetic tokens zero-width |
 | done / VER-P006b3 | Guarded Warrant source lexer/parser | #18996 merged as 2f1e8361a38; [VER04c](VER04c-guarded-warrant-parser.md) specified; bounded recursive descent over layout tokens, node quotas, recursion depth guards (depth <= 64), 90%+ line/branch coverage |
 | done / VER-P007 | Warrant type checker/Rust bindings | #18997 merged as f471a7195f3; [VER04d](VER04d-warrant-type-system.md) specified; scope/symbol resolution, acyclic models, static typing, contract verification and closed Rust binding schema; 90%+ line/branch cov |
-| P1 / VER-P008 | Rust backend and ct-compare.warrant | [VER04e](VER04e-warrant-codegen.md) specified; bounded pure model evaluator, TFV test vector compiler, Rust L0 harness generator, checked regeneration |
-| P1 / VER-P009 | Property spec and pbt-v1 corpus | waiting P008; VER05 generation, integrated shrinking, coverage/negative cases |
+| done / VER-P008 | Rust backend and ct-compare.warrant | #19002 merged as 652207f348d; [VER04e](VER04e-warrant-codegen.md) specified; bounded pure model evaluator, TFV test vector compiler, Rust L0 harness generator, checked regeneration |
+| P1 / VER-P009 | Property spec and pbt-v1 corpus | in progress; [VER05](VER05-property-engine.md) generation, integrated shrinking, coverage/negative cases |
 | P1 / VER-P010 | Rust property engine | waiting P009; deterministic replay, shrink quality, bounded work |
 | P1 / VER-P011 | Warrant claims to properties | waiting P010; public API calls and broken implementations detected |
 | P1 / VER-P012 | Stateful properties | waiting P011; select only if pilot needs them, otherwise explicitly defer |
@@ -85,6 +85,19 @@ can progress independently once their prerequisites are available.
 | VER26 follow-on | Busicom-to-gates, a capability-bearing pilot, then other languages |
 
 ## Discoveries and current plan
+
+P008 merged in #19002 (commit 652207f348d) with all matrix checks passing on main.
+The pure model evaluator, TFV vector compiler, and Rust L0 harness generator are
+active in `warrant-grammar::codegen`. 14 integration tests and checked regeneration
+passed, exceeding 90% line and region coverage with zero external dependencies.
+
+Post-P008 prioritization: #19002 merged cleanly at expected head. Prioritize VER-P009
+([VER05](VER05-property-engine.md) property testing engine specification and `pbt-v1`
+conformance corpus). P009 establishes the formal generator algebra, integrated shrinking
+protocol (Hypothesis-style, preserving refinements), PRNG seed determinism via SplitMix64,
+bounded search/shrink budgets, private failure reporting policies (§7.3), the canonical
+`pbt-v1` corpus (`cases.json` & `cases.tfv`), and an independent stdlib-only Python reference
+validator and falsification suite before native engine implementation in P010.
 
 P006b1 merged in #18913 (commit 964dc3df7bc) with all checks passing on main.
 The source admission contract is active in `rust/warrant-grammar`. Eleven source
