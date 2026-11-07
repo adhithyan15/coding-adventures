@@ -258,6 +258,9 @@ struct InlineCandidate {
     name: String,
     params: Vec<String>,
     return_expr: Expression,
+    /// #18144: Parameters referenced inside nested closures in `return_expr`.
+    /// May only be substituted by literal arguments.
+    closure_captured_params: HashSet<String>,
 }
 
 /// One inlining *event* for CV provenance (#89): the original source name of
@@ -396,9 +399,21 @@ struct Tally {
 }
 
 /// Is `ce` a call we can inline for `cand` — `cand.name(args)` with the
-/// right number of side-effect-free arguments?
+/// right number of side-effect-free arguments, and literal arguments for any
+/// parameter referenced inside a nested closure (#18144)?
 fn is_inlinable_call(ce: &CallExpression, cand: &InlineCandidate) -> bool {
-    is_name_arity_call(ce, cand) && ce.arguments.iter().all(is_simple_arg)
+    if !is_name_arity_call(ce, cand) {
+        return false;
+    }
+    for (i, arg) in ce.arguments.iter().enumerate() {
+        if !is_simple_arg(arg) {
+            return false;
+        }
+        if cand.closure_captured_params.contains(&cand.params[i]) && !is_literal_arg(arg) {
+            return false;
+        }
+    }
+    true
 }
 
 /// Is `ce` a call to `cand.name` with the right ARITY (any arguments)? The
@@ -628,10 +643,29 @@ fn candidate_from_function(
         return None;
     }
 
+    // #18144: Collect parameters referenced or mutated inside nested closures.
+    // If any parameter is mutated inside a nested closure, decline outright.
+    let param_set_owned: HashSet<String> = params.iter().cloned().collect();
+    let mut captured_in_closure = HashSet::new();
+    let mut mutated_in_closure = HashSet::new();
+    let empty_shadowed = HashSet::new();
+    collect_closure_param_usage_expr(
+        return_expr,
+        &param_set_owned,
+        false,
+        &empty_shadowed,
+        &mut captured_in_closure,
+        &mut mutated_in_closure,
+    );
+    if !mutated_in_closure.is_empty() {
+        return None;
+    }
+
     Some(InlineCandidate {
         name: fd.id.name.clone(),
         params,
         return_expr: return_expr.clone(),
+        closure_captured_params: captured_in_closure,
     })
 }
 
@@ -644,6 +678,22 @@ fn is_simple_arg(expr: &Expression) -> bool {
         expr,
         Expression::Identifier(_)
             | Expression::NumericLiteral(_)
+            | Expression::StringLiteral(_)
+            | Expression::BooleanLiteral(_)
+            | Expression::NullLiteral(_)
+            | Expression::BigIntLiteral(_)
+            | Expression::UndefinedLiteral(_)
+    )
+}
+
+/// #18144: True for a literal expression (numeric, string, boolean, null,
+/// bigint, undefined). A literal argument has no variable binding and is
+/// immutable, so substituting it into a nested closure cannot produce a
+/// deferred live read.
+fn is_literal_arg(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::NumericLiteral(_)
             | Expression::StringLiteral(_)
             | Expression::BooleanLiteral(_)
             | Expression::NullLiteral(_)
@@ -2165,6 +2215,13 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                 let id = p.binding_identifier();
                 inner.remove(&id.name);
             }
+            // #18144: locals declared inside the body (var, let, const, functions,
+            // classes, catch params, loops) shadow outer parameters of the same name.
+            let mut local_decls = HashSet::new();
+            collect_declared_names_body(&fe.body.body, &mut local_decls);
+            for name in &local_decls {
+                inner.remove(name);
+            }
             // A default parameter's `right` runs in the nested scope and can
             // reference a substituted outer parameter (`return function(a = b){}`
             // inside `f(a, b)`); substitute through it with the shadow-stripped
@@ -2184,8 +2241,7 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
         // class's own name, the method value's own name, and the method
         // params SHADOW a substituted parameter of the same spelling — remove
         // those keys before recursing, exactly as the `FunctionExpression`
-        // arm does. A method KEY is a property name, never a substitutable
-        // identifier.
+        // arm does.
         Expression::ClassExpression(ce) => {
             if let Some(sup) = &mut ce.super_class {
                 substitute(sup, map);
@@ -2197,6 +2253,14 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
             for member in &mut ce.body {
                 match member {
                     ClassMember::Method(m) => {
+                        // #18144: A computed method key is evaluated in the enclosing
+                        // scope, so substitute through it with `class_inner` (mirroring
+                        // ClassMember::Field).
+                        if m.computed {
+                            if let PropertyKey::Expression(e) = &mut m.key {
+                                substitute(e, &class_inner);
+                            }
+                        }
                         let mut inner = class_inner.clone();
                         if let Some(id) = &m.value.id {
                             inner.remove(&id.name);
@@ -2204,6 +2268,12 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                         for p in &m.value.params {
                             let id = p.binding_identifier();
                             inner.remove(&id.name);
+                        }
+                        // #18144: local declarations inside the method body shadow outer parameters.
+                        let mut local_decls = HashSet::new();
+                        collect_declared_names_body(&m.value.body.body, &mut local_decls);
+                        for name in &local_decls {
+                            inner.remove(name);
                         }
                         // Default-param `right` expressions — see the
                         // `FunctionExpression` arm.
@@ -2232,8 +2302,14 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
                     // the class's own name in scope (no method params) —
                     // substitute through them with `class_inner`.
                     ClassMember::StaticBlock(b) => {
+                        let mut inner = class_inner.clone();
+                        let mut local_decls = HashSet::new();
+                        collect_declared_names_body(&b.body, &mut local_decls);
+                        for name in &local_decls {
+                            inner.remove(name);
+                        }
                         for s in &mut b.body {
-                            substitute_in_stmt(s, &class_inner);
+                            substitute_in_stmt(s, &inner);
                         }
                     }
                 }
@@ -2256,6 +2332,11 @@ fn substitute(expr: &mut Expression, map: &HashMap<String, Expression>) {
             }
             match &mut ae.body {
                 ArrowBody::Block(b) => {
+                    let mut local_decls = HashSet::new();
+                    collect_declared_names_body(&b.body, &mut local_decls);
+                    for name in &local_decls {
+                        inner.remove(name);
+                    }
                     for s in &mut b.body {
                         substitute_in_stmt(s, &inner);
                     }
@@ -2386,6 +2467,9 @@ struct VoidStmtCandidate {
     /// and routes the parameter through the rename map. Empty ⇒ all parameters
     /// are pure values, substituted directly as before.
     mutated_params: HashSet<String>,
+    /// #18144: Parameters referenced inside nested closures in the body.
+    /// May only be substituted by literal arguments.
+    closure_captured_params: HashSet<String>,
 }
 
 /// Find every qualifying void statement-helper and splice its single call.
@@ -2942,6 +3026,25 @@ fn void_candidate_from_function(
         }
     }
 
+    // #18144: Collect parameters referenced or mutated inside nested closures.
+    // If any parameter is mutated inside a nested closure, decline outright.
+    let mut captured_in_closure = HashSet::new();
+    let mut mutated_in_closure = HashSet::new();
+    let empty_shadowed = HashSet::new();
+    for stmt in &fd.body.body {
+        collect_closure_param_usage_stmt(
+            stmt,
+            &param_set,
+            false,
+            &empty_shadowed,
+            &mut captured_in_closure,
+            &mut mutated_in_closure,
+        );
+    }
+    if !mutated_in_closure.is_empty() {
+        return None;
+    }
+
     Some(VoidStmtCandidate {
         name: fd.id.name.clone(),
         params,
@@ -2949,6 +3052,7 @@ fn void_candidate_from_function(
         locals,
         free_top_level,
         mutated_params,
+        closure_captured_params: captured_in_closure,
     })
 }
 
@@ -2990,6 +3094,7 @@ fn name_use_and_arity_calls(program: &Program, name: &str, arity: usize) -> (usi
     let probe = InlineCandidate {
         name: name.to_string(),
         params: vec![String::new(); arity],
+        closure_captured_params: HashSet::new(),
         return_expr: Expression::NullLiteral(NullLiteral { cv: None }),
     };
     let t = tally_program(program, &probe);
@@ -3004,8 +3109,20 @@ fn is_void_target_call(ce: &CallExpression, cand: &VoidStmtCandidate) -> bool {
     // Name + arity only: PR-4a materialises non-simple arguments into temps
     // (see [`materialize_args`]), so the simple-arg requirement is lifted for
     // the statement-inlining paths.
-    matches!(&*ce.callee, Expression::Identifier(id) if id.name == cand.name)
-        && ce.arguments.len() == cand.params.len()
+    // #18144: A parameter used inside a nested closure cannot be substituted
+    // by a non-literal argument.
+    if !matches!(&*ce.callee, Expression::Identifier(id) if id.name == cand.name) {
+        return false;
+    }
+    if ce.arguments.len() != cand.params.len() {
+        return false;
+    }
+    for (i, arg) in ce.arguments.iter().enumerate() {
+        if cand.closure_captured_params.contains(&cand.params[i]) && !is_literal_arg(arg) {
+            return false;
+        }
+    }
+    true
 }
 
 /// Walk the program's statement structure and replace the single
@@ -4431,8 +4548,7 @@ fn rename_in_expr(expr: &mut Expression, map: &HashMap<String, String>) {
     }
 }
 
-/// Apply parameter→argument [`substitute`] across a body statement (the
-/// admitted shapes, including the PR-4b `if` / block).
+/// Apply parameter→argument [`substitute`] across a body statement (#18144 covers all statement forms).
 fn substitute_in_stmt(stmt: &mut Statement, map: &HashMap<String, Expression>) {
     match stmt {
         Statement::Tagged(TaggedStatement::ExpressionStatement(es)) => {
@@ -4445,7 +4561,94 @@ fn substitute_in_stmt(stmt: &mut Statement, map: &HashMap<String, Expression>) {
                 }
             }
         }
-        // PR-4b: an admitted `if` and the blocks its branches may be.
+        Statement::Declaration(Declaration::FunctionDeclaration(fd)) => {
+            let mut inner = map.clone();
+            inner.remove(&fd.id.name);
+            for p in &fd.params {
+                let id = p.binding_identifier();
+                inner.remove(&id.name);
+            }
+            let mut local_decls = HashSet::new();
+            collect_declared_names_body(&fd.body.body, &mut local_decls);
+            for name in &local_decls {
+                inner.remove(name);
+            }
+            for p in &mut fd.params {
+                if let Some(def) = p.default_value_mut() {
+                    substitute(def, &inner);
+                }
+            }
+            for s in &mut fd.body.body {
+                substitute_in_stmt(s, &inner);
+            }
+        }
+        Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
+            if let Some(sup) = &mut cd.super_class {
+                substitute(sup, map);
+            }
+            let mut class_inner = map.clone();
+            class_inner.remove(&cd.id.name);
+            for member in &mut cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        if m.computed {
+                            if let PropertyKey::Expression(e) = &mut m.key {
+                                substitute(e, &class_inner);
+                            }
+                        }
+                        let mut inner = class_inner.clone();
+                        if let Some(id) = &m.value.id {
+                            inner.remove(&id.name);
+                        }
+                        for p in &m.value.params {
+                            let id = p.binding_identifier();
+                            inner.remove(&id.name);
+                        }
+                        let mut local_decls = HashSet::new();
+                        collect_declared_names_body(&m.value.body.body, &mut local_decls);
+                        for name in &local_decls {
+                            inner.remove(name);
+                        }
+                        for p in &mut m.value.params {
+                            if let Some(def) = p.default_value_mut() {
+                                substitute(def, &inner);
+                            }
+                        }
+                        for s in &mut m.value.body.body {
+                            substitute_in_stmt(s, &inner);
+                        }
+                    }
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &mut f.key {
+                            substitute(e, &class_inner);
+                        }
+                        if let Some(v) = &mut f.value {
+                            substitute(v, &class_inner);
+                        }
+                    }
+                    ClassMember::StaticBlock(b) => {
+                        let mut inner = class_inner.clone();
+                        let mut local_decls = HashSet::new();
+                        collect_declared_names_body(&b.body, &mut local_decls);
+                        for name in &local_decls {
+                            inner.remove(name);
+                        }
+                        for s in &mut b.body {
+                            substitute_in_stmt(s, &inner);
+                        }
+                    }
+                }
+            }
+        }
+        Statement::Declaration(_) => {}
+        Statement::Tagged(TaggedStatement::ReturnStatement(rs)) => {
+            if let Some(arg) = &mut rs.argument {
+                substitute(arg, map);
+            }
+        }
+        Statement::Tagged(TaggedStatement::ThrowStatement(ts)) => {
+            substitute(&mut ts.argument, map);
+        }
         Statement::Tagged(TaggedStatement::IfStatement(is)) => {
             substitute(&mut is.test, map);
             substitute_in_stmt(&mut is.consequent, map);
@@ -4458,7 +4661,616 @@ fn substitute_in_stmt(stmt: &mut Statement, map: &HashMap<String, Expression>) {
                 substitute_in_stmt(s, map);
             }
         }
+        Statement::Tagged(TaggedStatement::TryStatement(ts)) => {
+            for s in &mut ts.block.body {
+                substitute_in_stmt(s, map);
+            }
+            if let Some(handler) = &mut ts.handler {
+                let mut inner = map.clone();
+                if let Some(param) = &handler.param {
+                    inner.remove(&param.name);
+                }
+                let mut local_decls = HashSet::new();
+                collect_declared_names_body(&handler.body.body, &mut local_decls);
+                for name in &local_decls {
+                    inner.remove(name);
+                }
+                for s in &mut handler.body.body {
+                    substitute_in_stmt(s, &inner);
+                }
+            }
+            if let Some(finalizer) = &mut ts.finalizer {
+                for s in &mut finalizer.body {
+                    substitute_in_stmt(s, map);
+                }
+            }
+        }
+        Statement::Tagged(TaggedStatement::ForOfStatement(fos)) => {
+            substitute(&mut fos.right, map);
+            let mut inner = map.clone();
+            if let ForInit::VariableDeclaration(vd) = &mut fos.left {
+                for d in &mut vd.declarations {
+                    if let Some(init) = &mut d.init {
+                        substitute(init, map);
+                    }
+                    let BindingTarget::Identifier(id) = &d.id;
+                    inner.remove(&id.name);
+                }
+            }
+            substitute_in_stmt(&mut fos.body, &inner);
+        }
+        Statement::Tagged(TaggedStatement::ForInStatement(fis)) => {
+            substitute(&mut fis.right, map);
+            let mut inner = map.clone();
+            if let ForInit::VariableDeclaration(vd) = &mut fis.left {
+                for d in &mut vd.declarations {
+                    if let Some(init) = &mut d.init {
+                        substitute(init, map);
+                    }
+                    let BindingTarget::Identifier(id) = &d.id;
+                    inner.remove(&id.name);
+                }
+            }
+            substitute_in_stmt(&mut fis.body, &inner);
+        }
+        Statement::Tagged(TaggedStatement::ForStatement(fs)) => {
+            let mut inner = map.clone();
+            if let Some(init) = &mut fs.init {
+                match init {
+                    ForInit::VariableDeclaration(vd) => {
+                        for d in &mut vd.declarations {
+                            if let Some(init_expr) = &mut d.init {
+                                substitute(init_expr, map);
+                            }
+                            let BindingTarget::Identifier(id) = &d.id;
+                            inner.remove(&id.name);
+                        }
+                    }
+                    ForInit::Expression(e) => substitute(e, map),
+                }
+            }
+            if let Some(test) = &mut fs.test {
+                substitute(test, &inner);
+            }
+            if let Some(update) = &mut fs.update {
+                substitute(update, &inner);
+            }
+            substitute_in_stmt(&mut fs.body, &inner);
+        }
+        Statement::Tagged(TaggedStatement::WhileStatement(ws)) => {
+            substitute(&mut ws.test, map);
+            substitute_in_stmt(&mut ws.body, map);
+        }
+        Statement::Tagged(TaggedStatement::DoWhileStatement(dws)) => {
+            substitute_in_stmt(&mut dws.body, map);
+            substitute(&mut dws.test, map);
+        }
+        Statement::Tagged(TaggedStatement::SwitchStatement(ss)) => {
+            substitute(&mut ss.discriminant, map);
+            for case in &mut ss.cases {
+                if let Some(test) = &mut case.test {
+                    substitute(test, map);
+                }
+                for s in &mut case.consequent {
+                    substitute_in_stmt(s, map);
+                }
+            }
+        }
+        Statement::Tagged(TaggedStatement::LabeledStatement(ls)) => {
+            substitute_in_stmt(&mut ls.body, map);
+        }
+        Statement::Tagged(TaggedStatement::WithStatement(ws)) => {
+            substitute(&mut ws.object, map);
+            substitute_in_stmt(&mut ws.body, map);
+        }
         _ => {}
+    }
+}
+
+/// #18144: Collect every declared variable/function/class binding name within a
+/// statement list, so that inner closures do not substitute over shadowing locals.
+fn collect_declared_names_body(body: &[Statement], out: &mut HashSet<String>) {
+    for s in body {
+        collect_declared_names_stmt(s, out);
+    }
+}
+
+fn collect_declared_names_stmt(stmt: &Statement, out: &mut HashSet<String>) {
+    match stmt {
+        Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
+            for d in &vd.declarations {
+                let BindingTarget::Identifier(id) = &d.id;
+                out.insert(id.name.clone());
+            }
+        }
+        Statement::Declaration(Declaration::FunctionDeclaration(fd)) => {
+            out.insert(fd.id.name.clone());
+        }
+        Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
+            out.insert(cd.id.name.clone());
+        }
+        Statement::Declaration(_) => {}
+        Statement::Tagged(t) => match t {
+            TaggedStatement::BlockStatement(b) => {
+                collect_declared_names_body(&b.body, out);
+            }
+            TaggedStatement::IfStatement(is) => {
+                collect_declared_names_stmt(&is.consequent, out);
+                if let Some(alt) = &is.alternate {
+                    collect_declared_names_stmt(alt, out);
+                }
+            }
+            TaggedStatement::WhileStatement(ws) => {
+                collect_declared_names_stmt(&ws.body, out);
+            }
+            TaggedStatement::DoWhileStatement(dws) => {
+                collect_declared_names_stmt(&dws.body, out);
+            }
+            TaggedStatement::ForStatement(fs) => {
+                if let Some(ForInit::VariableDeclaration(vd)) = &fs.init {
+                    for d in &vd.declarations {
+                        let BindingTarget::Identifier(id) = &d.id;
+                        out.insert(id.name.clone());
+                    }
+                }
+                collect_declared_names_stmt(&fs.body, out);
+            }
+            TaggedStatement::ForInStatement(fis) => {
+                if let ForInit::VariableDeclaration(vd) = &fis.left {
+                    for d in &vd.declarations {
+                        let BindingTarget::Identifier(id) = &d.id;
+                        out.insert(id.name.clone());
+                    }
+                }
+                collect_declared_names_stmt(&fis.body, out);
+            }
+            TaggedStatement::ForOfStatement(fos) => {
+                if let ForInit::VariableDeclaration(vd) = &fos.left {
+                    for d in &vd.declarations {
+                        let BindingTarget::Identifier(id) = &d.id;
+                        out.insert(id.name.clone());
+                    }
+                }
+                collect_declared_names_stmt(&fos.body, out);
+            }
+            TaggedStatement::SwitchStatement(ss) => {
+                for case in &ss.cases {
+                    collect_declared_names_body(&case.consequent, out);
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                collect_declared_names_body(&ts.block.body, out);
+                if let Some(h) = &ts.handler {
+                    if let Some(p) = &h.param {
+                        out.insert(p.name.clone());
+                    }
+                    collect_declared_names_body(&h.body.body, out);
+                }
+                if let Some(fin) = &ts.finalizer {
+                    collect_declared_names_body(&fin.body, out);
+                }
+            }
+            TaggedStatement::LabeledStatement(ls) => {
+                collect_declared_names_stmt(&ls.body, out);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                collect_declared_names_stmt(&ws.body, out);
+            }
+            _ => {}
+        },
+    }
+}
+
+/// #18144: Walk an expression to find parameters referenced or mutated inside
+/// nested closures (arrows, functions, classes).
+fn collect_closure_param_usage_expr(
+    expr: &Expression,
+    params: &HashSet<String>,
+    in_closure: bool,
+    shadowed: &HashSet<String>,
+    captured: &mut HashSet<String>,
+    mutated: &mut HashSet<String>,
+) {
+    match expr {
+        Expression::Identifier(id) => {
+            if in_closure && params.contains(&id.name) && !shadowed.contains(&id.name) {
+                captured.insert(id.name.clone());
+            }
+        }
+        Expression::AssignmentExpression(ae) => {
+            if in_closure {
+                if let AssignmentTarget::Identifier(id) = &ae.left {
+                    if params.contains(&id.name) && !shadowed.contains(&id.name) {
+                        captured.insert(id.name.clone());
+                        mutated.insert(id.name.clone());
+                    }
+                }
+            }
+            if let AssignmentTarget::MemberExpression(m) = &ae.left {
+                collect_closure_param_usage_expr(&m.object, params, in_closure, shadowed, captured, mutated);
+                if m.computed {
+                    collect_closure_param_usage_expr(&m.property, params, in_closure, shadowed, captured, mutated);
+                }
+            }
+            collect_closure_param_usage_expr(&ae.right, params, in_closure, shadowed, captured, mutated);
+        }
+        Expression::UpdateExpression(ue) => {
+            if in_closure {
+                if let Expression::Identifier(id) = &*ue.argument {
+                    if params.contains(&id.name) && !shadowed.contains(&id.name) {
+                        captured.insert(id.name.clone());
+                        mutated.insert(id.name.clone());
+                    }
+                }
+            }
+            collect_closure_param_usage_expr(&ue.argument, params, in_closure, shadowed, captured, mutated);
+        }
+        Expression::ArrowFunctionExpression(ae) => {
+            let mut inner_shadowed = shadowed.clone();
+            for p in &ae.params {
+                let id = p.binding_identifier();
+                inner_shadowed.insert(id.name.clone());
+            }
+            for p in &ae.params {
+                if let Some(def) = p.default_value() {
+                    collect_closure_param_usage_expr(def, params, true, &inner_shadowed, captured, mutated);
+                }
+            }
+            match &ae.body {
+                ArrowBody::Expression(e) => {
+                    collect_closure_param_usage_expr(e, params, true, &inner_shadowed, captured, mutated);
+                }
+                ArrowBody::Block(b) => {
+                    collect_declared_names_body(&b.body, &mut inner_shadowed);
+                    for s in &b.body {
+                        collect_closure_param_usage_stmt(s, params, true, &inner_shadowed, captured, mutated);
+                    }
+                }
+            }
+        }
+        Expression::FunctionExpression(fe) => {
+            let mut inner_shadowed = shadowed.clone();
+            if let Some(id) = &fe.id {
+                inner_shadowed.insert(id.name.clone());
+            }
+            for p in &fe.params {
+                let id = p.binding_identifier();
+                inner_shadowed.insert(id.name.clone());
+            }
+            collect_declared_names_body(&fe.body.body, &mut inner_shadowed);
+            for p in &fe.params {
+                if let Some(def) = p.default_value() {
+                    collect_closure_param_usage_expr(def, params, true, &inner_shadowed, captured, mutated);
+                }
+            }
+            for s in &fe.body.body {
+                collect_closure_param_usage_stmt(s, params, true, &inner_shadowed, captured, mutated);
+            }
+        }
+        Expression::ClassExpression(ce) => {
+            if let Some(sup) = &ce.super_class {
+                collect_closure_param_usage_expr(sup, params, in_closure, shadowed, captured, mutated);
+            }
+            let mut class_shadowed = shadowed.clone();
+            if let Some(id) = &ce.id {
+                class_shadowed.insert(id.name.clone());
+            }
+            for member in &ce.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        if m.computed {
+                            if let PropertyKey::Expression(e) = &m.key {
+                                collect_closure_param_usage_expr(e, params, in_closure, shadowed, captured, mutated);
+                            }
+                        }
+                        let mut inner_shadowed = class_shadowed.clone();
+                        if let Some(id) = &m.value.id {
+                            inner_shadowed.insert(id.name.clone());
+                        }
+                        for p in &m.value.params {
+                            let id = p.binding_identifier();
+                            inner_shadowed.insert(id.name.clone());
+                        }
+                        collect_declared_names_body(&m.value.body.body, &mut inner_shadowed);
+                        for p in &m.value.params {
+                            if let Some(def) = p.default_value() {
+                                collect_closure_param_usage_expr(def, params, true, &inner_shadowed, captured, mutated);
+                            }
+                        }
+                        for s in &m.value.body.body {
+                            collect_closure_param_usage_stmt(s, params, true, &inner_shadowed, captured, mutated);
+                        }
+                    }
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_closure_param_usage_expr(e, params, in_closure, shadowed, captured, mutated);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_closure_param_usage_expr(v, params, true, &class_shadowed, captured, mutated);
+                        }
+                    }
+                    ClassMember::StaticBlock(b) => {
+                        let mut inner_shadowed = class_shadowed.clone();
+                        collect_declared_names_body(&b.body, &mut inner_shadowed);
+                        for s in &b.body {
+                            collect_closure_param_usage_stmt(s, params, true, &inner_shadowed, captured, mutated);
+                        }
+                    }
+                }
+            }
+        }
+        Expression::BinaryExpression(be) => {
+            collect_closure_param_usage_expr(&be.left, params, in_closure, shadowed, captured, mutated);
+            collect_closure_param_usage_expr(&be.right, params, in_closure, shadowed, captured, mutated);
+        }
+        Expression::LogicalExpression(le) => {
+            collect_closure_param_usage_expr(&le.left, params, in_closure, shadowed, captured, mutated);
+            collect_closure_param_usage_expr(&le.right, params, in_closure, shadowed, captured, mutated);
+        }
+        Expression::UnaryExpression(ue) => {
+            collect_closure_param_usage_expr(&ue.argument, params, in_closure, shadowed, captured, mutated);
+        }
+        Expression::ConditionalExpression(ce) => {
+            collect_closure_param_usage_expr(&ce.test, params, in_closure, shadowed, captured, mutated);
+            collect_closure_param_usage_expr(&ce.consequent, params, in_closure, shadowed, captured, mutated);
+            collect_closure_param_usage_expr(&ce.alternate, params, in_closure, shadowed, captured, mutated);
+        }
+        Expression::CallExpression(ce) => {
+            collect_closure_param_usage_expr(&ce.callee, params, in_closure, shadowed, captured, mutated);
+            for a in &ce.arguments {
+                collect_closure_param_usage_expr(a, params, in_closure, shadowed, captured, mutated);
+            }
+        }
+        Expression::NewExpression(ne) => {
+            collect_closure_param_usage_expr(&ne.callee, params, in_closure, shadowed, captured, mutated);
+            for a in &ne.arguments {
+                collect_closure_param_usage_expr(a, params, in_closure, shadowed, captured, mutated);
+            }
+        }
+        Expression::SequenceExpression(se) => {
+            for e in &se.expressions {
+                collect_closure_param_usage_expr(e, params, in_closure, shadowed, captured, mutated);
+            }
+        }
+        Expression::MemberExpression(m) => {
+            collect_closure_param_usage_expr(&m.object, params, in_closure, shadowed, captured, mutated);
+            if m.computed {
+                collect_closure_param_usage_expr(&m.property, params, in_closure, shadowed, captured, mutated);
+            }
+        }
+        Expression::OptionalMemberExpression(m) => {
+            collect_closure_param_usage_expr(&m.object, params, in_closure, shadowed, captured, mutated);
+            if m.computed {
+                collect_closure_param_usage_expr(&m.property, params, in_closure, shadowed, captured, mutated);
+            }
+        }
+        Expression::OptionalCallExpression(ce) => {
+            collect_closure_param_usage_expr(&ce.callee, params, in_closure, shadowed, captured, mutated);
+            for a in &ce.arguments {
+                collect_closure_param_usage_expr(a, params, in_closure, shadowed, captured, mutated);
+            }
+        }
+        Expression::ChainExpression(c) => {
+            collect_closure_param_usage_expr(&c.expression, params, in_closure, shadowed, captured, mutated);
+        }
+        Expression::ArrayExpression(ae) => {
+            for el in ae.elements.iter().flatten() {
+                collect_closure_param_usage_expr(el, params, in_closure, shadowed, captured, mutated);
+            }
+        }
+        Expression::ObjectExpression(oe) => {
+            for member in &oe.properties {
+                match member {
+                    ObjectMember::Property(prop) => {
+                        if prop.computed {
+                            if let PropertyKey::Expression(e) = &prop.key {
+                                collect_closure_param_usage_expr(e, params, in_closure, shadowed, captured, mutated);
+                            }
+                        }
+                        collect_closure_param_usage_expr(&prop.value, params, in_closure, shadowed, captured, mutated);
+                    }
+                    ObjectMember::Spread(s) => {
+                        collect_closure_param_usage_expr(&s.argument, params, in_closure, shadowed, captured, mutated);
+                    }
+                }
+            }
+        }
+        Expression::TemplateLiteral(t) => {
+            for e in &t.expressions {
+                collect_closure_param_usage_expr(e, params, in_closure, shadowed, captured, mutated);
+            }
+        }
+        Expression::TaggedTemplateExpression(t) => {
+            collect_closure_param_usage_expr(&t.tag, params, in_closure, shadowed, captured, mutated);
+            for e in &t.quasi.expressions {
+                collect_closure_param_usage_expr(e, params, in_closure, shadowed, captured, mutated);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn collect_closure_param_usage_stmt(
+    stmt: &Statement,
+    params: &HashSet<String>,
+    in_closure: bool,
+    shadowed: &HashSet<String>,
+    captured: &mut HashSet<String>,
+    mutated: &mut HashSet<String>,
+) {
+    match stmt {
+        Statement::Declaration(Declaration::VariableDeclaration(vd)) => {
+            for d in &vd.declarations {
+                if let Some(init) = &d.init {
+                    collect_closure_param_usage_expr(init, params, in_closure, shadowed, captured, mutated);
+                }
+            }
+        }
+        Statement::Declaration(Declaration::FunctionDeclaration(fd)) => {
+            let mut inner_shadowed = shadowed.clone();
+            inner_shadowed.insert(fd.id.name.clone());
+            for p in &fd.params {
+                let id = p.binding_identifier();
+                inner_shadowed.insert(id.name.clone());
+            }
+            collect_declared_names_body(&fd.body.body, &mut inner_shadowed);
+            for p in &fd.params {
+                if let Some(def) = p.default_value() {
+                    collect_closure_param_usage_expr(def, params, true, &inner_shadowed, captured, mutated);
+                }
+            }
+            for s in &fd.body.body {
+                collect_closure_param_usage_stmt(s, params, true, &inner_shadowed, captured, mutated);
+            }
+        }
+        Statement::Declaration(Declaration::ClassDeclaration(cd)) => {
+            if let Some(sup) = &cd.super_class {
+                collect_closure_param_usage_expr(sup, params, in_closure, shadowed, captured, mutated);
+            }
+            let mut class_shadowed = shadowed.clone();
+            class_shadowed.insert(cd.id.name.clone());
+            for member in &cd.body {
+                match member {
+                    ClassMember::Method(m) => {
+                        if m.computed {
+                            if let PropertyKey::Expression(e) = &m.key {
+                                collect_closure_param_usage_expr(e, params, in_closure, shadowed, captured, mutated);
+                            }
+                        }
+                        let mut inner_shadowed = class_shadowed.clone();
+                        if let Some(id) = &m.value.id {
+                            inner_shadowed.insert(id.name.clone());
+                        }
+                        for p in &m.value.params {
+                            let id = p.binding_identifier();
+                            inner_shadowed.insert(id.name.clone());
+                        }
+                        collect_declared_names_body(&m.value.body.body, &mut inner_shadowed);
+                        for p in &m.value.params {
+                            if let Some(def) = p.default_value() {
+                                collect_closure_param_usage_expr(def, params, true, &inner_shadowed, captured, mutated);
+                            }
+                        }
+                        for s in &m.value.body.body {
+                            collect_closure_param_usage_stmt(s, params, true, &inner_shadowed, captured, mutated);
+                        }
+                    }
+                    ClassMember::Field(f) => {
+                        if let PropertyKey::Expression(e) = &f.key {
+                            collect_closure_param_usage_expr(e, params, in_closure, shadowed, captured, mutated);
+                        }
+                        if let Some(v) = &f.value {
+                            collect_closure_param_usage_expr(v, params, true, &class_shadowed, captured, mutated);
+                        }
+                    }
+                    ClassMember::StaticBlock(b) => {
+                        let mut inner_shadowed = class_shadowed.clone();
+                        collect_declared_names_body(&b.body, &mut inner_shadowed);
+                        for s in &b.body {
+                            collect_closure_param_usage_stmt(s, params, true, &inner_shadowed, captured, mutated);
+                        }
+                    }
+                }
+            }
+        }
+        Statement::Declaration(_) => {}
+        Statement::Tagged(t) => match t {
+            TaggedStatement::ExpressionStatement(es) => {
+                collect_closure_param_usage_expr(&es.expression, params, in_closure, shadowed, captured, mutated);
+            }
+            TaggedStatement::ReturnStatement(rs) => {
+                if let Some(arg) = &rs.argument {
+                    collect_closure_param_usage_expr(arg, params, in_closure, shadowed, captured, mutated);
+                }
+            }
+            TaggedStatement::ThrowStatement(ts) => {
+                collect_closure_param_usage_expr(&ts.argument, params, in_closure, shadowed, captured, mutated);
+            }
+            TaggedStatement::IfStatement(is) => {
+                collect_closure_param_usage_expr(&is.test, params, in_closure, shadowed, captured, mutated);
+                collect_closure_param_usage_stmt(&is.consequent, params, in_closure, shadowed, captured, mutated);
+                if let Some(alt) = &is.alternate {
+                    collect_closure_param_usage_stmt(alt, params, in_closure, shadowed, captured, mutated);
+                }
+            }
+            TaggedStatement::BlockStatement(b) => {
+                for s in &b.body {
+                    collect_closure_param_usage_stmt(s, params, in_closure, shadowed, captured, mutated);
+                }
+            }
+            TaggedStatement::WhileStatement(ws) => {
+                collect_closure_param_usage_expr(&ws.test, params, in_closure, shadowed, captured, mutated);
+                collect_closure_param_usage_stmt(&ws.body, params, in_closure, shadowed, captured, mutated);
+            }
+            TaggedStatement::DoWhileStatement(dws) => {
+                collect_closure_param_usage_stmt(&dws.body, params, in_closure, shadowed, captured, mutated);
+                collect_closure_param_usage_expr(&dws.test, params, in_closure, shadowed, captured, mutated);
+            }
+            TaggedStatement::ForStatement(fs) => {
+                if let Some(init) = &fs.init {
+                    match init {
+                        ForInit::VariableDeclaration(vd) => {
+                            for d in &vd.declarations {
+                                if let Some(init_expr) = &d.init {
+                                    collect_closure_param_usage_expr(init_expr, params, in_closure, shadowed, captured, mutated);
+                                }
+                            }
+                        }
+                        ForInit::Expression(e) => {
+                            collect_closure_param_usage_expr(e, params, in_closure, shadowed, captured, mutated);
+                        }
+                    }
+                }
+                if let Some(test) = &fs.test {
+                    collect_closure_param_usage_expr(test, params, in_closure, shadowed, captured, mutated);
+                }
+                if let Some(update) = &fs.update {
+                    collect_closure_param_usage_expr(update, params, in_closure, shadowed, captured, mutated);
+                }
+                collect_closure_param_usage_stmt(&fs.body, params, in_closure, shadowed, captured, mutated);
+            }
+            TaggedStatement::ForInStatement(fis) => {
+                collect_closure_param_usage_expr(&fis.right, params, in_closure, shadowed, captured, mutated);
+                collect_closure_param_usage_stmt(&fis.body, params, in_closure, shadowed, captured, mutated);
+            }
+            TaggedStatement::ForOfStatement(fos) => {
+                collect_closure_param_usage_expr(&fos.right, params, in_closure, shadowed, captured, mutated);
+                collect_closure_param_usage_stmt(&fos.body, params, in_closure, shadowed, captured, mutated);
+            }
+            TaggedStatement::SwitchStatement(ss) => {
+                collect_closure_param_usage_expr(&ss.discriminant, params, in_closure, shadowed, captured, mutated);
+                for case in &ss.cases {
+                    if let Some(test) = &case.test {
+                        collect_closure_param_usage_expr(test, params, in_closure, shadowed, captured, mutated);
+                    }
+                    for s in &case.consequent {
+                        collect_closure_param_usage_stmt(s, params, in_closure, shadowed, captured, mutated);
+                    }
+                }
+            }
+            TaggedStatement::TryStatement(ts) => {
+                collect_closure_param_usage_stmt(&Statement::Tagged(TaggedStatement::BlockStatement(ts.block.clone())), params, in_closure, shadowed, captured, mutated);
+                if let Some(h) = &ts.handler {
+                    let mut inner_shadowed = shadowed.clone();
+                    if let Some(p) = &h.param {
+                        inner_shadowed.insert(p.name.clone());
+                    }
+                    for s in &h.body.body {
+                        collect_closure_param_usage_stmt(s, params, in_closure, &inner_shadowed, captured, mutated);
+                    }
+                }
+                if let Some(fin) = &ts.finalizer {
+                    collect_closure_param_usage_stmt(&Statement::Tagged(TaggedStatement::BlockStatement(fin.clone())), params, in_closure, shadowed, captured, mutated);
+                }
+            }
+            TaggedStatement::LabeledStatement(ls) => {
+                collect_closure_param_usage_stmt(&ls.body, params, in_closure, shadowed, captured, mutated);
+            }
+            TaggedStatement::WithStatement(ws) => {
+                collect_closure_param_usage_stmt(&ws.body, params, in_closure, shadowed, captured, mutated);
+            }
+            _ => {}
+        },
     }
 }
 
@@ -6182,5 +6994,81 @@ mod tests {
             inline_source("function t(){return function(){return 7}}log(t()());"),
             "function t(){return function(){return 7}}log((function(){return 7})());"
         );
+    }
+
+    // ---- #18144: nested closure parameter capture, substitution & shadowing ----
+
+    /// When a parameter is captured by a nested closure and the caller passes an identifier,
+    /// deferred reads could observe later mutations. Inlining must be rejected.
+    #[test]
+    fn issue18144_closure_deferred_read_with_identifier_is_not_inlined() {
+        let src = "function t(x){return function(){return x}}var a=1;var f=t(a);a=2;log(f());";
+        assert_eq!(inline_source(src), src, "t was inlined despite deferred identifier read");
+
+        // Arrow function closure deferred read
+        let src_arrow = "function t(x){return ()=>x}var a=1;var f=t(a);a=2;log(f());";
+        assert_eq!(inline_source(src_arrow), src_arrow, "t was inlined with arrow deferred read");
+
+        // Class method deferred read
+        let src_class = "function t(x){return class{m(){return x}}}var a=1;var f=t(a);a=2;log(f);";
+        assert_eq!(inline_source(src_class), src_class, "t was inlined with class method deferred read");
+    }
+
+    /// When a parameter is captured by a nested closure and the caller passes a literal,
+    /// the literal's value is immutable, so inlining is safe.
+    #[test]
+    fn issue18144_closure_deferred_read_with_literal_is_inlined() {
+        let src = "function t(x){return function(){return x}}log(t(1)());";
+        let expected = "function t(x){return function(){return x}}log((function(){return 1})());";
+        assert_eq!(inline_source(src), expected);
+
+        let src_arrow = "function t(x){return ()=>x}log(t(\"hello\")());";
+        let expected_arrow = "function t(x){return ()=>x}log((()=>\"hello\")());";
+        assert_eq!(inline_source(src_arrow), expected_arrow);
+    }
+
+    /// Return statement inside a nested closure was previously missing from substitute_in_stmt.
+    #[test]
+    fn issue18144_return_statement_in_nested_closure_is_substituted() {
+        let src = "function t(x){return function(){return x}}log(t(42)());";
+        let out = inline_source(src);
+        assert!(out.contains("return 42"), "return x was not substituted: {out}");
+    }
+
+    /// Computed class method keys evaluate in the enclosing scope and must be substituted.
+    #[test]
+    fn issue18144_computed_class_method_key_is_substituted() {
+        let src = "function t(k){return class{[k](){return 1}}}log(t(\"foo\"));";
+        let out = inline_source(src);
+        assert!(out.contains("class{[\"foo\"]()"), "computed key was not substituted: {out}");
+    }
+
+    /// Nested declarations (var, let, const, function, class) shadowing a parameter must NOT be substituted.
+    #[test]
+    fn issue18144_nested_locals_shadowing_parameter_are_preserved() {
+        let src = "function t(x){return function(){let x=2;return x}}log(t(1)());";
+        let out = inline_source(src);
+        assert!(out.contains("let x=2;return x"), "shadowed x was incorrectly substituted: {out}");
+
+        // Catch parameter shadowing
+        let src_catch = "function t(x){return function(){try{throw 9}catch(x){return x}}}log(t(1)());";
+        let out_catch = inline_source(src_catch);
+        assert!(out_catch.contains("catch(x){return x}"), "catch param was incorrectly substituted: {out_catch}");
+
+        // For-of loop binding shadowing
+        let src_for = "function t(x){return function(){for(let x of[2]){return x}}}log(t(1)());";
+        let out_for = inline_source(src_for);
+        assert!(!out_for.contains("return 1"), "for-of binding was substituted with 1: {out_for}");
+        assert!(out_for.contains("return x"), "for-of binding was incorrectly substituted: {out_for}");
+    }
+
+    /// When a parameter is assigned/mutated inside a nested closure, it can never be inlined soundly.
+    #[test]
+    fn issue18144_parameter_assigned_in_nested_closure_is_not_inlined() {
+        let src = "function t(x){return function(){x=2;return x}}log(t(1)());";
+        assert_eq!(inline_source(src), src, "t was inlined despite mutation in closure");
+
+        let src_inc = "function t(x){return function(){x++;return x}}log(t(1)());";
+        assert_eq!(inline_source(src_inc), src_inc, "t was inlined despite update in closure");
     }
 }
