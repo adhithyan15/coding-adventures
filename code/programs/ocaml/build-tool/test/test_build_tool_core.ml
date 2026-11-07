@@ -238,11 +238,11 @@ let consumes_every_shared_fixture () =
                seen :=
                  String_set.add (fixture |> member "id" |> to_string) !seen;
                check_graph fixture
-           | "diff_selection" ->
+           | "diff_selection" -> (
                let options = fixture |> member "input" |> member "options" in
                (* This closed variant uses package-name strings rather than the
                   legacy path-selection package records consumed here. *)
-               (match member "trigger_relations" options with
+               match member "trigger_relations" options with
                | `Null ->
                    seen :=
                      String_set.add (fixture |> member "id" |> to_string) !seen;
