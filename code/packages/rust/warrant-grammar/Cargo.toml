@@ -2,7 +2,7 @@
 name = "coding_adventures_warrant_grammar"
 version = "0.1.0"
 edition = "2021"
-description = "Warrant v0 grammar artifacts, bounded source admission and syntax-corpus checks"
+description = "Warrant v0 grammar artifacts, bounded source admission, layout, parser, type checker and bindings"
 license = "MIT"
 
 [dependencies]
