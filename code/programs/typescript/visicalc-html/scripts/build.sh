@@ -20,6 +20,10 @@
 
 set -euo pipefail
 
+if [ -d "$HOME/.cargo/bin" ] && ! command -v cargo >/dev/null 2>&1; then
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEMO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(cd "$DEMO_DIR/../../../.." && pwd)"
@@ -107,11 +111,28 @@ done
 # Back-compat alias for the pre-switcher filename.
 cp "$OUT_DIR/Grid.dark.html" "$OUT_DIR/Grid.html"
 
+PYTHON_BIN=""
+for candidate in python3 python py; do
+  if command -v "$candidate" >/dev/null 2>&1; then
+    PYTHON_BIN="$candidate"
+    break
+  fi
+done
+if [ -z "$PYTHON_BIN" ] && [ -n "${LOCALAPPDATA:-}" ] && [ -x "$LOCALAPPDATA/Programs/Python/Python313/python.exe" ]; then
+  PYTHON_BIN="$LOCALAPPDATA/Programs/Python/Python313/python.exe"
+fi
+if [ -z "$PYTHON_BIN" ] && [ -x "$HOME/AppData/Local/Programs/Python/Python313/python.exe" ]; then
+  PYTHON_BIN="$HOME/AppData/Local/Programs/Python/Python313/python.exe"
+fi
+if [ -z "$PYTHON_BIN" ]; then
+  PYTHON_BIN="python3"
+fi
+
 if ((CHECK)); then
-  python3 "$SCRIPT_DIR/sync-templates.py" "$OUT_DIR" "$DEMO_DIR/index.html" --check
+  "$PYTHON_BIN" "$SCRIPT_DIR/sync-templates.py" "$OUT_DIR" "$DEMO_DIR/index.html" --check
   exit 0
 fi
-python3 "$SCRIPT_DIR/sync-templates.py" "$OUT_DIR" "$DEMO_DIR/index.html"
+"$PYTHON_BIN" "$SCRIPT_DIR/sync-templates.py" "$OUT_DIR" "$DEMO_DIR/index.html"
 
 echo "Done. Generated:"
 ls -la "$OUT_DIR"

@@ -33,6 +33,10 @@
 
 set -euo pipefail
 
+if [ -d "$HOME/.cargo/bin" ] && ! command -v cargo >/dev/null 2>&1; then
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEMO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(cd "$DEMO_DIR/../../../.." && pwd)"
@@ -98,7 +102,19 @@ echo "Building the spreadsheet engine (Rust → static lib) and vendoring it..."
 # Vendor/ (git-ignored), along with the C header the C++ model includes.
 (cd "$REPO_ROOT/code/packages/rust" && cargo build -p spreadsheet-capi --release)
 mkdir -p "$DEMO_DIR/Vendor"
-cp "$REPO_ROOT/code/packages/rust/target/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/"
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*)
+    if [ -f "$REPO_ROOT/code/packages/rust/target/release/spreadsheet_capi.lib" ]; then
+      cp "$REPO_ROOT/code/packages/rust/target/release/spreadsheet_capi.lib" "$DEMO_DIR/Vendor/spreadsheet_capi.lib"
+      cp "$REPO_ROOT/code/packages/rust/target/release/spreadsheet_capi.lib" "$DEMO_DIR/Vendor/libspreadsheet_capi.a"
+    elif [ -f "$REPO_ROOT/code/packages/rust/target/release/libspreadsheet_capi.a" ]; then
+      cp "$REPO_ROOT/code/packages/rust/target/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/libspreadsheet_capi.a"
+    fi
+    ;;
+  *)
+    cp "$REPO_ROOT/code/packages/rust/target/release/libspreadsheet_capi.a" "$DEMO_DIR/Vendor/"
+    ;;
+esac
 cp "$REPO_ROOT/code/packages/rust/spreadsheet-capi/include/spreadsheet.h" "$DEMO_DIR/Vendor/spreadsheet.h"
 
 echo "Done. Generated QML + vendored engine:"
