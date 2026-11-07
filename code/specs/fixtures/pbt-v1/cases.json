@@ -1,0 +1,618 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "pbt/gen_primitive/bool_seed0",
+      "op": "gen_primitive",
+      "type": "bool",
+      "seed": {
+        "kind": "int",
+        "value": "0"
+      },
+      "count": {
+        "kind": "int",
+        "value": "8"
+      },
+      "outputs": [
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false
+      ]
+    },
+    {
+      "id": "pbt/gen_primitive/u8_seed0",
+      "op": "gen_primitive",
+      "type": "u8",
+      "seed": {
+        "kind": "int",
+        "value": "0"
+      },
+      "count": {
+        "kind": "int",
+        "value": "8"
+      },
+      "outputs": [
+        {
+          "kind": "int",
+          "value": "175"
+        },
+        {
+          "kind": "int",
+          "value": "244"
+        },
+        {
+          "kind": "int",
+          "value": "79"
+        },
+        {
+          "kind": "int",
+          "value": "236"
+        },
+        {
+          "kind": "int",
+          "value": "155"
+        },
+        {
+          "kind": "int",
+          "value": "234"
+        },
+        {
+          "kind": "int",
+          "value": "225"
+        },
+        {
+          "kind": "int",
+          "value": "60"
+        }
+      ]
+    },
+    {
+      "id": "pbt/gen_primitive/u64_seed0",
+      "op": "gen_primitive",
+      "type": "u64",
+      "seed": {
+        "kind": "int",
+        "value": "0"
+      },
+      "count": {
+        "kind": "int",
+        "value": "4"
+      },
+      "outputs": [
+        {
+          "kind": "int",
+          "value": "16294208416658607535"
+        },
+        {
+          "kind": "int",
+          "value": "7960286522194355700"
+        },
+        {
+          "kind": "int",
+          "value": "487617019471545679"
+        },
+        {
+          "kind": "int",
+          "value": "17909611376780542444"
+        }
+      ]
+    },
+    {
+      "id": "pbt/gen_primitive/u64_seed12345",
+      "op": "gen_primitive",
+      "type": "u64",
+      "seed": {
+        "kind": "int",
+        "value": "12345"
+      },
+      "count": {
+        "kind": "int",
+        "value": "4"
+      },
+      "outputs": [
+        {
+          "kind": "int",
+          "value": "2454886589211414944"
+        },
+        {
+          "kind": "int",
+          "value": "3778200017661327597"
+        },
+        {
+          "kind": "int",
+          "value": "2205171434679333405"
+        },
+        {
+          "kind": "int",
+          "value": "3248800117070709450"
+        }
+      ]
+    },
+    {
+      "id": "pbt/gen_primitive/i128_seed42",
+      "op": "gen_primitive",
+      "type": "i128",
+      "seed": {
+        "kind": "int",
+        "value": "42"
+      },
+      "count": {
+        "kind": "int",
+        "value": "4"
+      },
+      "outputs": [
+        {
+          "kind": "int",
+          "value": "-87940914747023602177814525588822101757"
+        },
+        {
+          "kind": "int",
+          "value": "94803052030067299153913603305528550292"
+        },
+        {
+          "kind": "int",
+          "value": "12940995765277210856621310805113101062"
+        },
+        {
+          "kind": "int",
+          "value": "74319436264208187434626610466163404708"
+        }
+      ]
+    },
+    {
+      "id": "pbt/gen_bounded/small_seed7",
+      "op": "gen_bounded",
+      "min": {
+        "kind": "int",
+        "value": "10"
+      },
+      "max": {
+        "kind": "int",
+        "value": "20"
+      },
+      "seed": {
+        "kind": "int",
+        "value": "7"
+      },
+      "count": {
+        "kind": "int",
+        "value": "8"
+      },
+      "outputs": [
+        {
+          "kind": "int",
+          "value": "12"
+        },
+        {
+          "kind": "int",
+          "value": "10"
+        },
+        {
+          "kind": "int",
+          "value": "10"
+        },
+        {
+          "kind": "int",
+          "value": "10"
+        },
+        {
+          "kind": "int",
+          "value": "17"
+        },
+        {
+          "kind": "int",
+          "value": "17"
+        },
+        {
+          "kind": "int",
+          "value": "11"
+        },
+        {
+          "kind": "int",
+          "value": "19"
+        }
+      ]
+    },
+    {
+      "id": "pbt/gen_bounded/large_seed99",
+      "op": "gen_bounded",
+      "min": {
+        "kind": "int",
+        "value": "0"
+      },
+      "max": {
+        "kind": "int",
+        "value": "1099511627776"
+      },
+      "seed": {
+        "kind": "int",
+        "value": "99"
+      },
+      "count": {
+        "kind": "int",
+        "value": "4"
+      },
+      "outputs": [
+        {
+          "kind": "int",
+          "value": "233203595322"
+        },
+        {
+          "kind": "int",
+          "value": "105353924331"
+        },
+        {
+          "kind": "int",
+          "value": "227355140139"
+        },
+        {
+          "kind": "int",
+          "value": "673123728189"
+        }
+      ]
+    },
+    {
+      "id": "pbt/gen_bytes/len4_8_seed13",
+      "op": "gen_bytes",
+      "min_len": {
+        "kind": "int",
+        "value": "4"
+      },
+      "max_len": {
+        "kind": "int",
+        "value": "8"
+      },
+      "seed": {
+        "kind": "int",
+        "value": "13"
+      },
+      "count": {
+        "kind": "int",
+        "value": "3"
+      },
+      "outputs": [
+        {
+          "kind": "bytes",
+          "hex": "71c87363"
+        },
+        {
+          "kind": "bytes",
+          "hex": "9754410f49cc12"
+        },
+        {
+          "kind": "bytes",
+          "hex": "88bac082a4fdfff1"
+        }
+      ]
+    },
+    {
+      "id": "pbt/gen_bytes/empty_seed1",
+      "op": "gen_bytes",
+      "min_len": {
+        "kind": "int",
+        "value": "0"
+      },
+      "max_len": {
+        "kind": "int",
+        "value": "0"
+      },
+      "seed": {
+        "kind": "int",
+        "value": "1"
+      },
+      "count": {
+        "kind": "int",
+        "value": "2"
+      },
+      "outputs": [
+        {
+          "kind": "bytes",
+          "hex": ""
+        },
+        {
+          "kind": "bytes",
+          "hex": ""
+        }
+      ]
+    },
+    {
+      "id": "pbt/shrink_int/54321_le_100",
+      "op": "shrink_int",
+      "initial": {
+        "kind": "int",
+        "value": "54321"
+      },
+      "target": {
+        "kind": "int",
+        "value": "0"
+      },
+      "min": {
+        "kind": "int",
+        "value": "0"
+      },
+      "max": {
+        "kind": "int",
+        "value": "100000"
+      },
+      "property": "int_le_100",
+      "expected_minimal": {
+        "kind": "int",
+        "value": "101"
+      },
+      "expected_steps": {
+        "kind": "int",
+        "value": "15"
+      }
+    },
+    {
+      "id": "pbt/shrink_int/200_range_neg10_50",
+      "op": "shrink_int",
+      "initial": {
+        "kind": "int",
+        "value": "200"
+      },
+      "target": {
+        "kind": "int",
+        "value": "0"
+      },
+      "min": {
+        "kind": "int",
+        "value": "-100"
+      },
+      "max": {
+        "kind": "int",
+        "value": "500"
+      },
+      "property": "int_in_range_neg10_50",
+      "expected_minimal": {
+        "kind": "int",
+        "value": "51"
+      },
+      "expected_steps": {
+        "kind": "int",
+        "value": "50"
+      }
+    },
+    {
+      "id": "pbt/shrink_int/neg80_range_neg10_50",
+      "op": "shrink_int",
+      "initial": {
+        "kind": "int",
+        "value": "-80"
+      },
+      "target": {
+        "kind": "int",
+        "value": "0"
+      },
+      "min": {
+        "kind": "int",
+        "value": "-200"
+      },
+      "max": {
+        "kind": "int",
+        "value": "200"
+      },
+      "property": "int_in_range_neg10_50",
+      "expected_minimal": {
+        "kind": "int",
+        "value": "-11"
+      },
+      "expected_steps": {
+        "kind": "int",
+        "value": "11"
+      }
+    },
+    {
+      "id": "pbt/shrink_refinement/x_le_50_min10",
+      "op": "shrink_refinement",
+      "initial": {
+        "kind": "int",
+        "value": "99"
+      },
+      "target": {
+        "kind": "int",
+        "value": "10"
+      },
+      "min": {
+        "kind": "int",
+        "value": "10"
+      },
+      "max": {
+        "kind": "int",
+        "value": "500"
+      },
+      "property": "refinement_x_le_50",
+      "expected_minimal": {
+        "kind": "int",
+        "value": "51"
+      },
+      "expected_steps": {
+        "kind": "int",
+        "value": "5"
+      }
+    },
+    {
+      "id": "pbt/shrink_list/consecutive_duplicates",
+      "op": "shrink_list",
+      "initial": [
+        {
+          "kind": "int",
+          "value": "1"
+        },
+        {
+          "kind": "int",
+          "value": "2"
+        },
+        {
+          "kind": "int",
+          "value": "3"
+        },
+        {
+          "kind": "int",
+          "value": "3"
+        },
+        {
+          "kind": "int",
+          "value": "4"
+        },
+        {
+          "kind": "int",
+          "value": "5"
+        }
+      ],
+      "elem_target": {
+        "kind": "int",
+        "value": "0"
+      },
+      "property": "list_no_consecutive_duplicates",
+      "expected_minimal": [
+        {
+          "kind": "int",
+          "value": "3"
+        },
+        {
+          "kind": "int",
+          "value": "3"
+        }
+      ],
+      "expected_steps": {
+        "kind": "int",
+        "value": "4"
+      }
+    },
+    {
+      "id": "pbt/shrink_list/sum_le_20",
+      "op": "shrink_list",
+      "initial": [
+        {
+          "kind": "int",
+          "value": "10"
+        },
+        {
+          "kind": "int",
+          "value": "5"
+        },
+        {
+          "kind": "int",
+          "value": "8"
+        },
+        {
+          "kind": "int",
+          "value": "4"
+        }
+      ],
+      "elem_target": {
+        "kind": "int",
+        "value": "0"
+      },
+      "property": "list_sum_le_20",
+      "expected_minimal": [
+        {
+          "kind": "int",
+          "value": "8"
+        },
+        {
+          "kind": "int",
+          "value": "5"
+        },
+        {
+          "kind": "int",
+          "value": "8"
+        }
+      ],
+      "expected_steps": {
+        "kind": "int",
+        "value": "3"
+      }
+    },
+    {
+      "id": "pbt/shrink_bytes/len_lt_5",
+      "op": "shrink_bytes",
+      "initial": {
+        "kind": "bytes",
+        "hex": "0102030405060708"
+      },
+      "property": "bytes_len_lt_5",
+      "expected_minimal": {
+        "kind": "bytes",
+        "hex": "0000000000"
+      },
+      "expected_steps": {
+        "kind": "int",
+        "value": "16"
+      }
+    },
+    {
+      "id": "pbt/replay/seed42_le_100",
+      "op": "replay_consistency",
+      "seed": {
+        "kind": "int",
+        "value": "42"
+      },
+      "property": "int_le_100",
+      "initial_fail": {
+        "kind": "int",
+        "value": "413"
+      },
+      "expected_minimal": {
+        "kind": "int",
+        "value": "101"
+      }
+    },
+    {
+      "id": "pbt/filter_exhausted/impossible",
+      "op": "filter_exhausted",
+      "max_retries": {
+        "kind": "int",
+        "value": "100"
+      },
+      "verdict": "fail",
+      "failure_id": "property-exhausted"
+    },
+    {
+      "id": "pbt/failure_id/counterexample",
+      "op": "failure_id_valid",
+      "input": "property-counterexample",
+      "valid": true
+    },
+    {
+      "id": "pbt/failure_id/exhausted",
+      "op": "failure_id_valid",
+      "input": "property-exhausted",
+      "valid": true
+    },
+    {
+      "id": "pbt/failure_id/timeout",
+      "op": "failure_id_valid",
+      "input": "property-timeout",
+      "valid": true
+    },
+    {
+      "id": "pbt/failure_id/panic",
+      "op": "failure_id_valid",
+      "input": "property-panic",
+      "valid": true
+    },
+    {
+      "id": "pbt/failure_id/unregistered",
+      "op": "failure_id_valid",
+      "input": "unregistered-id",
+      "valid": false
+    },
+    {
+      "id": "pbt/corpus_reject/bad_header",
+      "op": "corpus_reject",
+      "text": "bad header\n"
+    },
+    {
+      "id": "pbt/corpus_reject/uppercase_hex",
+      "op": "corpus_reject",
+      "text": "tfv 1\nr R1 Kop S706274 Kdata XFF\n"
+    }
+  ]
+}

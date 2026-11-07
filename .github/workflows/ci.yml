@@ -758,6 +758,10 @@ jobs:
           # the build tool selects the crate; this keeps it always on.
           python3 code/scripts/bootstrap_harness_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_bootstrap_harness_conformance.py'
+          # VER05: the PBT property engine's conformance corpus (pbt-v1) and its
+          # independent reference.
+          python3 code/scripts/pbt_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_pbt_conformance.py'
           # rng spec v2: the shared corpus and its independent reference.
           python3 code/scripts/rng_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_rng_conformance.py'
