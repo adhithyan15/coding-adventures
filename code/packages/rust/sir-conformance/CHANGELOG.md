@@ -4,6 +4,12 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18496 item 3)
+
+- Conformance programs `py_list_concat_plus` and `py_list_concat_multiple` in
+  `tests/python_statement_forms.rs`, verifying that `print([1] + [2])` and chained list
+  concatenation match CPython across all backends.
+
 ### Added (#18496 item 1)
 
 - Conformance programs `py_display_booleans_and_none` and `py_display_booleans_and_none_in_list`

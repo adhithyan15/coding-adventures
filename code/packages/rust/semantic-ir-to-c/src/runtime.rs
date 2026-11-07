@@ -383,7 +383,11 @@ SirValue *_sir_va_collect(int n, va_list ap) {
 
 /* ---- arithmetic (array cores + variadic wrappers) ----------- */
 
-/* `+` is polymorphic: string operands concatenate, else numeric add with
+SirValue _sir_error(const char *sir_class, SirValue msg);
+SirValue _sir_raise(SirValue exc);
+
+/* `+` is polymorphic: string operands concatenate, sequence operands
+ * concatenate (Ruby Array#+ / Python [a] + [b]), else numeric add with
  * int -> float promotion once any operand is a float. */
 SirValue _sir_plus_v(SirValue *xs, int n) {
     int i;
@@ -393,6 +397,33 @@ SirValue _sir_plus_v(SirValue *xs, int n) {
         for (i = 1; i < n; i++) acc = _sir_cat(acc, _sir_str_of(xs[i]));
         return _sir_str(acc);
     }
+    if (xs[0].tag == SIR_SEQ) {
+        /* Sequence concatenation: build a FRESH SirSeq so the result never
+         * aliases any input's backing items (matching Ruby Array#+ and the
+         * Go/Rust reference runtimes). All operands must be sequences; a non-
+         * sequence raises a rescuable TypeError. */
+        int64_t total_len = 0;
+        for (i = 0; i < n; i++) {
+            if (xs[i].tag != SIR_SEQ) {
+                return _sir_raise(_sir_error("TypeError", _sir_str("no implicit conversion into Array")));
+            }
+            total_len += xs[i].as.seq->len;
+        }
+        SirSeq *r = (SirSeq *)_sir_alloc(sizeof(SirSeq));
+        r->len = total_len;
+        r->items = (total_len > 0) ? (SirValue *)_sir_alloc(sizeof(SirValue) * (size_t)total_len) : NULL;
+        int64_t offset = 0;
+        for (i = 0; i < n; i++) {
+            SirSeq *cur = xs[i].as.seq;
+            for (int64_t k = 0; k < cur->len; k++) {
+                r->items[offset++] = cur->items[k];
+            }
+        }
+        SirValue v;
+        v.tag = SIR_SEQ;
+        v.as.seq = r;
+        return v;
+    }
     {
         int64_t iacc = (xs[0].tag == SIR_INT) ? xs[0].as.i : 0;
         double  facc = _sir_as_num(xs[0]);
@@ -400,7 +431,7 @@ SirValue _sir_plus_v(SirValue *xs, int n) {
         for (i = 1; i < n; i++) {
             if (!promoted && xs[i].tag == SIR_FLOAT) { promoted = 1; facc = (double)iacc; }
             if (promoted) facc += _sir_as_num(xs[i]);
-            else          iacc += xs[i].as.i;
+            else          iacc += _sir_as_int(xs[i]);
         }
         return promoted ? _sir_float(facc) : _sir_int(iacc);
     }
