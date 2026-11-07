@@ -2431,7 +2431,7 @@ fn emit_make_closure(
     //     fun: Box::new(move |__args: Vec<__sir::Value>| {
     //         let mut __it = __args.into_iter();
     //         <fn_name>(__cap_<n0>.clone(), __cap_<n1>.clone(),
-    //                   __it.next().unwrap_or(__sir::Value::Nil),
+    //                   __it.next().unwrap_or(__sir::Value::Missing),
     //                   ... )
     //     })
     //   }))
@@ -2524,7 +2524,13 @@ fn emit_make_closure(
             out.push_str(", ");
         }
         first = false;
-        out.push_str("__it.next().unwrap_or(__sir::Value::Nil)");
+        // Drain argument iterator. If an argument is omitted, pad with the
+        // `__sir::Value::Missing` sentinel rather than `Value::Nil` (#18490).
+        // This ensures the callee's default-parameter prologue
+        // (`let p = if __sir::is_missing(&p) { <default> } else { p };`)
+        // detects the omitted argument and substitutes its default expression,
+        // exactly matching direct-call semantics.
+        out.push_str("__it.next().unwrap_or(__sir::Value::Missing)");
     }
     out.push_str(")\n");
     let _ = writeln!(out, "{}}}) }}))", pad);
@@ -3476,6 +3482,29 @@ mod tests {
         emit_expr(&mut out, &e, 0);
         assert!(out.contains("let __cap_fn: __sir::Value"), "got: {out}");
         assert!(!out.contains("__cap_r#"), "got: {out}");
+    }
+
+    /// An omitted argument in a closure adapter drains as `Value::Missing`
+    /// rather than `Value::Nil` (#18490) so defaulted parameters evaluate
+    /// their default expressions.
+    #[test]
+    fn closure_adapter_drains_omitted_arguments_with_missing_sentinel() {
+        let e = Expr::MakeClosure {
+            fn_name: "f".into(),
+            captures: vec![],
+            span: Span::synthetic(),
+        };
+        let mut out = String::new();
+        FN_ARITY.with(|t| t.borrow_mut().insert("f".into(), 2));
+        emit_expr(&mut out, &e, 0);
+        assert!(
+            out.contains("__it.next().unwrap_or(__sir::Value::Missing)"),
+            "closure adapter must unwrap to Value::Missing sentinel (#18490); got:\n{out}"
+        );
+        assert!(
+            !out.contains("__it.next().unwrap_or(__sir::Value::Nil)"),
+            "closure adapter must not unwrap to Nil; got:\n{out}"
+        );
     }
 
     #[test]

@@ -358,7 +358,12 @@ fn emit_thunk(out: &mut String, m: &Module, name: &str) {
                 out.push_str(", ");
             }
             first = false;
-            let _ = write!(out, "(argc > {i} ? args[{i}] : _sir_nil())", i = i);
+            // Pad omitted arguments with the `_sir_missing()` sentinel rather
+            // than `_sir_nil()` (#18490). If the callee has default parameters,
+            // its opening prologue (`if (_sir_is_missing(p)) { p = <default>; }`)
+            // detects the sentinel and evaluates the default expression,
+            // exactly as direct calls do.
+            let _ = write!(out, "(argc > {i} ? args[{i}] : _sir_missing())", i = i);
         }
         // A body with no captures and no params is still a valid zero-arg call.
         out.push_str(");\n");

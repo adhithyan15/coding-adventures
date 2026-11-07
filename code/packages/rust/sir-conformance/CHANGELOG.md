@@ -4,6 +4,10 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18490)
+
+- Conformance program `sir_closure_default_param_omitted_call` in `tests/local_shadows_function.rs`, verifying that calling a closure with an omitted default parameter evaluates the default argument expression on all backends.
+
 ### Added (#18496 review)
 
 - Conformance programs `py_subscript_assign_eval_order` and `py_chained_subscript_assign_eval_order` in `tests/python_statement_forms.rs`, verifying that single and chained subscript assignments evaluate the RHS value strictly before the subscript target and index across all backends.
