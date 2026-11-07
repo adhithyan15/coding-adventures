@@ -2,6 +2,17 @@
 
 ## 0.1.0 — Unreleased
 
+- Add VER04e/P008 Warrant code generation and L0 test vector compiler:
+  - Bounded pure compile-time ground model evaluator with strict recursion depth (<= 64)
+    and work quotas (<= 1,000,000 steps).
+  - Canonical Portable Test Vector (TFV) compiler transforming Warrant `example` and `claim`
+    declarations into structured portable records with logical work accounting.
+  - Standalone, deterministic Rust L0 test harness generator executing on `test-bootstrap`,
+    calling real public exports, verifying fresh-output non-aliasing, containing and
+    normalizing declared panics via `catch_unwind`, and incorporating adapter negative controls.
+  - Closed diagnostic error codes (`W0701`..`W0705`) and checked regeneration drift detection.
+  - Pilot `code/specs/ct-compare.warrant` canonical specification.
+  - Exceed strict ≥90% line and branch/region test coverage with zero third-party dependencies.
 - Add VER04d/P007 Warrant type checker and Rust binding schema: static type checking,
   scope/symbol resolution, cycle detection on type aliases and pure model functions,
   minimal subtyping (`Nat <: Int`, `Bytes<N> <: Bytes`), exhaustive match verification,

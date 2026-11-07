@@ -65,8 +65,22 @@ let checked = check_warrant(&ast).unwrap();
 validate_bindings(&checked, &manifest).unwrap();
 ```
 
-Source admission, layout capture, grammar data, parser and type checking do not
-establish solvers, Rust test generation, proof or release authorization (VER-P008+).
+The additive [VER04e code generation stage](../../../specs/VER04e-warrant-codegen.md)
+compiles checked Warrant modules into canonical portable test vectors (TFV) and
+standalone Rust L0 test harnesses running on `test-bootstrap`. It features a bounded
+ground model evaluator (depth <= 64, work <= 1,000,000), real export invocations,
+fresh-output non-aliasing validation, panic containment/normalization via `catch_unwind`,
+and adapter negative controls:
+
+```rust
+use coding_adventures_warrant_grammar::codegen::{compile_warrant_to_tfv, compile_rust_l0_harness, CodegenLimits, RustL0Options};
+
+let tfv = compile_warrant_to_tfv(&ast, CodegenLimits::default()).unwrap();
+let harness = compile_rust_l0_harness(&ast, &checked, &manifest, &options).unwrap();
+```
+
+Source admission, layout capture, grammar data, parser, type checking and codegen do not
+establish solvers, property engine, proof or release authorization (VER-P009+).
 
 ## Tests and regeneration
 

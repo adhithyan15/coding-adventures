@@ -1037,9 +1037,14 @@ impl<'a> Checker<'a> {
             })?;
 
             let op_params = op.params.clone();
+            let op_static_params: Vec<String> = op
+                .static_params
+                .iter()
+                .map(|sp| sp.name.to_string())
+                .collect();
             let mut env = HashMap::new();
             for p in &op_params {
-                let ty = self.resolve_type(&p.param_type, &[])?;
+                let ty = self.resolve_type(&p.param_type, &op_static_params)?;
                 env.insert(p.name.to_string(), ty);
             }
 
@@ -1102,12 +1107,17 @@ impl<'a> Checker<'a> {
 
                 let op_params = op.params.clone();
                 let op_ret = op.return_type.clone();
+                let op_static_params: Vec<String> = op
+                    .static_params
+                    .iter()
+                    .map(|sp| sp.name.to_string())
+                    .collect();
                 let mut env = HashMap::new();
                 for p in &op_params {
-                    let ty = self.resolve_type(&p.param_type, &[])?;
+                    let ty = self.resolve_type(&p.param_type, &op_static_params)?;
                     env.insert(p.name.to_string(), ty);
                 }
-                let ret_ty = self.resolve_type(&op_ret, &[])?;
+                let ret_ty = self.resolve_type(&op_ret, &op_static_params)?;
                 (env, ret_ty)
             };
 
