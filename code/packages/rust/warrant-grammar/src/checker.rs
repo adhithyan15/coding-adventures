@@ -105,6 +105,7 @@ pub enum CheckerErrorKind {
     MissingFreshRequirement(String),
     WorkBudgetExceeded,
     DepthBudgetExceeded,
+    ArithmeticOverflow(String),
 }
 
 /// Semantic checking error with source span.
@@ -329,13 +330,16 @@ impl<'a> Checker<'a> {
         // Pass 3: Validate model function dependencies (must be acyclic and not call operations)
         self.validate_model_dependencies()?;
 
-        // Pass 4: Type-check model function bodies
+        // Pass 4: Validate operations (parameters, refinements)
+        let checked_ops = self.validate_operations()?;
+
+        // Pass 5: Type-check model function bodies
         let checked_models = self.typecheck_models()?;
 
-        // Pass 5: Type-check examples and claims
+        // Pass 6: Type-check examples and claims
         self.typecheck_examples_and_claims()?;
 
-        // Pass 6: Check contracts (labels, bounds, inputs, assumptions)
+        // Pass 7: Check contracts (labels, bounds, inputs, assumptions)
         self.check_contracts()?;
 
         // Construct CheckedWarrantModule
@@ -347,31 +351,6 @@ impl<'a> Checker<'a> {
                     name: name.clone(),
                     variants: variants.clone(),
                     span: *span,
-                },
-            );
-        }
-
-        let mut checked_ops = BTreeMap::new();
-        for (name, op) in &self.operations {
-            let mut static_params = Vec::new();
-            for sp in &op.static_params {
-                static_params.push(sp.name.to_string());
-            }
-            let mut params = Vec::new();
-            for p in &op.params {
-                let ty = self.resolve_type(&p.param_type, &static_params)?;
-                params.push((p.name.to_string(), ty));
-            }
-            let return_type = self.resolve_type(&op.return_type, &static_params)?;
-            checked_ops.insert(
-                name.clone(),
-                CheckedOp {
-                    name: name.clone(),
-                    static_params,
-                    params,
-                    return_type,
-                    is_fresh: op.is_fresh,
-                    span: op.span,
                 },
             );
         }
@@ -401,6 +380,7 @@ impl<'a> Checker<'a> {
 
     fn catalog_declarations(&mut self) -> Result<(), CheckerError> {
         let mut module_symbols = HashSet::new();
+        let mut seen_assumptions = HashSet::new();
 
         // Built-in types and callables reserved in module symbol namespace
         let builtins = [
@@ -518,7 +498,19 @@ impl<'a> Checker<'a> {
                         });
                     }
                 }
-                Declaration::Assumptions(_) => {}
+                Declaration::Assumptions(a) => {
+                    let (kind, span) = match a {
+                        AssumptionsDecl::Platform { span, .. } => ("platform", *span),
+                        AssumptionsDecl::Environment { span, .. } => ("environment", *span),
+                    };
+                    if !seen_assumptions.insert(kind) {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0201,
+                            kind: CheckerErrorKind::DuplicateContract(format!("assume {kind}")),
+                            span,
+                        });
+                    }
+                }
             }
         }
         Ok(())
@@ -545,7 +537,12 @@ impl<'a> Checker<'a> {
         Ok(())
     }
 
-    fn check_alias_cycle(&self, current: &str, path: &mut Vec<String>) -> Result<(), CheckerError> {
+    fn check_alias_cycle(
+        &mut self,
+        current: &str,
+        path: &mut Vec<String>,
+    ) -> Result<(), CheckerError> {
+        self.charge_work((0, 0))?;
         if let Some(pos) = path.iter().position(|x| x == current) {
             let cycle = path[pos..].join(" -> ") + " -> " + current;
             return Err(CheckerError {
@@ -555,12 +552,12 @@ impl<'a> Checker<'a> {
             });
         }
 
-        if let Some(ty_expr) = self.type_aliases.get(current) {
+        if let Some(ty_expr) = self.type_aliases.get(current).cloned() {
             path.push(current.to_string());
-            let deps = self.collect_type_dependencies(ty_expr);
+            let deps = self.collect_type_dependencies(&ty_expr);
             for dep in deps {
                 if self.type_aliases.contains_key(&dep) {
-                    self.check_alias_cycle(&dep, path)?;
+                    self.enter_scope((0, 0), |this| this.check_alias_cycle(&dep, path))?;
                 }
             }
             path.pop();
@@ -587,11 +584,13 @@ impl<'a> Checker<'a> {
     }
 
     fn resolve_type(
-        &self,
+        &mut self,
         ty: &TypeExpr<'a>,
         static_params: &[String],
     ) -> Result<Type, CheckerError> {
-        match ty {
+        let span = type_expr_span(ty);
+        self.charge_work(span)?;
+        self.enter_scope(span, |this| match ty {
             TypeExpr::Named { name, span } => match *name {
                 "Bool" => Ok(Type::Bool),
                 "Int" => Ok(Type::Int),
@@ -600,13 +599,13 @@ impl<'a> Checker<'a> {
                 "U64" => Ok(Type::U64),
                 "Bytes" => Ok(Type::Bytes),
                 other => {
-                    if let Some(resolved) = self.resolved_aliases.get(other) {
+                    if let Some(resolved) = this.resolved_aliases.get(other) {
                         return Ok(resolved.clone());
                     }
-                    if let Some(raw) = self.type_aliases.get(other) {
-                        return self.resolve_type(raw, static_params);
+                    if let Some(raw) = this.type_aliases.get(other).cloned() {
+                        return this.resolve_type(&raw, static_params);
                     }
-                    if self.errors.contains_key(other) {
+                    if this.errors.contains_key(other) {
                         return Ok(Type::ErrorVariant(other.to_string()));
                     }
                     Err(CheckerError {
@@ -632,11 +631,11 @@ impl<'a> Checker<'a> {
                 }
             },
             TypeExpr::List { inner, .. } => {
-                let inner_ty = self.resolve_type(inner, static_params)?;
+                let inner_ty = this.resolve_type(inner, static_params)?;
                 Ok(Type::List(Box::new(inner_ty)))
             }
             TypeExpr::Option { inner, .. } => {
-                let inner_ty = self.resolve_type(inner, static_params)?;
+                let inner_ty = this.resolve_type(inner, static_params)?;
                 Ok(Type::Option(Box::new(inner_ty)))
             }
             TypeExpr::Result {
@@ -644,8 +643,8 @@ impl<'a> Checker<'a> {
                 err_name,
                 span,
             } => {
-                let ok_ty = self.resolve_type(ok_type, static_params)?;
-                if !self.errors.contains_key(*err_name) {
+                let ok_ty = this.resolve_type(ok_type, static_params)?;
+                if !this.errors.contains_key(*err_name) {
                     return Err(CheckerError {
                         code: DiagnosticCode::W0202,
                         kind: CheckerErrorKind::UnboundType((*err_name).to_string()),
@@ -654,7 +653,7 @@ impl<'a> Checker<'a> {
                 }
                 Ok(Type::Result(Box::new(ok_ty), (*err_name).to_string()))
             }
-        }
+        })
     }
 
     // ── Pass 3: Model Dependencies and Acyclic Validation ──────────────────
@@ -664,9 +663,15 @@ impl<'a> Checker<'a> {
 
         // Build call graph for model functions
         let mut call_graph: HashMap<String, HashSet<String>> = HashMap::new();
-        for (name, model) in &self.models {
+        let model_entries: Vec<(String, Option<Expression<'a>>, (usize, usize))> = self
+            .models
+            .iter()
+            .map(|(k, v)| (k.clone(), v.body.clone(), v.span))
+            .collect();
+
+        for (name, body_opt, span) in model_entries {
             let mut calls = HashSet::new();
-            if let Some(body) = &model.body {
+            if let Some(body) = &body_opt {
                 self.collect_function_calls(body, &mut calls)?;
             }
             // Check if any model calls an operation (strictly forbidden in pure models!)
@@ -675,11 +680,11 @@ impl<'a> Checker<'a> {
                     return Err(CheckerError {
                         code: DiagnosticCode::W0301,
                         kind: CheckerErrorKind::ModelCallsOperation(called.clone()),
-                        span: model.span,
+                        span,
                     });
                 }
             }
-            call_graph.insert(name.clone(), calls);
+            call_graph.insert(name, calls);
         }
 
         // Detect recursion or mutual recursion in model functions
@@ -692,63 +697,68 @@ impl<'a> Checker<'a> {
     }
 
     fn collect_function_calls(
-        &self,
+        &mut self,
         expr: &Expression<'a>,
         calls: &mut HashSet<String>,
     ) -> Result<(), CheckerError> {
-        match expr {
-            Expression::Reference { name, args, .. } => {
-                if args.is_some() && name.segments.len() == 1 {
-                    calls.insert(name.segments[0].to_string());
-                }
-                if let Some(args_list) = args {
-                    for arg in args_list {
-                        self.collect_function_calls(arg, calls)?;
+        let span = body_span(expr);
+        self.charge_work(span)?;
+        self.enter_scope(span, |this| {
+            match expr {
+                Expression::Reference { name, args, .. } => {
+                    if args.is_some() && name.segments.len() == 1 {
+                        calls.insert(name.segments[0].to_string());
+                    }
+                    if let Some(args_list) = args {
+                        for arg in args_list {
+                            this.collect_function_calls(arg, calls)?;
+                        }
                     }
                 }
-            }
-            Expression::Binary { left, right, .. } => {
-                self.collect_function_calls(left, calls)?;
-                self.collect_function_calls(right, calls)?;
-            }
-            Expression::Unary { operand, .. } | Expression::Grouped { inner: operand, .. } => {
-                self.collect_function_calls(operand, calls)?;
-            }
-            Expression::Conditional {
-                condition,
-                then_branch,
-                else_branch,
-                ..
-            } => {
-                self.collect_function_calls(condition, calls)?;
-                self.collect_function_calls(then_branch, calls)?;
-                self.collect_function_calls(else_branch, calls)?;
-            }
-            Expression::Match { target, arms, .. } => {
-                self.collect_function_calls(target, calls)?;
-                for arm in arms {
-                    self.collect_function_calls(&arm.body, calls)?;
+                Expression::Binary { left, right, .. } => {
+                    this.collect_function_calls(left, calls)?;
+                    this.collect_function_calls(right, calls)?;
                 }
-            }
-            Expression::Quantified { body, .. } => {
-                self.collect_function_calls(body, calls)?;
-            }
-            Expression::List { elements, .. } => {
-                for el in elements {
-                    self.collect_function_calls(el, calls)?;
+                Expression::Unary { operand, .. } | Expression::Grouped { inner: operand, .. } => {
+                    this.collect_function_calls(operand, calls)?;
                 }
+                Expression::Conditional {
+                    condition,
+                    then_branch,
+                    else_branch,
+                    ..
+                } => {
+                    this.collect_function_calls(condition, calls)?;
+                    this.collect_function_calls(then_branch, calls)?;
+                    this.collect_function_calls(else_branch, calls)?;
+                }
+                Expression::Match { target, arms, .. } => {
+                    this.collect_function_calls(target, calls)?;
+                    for arm in arms {
+                        this.collect_function_calls(&arm.body, calls)?;
+                    }
+                }
+                Expression::Quantified { body, .. } => {
+                    this.collect_function_calls(body, calls)?;
+                }
+                Expression::List { elements, .. } => {
+                    for el in elements {
+                        this.collect_function_calls(el, calls)?;
+                    }
+                }
+                Expression::Literal { .. } => {}
             }
-            Expression::Literal { .. } => {}
-        }
-        Ok(())
+            Ok(())
+        })
     }
 
     fn check_model_cycle(
-        &self,
+        &mut self,
         current: &str,
         graph: &HashMap<String, HashSet<String>>,
         path: &mut Vec<String>,
     ) -> Result<(), CheckerError> {
+        self.charge_work((0, 0))?;
         if let Some(pos) = path.iter().position(|x| x == current) {
             let cycle = path[pos..].join(" -> ") + " -> " + current;
             return Err(CheckerError {
@@ -762,7 +772,7 @@ impl<'a> Checker<'a> {
             path.push(current.to_string());
             for next in neighbors {
                 if self.models.contains_key(next) {
-                    self.check_model_cycle(next, graph, path)?;
+                    self.enter_scope((0, 0), |this| this.check_model_cycle(next, graph, path))?;
                 }
             }
             path.pop();
@@ -770,11 +780,68 @@ impl<'a> Checker<'a> {
         Ok(())
     }
 
-    // ── Pass 4: Type-Check Models ──────────────────────────────────────────
+    // ── Pass 4: Validate Operations ────────────────────────────────────────
+
+    fn validate_operations(&mut self) -> Result<BTreeMap<String, CheckedOp>, CheckerError> {
+        let mut checked_ops = BTreeMap::new();
+        let op_decls: Vec<OpDecl<'a>> = self.operations.values().map(|op| (*op).clone()).collect();
+
+        for op in op_decls {
+            let mut static_params = Vec::new();
+            for sp in &op.static_params {
+                static_params.push(sp.name.to_string());
+            }
+            let mut params = Vec::new();
+            let mut env = HashMap::new();
+            for p in &op.params {
+                if env.contains_key(p.name) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0201,
+                        kind: CheckerErrorKind::DuplicateParameter(p.name.to_string()),
+                        span: p.span,
+                    });
+                }
+                let ty = self.resolve_type(&p.param_type, &static_params)?;
+                env.insert(p.name.to_string(), ty.clone());
+                params.push((p.name.to_string(), ty));
+            }
+            for p in &op.params {
+                if let Some(refinement) = &p.refinement {
+                    let ref_ty =
+                        self.typecheck_expression(refinement, &env, Some(&Type::Bool), false)?;
+                    if ref_ty != Type::Bool {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Bool".to_string(),
+                                actual: ref_ty.display_name(),
+                            },
+                            span: body_span(refinement),
+                        });
+                    }
+                }
+            }
+            let return_type = self.resolve_type(&op.return_type, &static_params)?;
+            checked_ops.insert(
+                op.name.to_string(),
+                CheckedOp {
+                    name: op.name.to_string(),
+                    static_params,
+                    params,
+                    return_type,
+                    is_fresh: op.is_fresh,
+                    span: op.span,
+                },
+            );
+        }
+        Ok(checked_ops)
+    }
+
+    // ── Pass 5: Type-Check Models ──────────────────────────────────────────
 
     fn typecheck_models(&mut self) -> Result<BTreeMap<String, CheckedModel>, CheckerError> {
         let mut checked_models = BTreeMap::new();
-        let model_decls: Vec<&ModelDecl<'a>> = self.models.values().copied().collect();
+        let model_decls: Vec<ModelDecl<'a>> = self.models.values().map(|m| (*m).clone()).collect();
 
         for model in model_decls {
             let mut params = Vec::new();
@@ -791,6 +858,23 @@ impl<'a> Checker<'a> {
                 let param_type = self.resolve_type(&p.param_type, &[])?;
                 env.insert(p.name.to_string(), param_type.clone());
                 params.push((p.name.to_string(), param_type));
+            }
+
+            for p in &model.params {
+                if let Some(refinement) = &p.refinement {
+                    let ref_ty =
+                        self.typecheck_expression(refinement, &env, Some(&Type::Bool), false)?;
+                    if ref_ty != Type::Bool {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::TypeMismatch {
+                                expected: "Bool".to_string(),
+                                actual: ref_ty.display_name(),
+                            },
+                            span: body_span(refinement),
+                        });
+                    }
+                }
             }
 
             let target_type = self.resolve_type(&model.target_type, &[])?;
@@ -825,7 +909,7 @@ impl<'a> Checker<'a> {
         Ok(checked_models)
     }
 
-    // ── Pass 5: Type-Check Examples and Claims ─────────────────────────────
+    // ── Pass 6: Type-Check Examples and Claims ─────────────────────────────
 
     fn typecheck_examples_and_claims(&mut self) -> Result<(), CheckerError> {
         for decl in &self.file.declarations {
@@ -864,9 +948,22 @@ impl<'a> Checker<'a> {
         Ok(())
     }
 
-    // ── Pass 6: Check Contracts ────────────────────────────────────────────
+    // ── Pass 7: Check Contracts ────────────────────────────────────────────
 
     fn check_contracts(&mut self) -> Result<(), CheckerError> {
+        // All operations with parameters must have secrecy labels
+        for (op_name, op) in &self.operations {
+            if !op.params.is_empty() && !self.labels.contains_key(op_name) {
+                return Err(CheckerError {
+                    code: DiagnosticCode::W0401,
+                    kind: CheckerErrorKind::MissingContract(format!(
+                        "Missing secrecy labels contract for operation {op_name}"
+                    )),
+                    span: op.span,
+                });
+            }
+        }
+
         // Labels
         for (op_name, lbl) in &self.labels {
             let op = self.operations.get(op_name).ok_or(CheckerError {
@@ -879,6 +976,16 @@ impl<'a> Checker<'a> {
             let mut labeled_params = HashSet::new();
 
             for row in &lbl.rows {
+                if row.name.segments.is_empty() || row.name.segments.len() > 2 {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0401,
+                        kind: CheckerErrorKind::InvalidContract(format!(
+                            "Label target cannot exceed 2 segments: {}",
+                            row.name.segments.join(".")
+                        )),
+                        span: row.span,
+                    });
+                }
                 let first_seg = row.name.segments[0];
                 if !op_param_names.contains(first_seg) {
                     return Err(CheckerError {
@@ -889,7 +996,7 @@ impl<'a> Checker<'a> {
                         span: row.span,
                     });
                 }
-                if row.name.segments.len() > 1 {
+                if row.name.segments.len() == 2 {
                     let proj = row.name.segments[1];
                     if proj != "contents" && proj != "length" {
                         return Err(CheckerError {
@@ -920,7 +1027,7 @@ impl<'a> Checker<'a> {
         }
 
         // Bounds
-        let bounds_list: Vec<&BoundDecl<'a>> = self.bounds.values().copied().collect();
+        let bounds_list: Vec<BoundDecl<'a>> = self.bounds.values().map(|b| (*b).clone()).collect();
         for bnd in bounds_list {
             let op_name = bnd.name;
             let op = self.operations.get(op_name).ok_or(CheckerError {
@@ -929,8 +1036,9 @@ impl<'a> Checker<'a> {
                 span: bnd.span,
             })?;
 
+            let op_params = op.params.clone();
             let mut env = HashMap::new();
-            for p in &op.params {
+            for p in &op_params {
                 let ty = self.resolve_type(&p.param_type, &[])?;
                 env.insert(p.name.to_string(), ty);
             }
@@ -959,7 +1067,7 @@ impl<'a> Checker<'a> {
         }
 
         // Inputs
-        let inputs_list: Vec<&InputDecl<'a>> = self.inputs.values().copied().collect();
+        let inputs_list: Vec<InputDecl<'a>> = self.inputs.values().map(|i| (*i).clone()).collect();
         for inp in inputs_list {
             let target_name = inp.target.segments.join(".");
             let parts: Vec<&str> = target_name.split('.').collect();
@@ -992,14 +1100,29 @@ impl<'a> Checker<'a> {
                     });
                 }
 
+                let op_params = op.params.clone();
+                let op_ret = op.return_type.clone();
                 let mut env = HashMap::new();
-                for p in &op.params {
+                for p in &op_params {
                     let ty = self.resolve_type(&p.param_type, &[])?;
                     env.insert(p.name.to_string(), ty);
                 }
-                let ret_ty = self.resolve_type(&op.return_type, &[])?;
+                let ret_ty = self.resolve_type(&op_ret, &[])?;
                 (env, ret_ty)
             };
+
+            // Strict validation of ensures flags
+            for flag in &inp.ensures {
+                if *flag != "no_panic" && *flag != "terminates" {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0401,
+                        kind: CheckerErrorKind::InvalidContract(format!(
+                            "Invalid ensures flag '{flag}', expected 'no_panic' or 'terminates'"
+                        )),
+                        span: inp.span,
+                    });
+                }
+            }
 
             // Check rejections
             for rej in &inp.rejections {
@@ -1572,11 +1695,23 @@ impl<'a> Checker<'a> {
                 let b_ty = self.typecheck_expression(&args[1], env, None, allow_ops)?;
                 match (&a_ty, &b_ty) {
                     (Type::FixedBytes(m), Type::FixedBytes(n)) => {
-                        return Ok(Type::FixedBytes(m + n));
+                        let sum = m.checked_add(*n).ok_or(CheckerError {
+                            code: DiagnosticCode::W0301,
+                            kind: CheckerErrorKind::ArithmeticOverflow(
+                                "concat FixedBytes width overflow".to_string(),
+                            ),
+                            span,
+                        })?;
+                        return Ok(Type::FixedBytes(sum));
                     }
                     (Type::Bytes, Type::Bytes)
                     | (Type::FixedBytes(_), Type::Bytes)
-                    | (Type::Bytes, Type::FixedBytes(_)) => {
+                    | (Type::Bytes, Type::FixedBytes(_))
+                    | (Type::FixedBytesParam(_), Type::Bytes)
+                    | (Type::Bytes, Type::FixedBytesParam(_))
+                    | (Type::FixedBytesParam(_), Type::FixedBytes(_))
+                    | (Type::FixedBytes(_), Type::FixedBytesParam(_))
+                    | (Type::FixedBytesParam(_), Type::FixedBytesParam(_)) => {
                         return Ok(Type::Bytes);
                     }
                     (Type::List(ia), Type::List(ib)) => {
@@ -1704,7 +1839,9 @@ impl<'a> Checker<'a> {
                     span,
                 });
             }
-            for (arg_expr, param) in actual_args.iter().zip(&model.params) {
+            let model_params = model.params.clone();
+            let model_target_type = model.target_type.clone();
+            for (arg_expr, param) in actual_args.iter().zip(&model_params) {
                 let expected_param_ty = self.resolve_type(&param.param_type, &[])?;
                 let actual_ty =
                     self.typecheck_expression(arg_expr, env, Some(&expected_param_ty), allow_ops)?;
@@ -1719,7 +1856,7 @@ impl<'a> Checker<'a> {
                     });
                 }
             }
-            return self.resolve_type(&model.target_type, &[]);
+            return self.resolve_type(&model_target_type, &[]);
         }
 
         // 4. Public operations
@@ -1762,13 +1899,25 @@ impl<'a> Checker<'a> {
                     span,
                 });
             }
-            for (w, sp) in widths.iter().zip(&op.static_params) {
-                if let Width::Literal(n) = w {
-                    static_map.insert(sp.name.to_string(), *n);
+            let op_static_params = op.static_params.clone();
+            for (w, sp) in widths.iter().zip(&op_static_params) {
+                match w {
+                    Width::Literal(n) => {
+                        static_map.insert(sp.name.to_string(), *n);
+                    }
+                    Width::Named(name) => {
+                        return Err(CheckerError {
+                            code: DiagnosticCode::W0202,
+                            kind: CheckerErrorKind::UnboundName((*name).to_string()),
+                            span,
+                        });
+                    }
                 }
             }
 
-            for (arg_expr, param) in actual_args.iter().zip(&op.params) {
+            let op_params = op.params.clone();
+            let op_ret = op.return_type.clone();
+            for (arg_expr, param) in actual_args.iter().zip(&op_params) {
                 let resolved_param_ty = self.instantiate_type(&param.param_type, &static_map)?;
                 let actual_ty =
                     self.typecheck_expression(arg_expr, env, Some(&resolved_param_ty), allow_ops)?;
@@ -1784,7 +1933,7 @@ impl<'a> Checker<'a> {
                 }
             }
 
-            return self.instantiate_type(&op.return_type, &static_map);
+            return self.instantiate_type(&op_ret, &static_map);
         }
 
         Err(CheckerError {
@@ -1795,20 +1944,47 @@ impl<'a> Checker<'a> {
     }
 
     fn instantiate_type(
-        &self,
+        &mut self,
         ty: &TypeExpr<'a>,
         static_map: &HashMap<String, u64>,
     ) -> Result<Type, CheckerError> {
         match ty {
             TypeExpr::Bytes {
                 width: Some(Width::Named(name)),
-                ..
+                span,
             } => {
                 if let Some(n) = static_map.get(*name) {
                     Ok(Type::FixedBytes(*n))
                 } else {
-                    Ok(Type::Bytes)
+                    Err(CheckerError {
+                        code: DiagnosticCode::W0202,
+                        kind: CheckerErrorKind::UnboundName(name.to_string()),
+                        span: *span,
+                    })
                 }
+            }
+            TypeExpr::List { inner, .. } => {
+                let inner_ty = self.instantiate_type(inner, static_map)?;
+                Ok(Type::List(Box::new(inner_ty)))
+            }
+            TypeExpr::Option { inner, .. } => {
+                let inner_ty = self.instantiate_type(inner, static_map)?;
+                Ok(Type::Option(Box::new(inner_ty)))
+            }
+            TypeExpr::Result {
+                ok_type,
+                err_name,
+                span,
+            } => {
+                let ok_ty = self.instantiate_type(ok_type, static_map)?;
+                if !self.errors.contains_key(*err_name) {
+                    return Err(CheckerError {
+                        code: DiagnosticCode::W0202,
+                        kind: CheckerErrorKind::UnboundType((*err_name).to_string()),
+                        span: *span,
+                    });
+                }
+                Ok(Type::Result(Box::new(ok_ty), (*err_name).to_string()))
             }
             _ => self.resolve_type(ty, &[]),
         }
@@ -1905,6 +2081,31 @@ impl<'a> Checker<'a> {
         }
     }
 
+    fn check_arm_binder(
+        &self,
+        binder: &str,
+        span: (usize, usize),
+        env: &HashMap<String, Type>,
+    ) -> Result<(), CheckerError> {
+        let builtins = [
+            "Bool", "Int", "Nat", "U8", "U64", "Bytes", "List", "Option", "Result", "len", "at",
+            "concat", "fixed", "div", "Some", "None", "Ok", "Err",
+        ];
+        if env.contains_key(binder)
+            || self.models.contains_key(binder)
+            || self.operations.contains_key(binder)
+            || self.errors.contains_key(binder)
+            || builtins.contains(&binder)
+        {
+            return Err(CheckerError {
+                code: DiagnosticCode::W0203,
+                kind: CheckerErrorKind::ShadowedBinding(binder.to_string()),
+                span,
+            });
+        }
+        Ok(())
+    }
+
     fn typecheck_match(
         &mut self,
         target: &Expression<'a>,
@@ -1932,6 +2133,7 @@ impl<'a> Checker<'a> {
                         }
                         Pattern::Some(binder) => {
                             has_some = true;
+                            self.check_arm_binder(binder, arm.span, env)?;
                             let mut local_env = env.clone();
                             local_env.insert(binder.to_string(), *inner.clone());
                             let arm_ty = self
@@ -1975,6 +2177,7 @@ impl<'a> Checker<'a> {
                     match arm.pattern {
                         Pattern::Ok(binder) => {
                             has_ok = true;
+                            self.check_arm_binder(binder, arm.span, env)?;
                             let mut local_env = env.clone();
                             local_env.insert(binder.to_string(), *ok_inner.clone());
                             let arm_ty = self
@@ -1983,6 +2186,7 @@ impl<'a> Checker<'a> {
                         }
                         Pattern::Err(binder) => {
                             has_err = true;
+                            self.check_arm_binder(binder, arm.span, env)?;
                             let mut local_env = env.clone();
                             local_env.insert(
                                 binder.to_string(),
@@ -2043,6 +2247,16 @@ fn body_span(expr: &Expression<'_>) -> (usize, usize) {
         | Expression::List { span, .. }
         | Expression::Reference { span, .. }
         | Expression::Grouped { span, .. } => *span,
+    }
+}
+
+fn type_expr_span(ty: &TypeExpr<'_>) -> (usize, usize) {
+    match ty {
+        TypeExpr::Bytes { span, .. }
+        | TypeExpr::List { span, .. }
+        | TypeExpr::Option { span, .. }
+        | TypeExpr::Result { span, .. }
+        | TypeExpr::Named { span, .. } => *span,
     }
 }
 

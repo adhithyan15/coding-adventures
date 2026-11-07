@@ -1364,3 +1364,132 @@ fn test_display_and_diagnostics_coverage() {
     let s = format!("{err}");
     assert!(s.contains("W0201"));
 }
+
+#[test]
+fn test_security_review_fixes() {
+    // 1. Duplicate platform assumption
+    let src_dup_p = r#"warrant dup_p
+  assume platform:
+    none
+  assume platform:
+    none
+"#;
+    assert_eq!(
+        parse_and_check(src_dup_p).unwrap_err().code,
+        DiagnosticCode::W0201
+    );
+
+    // 2. Duplicate environment assumption
+    let src_dup_e = r#"warrant dup_e
+  assume environment:
+    none
+  assume environment:
+    none
+"#;
+    assert_eq!(
+        parse_and_check(src_dup_e).unwrap_err().code,
+        DiagnosticCode::W0201
+    );
+
+    // 3. Op missing labels contract
+    let src_missing_labels = r#"warrant missing_lbl
+  op f(x: Int) -> Int
+"#;
+    assert_eq!(
+        parse_and_check(src_missing_labels).unwrap_err().code,
+        DiagnosticCode::W0401
+    );
+
+    // 4. Label target with > 2 segments
+    let src_long_label = r#"warrant long_lbl
+  op f(x: Int) -> Int
+  labels f:
+    x.contents.extra secret
+"#;
+    assert_eq!(
+        parse_and_check(src_long_label).unwrap_err().code,
+        DiagnosticCode::W0401
+    );
+
+    // 5. Invalid ensures flag
+    let src_bad_ensures = r#"warrant bad_ensures
+  op f(x: Int) -> Int
+  labels f:
+    x secret
+  input f.x:
+    hostile
+    ensures bogus_flag
+"#;
+    assert_eq!(
+        parse_and_check(src_bad_ensures).unwrap_err().code,
+        DiagnosticCode::W0401
+    );
+
+    // 6. Model parameter refinement non-Bool
+    let src_bad_model_ref = r#"warrant bad_model_ref
+  model f(x: Int | x + 1) -> Int = x
+"#;
+    assert_eq!(
+        parse_and_check(src_bad_model_ref).unwrap_err().code,
+        DiagnosticCode::W0301
+    );
+
+    // 7. Op parameter refinement non-Bool
+    let src_bad_op_ref = r#"warrant bad_op_ref
+  op f(x: Int | x + 1) -> Int
+  labels f:
+    x secret
+"#;
+    assert_eq!(
+        parse_and_check(src_bad_op_ref).unwrap_err().code,
+        DiagnosticCode::W0301
+    );
+
+    // 8. Match arm binder shadowing model symbol
+    let src_shadow_model = r#"warrant shadow_model
+  model f(x: Option<Int>) -> Int = match x with None -> 0 | Some(f) -> 1
+"#;
+    assert_eq!(
+        parse_and_check(src_shadow_model).unwrap_err().code,
+        DiagnosticCode::W0203
+    );
+
+    // 9. Match arm binder shadowing local parameter
+    let src_shadow_local = r#"warrant shadow_local
+  model f(x: Option<Int>, y: Int) -> Int = match x with None -> 0 | Some(y) -> 1
+"#;
+    assert_eq!(
+        parse_and_check(src_shadow_local).unwrap_err().code,
+        DiagnosticCode::W0203
+    );
+
+    // 10. Concat FixedBytes arithmetic overflow
+    let src_concat_overflow = r#"warrant ovf
+  model f() -> Option<Bytes> = match fixed<18446744073709551615>(b"") with None -> None | Some(a) -> match fixed<1>(b"") with None -> None | Some(b) -> Some(concat(a, b))
+"#;
+    let err = parse_and_check(src_concat_overflow).unwrap_err();
+    assert_eq!(err.code, DiagnosticCode::W0301);
+    assert!(format!("{err:?}").contains("ArithmeticOverflow"));
+
+    // 11. Op call with named width unbound
+    let src_named_width_unbound = r#"warrant unbound_w
+  op f<N: Nat>(x: Bytes<N>) -> Int
+  labels f:
+    x secret
+  example ex:
+    f<M>(b"") == 1
+"#;
+    assert_eq!(
+        parse_and_check(src_named_width_unbound).unwrap_err().code,
+        DiagnosticCode::W0202
+    );
+
+    // 12. Valid op and model parameter refinements
+    let src_valid_ref = r#"warrant valid_ref
+  op f(x: Int | x > 0) -> Int
+  labels f:
+    x secret
+  model m(x: Int | x >= 0) -> Int = x
+"#;
+    assert!(parse_and_check(src_valid_ref).is_ok());
+}
