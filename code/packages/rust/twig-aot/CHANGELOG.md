@@ -1,5 +1,14 @@
 # Changelog — `twig-aot`
 
+## Unreleased — #18486: `AOT_BUILTIN_MAP` maps `modulo` to `i64_mod_floor`
+
+- `AOT_BUILTIN_MAP` now recognizes `"modulo"`, `"remainder"`, and `"quotient"`, mapping
+  `"modulo"` to `"i64_mod_floor"`, `"remainder"` to `"mod"`, and `"quotient"` to `"div"`.
+  When compiling typed functions or running `pre_lower_aot_builtins`, `modulo` lowers to
+  floored modulo rather than truncating remainder, matching the VM's Scheme-compliant floor
+  semantics.
+- Tests: `tests::modulo_builtins_lower_to_i64_mod_floor`, `tests::prepare_module_for_aot_lowers_modulo_to_i64_mod_floor`.
+
 ## Unreleased — #18488: variadic comparisons and reference operand typing in comparisons
 
 - **Variadic comparisons lower to pairwise chained comparisons and `and`.**

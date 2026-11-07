@@ -84,7 +84,7 @@ const ARITH: &[(&str, &str)] = &[
     ("quotient", "div"),
     ("%", "mod"),
     ("remainder", "mod"),
-    ("modulo", "mod"),
+    ("modulo", "i64_mod_floor"),
     ("=", "cmp_eq"),
     ("<", "cmp_lt"),
     ("<=", "cmp_le"),
@@ -543,6 +543,21 @@ mod tests {
         let mut f = arith_fn("-", ("x", "i64"), ("y", "i64"));
         lower_dynamic_arith_function(&mut f);
         assert_eq!(ops(&f), vec!["const", "const", "sub", "box", "ret"]);
+    }
+
+    #[test]
+    fn modulo_lowers_to_i64_mod_floor_and_remainder_to_mod() {
+        let mut f_mod = arith_fn("modulo", ("x", "ref<any>"), ("y", "i64"));
+        lower_dynamic_arith_function(&mut f_mod);
+        assert_eq!(ops(&f_mod), vec!["field_load", "const", "unbox", "i64_mod_floor", "box", "ret"]);
+        let mod_instr = f_mod.instructions.iter().find(|i| i.op == "i64_mod_floor").unwrap();
+        assert_eq!(mod_instr.type_hint, "i64");
+
+        let mut f_rem = arith_fn("remainder", ("x", "ref<any>"), ("y", "i64"));
+        lower_dynamic_arith_function(&mut f_rem);
+        assert_eq!(ops(&f_rem), vec!["field_load", "const", "unbox", "mod", "box", "ret"]);
+        let rem_instr = f_rem.instructions.iter().find(|i| i.op == "mod").unwrap();
+        assert_eq!(rem_instr.type_hint, "i64");
     }
 
     #[test]
