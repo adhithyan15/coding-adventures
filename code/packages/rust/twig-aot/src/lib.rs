@@ -2721,6 +2721,7 @@ fn find_windows_linker() -> Option<WinLinker> {
 /// Builtin-name → IIR-op for AOT.
 const AOT_BUILTIN_MAP: &[(&str, &str)] = &[
     ("+",  "add"),  ("-",  "sub"),   ("*",  "mul"),   ("/",  "div"),
+    ("quotient", "div"), ("remainder", "mod"), ("modulo", "i64_mod_floor"),
     ("=",  "cmp_eq"), ("<", "cmp_lt"), (">", "cmp_gt"),
     ("<=", "cmp_le"), (">=", "cmp_ge"),
     ("not", "not"),  ("_move", "mov"),
@@ -5081,6 +5082,58 @@ mod tests {
             cir.iter().all(|i| i.op != "call_runtime"),
             "comparison must not fall back to call_runtime: {:?}",
             cir
+        );
+    }
+
+    /// Issue #18486: modulo must lower to floored modulo (i64_mod_floor) rather than
+    /// truncating mod, matching the VM's Scheme-compliant floor semantics.
+    #[test]
+    fn modulo_builtins_lower_to_i64_mod_floor() {
+        let mut func = IIRFunction::new(
+            "f",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("r".into()),
+                    vec![Operand::Var("modulo".into()), Operand::Int(-7), Operand::Int(2)],
+                    "i64",
+                ),
+            ],
+        );
+        pre_lower_aot_builtins(&mut func);
+        assert_eq!(func.instructions.len(), 1);
+        assert_eq!(func.instructions[0].op, "i64_mod_floor");
+        assert_eq!(func.instructions[0].dest, Some("r".into()));
+        assert_eq!(func.instructions[0].srcs, vec![Operand::Int(-7), Operand::Int(2)]);
+    }
+
+    #[test]
+    fn prepare_module_for_aot_lowers_modulo_to_i64_mod_floor() {
+        let mut module = IIRModule::new("m", "twig");
+        let func = IIRFunction::new(
+            "main",
+            vec![],
+            "i64",
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("r".into()),
+                    vec![Operand::Var("modulo".into()), Operand::Int(-7), Operand::Int(2)],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+            ],
+        );
+        module.add_or_replace(func);
+        module.entry_point = Some("main".into());
+        prepare_module_for_aot(&mut module).expect("prepares");
+        let main = module.functions.iter().find(|f| f.name == "main").unwrap();
+        assert!(
+            main.instructions.iter().any(|i| i.op == "i64_mod_floor"),
+            "expected i64_mod_floor in {:?}",
+            main.instructions
         );
     }
 

@@ -57,6 +57,7 @@ fn run_vm_i64(src: &str) -> i64 {
     iir_builtin_lowering::lower_global_io(&mut module);
     iir_builtin_lowering::lower_closures_to_heap(&mut module).expect("closure lowering");
     iir_builtin_lowering::lower_heap_builtins(&mut module).expect("heap lowering");
+    iir_builtin_lowering::lower_lisp_for_vm(&mut module);
     let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
     let mut vm = VMCore::new();
     vm.execute(&mut module, &entry, &[])
@@ -71,6 +72,36 @@ fn dynamic_arith_over_boxed_operand_matches_vm_core_oracle() {
     // ground truth the native/LLVM assertions above are checked against,
     // not just a hardcoded literal both happen to share.
     assert_eq!(run_vm_i64(SRC), 42, "vm-core oracle: (+ (car (cons 41 0)) 1)");
+}
+
+/// Issue #18486: (modulo -7 2) must floor to 1 (sign follows divisor) rather than
+/// truncate to -1 like remainder does.
+#[test]
+fn modulo_floors_and_remainder_truncates() {
+    assert_eq!(run_vm_i64("(modulo -7 2)"), 1);
+    assert_eq!(run_vm_i64("(modulo 7 -2)"), -1);
+    assert_eq!(run_vm_i64("(remainder -7 2)"), -1);
+    assert_eq!(run_vm_i64("(modulo 6 3)"), 0);
+
+    if clang_available() {
+        assert_eq!(run_llvm("(modulo -7 2)", "mod_llvm_1"), 1);
+        assert_eq!(run_llvm("(modulo 6 3)", "mod_llvm_2"), 0);
+    }
+
+    if native_toolchain_available() {
+        if let Some(code) = run_native("(modulo -7 2)", "modulo_neg_div") {
+            assert_eq!(code & 0xFF, 1, "(modulo -7 2) must exit 1, not 255");
+        }
+        if let Some(code) = run_native("(modulo 6 3)", "modulo_zero") {
+            assert_eq!(code & 0xFF, 0, "(modulo 6 3) must exit 0");
+        }
+        if let Some(code) = run_native("(remainder -7 2)", "remainder_neg") {
+            assert_eq!(code & 0xFF, 255, "(remainder -7 2) must exit 255 (-1)");
+        }
+        if let Some(code) = run_native("(modulo 7 -2)", "modulo_pos_neg") {
+            assert_eq!(code & 0xFF, 255, "(modulo 7 -2) must exit 255 (-1)");
+        }
+    }
 }
 
 /// Compile to host LLVM IR, link the full C runtime with `clang`, run, return exit code.

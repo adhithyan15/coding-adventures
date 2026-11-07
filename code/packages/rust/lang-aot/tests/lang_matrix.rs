@@ -1249,14 +1249,14 @@ const PROGRAMS: &[Prog] = &[
         case: None,
     },
     // modulo takes the divisor's sign: 16·3 + (-3) = 45. Truncating gives
-    // 16·(-2) + 2 = -30. WASM lowers `modulo` to the truncating `mod` (wrong
-    // answer), NativeAot / LLVM exit 128; neither is declared.
+    // 16·(-2) + 2 = -30. Fixed in #18486: modulo lowers to i64_mod_floor so
+    // WASM floors correctly like the VM and JIT.
     Prog {
         lang: Language::Twig,
         ext: "twig",
         src: "(define (f x y) (modulo x y)) (+ (* 16 (f -17 5)) (f 17 -5))",
         expect: Expect::Exit(45),
-        backends: &[Vm, Jit],
+        backends: &[Wasm, Vm, Jit],
         release: None,
         case: None,
     },
@@ -15941,8 +15941,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // comparison rows on six columns (all but Clr / Beam), then
         // #18493 / #18470's seventeen truthiness, value-kind, predicate and
         // dynamic-division rows (51 cells: Vm and Jit on every row, plus the
-        // NativeAot / Llvm / Wasm / Jvm cells each row was run on).
-        (Language::Twig, 77, 507),
+        // NativeAot / Llvm / Wasm / Jvm cells each row was run on;
+        // #18486 adds Wasm to the modulo row).
+        (Language::Twig, 77, 508),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),
