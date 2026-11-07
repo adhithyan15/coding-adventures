@@ -2,6 +2,15 @@
 
 ## 0.1.0 — Unreleased
 
+- Add VER04f/P011 Warrant Universal Claims to Property Tests Compiler:
+  - Extract and validate universally quantified `claim` declarations (`ClaimCase`) calling bound host operations.
+  - Compile claims into Level 2 property-based tests executed on `coding_adventures_test_bootstrap::pbt`.
+  - Type-to-generator mappings for `Bytes`, `U64`, `U8`, `Bool` with deterministic PRNG replay and isolated sub-seeds.
+  - Integrated shrinking minimizing counterexamples across component values.
+  - Public host API call binding dispatch with panic isolation and fault injection.
+  - Harness emission of claim sabotage negative controls (`claim_sabotage/{id}_broken_impl`) to detect broken implementations.
+  - Privacy-preserving failure output in CI mode redacting raw inputs with FNV-1a reproducer digest.
+  - Exceed strict ≥90% line and branch/region test coverage (93.19% lines, 94.51% regions) with zero third-party dependencies.
 - Add VER04e/P008 Warrant code generation and L0 test vector compiler:
   - Bounded pure compile-time ground model evaluator with strict recursion depth (<= 64)
     and work quotas (<= 1,000,000 steps).
