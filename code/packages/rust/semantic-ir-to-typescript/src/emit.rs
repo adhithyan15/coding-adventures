@@ -639,6 +639,8 @@ pub fn emit_module(m: &Module) -> String {
         out.push_str("__Sir.setDisplayConvention(\"ruby\");\n");
     } else if m.metadata.source_language.as_deref() == Some("apl") {
         out.push_str("__Sir.setDisplayConvention(\"apl\");\n");
+    } else if m.metadata.source_language.as_deref() == Some("python") {
+        out.push_str("__Sir.setDisplayConvention(\"python\");\n");
     }
     // Only OOP-using modules import the OOP runtime, so a pure
     // arithmetic module gains no dependency on it.
@@ -3897,6 +3899,42 @@ mod tests {
         // Never both — an exhaustive `if`/`else if` in `emit_module`, not
         // two independent conditions.
         assert!(!out.contains(r#"setDisplayConvention("ruby")"#));
+    }
+
+    #[test]
+    fn emit_display_convention_python_selects_python_booleans() {
+        let m = Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::new(),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block {
+                    stmts: vec![],
+                    value: Expr::NilLit { span: s() },
+                    span: s(),
+                },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("python")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        };
+        let out = emit_module(&m);
+        assert!(
+            out.contains(r#"__Sir.setDisplayConvention("python");"#),
+            "python module must select the Python display convention; got:\n{out}"
+        );
+        assert!(!out.contains(r#"setDisplayConvention("ruby")"#));
+        assert!(!out.contains(r#"setDisplayConvention("apl")"#));
     }
 
     #[test]

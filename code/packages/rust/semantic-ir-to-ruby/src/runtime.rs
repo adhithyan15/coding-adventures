@@ -25,6 +25,7 @@ pub const RUNTIME: &str = r####"# ── inlined SIR runtime (semantic-ir-to-rub
 # Ruby's semantics match the SIR's, so this preamble is small.
 
 SIR_DISPLAY_RUBY = __SIR_DISPLAY_RUBY__
+SIR_DISPLAY_PYTHON = __SIR_DISPLAY_PYTHON__
 
 # A cons cell — the one SIR primitive with no native Ruby type.
 SirPair = Struct.new(:car, :cdr)
@@ -292,9 +293,10 @@ end
 # ── display ──
 def sir_fmt(v)
   case v
-  when nil        then SIR_DISPLAY_RUBY ? "" : "nil"
-  when true       then SIR_DISPLAY_RUBY ? "true"  : "#t"
-  when false      then SIR_DISPLAY_RUBY ? "false" : "#f"
+  when nil        then SIR_DISPLAY_RUBY ? "" : (SIR_DISPLAY_PYTHON ? "None" : "nil")
+  when true       then SIR_DISPLAY_RUBY ? "true"  : (SIR_DISPLAY_PYTHON ? "True" : "#t")
+  when false      then SIR_DISPLAY_RUBY ? "false" : (SIR_DISPLAY_PYTHON ? "False" : "#f")
+  when Array      then "[" + v.map { |x| (x.nil? && SIR_DISPLAY_RUBY) ? "nil" : sir_fmt(x) }.join(", ") + "]"
   when SirPair    then sir_fmt_pair(v)
   when Symbol     then v.to_s
   when Float      then sir_fmt_float(v)

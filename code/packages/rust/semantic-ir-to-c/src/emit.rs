@@ -163,7 +163,11 @@ pub fn emit_module(m: &Module) -> String {
     // boolean-selected LITERAL (never source text — see the security note in
     // runtime.rs).
     let display_ruby = m.metadata.source_language.as_deref() == Some("ruby");
-    out.push_str(&RUNTIME.replace("__SIR_DISPLAY_RUBY__", if display_ruby { "1" } else { "0" }));
+    let display_python = m.metadata.source_language.as_deref() == Some("python");
+    let runtime = RUNTIME
+        .replace("__SIR_DISPLAY_RUBY__", if display_ruby { "1" } else { "0" })
+        .replace("__SIR_DISPLAY_PYTHON__", if display_python { "1" } else { "0" });
+    out.push_str(&runtime);
     out.push_str("\n\n");
 
     emit_globals_comment(&mut out, &m.globals);

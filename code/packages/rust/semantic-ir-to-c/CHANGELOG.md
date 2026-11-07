@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted C runtime defines `SIR_DISPLAY_PYTHON 1`. `_sir_fmt`, `_sir_fmt_elem`,
+  `_sir_display_str`, and `_sir_display_elem` print `True`, `False`, and `None`
+  matching CPython behavior.
+
 ## Unreleased — `nil` inside an array; Ruby's `[]=` (#18798)
 
 - **Two Integers compare exactly.** `_sir_lt`/`_sir_gt`/`_sir_le`/`_sir_ge`

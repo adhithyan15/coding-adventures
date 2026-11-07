@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted Go runtime sets `_sir_display_python = true`. `_sir_format_d`
+  prints `True`, `False`, and `None` matching CPython behavior.
+
 ## Unreleased — interpolation, `nil`'s display, `[]`/`[]=` (#18798)
 
 - **`StrConcat` (string interpolation) is accepted.**  It renders as

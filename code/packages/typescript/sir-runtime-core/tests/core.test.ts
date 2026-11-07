@@ -88,6 +88,22 @@ describe("predicates and display", () => {
     expect(sir.toDisplay(true)).toBe("#t");
   });
 
+  it("display convention: Python booleans and None (#18496)", () => {
+    // A Python-sourced program selects `True`/`False` and `None`.
+    // Restore the default so module state does not leak.
+    try {
+      sir.setDisplayConvention("python");
+      expect(sir.toDisplay(true)).toBe("True");
+      expect(sir.toDisplay(false)).toBe("False");
+      expect(sir.toDisplay(null)).toBe("None");
+      expect(sir.toDisplay(undefined)).toBe("None");
+      expect(sir.toDisplay([true, false, null])).toBe("[True, False, None]");
+    } finally {
+      sir.setDisplayConvention("lisp");
+    }
+    expect(sir.toDisplay(true)).toBe("#t");
+  });
+
   describe("display convention: APL high-minus + NDArray (SIR22)", () => {
     // An APL-sourced program selects `setDisplayConvention("apl")` so a
     // negative number renders with APL's own high-minus glyph (`¯`, not

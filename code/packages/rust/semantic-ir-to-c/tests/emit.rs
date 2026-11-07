@@ -76,16 +76,35 @@ fn display_convention_follows_source_language() {
         twig.contains("#define SIR_DISPLAY_RUBY 0"),
         "twig → #t/#f display"
     );
+    assert!(
+        twig.contains("#define SIR_DISPLAY_PYTHON 0"),
+        "twig → not python display"
+    );
 
-    // A module tagged `ruby` selects the `true`/`false` rendering.  (The Ruby
-    // frontend does not yet set `source_language`, a pre-existing gap shared by
-    // every backend; the backend substitution itself is what we verify here.)
+    // A module tagged `ruby` selects the `true`/`false` rendering.
     let mut m = lower_twig("(print #t)");
     m.metadata.source_language = Some("ruby".to_string());
     let ruby = compile(&m).unwrap().source;
     assert!(
         ruby.contains("#define SIR_DISPLAY_RUBY 1"),
         "ruby → true/false display"
+    );
+    assert!(
+        ruby.contains("#define SIR_DISPLAY_PYTHON 0"),
+        "ruby → not python display"
+    );
+
+    // A module tagged `python` selects the `True`/`False`/`None` rendering.
+    let mut m = lower_twig("(print #t)");
+    m.metadata.source_language = Some("python".to_string());
+    let py = compile(&m).unwrap().source;
+    assert!(
+        py.contains("#define SIR_DISPLAY_PYTHON 1"),
+        "python → True/False display"
+    );
+    assert!(
+        py.contains("#define SIR_DISPLAY_RUBY 0"),
+        "python → not ruby display"
     );
 }
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted Rust runtime sets `SIR_DISPLAY_PYTHON: bool = true`. `format_d`
+  prints `True`, `False`, and `None` matching CPython behavior.
+
 ## Unreleased — interpolation, `nil`'s display, Ruby's `[]=` (#18798)
 
 - **`StrConcat` (string interpolation) is accepted**, as

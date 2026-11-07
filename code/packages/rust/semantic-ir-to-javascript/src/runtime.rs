@@ -63,6 +63,7 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `true`/`false` rather than the Lisp `#t`/`#f`; existing Twig output is
   // unchanged.
   const SIR_DISPLAY_RUBY = __SIR_DISPLAY_RUBY__;
+  const SIR_DISPLAY_PYTHON = __SIR_DISPLAY_PYTHON__;
   // A second, independent display-convention flag: `true` when the
   // module's `source_language` is APL, else `false`. APL's own console
   // convention renders a negative number with the high-minus glyph `¯`
@@ -440,9 +441,9 @@ pub const RUNTIME: &str = r##"const __Sir = (() => {
   // `"a#{x}b"` — SIR's `StrConcat`: every part shown with `toS`, joined.
   function strConcat(...parts) { return parts.map(toS).join(""); }
   function formatSeen(v, seen) {
-    if (v === null || v === undefined) { return "nil"; }
-    if (v === true) { return SIR_DISPLAY_RUBY ? "true" : "#t"; }
-    if (v === false) { return SIR_DISPLAY_RUBY ? "false" : "#f"; }
+    if (v === null || v === undefined) { return SIR_DISPLAY_PYTHON ? "None" : "nil"; }
+    if (v === true) { return SIR_DISPLAY_RUBY ? "true" : (SIR_DISPLAY_PYTHON ? "True" : "#t"); }
+    if (v === false) { return SIR_DISPLAY_RUBY ? "false" : (SIR_DISPLAY_PYTHON ? "False" : "#f"); }
     if (typeof v === "string") { return v; }
     // An EXCEPTION renders as its MESSAGE, matching Ruby's `Exception#to_s`.
     // `Error`, not `SirError`: `emit.rs`'s `catch` binds the RAW thrown value,

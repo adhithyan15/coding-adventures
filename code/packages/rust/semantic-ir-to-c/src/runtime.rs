@@ -39,6 +39,7 @@ pub const RUNTIME: &str = r####"/* =============================================
 
 /* Display convention: 1 => Ruby (true/false, empty nil), 0 => Lisp (#t/#f). */
 #define SIR_DISPLAY_RUBY __SIR_DISPLAY_RUBY__
+#define SIR_DISPLAY_PYTHON __SIR_DISPLAY_PYTHON__
 
 typedef enum {
     SIR_NIL, SIR_BOOL, SIR_INT, SIR_FLOAT,
@@ -961,7 +962,7 @@ void _sir_fmt(FILE *out, SirValue v);
  * `print [nil, false]` printed `[, false]` (#18798); every other element
  * renders as `_sir_fmt` does. */
 void _sir_fmt_elem(FILE *out, SirValue v) {
-    if (v.tag == SIR_NIL) fputs("nil", out);
+    if (v.tag == SIR_NIL) fputs(SIR_DISPLAY_PYTHON ? "None" : "nil", out);
     else _sir_fmt(out, v);
 }
 
@@ -1067,9 +1068,9 @@ void _sir_fmt(FILE *out, SirValue v) {
     }
     _sir_fmt_depth++;
     switch (v.tag) {
-        case SIR_NIL:   fputs(SIR_DISPLAY_RUBY ? "" : "nil", out); break;
-        case SIR_BOOL:  fputs(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : "#t")
-                                     : (SIR_DISPLAY_RUBY ? "false" : "#f"), out); break;
+        case SIR_NIL:   fputs(SIR_DISPLAY_RUBY ? "" : (SIR_DISPLAY_PYTHON ? "None" : "nil"), out); break;
+        case SIR_BOOL:  fputs(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : (SIR_DISPLAY_PYTHON ? "True" : "#t"))
+                                     : (SIR_DISPLAY_RUBY ? "false" : (SIR_DISPLAY_PYTHON ? "False" : "#f")), out); break;
         case SIR_INT:   snprintf(buf, sizeof(buf), "%lld", (long long)v.as.i); fputs(buf, out); break;
         case SIR_FLOAT: _sir_fmt_float(out, v.as.f); break;
         case SIR_STR:   fputs(v.as.s, out); break;
@@ -1125,7 +1126,7 @@ char *_sir_display_str(SirValue v);
 
 /* The string twin of `_sir_fmt_elem`: `nil` inside a collection is `nil`. */
 char *_sir_display_elem(SirValue v) {
-    return v.tag == SIR_NIL ? _sir_dup("nil") : _sir_display_str(v);
+    return v.tag == SIR_NIL ? _sir_dup(SIR_DISPLAY_PYTHON ? "None" : "nil") : _sir_display_str(v);
 }
 
 char *_sir_display_seq(SirValue v) {
@@ -1196,9 +1197,9 @@ char *_sir_display_str(SirValue v) {
     if (_sir_display_depth > SIR_MAX_DISPLAY_DEPTH) return _sir_dup("[...]");
     _sir_display_depth++;
     switch (v.tag) {
-        case SIR_NIL:   result = _sir_dup(SIR_DISPLAY_RUBY ? "" : "nil"); break;
-        case SIR_BOOL:  result = _sir_dup(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : "#t")
-                                                  : (SIR_DISPLAY_RUBY ? "false" : "#f")); break;
+        case SIR_NIL:   result = _sir_dup(SIR_DISPLAY_RUBY ? "" : (SIR_DISPLAY_PYTHON ? "None" : "nil")); break;
+        case SIR_BOOL:  result = _sir_dup(v.as.b ? (SIR_DISPLAY_RUBY ? "true" : (SIR_DISPLAY_PYTHON ? "True" : "#t"))
+                                                  : (SIR_DISPLAY_RUBY ? "false" : (SIR_DISPLAY_PYTHON ? "False" : "#f"))); break;
         case SIR_INT:   snprintf(buf, sizeof(buf), "%lld", (long long)v.as.i); result = _sir_dup(buf); break;
         case SIR_FLOAT: result = _sir_display_float(v.as.f); break;
         case SIR_STR:   result = _sir_dup(v.as.s); break;

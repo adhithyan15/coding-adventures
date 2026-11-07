@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — Python display convention for booleans and None (#18496 item 1)
+
+- **Python display convention.** When `source_language == Some("python")`,
+  emitted JavaScript runtime sets `SIR_DISPLAY_PYTHON = true`. `formatSeen`
+  prints `True`, `False`, and `None` (standalone and in collections) matching
+  CPython behavior.
+
 ## Unreleased — interpolation, `nil`'s display, `[]`/`[]=`/`size` (#18798)
 
 - **`StrConcat` (string interpolation) is accepted**, as
