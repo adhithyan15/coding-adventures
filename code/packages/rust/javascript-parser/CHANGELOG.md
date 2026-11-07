@@ -6,6 +6,10 @@ All notable changes to the `coding-adventures-javascript-parser` crate will be d
 
 ### Fixed
 
+- Contextual keyword ASI boundaries and expression termination (#18152):
+  - `can_end_expression` now includes contextual keywords `let`, `await`, `yield` so they can terminate expression statements before newline-led statement starts.
+  - `ends_expression_before` now correctly treats property accesses (`is_member_access_dot`) as ending expressions.
+  - `speculate_line_semicolons` allows `let` followed across a newline by statement-starting tokens (`++`, `--`, statement keywords, numbers, strings) to trigger ASI rather than being suppressed by contextual keyword guards.
 - The ES grammars now enforce ECMA-262's ExpressionStatement lookahead:
   `!( LBRACE | "function" )` in ES1/ES3/ES5, plus `"class"` and `"let" LBRACKET`
   from ES2015 and `"async" "function"` from ES2017. Before, a block whose last

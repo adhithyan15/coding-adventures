@@ -4,6 +4,12 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - WHITESPACE_ONLY contextual keyword ASI boundaries and script await calls (#18152)
+
+- Contextual keyword ASI: `let⏎new Foo`, `let⏎++x`, `await⏎using⏎x`, and property access `x=y.if⏎l:;` now properly splice `;` statement terminators into minified output.
+- `await` operand paren elision and unary spacing: `await(x)` in scripts outside async functions is preserved as a function call, rather than miscompiling to top-level `await x;` (which is a SyntaxError in scripts). Unary `await` paren elision and spacing are only applied inside async functions, async methods, async arrows, or ES modules (`compute_async_context_mask`).
+- Added unit tests in `whitespace_only.rs` and regression integration tests in `tests/regression_ws_contextual_keywords_18152.rs` verifying minified output parses cleanly with `node`.
+
 ### Fixed - ADVANCED inline substitution soundness: deferred closure reads, missing statement arms, computed keys (#18144)
 
 Parameters captured in nested closures now require literal arguments at call sites
