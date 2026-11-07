@@ -16,6 +16,7 @@ mod _parser;
 mod _tokens;
 
 pub mod layout;
+pub mod parser;
 pub mod source;
 
 pub use _parser::parser_grammar;

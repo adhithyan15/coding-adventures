@@ -211,6 +211,8 @@ pub fn capture_layout<'a>(
             Ok(())
         };
 
+    let mut bracket_depth: usize = 0;
+
     while pos < source_len {
         check_work(1)?;
 
@@ -242,89 +244,91 @@ pub fn capture_layout<'a>(
             idx + 1 < line_bytes.len() && line_bytes[idx] == b'-' && line_bytes[idx + 1] == b'-';
 
         if !is_blank && !is_comment {
-            if saw_tab {
-                let orig_start = doc.original_span(tab_pos, tab_pos + 1);
-                let range = orig_start.map(|s| s.start.byte_offset..s.end.byte_offset);
-                return Err(LayoutError {
-                    kind: LayoutErrorKind::TabInIndentation,
-                    byte_range: range,
-                });
-            }
-
-            let current_indent = *indent_stack.last().unwrap();
-            let first_token_pos = line_start + idx;
-
-            if indent_col > current_indent {
-                if indent_stack.len() >= limits.max_indent_depth {
-                    return Err(LayoutError::budget(LayoutErrorKind::IndentDepth));
-                }
-                // Preceding statement must terminate with NEWLINE before INDENT (warrant.grammar contract).
-                if !tokens.is_empty()
-                    && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
-                {
-                    push_token(
-                        LayoutToken {
-                            kind: LayoutTokenKind::Newline,
-                            span: TokenSpan::Synthetic { at: line_start },
-                        },
-                        &mut tokens,
-                    )?;
+            if bracket_depth == 0 {
+                if saw_tab {
+                    let orig_start = doc.original_span(tab_pos, tab_pos + 1);
+                    let range = orig_start.map(|s| s.start.byte_offset..s.end.byte_offset);
+                    return Err(LayoutError {
+                        kind: LayoutErrorKind::TabInIndentation,
+                        byte_range: range,
+                    });
                 }
 
-                indent_stack
-                    .try_reserve(1)
-                    .map_err(|_| LayoutError::budget(LayoutErrorKind::Allocation))?;
-                indent_stack.push(indent_col);
-                push_token(
-                    LayoutToken {
-                        kind: LayoutTokenKind::Indent,
-                        span: TokenSpan::Synthetic {
-                            at: first_token_pos,
-                        },
-                    },
-                    &mut tokens,
-                )?;
-            } else if indent_col < current_indent {
-                if !tokens.is_empty()
-                    && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
-                {
-                    push_token(
-                        LayoutToken {
-                            kind: LayoutTokenKind::Newline,
-                            span: TokenSpan::Synthetic { at: line_start },
-                        },
-                        &mut tokens,
-                    )?;
-                }
+                let current_indent = *indent_stack.last().unwrap();
+                let first_token_pos = line_start + idx;
 
-                while let Some(&top) = indent_stack.last() {
-                    if top == indent_col {
-                        break;
+                if indent_col > current_indent {
+                    if indent_stack.len() >= limits.max_indent_depth {
+                        return Err(LayoutError::budget(LayoutErrorKind::IndentDepth));
                     }
-                    if top < indent_col {
-                        return Err(LayoutError::budget(LayoutErrorKind::InconsistentDedent));
+                    // Preceding statement must terminate with NEWLINE before INDENT (warrant.grammar contract).
+                    if !tokens.is_empty()
+                        && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
+                    {
+                        push_token(
+                            LayoutToken {
+                                kind: LayoutTokenKind::Newline,
+                                span: TokenSpan::Synthetic { at: line_start },
+                            },
+                            &mut tokens,
+                        )?;
                     }
-                    indent_stack.pop();
+
+                    indent_stack
+                        .try_reserve(1)
+                        .map_err(|_| LayoutError::budget(LayoutErrorKind::Allocation))?;
+                    indent_stack.push(indent_col);
                     push_token(
                         LayoutToken {
-                            kind: LayoutTokenKind::Dedent,
+                            kind: LayoutTokenKind::Indent,
                             span: TokenSpan::Synthetic {
                                 at: first_token_pos,
                             },
                         },
                         &mut tokens,
                     )?;
+                } else if indent_col < current_indent {
+                    if !tokens.is_empty()
+                        && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
+                    {
+                        push_token(
+                            LayoutToken {
+                                kind: LayoutTokenKind::Newline,
+                                span: TokenSpan::Synthetic { at: line_start },
+                            },
+                            &mut tokens,
+                        )?;
+                    }
+
+                    while let Some(&top) = indent_stack.last() {
+                        if top == indent_col {
+                            break;
+                        }
+                        if top < indent_col {
+                            return Err(LayoutError::budget(LayoutErrorKind::InconsistentDedent));
+                        }
+                        indent_stack.pop();
+                        push_token(
+                            LayoutToken {
+                                kind: LayoutTokenKind::Dedent,
+                                span: TokenSpan::Synthetic {
+                                    at: first_token_pos,
+                                },
+                            },
+                            &mut tokens,
+                        )?;
+                    }
+                } else if !tokens.is_empty()
+                    && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
+                {
+                    push_token(
+                        LayoutToken {
+                            kind: LayoutTokenKind::Newline,
+                            span: TokenSpan::Synthetic { at: line_start },
+                        },
+                        &mut tokens,
+                    )?;
                 }
-            } else if !tokens.is_empty()
-                && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
-            {
-                push_token(
-                    LayoutToken {
-                        kind: LayoutTokenKind::Newline,
-                        span: TokenSpan::Synthetic { at: line_start },
-                    },
-                    &mut tokens,
-                )?;
             }
 
             // Lex tokens across the rest of the line.
@@ -344,7 +348,27 @@ pub fn capture_layout<'a>(
 
                 let tok_start = line_start + idx;
 
-                if c == b'"' {
+                if c == b'b' && idx + 1 < line_bytes.len() && line_bytes[idx + 1] == b'"' {
+                    let bytes_start = idx;
+                    idx += 2;
+                    while idx < line_bytes.len() && line_bytes[idx] != b'"' {
+                        idx += 1;
+                    }
+                    if idx < line_bytes.len() && line_bytes[idx] == b'"' {
+                        idx += 1;
+                    }
+                    let raw = &source[line_start + bytes_start..line_start + idx];
+                    push_token(
+                        LayoutToken {
+                            kind: LayoutTokenKind::Bytes(raw),
+                            span: TokenSpan::Real {
+                                start: tok_start,
+                                end: line_start + idx,
+                            },
+                        },
+                        &mut tokens,
+                    )?;
+                } else if c == b'"' {
                     idx += 1;
                     let str_start = idx;
                     while idx < line_bytes.len() && line_bytes[idx] != b'"' {
@@ -393,17 +417,13 @@ pub fn capture_layout<'a>(
                     )?;
                 } else if c.is_ascii_digit() {
                     let num_start = idx;
-                    while idx < line_bytes.len()
-                        && (line_bytes[idx].is_ascii_digit() || line_bytes[idx] == b'.')
-                    {
-                        if line_bytes[idx] == b'.'
-                            && idx + 1 < line_bytes.len()
-                            && line_bytes[idx + 1] == b'.'
-                        {
-                            // Part of '..' operator.
-                            break;
-                        }
+                    while idx < line_bytes.len() && line_bytes[idx].is_ascii_digit() {
                         idx += 1;
+                    }
+                    if idx + 3 <= line_bytes.len() && &line_bytes[idx..idx + 3] == b"u64" {
+                        idx += 3;
+                    } else if idx + 2 <= line_bytes.len() && &line_bytes[idx..idx + 2] == b"u8" {
+                        idx += 2;
                     }
                     let num = &source[line_start + num_start..line_start + idx];
                     push_token(
@@ -463,6 +483,11 @@ pub fn capture_layout<'a>(
                     let ch = source[line_start + idx..].chars().next().unwrap();
                     idx += ch.len_utf8();
                     let sym = &source[line_start + sym_start..line_start + idx];
+                    if matches!(sym, "(" | "[" | "{") {
+                        bracket_depth += 1;
+                    } else if matches!(sym, ")" | "]" | "}") {
+                        bracket_depth = bracket_depth.saturating_sub(1);
+                    }
                     push_token(
                         LayoutToken {
                             kind: LayoutTokenKind::Symbol(sym),
@@ -483,25 +508,25 @@ pub fn capture_layout<'a>(
         }
     }
 
-    // End-of-file closure: pop all remaining indent levels down to 0.
-    while indent_stack.len() > 1 {
-        indent_stack.pop();
-        push_token(
-            LayoutToken {
-                kind: LayoutTokenKind::Dedent,
-                span: TokenSpan::Synthetic { at: source_len },
-            },
-            &mut tokens,
-        )?;
-    }
-
-    // Trailing newline if not already present.
+    // Trailing newline if not already present before EOF dedents.
     if !tokens.is_empty()
         && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
     {
         push_token(
             LayoutToken {
                 kind: LayoutTokenKind::Newline,
+                span: TokenSpan::Synthetic { at: source_len },
+            },
+            &mut tokens,
+        )?;
+    }
+
+    // End-of-file closure: pop all remaining indent levels down to 0.
+    while indent_stack.len() > 1 {
+        indent_stack.pop();
+        push_token(
+            LayoutToken {
+                kind: LayoutTokenKind::Dedent,
                 span: TokenSpan::Synthetic { at: source_len },
             },
             &mut tokens,
