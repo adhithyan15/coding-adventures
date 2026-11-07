@@ -2,6 +2,10 @@
 
 ## 0.1.0 — Unreleased
 
+- Add VER04b/P006b2 bounded significant-layout capture: space-only indentation,
+  indentation stack tracking with configurable limits, tabs-in-indentation rejection,
+  and exact zero-width synthetic token origins (INDENT/DEDENT/NEWLINE) without
+  fictitious positive-width byte spans.
 - Add VER04a/P006b1 source admission: bounded UTF-8/BOM/NUL/CR validation,
   borrowed LF views, fallible CRLF normalization and original-byte/one-based
   line/byte-column mapping through a source-bound line-start index.

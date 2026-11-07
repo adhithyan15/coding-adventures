@@ -570,5 +570,12 @@ significant-layout origins (b2) and the guarded parser (b3). The additive
 UTF-8 admission, distinct normalized buffer, original byte/line mapping and
 fixed W0001 rejection. It explicitly rejects bare CR and treats only LF/CRLF
 as source line endings. A successful admitted buffer is not a parsed or checked
-document. The shared CV04a standard-mode partition contract remains unchanged;
-its indentation refusal must not be treated as complete layout capture.
+document.
+
+The additive [VER04b layout contract](VER04b-warrant-layout-capture.md) specifies
+b2's bounded significant-layout capture and synthetic token origin mapping over
+admitted source documents, ensuring synthetic INDENT/DEDENT/NEWLINE tokens possess
+exact zero-width origins without fictitious positive-width spans. The guarded
+parser and nesting quotas follow as b3. The shared CV04a standard-mode partition
+contract remains unchanged; its indentation refusal must not be treated as complete
+layout capture.

@@ -15,6 +15,7 @@ mod _parser;
 #[rustfmt::skip]
 mod _tokens;
 
+pub mod layout;
 pub mod source;
 
 pub use _parser::parser_grammar;

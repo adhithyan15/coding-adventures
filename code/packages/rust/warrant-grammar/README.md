@@ -28,10 +28,21 @@ let newline = source.original_span(9, 10).unwrap();
 assert_eq!(&source.original()[newline.start.byte_offset..newline.end.byte_offset], "\r\n");
 ```
 
-Significant-layout token origins and the guarded lexer/parser with its
-token/literal/AST/native-stack quotas remain P006b2/b3. Source admission,
-grammar data and syntax acceptance do not establish type/binding validation,
-solvers, Rust generation, proof or release authorization.
+The additive [VER04b layout stage](../../../specs/VER04b-warrant-layout-capture.md)
+captures significant-layout tokens (`INDENT`, `DEDENT`, `NEWLINE`) over admitted
+source documents. Synthetic layout tokens possess exact zero-width origins, mapping
+via `doc.original_span(at, at)` to zero-width original source intervals without
+fictitious positive-width whitespace spans:
+
+```rust
+use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
+let tokens = capture_layout(&source, LayoutLimits::default()).unwrap();
+```
+
+The guarded lexer/parser with its AST and native-stack quotas remains P006b3.
+Source admission, layout capture, grammar data and syntax acceptance do not
+establish type/binding validation, solvers, Rust generation, proof or release
+authorization.
 
 ## Tests and regeneration
 
