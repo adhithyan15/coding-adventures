@@ -21,6 +21,7 @@ const TOKEN_CEILING: usize = 1_048_576;
 const DEFAULT_TOKEN_BUDGET: usize = 65_536;
 const INDENT_DEPTH_CEILING: usize = 256;
 const DEFAULT_INDENT_DEPTH: usize = 64;
+const WORK_CEILING: usize = 3 * 1024 * 1024;
 
 /// Bounded limits for layout capture.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -35,7 +36,7 @@ impl Default for LayoutLimits {
         Self {
             max_tokens: DEFAULT_TOKEN_BUDGET,
             max_indent_depth: DEFAULT_INDENT_DEPTH,
-            max_scan_work: 3 * 1024 * 1024,
+            max_scan_work: WORK_CEILING,
         }
     }
 }
@@ -113,27 +114,27 @@ pub enum TokenSpan {
     Synthetic { at: usize },
 }
 
-/// The grammatical kind of a layout token.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum LayoutTokenKind {
+/// The grammatical kind of a layout token, borrowing slices directly from source text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LayoutTokenKind<'a> {
     Indent,
     Dedent,
     Newline,
-    Word(String),
-    Symbol(String),
-    Number(String),
-    Bytes(String),
-    Text(String),
+    Word(&'a str),
+    Symbol(&'a str),
+    Number(&'a str),
+    Bytes(&'a str),
+    Text(&'a str),
 }
 
 /// A captured token with its grammatical kind and exact origin span.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct LayoutToken {
-    pub kind: LayoutTokenKind,
+pub struct LayoutToken<'a> {
+    pub kind: LayoutTokenKind<'a>,
     pub span: TokenSpan,
 }
 
-impl LayoutToken {
+impl<'a> LayoutToken<'a> {
     /// Returns true if this token is synthetic (INDENT, DEDENT, or synthetic NEWLINE).
     pub fn is_synthetic(&self) -> bool {
         matches!(self.span, TokenSpan::Synthetic { .. })
@@ -150,14 +151,16 @@ impl LayoutToken {
 }
 
 /// Captures significant-layout tokens from an admitted source document.
-pub fn capture_layout(
-    doc: &SourceDocument,
+pub fn capture_layout<'a>(
+    doc: &'a SourceDocument<'a>,
     limits: LayoutLimits,
-) -> Result<Vec<LayoutToken>, LayoutError> {
+) -> Result<Vec<LayoutToken<'a>>, LayoutError> {
     if limits.max_tokens == 0
         || limits.max_tokens > TOKEN_CEILING
         || limits.max_indent_depth == 0
         || limits.max_indent_depth > INDENT_DEPTH_CEILING
+        || limits.max_scan_work == 0
+        || limits.max_scan_work > WORK_CEILING
     {
         return Err(LayoutError::budget(LayoutErrorKind::InvalidLimits));
     }
@@ -179,17 +182,31 @@ pub fn capture_layout(
 
     check_work(source_len)?;
 
-    let mut tokens = Vec::new();
-    let mut indent_stack = Vec::with_capacity(limits.max_indent_depth.min(16));
+    // Bounded pre-allocation with fallible reservation.
+    let max_cap = limits.max_tokens.min(4096);
+    let min_cap = 16.min(max_cap);
+    let estimated_tokens = (source_len / 4).clamp(min_cap, max_cap);
+    let mut tokens: Vec<LayoutToken<'a>> = Vec::new();
+    tokens
+        .try_reserve(estimated_tokens)
+        .map_err(|_| LayoutError::budget(LayoutErrorKind::Allocation))?;
+
+    let mut indent_stack = Vec::new();
+    indent_stack
+        .try_reserve(limits.max_indent_depth.min(32))
+        .map_err(|_| LayoutError::budget(LayoutErrorKind::Allocation))?;
     indent_stack.push(0usize);
 
     let mut pos = 0usize;
 
     let push_token =
-        |token: LayoutToken, tokens: &mut Vec<LayoutToken>| -> Result<(), LayoutError> {
+        |token: LayoutToken<'a>, tokens: &mut Vec<LayoutToken<'a>>| -> Result<(), LayoutError> {
             if tokens.len() >= limits.max_tokens {
                 return Err(LayoutError::budget(LayoutErrorKind::TokenBudget));
             }
+            tokens
+                .try_reserve(1)
+                .map_err(|_| LayoutError::budget(LayoutErrorKind::Allocation))?;
             tokens.push(token);
             Ok(())
         };
@@ -241,6 +258,22 @@ pub fn capture_layout(
                 if indent_stack.len() >= limits.max_indent_depth {
                     return Err(LayoutError::budget(LayoutErrorKind::IndentDepth));
                 }
+                // Preceding statement must terminate with NEWLINE before INDENT (warrant.grammar contract).
+                if !tokens.is_empty()
+                    && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
+                {
+                    push_token(
+                        LayoutToken {
+                            kind: LayoutTokenKind::Newline,
+                            span: TokenSpan::Synthetic { at: line_start },
+                        },
+                        &mut tokens,
+                    )?;
+                }
+
+                indent_stack
+                    .try_reserve(1)
+                    .map_err(|_| LayoutError::budget(LayoutErrorKind::Allocation))?;
                 indent_stack.push(indent_col);
                 push_token(
                     LayoutToken {
@@ -253,10 +286,7 @@ pub fn capture_layout(
                 )?;
             } else if indent_col < current_indent {
                 if !tokens.is_empty()
-                    && !matches!(
-                        tokens.last().map(|t| &t.kind),
-                        Some(LayoutTokenKind::Newline)
-                    )
+                    && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
                 {
                     push_token(
                         LayoutToken {
@@ -286,10 +316,7 @@ pub fn capture_layout(
                     )?;
                 }
             } else if !tokens.is_empty()
-                && !matches!(
-                    tokens.last().map(|t| &t.kind),
-                    Some(LayoutTokenKind::Newline)
-                )
+                && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
             {
                 push_token(
                     LayoutToken {
@@ -324,14 +351,16 @@ pub fn capture_layout(
                         if line_bytes[idx] == b'\\' && idx + 1 < line_bytes.len() {
                             idx += 2;
                         } else {
-                            idx += 1;
+                            // Safe Unicode advance
+                            let ch = source[line_start + idx..].chars().next().unwrap();
+                            idx += ch.len_utf8();
                         }
                     }
                     let str_end = idx;
                     if idx < line_bytes.len() && line_bytes[idx] == b'"' {
                         idx += 1;
                     }
-                    let text = source[line_start + str_start..line_start + str_end].to_string();
+                    let text = &source[line_start + str_start..line_start + str_end];
                     push_token(
                         LayoutToken {
                             kind: LayoutTokenKind::Text(text),
@@ -351,7 +380,7 @@ pub fn capture_layout(
                     while idx < line_bytes.len() && line_bytes[idx].is_ascii_hexdigit() {
                         idx += 1;
                     }
-                    let hex = source[line_start + hex_start..line_start + idx].to_string();
+                    let hex = &source[line_start + hex_start..line_start + idx];
                     push_token(
                         LayoutToken {
                             kind: LayoutTokenKind::Bytes(hex),
@@ -376,7 +405,7 @@ pub fn capture_layout(
                         }
                         idx += 1;
                     }
-                    let num = source[line_start + num_start..line_start + idx].to_string();
+                    let num = &source[line_start + num_start..line_start + idx];
                     push_token(
                         LayoutToken {
                             kind: LayoutTokenKind::Number(num),
@@ -394,7 +423,7 @@ pub fn capture_layout(
                     {
                         idx += 1;
                     }
-                    let word = source[line_start + word_start..line_start + idx].to_string();
+                    let word = &source[line_start + word_start..line_start + idx];
                     push_token(
                         LayoutToken {
                             kind: LayoutTokenKind::Word(word),
@@ -415,7 +444,7 @@ pub fn capture_layout(
                             b"->" | b"=>" | b"==" | b"!=" | b"<=" | b">=" | b".." | b"::"
                         ) {
                             idx += 2;
-                            let sym = source[line_start + sym_start..line_start + idx].to_string();
+                            let sym = &source[line_start + sym_start..line_start + idx];
                             push_token(
                                 LayoutToken {
                                     kind: LayoutTokenKind::Symbol(sym),
@@ -430,8 +459,10 @@ pub fn capture_layout(
                         }
                     }
 
-                    idx += 1;
-                    let sym = source[line_start + sym_start..line_start + idx].to_string();
+                    // Safe advance respecting UTF-8 char boundaries.
+                    let ch = source[line_start + idx..].chars().next().unwrap();
+                    idx += ch.len_utf8();
+                    let sym = &source[line_start + sym_start..line_start + idx];
                     push_token(
                         LayoutToken {
                             kind: LayoutTokenKind::Symbol(sym),
@@ -466,10 +497,7 @@ pub fn capture_layout(
 
     // Trailing newline if not already present.
     if !tokens.is_empty()
-        && !matches!(
-            tokens.last().map(|t| &t.kind),
-            Some(LayoutTokenKind::Newline)
-        )
+        && !matches!(tokens.last(), Some(t) if matches!(t.kind, LayoutTokenKind::Newline))
     {
         push_token(
             LayoutToken {

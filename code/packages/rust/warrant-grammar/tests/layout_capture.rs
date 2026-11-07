@@ -20,7 +20,7 @@ fn flat_document_has_no_indent_dedent() {
     let words: Vec<_> = tokens
         .iter()
         .filter_map(|t| match &t.kind {
-            LayoutTokenKind::Word(s) => Some(s.as_str()),
+            LayoutTokenKind::Word(s) => Some(*s),
             _ => None,
         })
         .collect();
@@ -142,6 +142,43 @@ fn comments_and_blank_lines_are_trivia() {
 
     assert_eq!(indents, 1, "only model X creates indentation level");
     assert_eq!(dedents, 1);
+}
+
+#[test]
+fn newline_precedes_indent_for_grammar_compliance() {
+    let source = "warrant bitset\n  model BitSet\n";
+    let doc = admit(source);
+    let tokens = capture_layout(&doc, LayoutLimits::default()).expect("layout captured");
+
+    let indent_pos = tokens
+        .iter()
+        .position(|t| matches!(t.kind, LayoutTokenKind::Indent))
+        .expect("must contain indent");
+    assert!(indent_pos > 0);
+    assert_eq!(
+        tokens[indent_pos - 1].kind,
+        LayoutTokenKind::Newline,
+        "NEWLINE must precede INDENT for grammar compliance"
+    );
+}
+
+#[test]
+fn multibyte_utf8_source_never_panics() {
+    let source = "claim test:\n  ∀ x : Nat . λ y -> x + y\n";
+    let doc = admit(source);
+    let tokens = capture_layout(&doc, LayoutLimits::default()).expect("multibyte layout captured");
+    assert!(!tokens.is_empty());
+}
+
+#[test]
+fn invalid_limits_rejects_zero_or_excessive_bounds() {
+    let doc = admit("warrant test\n");
+    let limits = LayoutLimits {
+        max_scan_work: 0,
+        ..Default::default()
+    };
+    let err = capture_layout(&doc, limits).unwrap_err();
+    assert_eq!(err.kind(), LayoutErrorKind::InvalidLimits);
 }
 
 #[test]
