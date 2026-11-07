@@ -44,8 +44,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P005 | Warrant v0 specification | #18890 merged as 655b99e5e27 at expected 5a60550f9d1; verified on fetched main; all 37 checks acceptable; no implemented compiler claimed |
 | done / VER-P006a | Canonical Warrant grammars, compiled Rust grammar data and syntax corpus | #18898 merged as ce9ab9e57d48 at expected 4271246dbe7; verified on fetched main; all 40 checks acceptable; protected frontend remains P006b |
 | done / VER-P006b1 | Bounded source admission and CRLF/original-byte mapping | #18913 merged as 964dc3df7bc; verified on fetched main; all checks acceptable; no public parser |
-| P1 / VER-P006b2 | Exact bounded significant-layout capture | [VER04b](VER04b-warrant-layout-capture.md) specified; additive matcher/synthetic-token origin contract over SourceDocument, pre-allocation budgets, zero fictitious spans |
-| P1 / VER-P006b3 | Guarded Warrant source lexer/parser | after b2; source/token/literal/declaration/AST limits, original-byte spans and measured multi-shape native-stack guard; no unguarded public parser in earlier slices |
+| done / VER-P006b2 | Exact bounded significant-layout capture | #18992 merged as dc360bfb789; verified on fetched main; all checks acceptable; synthetic tokens zero-width |
+| P1 / VER-P006b3 | Guarded Warrant source lexer/parser | [VER04c](VER04c-guarded-warrant-parser.md) specified; bounded recursive descent over layout tokens, node quotas, recursion depth guards (depth <= 64), 90%+ line/branch coverage |
 | P1 / VER-P007 | Warrant type checker/Rust bindings | waiting P006; missing exports, wrong types and vacuous bindings reject |
 | P1 / VER-P008 | Rust backend and ct-compare.warrant | waiting P007; generated tests through L0, checked regeneration |
 | P1 / VER-P009 | Property spec and pbt-v1 corpus | waiting P008; VER05 generation, integrated shrinking, coverage/negative cases |
