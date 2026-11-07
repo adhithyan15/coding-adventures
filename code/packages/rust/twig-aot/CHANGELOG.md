@@ -1,5 +1,13 @@
 # Changelog — `twig-aot`
 
+## Unreleased — #18488: variadic comparisons and reference operand typing in comparisons
+
+- **Variadic comparisons lower to pairwise chained comparisons and `and`.**
+  `pre_lower_aot_builtins` lowers `call_builtin "<"` (and `<=`, `>`, `>=`, `=`) with 3 or more arguments into a chain of binary comparisons folded with `and` (`a < b ∧ b < c`). Previously, `call_builtin` was mapped directly to `cmp_*` with all arguments, causing native backends to evaluate only the first two operands and ignore the remainder.
+- **`infer_aot_type` maps `ref<any>` (and other reference/array types) in comparisons to `i64`.**
+  Comparisons in IIR have a `type_hint` that reflects the operand comparison type. Since reference pointers are 64-bit words, treating reference operands as `i64` ensures the specialiser emits a native word comparison (`cmp_*_i64`) rather than falling back to `call_runtime generic_cmp_*` (which native backends refuse).
+- **Tests**: `variadic_comparison_lowers_to_chained_pairwise_compares_and_and` and `compare_with_ref_operand_infers_i64_and_specialises_to_i64`.
+
 ## Unreleased — LANG83 PR5b — literals are bytes
 
 - The validator calls `IIRModule::str_literal_errors()` (the ceiling checks plus `BytesOperand`, security review L2) where it called `str_ceiling_errors()`.

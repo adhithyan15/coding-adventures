@@ -2774,18 +2774,64 @@ fn select_ref_array_allocator(func: &mut IIRFunction) {
 fn pre_lower_aot_builtins(func: &mut IIRFunction) {
     select_ref_array_allocator(func);
     let old = std::mem::take(&mut func.instructions);
-    func.instructions = old.into_iter().map(|instr| {
-        if instr.op != "call_builtin" { return instr; }
-        let name = match instr.srcs.first() {
-            Some(Operand::Var(n)) => n.as_str(),
-            _ => return instr,
-        };
-        let Some((_, op)) = AOT_BUILTIN_MAP.iter().find(|(b, _)| *b == name) else {
-            return instr;
-        };
-        let args: Vec<Operand> = instr.srcs[1..].to_vec();
-        IIRInstr::new(*op, instr.dest.clone(), args, &instr.type_hint)
-    }).collect();
+    func.instructions = old
+        .into_iter()
+        .flat_map(|instr| {
+            if instr.op != "call_builtin" {
+                return vec![instr];
+            }
+            let name = match instr.srcs.first() {
+                Some(Operand::Var(n)) => n.as_str(),
+                _ => return vec![instr],
+            };
+            let Some((_, op)) = AOT_BUILTIN_MAP.iter().find(|(b, _)| *b == name) else {
+                return vec![instr];
+            };
+            let args: Vec<Operand> = instr.srcs[1..].to_vec();
+
+            // Variadic comparisons: Scheme (< a b c) means a<b ∧ b<c (#18488).
+            // Lower chained comparisons (n >= 3) to pairwise 2-operand comparisons
+            // joined with `and` so backends do not drop operands past the first two.
+            if op.starts_with("cmp_") && args.len() > 2 {
+                let base = instr.dest.as_deref().unwrap_or("__cmp");
+                let mut out = Vec::new();
+                let mut prev_and: Option<String> = None;
+                for i in 0..args.len() - 1 {
+                    let pair_cmp = format!("{base}_c{i}");
+                    out.push(IIRInstr::new(
+                        *op,
+                        Some(pair_cmp.clone()),
+                        vec![args[i].clone(), args[i + 1].clone()],
+                        "bool",
+                    ));
+
+                    if let Some(prev) = prev_and.take() {
+                        let is_last = i == args.len() - 2;
+                        let and_dest = if is_last {
+                            instr.dest.clone()
+                        } else {
+                            Some(format!("{base}_a{i}"))
+                        };
+                        let and_instr = IIRInstr::new(
+                            "and",
+                            and_dest.clone(),
+                            vec![Operand::Var(prev), Operand::Var(pair_cmp)],
+                            "bool",
+                        );
+                        if !is_last {
+                            prev_and = and_dest;
+                        }
+                        out.push(and_instr);
+                    } else {
+                        prev_and = Some(pair_cmp);
+                    }
+                }
+                return out;
+            }
+
+            vec![IIRInstr::new(*op, instr.dest.clone(), args, &instr.type_hint)]
+        })
+        .collect();
 }
 
 /// Is `ty` a dynamic param type — one the Twig IR compiler leaves undecided?
@@ -2945,6 +2991,13 @@ fn infer_aot_type(instr: &IIRInstr, env: &HashMap<String, String>) -> Option<Str
                 .find_map(|src| resolve_src_aot_type(Some(src), env));
             typed_register
                 .or_else(|| instr.srcs.iter().find_map(|src| resolve_src_aot_type(Some(src), env)))
+                .map(|ty| {
+                    if ty == "ref<any>" || ty.starts_with("ref<") || ty.starts_with("array<") {
+                        "i64".into()
+                    } else {
+                        ty
+                    }
+                })
                 .or_else(|| Some("bool".into()))
         }
         // Arithmetic + move: use the type of the first source operand.
@@ -4960,6 +5013,75 @@ mod tests {
         propagate_aot_types(&mut func);
         let hints: Vec<&str> = func.instructions.iter().map(|i| i.type_hint.as_str()).collect();
         assert_eq!(hints, ["u64", "u64", "i64"]);
+    }
+
+    /// Issue #18488 item 1: variadic comparisons (< a b c) lower to pairwise
+    /// comparisons joined by `and`, so backends do not drop operands.
+    #[test]
+    fn variadic_comparison_lowers_to_chained_pairwise_compares_and_and() {
+        let mut func = IIRFunction::new(
+            "f",
+            vec![],
+            "bool",
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("r".into()),
+                    vec![
+                        Operand::Var("<".into()),
+                        Operand::Int(1),
+                        Operand::Int(2),
+                        Operand::Int(0),
+                    ],
+                    "any",
+                ),
+            ],
+        );
+        pre_lower_aot_builtins(&mut func);
+        assert_eq!(func.instructions.len(), 3);
+        assert_eq!(func.instructions[0].op, "cmp_lt");
+        assert_eq!(func.instructions[0].dest, Some("r_c0".into()));
+        assert_eq!(func.instructions[0].srcs, vec![Operand::Int(1), Operand::Int(2)]);
+        assert_eq!(func.instructions[1].op, "cmp_lt");
+        assert_eq!(func.instructions[1].dest, Some("r_c1".into()));
+        assert_eq!(func.instructions[1].srcs, vec![Operand::Int(2), Operand::Int(0)]);
+        assert_eq!(func.instructions[2].op, "and");
+        assert_eq!(func.instructions[2].dest, Some("r".into()));
+        assert_eq!(func.instructions[2].srcs, vec![Operand::Var("r_c0".into()), Operand::Var("r_c1".into())]);
+    }
+
+    /// Issue #18488 item 2: A comparison with a ref<any> operand must infer operand
+    /// type i64 so the specialiser generates a typed word comparison rather than
+    /// falling back to call_runtime generic_cmp_lt (which native backends refuse).
+    #[test]
+    fn compare_with_ref_operand_infers_i64_and_specialises_to_i64() {
+        let mut func = IIRFunction::new(
+            "f",
+            vec![("p".into(), "ref<any>".into())],
+            "bool",
+            vec![
+                IIRInstr::new(
+                    "cmp_lt",
+                    Some("r".into()),
+                    vec![Operand::Int(0), Operand::Var("p".into())],
+                    "any",
+                ),
+            ],
+        );
+        propagate_aot_types(&mut func);
+        assert_eq!(func.instructions[0].type_hint, "i64");
+
+        let cir = aot_core::specialise::aot_specialise(&func, None);
+        assert!(
+            cir.iter().any(|i| i.op == "cmp_lt_i64"),
+            "expected cmp_lt_i64 in {:?}",
+            cir
+        );
+        assert!(
+            cir.iter().all(|i| i.op != "call_runtime"),
+            "comparison must not fall back to call_runtime: {:?}",
+            cir
+        );
     }
 
     /// End to end on the host: each program exits with the VM's answer.
