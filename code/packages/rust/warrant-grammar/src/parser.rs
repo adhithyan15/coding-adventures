@@ -1225,19 +1225,13 @@ impl<'a> Parser<'a> {
 
         while matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol("."))) {
             let dot_tok = self.peek().unwrap();
-            let dot_span = match dot_tok.span {
-                TokenSpan::Real { start, end } => (start, end),
-                TokenSpan::Synthetic { at } => (at, at),
-            };
+            let dot_span = self.token_span_range(dot_tok);
             if dot_span.0 != end_span.1 {
                 break;
             }
             if let Some(next_tok) = self.tokens.get(self.pos + 1) {
-                let next_start = match next_tok.span {
-                    TokenSpan::Real { start, .. } => start,
-                    TokenSpan::Synthetic { at } => at,
-                };
-                if next_start != dot_span.1 || !matches!(next_tok.kind, LayoutTokenKind::Word(_)) {
+                let next_span = self.token_span_range(next_tok);
+                if next_span.0 != dot_span.1 || !matches!(next_tok.kind, LayoutTokenKind::Word(_)) {
                     break;
                 }
             } else {

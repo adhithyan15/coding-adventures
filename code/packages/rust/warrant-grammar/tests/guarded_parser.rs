@@ -168,6 +168,15 @@ fn quantifier_with_space_before_dot_preserves_refinement_identifier() {
 }
 
 #[test]
+fn crlf_input_with_qualified_names_parses_successfully() {
+    let source = "warrant test\r\n  assume platform:\r\n    u64.wraps\r\n  example e:\r\n    Err(E.Bad) == Err(E.Bad)\r\n";
+    let doc = SourceDocument::admit(source.as_bytes(), SourceLimits::default()).unwrap();
+    let tokens = capture_layout(&doc, LayoutLimits::default()).unwrap();
+    let file = parse_document(&tokens, &doc, ParserLimits::default()).unwrap();
+    assert_eq!(file.declarations.len(), 2);
+}
+
+#[test]
 fn all_57_canonical_cases_validated() {
     use coding_adventures_test_bootstrap::tfv::{self, Value};
     const CORPUS: &str = include_str!("../../../../specs/fixtures/warrant-syntax-v1/cases.tfv");
