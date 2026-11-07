@@ -1,0 +1,4 @@
+### Serialize all GitHub Pages deployments to eliminate git push race condition
+
+- Added shared concurrency group `gh-pages-deployment` with `cancel-in-progress: false` and `queue: max` across all 21 GitHub Pages deployment workflows and publication jobs (`deploy-arithmetic`, `deploy-arm1-web`, `deploy-blog`, `deploy-busicom`, `deploy-code39`, `deploy-commonmark`, `deploy-electronics-visualizers`, `deploy-engram-docs`, `deploy-engram`, `deploy-eniac`, `deploy-journal`, `deploy-language-ladder`, `deploy-lattice-docs`, `deploy-logic-gates`, `deploy-ml-learning`, `deploy-mosaic-docs`, `deploy-nib-web`, `deploy-root`, `deploy-task-app`, `deploy-transistors`, and `human-languages-books`).
+- Prevents concurrent deployments from triggering parallel pushes to the shared `gh-pages` branch, eliminating `! [rejected] gh-pages -> gh-pages (fetch first)` race failures when commits update shared dependencies across multiple web apps.

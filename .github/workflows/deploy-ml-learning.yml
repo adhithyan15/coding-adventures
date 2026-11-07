@@ -74,6 +74,11 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: gh-pages-deployment
+  cancel-in-progress: false
+  queue: max
+
 jobs:
   validate-language-consumers:
     runs-on: ubuntu-latest
