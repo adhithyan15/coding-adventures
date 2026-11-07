@@ -4,6 +4,12 @@ All notable changes to the OCaml build-tool core are documented here.
 
 ## [Unreleased]
 
+### Fixed
+
+- Ignore test-trigger variant diff-selection fixtures carrying
+  `trigger_relations`, matching the Java, Kotlin, and Dart legacy fixture
+  filtering contracts.
+
 ### Added
 
 - A pure typed graph API with canonical edges, deterministic
