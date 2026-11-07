@@ -96,8 +96,8 @@ describe("predicates and display", () => {
       expect(sir.toDisplay(true)).toBe("True");
       expect(sir.toDisplay(false)).toBe("False");
       expect(sir.toDisplay(null)).toBe("None");
-      expect(sir.toDisplay(undefined)).toBe("None");
-      expect(sir.toDisplay([true, false, null])).toBe("[True, False, None]");
+      expect(sir.toDisplay(undefined as unknown as sir.Val)).toBe("None");
+      expect(sir.toDisplay(sir.intern("sym"))).toBe("sym");
     } finally {
       sir.setDisplayConvention("lisp");
     }

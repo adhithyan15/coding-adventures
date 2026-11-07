@@ -196,7 +196,7 @@ function displayNdArrayApl(a: NDArrayLike): string {
  * the default Lisp `#t`/`#f`. Everything else falls back to `String(v)`.
  */
 export function toDisplay(v: Val): string {
-  if (v === null) {
+  if (v === null || v === undefined) {
     return _displayConvention === "python" ? "None" : "nil";
   }
   if (v === true) {
