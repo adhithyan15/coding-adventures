@@ -896,3 +896,504 @@ fn test_windows_path_normalization() {
     let normalized = raw_win_path.replace('\\', "/");
     assert_eq!(normalized, "src/sub/module.rs");
 }
+
+#[test]
+fn test_sha256_full_suite() {
+    use coding_adventures_ca_capability_analyzer::sha256::{sha256, sha256_hex, Sha256};
+
+    // Standard NIST test vectors
+    assert_eq!(
+        sha256_hex(b""),
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    );
+    assert_eq!(
+        sha256_hex(b"abc"),
+        "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    );
+    assert_eq!(
+        sha256_hex(b"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"),
+        "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"
+    );
+
+    // Multi-block and streaming equivalence
+    let long_data = vec![0x61u8; 1_000_000]; // 1,000,000 'a's
+    let mut streaming = Sha256::new();
+    for chunk in long_data.chunks(1024) {
+        streaming.update(chunk);
+    }
+    let stream_digest = streaming.finalize();
+    let direct_digest = sha256(&long_data);
+    assert_eq!(stream_digest, direct_digest);
+    assert_eq!(
+        sha256_hex(&long_data),
+        "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0"
+    );
+}
+
+#[test]
+fn test_module_generator_pure() {
+    use coding_adventures_ca_capability_analyzer::generator::{
+        check_module_on_disk, write_module_to_disk,
+    };
+
+    let tmp = tempfile_dir("module_pure");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn foo() {}").unwrap();
+
+    let manifest_json = r#"{
+        "version": 1,
+        "package": "rust/pure-crate",
+        "capabilities": [],
+        "justification": "Pure crate with no ambient effects."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), manifest_json).unwrap();
+
+    // Module does not exist yet
+    assert!(!check_module_on_disk(&tmp).unwrap());
+
+    // Write module
+    write_module_to_disk(&tmp).unwrap();
+    assert!(check_module_on_disk(&tmp).unwrap());
+
+    let content = fs::read_to_string(tmp.join("src").join("capabilities.rs")).unwrap();
+    assert!(content.contains("PureCapabilities"));
+    assert!(content.contains("#![deny(unsafe_code)]"));
+    assert!(content.contains("Package: rust/pure-crate"));
+
+    // Modify module to simulate drift
+    fs::write(tmp.join("src").join("capabilities.rs"), "// drifted content").unwrap();
+    assert!(!check_module_on_disk(&tmp).unwrap());
+
+    fs::remove_dir_all(&tmp).ok();
+}
+
+#[test]
+fn test_module_generator_capabilities() {
+    use coding_adventures_ca_capability_analyzer::generator::{
+        check_module_on_disk, write_module_to_disk,
+    };
+
+    let tmp = tempfile_dir("module_caps");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn foo() {}").unwrap();
+
+    let manifest_json = r#"{
+        "version": 1,
+        "package": "rust/caps-crate",
+        "capabilities": [
+            {
+                "category": "stdout",
+                "action": "write",
+                "target": "*",
+                "justification": "Writing diagnostic messages to standard output."
+            },
+            {
+                "category": "fs",
+                "action": "read",
+                "target": "cache/*",
+                "justification": "Reading cached configuration files."
+            }
+        ],
+        "justification": "Capability-bearing crate with file read and stdout write."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), manifest_json).unwrap();
+
+    write_module_to_disk(&tmp).unwrap();
+    assert!(check_module_on_disk(&tmp).unwrap());
+
+    let content = fs::read_to_string(tmp.join("src").join("capabilities.rs")).unwrap();
+    assert!(content.contains("PackageCapabilities"));
+    assert!(content.contains("StdoutWriteAllCap"));
+    assert!(content.contains("FsReadCacheCap"));
+
+    fs::remove_dir_all(&tmp).ok();
+}
+
+#[test]
+fn test_certificate_generation_and_verification() {
+    use coding_adventures_ca_capability_analyzer::certificate::{
+        generate_certificate, parse_certificate, verify_certificate,
+    };
+
+    let tmp = tempfile_dir("cert_flow");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(
+        tmp.join("src").join("lib.rs"),
+        "pub fn calculate(a: u32, b: u32) -> u32 { a + b }\npub const fn zero() -> u32 { 0 }",
+    ).unwrap();
+
+    let manifest_json = r#"{
+        "version": 1,
+        "package": "rust/cert-test",
+        "capabilities": [],
+        "justification": "Pure mathematical calculation crate."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), manifest_json).unwrap();
+    coding_adventures_ca_capability_analyzer::generator::write_module_to_disk(&tmp).unwrap();
+
+    let cert = generate_certificate(&tmp).unwrap();
+    assert_eq!(cert.package, "rust/cert-test");
+    assert_eq!(cert.label, "proved");
+    assert_eq!(cert.entry_points.len(), 2);
+    assert_eq!(cert.declared_effects.len(), 0);
+
+    let cert_json = cert.to_json_string();
+    let cert_path = tmp.join("effect_certificate.json");
+    fs::write(&cert_path, &cert_json).unwrap();
+
+    let parsed = parse_certificate(&cert_json).unwrap();
+    assert_eq!(parsed.package, cert.package);
+    assert_eq!(parsed.source_digest, cert.source_digest);
+
+    // Verify passes cleanly
+    let verify_res = verify_certificate(&tmp, &cert_path).unwrap();
+    assert_eq!(verify_res.package, "rust/cert-test");
+    assert_eq!(verify_res.label, "proved");
+    assert_eq!(verify_res.entry_points_count, 2);
+
+    fs::remove_dir_all(&tmp).ok();
+}
+
+#[test]
+fn test_certificate_sabotage_source_digest() {
+    use coding_adventures_ca_capability_analyzer::certificate::{
+        generate_certificate, verify_certificate,
+    };
+
+    let tmp = tempfile_dir("cert_sabotage_src");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn op() -> u32 { 42 }").unwrap();
+
+    let manifest_json = r#"{
+        "version": 1,
+        "package": "rust/sabotage-src",
+        "capabilities": [],
+        "justification": "Test package for source digest sabotage detection."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), manifest_json).unwrap();
+    coding_adventures_ca_capability_analyzer::generator::write_module_to_disk(&tmp).unwrap();
+
+    let cert = generate_certificate(&tmp).unwrap();
+    let cert_path = tmp.join("effect_certificate.json");
+    fs::write(&cert_path, cert.to_json_string()).unwrap();
+
+    // Verify passes initially
+    assert!(verify_certificate(&tmp, &cert_path).is_ok());
+
+    // Tamper with source code
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn op() -> u32 { 43 }").unwrap();
+
+    // Verification must fail with digest mismatch
+    let err = verify_certificate(&tmp, &cert_path).unwrap_err();
+    assert!(err.contains("source_digest mismatch"));
+
+    fs::remove_dir_all(&tmp).ok();
+}
+
+#[test]
+fn test_certificate_sabotage_manifest_digest() {
+    use coding_adventures_ca_capability_analyzer::certificate::{
+        generate_certificate, verify_certificate,
+    };
+
+    let tmp = tempfile_dir("cert_sabotage_manifest");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn op() {}").unwrap();
+
+    let manifest_json = r#"{
+        "version": 1,
+        "package": "rust/sabotage-manifest",
+        "capabilities": [],
+        "justification": "Test package for manifest digest sabotage detection."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), manifest_json).unwrap();
+    coding_adventures_ca_capability_analyzer::generator::write_module_to_disk(&tmp).unwrap();
+
+    let cert = generate_certificate(&tmp).unwrap();
+    let cert_path = tmp.join("effect_certificate.json");
+    fs::write(&cert_path, cert.to_json_string()).unwrap();
+
+    assert!(verify_certificate(&tmp, &cert_path).is_ok());
+
+    // Tamper with manifest file
+    let tampered_manifest = r#"{
+        "version": 1,
+        "package": "rust/sabotage-manifest",
+        "capabilities": [],
+        "justification": "Tampered justification text here."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), tampered_manifest).unwrap();
+
+    let err = verify_certificate(&tmp, &cert_path).unwrap_err();
+    assert!(err.contains("manifest_digest mismatch"));
+
+    fs::remove_dir_all(&tmp).ok();
+}
+
+#[test]
+fn test_certificate_sabotage_uncertified_entry_point() {
+    use coding_adventures_ca_capability_analyzer::certificate::{
+        generate_certificate, verify_certificate,
+    };
+
+    let tmp = tempfile_dir("cert_sabotage_entry");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn legitimate() {}").unwrap();
+
+    let manifest_json = r#"{
+        "version": 1,
+        "package": "rust/sabotage-entry",
+        "capabilities": [],
+        "justification": "Test package for uncertified entry point detection."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), manifest_json).unwrap();
+    coding_adventures_ca_capability_analyzer::generator::write_module_to_disk(&tmp).unwrap();
+
+    let mut cert = generate_certificate(&tmp).unwrap();
+    // Tamper certificate: remove entry points
+    cert.entry_points.clear();
+    let cert_path = tmp.join("effect_certificate.json");
+    fs::write(&cert_path, cert.to_json_string()).unwrap();
+
+    let err = verify_certificate(&tmp, &cert_path).unwrap_err();
+    assert!(err.contains("mismatch") || err.contains("Uncertified"));
+
+    fs::remove_dir_all(&tmp).ok();
+}
+
+#[test]
+fn test_certificate_sabotage_pure_claiming_effects() {
+    use coding_adventures_ca_capability_analyzer::certificate::{
+        generate_certificate, verify_certificate,
+    };
+
+    let tmp = tempfile_dir("cert_sabotage_pure");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn pure_fn() {}").unwrap();
+
+    let manifest_json = r#"{
+        "version": 1,
+        "package": "rust/sabotage-pure",
+        "capabilities": [],
+        "justification": "Test package for pure claiming effects."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), manifest_json).unwrap();
+    coding_adventures_ca_capability_analyzer::generator::write_module_to_disk(&tmp).unwrap();
+
+    let mut cert = generate_certificate(&tmp).unwrap();
+    // Tamper certificate: pure package entry point claims side effect
+    cert.entry_points[0].effects.push("fs:read:*".to_string());
+    let cert_path = tmp.join("effect_certificate.json");
+    fs::write(&cert_path, cert.to_json_string()).unwrap();
+
+    let err = verify_certificate(&tmp, &cert_path).unwrap_err();
+    assert!(err.contains("not present in declared_effects") || err.contains("claims non-empty effects"));
+
+    fs::remove_dir_all(&tmp).ok();
+}
+
+#[test]
+fn test_certificate_sabotage_dishonest_label() {
+    use coding_adventures_ca_capability_analyzer::certificate::{
+        generate_certificate, verify_certificate,
+    };
+
+    let tmp = tempfile_dir("cert_sabotage_label");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn f() {}").unwrap();
+
+    let manifest_json = r#"{
+        "version": 1,
+        "package": "rust/sabotage-label",
+        "capabilities": [],
+        "justification": "Test package for dishonest label detection."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), manifest_json).unwrap();
+    coding_adventures_ca_capability_analyzer::generator::write_module_to_disk(&tmp).unwrap();
+
+    let mut cert = generate_certificate(&tmp).unwrap();
+    cert.label = "unverified-passed".to_string();
+    let cert_path = tmp.join("effect_certificate.json");
+    fs::write(&cert_path, cert.to_json_string()).unwrap();
+
+    let err = verify_certificate(&tmp, &cert_path).unwrap_err();
+    assert!(err.contains("Invalid certificate label 'unverified-passed'"));
+
+    fs::remove_dir_all(&tmp).ok();
+}
+
+#[test]
+fn test_cli_module_and_cert_flags() {
+    let tmp = tempfile_dir("cli_flags");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn compute() -> u32 { 10 }").unwrap();
+
+    let manifest_json = r#"{
+        "version": 1,
+        "package": "rust/cli-test",
+        "capabilities": [],
+        "justification": "Package for testing CLI module and certificate flags."
+    }"#;
+    fs::write(tmp.join("required_capabilities.json"), manifest_json).unwrap();
+
+    let bin = env!("CARGO_BIN_EXE_ca-capability-analyzer-rs");
+
+    // 1. --check-module fails before generation
+    let status_before = std::process::Command::new(bin)
+        .arg("--dir")
+        .arg(&tmp)
+        .arg("--check-module")
+        .status()
+        .unwrap();
+    assert_eq!(status_before.code(), Some(1));
+
+    // 2. --generate-module succeeds
+    let status_gen = std::process::Command::new(bin)
+        .arg("--dir")
+        .arg(&tmp)
+        .arg("--generate-module")
+        .status()
+        .unwrap();
+    assert!(status_gen.success());
+
+    // 3. --check-module succeeds now
+    let status_check = std::process::Command::new(bin)
+        .arg("--dir")
+        .arg(&tmp)
+        .arg("--check-module")
+        .status()
+        .unwrap();
+    assert!(status_check.success());
+
+    // 4. --emit-cert succeeds
+    let cert_file = tmp.join("cert.json");
+    let status_emit = std::process::Command::new(bin)
+        .arg("--dir")
+        .arg(&tmp)
+        .arg("--emit-cert")
+        .arg(&cert_file)
+        .status()
+        .unwrap();
+    assert!(status_emit.success());
+    assert!(cert_file.exists());
+
+    // 5. --verify-cert succeeds
+    let status_verify = std::process::Command::new(bin)
+        .arg("--dir")
+        .arg(&tmp)
+        .arg("--verify-cert")
+        .arg(&cert_file)
+        .status()
+        .unwrap();
+    assert!(status_verify.success());
+
+    fs::remove_dir_all(&tmp).ok();
+}
+
+#[test]
+fn test_certificate_and_generator_edge_cases() {
+    use coding_adventures_ca_capability_analyzer::certificate::{
+        generate_certificate, parse_certificate, verify_certificate,
+        BannedExceptionCert, EffectCertificate, EntryPointCert,
+    };
+    use coding_adventures_ca_capability_analyzer::generator::generate_module_source;
+
+    // 1. Test None manifest for generator
+    let none_source = generate_module_source("none-pkg", None);
+    assert!(none_source.contains("PureCapabilities"));
+
+    // 2. Full EffectCertificate JSON serialization with all non-empty fields
+    let full_cert = EffectCertificate {
+        schema_version: "ver24-effect-cert-v1".to_string(),
+        package: "rust/full-pkg".to_string(),
+        source_digest: "abcd".to_string(),
+        manifest_digest: "1234".to_string(),
+        declared_effects: vec!["stdout:write:*".to_string(), "fs:read:cache/*".to_string()],
+        entry_points: vec![EntryPointCert {
+            name: "log_message".to_string(),
+            signature: "pub fn log_message(msg: &str)".to_string(),
+            effects: vec!["stdout:write:*".to_string()],
+        }],
+        unconditional_roots: vec!["init".to_string()],
+        banned_construct_exceptions: vec![BannedExceptionCert {
+            construct: "unsafe_code".to_string(),
+            language: "rust".to_string(),
+            justification: "Checked volatile barrier".to_string(),
+        }],
+        label: "proved".to_string(),
+    };
+    let json = full_cert.to_json_string();
+    assert!(json.contains("declared_effects"));
+    assert!(json.contains("unconditional_roots"));
+    assert!(json.contains("banned_construct_exceptions"));
+
+    let parsed = parse_certificate(&json).unwrap();
+    assert_eq!(parsed.declared_effects.len(), 2);
+    assert_eq!(parsed.unconditional_roots.len(), 1);
+    assert_eq!(parsed.banned_construct_exceptions.len(), 1);
+
+    // 3. parse_certificate error branches
+    assert!(parse_certificate(r#"{"package": "x"}"#).unwrap_err().contains("Missing 'schema_version'"));
+    assert!(parse_certificate(r#"{"schema_version": "wrong"}"#).unwrap_err().contains("Unsupported certificate schema_version"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1"}"#).unwrap_err().contains("Missing 'package'"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p"}"#).unwrap_err().contains("Missing 'source_digest'"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s"}"#).unwrap_err().contains("Missing 'manifest_digest'"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s", "manifest_digest": "m"}"#).unwrap_err().contains("Missing 'label'"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s", "manifest_digest": "m", "label": "proved", "declared_effects": [123]}"#).unwrap_err().contains("must be string"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s", "manifest_digest": "m", "label": "proved", "entry_points": [{}]}"#).unwrap_err().contains("missing 'name'"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s", "manifest_digest": "m", "label": "proved", "entry_points": [{"name": "n"}]}"#).unwrap_err().contains("missing 'signature'"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s", "manifest_digest": "m", "label": "proved", "entry_points": [{"name": "n", "signature": "s", "effects": [456]}]}"#).unwrap_err().contains("effect must be string"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s", "manifest_digest": "m", "label": "proved", "unconditional_roots": [789]}"#).unwrap_err().contains("must be string"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s", "manifest_digest": "m", "label": "proved", "banned_construct_exceptions": [{}]}"#).unwrap_err().contains("missing 'construct'"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s", "manifest_digest": "m", "label": "proved", "banned_construct_exceptions": [{"construct": "c"}]}"#).unwrap_err().contains("missing 'language'"));
+    assert!(parse_certificate(r#"{"schema_version": "ver24-effect-cert-v1", "package": "p", "source_digest": "s", "manifest_digest": "m", "label": "proved", "banned_construct_exceptions": [{"construct": "c", "language": "l"}]}"#).unwrap_err().contains("missing 'justification'"));
+
+    // 4. verify_certificate error conditions
+    let tmp = tempfile_dir("cert_errors");
+    fs::create_dir_all(tmp.join("src")).unwrap();
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn test_fn() {}\n").unwrap();
+    fs::write(tmp.join("required_capabilities.json"), r#"{"version": 1, "package": "rust/tmp", "capabilities": [], "justification": "Testing cert errors."}"#).unwrap();
+    coding_adventures_ca_capability_analyzer::generator::write_module_to_disk(&tmp).unwrap();
+
+    let cert = generate_certificate(&tmp).unwrap();
+    let cert_file = tmp.join("cert.json");
+    fs::write(&cert_file, cert.to_json_string()).unwrap();
+
+    // Non-existent cert path
+    assert!(verify_certificate(&tmp, &tmp.join("nonexistent.json")).unwrap_err().contains("does not exist"));
+
+    // Package name mismatch
+    let mut bad_pkg_cert = cert.clone();
+    bad_pkg_cert.package = "rust/mismatch".to_string();
+    let bad_pkg_path = tmp.join("bad_pkg.json");
+    fs::write(&bad_pkg_path, bad_pkg_cert.to_json_string()).unwrap();
+    assert!(verify_certificate(&tmp, &bad_pkg_path).unwrap_err().contains("does not match manifest package"));
+
+    // Declared effects mismatch
+    let mut bad_eff_cert = cert.clone();
+    bad_eff_cert.declared_effects = vec!["stdout:write:*".to_string()];
+    let bad_eff_path = tmp.join("bad_eff.json");
+    fs::write(&bad_eff_path, bad_eff_cert.to_json_string()).unwrap();
+    assert!(verify_certificate(&tmp, &bad_eff_path).unwrap_err().contains("declared_effects mismatch"));
+
+    // Entry point undeclared effect
+    let mut bad_ep_cert = cert.clone();
+    bad_ep_cert.declared_effects = vec!["stdout:write:*".to_string()];
+    bad_ep_cert.entry_points[0].effects = vec!["fs:read:*".to_string()];
+    // create manifest matching declared_effects so we get past step 3
+    fs::write(tmp.join("required_capabilities.json"), r#"{"version": 1, "package": "rust/tmp", "capabilities": [{"category": "stdout", "action": "write", "target": "*", "justification": "stdout write justification."}], "justification": "Testing cert errors."}"#).unwrap();
+    coding_adventures_ca_capability_analyzer::generator::write_module_to_disk(&tmp).unwrap();
+    bad_ep_cert.manifest_digest = coding_adventures_ca_capability_analyzer::certificate::compute_manifest_digest(&tmp).unwrap();
+    let bad_ep_path = tmp.join("bad_ep.json");
+    fs::write(&bad_ep_path, bad_ep_cert.to_json_string()).unwrap();
+    assert!(verify_certificate(&tmp, &bad_ep_path).unwrap_err().contains("not present in declared_effects"));
+
+    // Package static analysis failure
+    fs::write(tmp.join("src").join("lib.rs"), "pub fn test_fn() { std::fs::read(\"bad\").ok(); }\n").unwrap();
+    let bad_code_cert = generate_certificate(&tmp).unwrap();
+    let bad_code_path = tmp.join("bad_code.json");
+    fs::write(&bad_code_path, bad_code_cert.to_json_string()).unwrap();
+    assert!(verify_certificate(&tmp, &bad_code_path).unwrap_err().contains("static capability analysis failed"));
+
+    fs::remove_dir_all(&tmp).ok();
+}

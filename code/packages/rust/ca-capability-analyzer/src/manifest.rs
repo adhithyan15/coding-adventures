@@ -196,6 +196,16 @@ fn validate_and_convert_manifest(val: JsonValue) -> Result<ManifestData, Manifes
             "invalid package '{package}', expected rust/<name>"
         )));
     }
+    let pkg_suffix = &package["rust/".len()..];
+    if pkg_suffix.is_empty()
+        || !pkg_suffix
+            .chars()
+            .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-' || c == '_')
+    {
+        return Err(ManifestError::Validation(format!(
+            "invalid package '{package}', expected rust/<name> containing only [a-z0-9-_]"
+        )));
+    }
 
     // justification
     let justification = obj
@@ -267,6 +277,14 @@ fn validate_and_convert_manifest(val: JsonValue) -> Result<ManifestData, Manifes
         if target.trim().is_empty() {
             return Err(ManifestError::Validation(format!(
                 "capability[{i}].target must not be empty"
+            )));
+        }
+        if !target
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '-' || c == '.' || c == '/' || c == '*')
+        {
+            return Err(ManifestError::Validation(format!(
+                "capability[{i}].target '{target}' contains disallowed characters (only [a-zA-Z0-9_\\-./*] permitted)"
             )));
         }
         if just.trim().len() < 10 {
@@ -412,6 +430,13 @@ impl JsonValue {
     pub fn as_object(&self) -> Option<&HashMap<String, JsonValue>> {
         match self {
             Self::Object(m) => Some(m),
+            _ => None,
+        }
+    }
+
+    pub fn get(&self, key: &str) -> Option<&JsonValue> {
+        match self {
+            Self::Object(m) => m.get(key),
             _ => None,
         }
     }
