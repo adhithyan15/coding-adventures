@@ -471,7 +471,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "LINE_COMMENT",
-        pattern: "\\/\\/[^\\n\\r]*",
+        pattern: "\\/\\/[^\\n\\r\\u2028\\u2029]*",
         is_regex: true,
         line_number: 302,
         alias_name: nil,

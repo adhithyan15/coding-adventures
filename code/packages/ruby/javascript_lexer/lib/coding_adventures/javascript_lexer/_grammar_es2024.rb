@@ -18,7 +18,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
   definitions: [
       GT::TokenDefinition.new(
         name: "HASHBANG",
-        pattern: "^#![^\\n\\r]*",
+        pattern: "^#![^\\n\\r\\u2028\\u2029]*",
         is_regex: true,
         line_number: 41,
         alias_name: nil,
@@ -562,7 +562,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
       ),
       GT::TokenDefinition.new(
         name: "LINE_COMMENT",
-        pattern: "\\/\\/[^\\n\\r]*",
+        pattern: "\\/\\/[^\\n\\r\\u2028\\u2029]*",
         is_regex: true,
         line_number: 313,
         alias_name: nil,

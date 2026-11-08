@@ -5,6 +5,9 @@ All notable changes to `coding_adventures_javascript_lexer` will be documented i
 ## [Unreleased]
 
 ### Fixed
+- Regenerated `_grammar_es*.rb` after `LINE_COMMENT` and `HASHBANG` were updated across ECMAScript token definitions to stop before U+2028 and U+2029 (#17887).
+
+### Fixed
 - Regenerated `_grammar_es2021.rb` … `_grammar_es2025.rb` after those editions' number patterns were brought in line with ECMA-262's NumericLiteralSeparator grammar (no `1__0`, `0_17`, `1_.5`; `5.` and `5.e1` lex as one NUMBER; a legacy octal takes no fraction or exponent). LANG84 6d security review.
 
 ### Changed
