@@ -6,6 +6,8 @@ All notable changes to the `coding-adventures-javascript-parser` crate will be d
 
 ### Fixed
 
+- Keyword property names in Phase-1 ASI parsing (#18125):
+  - Normalizes member access keyword tokens after `.` or `?.` to `TokenType::Name` during `parse_with_asi_tracked`, allowing the compiled grammar (`DOT NAME`) to parse keyword properties like `x=y.if` and compute accurate ASI insertion points before subsequent newline-led statements.
 - Contextual keyword ASI boundaries and expression termination (#18152):
   - `can_end_expression` now includes contextual keywords `let`, `await`, `yield` so they can terminate expression statements before newline-led statement starts.
   - `ends_expression_before` now correctly treats property accesses (`is_member_access_dot`) as ending expressions.
