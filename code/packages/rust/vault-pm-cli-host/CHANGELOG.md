@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Fixed: `program_trust_requires_a_root_owned_regular_file` candidate set expands to handle multicall coreutils layouts.**
+  On modern Linux hosts (e.g. Ubuntu 25+ and runner images using multicall `uutils-coreutils`
+  or busybox single-binary layouts), standard utilities such as `/bin/cat`, `/usr/bin/cat`,
+  `/bin/ls`, `/usr/bin/ls`, and `/usr/bin/env` may be symlinks to `/usr/bin/coreutils`
+  rather than standalone binaries. Because `is_trusted_program` specifically uses `symlink_metadata`
+  to refuse symlinks by design, testing only those five paths resulted in an empty candidate set
+  when filtering for regular files. The candidate set now includes standard system binaries and
+  shells (`/usr/bin/coreutils`, `dash`, `bash`, `grep`, `sed`, `tar`, `gzip`) so that on any
+  compliant Unix/Linux host at least one root-owned regular binary is discovered and verified.
+
 - **Fixed: `escaped_revealed_text` no longer reallocates while holding a
   secret.** `item reveal` and `conflict reveal` (via `write_revealed_text`)
   used to build the quote/control-escaped terminal text with

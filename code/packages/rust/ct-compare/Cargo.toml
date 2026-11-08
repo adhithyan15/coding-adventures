@@ -13,3 +13,8 @@ coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
 name = "conformance"
 path = "tests/conformance.rs"
 harness = false
+
+[[test]]
+name = "fuzz_targets"
+path = "tests/fuzz_targets.rs"
+harness = false
