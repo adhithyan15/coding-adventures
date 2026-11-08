@@ -442,10 +442,11 @@ console.log(prose, nested);
         # +1: warrant-compiler, the VER04g zero-dependency Level 1 Warrant compiler package.
         # +1: pbt, the VER05 zero-dependency Level 2 property-based testing package.
         # +1: fuzz, the VER06 zero-dependency Level 2 coverage-guided fuzz engine package.
-        self.assertEqual(summary.total_projects, 498)
-        self.assertEqual(summary.shared_projects, 307)
-        self.assertEqual(summary.inherited_root_dir, 134)
-        self.assertEqual(summary.inherited_out_dir, 137)
+        # +1: test-matchers, the VER01 zero-dependency Level 1 matchers and assertions package.
+        self.assertEqual(summary.total_projects, 499)
+        self.assertEqual(summary.shared_projects, 308)
+        self.assertEqual(summary.inherited_root_dir, 135)
+        self.assertEqual(summary.inherited_out_dir, 138)
         # forme-authoring-core, forme-authoring-editor,
         # forme-authoring-preview, forme-authoring-publish, and
         # forme-authoring-shell are isolated standalone emitters, adding five
@@ -589,7 +590,8 @@ console.log(prose, nested);
         # +1: warrant-compiler locks its standalone compiler.
         # +1: pbt locks its standalone compiler.
         # +1: fuzz locks its standalone compiler.
-        self.assertEqual(summary.locked_compilers, 497)
+        # +1: test-matchers locks its standalone compiler.
+        self.assertEqual(summary.locked_compilers, 498)
 
 
 if __name__ == "__main__":
