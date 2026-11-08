@@ -9,7 +9,7 @@ export const testBootstrapCliSpec: CliSpec = {
   name: "test-bootstrap",
   displayName: "Test Bootstrap",
   description: "Zero-dependency Level 0 bootstrap harness, TFV runner, and pure Level 1 matchers",
-  version: "0.1.0",
+  version: "0.2.0",
   parsingMode: "gnu",
   builtinFlags: {
     help: true,
