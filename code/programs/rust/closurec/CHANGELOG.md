@@ -4,6 +4,12 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - function and class declarations in class static initialization blocks (#17940)
+
+- Function, generator, async function, and class declarations inside class static initialization blocks (`class C { static { function f() { return 1; } } }`) now parse and compile correctly under `SIMPLE` and `ADVANCED` compilation levels, rather than failing at the parse stage or emitting declarations as parenthesized expressions.
+- Updated `static_block` in ES2022–ES2025 grammars to include declaration alternatives, updated `javascript-parser/src/bridge.rs`'s `convert_static_block` to lower declarations via `convert_statement_list_item`, and added static blocks to early error duplicate checks.
+- Added regression tests in `tests/regression_static_block_declarations_17940.rs` validated against Node.js runtime execution.
+
 ### Fixed - prevent emitting `<!--` HTML comment sequence after `<` (#17887)
 
 - Fixed a silent miscompile where `a < !--b` (or `a < ! --b`) was emitted as `a<!--b` across `WHITESPACE_ONLY`, `SIMPLE`, and `ADVANCED` compilation levels. In ECMAScript Annex B.1.1 (script mode), `<!--` begins a SingleLineHTMLOpenComment, causing Node.js and browsers to treat the remainder of the line as a comment and discard subsequent statements.

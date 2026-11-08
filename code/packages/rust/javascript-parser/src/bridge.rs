@@ -1661,17 +1661,16 @@ fn convert_class_element(node: &GrammarASTNode) -> Result<ClassMember, BridgeErr
 /// ```
 ///
 /// The block body is exactly a statement list — the *same* shape as a plain
-/// `{ … }` [`convert_block_statement`] — so each `statement` node child is
-/// lowered by the shared [`convert_statement`], covering the full statement
-/// surface (including `let` / `const` / `var`, which map to
-/// `Statement::Declaration`). Tokens (`static`, the braces) are ignored by
-/// [`node_children`], so the leading `static` needs no special handling. An
-/// empty block (`static {}`) yields an empty `body`. Because every statement is
-/// routed through the shared converter, any unmodelled body statement makes the
+/// `{ … }` [`convert_block_statement`] — so each child statement or
+/// declaration node is lowered by [`convert_statement_list_item`] (#17940).
+/// Tokens (`static`, the braces) are ignored by [`node_children`], so the
+/// leading `static` needs no special handling. An empty block (`static {}`)
+/// yields an empty `body`. Because every statement/declaration is routed
+/// through the shared converter, any unmodelled body statement makes the
 /// converter DECLINE (safe WHITESPACE_ONLY fallback) rather than mis-emit.
 fn convert_static_block(node: &GrammarASTNode) -> Result<BlockStatement, BridgeError> {
     let stmts: Result<Vec<Statement>, _> =
-        node_children(node).into_iter().map(convert_statement).collect();
+        node_children(node).into_iter().map(convert_statement_list_item).collect();
     Ok(BlockStatement { cv: None, body: stmts? })
 }
 
@@ -7972,5 +7971,19 @@ mod tests {
         // declaration; `(function g(){})` is still an expression statement.
         let p = bridge_ok("{(function g(){}); (class C{});}");
         assert_eq!(kinds(&block_body(&p)), vec!["expr", "expr"]);
+    }
+
+    #[test]
+    fn static_block_function_and_class_are_declarations() {
+        // #17940: function and class declarations in static initialization blocks
+        // were rejected at the parse stage because static_block only accepted statements.
+        let p = bridge_ok("class A { static { function f() { return 1; } class B {} } }");
+        let ProgramItem::Declaration(Declaration::ClassDeclaration(c)) = &p.body[0] else {
+            panic!("expected class declaration, got {:?}", p.body[0]);
+        };
+        let ClassMember::StaticBlock(b) = &c.body[0] else {
+            panic!("expected static block, got {:?}", c.body[0]);
+        };
+        assert_eq!(kinds(&b.body), vec!["fn", "class"]);
     }
 }

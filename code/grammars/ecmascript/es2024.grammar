@@ -120,7 +120,7 @@ private_method_definition = [ "static" ] PRIVATE_NAME
                             LPAREN [ formal_parameters ] RPAREN
                             LBRACE function_body RBRACE ;
 
-static_block = "static" LBRACE { statement } RBRACE ;
+static_block = "static" LBRACE { ( function_declaration | generator_declaration | async_function_declaration | async_generator_declaration | class_declaration | statement ) } RBRACE ;
 
 method_definition = property_name LPAREN [ formal_parameters ] RPAREN
                     LBRACE function_body RBRACE
