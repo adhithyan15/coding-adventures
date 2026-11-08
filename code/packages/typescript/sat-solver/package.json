@@ -1,0 +1,23 @@
+{
+  "name": "@coding-adventures/sat-solver",
+  "version": "0.1.0",
+  "description": "Zero-dependency TypeScript Level 3 CDCL SAT solver, Tseitin circuit bit-blaster, and DIMACS CNF transport (VER09a)",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-strip-types --test tests/sat.test.ts"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
