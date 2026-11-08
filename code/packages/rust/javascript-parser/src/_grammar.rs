@@ -30674,8 +30674,29 @@ mod v_es2022 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -34749,8 +34770,29 @@ mod v_es2023 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -38824,8 +38866,29 @@ mod v_es2024 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {
@@ -42997,8 +43060,32 @@ mod v_es2025 {
                                 name: r#"LBRACE"#.to_string(),
                             },
                             GrammarElement::Repetition {
-                                element: Box::new(GrammarElement::RuleReference {
-                                    name: r#"statement"#.to_string(),
+                                element: Box::new(GrammarElement::Group {
+                                    element: Box::new(GrammarElement::Alternation {
+                                        choices: vec![
+                                            GrammarElement::RuleReference {
+                                                name: r#"function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_function_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"async_generator_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"decorated_class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"statement"#.to_string(),
+                                            },
+                                        ],
+                                    }),
                                 }),
                             },
                             GrammarElement::TokenReference {

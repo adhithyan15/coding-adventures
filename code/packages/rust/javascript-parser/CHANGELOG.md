@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.67.1] - 2026-11-08
+
+### Fixed
+
+- Function and class declarations in class static initialization blocks (`static { ... }`) (#17940):
+  - In `code/grammars/ecmascript/es2022.grammar`, `es2023.grammar`, `es2024.grammar`, and `es2025.grammar`, `static_block` now accepts declarations (`function_declaration`, `generator_declaration`, `async_function_declaration`, `async_generator_declaration`, `class_declaration`, and in ES2025 `decorated_class_declaration`) in addition to `statement`.
+  - In typed AST `bridge.rs`, `convert_static_block` now lowers its children via `convert_statement_list_item` (matching `convert_block_statement`), preserving function and class declarations instead of rejecting them or lowering them as expressions.
+  - In `early_errors.rs`, `static_block` is added to block scope validation so duplicate lexical declarations within a static block are detected as early errors.
+  - Regenerated `src/_grammar.rs` (rustfmt).
+
 ## Unreleased - an ExpressionStatement never starts with `{` or `function` (F12 phase 0)
 
 ### Fixed

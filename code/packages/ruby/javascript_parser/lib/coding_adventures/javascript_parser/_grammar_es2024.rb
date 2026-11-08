@@ -399,7 +399,14 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
       body: GT::Sequence.new(elements: [
         GT::Literal.new(value: "static"),
         GT::RuleReference.new(name: "LBRACE", is_token: true),
-        GT::Repetition.new(element: GT::RuleReference.new(name: "statement", is_token: false)),
+        GT::Repetition.new(element: GT::Group.new(element: GT::Alternation.new(choices: [
+              GT::RuleReference.new(name: "function_declaration", is_token: false),
+              GT::RuleReference.new(name: "generator_declaration", is_token: false),
+              GT::RuleReference.new(name: "async_function_declaration", is_token: false),
+              GT::RuleReference.new(name: "async_generator_declaration", is_token: false),
+              GT::RuleReference.new(name: "class_declaration", is_token: false),
+              GT::RuleReference.new(name: "statement", is_token: false),
+            ]))),
         GT::RuleReference.new(name: "RBRACE", is_token: true),
       ]),
       line_number: 123,

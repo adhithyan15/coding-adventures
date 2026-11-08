@@ -58,7 +58,7 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 ///   differently (ES2015 inlines them in `property_definition`).
 pub fn check(root: &GrammarASTNode) -> Result<(), String> {
     enum Step<'a> {
-        Enter(&'a GrammarASTNode, bool),
+        Enter(&'a GrammarASTNode, bool, bool),
         /// Leave a block scope: forget its lexical names.
         LeaveScope(Vec<&'a str>),
         /// Leave a function or class body: restore the outer scopes.
@@ -66,10 +66,10 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
     }
     let mut active: HashMap<&str, usize> = HashMap::new();
     let mut saved: Vec<HashMap<&str, usize>> = Vec::new();
-    let mut stack: Vec<Step> = vec![Step::Enter(root, has_use_strict_directive(root))];
+    let mut stack: Vec<Step> = vec![Step::Enter(root, has_use_strict_directive(root), false)];
     while let Some(step) = stack.pop() {
-        let (node, strict) = match step {
-            Step::Enter(node, strict) => (node, strict),
+        let (node, strict, in_static_block) = match step {
+            Step::Enter(node, strict, in_static_block) => (node, strict, in_static_block),
             Step::LeaveScope(names) => {
                 for name in names {
                     if let Some(count) = active.get_mut(name) {
@@ -86,11 +86,13 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                 continue;
             }
         };
+        let is_static = node.rule_name == "static_block";
+        let in_static = in_static_block || is_static;
         match node.rule_name.as_str() {
-            rule @ ("block" | "switch_statement") => {
+            rule @ ("block" | "switch_statement" | "static_block") => {
                 let items =
-                    if rule == "block" { block_items(node) } else { case_block_items(node) };
-                let names = check_duplicates(&items, strict)?;
+                    if rule == "switch_statement" { case_block_items(node) } else { block_items(node) };
+                let names = check_duplicates(&items, strict, in_static)?;
                 for &name in &names {
                     *active.entry(name).or_insert(0) += 1;
                 }
@@ -100,14 +102,14 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                 saved.push(std::mem::take(&mut active));
                 stack.push(Step::LeaveBoundary);
             }
-            "variable_statement" => check_vars(node, &active)?,
+            "variable_statement" => check_vars(node, &active, in_static)?,
             "for_statement" | "for_in_statement" | "for_of_statement" | "for_await_of_statement"
                 if has_token(node, "var") =>
             {
                 for decl in children(node).take_while(|n| {
                     matches!(n.rule_name.as_str(), "variable_declaration_list" | "variable_declaration")
                 }) {
-                    check_vars(decl, &active)?;
+                    check_vars(decl, &active, in_static)?;
                 }
             }
             _ => {}
@@ -122,7 +124,25 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                     || child.rule_name == "class_body"
                     // A function body's own directive prologue.
                     || (child.rule_name == "function_body" && has_use_strict_directive(child));
-                stack.push(Step::Enter(child, child_strict));
+                let is_boundary = matches!(
+                    child.rule_name.as_str(),
+                    "function_declaration"
+                        | "generator_declaration"
+                        | "async_function_declaration"
+                        | "async_generator_declaration"
+                        | "function_expression"
+                        | "generator_expression"
+                        | "async_function_expression"
+                        | "async_generator_expression"
+                        | "arrow_function"
+                        | "async_arrow_function"
+                        | "function_body"
+                        | "class_declaration"
+                        | "class_expression"
+                        | "class_body"
+                );
+                let child_in_static = if is_boundary { false } else { in_static };
+                stack.push(Step::Enter(child, child_strict, child_in_static));
             }
         }
     }
@@ -131,10 +151,20 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
 
 /// Rule 2 for one `var` binding list: none of its names may be lexically
 /// declared by an enclosing block scope since the nearest function boundary.
-fn check_vars(decl: &GrammarASTNode, active: &HashMap<&str, usize>) -> Result<(), String> {
+fn check_vars(
+    decl: &GrammarASTNode,
+    active: &HashMap<&str, usize>,
+    in_static_block: bool,
+) -> Result<(), String> {
     let mut names = Vec::new();
     bound_names(decl, &mut names);
     for (name, line, column) in names {
+        if in_static_block && name == "await" {
+            return Err(format!(
+                "early error at {line}:{column}: `await` cannot be used as a binding identifier \
+                 in a class static initialization block (ECMA-262 §15.7.1)"
+            ));
+        }
         if active.contains_key(name) {
             return Err(format!(
                 "early error at {line}:{column}: `{name}` is declared with both var and \
@@ -155,13 +185,24 @@ struct Lexical<'a> {
 }
 
 /// Rule 1 for one scope's items. Returns the scope's lexical names.
-fn check_duplicates<'a>(items: &[&'a GrammarASTNode], strict: bool) -> Result<Vec<&'a str>, String> {
+fn check_duplicates<'a>(
+    items: &[&'a GrammarASTNode],
+    strict: bool,
+    in_static_block: bool,
+) -> Result<Vec<&'a str>, String> {
     let mut lexical: Vec<Lexical> = Vec::new();
     for item in items {
         lexically_declared(item, &mut lexical);
     }
     let mut seen: HashMap<&str, bool> = HashMap::new();
     for l in &lexical {
+        if in_static_block && l.name == "await" {
+            return Err(format!(
+                "early error at {}:{}: `await` cannot be used as a binding identifier \
+                 in a class static initialization block (ECMA-262 §15.7.1)",
+                l.line, l.column
+            ));
+        }
         if let Some(&prev_plain) = seen.get(l.name) {
             let annex_b = !strict && prev_plain && l.plain_function;
             if !annex_b {
@@ -407,6 +448,8 @@ mod tests {
         assert!(!ok("{ let f; { var f; } }"));
         assert!(!ok("{ function f(){} for (var f in o); }"));
         assert!(!ok("function x(){ { class f {} var f; } }"));
+        assert!(!ok("class C { static { let f; var f; } }"));
+        assert!(!ok("class C { static { function f(){} var f; } }"));
     }
 
     #[test]
@@ -422,6 +465,7 @@ mod tests {
         assert!(!ok("'use strict'; { function f(){} function f(){} }"));
         assert!(!ok("function g(){ 'use strict'; { function f(){} function f(){} } }"));
         assert!(!ok("class C { m(){ { function f(){} function f(){} } } }"));
+        assert!(!ok("class C { static { function f(){} function f(){} } }"));
         // Async functions and generators never qualify.
         assert!(!ok("{ async function f(){} async function f(){} }"));
     }
@@ -443,6 +487,7 @@ mod tests {
         assert!(ok("{ var f; { let f; } }"));
         // A class field's or static block's var scope is its own.
         assert!(ok("{ let f; class C { static { var f; } m(){ var f; } } }"));
+        assert!(ok("class C { static { function f(){} } static { function f(){} } }"));
     }
 
     #[test]
@@ -461,6 +506,14 @@ mod tests {
     #[test]
     fn class_heritage_is_strict() {
         assert!(!ok("class C extends (function(){ { function f(){} function f(){} } }) {}"));
+    }
+
+    #[test]
+    fn await_cannot_be_binding_name_in_static_block() {
+        assert!(!ok("class C { static { class await {} } }"));
+        assert!(!ok("class C { static { function await() {} } }"));
+        assert!(!ok("class C { static { var await; } }"));
+        assert!(!ok("class C { static { let await; } }"));
     }
 
     #[test]
