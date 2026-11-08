@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Add equal-instruction-count microbenchmarks and deterministic cost budgeting
+  (`tests/microbenchmarks.rs`, VER07 / VER07a / VER-P017):
+  - Multi-scale $n \in \{16, 256, 4096\}$ sweeps for `ct_eq` with zero-allocation budget;
+  - Equivalence class verification: identical, differing first, differing last, differing middle;
+  - Compile-time fixed width comparison benchmarks (`ct_eq_fixed` for 16, 32, and 64 bytes);
+  - Branch-free selection microbenchmarks (`ct_select_bytes`);
+  - 64-bit integer comparison microbenchmarks (`ct_eq_u64`);
+  - Hardware instruction count divergence assertions when PMU counters are live;
+  - Negative sabotage test asserting divergence detection on naive short-circuiting comparison mutants.
+
 - Keep negative adapter diagnostics within TF01's closed failure-ID vocabulary:
   rejected baselines and undetected injected defects report corpus-mismatch.
   Exercise the real failing TAP output with the always-pass sabotage mode.

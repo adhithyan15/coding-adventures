@@ -18,3 +18,8 @@ harness = false
 name = "fuzz_targets"
 path = "tests/fuzz_targets.rs"
 harness = false
+
+[[test]]
+name = "microbenchmarks"
+path = "tests/microbenchmarks.rs"
+harness = false
