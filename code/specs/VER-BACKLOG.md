@@ -58,7 +58,7 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | P2 / VER-P016 | Microbenchmark spec/harness | waiting P003; VER07 counts distinct from measured timing |
 | P2 / VER-P017 | Equal-instruction-count measurements | waiting P016; n=16/256/4096; absent counters report not-live |
 | done / VER-P021 | WIR core/reference interpreter | [VER25](VER25-wir-core-interpreter.md) specified; WIR core AST, static type checker, cost semantics, provenance-tracking memory model, observable trace recorder, bounded reference interpreter, constant-time validation; 91%+ line/branch cov |
-| P1 / VER-P022 | Rust-subset grammar | waiting P021; real ct-compare source, volatile/unsafe assumptions |
+| in-flight / VER-P022 | Rust-subset grammar | [VER25a](VER25a-rust-subset-grammar.md) specified; real ct-compare source, volatile/unsafe assumptions, zero third-party deps |
 | P1 / VER-P023 | Rust-to-WIR front end | waiting P022; differential checks against real public entry points |
 | P1 / VER-P024 | Symbolic execution | waiting P023; VER19, certified UNSAT, honest bounded(k) labels |
 | P1 / VER-P025 | Bounds/constant-time trace proofs | waiting P024; VER20, branch/address self-composition, not counts alone |
