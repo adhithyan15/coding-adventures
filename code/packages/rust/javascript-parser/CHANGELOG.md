@@ -6,6 +6,8 @@ All notable changes to the `coding-adventures-javascript-parser` crate will be d
 
 ### Fixed
 
+- Module specifier escape sequence decoding in typed AST bridge (#18122):
+  - In `import_source`, `decode_string_escapes` is now invoked on the module specifier's token value before creating `StringLiteral`. This ensures `StringLiteral.value` holds the decoded characters rather than source escape sequences, preventing downstream emitters from doubling backslashes in `import` and `export ... from` specifiers.
 - Keyword property names in Phase-1 ASI parsing (#18125):
   - Normalizes member access keyword tokens after `.` or `?.` to `TokenType::Name` during `parse_with_asi_tracked`, allowing the compiled grammar (`DOT NAME`) to parse keyword properties like `x=y.if` and compute accurate ASI insertion points before subsequent newline-led statements.
 - Contextual keyword ASI boundaries and expression termination (#18152):
