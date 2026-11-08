@@ -254,3 +254,38 @@ fn postfix_increment_before_star_no_space() {
     let e = binary(BinaryOperator::Mul, update(UpdateOperator::Increment, false, ident("x")), ident("y"));
     assert_emits(e, "x++*y;");
 }
+
+/// `a < !(--b)` must print `a< !--b`, never `a<!--b` (which in script mode
+/// starts an Annex B single-line HTML comment, dropping the rest of the line,
+/// issue #17887).
+#[test]
+fn prefix_decrement_after_less_than_and_not_needs_space() {
+    let not_decr = Expression::UnaryExpression(UnaryExpression {
+        cv: None,
+        operator: UnaryOperator::Not,
+        prefix: true,
+        argument: Box::new(update(UpdateOperator::Decrement, true, ident("b"))),
+    });
+    let e = binary(BinaryOperator::Lt, ident("a"), not_decr);
+    assert_emits(e, "a< !--b;");
+}
+
+/// Negative check: `a < !b` and `a < !++b` do not form `<!--`, so no space is added.
+#[test]
+fn not_without_decrement_after_less_than_no_space() {
+    let not_b = Expression::UnaryExpression(UnaryExpression {
+        cv: None,
+        operator: UnaryOperator::Not,
+        prefix: true,
+        argument: Box::new(ident("b")),
+    });
+    assert_emits(binary(BinaryOperator::Lt, ident("a"), not_b), "a<!b;");
+
+    let not_incr = Expression::UnaryExpression(UnaryExpression {
+        cv: None,
+        operator: UnaryOperator::Not,
+        prefix: true,
+        argument: Box::new(update(UpdateOperator::Increment, true, ident("b"))),
+    });
+    assert_emits(binary(BinaryOperator::Lt, ident("a"), not_incr), "a<!++b;");
+}

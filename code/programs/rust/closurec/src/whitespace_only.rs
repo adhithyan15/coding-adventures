@@ -3772,6 +3772,7 @@ pub fn whitespace_only_minify(
                 || await_operator_needs_space(&kept, &is_async_mask, idx)
                 || keyword_string_needs_space(&kept, idx)
                 || case_unary_needs_space(&kept, idx)
+                || lt_bang_needs_space(&kept, idx, prev_emitted_tok)
             {
                 out.push(' ');
             }
@@ -5754,6 +5755,35 @@ fn case_unary_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
     is_word_like(prev) && prev.value == "case"
 }
 
+/// Issue #17887: decide whether the token at `kept[idx]` (a `!` operator)
+/// needs a preceding space because it was preceded by `<` and is immediately
+/// followed by `--` (i.e. `< !--`).
+///
+/// In ECMAScript Annex B.1.1, `<!--` in script mode starts a SingleLineHTMLOpenComment.
+/// Gluing `<` and `!--b` into `a<!--b` swallows the remainder of the line as a comment,
+/// causing a silent miscompile. Upstream Closure preserves a space between `<` and `!`.
+fn lt_bang_needs_space(
+    kept: &[&lexer::token::Token],
+    idx: usize,
+    prev_emitted_tok: Option<&lexer::token::Token>,
+) -> bool {
+    if idx + 1 >= kept.len() {
+        return false;
+    }
+    let tok = kept[idx];
+    if !is_structural_punct(tok, "!") {
+        return false;
+    }
+    let Some(prev) = prev_emitted_tok else {
+        return false;
+    };
+    if !is_structural_punct(prev, "<") {
+        return false;
+    }
+    let next = kept[idx + 1];
+    is_structural_punct(next, "--")
+}
+
 /// gap-097: True iff the token at `idx` is the `*` of an ASYNC GENERATOR
 /// METHOD (`async *m(){}`), so a separating space is needed between the
 /// preceding `async` and this `*`.
@@ -7417,6 +7447,23 @@ mod tests {
     #[test]
     fn empty_source_yields_empty_output() {
         assert_eq!(minify(""), "");
+    }
+
+    #[test]
+    fn lt_bang_decr_keeps_space_to_prevent_html_comment() {
+        // Issue #17887: `a < !--b` (or `a < ! --b`) must emit `a< !--b`, never `a<!--b`
+        // which in script mode starts an Annex B single-line HTML comment.
+        assert_eq!(
+            minify("var b=2,a=1; var x = a < !--b; console.log(\"ok\", x)"),
+            "var b=2,a=1;var x=a< !--b;console.log(\"ok\",x);"
+        );
+        assert_eq!(minify("a < ! --b"), "a< !--b;");
+        // Negative checks: no space needed if not followed by `--`
+        assert_eq!(minify("a < !b"), "a<!b;");
+        assert_eq!(minify("a < !++b"), "a<!++b;");
+        assert_eq!(minify("a < ! - -b"), "a<!- -b;");
+        assert_eq!(minify("a << !--b"), "a<<!--b;");
+        assert_eq!(minify("a <= !--b"), "a<=!--b;");
     }
 
     #[test]

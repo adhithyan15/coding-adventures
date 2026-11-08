@@ -4,6 +4,12 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - prevent emitting `<!--` HTML comment sequence after `<` (#17887)
+
+- Fixed a silent miscompile where `a < !--b` (or `a < ! --b`) was emitted as `a<!--b` across `WHITESPACE_ONLY`, `SIMPLE`, and `ADVANCED` compilation levels. In ECMAScript Annex B.1.1 (script mode), `<!--` begins a SingleLineHTMLOpenComment, causing Node.js and browsers to treat the remainder of the line as a comment and discard subsequent statements.
+- Added `lt_bang_needs_space` in `code/programs/rust/closurec/src/whitespace_only.rs` and updated `closure-emitter`'s `emit_binary` to ensure a separating space is preserved after `<` (`a< !--b;`), matching Closure Compiler upstream behavior.
+- Added regression integration tests in `tests/regression_emitter_html_comment_17887.rs` validated against Node.js runtime execution.
+
 ### Fixed - SIMPLE and ADVANCED module specifier escape backslash doubling (#18122)
 
 - Fixed module specifiers in `import` declarations, side-effect imports, and `export ... from` re-exports doubling backslashes when compiled under `SIMPLE` and `ADVANCED` optimization levels (e.g. `import a from "./a\x2ejs"` previously emitting `./a\\x2ejs`).
