@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — Closure call default-padding sentinel (#18490)
+
+- **Closure adapter missing argument sentinel.** `MakeClosure` adapter generation in `emit.rs` now drains omitted arguments with `unwrap_or(__sir::Value::Missing)` instead of `Value::Nil`. This ensures callees with default parameters recognize missing arguments via `__sir::is_missing(&param)` and evaluate their default expressions.
+
 ## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
 
 - **In-place addition `+=`.** Added `__sir::iadd` helper and mapped `BuiltinCall("+=", [lhs, rhs])` to it. Mutates `Value::Seq` in place, preserving pointer identity across aliases, and delegates to `plus` otherwise.

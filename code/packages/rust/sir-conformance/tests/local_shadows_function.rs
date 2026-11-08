@@ -264,6 +264,16 @@ fn param(name: &str, kind: ParamKind) -> Param {
     }
 }
 
+fn param_default(name: &str, kind: ParamKind, default: Expr) -> Param {
+    Param {
+        name: name.to_string(),
+        sir_type: None,
+        kind,
+        default: Some(Box::new(default)),
+        span: sp(),
+    }
+}
+
 /// `t = t + <value>` for the local accumulator `t`.
 fn accumulate(value: Expr) -> Stmt {
     Stmt::Assign {
@@ -530,6 +540,49 @@ fn hand_built() -> Vec<(&'static str, Module, &'static str)> {
                 ),
             ),
             "42",
+        ),
+        // Closure called with omitted default parameter (#18490):
+        // (lambda (a, b = 10) (+ a b))(1) -> 11.
+        // Go bounds-checks the arg slice, Rust and C pad with their missing
+        // sentinel, so the callee's default-parameter prologue runs on all backends.
+        (
+            "sir_closure_default_param_omitted_call",
+            module(
+                "sir_closure_default_param_omitted_call",
+                func(
+                    "g",
+                    vec![],
+                    vec![],
+                    block(
+                        vec![],
+                        Expr::IndirectCall {
+                            target: Box::new(Expr::MakeClosure {
+                                fn_name: "add".to_string(),
+                                captures: vec![],
+                                span: sp(),
+                            }),
+                            args: vec![int(1)],
+                            effects: EffectSet::PURE,
+                            span: sp(),
+                        },
+                    ),
+                ),
+                vec![func(
+                    "add",
+                    vec![
+                        param("a", ParamKind::Required),
+                        param_default("b", ParamKind::Required, int(10)),
+                    ],
+                    vec![],
+                    block(vec![], add(var("a", Scope::Param), var("b", Scope::Param))),
+                )],
+                &[
+                    Feature::Closures,
+                    Feature::DefaultParams,
+                    Feature::DynamicTyping,
+                ],
+            ),
+            "11",
         ),
     ]
 }

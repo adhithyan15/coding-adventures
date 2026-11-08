@@ -96,6 +96,17 @@ func _sir_is_missing(v Value) bool {
 	return ok
 }
 
+// _sir_closure_arg extracts argument `i` from `args`, returning the
+// `_sir_missing` sentinel if `i >= len(args)`. Used by closure adapter
+// functions so callers passing fewer arguments than the callee's parameter count
+// trigger default-parameter prologues rather than an index-out-of-bounds panic (#18490).
+func _sir_closure_arg(args []Value, i int) Value {
+	if i < len(args) {
+		return args[i]
+	}
+	return _sir_missing
+}
+
 var _sir_symbol_table = make(map[string]*Symbol)
 var _sir_globals = make(map[string]Value)
 
@@ -6914,7 +6925,7 @@ mod tests {
             "_sir_cons", "_sir_car", "_sir_cdr",
             "_sir_is_null", "_sir_is_pair", "_sir_is_number", "_sir_is_symbol",
             "_sir_write", "_sir_global_set", "_sir_global_get",
-            "_sir_apply", "_sir_make_closure", "_sir_intern", "_sir_truthy",
+            "_sir_apply", "_sir_make_closure", "_sir_closure_arg", "_sir_intern", "_sir_truthy",
             "_sir_format", "_sir_builtin_closure", "_sir_call_builtin_by_name",
             // E3 exception helpers.
             "_sir_new_error", "_sir_exc_value", "_sir_rescue_matches",

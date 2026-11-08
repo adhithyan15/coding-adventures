@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — Closure call default-padding sentinel (#18490)
+
+- **Closure adapter bounds check and missing argument sentinel.** Added `_sir_closure_arg(args []Value, i int) Value` helper in `runtime.rs` that bounds-checks the arguments slice and returns `_sir_missing` if `i >= len(args)`. `MakeClosure` in `emit.rs` now indexes incoming arguments through `_sir_closure_arg(__args, i)`, avoiding runtime `index out of range` panics when called with fewer arguments than parameters and properly triggering default-parameter evaluation.
+
 ## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
 
 - **In-place addition `+=`.** Added `_sir_iadd` helper and mapped `BuiltinCall("+=", [lhs, rhs])` to it. Mutates `*Seq` in place, preserving pointer identity across aliases, and delegates to `_sir_plus` otherwise.

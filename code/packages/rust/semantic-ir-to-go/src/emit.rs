@@ -891,7 +891,13 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 if i > 0 {
                     out.push_str(", ");
                 }
-                let _ = write!(out, "__args[{}]", i);
+                // Bounds-check the argument slice via `_sir_closure_arg` rather
+                // than direct indexing `__args[{i}]` (#18490). If a closure with
+                // defaulted parameters is called with fewer arguments than parameters,
+                // omitted slots return `_sir_missing` so the callee's prologue
+                // (`if _sir_is_missing(p) { p = <default> }`) evaluates the default
+                // instead of panicking with a Go index-out-of-bounds.
+                let _ = write!(out, "_sir_closure_arg(__args, {})", i);
             }
             out.push_str(") }, []Value{");
             for (i, c) in captures.iter().enumerate() {
@@ -3799,6 +3805,34 @@ mod tests {
         emit_expr(&mut out, &method_call(recv, "map", vec![block]), 0);
         FN_ARITY.with(|t| t.borrow_mut().clear());
         assert!(out.starts_with(r#"_sir_call_method(xs, "map", []Value{_sir_make_closure("#));
+    }
+
+    /// Closure adapters bounds-check arguments using `_sir_closure_arg` rather
+    /// than direct indexing (#18490), returning `_sir_missing` for omitted
+    /// arguments so default parameter prologues run without panicking.
+    #[test]
+    fn closure_adapter_indexes_args_with_closure_arg_helper() {
+        let block = Expr::MakeClosure {
+            fn_name: "f".into(),
+            captures: vec![],
+            span: s(),
+        };
+        FN_ARITY.with(|t| t.borrow_mut().insert("f".into(), 2));
+        let mut out = String::new();
+        emit_expr(&mut out, &block, 0);
+        FN_ARITY.with(|t| t.borrow_mut().clear());
+        assert!(
+            out.contains("_sir_closure_arg(__args, 0)"),
+            "closure adapter must use _sir_closure_arg (#18490); got:\n{out}"
+        );
+        assert!(
+            out.contains("_sir_closure_arg(__args, 1)"),
+            "closure adapter must use _sir_closure_arg (#18490); got:\n{out}"
+        );
+        assert!(
+            !out.contains("__args[0]"),
+            "closure adapter must not index __args directly; got:\n{out}"
+        );
     }
 
     #[test]

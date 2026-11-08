@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — Closure call default-padding sentinel (#18490)
+
+- **Closure thunk missing argument padding.** `emit_closure_thunk` in `emit.rs` now emits `_sir_missing()` instead of `_sir_nil()` when padding omitted arguments in closure calls. This ensures callees with default parameters trigger their body-top default evaluation prologue instead of binding `nil`.
+
 ## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
 
 - **Array `append` builtin method.** `is_builtin_method` in `emit.rs` and `_sir_builtin_method` in `runtime.rs` now recognize `"append"`, mutating `SirSeq` in place and returning the receiver pointer.
