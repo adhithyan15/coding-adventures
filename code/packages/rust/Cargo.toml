@@ -788,6 +788,7 @@ members = [
     "ct-compare",
     "test-bootstrap",
     "warrant-grammar",
+    "warrant-ir",
     "zeroize",
     "x3dh",
     "double-ratchet",

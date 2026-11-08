@@ -50,14 +50,14 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P008 | Rust backend and ct-compare.warrant | #19002 merged as 652207f348d; [VER04e](VER04e-warrant-codegen.md) specified; bounded pure model evaluator, TFV test vector compiler, Rust L0 harness generator, checked regeneration |
 | done / VER-P009 | Property spec and pbt-v1 corpus | #19004 merged as 5b1fcef8b2e at expected c6f4c29e61c; verified on fetched main; all checks acceptable |
 | done / VER-P010 | Rust property engine | #19007 merged as f66f3a2e057; [VER05](VER05-property-engine.md) generator algebra, integrated shrinking, deterministic replay, pbt-v1 corpus (25 cases), zero third-party deps, 92%+ line/branch cov |
-| done / VER-P011 | Warrant claims to properties | [VER04f](VER04f-claims-to-properties.md) specified; compiled universal claims to native Level 2 PBT suites, public API calls and broken implementations detected, 93%+ line/branch cov |
+| done / VER-P011 | Warrant claims to properties | #19011 merged as 315447685ec; [VER04f](VER04f-claims-to-properties.md) specified; compiled universal claims to native Level 2 PBT suites, public API calls and broken implementations detected, 93%+ line/branch cov |
 | P1 / VER-P012 | Stateful properties | waiting P011; select only if pilot needs them, otherwise explicitly defer |
 | P2 / VER-P013 | Fuzz spec and fuzz-v1 corpus | waiting P011; VER06, private failure-output policy |
 | P2 / VER-P014 | Rust fuzz engine | waiting P013; bounded runs, replay, honest coverage label |
 | P2 / VER-P015 | ct-compare fuzz targets | waiting P014; no-panic/agreement, private triage of new failures |
 | P2 / VER-P016 | Microbenchmark spec/harness | waiting P003; VER07 counts distinct from measured timing |
 | P2 / VER-P017 | Equal-instruction-count measurements | waiting P016; n=16/256/4096; absent counters report not-live |
-| P1 / VER-P021 | WIR core/reference interpreter | waiting P011; VER25 semantics, types, cost/label annotations |
+| done / VER-P021 | WIR core/reference interpreter | [VER25](VER25-wir-core-interpreter.md) specified; WIR core AST, static type checker, cost semantics, provenance-tracking memory model, observable trace recorder, bounded reference interpreter, constant-time validation; 91%+ line/branch cov |
 | P1 / VER-P022 | Rust-subset grammar | waiting P021; real ct-compare source, volatile/unsafe assumptions |
 | P1 / VER-P023 | Rust-to-WIR front end | waiting P022; differential checks against real public entry points |
 | P1 / VER-P024 | Symbolic execution | waiting P023; VER19, certified UNSAT, honest bounded(k) labels |
@@ -112,6 +112,13 @@ to deterministic test suites with isolated PRNG sub-seeds, integrated multi-comp
 fault-injected sabotage detection for broken implementations, and privacy-preserving failure reporting in CI mode.
 Next on the critical path is VER-P021 (WIR core and reference interpreter) to establish the semantic intermediate
 representation for verified shipping.
+
+Post-P021 prioritization: VER-P021 delivers the Warrant Intermediate Representation (WIR) core and deterministic reference
+interpreter ([VER25](VER25-wir-core-interpreter.md)) in `coding_adventures_warrant_ir`. It provides the exact formal intermediate
+model for proofs with mandatory types, security taint/information-flow lattice (`Public`, `Secret`, `Hostile`), operational cost
+accounting, provenance-tracking memory safety with explicit `Stuck` undefined-behavior detection, and observable event trace
+recording for constant-time self-composition (CWE-208).
+Next on the critical path is VER-P022 (Rust-subset grammar) to parse real ct-compare source into the verified front end pipeline.
 
 P006b1 merged in #18913 (commit 964dc3df7bc) with all checks passing on main.
 The source admission contract is active in `rust/warrant-grammar`. Eleven source
