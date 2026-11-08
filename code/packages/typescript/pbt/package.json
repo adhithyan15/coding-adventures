@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/pbt",
+  "version": "0.1.0",
+  "description": "Zero-dependency TypeScript Level 2 property-based testing engine with generator algebra and integrated shrinking (VER05)",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-strip-types --test tests/pbt.test.ts"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

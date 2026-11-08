@@ -440,10 +440,11 @@ console.log(prose, nested);
         # +1: test-bootstrap, the TF01a zero-dependency Level 0 harness and test runner.
         # +1: sat-solver, the VER09a zero-dependency Level 3 CDCL SAT solver package.
         # +1: warrant-compiler, the VER04g zero-dependency Level 1 Warrant compiler package.
-        self.assertEqual(summary.total_projects, 496)
-        self.assertEqual(summary.shared_projects, 305)
-        self.assertEqual(summary.inherited_root_dir, 132)
-        self.assertEqual(summary.inherited_out_dir, 135)
+        # +1: pbt, the VER05 zero-dependency Level 2 property-based testing package.
+        self.assertEqual(summary.total_projects, 497)
+        self.assertEqual(summary.shared_projects, 306)
+        self.assertEqual(summary.inherited_root_dir, 133)
+        self.assertEqual(summary.inherited_out_dir, 136)
         # forme-authoring-core, forme-authoring-editor,
         # forme-authoring-preview, forme-authoring-publish, and
         # forme-authoring-shell are isolated standalone emitters, adding five
@@ -585,7 +586,8 @@ console.log(prose, nested);
         # +1: test-bootstrap locks its standalone compiler and test graph.
         # +1: sat-solver locks its standalone compiler.
         # +1: warrant-compiler locks its standalone compiler.
-        self.assertEqual(summary.locked_compilers, 495)
+        # +1: pbt locks its standalone compiler.
+        self.assertEqual(summary.locked_compilers, 496)
 
 
 if __name__ == "__main__":
