@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - bare yield and restricted-production ASI after yield (#17939)
+
+- Fixed a bug where `yield` followed by a newline (e.g. `function* G(){ yield\n{ x; }\n}`) dropped the restricted-production boundary under `WHITESPACE_ONLY` or failed to parse under `SIMPLE` and `ADVANCED`.
+- ECMA-262 §15.4 defines bare `yield` (without an operand) as legal syntax. Updated `yield_expression` across `es2015.grammar` through `es2025.grammar` to permit an optional operand (`"yield" STAR assignment_expression | "yield" [ assignment_expression ]`) and updated `javascript-parser/src/bridge.rs` to lower operand-less yield expressions to `YieldExpression { argument: None, delegate }`.
+- ASI insertion points now cleanly parse bare `yield` and insert semicolons where forced by newlines, ensuring `yield\n{ x; }` compiles to `yield;{x;}` without fusing into `yield{x}`.
+- Added regression tests in `tests/regression_yield_bare_17939.rs` validated against Node.js runtime execution across `WHITESPACE_ONLY`, `SIMPLE`, and `ADVANCED`.
+
 ### Fixed - function and class declarations in class static initialization blocks (#17940)
 
 - Function, generator, async function, and class declarations inside class static initialization blocks (`class C { static { function f() { return 1; } } }`) now parse and compile correctly under `SIMPLE` and `ADVANCED` compilation levels, rather than failing at the parse stage or emitting declarations as parenthesized expressions.

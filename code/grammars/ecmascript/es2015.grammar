@@ -322,7 +322,7 @@ expression = assignment_expression { COMMA assignment_expression } ;
 # Arrow function: `(x, y) => x + y` or `x => x * 2`
 
 assignment_expression = arrow_function
-                      | "yield" [ STAR ] assignment_expression
+                      | yield_expression
                       | left_hand_side_expression assignment_operator assignment_expression
                       | conditional_expression ;
 
@@ -518,3 +518,6 @@ class_expression = "class" [ NAME ] [ class_heritage ] class_body ;
 # `({a})`, and `{ a }⏎/foo/g.exec(s)` compiled to a different program. The
 # rule is kept on one line, with this note at the end of the file, so the
 # rules after it keep their line numbers in the compiled grammars.
+
+yield_expression = "yield" STAR assignment_expression | "yield" [ assignment_expression ] ;
+

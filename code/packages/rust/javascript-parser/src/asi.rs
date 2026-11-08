@@ -907,6 +907,8 @@ mod tests {
         assert_eq!(forced_semis("throw\ne"), 1, "throw split");
         assert_eq!(forced_semis("for(;;){break\nx}"), 1, "break split");
         assert_eq!(forced_semis("for(;;){continue\nx}"), 1, "continue split");
+        assert_eq!(forced_semis("function*g(){yield\n{x;}}"), 1, "yield split");
+        assert!(parses_with_asi("function*g(){yield\n{x;}}"));
     }
 
     #[test]

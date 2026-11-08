@@ -2000,35 +2000,27 @@ fn convert_private_method_definition(node: &GrammarASTNode) -> Result<MethodDefi
 
 /// Convert a `yield_expression` grammar node into a [`YieldExpression`].
 ///
-/// The parse tree has one of two shapes (confirmed by dumping the grammar
-/// parser's output for `function*g(){yield x}` / `function*g(){yield* xs}`):
+/// The parse tree has one of three shapes:
 ///
 /// ```text
+///   yield       yield_expression = [ Token("yield") ]
 ///   yield x     yield_expression = [ Token("yield"),            Node(assignment_expression) ]
 ///   yield* xs   yield_expression = [ Token("yield"), Token("*"), Node(assignment_expression) ]
 /// ```
 ///
 /// So `delegate` is simply "does the node carry a `*` token", and the operand
-/// is the sole child *node* (`node_children` skips the `yield` / `*` tokens).
-///
-/// **Operand is mandatory in this grammar.** A bare operand-less `yield` does
-/// *not* parse today — the grammar's `yield_expression` production requires an
-/// `assignment_expression` operand (`function*g(){yield;}` is a parse error).
-/// The typed AST models `argument` as `Option` (a bare `yield` is legal ES),
-/// but the bridge only ever produces `Some(_)` until the grammar admits the
-/// operand-less form. If a future grammar change yields an operand-less node,
-/// the `node_children().next()` below returns `None` and we surface an internal
-/// error rather than silently mis-converting.
+/// is the optional child *node* (`node_children` skips the `yield` / `*` tokens).
 fn convert_yield_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
     let delegate = has_token(node, "*");
-    let operand = node_children(node)
-        .into_iter()
-        .next()
-        .ok_or_else(|| internal(node, "yield_expression: missing operand"))?;
+    let argument = if let Some(operand) = node_children(node).into_iter().next() {
+        Some(Box::new(convert_expression(operand)?))
+    } else {
+        None
+    };
     Ok(Expression::YieldExpression(YieldExpression {
         cv: None,
         delegate,
-        argument: Some(Box::new(convert_expression(operand)?)),
+        argument,
     }))
 }
 
@@ -7813,6 +7805,20 @@ mod tests {
                 (f.generator, expr)
             }
             other => panic!("expected a FunctionDeclaration, got {other:?}"),
+        }
+    }
+
+    /// `function*g(){yield;}` bridges to a `YieldExpression` with `argument: None`.
+    #[test]
+    fn generator_declaration_with_bare_yield() {
+        let (is_gen, expr) = gen_decl("function*g(){yield;}");
+        assert!(is_gen, "function* must set the generator flag");
+        match expr {
+            Expression::YieldExpression(y) => {
+                assert!(!y.delegate, "bare yield is not delegating");
+                assert!(y.argument.is_none(), "bare yield has no argument");
+            }
+            other => panic!("expected YieldExpression, got {other:?}"),
         }
     }
 

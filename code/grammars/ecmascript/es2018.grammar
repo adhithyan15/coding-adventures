@@ -78,7 +78,7 @@ generator_declaration = "function" STAR NAME LPAREN [ formal_parameters ] RPAREN
 generator_expression = "function" STAR [ NAME ] LPAREN [ formal_parameters ] RPAREN
                        LBRACE function_body RBRACE ;
 
-yield_expression = "yield" [ STAR ] assignment_expression ;
+yield_expression = "yield" STAR assignment_expression | "yield" [ assignment_expression ] ;
 
 # --- Async functions (ES2017) ---
 

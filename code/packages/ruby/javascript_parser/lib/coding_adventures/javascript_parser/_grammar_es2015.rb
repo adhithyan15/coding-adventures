@@ -852,11 +852,7 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
       name: "assignment_expression",
       body: GT::Alternation.new(choices: [
         GT::RuleReference.new(name: "arrow_function", is_token: false),
-        GT::Sequence.new(elements: [
-          GT::Literal.new(value: "yield"),
-          GT::OptionalElement.new(element: GT::RuleReference.new(name: "STAR", is_token: true)),
-          GT::RuleReference.new(name: "assignment_expression", is_token: false),
-        ]),
+        GT::RuleReference.new(name: "yield_expression", is_token: false),
         GT::Sequence.new(elements: [
           GT::RuleReference.new(name: "left_hand_side_expression", is_token: false),
           GT::RuleReference.new(name: "assignment_operator", is_token: false),
@@ -1417,6 +1413,21 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "class_body", is_token: false),
       ]),
       line_number: 505,
+    ),
+    GT::GrammarRule.new(
+      name: "yield_expression",
+      body: GT::Alternation.new(choices: [
+        GT::Sequence.new(elements: [
+          GT::Literal.new(value: "yield"),
+          GT::RuleReference.new(name: "STAR", is_token: true),
+          GT::RuleReference.new(name: "assignment_expression", is_token: false),
+        ]),
+        GT::Sequence.new(elements: [
+          GT::Literal.new(value: "yield"),
+          GT::OptionalElement.new(element: GT::RuleReference.new(name: "assignment_expression", is_token: false)),
+        ]),
+      ]),
+      line_number: 522,
     ),
   ],
 )
