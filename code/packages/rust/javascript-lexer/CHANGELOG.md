@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## 0.10.2 — Unreleased
+
+### Fixed
+
+- Line comments (`LINE_COMMENT`) and hashbangs (`HASHBANG`) in ECMAScript grammars
+  (es1 through es2025) now stop before U+2028 (Line Separator) and U+2029
+  (Paragraph Separator), matching ECMA-262 §12.3 LineTerminator definition
+  (`[^\n\r\u2028\u2029]*`). Previously, `[^\n\r]*` allowed line comments and
+  hashbangs to swallow following source code across U+2028/U+2029 until the next
+  `\r` or `\n` (#17887).
+
 ## 0.10.1 — Unreleased — LANG84 phase 6d: pair headers cite their releases
 
 ### Fixed

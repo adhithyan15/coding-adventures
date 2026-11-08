@@ -760,7 +760,7 @@ mod v_es1 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 182,
                     alias: None,
@@ -768,7 +768,7 @@ mod v_es1 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 183,
                     alias: None,
@@ -1294,7 +1294,7 @@ mod v_es3 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 211,
                     alias: None,
@@ -1302,7 +1302,7 @@ mod v_es3 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 212,
                     alias: None,
@@ -1836,7 +1836,7 @@ mod v_es5 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 191,
                     alias: None,
@@ -1844,7 +1844,7 @@ mod v_es5 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 192,
                     alias: None,
@@ -2426,7 +2426,7 @@ mod v_es2015 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 301,
                     alias: None,
@@ -2434,7 +2434,7 @@ mod v_es2015 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 302,
                     alias: None,
@@ -3309,7 +3309,7 @@ mod v_es2016 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 346,
                     alias: None,
@@ -3317,7 +3317,7 @@ mod v_es2016 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 347,
                     alias: None,
@@ -4192,7 +4192,7 @@ mod v_es2017 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 291,
                     alias: None,
@@ -4200,7 +4200,7 @@ mod v_es2017 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 292,
                     alias: None,
@@ -5075,7 +5075,7 @@ mod v_es2018 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 284,
                     alias: None,
@@ -5083,7 +5083,7 @@ mod v_es2018 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 285,
                     alias: None,
@@ -5958,7 +5958,7 @@ mod v_es2019 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 288,
                     alias: None,
@@ -5966,7 +5966,7 @@ mod v_es2019 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 289,
                     alias: None,
@@ -6889,7 +6889,7 @@ mod v_es2020 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 316,
                     alias: None,
@@ -6897,7 +6897,7 @@ mod v_es2020 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 317,
                     alias: None,
@@ -7844,7 +7844,7 @@ mod v_es2021 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 329,
                     alias: None,
@@ -7852,7 +7852,7 @@ mod v_es2021 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 330,
                     alias: None,
@@ -8807,7 +8807,7 @@ mod v_es2022 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 330,
                     alias: None,
@@ -8815,7 +8815,7 @@ mod v_es2022 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 331,
                     alias: None,
@@ -9166,7 +9166,7 @@ mod v_es2023 {
             definitions: vec![
                 TokenDefinition {
                     name: r#"HASHBANG"#.to_string(),
-                    pattern: r#"^#![^\n\r]*"#.to_string(),
+                    pattern: r#"^#![^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 59,
                     alias: None,
@@ -9778,7 +9778,7 @@ mod v_es2023 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 316,
                     alias: None,
@@ -9786,7 +9786,7 @@ mod v_es2023 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 317,
                     alias: None,
@@ -10137,7 +10137,7 @@ mod v_es2024 {
             definitions: vec![
                 TokenDefinition {
                     name: r#"HASHBANG"#.to_string(),
-                    pattern: r#"^#![^\n\r]*"#.to_string(),
+                    pattern: r#"^#![^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 41,
                     alias: None,
@@ -10749,7 +10749,7 @@ mod v_es2024 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 312,
                     alias: None,
@@ -10757,7 +10757,7 @@ mod v_es2024 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 313,
                     alias: None,
@@ -11108,7 +11108,7 @@ mod v_es2025 {
             definitions: vec![
                 TokenDefinition {
                     name: r#"HASHBANG"#.to_string(),
-                    pattern: r#"^#![^\n\r]*"#.to_string(),
+                    pattern: r#"^#![^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 82,
                     alias: None,
@@ -11728,7 +11728,7 @@ mod v_es2025 {
             skip_definitions: vec![
                 TokenDefinition {
                     name: r#"WHITESPACE"#.to_string(),
-                    pattern: r#"[ \t\r\n\v\f]+"#.to_string(),
+                    pattern: r#"[ \t\r\n\v\f\u2028\u2029]+"#.to_string(),
                     is_regex: true,
                     line_number: 416,
                     alias: None,
@@ -11736,7 +11736,7 @@ mod v_es2025 {
                 },
                 TokenDefinition {
                     name: r#"LINE_COMMENT"#.to_string(),
-                    pattern: r#"\/\/[^\n\r]*"#.to_string(),
+                    pattern: r#"\/\/[^\n\r\u2028\u2029]*"#.to_string(),
                     is_regex: true,
                     line_number: 417,
                     alias: None,

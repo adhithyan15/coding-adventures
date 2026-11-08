@@ -11846,9 +11846,11 @@ mod tests {
                 Err(MinifyError::LexError(_))
             )
         };
-        // U+2028/U+2029 end the hashbang, but the lexer runs past them.
-        assert!(refused("#!/x\u{2028}console.log(1)"));
-        assert!(refused("#!/x\u{2029}console.log(1)\nf()"));
+        // #17887: U+2028/U+2029 end the hashbang properly without swallowing following code.
+        assert!(!refused("#!/x\u{2028}console.log(1)"));
+        assert!(!refused("#!/x\u{2029}console.log(1)\nf()"));
+        assert_eq!(minify("#!/x\u{2028}console.log(1)"), "console.log(1);");
+        assert_eq!(minify("#!/x\u{2029}console.log(1)\nf()"), "console.log(1);f();");
         // `#!` is only a hashbang at the very start of the file.
         assert!(refused("console.log(1);\n#!foo\nconsole.log(2);"));
         assert!(refused(" #!/x\nconsole.log(1)"));

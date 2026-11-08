@@ -300,6 +300,19 @@ mod tests {
     }
 
     #[test]
+    fn line_comments_and_hashbangs_end_at_unicode_line_terminators() {
+        // ECMA-262 12.3: SingleLineCommentChars stop at LF, CR, LS (U+2028), PS (U+2029).
+        // HASHBANG and LINE_COMMENT must not swallow U+2028 or U+2029 (#17887).
+        for sep in ['\u{2028}', '\u{2029}'] {
+            let src_comment = format!("// comment{sep}code");
+            assert_eq!(values(&src_comment), vec!["code"]);
+
+            let src_hashbang = format!("#!/usr/bin/env node{sep}code");
+            assert_eq!(values(&src_hashbang), vec!["#!/usr/bin/env node", "code"]);
+        }
+    }
+
+    #[test]
     fn a_regex_never_spans_a_carriage_return() {
         // A regex literal can't hold a line terminator, escaped or not.
         let toks = tokenize_javascript_typed("x = /a\rb/", EsVersion::Es2025);

@@ -33,7 +33,7 @@
 #   4. Symbols as WeakMap keys — runtime only
 #
 # Token changes from ES2022:
-#   - Added: HASHBANG = /^#![^\n\r]*/
+#   - Added: HASHBANG = /^#![^\n\r\u2028\u2029]*/
 #     Note: The `^` means "start of input" — this token is only valid at
 #     byte position 0. The lexer must enforce this positional constraint.
 
@@ -56,7 +56,7 @@
 # Best implementation strategy: check for `#!` before starting the main
 # lexer loop, or use a pre-tokenize hook.
 
-HASHBANG = /^#![^\n\r]*/
+HASHBANG = /^#![^\n\r\u2028\u2029]*/
 
 NAME = /[a-zA-Z_$][a-zA-Z0-9_$]*/
 
@@ -313,8 +313,8 @@ transitions:
 # ============================================================================
 
 skip:
-  WHITESPACE    = /[ \t\r\n\v\f]+/
-  LINE_COMMENT  = /\/\/[^\n\r]*/
+  WHITESPACE    = /[ \t\r\n\v\f\u2028\u2029]+/
+  LINE_COMMENT  = /\/\/[^\n\r\u2028\u2029]*/
   BLOCK_COMMENT = /\/\*[^*]*\*+([^\/*][^*]*\*+)*\//
 
 # ============================================================================

@@ -104,15 +104,15 @@ fn malformed_source_returns_no_snapshot_and_resource_errors_are_distinct() {
 }
 
 #[test]
-fn unsupported_bare_unicode_line_terminators_preserve_the_legacy_error() {
+fn bare_unicode_line_terminators_are_supported() {
     for src in ["a\u{2028}b", "a\u{2029}b"] {
-        let legacy = tokenize_javascript_typed(src, EsVersion::Es2025).unwrap_err();
-        let error =
+        let legacy = tokenize_javascript_typed(src, EsVersion::Es2025).unwrap();
+        let snap =
             tokenize_javascript_typed_with_ranges(src, EsVersion::Es2025, LexicalLimits::default())
-                .unwrap_err();
-        let lexer::lexical::LexicalError::Lex(error) = error else {
-            panic!("expected actual lexer error");
-        };
-        assert_eq!(legacy, format!("JavaScript tokenization failed: {error}"));
+                .unwrap();
+        assert_eq!(legacy, snap.tokens());
+        assert_eq!(legacy.len(), 3);
+        assert_eq!(legacy[0].value, "a");
+        assert_eq!(legacy[1].value, "b");
     }
 }
