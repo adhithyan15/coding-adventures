@@ -1,0 +1,403 @@
+{
+  "version": 1,
+  "last_updated": "2026-11-08",
+  "classes": [
+    {
+      "cwe": 416,
+      "name": "Use After Free",
+      "family": "memory_safety",
+      "description": "Memory is accessed through a pointer or reference after the allocated memory has been deallocated.",
+      "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
+      "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
+      "exclusion_rationale": "The language enforces strict compile-time ownership, lifetimes, and borrow semantics with no manual deallocation. The static analyzer verifies zero unsafe blocks and zero FFI reachability.",
+      "attack_patterns": [
+        "Free followed by read access",
+        "Free followed by write access",
+        "Use after realloc reallocation",
+        "Dangling pointer escaping stack or heap scope"
+      ],
+      "required_evidence": ["attack-corpus", "fuzz-checked-allocator", "memory-safety-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 787,
+      "name": "Out-of-bounds Write",
+      "family": "memory_safety",
+      "description": "The software writes data past the end, or before the beginning, of the intended buffer.",
+      "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
+      "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
+      "exclusion_rationale": "The compiler instruments all slice and index writes with bounds checks, or proves bounds preservation via type invariants. The static analyzer verifies zero unsafe blocks.",
+      "attack_patterns": [
+        "Off-by-one buffer index write",
+        "Negative buffer index indexing",
+        "Unbounded destination buffer copy"
+      ],
+      "required_evidence": ["attack-corpus", "fuzz-address-sanitizer", "memory-bounds-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 125,
+      "name": "Out-of-bounds Read",
+      "family": "memory_safety",
+      "description": "The software reads data past the end, or before the beginning, of the intended buffer.",
+      "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
+      "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
+      "exclusion_rationale": "The compiler instruments all slice and index reads with bounds checks or panics on divergence. The static analyzer verifies zero unsafe blocks.",
+      "attack_patterns": [
+        "Over-read of trailing buffer bytes",
+        "Negative indexing into array or slice",
+        "Buffer over-read via untrusted length field"
+      ],
+      "required_evidence": ["attack-corpus", "fuzz-address-sanitizer", "memory-bounds-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 415,
+      "name": "Double Free",
+      "family": "memory_safety",
+      "description": "The software calls free() on a resource that has already been deallocated.",
+      "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
+      "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
+      "exclusion_rationale": "Single ownership semantics guarantees exactly one drop execution per heap resource. The static analyzer verifies zero unsafe blocks.",
+      "attack_patterns": [
+        "Duplicate free in error handling recovery branch",
+        "Aliased pointer double release"
+      ],
+      "required_evidence": ["attack-corpus", "fuzz-checked-allocator", "resource-lifecycle-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 476,
+      "name": "NULL Pointer Dereference",
+      "family": "memory_safety",
+      "description": "A NULL pointer is dereferenced, leading to segmentation fault or abnormal process termination.",
+      "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
+      "safe_subsets": ["safe_rust"],
+      "exclusion_rationale": "The type system enforces non-nullable references (&T, &mut T) and mandates explicit handling of Option<T>. The static analyzer verifies zero unsafe pointer dereferences.",
+      "attack_patterns": [
+        "Unchecked dereference of lookup or allocation return",
+        "Missing sentinel node check in linked structures"
+      ],
+      "required_evidence": ["attack-corpus", "type-exhaustiveness-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 190,
+      "name": "Integer Overflow to Buffer Boundary",
+      "family": "memory_safety",
+      "description": "Integer arithmetic calculation of buffer size or offset wraps around, producing an undersized allocation or out-of-bounds pointer calculation.",
+      "applies_to": ["c", "cpp", "rust_unsafe", "ffi"],
+      "safe_subsets": ["safe_rust", "go_race_free", "gc_runtimes"],
+      "exclusion_rationale": "Language checks arithmetic overflow in debug mode and slices panic on out-of-range indexing. The static analyzer verifies all length calculations are checked or saturated.",
+      "attack_patterns": [
+        "Multiplication overflow in element count times size",
+        "Addition overflow in offset plus length calculation"
+      ],
+      "required_evidence": ["fuzz-integer-boundaries", "arithmetic-overflow-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 78,
+      "name": "OS Command Injection",
+      "family": "injection",
+      "description": "The software constructs all or part of an OS command string using untrusted input without proper validation or escaping.",
+      "applies_to": ["all"],
+      "safe_subsets": ["pure_computation", "capability_confined_no_proc"],
+      "exclusion_rationale": "The package does not declare the proc capability. The static analyzer verifies zero process spawning, exec, or shell invocations.",
+      "attack_patterns": [
+        "Command chaining via shell metacharacters (; | & ` $)",
+        "Argument injection via whitespace or flags"
+      ],
+      "required_evidence": ["capability-audit-proc-empty", "injection-attack-corpus"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 89,
+      "name": "SQL Injection",
+      "family": "injection",
+      "description": "The software constructs all or part of a SQL command using untrusted input without parameterized queries.",
+      "applies_to": ["database_clients", "sql_engines"],
+      "safe_subsets": ["pure_computation", "capability_confined_no_db"],
+      "exclusion_rationale": "The package does not interact with SQL engines or databases. The static analyzer verifies zero SQL query construction.",
+      "attack_patterns": [
+        "Tautology injection (' OR '1'='1)",
+        "Stacked SQL queries and comments (-- or /* */)"
+      ],
+      "required_evidence": ["capability-audit-no-db", "parameterized-query-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 22,
+      "name": "Path Traversal",
+      "family": "injection",
+      "description": "The software uses external input to construct a pathname intended to identify a file or directory located under a restricted directory, but does not properly neutralize traversal sequences.",
+      "applies_to": ["all"],
+      "safe_subsets": ["pure_computation", "capability_confined_no_fs"],
+      "exclusion_rationale": "The package does not declare the fs capability. The static analyzer verifies zero filesystem paths are constructed or opened.",
+      "attack_patterns": [
+        "Directory climbing using ../ and ..\\",
+        "Absolute path override (/etc/passwd, C:\\Windows)",
+        "URL-encoded or UTF-8 multi-byte traversal sequences"
+      ],
+      "required_evidence": ["capability-audit-fs-empty", "path-canonicalization-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 79,
+      "name": "Cross-Site Scripting (XSS)",
+      "family": "injection",
+      "description": "The software receives untrusted input and places it into dynamic web or HTML content without proper validation or encoding.",
+      "applies_to": ["web_frontends", "ui_renderers"],
+      "safe_subsets": ["pure_computation", "capability_confined_no_ui"],
+      "exclusion_rationale": "The package does not declare the ui capability and outputs no HTML/DOM structures. The static analyzer verifies zero UI/DOM sinks.",
+      "attack_patterns": [
+        "Script tag injection (<script>alert(1)</script>)",
+        "Event handler injection in attributes (onload, onerror)",
+        "JavaScript URI scheme execution (javascript:...)"
+      ],
+      "required_evidence": ["capability-audit-ui-empty", "context-aware-escaping-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 94,
+      "name": "Code Injection / Eval",
+      "family": "injection",
+      "description": "The software constructs all or part of a code segment using untrusted input from an upstream component and executes it dynamically.",
+      "applies_to": ["all"],
+      "safe_subsets": ["compiled_languages_no_eval"],
+      "exclusion_rationale": "Compiled language without dynamic code evaluation or runtime eval primitives. The static analyzer verifies zero dynamic execution mechanisms.",
+      "attack_patterns": [
+        "Injected code evaluation in eval() or Function()",
+        "Dynamic script compilation of untrusted strings"
+      ],
+      "required_evidence": ["capability-audit-banned-constructs", "ast-eval-absence-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 116,
+      "name": "Improper Output Encoding",
+      "family": "injection",
+      "description": "The software does not properly encode or escape output before placing it into a downstream protocol or format.",
+      "applies_to": ["serializers", "protocols"],
+      "safe_subsets": ["pure_computation_no_serialization"],
+      "exclusion_rationale": "Package performs no serialized protocol formatting, or strictly relies on type-safe verified encoders. The static analyzer confirms no raw unescaped protocol sinks.",
+      "attack_patterns": [
+        "Delimiter injection into CSV, TSV, or key-value streams",
+        "Control character injection into header lines"
+      ],
+      "required_evidence": ["protocol-encoder-fuzz", "escaping-bijection-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 117,
+      "name": "Log Injection",
+      "family": "injection",
+      "description": "The software receives untrusted input and writes it directly to log files or audit streams without neutralizing control characters.",
+      "applies_to": ["all"],
+      "safe_subsets": ["pure_computation", "capability_confined_no_stdout"],
+      "exclusion_rationale": "Package declares no stdout or logging capabilities. The static analyzer verifies zero ambient logging or stream writing.",
+      "attack_patterns": [
+        "Carriage return and newline (CRLF) injection forging log lines",
+        "ANSI escape sequences altering terminal display"
+      ],
+      "required_evidence": ["capability-audit-stdout-empty", "log-sanitizer-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 400,
+      "name": "Uncontrolled Resource Consumption",
+      "family": "parsing_dos",
+      "description": "The software does not properly control the allocation or consumption of finite resources such as CPU time, heap memory, or file handles.",
+      "applies_to": ["all"],
+      "safe_subsets": ["pure_zero_allocation"],
+      "exclusion_rationale": "Pure computation package with static zero-allocation guarantees and linear step bounds (steps <= c*n + d).",
+      "attack_patterns": [
+        "Adversarial input triggering exponential CPU loops",
+        "Unbounded allocation of large arrays or buffers"
+      ],
+      "required_evidence": ["microbenchmark-zero-alloc", "bounded-step-proof", "rejects-input-bounds"],
+      "minimum_proof_label": "bounded(k)"
+    },
+    {
+      "cwe": 409,
+      "name": "Decompression Bomb",
+      "family": "parsing_dos",
+      "description": "The software does not properly limit the resources used to decompress data, enabling a denial of service via high compression ratio inputs.",
+      "applies_to": ["decompressors", "archive_readers"],
+      "safe_subsets": ["non_decompressing_packages"],
+      "exclusion_rationale": "The package does not implement or invoke decompression or archive expansion routines. Verified by static analyzer.",
+      "attack_patterns": [
+        "Zip bomb / gzip bomb / recursive archive expansion",
+        "Highly redundant payload producing gigabytes from kilobytes"
+      ],
+      "required_evidence": ["max-expansion-ratio-enforcement", "streaming-bounded-decoder"],
+      "minimum_proof_label": "bounded(k)"
+    },
+    {
+      "cwe": 674,
+      "name": "Uncontrolled Recursion",
+      "family": "parsing_dos",
+      "description": "The software does not properly control the recursion depth of nested function calls, leading to call stack exhaustion.",
+      "applies_to": ["recursive_parsers", "tree_traversals"],
+      "safe_subsets": ["iterative_only_algorithms"],
+      "exclusion_rationale": "The package contains zero recursive function calls, relying exclusively on iterative loops with bounded state stacks. Verified by AST analysis.",
+      "attack_patterns": [
+        "Deeply nested parentheses, arrays, or object structures",
+        "Cyclic graph inputs causing infinite traversal recursion"
+      ],
+      "required_evidence": ["ast-call-graph-acyclic", "recursion-depth-guard-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 1333,
+      "name": "Inefficient Regular Expression (ReDoS)",
+      "family": "parsing_dos",
+      "description": "The software uses a regular expression engine with non-linear worst-case time complexity, enabling CPU exhaustion on crafted strings.",
+      "applies_to": ["regex_users"],
+      "safe_subsets": ["no_regular_expressions", "linear_automata_engines"],
+      "exclusion_rationale": "Package contains zero regular expression usage and has zero regex dependencies. Verified by static analyzer allowlist.",
+      "attack_patterns": [
+        "Catastrophic backtracking on overlapping quantifier patterns (a+)+$",
+        "Nested repetition on non-matching suffix"
+      ],
+      "required_evidence": ["regex-linear-guarantee-proof", "fuzz-redos-attack-corpus"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 407,
+      "name": "Inefficient Algorithmic Complexity",
+      "family": "parsing_dos",
+      "description": "The software uses an algorithm whose computational complexity can be degraded from average to worst-case by crafted adversarial inputs.",
+      "applies_to": ["hash_tables", "sorting_routines", "search_algorithms"],
+      "safe_subsets": ["constant_time_linear_algorithms"],
+      "exclusion_rationale": "All algorithms operate in strict linear time O(n) independent of input values. Verified by WIR cost semantics.",
+      "attack_patterns": [
+        "Hash table collision flooding degrading lookups to O(n)",
+        "Adversarial quicksort pivot selection degrading to O(n^2)"
+      ],
+      "required_evidence": ["siphash-secret-seed-proof", "deterministic-step-bound-proof"],
+      "minimum_proof_label": "bounded(k)"
+    },
+    {
+      "cwe": 208,
+      "name": "Observable Timing Discrepancy",
+      "family": "cryptography",
+      "description": "Differences in execution time, memory access patterns, or microarchitectural state vary with secret data, allowing secret extraction via timing side channels.",
+      "applies_to": ["cryptography", "constant_time_comparison", "secret_handling"],
+      "safe_subsets": [],
+      "exclusion_rationale": null,
+      "attack_patterns": [
+        "Early return on byte mismatch in secret comparison",
+        "Secret-dependent memory indexing causing cache line hits/misses",
+        "Secret-dependent branching with observable pipeline stalls"
+      ],
+      "required_evidence": ["attack-corpus", "microbenchmark-instructions", "trace-self-composition-proof"],
+      "minimum_proof_label": "proved-to-gate-level"
+    },
+    {
+      "cwe": 330,
+      "name": "Use of Insufficiently Random Values",
+      "family": "cryptography",
+      "description": "The software uses insufficiently random numbers in a security context that requires unpredictable randomness.",
+      "applies_to": ["key_generation", "session_tokens", "cryptography"],
+      "safe_subsets": ["pure_computation_deterministic"],
+      "exclusion_rationale": "Package performs purely deterministic computation and declares no rand capability. Verified by static analyzer.",
+      "attack_patterns": [
+        "Predictable PRNG seed derivation from system timestamp",
+        "Truncated state space in random number generation"
+      ],
+      "required_evidence": ["csprng-entropy-audit", "drbg-statistical-test-suite"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 327,
+      "name": "Use of Broken or Risky Cryptographic Algorithm",
+      "family": "cryptography",
+      "description": "The software uses a cryptographic algorithm that has known mathematical weaknesses or is obsolete.",
+      "applies_to": ["cryptography"],
+      "safe_subsets": ["pure_computation_non_cryptographic"],
+      "exclusion_rationale": "Package implements no legacy cryptographic ciphers or digests, or only implements modern vetted primitives per specification.",
+      "attack_patterns": [
+        "Collision generation on MD5 or SHA-1",
+        "Key recovery on RC4 or single DES"
+      ],
+      "required_evidence": ["cryptographic-algorithm-allowlist-audit"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 326,
+      "name": "Inadequate Encryption Strength",
+      "family": "cryptography",
+      "description": "The software uses encryption with a key or parameter length that is insufficient for modern computing capabilities.",
+      "applies_to": ["cryptography"],
+      "safe_subsets": ["pure_computation_non_cryptographic"],
+      "exclusion_rationale": "Package implements no ciphers with configurable sub-standard key lengths; minimum parameter lengths are enforced at compile time.",
+      "attack_patterns": [
+        "Exhaustive key search on sub-128-bit symmetric keys",
+        "Factoring of RSA keys below 2048 bits"
+      ],
+      "required_evidence": ["type-refinement-key-size-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 362,
+      "name": "Concurrent Execution Race Condition",
+      "family": "concurrency",
+      "description": "The software contains a concurrent execution sequence where access to shared state is not properly synchronized.",
+      "applies_to": ["all"],
+      "safe_subsets": ["pure_computation", "capability_confined_no_thread"],
+      "exclusion_rationale": "Package declares no thread capability and uses zero multithreading or concurrency constructs. Verified by static analyzer.",
+      "attack_patterns": [
+        "Data race on unsynchronized shared memory pointer",
+        "Inconsistent intermediate state observed by concurrent thread"
+      ],
+      "required_evidence": ["capability-audit-thread-empty", "thread-sanitizer-pass", "race-freedom-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 367,
+      "name": "Time-of-check Time-of-use (TOCTOU) Race Condition",
+      "family": "concurrency",
+      "description": "The software checks the state of a resource before using it, but the resource's state can change between check and use.",
+      "applies_to": ["all"],
+      "safe_subsets": ["pure_computation", "capability_confined_no_fs"],
+      "exclusion_rationale": "Package declares no fs or proc capabilities and has no external state dependencies. Verified by static analyzer.",
+      "attack_patterns": [
+        "File replacement via symlink swap between stat() and open()",
+        "Permission change on filesystem object between access check and modification"
+      ],
+      "required_evidence": ["capability-audit-fs-empty", "atomic-operation-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 502,
+      "name": "Deserialization of Untrusted Data",
+      "family": "deserialization",
+      "description": "The software deserializes untrusted data without sufficiently verifying that the resulting data will be valid.",
+      "applies_to": ["deserializers", "object_mappers"],
+      "safe_subsets": ["pure_computation_no_deserialization", "typed_safe_decoders"],
+      "exclusion_rationale": "Package contains zero dynamic object deserializers, polymorphic object factories, or reflection dispatch mechanisms. Verified by static analyzer.",
+      "attack_patterns": [
+        "Gadget chain execution during object unpickling or Java deserialization",
+        "Type confusion in polymorphic JSON or XML deserialization"
+      ],
+      "required_evidence": ["fuzz-deserializer-malformed", "type-safe-decoder-proof"],
+      "minimum_proof_label": "proved"
+    },
+    {
+      "cwe": 1321,
+      "name": "Prototype Pollution",
+      "family": "deserialization",
+      "description": "The software receives untrusted input that can modify the prototype attributes of Object in prototype-based languages.",
+      "applies_to": ["javascript", "typescript"],
+      "safe_subsets": ["safe_rust", "go", "c", "cpp", "jvm", "dotnet", "ocaml"],
+      "exclusion_rationale": "Language does not possess prototype-based inheritance or dynamic object prototype chains. Verified by compiler and analyzer.",
+      "attack_patterns": [
+        "Recursive deep merge on __proto__ or constructor.prototype keys",
+        "Path lookup polluting global Object prototype properties"
+      ],
+      "required_evidence": ["language-type-system-guarantee"],
+      "minimum_proof_label": "proved"
+    }
+  ]
+}

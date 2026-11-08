@@ -9,6 +9,7 @@ resolver = "2"
 exclude = ["os-kernel"]
 members = [
     "ca-capability-analyzer",
+    "ca-assurance-report",
     "avr-classic-simulator",
     "superh2-simulator",
     "cortex-m4-gatelevel",

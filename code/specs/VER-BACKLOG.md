@@ -63,8 +63,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P024 | Symbolic execution | #19019 merged as b56a4b1d0fe; [VER19](VER19-symbolic-execution.md) specified; bit-precise proofs via bit-blaster and cdcl-sat, memory safety bounds, honest bounded(k) labels |
 | done / VER-P025 | Bounds/constant-time trace proofs | #19020 merged as e2a4c386892; [VER20](VER20-resource-timing-proofs.md) specified; self-composition 2-safety hyperproperties, timing/address divergence detection, DRAT-certified UNSAT, >90% line/branch cov |
 | done / VER-P027a | Rust capability analyzer/name allowlist | #19028 merged as cbd8b93f0e7; [VER08a](VER08a-rust-capability-analyzer.md) specified; zero third-party deps, 92%+ cov, fail-closed audit |
-| in-progress / VER-P027b | Generated effect module/certificate | [VER23a](VER23a-rust-effect-modules.md) specified; VER23/24, small checker, empty effects, ct-compare certified |
-| P2 / VER-P028 | Weakness registry/report-only assurance | waiting proof/effect evidence; VER15/01, not-live rows, unapproved CWE-208 exemption |
+| done / VER-P027b | Generated effect module/certificate | #19030 merged as a1a722f32c5; [VER23a](VER23a-rust-effect-modules.md) specified; VER23/24, small checker, empty effects, ct-compare certified |
+| in-progress / VER-P028 | Weakness registry/report-only assurance | [VER15](VER15-weakness-registry.md), [VER01](VER01-assurance-report.md) specified; weakness registry v1 (26 CWE classes), per-package weakness matrix, computed unapproved CWE-208 exemption, not-live rungs, ct-compare report-only assurance |
 
 Critical path: P003 -> P004 -> P005-011 -> P021-025. Fuzzing and measurements
 can progress independently once their prerequisites are available.
