@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.63.2] - 2026-11-08
+
+### Fixed — prevent emitting `<!--` HTML comment sequence after `<` (#17887)
+
+- `BinaryOperator::Lt` (`<`) followed by `UnaryOperator::Not` (`!`) with a prefix decrement (`--`) operand (e.g. `a < !--b`) previously emitted as `a<!--b` in compact mode. In ECMAScript Annex B.1.1 (script mode), `<!--` begins a `SingleLineHTMLOpenComment`, swallowing the remainder of the line and causing a silent miscompile under Node.js and browsers.
+- Added `arg_starts_with_bang_decr` helper in `emit_binary` to ensure a separating space is preserved after `<` (`a< !--b;`), matching Closure Compiler upstream behavior.
+- Added unit test coverage in `code_printer_update_test.rs`.
+
 ## [0.63.1] - 2026-11-08
 
 ### Added

@@ -2028,16 +2028,20 @@ impl<'a> Emitter<'a> {
         }
 
         // Every other (symbolic) operator is emitted tight in compact mode
-        // (`a+b`, `a&&b`, `a<<b`, `a===b`) — a space only in `pretty` mode. The
-        // ONLY token-merge hazard is the additive operators `+` / `-`: if the
-        // left operand already ends with the same sign, or the right operand
-        // begins with it, dropping the space fuses the pair into the
-        // increment/decrement token — `a+ +b` would become `a++b` (parsed
-        // `a++ b`), a MISCOMPILE. No other operator can fuse: no operand begins
-        // or ends with `<`,`>`,`&`,`|`,`*`,`/`,`%`,`^`,`=` in a way that forms a
-        // different token, and the right operand can never lead with `*` or `/`
-        // (so `/` cannot start a `/*`//`//` comment), since `++`/`--` are not
-        // representable unary operators here. We guard both seams for `+`/`-`.
+        // (`a+b`, `a&&b`, `a<<b`, `a===b`) — a space only in `pretty` mode. Two
+        // token-merge hazards exist:
+        //
+        // 1. Additive operators `+` / `-`: if the left operand already ends with
+        //    the same sign, or the right operand begins with it, dropping the
+        //    space fuses the pair into the increment/decrement token — `a+ +b`
+        //    would become `a++b` (parsed `a++ b`), a MISCOMPILE. We guard both
+        //    seams for `+`/`-`.
+        //
+        // 2. Relational `<` followed by `!` and `--`: `a < !--b` (or `a < ! --b`)
+        //    fusing into `a<!--b` triggers ECMAScript Annex B.1.1 single-line HTML
+        //    comment syntax in script mode (`<!--`), swallowing the remainder of
+        //    the line and causing a silent miscompile (#17887). We guard the `<`
+        //    right seam with a space (`a< !--b`).
         let sign = match b.operator {
             BinaryOperator::Add => Some('+'),
             BinaryOperator::Sub => Some('-'),
@@ -2048,8 +2052,9 @@ impl<'a> Emitter<'a> {
             self.write_str(" ");
         }
         self.write_str(op);
-        let right_needs_space =
-            self.opts.pretty || sign.is_some_and(|sc| arg_starts_with_sign(&b.right, sc));
+        let right_needs_space = self.opts.pretty
+            || sign.is_some_and(|sc| arg_starts_with_sign(&b.right, sc))
+            || (matches!(b.operator, BinaryOperator::Lt) && arg_starts_with_bang_decr(&b.right));
         if right_needs_space {
             self.write_str(" ");
         }
@@ -3311,6 +3316,24 @@ fn arg_starts_with_sign(e: &Expression, sign: char) -> bool {
         }
         _ => false,
     }
+}
+
+/// Returns true if expression `e`, emitted without outer parentheses, would
+/// begin with `!` immediately followed by `--` (i.e. prefix `--` update).
+///
+/// In ECMAScript (Annex B.1.1), `<!--` begins a SingleLineHTMLOpenComment in
+/// script mode. When preceded by a `<` binary operator (`a < !--b`), omitting
+/// whitespace produces `a<!--b`, which turns the remainder of the line into an
+/// HTML-like comment, dropping statements and causing a silent miscompile (#17887).
+fn arg_starts_with_bang_decr(e: &Expression) -> bool {
+    if let Expression::UnaryExpression(u) = e {
+        if matches!(u.operator, UnaryOperator::Not) {
+            if let Expression::UpdateExpression(up) = &*u.argument {
+                return up.prefix && matches!(up.operator, UpdateOperator::Decrement);
+            }
+        }
+    }
+    false
 }
 
 fn binary_op_str(op: BinaryOperator) -> &'static str {
