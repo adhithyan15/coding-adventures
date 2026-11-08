@@ -1310,6 +1310,29 @@ const PROGRAMS: &[Prog] = &[
         release: None,
         case: None,
     },
+    // Twig — dynamic string-length on an untyped parameter (#18428). When a function
+    // has multiple call sites with different operand types or dynamic arguments, the parameter
+    // cannot be statically inferred as `str`. `twig-ir-compiler` emits dynamic
+    // `call_builtin "string-length"`, which `vm_lisp` rewrites to `str_len`.
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen s) (string-length s)) (define (run) (if (< 1 2) (strlen \"HELLO\") (strlen 42))) (run)",
+        expect: Expect::Exit(5),
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
+    // Twig — dynamic string-length on a non-string traps with TypeError (#18428).
+    Prog {
+        lang: Language::Twig,
+        ext: "twig",
+        src: "(define (strlen s) (string-length s)) (strlen 42)",
+        expect: Expect::Trap,
+        backends: &[Vm, Jit],
+        release: None,
+        case: None,
+    },
     // Twig — E4 string ops over an unannotated top-level function parameter
     // with direct-call evidence from a static string expression actual. The
     // actual materialises through `str_concat` + `str_slice`, then feeds the
@@ -15941,8 +15964,9 @@ fn feature_coverage_doc_counts_match_programs_source() {
         // comparison rows on six columns (all but Clr / Beam), then
         // #18493 / #18470's seventeen truthiness, value-kind, predicate and
         // dynamic-division rows (51 cells: Vm and Jit on every row, plus the
-        // NativeAot / Llvm / Wasm / Jvm cells each row was run on).
-        (Language::Twig, 77, 507),
+        // NativeAot / Llvm / Wasm / Jvm cells each row was run on), and
+        // #18428's two dynamic string-length rows on Vm and Jit (4 cells).
+        (Language::Twig, 79, 511),
         (Language::Nib, 26, 208),
         (Language::Brainfuck, 6, 48),
         (Language::DartmouthBasic, 52, 416),

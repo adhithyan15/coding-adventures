@@ -285,3 +285,27 @@ fn division_refuses_a_non_integer_operand() {
         }
     }
 }
+
+/// `call_builtin "string-length"` lowers to `str_len` which counts bytes on a string
+/// and refuses non-strings with a TypeError (#18428).
+#[test]
+fn string_length_counts_bytes_and_refuses_non_strings() {
+    let check = |lit: Lit| {
+        let mut b = Vec::new();
+        emit(lit, "s", &mut b);
+        b.push(ins("call_builtin", Some("r"), vec![var("string-length"), var("s")], "any"));
+        b.push(ins("ret", None, vec![var("r")], "any"));
+        run(b)
+    };
+
+    assert_eq!(check(Lit::Str("hello")).unwrap(), Some(Value::Int(5)));
+    assert_eq!(check(Lit::Str("")).unwrap(), Some(Value::Int(0)));
+
+    for bad in [Lit::Int(42), Lit::Bool(true), Lit::Bool(false), Lit::Nil, Lit::Sym("a"), Lit::Pair] {
+        let got = check(bad);
+        assert!(
+            matches!(got, Err(VMError::TypeError { .. })),
+            "string-length with {bad:?}: {got:?}"
+        );
+    }
+}

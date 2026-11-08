@@ -1,5 +1,10 @@
 # Changelog — iir-builtin-lowering
 
+## Unreleased — #18428 — `vm_lisp`: lower `string-length` to `str_len`
+
+- `vm_lisp` now rewrites `call_builtin "string-length" [x]` to `str_len x` with type hint `i64`. When a Twig function receives an untyped parameter or dynamic value, `twig-ir-compiler` emits dynamic `call_builtin "string-length"`. Rewriting it to `str_len` enables correct execution on `vm-core` and JIT fallback tier, ensuring non-string values raise a clean `TypeError`.
+- Tests: `vm_lisp_on_vm::string_length_counts_bytes_and_refuses_non_strings`.
+
 ## Unreleased — #18486 — `dynamic_arith`: floored modulo lowering
 
 - `dynamic_arith` now maps `modulo` to `i64_mod_floor` rather than truncating `mod`.

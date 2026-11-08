@@ -59,9 +59,9 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | P2 / VER-P017 | Equal-instruction-count measurements | waiting P016; n=16/256/4096; absent counters report not-live |
 | done / VER-P021 | WIR core/reference interpreter | [VER25](VER25-wir-core-interpreter.md) specified; WIR core AST, static type checker, cost semantics, provenance-tracking memory model, observable trace recorder, bounded reference interpreter, constant-time validation; 91%+ line/branch cov |
 | done / VER-P022 | Rust-subset grammar | #19014 merged as 3d8a14c46d8; [VER25a](VER25a-rust-subset-grammar.md) specified; real ct-compare source, volatile/unsafe assumptions, zero third-party deps, 93%+ line/branch cov |
-| in-flight / VER-P023 | Rust-to-WIR front end | [VER25b](VER25b-rust-to-wir-frontend.md) specified; differential checks against real public entry points |
-| P1 / VER-P024 | Symbolic execution | waiting P023; VER19, certified UNSAT, honest bounded(k) labels |
-| P1 / VER-P025 | Bounds/constant-time trace proofs | waiting P024; VER20, branch/address self-composition, not counts alone |
+| done / VER-P023 | Rust-to-WIR front end | #19017 merged as b486bf3b28e; [VER25b](VER25b-rust-to-wir-frontend.md) specified; lowered parsed Rust AST to WIR modules, differential validation against ct-compare, zero third-party deps, 92%+ line/branch cov |
+| done / VER-P024 | Symbolic execution | #19019 merged as b56a4b1d0fe; [VER19](VER19-symbolic-execution.md) specified; bit-precise proofs via bit-blaster and cdcl-sat, memory safety bounds, honest bounded(k) labels |
+| ready-pr / VER-P025 | Bounds/constant-time trace proofs | [VER20](VER20-resource-timing-proofs.md) specified; self-composition 2-safety hyperproperties, timing/address divergence detection, DRAT-certified UNSAT, >90% line/branch cov |
 | P2 / VER-P027a | Rust capability analyzer/name allowlist | waiting P023; VER08/23, macro policy, negative corpus |
 | P2 / VER-P027b | Generated effect module/certificate | waiting P027a; VER23/24, small checker, empty effects |
 | P2 / VER-P028 | Weakness registry/report-only assurance | waiting proof/effect evidence; VER15/01, not-live rows, unapproved CWE-208 exemption |
@@ -123,8 +123,13 @@ Post-P022 prioritization: VER-P022 merged cleanly in #19014 (commit 3d8a14c46d8)
 It delivers the Confined Rust Subset grammar, AST, and recursive-descent parser ([VER25a](VER25a-rust-subset-grammar.md)),
 parsing real `ct-compare/src/lib.rs` (372 lines) with zero third-party dependencies, hardened resource quotas (1 MiB source cap,
 32 recursion depth limit, 65,536 token cap), and 93.7% line / 91.3% region coverage.
-Next on the critical path is VER-P023 (Rust-to-WIR front end) to lower parsed Rust AST into WIR modules and validate differentially
-against native `ct-compare` public entry points.
+
+Post-P023 prioritization: VER-P023 merged cleanly in #19017 (commit b486bf3b28e) with all CI matrix checks passing.
+It delivers the Rust-to-WIR lowering front end ([VER25b](VER25b-rust-to-wir-frontend.md)), compiling Confined Rust AST into
+WIR modules with linearized control flow, compiler barrier inlining, dynamic slice length queries, and differential validation
+against native `ct-compare` entry points with 97.1% line / 92.9% region coverage and zero third-party dependencies.
+Next on the critical path is VER-P024 (Symbolic execution / [VER19](VER19-symbolic-execution.md)) to execute WIR over symbolic
+inputs, bit-blast arithmetic/logic into AIG circuits, and discharge bit-precise proofs and memory safety checks via CDCL SAT.
 
 P006b1 merged in #18913 (commit 964dc3df7bc) with all checks passing on main.
 The source admission contract is active in `rust/warrant-grammar`. Eleven source
