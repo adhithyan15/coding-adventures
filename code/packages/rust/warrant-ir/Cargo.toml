@@ -8,4 +8,5 @@ license = "MIT"
 [dependencies]
 
 [dev-dependencies]
+coding_adventures_ct_compare = { path = "../ct-compare" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }

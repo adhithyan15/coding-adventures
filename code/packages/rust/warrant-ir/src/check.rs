@@ -385,6 +385,13 @@ impl<'a> TypeChecker<'a> {
                 }
                 Ok((target_ty.clone(), label))
             }
+            WirExpr::PtrLen(ptr) => {
+                let (sub_ty, _) = self.check_expr(ptr, env)?;
+                match sub_ty {
+                    WirType::Ptr(_) => Ok((WirType::U64, Label::PUBLIC)),
+                    _ => Err(TypeError::ExpectedPointer(sub_ty)),
+                }
+            }
             WirExpr::TupleMake(elems) => {
                 let mut elem_tys = Vec::new();
                 let mut joint_label = Label::PUBLIC;
