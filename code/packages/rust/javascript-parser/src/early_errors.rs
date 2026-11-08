@@ -130,13 +130,11 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                 }
             }
             "yield_expression" => {
-                if in_parameters {
-                    if in_generator || strict || has_operand_or_delegate(node) {
-                        return Err(
-                            "early error: `yield` expression cannot be used in formal parameters (ECMA-262 §15.3.1)"
-                                .to_string(),
-                        );
-                    }
+                if in_parameters && (in_generator || strict || has_operand_or_delegate(node)) {
+                    return Err(
+                        "early error: `yield` expression cannot be used in formal parameters (ECMA-262 §15.3.1)"
+                            .to_string(),
+                    );
                 }
                 if in_static {
                     return Err(
@@ -159,13 +157,14 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
             }
             "assignment_expression" => {
                 let nds = nodes(node);
-                if nds.len() == 3 && nds[1].rule_name == "assignment_operator" {
-                    if is_invalid_yield_target(nds[0]) {
-                        return Err(
-                            "early error: invalid left-hand side in assignment (ECMA-262 §13.15.1)"
-                                .to_string(),
-                        );
-                    }
+                if nds.len() == 3
+                    && nds[1].rule_name == "assignment_operator"
+                    && is_invalid_yield_target(nds[0])
+                {
+                    return Err(
+                        "early error: invalid left-hand side in assignment (ECMA-262 §13.15.1)"
+                            .to_string(),
+                    );
                 }
             }
             "postfix_expression" => {
@@ -658,7 +657,7 @@ fn is_invalid_yield_target(node: &GrammarASTNode) -> bool {
     false
 }
 
-fn destructuring_assignment_target<'a>(elem: &'a GrammarASTNode) -> Option<&'a GrammarASTNode> {
+fn destructuring_assignment_target(elem: &GrammarASTNode) -> Option<&GrammarASTNode> {
     match elem.rule_name.as_str() {
         "spread_element" | "object_spread_property" => children(elem).next(),
         "assignment_expression" => {
@@ -673,7 +672,7 @@ fn destructuring_assignment_target<'a>(elem: &'a GrammarASTNode) -> Option<&'a G
     }
 }
 
-fn destructuring_property_target<'a>(prop: &'a GrammarASTNode) -> Option<&'a GrammarASTNode> {
+fn destructuring_property_target(prop: &GrammarASTNode) -> Option<&GrammarASTNode> {
     if prop.rule_name == "property_definition" {
         if has_token(prop, ":") {
             let nds = nodes(prop);
@@ -723,9 +722,9 @@ fn unwrap_parens(mut node: &GrammarASTNode) -> &GrammarASTNode {
             }
             "primary_expression" => {
                 let n = nodes(node);
-                if n.len() == 1 && has_token(node, "(") && has_token(node, ")") {
-                    node = n[0];
-                } else if n.len() == 1 && node.children.len() == 1 {
+                if n.len() == 1
+                    && ((has_token(node, "(") && has_token(node, ")")) || node.children.len() == 1)
+                {
                     node = n[0];
                 } else {
                     break;
