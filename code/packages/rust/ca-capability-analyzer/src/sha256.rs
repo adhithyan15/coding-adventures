@@ -77,7 +77,7 @@ impl Sha256 {
 
     /// Finalize and return the 32-byte SHA-256 digest.
     pub fn finalize(mut self) -> [u8; 32] {
-        let bit_len = self.total_len_bytes.checked_mul(8).unwrap_or(u64::MAX);
+        let bit_len = self.total_len_bytes.saturating_mul(8);
         self.buffer[self.buf_len] = 0x80;
         self.buf_len += 1;
 

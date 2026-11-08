@@ -310,6 +310,18 @@ impl Parser {
             }
         };
 
+        if self.peek() == &TokenKind::Semi {
+            self.advance();
+            let end = self.peek_span();
+            return Ok(Item::Module(ModuleDecl {
+                attrs,
+                vis,
+                name,
+                items: Vec::new(),
+                span: Span::new(start.start, end.end, start.line, start.col),
+            }));
+        }
+
         self.expect(TokenKind::LBrace)?;
         let mut items = Vec::new();
         while self.peek() != &TokenKind::RBrace && self.peek() != &TokenKind::Eof {

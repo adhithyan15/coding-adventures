@@ -223,9 +223,11 @@ fn collect_rs_files(
 
         if file_type.is_dir() {
             collect_rs_files(root, &path, out, depth + 1, total_bytes)?;
-        } else if file_type.is_file() {
-            if file_name.ends_with(".rs") && file_name != "capabilities.rs" {
-                if out.len() >= MAX_SOURCE_FILES {
+        } else if file_type.is_file()
+            && file_name.ends_with(".rs")
+            && file_name != "capabilities.rs"
+        {
+            if out.len() >= MAX_SOURCE_FILES {
                     return Err(format!("Source file count exceeded limit of {MAX_SOURCE_FILES}"));
                 }
 
@@ -250,7 +252,6 @@ fn collect_rs_files(
                 out.push((rel_str, content));
             }
         }
-    }
     Ok(())
 }
 
