@@ -1,0 +1,11 @@
+[package]
+name = "coding_adventures_warrant_ir"
+version = "0.1.0"
+edition = "2021"
+description = "Warrant Intermediate Representation (WIR) core AST, type checker, cost semantics, and bounded reference interpreter (VER25, VER-P021)"
+license = "MIT"
+
+[dependencies]
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
