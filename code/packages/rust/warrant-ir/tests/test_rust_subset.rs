@@ -14,6 +14,7 @@ fn test_parse_ct_compare_source() {
 
     // Find volatile_barrier module
     let mut found_volatile_barrier = false;
+    let mut found_capabilities = false;
     let mut found_ct_eq = false;
     let mut found_ct_eq_fixed = false;
     let mut found_ct_select_bytes = false;
@@ -21,6 +22,11 @@ fn test_parse_ct_compare_source() {
 
     for item in &file.items {
         match item {
+            Item::Module(m) if m.name == "capabilities" => {
+                found_capabilities = true;
+                assert_eq!(m.vis, Visibility::Public);
+                assert!(m.items.is_empty());
+            }
             Item::Module(m) if m.name == "volatile_barrier" => {
                 found_volatile_barrier = true;
                 assert_eq!(m.items.len(), 3); // use core::ptr, fn accumulate, fn read
@@ -56,6 +62,7 @@ fn test_parse_ct_compare_source() {
     }
 
     assert!(found_volatile_barrier);
+    assert!(found_capabilities);
     assert!(found_ct_eq);
     assert!(found_ct_eq_fixed);
     assert!(found_ct_select_bytes);

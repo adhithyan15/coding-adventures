@@ -10,7 +10,9 @@ Every Rust package in this repository declares its operating-system level capabi
 1. Every ambient OS access in `.rs` files matches a declared capability (`CAP001` check);
 2. All banned constructs (`unsafe` blocks/functions, inline assembly, uninspected foreign linkage) have matching hardware-key exceptions (`CAP002` check);
 3. Manifests conform to `required_capabilities.schema.json` version 1;
-4. Traversal adheres to strict resource quotas and refuses symlinked files.
+4. Traversal adheres to strict resource quotas and refuses symlinked files;
+5. Sealed capability modules (`src/capabilities.rs`) enforce "you cannot name what you did not declare" (VER23);
+6. Canonical effect proof certificates (`effect_certificate.json`, schema `ver24-effect-cert-v1`) verify proof-carrying capability bounds via an independent small checker (VER24).
 
 ```text
   Package Rust Source Files
@@ -36,6 +38,18 @@ cargo run -p coding_adventures_ca_capability_analyzer -- --dir code/packages/rus
 
 # Verbose mode: display all detected capabilities and inspected files
 cargo run -p coding_adventures_ca_capability_analyzer -- --dir code/packages/rust/ct-compare --verbose
+
+# Generate sealed capabilities module (VER23)
+cargo run -p coding_adventures_ca_capability_analyzer -- --dir code/packages/rust/ct-compare --generate-module
+
+# Verify capabilities module is up-to-date with manifest
+cargo run -p coding_adventures_ca_capability_analyzer -- --dir code/packages/rust/ct-compare --check-module
+
+# Emit canonical effect proof certificate (VER24)
+cargo run -p coding_adventures_ca_capability_analyzer -- --dir code/packages/rust/ct-compare --emit-cert code/packages/rust/ct-compare/effect_certificate.json
+
+# Verify effect certificate using the small independent checker
+cargo run -p coding_adventures_ca_capability_analyzer -- --dir code/packages/rust/ct-compare --verify-cert code/packages/rust/ct-compare/effect_certificate.json
 ```
 
 ## Exit Codes

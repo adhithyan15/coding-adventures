@@ -16,6 +16,18 @@
       "justification": "Recursively discovers Rust source files within the target package directory."
     },
     {
+      "category": "fs",
+      "action": "create",
+      "target": "*",
+      "justification": "Creates target source directories when generating capability modules."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "Emits generated capability modules and canonical effect proof certificates to target package directory."
+    },
+    {
       "category": "stdout",
       "action": "write",
       "target": "*",

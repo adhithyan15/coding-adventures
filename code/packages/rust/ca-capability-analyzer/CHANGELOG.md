@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0 — 2026-11-08
+
+- Generated capability module and canonical effect certificate support (VER23 / VER24 / VER-P027b):
+  - Sealed capability module generator (`src/capabilities.rs`, VER23) enforcing "you cannot name what you did not declare":
+    - Pure computation packages receive `PureCapabilities` zero-effect token with `#![deny(unsafe_code)]`;
+    - Capability-bearing packages receive typed witness handles strictly limited to declared capabilities;
+    - `--generate-module` and `--check-module` for pre-commit generation and CI regeneration verification;
+  - Canonical effect proof certificates (`effect_certificate.json`, schema `ver24-effect-cert-v1`, VER24):
+    - Independent small certificate checker reading package sources, manifests, and certificates directly;
+    - Cryptographic binding via deterministic multi-file SHA-256 source and manifest digests;
+    - Verification of public entry points, declared effect bounds, unconditional roots, and honest `"proved"` label;
+    - Comprehensive sabotage tests detecting source/manifest tampering, uncertified entry points, undeclared effects, and dishonest labels;
+    - Self-contained FIPS 180-4 SHA-256 cryptographic hasher with zero external dependencies.
+
 ## 0.1.0 — 2026-11-08
 
 - Initial implementation of the Rust Static Capability Analyzer (`ca-capability-analyzer-rs`, VER08 / VER08a / VER-P027a):
