@@ -19,8 +19,12 @@ pub fn bitvec_concrete_u128(bv: &BitVec) -> Option<u128> {
         if !edge.is_constant() {
             return None;
         }
-        if *edge == Edge::TRUE && i < 128 {
-            val |= 1 << i;
+        if *edge == Edge::TRUE {
+            if i < 128 {
+                val |= 1 << i;
+            } else {
+                return None;
+            }
         }
     }
     Some(val)
@@ -428,6 +432,8 @@ pub struct PathOutcome {
     pub observable_events: Vec<ObservableSymEvent>,
     /// Whether this path was truncated by bounded loop unrolling.
     pub bounded: bool,
+    /// Total instruction steps executed along this path.
+    pub steps: usize,
 }
 
 /// Configuration parameters for symbolic execution.
@@ -441,6 +447,8 @@ pub struct SymbolicConfig {
     pub unroll_bound: usize,
     /// Maximum total memory bytes that can be allocated.
     pub max_memory_bytes: usize,
+    /// Optional conflict budget for the SAT solver (CWE-400 mitigation).
+    pub solver_conflict_budget: Option<u64>,
 }
 
 impl Default for SymbolicConfig {
@@ -450,6 +458,7 @@ impl Default for SymbolicConfig {
             max_paths: 256,
             unroll_bound: 16,
             max_memory_bytes: 64 * 1024 * 1024,
+            solver_conflict_budget: Some(200_000),
         }
     }
 }
@@ -579,6 +588,7 @@ impl SymbolicExecutor {
                     memory: state.memory,
                     observable_events: state.observable_events,
                     bounded: true,
+                    steps: state.step_count,
                 });
                 continue;
             }
@@ -607,6 +617,7 @@ impl SymbolicExecutor {
                         memory: state.memory,
                         observable_events: state.observable_events,
                         bounded: state.bounded,
+                        steps: state.step_count,
                     });
                 }
                 WirTerminator::Jump(target) => {
@@ -1056,6 +1067,9 @@ impl Prover {
         tseitin.assert_true(&self.executor.aig, overall_miter, &mut cnf);
 
         let mut solver = Solver::from_cnf_with_proof(&cnf);
+        if let Some(budget) = self.executor.config.solver_conflict_budget {
+            solver.set_conflict_budget(Some(budget));
+        }
         match solver.solve() {
             SolveResult::Unsat => {
                 // Verify DRAT certificate

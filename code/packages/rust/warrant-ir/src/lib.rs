@@ -5,6 +5,7 @@ pub mod ast;
 pub mod check;
 pub mod constant_time;
 pub mod cost;
+pub mod ct_proof;
 pub mod interp;
 pub mod lower;
 pub mod rust_subset;
@@ -15,6 +16,9 @@ pub use ast::*;
 pub use check::{TypeChecker, TypeError};
 pub use constant_time::{check_constant_time, check_constant_time_default, ConstantTimeVerdict};
 pub use cost::{CostSchedule, ExecutionCost};
+pub use ct_proof::{
+    BoundProver, BoundVerdict, ConstantTimeProver, CtProofVerdict, DivergenceKind,
+};
 pub use interp::{
     Allocation, BudgetLimit, CapabilityDispatcher, DefaultCapabilityDispatcher, ExecutionOutcome,
     Interpreter, InterpreterConfig, Memory, UndefinedBehavior, WirValue,
