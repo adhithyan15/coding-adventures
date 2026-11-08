@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0 (2026-11-08)
+
+- Level 2 Property-Based Testing (PBT) engine (VER05 / VER05a).
+- Generator combinator algebra (`Gen<T>`): primitive generators (`bool`, `u8`, `u64`, `integer`, `bytes`), combinators (`map`, `filter`, `list`, `oneOf`).
+- Integrated shrinking protocol (`shrinkInt`, `shrinkList`, `shrinkBytes`) preserving type refinements and invariant boundaries.
+- Deterministic SplitMix64 pseudo-random generation with isolated sub-seed derivation.
+- Full validation of canonical `pbt-v1` conformance corpus (25 cases in `cases.tfv` / `cases.json`).
+- Closed failure vocabulary reporting (`property-counterexample`, `property-exhausted`, `property-timeout`, `property-panic`).
+- High-level property assertion API (`assertProperty`, `checkProperty`).
+
 ## 0.1.0 (2026-11-08)
 
 - Initial release of `@coding-adventures/test-bootstrap`.

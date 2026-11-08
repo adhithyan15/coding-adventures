@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/test-bootstrap",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Zero-dependency Level 0 bootstrap harness, TFV runner, and pure Level 1 matchers (TF01 / TF01a)",
   "type": "module",
   "main": "dist/index.js",
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "node --experimental-strip-types --test tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts"
+    "test": "node --experimental-strip-types --test tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts tests/cli.test.ts tests/pbt.test.ts"
   },
   "license": "MIT",
   "author": "Adhithya Rajasekaran",

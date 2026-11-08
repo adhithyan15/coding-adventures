@@ -25,7 +25,7 @@ describe("CLI Builder integration for test-bootstrap (TF01b)", () => {
   it("exports a valid declarative CliSpec", () => {
     expect(testBootstrapCliSpec.name).toBe("test-bootstrap");
     expect(testBootstrapCliSpec.specVersion).toBe("1.0");
-    expect(testBootstrapCliSpec.version).toBe("0.1.0");
+    expect(testBootstrapCliSpec.version).toBe("0.2.0");
     expect(testBootstrapCliSpec.parsingMode).toBe("gnu");
     expect(testBootstrapCliSpec.builtinFlags.help).toBe(true);
     expect(testBootstrapCliSpec.builtinFlags.version).toBe(true);
@@ -54,7 +54,7 @@ describe("CLI Builder integration for test-bootstrap (TF01b)", () => {
   it("--version prints package version and exits with code 0", () => {
     const res = runCli("--version");
     expect(res.status).toBe(0);
-    expect(res.stdout.trim()).toBe("0.1.0");
+    expect(res.stdout.trim()).toBe("0.2.0");
   });
 
   it("unknown flag exits with USAGE_EXIT (code 2)", () => {
