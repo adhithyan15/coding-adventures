@@ -11,7 +11,7 @@
     "extracted_surface_sha256": "a7d2346f5ad4bbe77acfe8bc176065d08ea3a8fa9ceb4ee4d05ade68644c8947"
   },
   "local_spec_path": "cli.spec.json",
-  "local_spec_sha256": "b0bb83812b06fb90cf26bbcbf73a2377f648869ef2ddf9150699549cdc729f28",
+  "local_spec_sha256": "61f7f83bcd96eb96d50760e27af75e18bab0978043ef143821efdb9c3c3f86be",
   "counts": {
     "upstream_options": 102,
     "upstream_aliases": 7,

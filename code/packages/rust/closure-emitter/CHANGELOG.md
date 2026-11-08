@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.63.1] - 2026-11-08
+
+### Added
+
+- Unit test coverage for module specifier string emission without escape doubling (#18122).
+
 ## [0.63.0] - 2026-10-24
 
 ### Fixed — a non-directive is never printed as `"use strict"` (#17907)

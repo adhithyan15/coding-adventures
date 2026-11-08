@@ -3662,3 +3662,10 @@ tests (`this;` → `ThisExpression`; `this.x;` → member access whose object is
 rather than falling back to a verbatim WHITESPACE_ONLY pass). The **PR3
 conformance port** (`code_printer_this_test.rs`) exercises the emitter via
 hand-constructed AST separately.
+
+
+### gap-ModuleSpecifierEscapes — module specifiers decode string escapes in typed AST bridge — **RESOLVED (javascript-parser 0.67.0, issue #18122)**
+
+At `SIMPLE` and `ADVANCED` compilation levels, module specifiers in `import` declarations (`import ... from "..."`), side-effect imports (`import "..."`), and `export ... from "..."` declarations previously retained source escape sequences verbatim in the `StringLiteral.value` field because `import_source` copied the raw token value without calling `decode_string_escapes`. When `closure-emitter` re-emitted the specifier, its string quote-and-escape routine treated the un-decoded backslashes as literal characters, escaping each `\` to `\\`. For example, `import a from "./a\x2ejs"` emitted as `import a from"./a\\x2ejs";`, altering the module path at runtime.
+
+**Fix (#18122):** `import_source` now decodes the token's escape sequences via `decode_string_escapes(&t.value)`, aligning module specifier string literals with primary string literals and object literal string keys. Module specifiers now emit exact canonical characters across all compilation levels.

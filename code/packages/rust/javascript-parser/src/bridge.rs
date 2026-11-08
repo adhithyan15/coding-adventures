@@ -436,15 +436,20 @@ fn convert_import_declaration(node: &GrammarASTNode) -> Result<ImportDeclaration
 /// Pull the module-specifier string out of a `module_specifier` or `from_clause`
 /// node: the first `String`-typed token among the node's direct children. The
 /// lexer stores the value unquoted (`y`, not `"y"`), so we rebuild a double-
-/// quoted `raw` for the [`StringLiteral`]; the emitter re-derives the quotes
-/// from `value`, so `raw` is only kept for round-trip fidelity.
+/// quoted `raw` for the [`StringLiteral`]. The escapes are decoded into `value`
+/// via `decode_string_escapes`, matching expression string literals and object
+/// property keys; the emitter re-derives quotes and escapes from `value` (#18122).
 fn import_source(node: &GrammarASTNode) -> Option<StringLiteral> {
     node.children.iter().find_map(|c| match c {
-        ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => Some(StringLiteral {
-            cv: t.cv.clone(),
-            value: t.value.clone(),
-            raw: format!("\"{}\"", t.value),
-        }),
+        ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => {
+            let raw = format!("\"{}\"", t.value);
+            let value = decode_string_escapes(&t.value);
+            Some(StringLiteral {
+                cv: t.cv.clone(),
+                value,
+                raw,
+            })
+        }
         _ => None,
     })
 }
@@ -4523,6 +4528,21 @@ mod tests {
     }
 
     #[test]
+    fn bridge_import_module_specifier_decodes_escapes() {
+        // Issue #18122: Module specifiers in import declarations must decode
+        // escape sequences into `StringLiteral.value` so that downstream emitters
+        // and tools do not double backslashes.
+        let i1 = import_of("import a from \"./a\\x2ejs\";");
+        assert_eq!(i1.source.value, "./a.js");
+
+        let i2 = import_of("import \"./foo\\x41\\u002ejs\";");
+        assert_eq!(i2.source.value, "./fooA.js");
+
+        let i3 = import_of("import { x } from \"./dir\\\\file\";");
+        assert_eq!(i3.source.value, "./dir\\file");
+    }
+
+    #[test]
     fn bridge_default_plus_namespace_import_declines() {
         // `import x, * as ns from "y";` is a grammar gap — the parser rejects
         // the default+namespace combination at the parse layer (before the
@@ -4583,6 +4603,25 @@ mod tests {
             Declaration::ExportAllDeclaration(e) => {
                 assert!(e.exported.is_none());
                 assert_eq!(e.source.value, "y");
+            }
+            other => panic!("expected ExportAllDeclaration, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bridge_export_module_specifier_decodes_escapes() {
+        // Issue #18122: Module specifiers in export declarations must decode
+        // escape sequences into `StringLiteral.value`.
+        match export_of("export { b } from \"./c\\x41\";") {
+            Declaration::ExportNamedDeclaration(e) => {
+                assert_eq!(e.source.as_ref().map(|s| s.value.as_str()), Some("./cA"));
+            }
+            other => panic!("expected ExportNamedDeclaration, got {other:?}"),
+        }
+
+        match export_of("export * from \"./c\\x41\\u002ejs\";") {
+            Declaration::ExportAllDeclaration(e) => {
+                assert_eq!(e.source.value, "./cA.js");
             }
             other => panic!("expected ExportAllDeclaration, got {other:?}"),
         }

@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - SIMPLE and ADVANCED module specifier escape backslash doubling (#18122)
+
+- Fixed module specifiers in `import` declarations, side-effect imports, and `export ... from` re-exports doubling backslashes when compiled under `SIMPLE` and `ADVANCED` optimization levels (e.g. `import a from "./a\x2ejs"` previously emitting `./a\\x2ejs`).
+- `javascript-parser/src/bridge.rs::import_source` now decodes string escape sequences via `decode_string_escapes`, ensuring `StringLiteral.value` represents the actual module path without un-decoded escape characters.
+- Added regression tests in `tests/regression_module_specifier_escapes_18122.rs` validated with `node --check`.
+- Version-synced `cli.spec.json` and `tests/diff/help-markdown/expected.stdout` to 0.247.0.
+
 ### Fixed - WHITESPACE_ONLY keyword property newline boundary (#18125)
 
 - Member access keyword properties ending a line (e.g. `function f(){x=y.if\nl:;}`): Phase-1 ASI parsing in `javascript-parser` now normalizes keyword property names after `.` or `?.` to `TokenType::Name`, allowing `asi_insertion_points` to succeed on keyword property access and accurately splice semicolons before subsequent statements across line terminators.

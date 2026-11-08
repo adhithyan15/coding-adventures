@@ -8594,6 +8594,20 @@ mod tests {
         );
     }
 
+    #[test]
+    fn import_decoded_specifier_value_emitted_without_doubling() {
+        // Issue #18122: Module specifiers print from the decoded value,
+        // through the same quote-and-escape path as emit_string.
+        assert_eq!(
+            emit_import_decl(vec![ImportSpecifier::Default(id_("a"))], "./a.js"),
+            "import a from\"./a.js\";"
+        );
+        assert_eq!(
+            emit_import_decl(vec![], "./a.js"),
+            "import\"./a.js\";"
+        );
+    }
+
     // ---- ES-module export declarations (CLOC12.189) -----------
 
     fn emit_one_decl(d: Declaration) -> String {
@@ -8629,6 +8643,25 @@ mod tests {
             source: Some(src_("y")),
         });
         assert_eq!(emit_one_decl(d), "export{a}from\"y\";");
+    }
+
+    #[test]
+    fn export_decoded_specifier_value_emitted_without_doubling() {
+        // Issue #18122: Export re-export specifiers print from decoded value.
+        let d1 = Declaration::export_named_declaration(ExportNamedDeclaration {
+            cv: None,
+            declaration: None,
+            specifiers: vec![export_spec("b", "b")],
+            source: Some(src_("./cA")),
+        });
+        assert_eq!(emit_one_decl(d1), "export{b}from\"./cA\";");
+
+        let d2 = Declaration::export_all_declaration(ExportAllDeclaration {
+            cv: None,
+            exported: None,
+            source: src_("./cA.js"),
+        });
+        assert_eq!(emit_one_decl(d2), "export*from\"./cA.js\";");
     }
 
     #[test]
