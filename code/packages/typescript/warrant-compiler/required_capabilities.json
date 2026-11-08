@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WarrantCompilerCapabilities",
+  "description": "Required capabilities for @coding-adventures/warrant-compiler. Pure computation with zero ambient capabilities.",
+  "type": "object",
+  "properties": {
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 0
+    }
+  },
+  "required": ["capabilities"],
+  "additionalProperties": false,
+  "capabilities": []
+}
