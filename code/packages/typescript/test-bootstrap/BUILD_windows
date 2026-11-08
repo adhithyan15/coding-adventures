@@ -1,5 +1,23 @@
+@echo off
+setlocal enabledelayedexpansion
+
 call npm ci --quiet
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 call npx tsc
-node --experimental-strip-types --test --experimental-test-coverage tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts
-node bin/cli.mjs
-node bin/cli.mjs --sabotage always-pass | findstr /C:"not ok "
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+node --experimental-strip-types --test tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts tests/cli.test.ts
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+node bin/cli.mjs --help >nul
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+node bin/cli.mjs --version >nul
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+node bin/cli.mjs --self-corpus
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+call node bin/cli.mjs --sabotage always-pass 2>nul | findstr /b "not ok " >nul
+if %ERRORLEVEL% neq 0 exit /b 1

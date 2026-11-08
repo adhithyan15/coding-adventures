@@ -65,7 +65,9 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P027a | Rust capability analyzer/name allowlist | #19028 merged as cbd8b93f0e7; [VER08a](VER08a-rust-capability-analyzer.md) specified; zero third-party deps, 92%+ cov, fail-closed audit |
 | done / VER-P027b | Generated effect module/certificate | #19030 merged as a1a722f32c5; [VER23a](VER23a-rust-effect-modules.md) specified; VER23/24, small checker, empty effects, ct-compare certified |
 | done / VER-P028 | Weakness registry/report-only assurance | #19031 merged as f53d4b45daa; [VER15](VER15-weakness-registry.md), [VER01](VER01-assurance-report.md) specified; weakness registry v1 (26 CWE classes), per-package weakness matrix, computed unapproved CWE-208 exemption, not-live rungs, ct-compare report-only assurance |
-| in-progress / VER-P029 | TypeScript bootstrap harness & test runner | [TF01a](TF01a-typescript-test-bootstrap.md) specified; [TF00](TF00-portable-test-framework.md), [TF01](TF01-bootstrap-harness.md), VER00 §7.1; zero npm dependencies, test-bootstrap-v1 self-corpus (1,256 cases), pure deep-equality, SplitMix64 PRNG, TAP v14 reporting, node:test integration, vitest/jest retirement pilot |
+| done / VER-P029 | TypeScript bootstrap harness & test runner | #19033 merged as 9c40051eff8; [TF01a](TF01a-typescript-test-bootstrap.md) specified; [TF00](TF00-portable-test-framework.md), [TF01](TF01-bootstrap-harness.md), VER00 §7.1; zero npm dependencies, test-bootstrap-v1 self-corpus (1,256 cases), pure deep-equality, SplitMix64 PRNG, TAP v14 reporting, node:test integration, vitest/jest retirement pilot |
+| in-progress / VER-P030 | CLI Builder integration for test-bootstrap | [TF01b](TF01b-typescript-cli-runner.md) specified; declarative CliSpec using internal @coding-adventures/cli-builder, multi-target runner, file discovery, seed/sabotage/filter/reporter/bail flags, closed exit codes, zero third-party npm deps |
+| ready-local / VER-P031 | TypeScript Level 2 property-based testing engine | [VER05a](VER05a-typescript-pbt-engine.md) specified; VER05 generator algebra, integrated shrinking, deterministic SplitMix64 replay, pbt-v1 conformance corpus (25 cases), fast-check retirement, zero third-party deps |
 
 Critical path: P003 -> P004 -> P005-011 -> P021-025. Fuzzing and measurements
 can progress independently once their prerequisites are available.
@@ -86,6 +88,9 @@ can progress independently once their prerequisites are available.
 | VER26 follow-on | Busicom-to-gates, a capability-bearing pilot, then other languages |
 
 ## Discoveries and current plan
+
+Post-P029 prioritization: VER-P029 merged cleanly in #19033 (commit 9c40051eff8) with all CI matrix checks passing. It delivered the zero-dependency TypeScript L0 bootstrap harness (`test-bootstrap`), exact deep equality, SplitMix64 PRNG, TFV v1 parser, closed failure vocabulary, matchers API, and pilot migration of `bitset` (retiring Vitest and 94 transitive packages).
+Prioritize VER-P030 (CLI Builder integration for `test-bootstrap` runner): Connect `@coding-adventures/cli-builder` to power `test-bootstrap`'s CLI runner with declarative argument parsing, help formatting, test file discovery, and fail-closed exit codes. Next step: VER-P031 (TypeScript Level 2 Property-Based Testing Engine).
 
 P009 merged in #19004 (commit 5b1fcef8b2e) with all matrix checks passing on main.
 The formal property engine specification ([VER05](VER05-property-engine.md)),
