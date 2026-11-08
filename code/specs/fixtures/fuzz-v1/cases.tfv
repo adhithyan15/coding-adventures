@@ -1,0 +1,26 @@
+tfv 1
+fuzz/mutate_bit_flip/bit0 R5 Kop S6d75746174655f6269745f666c6970 Kinput X0000 Kbit_offset I0 Kcount I1 Koutput X0100
+fuzz/mutate_bit_flip/bit9 R5 Kop S6d75746174655f6269745f666c6970 Kinput X0000 Kbit_offset I9 Kcount I1 Koutput X0002
+fuzz/mutate_bit_flip/consecutive_4bits R5 Kop S6d75746174655f6269745f666c6970 Kinput X0000 Kbit_offset I2 Kcount I4 Koutput X3c00
+fuzz/mutate_byte_flip/byte0 R5 Kop S6d75746174655f627974655f666c6970 Kinput X123456 Kbyte_offset I0 Kcount I1 Koutput Xed3456
+fuzz/mutate_byte_flip/bytes1_2 R5 Kop S6d75746174655f627974655f666c6970 Kinput X123456 Kbyte_offset I1 Kcount I2 Koutput X12cba9
+fuzz/mutate_arithmetic/u8_add1 R7 Kop S6d75746174655f61726974686d65746963 Kinput X0000 Kbyte_offset I0 Kdelta I1 Kwidth I1 Kendian S6c6974746c65 Koutput X0100
+fuzz/mutate_arithmetic/u8_wrap R7 Kop S6d75746174655f61726974686d65746963 Kinput Xff00 Kbyte_offset I0 Kdelta I1 Kwidth I1 Kendian S6c6974746c65 Koutput X0000
+fuzz/mutate_arithmetic/u16_le_add35 R7 Kop S6d75746174655f61726974686d65746963 Kinput X0000 Kbyte_offset I0 Kdelta I35 Kwidth I2 Kendian S6c6974746c65 Koutput X2300
+fuzz/mutate_arithmetic/u16_be_add35 R7 Kop S6d75746174655f61726974686d65746963 Kinput X0000 Kbyte_offset I0 Kdelta I35 Kwidth I2 Kendian S626967 Koutput X0023
+fuzz/mutate_boundary/u8_max R7 Kop S6d75746174655f626f756e64617279 Kinput X0000 Kbyte_offset I0 Kwidth I1 Kval I255 Kendian S6c6974746c65 Koutput Xff00
+fuzz/mutate_boundary/u32_max_le R7 Kop S6d75746174655f626f756e64617279 Kinput X00000000 Kbyte_offset I0 Kwidth I4 Kval I4294967295 Kendian S6c6974746c65 Koutput Xffffffff
+fuzz/mutate_boundary/u32_signed_min_le R7 Kop S6d75746174655f626f756e64617279 Kinput X00000000 Kbyte_offset I0 Kwidth I4 Kval I2147483648 Kendian S6c6974746c65 Koutput X00000080
+fuzz/mutate_block_delete/middle R5 Kop S6d75746174655f626c6f636b5f64656c657465 Kinput X0102030405 Koffset I1 Klength I2 Koutput X010405
+fuzz/mutate_block_insert/middle R5 Kop S6d75746174655f626c6f636b5f696e73657274 Kinput X010205 Koffset I2 Kinsert_bytes X0304 Koutput X0102030405
+fuzz/mutate_block_duplicate/prefix R6 Kop S6d75746174655f626c6f636b5f6475706c6963617465 Kinput X010203 Ksrc_offset I0 Klength I2 Kdst_offset I3 Koutput X0102030102
+fuzz/mutate_splice/cross R6 Kop S6d75746174655f73706c696365 Ktarget X01020304 Kdonor X05060708 Ktarget_split I2 Kdonor_split I2 Koutput X01020708
+fuzz/mutate_sequence/seed42_steps4 R5 Kop S6d75746174655f73657175656e6365 Kinput X0000000000000000 Kseed I42 Ksteps I4 Koutput X03ff00000000bf080000
+fuzz/corpus_admit/novel_edge R5 Kop S636f727075735f61646d6974 Kexisting_edges L3 I1 I2 I3 Ktrace_edges L2 I2 I4 Kadmitted T Knew_edges I1
+fuzz/corpus_admit/redundant_edge R5 Kop S636f727075735f61646d6974 Kexisting_edges L3 I1 I2 I3 Ktrace_edges L2 I1 I2 Kadmitted F Knew_edges I0
+fuzz/crash_dedup/same_signature R6 Kop S63726173685f6465647570 Kcrash_a_kind S70616e6963 Kcrash_a_frames L2 S6576616c S73746570 Kcrash_b_kind S70616e6963 Kcrash_b_frames L2 S6576616c S73746570 Kis_duplicate T
+fuzz/crash_dedup/divergent_signature R6 Kop S63726173685f6465647570 Kcrash_a_kind S70616e6963 Kcrash_a_frames L2 S6576616c S73746570 Kcrash_b_kind S73656776 Kcrash_b_frames L2 S616c6c6f63 S7772697465 Kis_duplicate F
+fuzz/failure_id/crash_valid R3 Kop S6661696c7572655f69645f76616c6964 Kinput S66757a7a2d6372617368 Kvalid T
+fuzz/failure_id/unregistered R3 Kop S6661696c7572655f69645f76616c6964 Kinput S66757a7a2d6172626974726172792d6572726f72 Kvalid F
+fuzz/private_reporting/opaque_token R7 Kop S707269766174655f7265706f7274696e67 Ktarget S63745f636f6d70617265 Kfailure_id S66757a7a2d6372617368 Kraw_payload Xdeadbeef Ksig_hash S3361386631396232 Ktap_line S6e6f74206f6b2031202d2063745f636f6d70617265205b66757a7a2d63726173683a33613866313962325d Kcontains_raw_payload F
+fuzz/corpus_reject/bad_header R2 Kop S636f727075735f72656a656374 Ktext S626164206865616465720a
