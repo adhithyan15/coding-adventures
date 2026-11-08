@@ -35,6 +35,7 @@
 //! What it deliberately lacks (fixtures, hooks, parallelism, rich assertions)
 //! is listed in TF01 §7; all of it belongs to the layers built on this one.
 
+pub mod bench;
 pub mod fuzz;
 pub mod pbt;
 pub mod prng;
@@ -42,6 +43,10 @@ pub mod run;
 pub mod tfv;
 pub mod verdict;
 
+pub use bench::{
+    bench, BenchmarkConfig, BenchmarkHarness, BenchmarkResult, Budget, BudgetVerdict, CostCounter,
+    CounterSample,
+};
 pub use run::{Ctx, Options, Suite, Summary};
 pub use tfv::{Record, TfvError, Value};
 pub use verdict::Verdict;
