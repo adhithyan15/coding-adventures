@@ -110,9 +110,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.event_name == 'pull_request' && format('forme-blog-pr-{0}', github.event.pull_request.number) || 'gh-pages-deployment' }}
+  group: ${{ github.event_name == 'pull_request' && format('forme-blog-pr-{0}', github.event.pull_request.number) || format('forme-blog-{0}', github.ref) }}
   cancel-in-progress: false
-  queue: max
 
 jobs:
   build:
