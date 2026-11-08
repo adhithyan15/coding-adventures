@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "test-bootstrap": "./dist/cli.js"
+    "test-bootstrap": "./bin/cli.mjs"
   },
   "exports": {
     ".": {

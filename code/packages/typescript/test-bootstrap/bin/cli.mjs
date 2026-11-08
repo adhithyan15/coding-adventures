@@ -3,11 +3,9 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
-import { parseArgs, USAGE_EXIT } from "./harness.js";
-import { parseFile } from "./tfv.js";
-import { buildSelfCorpusSuite } from "./corpus.js";
+import { parseArgs, USAGE_EXIT, parseFile, buildSelfCorpusSuite } from "../dist/index.js";
 
-async function main(): Promise<void> {
+async function main() {
   let options;
   try {
     options = parseArgs(process.argv.slice(2));
@@ -17,14 +15,14 @@ async function main(): Promise<void> {
   }
 
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  const candidatePaths: (string | undefined)[] = [
+  const candidatePaths = [
     process.env.TF_CORPUS,
     path.resolve(__dirname, "../../../../specs/fixtures/test-bootstrap-v1/cases.tfv"),
     path.resolve(process.cwd(), "specs/fixtures/test-bootstrap-v1/cases.tfv"),
     path.resolve(process.cwd(), "code/specs/fixtures/test-bootstrap-v1/cases.tfv"),
   ];
 
-  const foundPath = candidatePaths.find((p): p is string => p !== undefined && fs.existsSync(p));
+  const foundPath = candidatePaths.find((p) => p !== undefined && fs.existsSync(p));
 
   if (!foundPath) {
     console.error("test-bootstrap-v1/cases.tfv could not be found");
