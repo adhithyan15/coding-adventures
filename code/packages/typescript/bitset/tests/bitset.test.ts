@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { Bitset, BitsetError } from "../src/index.js";
+import { describe, it, expect } from "../../test-bootstrap/dist/index.js";
+import { Bitset, BitsetError } from "../dist/index.js";
 
 // =====================================================================
 // Bitset Test Suite

@@ -1,0 +1,5 @@
+call npm ci --quiet
+call npx tsc
+node --experimental-strip-types --test --experimental-test-coverage tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts
+node bin/cli.mjs
+node bin/cli.mjs --sabotage always-pass | findstr /C:"not ok "

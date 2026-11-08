@@ -437,8 +437,9 @@ console.log(prose, nested);
         # -1: the standalone checklist-app was retired; checklists live in
         # Trestle (mosaic-pkg-checklist).
         # +1: neural-framework, the standalone no-emit NN37 training lane.
-        self.assertEqual(summary.total_projects, 493)
-        self.assertEqual(summary.shared_projects, 302)
+        # +1: test-bootstrap, the TF01a zero-dependency Level 0 harness and test runner.
+        self.assertEqual(summary.total_projects, 494)
+        self.assertEqual(summary.shared_projects, 303)
         self.assertEqual(summary.inherited_root_dir, 130)
         self.assertEqual(summary.inherited_out_dir, 133)
         # forme-authoring-core, forme-authoring-editor,
@@ -579,7 +580,8 @@ console.log(prose, nested);
         # +1: forme-shell-desktop locks its React, Tauri, and test toolchain.
         # -1: the retired checklist-app took its lockfile with it.
         # +1: neural-framework locks its standalone compiler and test graph.
-        self.assertEqual(summary.locked_compilers, 492)
+        # +1: test-bootstrap locks its standalone compiler and test graph.
+        self.assertEqual(summary.locked_compilers, 493)
 
 
 if __name__ == "__main__":
