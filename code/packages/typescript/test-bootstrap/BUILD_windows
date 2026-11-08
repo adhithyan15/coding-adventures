@@ -7,7 +7,7 @@ if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 call npx tsc
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-node --experimental-strip-types --test tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts tests/cli.test.ts tests/pbt.test.ts tests/fuzz.test.ts tests/warrant.test.ts
+node --experimental-strip-types --test tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts tests/cli.test.ts tests/pbt.test.ts tests/fuzz.test.ts tests/warrant.test.ts tests/sat.test.ts
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 node bin/cli.mjs --help >nul

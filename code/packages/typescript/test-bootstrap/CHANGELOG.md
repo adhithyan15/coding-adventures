@@ -1,6 +1,18 @@
 # Changelog
 
-## 0.4.0 (2026-11-08)
+## 0.5.0 (2026-11-08)
+
+- Level 3 CDCL SAT Solver & Tseitin Bit-Blaster (VER09 / VER09a).
+- Conflict-Driven Clause Learning (CDCL) solver core with integer variables and literals (`Var`, `Lit`, MiniSat convention).
+- Two-watched-literals (2WL) unit propagation engine with blocker literal caching.
+- 1-UIP conflict analysis, learned clause recording, and non-chronological backjumping.
+- VSIDS variable decision heuristic with activity decays and phase saving.
+- Luby restart schedule and learned-clause database reduction.
+- Incremental solving under assumptions (`solveWithAssumptions`) and failed-assumption core extraction.
+- Hostile input protection: conflict budget (`maxConflicts`) and propagation step budget (`maxSteps`).
+- Tseitin transformation and bit-blaster (`CnfBuilder`): logical gates (`AND`, `OR`, `XOR`, `ITE`, `NOT`, `EQUIV`), 1-bit full adders, and multi-bit ripple-carry adders.
+- DIMACS CNF reader (`parseDimacs`) and writer (`writeDimacs`).
+- Zero third-party npm runtime dependencies (`"dependencies": {}`).
 
 - Level 1 Warrant Compiler & Claim Verifier (VER04g).
 - Bounded lexer & layout analyzer: comment stripping, indentation and layout capture (`INDENT`/`DEDENT`), hex byte literals `b"..."`, number suffixes.

@@ -1,7 +1,7 @@
 {
   "name": "@coding-adventures/test-bootstrap",
-  "version": "0.4.0",
-  "description": "Zero-dependency Level 0-2 bootstrap harness, TFV runner, pure matchers, PBT, fuzz, and Warrant compiler (TF01 / VER05a / VER06b / VER04g)",
+  "version": "0.5.0",
+  "description": "Zero-dependency Level 0-3 bootstrap harness, TFV runner, pure matchers, PBT, fuzz, Warrant, and CDCL SAT solver (TF01 / VER05a / VER06b / VER04g / VER09a)",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "node --experimental-strip-types --test tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts tests/cli.test.ts tests/pbt.test.ts tests/fuzz.test.ts tests/warrant.test.ts"
+    "test": "node --experimental-strip-types --test tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts tests/cli.test.ts tests/pbt.test.ts tests/fuzz.test.ts tests/warrant.test.ts tests/sat.test.ts"
   },
   "license": "MIT",
   "author": "Adhithya Rajasekaran",
