@@ -1,3 +1,2 @@
-call npm ci --quiet
-call npx tsc
-call npx vitest run --coverage
+npm ci --quiet
+npx vitest run --coverage

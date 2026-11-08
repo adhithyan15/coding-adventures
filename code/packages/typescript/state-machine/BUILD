@@ -1,4 +1,3 @@
-cd ../directed-graph && npm ci --quiet && npx tsc
+cd ../directed-graph && npm ci --quiet
 npm ci --quiet
-npx tsc
 npx vitest run --coverage

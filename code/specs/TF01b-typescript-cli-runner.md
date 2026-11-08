@@ -91,6 +91,6 @@ The CLI is defined declaratively using `CliSpec`:
 
 ## 4. Zero External Dependencies & Build-Tool Contracts
 
-- Zero external runtime npm dependencies (`"dependencies": { "@coding-adventures/cli-builder": "file:../cli-builder" }`).
-- Declared build-tool dependency: `# build-tool: deps=typescript/cli-builder` in both `BUILD` and `BUILD_windows`.
+- Zero external runtime npm dependencies (`"dependencies": {}`). Self-contained declarative CLI engine adhering to `@coding-adventures/cli-builder` specification.
+- Standalone clean build without inter-package coupling.
 - Strict compiler portability: `src/` files do not reference Node.js APIs or `@types/node`. All Node I/O is isolated to `bin/cli.mjs`.

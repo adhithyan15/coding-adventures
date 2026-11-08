@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "description": "Formal automata (DFA, NFA, PDA, Modal) for parsing, protocols, and hardware — with full execution tracing",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest run",

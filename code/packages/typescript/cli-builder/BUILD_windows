@@ -1,5 +1,4 @@
-cd ..\directed-graph && call npm ci --quiet && call npx tsc
-cd ..\state-machine && call npm ci --quiet && call npx tsc
-call npm ci --quiet
-call npx tsc
-call npm test
+cd ../directed-graph && npm install --silent
+cd ../state-machine && npm install --silent
+npm install --silent
+npm test

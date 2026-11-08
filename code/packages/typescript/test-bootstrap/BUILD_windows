@@ -1,12 +1,23 @@
-# build-tool: deps=typescript/cli-builder
-cd ..\directed-graph && call npm ci --quiet && call npx tsc
-cd ..\state-machine && call npm ci --quiet && call npx tsc
-cd ..\cli-builder && call npm ci --quiet && call npx tsc
-cd ..\test-bootstrap
+@echo off
+setlocal enabledelayedexpansion
+
 call npm ci --quiet
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 call npx tsc
-node --experimental-strip-types --test --experimental-test-coverage tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts tests/cli.test.ts
-node bin/cli.mjs --help
-node bin/cli.mjs --version
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+node --experimental-strip-types --test tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts tests/cli.test.ts
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+node bin/cli.mjs --help >nul
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+node bin/cli.mjs --version >nul
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
 node bin/cli.mjs --self-corpus
-node bin/cli.mjs --sabotage always-pass | findstr /C:"not ok "
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+call node bin/cli.mjs --sabotage always-pass 2>nul | findstr /b "not ok " >nul
+if %ERRORLEVEL% neq 0 exit /b 1

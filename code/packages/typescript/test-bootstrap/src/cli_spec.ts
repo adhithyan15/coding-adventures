@@ -1,4 +1,4 @@
-import type { CliSpec } from "@coding-adventures/cli-builder";
+import type { CliSpec } from "./cli_builder.js";
 
 /**
  * Declarative CLI specification for @coding-adventures/test-bootstrap.

@@ -4,12 +4,13 @@ import * as path from "node:path";
 import process from "node:process";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { Parser, ParseErrors } from "@coding-adventures/cli-builder";
 import {
   testBootstrapCliSpec,
   parseFile,
   buildSelfCorpusSuite,
   USAGE_EXIT,
+  Parser,
+  ParseErrors,
 } from "../dist/index.js";
 
 async function main() {
