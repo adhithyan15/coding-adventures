@@ -6,6 +6,9 @@ description = "Warrant Intermediate Representation (WIR) core AST, type checker,
 license = "MIT"
 
 [dependencies]
+bit-blaster = { path = "../bit-blaster" }
+cdcl-sat = { path = "../cdcl-sat" }
+drat-check = { path = "../drat-check" }
 
 [dev-dependencies]
 coding_adventures_ct_compare = { path = "../ct-compare" }

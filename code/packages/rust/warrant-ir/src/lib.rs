@@ -8,6 +8,7 @@ pub mod cost;
 pub mod interp;
 pub mod lower;
 pub mod rust_subset;
+pub mod sym;
 pub mod trace;
 
 pub use ast::*;
@@ -21,5 +22,9 @@ pub use interp::{
 pub use lower::{
     lower_block, lower_expr, lower_function, lower_source_file, lower_type, LoweringContext,
     LoweringError,
+};
+pub use sym::{
+    bitvec_concrete_u128, ObservableSymEvent, PathOutcome, Prover, SymAlloc, SymMemory, SymVal,
+    SymbolicConfig, SymbolicError, SymbolicExecutor, VerificationVerdict,
 };
 pub use trace::{AccessKind, ObservableTrace, TraceEvent};
