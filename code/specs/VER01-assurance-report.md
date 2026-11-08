@@ -157,6 +157,7 @@ For the `rust/ct-compare` pilot crate:
 - **E4:** `pass` (coverage-guided fuzz suites pass with zero crashes).
 - **E5:** `pass` (WIR trace proofs for `ct_eq`, `ct_eq_u64`, `ct_select_bytes`).
 - **Weakness Matrix:**
-  - 23 classes `excluded` (safe Rust with no unsafe, no FFI, no ambient I/O).
+  - 24 classes `excluded` (safe Rust with no unsafe, no FFI, no ambient I/O).
+  - 1 class (CWE-400) `discharged` (zero allocation, bounded linear steps).
   - 1 class (CWE-208) as `exemption` (`approved: false`, backed by WIR trace proofs and equal instruction counts).
 - **Verdict:** `"report-only"`.

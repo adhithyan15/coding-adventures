@@ -26,7 +26,7 @@ The registry establishes three non-negotiable invariants:
 
 ## 2. Weakness Registry Catalog (v1)
 
-The canonical weakness registry data file is located at `code/specs/data/weakness-registry-v1.json`. It defines 24 canonical classes across 6 primary security families:
+The canonical weakness registry data file is located at `code/specs/data/weakness-registry-v1.json`. It defines 26 canonical classes across 6 primary security families:
 
 ### 2.1 Family 1: Memory Safety
 Applies to C, C++, Rust `unsafe`, and FFI boundaries. Excluded by construction in safe Rust, Go (with race-freedom), and garbage-collected runtimes.
@@ -126,7 +126,7 @@ Applies to object deserializers, dynamic typing, and reflection.
 For any package $P$:
 
 1. **Completeness:**
-   $|\text{Matrix}(P)| = |\text{Registry}|$. Exactly 24 entries must be present.
+   $|\text{Matrix}(P)| = |\text{Registry}|$. Exactly 26 entries must be present.
 2. **Exclusion Validation:**
    A row may be marked `excluded` only if:
    - The registry class defines `safe_subsets` including $P$'s language and configuration; and
