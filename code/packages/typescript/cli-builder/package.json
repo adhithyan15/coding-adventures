@@ -3,7 +3,8 @@
   "version": "1.1.0",
   "description": "Declarative CLI argument parsing driven by directed graphs and state machines",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "vitest run",

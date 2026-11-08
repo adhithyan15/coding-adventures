@@ -24,7 +24,9 @@
   },
   "license": "MIT",
   "author": "Adhithya Rajasekaran",
-  "dependencies": {},
+  "dependencies": {
+    "@coding-adventures/cli-builder": "file:../cli-builder"
+  },
   "devDependencies": {
     "typescript": "^5.0.0"
   }
