@@ -4,6 +4,12 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - line comments and hashbangs stop before U+2028 and U+2029 (#17887)
+
+- Fixed a bug where line comments (`// ...`) and hashbangs (`#! ...`) swallowed U+2028 (Line Separator) and U+2029 (Paragraph Separator) and ran past them to the next `\n` or `\r`. Under ECMA-262 §12.3, U+2028 and U+2029 are LineTerminators that terminate single-line comments.
+- Updated `LINE_COMMENT` and `HASHBANG` patterns across all ECMAScript `.tokens` files (`es1.tokens` through `es2025.tokens`) to `[^\n\r\u2028\u2029]*` and regenerated `javascript-lexer` compiled grammars.
+- Added regression tests in `javascript-lexer` verifying line comments and hashbangs stop before U+2028 and U+2029.
+
 ### Fixed - bare yield and restricted-production ASI after yield (#17939)
 
 - Fixed a bug where `yield` followed by a newline (e.g. `function* G(){ yield\n{ x; }\n}`) dropped the restricted-production boundary under `WHITESPACE_ONLY` or failed to parse under `SIMPLE` and `ADVANCED`.

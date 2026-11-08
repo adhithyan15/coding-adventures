@@ -300,6 +300,24 @@ mod tests {
     }
 
     #[test]
+    fn line_comments_and_hashbangs_end_at_unicode_line_terminators() {
+        // ECMA-262 12.3: SingleLineCommentChars stop at LF, CR, LS (U+2028), PS (U+2029).
+        // HASHBANG and LINE_COMMENT must not swallow U+2028 or U+2029 (#17887).
+        for (sep, esc) in [('\u{2028}', "\\u{2028}"), ('\u{2029}', "\\u{2029}")] {
+            // Because bare U+2028/U+2029 outside strings currently reject as lexer
+            // errors, tokenizing stops immediately at the line terminator rather than
+            // swallowing following source code into the comment or hashbang.
+            let src_comment = format!("// comment{sep}code");
+            let err = tokenize_javascript_typed(&src_comment, EsVersion::Es2025).unwrap_err();
+            assert!(err.contains(&format!("Unexpected sequence '{esc}'")), "{err}");
+
+            let src_hashbang = format!("#!/usr/bin/env{sep}code");
+            let err = tokenize_javascript_typed(&src_hashbang, EsVersion::Es2025).unwrap_err();
+            assert!(err.contains(&format!("Unexpected sequence '{esc}'")), "{err}");
+        }
+    }
+
+    #[test]
     fn a_regex_never_spans_a_carriage_return() {
         // A regex literal can't hold a line terminator, escaped or not.
         let toks = tokenize_javascript_typed("x = /a\rb/", EsVersion::Es2025);
