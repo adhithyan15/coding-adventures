@@ -346,6 +346,22 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "log = []\ndef f():\n    log.append(1)\n    return 99\ndef g():\n    log.append(2)\n    return 0\ndef h():\n    log.append(3)\n    return 1\nxs = [0, 0]\nxs[g()] = xs[h()] = f()\nprint(xs)\nprint(log)\n",
         "[99, 99]\n[1, 2, 3]",
     ),
+    // ── nested def shadowing parameter or local (#18496 item 7) ──────
+    (
+        "py_nested_def_shadow_param",
+        "def f(n):\n    def n():\n        return 42\n    return n()\n\nprint(f(10))\n",
+        "42",
+    ),
+    (
+        "py_nested_def_shadow_local",
+        "def f():\n    n = 1\n    def n():\n        return 42\n    return n()\n\nprint(f())\n",
+        "42",
+    ),
+    (
+        "py_nested_def_shadow_param_returns_closure",
+        "def f(n):\n    def n():\n        return 42\n    return n\n\nprint(f(10)())\n",
+        "42",
+    ),
 ];
 
 /// `(program, backend, why)`: cells that fail for a reason outside what
