@@ -69,9 +69,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.event_name == 'pull_request' && format('forme-root-pr-{0}', github.event.pull_request.number) || 'gh-pages-deployment' }}
+  group: ${{ github.event_name == 'pull_request' && format('forme-root-pr-{0}', github.event.pull_request.number) || format('forme-root-{0}', github.ref) }}
   cancel-in-progress: false
-  queue: max
 
 jobs:
   build:
