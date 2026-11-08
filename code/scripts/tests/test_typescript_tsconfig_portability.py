@@ -439,10 +439,11 @@ console.log(prose, nested);
         # +1: neural-framework, the standalone no-emit NN37 training lane.
         # +1: test-bootstrap, the TF01a zero-dependency Level 0 harness and test runner.
         # +1: sat-solver, the VER09a zero-dependency Level 3 CDCL SAT solver package.
-        self.assertEqual(summary.total_projects, 495)
-        self.assertEqual(summary.shared_projects, 304)
-        self.assertEqual(summary.inherited_root_dir, 131)
-        self.assertEqual(summary.inherited_out_dir, 134)
+        # +1: warrant-compiler, the VER04g zero-dependency Level 1 Warrant compiler package.
+        self.assertEqual(summary.total_projects, 496)
+        self.assertEqual(summary.shared_projects, 305)
+        self.assertEqual(summary.inherited_root_dir, 132)
+        self.assertEqual(summary.inherited_out_dir, 135)
         # forme-authoring-core, forme-authoring-editor,
         # forme-authoring-preview, forme-authoring-publish, and
         # forme-authoring-shell are isolated standalone emitters, adding five
@@ -583,7 +584,8 @@ console.log(prose, nested);
         # +1: neural-framework locks its standalone compiler and test graph.
         # +1: test-bootstrap locks its standalone compiler and test graph.
         # +1: sat-solver locks its standalone compiler.
-        self.assertEqual(summary.locked_compilers, 494)
+        # +1: warrant-compiler locks its standalone compiler.
+        self.assertEqual(summary.locked_compilers, 495)
 
 
 if __name__ == "__main__":
