@@ -52,8 +52,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P010 | Rust property engine | #19007 merged as f66f3a2e057; [VER05](VER05-property-engine.md) generator algebra, integrated shrinking, deterministic replay, pbt-v1 corpus (25 cases), zero third-party deps, 92%+ line/branch cov |
 | done / VER-P011 | Warrant claims to properties | #19011 merged as 315447685ec; [VER04f](VER04f-claims-to-properties.md) specified; compiled universal claims to native Level 2 PBT suites, public API calls and broken implementations detected, 93%+ line/branch cov |
 | P1 / VER-P012 | Stateful properties | waiting P011; select only if pilot needs them, otherwise explicitly defer |
-| P2 / VER-P013 | Fuzz spec and fuzz-v1 corpus | waiting P011; VER06, private failure-output policy |
-| P2 / VER-P014 | Rust fuzz engine | waiting P013; bounded runs, replay, honest coverage label |
+| ready-pr / VER-P013 | Fuzz spec and fuzz-v1 corpus | [VER06](VER06-coverage-guided-fuzz-engine.md) specified; canonical fuzz-v1 corpus (25 cases in cases.json/cases.tfv), standard-library Python reference validator, private failure-output policy, 98% line cov |
+| ready-local / VER-P014 | Rust fuzz engine | waiting P013 merge; bounded runs, replay, honest coverage label |
 | P2 / VER-P015 | ct-compare fuzz targets | waiting P014; no-panic/agreement, private triage of new failures |
 | P2 / VER-P016 | Microbenchmark spec/harness | waiting P003; VER07 counts distinct from measured timing |
 | P2 / VER-P017 | Equal-instruction-count measurements | waiting P016; n=16/256/4096; absent counters report not-live |
@@ -61,7 +61,7 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P022 | Rust-subset grammar | #19014 merged as 3d8a14c46d8; [VER25a](VER25a-rust-subset-grammar.md) specified; real ct-compare source, volatile/unsafe assumptions, zero third-party deps, 93%+ line/branch cov |
 | done / VER-P023 | Rust-to-WIR front end | #19017 merged as b486bf3b28e; [VER25b](VER25b-rust-to-wir-frontend.md) specified; lowered parsed Rust AST to WIR modules, differential validation against ct-compare, zero third-party deps, 92%+ line/branch cov |
 | done / VER-P024 | Symbolic execution | #19019 merged as b56a4b1d0fe; [VER19](VER19-symbolic-execution.md) specified; bit-precise proofs via bit-blaster and cdcl-sat, memory safety bounds, honest bounded(k) labels |
-| ready-pr / VER-P025 | Bounds/constant-time trace proofs | [VER20](VER20-resource-timing-proofs.md) specified; self-composition 2-safety hyperproperties, timing/address divergence detection, DRAT-certified UNSAT, >90% line/branch cov |
+| done / VER-P025 | Bounds/constant-time trace proofs | #19020 merged as e2a4c386892; [VER20](VER20-resource-timing-proofs.md) specified; self-composition 2-safety hyperproperties, timing/address divergence detection, DRAT-certified UNSAT, >90% line/branch cov |
 | P2 / VER-P027a | Rust capability analyzer/name allowlist | waiting P023; VER08/23, macro policy, negative corpus |
 | P2 / VER-P027b | Generated effect module/certificate | waiting P027a; VER23/24, small checker, empty effects |
 | P2 / VER-P028 | Weakness registry/report-only assurance | waiting proof/effect evidence; VER15/01, not-live rows, unapproved CWE-208 exemption |
@@ -128,8 +128,17 @@ Post-P023 prioritization: VER-P023 merged cleanly in #19017 (commit b486bf3b28e)
 It delivers the Rust-to-WIR lowering front end ([VER25b](VER25b-rust-to-wir-frontend.md)), compiling Confined Rust AST into
 WIR modules with linearized control flow, compiler barrier inlining, dynamic slice length queries, and differential validation
 against native `ct-compare` entry points with 97.1% line / 92.9% region coverage and zero third-party dependencies.
-Next on the critical path is VER-P024 (Symbolic execution / [VER19](VER19-symbolic-execution.md)) to execute WIR over symbolic
-inputs, bit-blast arithmetic/logic into AIG circuits, and discharge bit-precise proofs and memory safety checks via CDCL SAT.
+
+Post-P025 prioritization: VER-P025 merged cleanly in #19020 (commit e2a4c386892) with all CI matrix checks passing.
+It delivers WIR resource-bound and constant-time trace proofs ([VER20](VER20-resource-timing-proofs.md)), proving memory safety,
+absence of resource exhaustion (CWE-400), and constant-time execution (CWE-208) via self-composition and DRAT-certified UNSAT.
+
+Prioritize VER-P013 (Fuzz specification [VER06](VER06-coverage-guided-fuzz-engine.md) and canonical `fuzz-v1` conformance corpus).
+VER-P013 formalizes the Level 2 coverage-guided fuzz engine architecture, SplitMix64 deterministic PRNG mutator algebra,
+corpus management with 65,536-bit coverage bitmaps, crash deduplication by normalized stack signatures, and the private failure disclosure
+policy (VER00 §7.3). It delivers the canonical `fuzz-v1` conformance corpus (25 cases in `cases.json` and `cases.tfv`), the standard-library
+Python reference validator (`code/scripts/fuzz_conformance.py`), and 29 falsification tests with 98% line coverage.
+Next step: VER-P014 (Rust fuzz engine implementation in `test-bootstrap`).
 
 P006b1 merged in #18913 (commit 964dc3df7bc) with all checks passing on main.
 The source admission contract is active in `rust/warrant-grammar`. Eleven source

@@ -762,6 +762,10 @@ jobs:
           # independent reference.
           python3 code/scripts/pbt_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_pbt_conformance.py'
+          # VER06: the coverage-guided fuzz engine's conformance corpus (fuzz-v1) and its
+          # independent reference.
+          python3 code/scripts/fuzz_conformance.py
+          python3 -m unittest discover -s code/scripts/tests -p 'test_fuzz_conformance.py'
           # rng spec v2: the shared corpus and its independent reference.
           python3 code/scripts/rng_conformance.py
           python3 -m unittest discover -s code/scripts/tests -p 'test_rng_conformance.py'
