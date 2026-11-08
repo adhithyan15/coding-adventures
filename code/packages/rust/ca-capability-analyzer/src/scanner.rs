@@ -75,7 +75,7 @@ pub fn discover_sources(package_dir: &Path) -> Result<Vec<SourceEntry>, ScanErro
             .strip_prefix(package_dir)
             .unwrap_or(&abs_path)
             .to_string_lossy()
-            .to_string();
+            .replace('\\', "/");
 
         let meta = fs::symlink_metadata(&abs_path)
             .map_err(|e| ScanError::Io(format!("{}: {e}", abs_path.display())))?;
@@ -145,7 +145,7 @@ fn collect_rs_files(
                 .strip_prefix(root)
                 .unwrap_or(&path)
                 .to_string_lossy()
-                .to_string();
+                .replace('\\', "/");
             return Err(ScanError::SymlinkDetected(rel));
         } else if meta.is_file() && path.extension().is_some_and(|ext| ext == "rs") {
             if out.len() >= MAX_SOURCE_FILES {

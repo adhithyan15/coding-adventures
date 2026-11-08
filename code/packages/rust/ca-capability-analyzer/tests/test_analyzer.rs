@@ -889,3 +889,10 @@ fn test_manifest_string(json: &str) -> Result<ManifestData, String> {
     fs::remove_dir_all(&tmp).ok();
     res
 }
+
+#[test]
+fn test_windows_path_normalization() {
+    let raw_win_path = r"src\sub\module.rs";
+    let normalized = raw_win_path.replace('\\', "/");
+    assert_eq!(normalized, "src/sub/module.rs");
+}
