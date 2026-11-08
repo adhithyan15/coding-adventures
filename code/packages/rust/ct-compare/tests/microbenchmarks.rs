@@ -12,6 +12,8 @@
 //! - Hard zero-heap-allocation budgets across all comparison operations
 //! - Sabotage detection: early-exit loops produce measurable instruction/timing divergence
 
+#![deny(unsafe_code)]
+
 use std::hint::black_box;
 use std::time::Duration;
 
@@ -120,11 +122,14 @@ fn check_ct_eq_16(_ctx: &Ctx) -> Verdict {
         res_hw_eq.instructions_per_iter,
         res_hw_diff.instructions_per_iter,
     ) {
-        if eq_instr != diff_instr {
+        let eq_per_iter = (eq_instr as f64 / res_hw_eq.batch_size.max(1) as f64).round() as u64;
+        let diff_per_iter =
+            (diff_instr as f64 / res_hw_diff.batch_size.max(1) as f64).round() as u64;
+        if eq_per_iter != diff_per_iter {
             return Verdict::fail(
                 FID_BENCH_FAIL,
                 format!(
-                    "ct_eq 16 instruction count diverged: equal={eq_instr}, diff={diff_instr}"
+                    "ct_eq 16 instruction count diverged: equal={eq_per_iter}, diff={diff_per_iter}"
                 ),
             );
         }
@@ -260,7 +265,10 @@ fn check_ct_select_choice(_ctx: &Ctx) -> Verdict {
     });
 
     if res_true.median_ns <= 0.0 || res_false.median_ns <= 0.0 {
-        return Verdict::fail(FID_BENCH_FAIL, "select benchmarks measured non-positive duration");
+        return Verdict::fail(
+            FID_BENCH_FAIL,
+            "select benchmarks measured non-positive duration",
+        );
     }
 
     Verdict::Pass
@@ -274,16 +282,34 @@ fn check_ct_eq_u64_classes(_ctx: &Ctx) -> Verdict {
         ..Default::default()
     };
 
+    let val: u64 = 0x1234_5678_9abc_def0;
     let alloc = AllocCounter::new();
+
+    // 1. Equal
     let r_eq = harness.run_with_counter("u64_equal", &budget, &alloc, || {
-        ct_eq_u64(black_box(0x1234_5678_9abc_def0), black_box(0x1234_5678_9abc_def0))
+        ct_eq_u64(black_box(val), black_box(val))
     });
 
-    let r_diff = harness.run_with_counter("u64_diff", &budget, &alloc, || {
-        ct_eq_u64(black_box(0x1234_5678_9abc_def0), black_box(0x9234_5678_9abc_def0))
+    // 2. High bit difference (sign bit)
+    let r_high_diff = harness.run_with_counter("u64_high_diff", &budget, &alloc, || {
+        ct_eq_u64(black_box(val), black_box(val ^ (1 << 63)))
     });
 
-    if !r_eq.budget_verdict.is_acceptable() || !r_diff.budget_verdict.is_acceptable() {
+    // 3. Low bit difference
+    let r_low_diff = harness.run_with_counter("u64_low_diff", &budget, &alloc, || {
+        ct_eq_u64(black_box(val), black_box(val ^ 1))
+    });
+
+    // 4. Bitwise inverted
+    let r_inv = harness.run_with_counter("u64_inv", &budget, &alloc, || {
+        ct_eq_u64(black_box(val), black_box(!val))
+    });
+
+    if !r_eq.budget_verdict.is_acceptable()
+        || !r_high_diff.budget_verdict.is_acceptable()
+        || !r_low_diff.budget_verdict.is_acceptable()
+        || !r_inv.budget_verdict.is_acceptable()
+    {
         return Verdict::fail(FID_BENCH_FAIL, "ct_eq_u64 allocated memory");
     }
 
@@ -323,10 +349,9 @@ fn check_sabotage_divergence_detected(_ctx: &Ctx) -> Verdict {
         });
 
     let step_counter_last = StepCounter::new();
-    let res_last =
-        harness.run_with_counter("leaky_diff_last", &budget, &step_counter_last, || {
-            naive_leaky_compare(black_box(&a), black_box(&diff_last), &step_counter_last)
-        });
+    let res_last = harness.run_with_counter("leaky_diff_last", &budget, &step_counter_last, || {
+        naive_leaky_compare(black_box(&a), black_box(&diff_last), &step_counter_last)
+    });
 
     // The harness must observe clear step divergence: first-byte difference takes 1 step,
     // last-byte difference takes 100 steps.

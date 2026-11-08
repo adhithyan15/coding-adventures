@@ -134,7 +134,10 @@ fn check_ct_eq_campaign(_ctx: &Ctx) -> Verdict {
     if !report.crashes.is_empty() {
         return Verdict::fail(
             FID_FUZZ_CRASH,
-            format!("ct_eq crashed with signature: {:?}", report.crashes[0].signature),
+            format!(
+                "ct_eq crashed with signature: {:?}",
+                report.crashes[0].signature
+            ),
         );
     }
 
@@ -192,7 +195,10 @@ fn check_ct_eq_fixed_campaign(_ctx: &Ctx) -> Verdict {
     if !report.crashes.is_empty() {
         return Verdict::fail(
             FID_FUZZ_CRASH,
-            format!("ct_eq_fixed crashed with signature: {:?}", report.crashes[0].signature),
+            format!(
+                "ct_eq_fixed crashed with signature: {:?}",
+                report.crashes[0].signature
+            ),
         );
     }
 
@@ -292,7 +298,10 @@ fn check_ct_select_bytes_campaign(_ctx: &Ctx) -> Verdict {
     if !report.crashes.is_empty() {
         return Verdict::fail(
             FID_FUZZ_CRASH,
-            format!("ct_select_bytes crashed with signature: {:?}", report.crashes[0].signature),
+            format!(
+                "ct_select_bytes crashed with signature: {:?}",
+                report.crashes[0].signature
+            ),
         );
     }
 
@@ -351,7 +360,10 @@ fn check_ct_eq_u64_campaign(_ctx: &Ctx) -> Verdict {
     if !report.crashes.is_empty() {
         return Verdict::fail(
             FID_FUZZ_CRASH,
-            format!("ct_eq_u64 crashed with signature: {:?}", report.crashes[0].signature),
+            format!(
+                "ct_eq_u64 crashed with signature: {:?}",
+                report.crashes[0].signature
+            ),
         );
     }
 
