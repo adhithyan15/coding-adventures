@@ -1812,6 +1812,21 @@ fn allocates_gc_block(instr: &jit_core::cir::CIRInstr) -> bool {
     }
 }
 
+/// Does `instr` produce a heap value?
+/// Fresh GC allocations ([`allocates_gc_block`]), function calls (`call`),
+/// global loads (`global_load`), or `dyn_pair_first` / `dyn_pair_rest` (#18779).
+fn produces_heap_word(instr: &jit_core::cir::CIRInstr) -> bool {
+    allocates_gc_block(instr)
+        || instr.op == "call"
+        || instr.op == "global_load"
+        || (instr.op == "call_builtin"
+            && matches!(
+                instr.srcs.first(),
+                Some(jit_core::cir::CIROperand::Var(name))
+                    if name == "dyn_pair_first" || name == "dyn_pair_rest"
+            ))
+}
+
 /// Give every **copy of a possible heap word** a root type in the CIR, so the
 /// backend's stack map names its slot (#18492, follow-up), starting from every
 /// **GC allocation**, whatever type it was given (#18766).
@@ -1879,10 +1894,11 @@ fn allocates_gc_block(instr: &jit_core::cir::CIRInstr) -> bool {
 /// Like the parameter rule, this accepts the known imprecision that a root slot
 /// may hold a plain integer (see `AOT00-T1-stackmap-emission.md` §4).
 fn root_heap_word_copies(declared_params: &[(String, String)], cir: &mut [jit_core::cir::CIRInstr]) {
-    // Step 0 (#18766): a fresh GC block is a reference, whatever the specialiser
-    // inferred for it.
+    // Step 0 (#18766, #18779): a heap-producing instruction produces a reference,
+    // whatever the specialiser inferred for it (e.g. if another definition of
+    // the destination register was an integer).
     for instr in cir.iter_mut() {
-        if instr.dest.is_some() && allocates_gc_block(instr) && is_machine_scalar(&instr.ty) {
+        if instr.dest.is_some() && produces_heap_word(instr) && is_machine_scalar(&instr.ty) {
             instr.ty = "any".to_string();
         }
     }
@@ -1922,10 +1938,7 @@ fn root_heap_word_copies(declared_params: &[(String, String)], cir: &mut [jit_co
     }
     for instr in cir.iter_mut() {
         let Some(dest) = &instr.dest else { continue };
-        if instr.op.starts_with("mov")
-            && matches!(instr.ty.as_str(), "i64" | "u64")
-            && may_hold_heap.contains(dest)
-        {
+        if matches!(instr.ty.as_str(), "i64" | "u64") && may_hold_heap.contains(dest) {
             instr.ty = "any".to_string();
         }
     }
@@ -2725,6 +2738,7 @@ const AOT_BUILTIN_MAP: &[(&str, &str)] = &[
     ("=",  "cmp_eq"), ("<", "cmp_lt"), (">", "cmp_gt"),
     ("<=", "cmp_le"), (">=", "cmp_ge"),
     ("not", "not"),  ("_move", "mov"),
+    ("string-length", "str_len"),
 ];
 
 /// Is an `array<T>` element type a GC reference — a heap handle the collector must
@@ -3579,7 +3593,10 @@ fn collect_runtime_str_vars_for_aot(func: &IIRFunction) -> HashSet<String> {
         }
         if let Some(dest) = &instr.dest {
             def_blocks.entry(dest.as_str()).or_default().insert(block);
-            if instr.type_hint == "str" {
+            if instr.type_hint == "str"
+                || instr.op == "str_const"
+                || (instr.op == "const" && instr.srcs.first().and_then(Operand::as_lit_bytes).is_some())
+            {
                 has_str_def.insert(dest.as_str());
             }
         }
@@ -3670,7 +3687,9 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
         // `call` that overwrote a literal register left the literal behind, and a
         // later `str_len` folded the old length. (The integer table needs no such
         // step: it only ever holds single-definition registers.)
-        if !matches!(instr.op.as_str(), "mov" | "str_const" | "str_concat" | "str_slice") {
+        if !matches!(instr.op.as_str(), "mov" | "str_const" | "str_concat" | "str_slice")
+            && !(instr.op == "const" && instr.srcs.first().and_then(Operand::as_lit_bytes).is_some())
+        {
             if let Some(dest) = &instr.dest {
                 strings.remove(dest);
             }
@@ -3702,6 +3721,25 @@ fn lower_string_literals_for_aot(func: &mut IIRFunction, ceiling: u32) {
             continue;
         }
         if instr.op == "const" {
+            // Lower string literals emitted as `const(Str)` or `const(Bytes)`
+            // identically to `str_const` (#18779).
+            if let Some(dest) = instr.dest.clone() {
+                if let Some(literal) = instr.srcs.first().and_then(Operand::as_lit_bytes) {
+                    let literal = literal.to_vec();
+                    let (buf_var, len_var, lit) =
+                        push_aot_string_literal(&mut lowered, &mut next, literal);
+                    lowered.push(IIRInstr::new(
+                        "mov",
+                        Some(dest.clone()),
+                        vec![Operand::Var(buf_var)],
+                        "i64",
+                    ));
+                    if !runtime_str_vars.contains(&dest) && !mutable_vars.contains(dest.as_str()) {
+                        strings.insert(dest.clone(), (dest, len_var, lit));
+                    }
+                    continue;
+                }
+            }
             if let (Some(dest), Some(Operand::Int(value))) =
                 (instr.dest.as_ref(), instr.srcs.first())
             {
@@ -4341,6 +4379,7 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
     // are borrowed mutably below.
     let str_ceiling = module.str_ceiling();
     for func in &mut module.functions {
+        pre_lower_aot_builtins(func);
         lower_string_literals_for_aot(func, str_ceiling);
         // Phase 0b: remove dead name-register `const` instructions.
         // `lower_global_io` leaves `const %n = Var("x")` in place even after
@@ -4348,7 +4387,6 @@ fn prepare_module_for_aot(module: &mut IIRModule) -> Result<(), AotError> {
         // These become `const_str` in CIR which the ARM64 backend rejects.
         strip_dead_string_consts(func);
         strip_dead_aot_string_allocs(func);
-        pre_lower_aot_builtins(func);
         // Step 2 deliberately does NOT retype the params in place: dynamic
         // params are read as `i64` by `propagate_aot_types` and by the
         // `specialisation_view` the compile step specialises, but stay `any`
@@ -7881,6 +7919,73 @@ mod gc_global_and_buffer_root_tests {
         }
         let ops_after: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
         assert_eq!(ops_before, ops_after, "only `ty` changes");
+    }
+
+    /// A variable that is ever defined by a heap-valued instruction (call,
+    /// dyn_pair_first / dyn_pair_rest, global_load, or an allocation) must
+    /// receive a root type ("any") regardless of whether an integer definition
+    /// comes first or last (#18779).
+    #[test]
+    fn heap_valued_defs_with_scalar_defs_in_any_order_get_a_root_type() {
+        let mut code = vec![
+            // 1. dyn_pair_first after integer const
+            cir("const_i64", Some("k1"), &[], "i64"),
+            cir("call_builtin", Some("k1"), &["dyn_pair_first", "p"], "i64"),
+            // 2. dyn_pair_first before integer const
+            cir("call_builtin", Some("k2"), &["dyn_pair_first", "p"], "i64"),
+            cir("const_i64", Some("k2"), &[], "i64"),
+            // 3. dyn_pair_rest after integer const
+            cir("const_i64", Some("r1"), &[], "i64"),
+            cir("call_builtin", Some("r1"), &["dyn_pair_rest", "p"], "i64"),
+            // 4. dyn_pair_rest before integer const
+            cir("call_builtin", Some("r2"), &["dyn_pair_rest", "p"], "i64"),
+            cir("const_i64", Some("r2"), &[], "i64"),
+            // 5. call after integer const
+            cir("const_i64", Some("c1"), &[], "i64"),
+            cir("call", Some("c1"), &["other_fn"], "i64"),
+            // 6. call before integer const
+            cir("call", Some("c2"), &["other_fn"], "i64"),
+            cir("const_i64", Some("c2"), &[], "i64"),
+            // 7. global_load after integer const
+            cir("const_i64", Some("g1"), &[], "i64"),
+            cir("global_load", Some("g1"), &["slot"], "i64"),
+            // 8. global_load before integer const
+            cir("global_load", Some("g2"), &["slot"], "i64"),
+            cir("const_i64", Some("g2"), &[], "i64"),
+            // 9. Pure integer controls (should stay i64)
+            cir("const_i64", Some("n1"), &[], "i64"),
+            cir("const_i64", Some("n2"), &[], "i64"),
+            // 10. Copy of a heap-valued variable (should become any)
+            cir("mov_i64", Some("k1_alias"), &["k1"], "i64"),
+        ];
+        let ops_before: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        root_heap_word_copies(&[], &mut code);
+
+        for v in ["k1", "k2", "r1", "r2", "c1", "c2", "g1", "g2"] {
+            assert_eq!(
+                ty_of(&code, v),
+                ["any", "any"],
+                "{v} is defined by a heap-producing op and must be rooted on every definition"
+            );
+        }
+        assert_eq!(ty_of(&code, "k1_alias"), ["any"], "copy of heap variable is rooted");
+        assert_eq!(ty_of(&code, "n1"), ["i64"], "n1 is pure integer");
+        assert_eq!(ty_of(&code, "n2"), ["i64"], "n2 is pure integer");
+
+        let ops_after: Vec<String> = code.iter().map(|i| i.op.clone()).collect();
+        assert_eq!(ops_before, ops_after, "only `ty` changes, never op");
+    }
+
+    /// Twig string held in a top-level global or local variable compiles to native object (#18779).
+    #[test]
+    fn string_held_in_variable_compiles_to_native_object() {
+        let src = "(define s \"abc\")\n(define (f) (string-length s))\n(f)";
+        let m = twig_ir_compiler::compile_source(src, "m").expect("compiles to IIR");
+        compile_module_linux_x86_64_object(&m).expect("must compile global string var without BackendRefused (#18779)");
+
+        let src_local = "(define (f) (let ((s \"hello world\")) (string-length s)))\n(f)";
+        let m_local = twig_ir_compiler::compile_source(src_local, "m_local").expect("compiles to IIR");
+        compile_module_linux_x86_64_object(&m_local).expect("must compile local string var without BackendRefused (#18779)");
     }
 
     /// End to end through both native compile paths: a branch-selected string's
