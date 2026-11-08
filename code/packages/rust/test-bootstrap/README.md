@@ -34,6 +34,8 @@ It is the first step of the [VER26](../../../specs/VER26-ct-compare-pilot.md)
 | `prng`    | SplitMix64, FNV-1a 64, an unbiased bounded draw, the run shuffle, per-test sub-seeds |
 | `run`     | `Suite`, seeded shuffled runs, panic isolation, TAP v14 output, `--seed`, `--sabotage` |
 | `pbt`     | Level 2 property-based testing engine (VER05): generators, integrated shrinking, closed PBT vocabulary |
+| `fuzz`    | Level 2 coverage-guided fuzz engine (VER06): mutators, 65,536-bit bitmap, power schedule, crash deduplication |
+| `bench`   | Level 5 microbenchmark harness (VER07): warmup/calibration, robust statistics, deterministic cost counters, budgets |
 
 ## Usage
 
