@@ -55,8 +55,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P013 | Fuzz spec and fuzz-v1 corpus | #19021 merged as 97618fd2c1f; [VER06](VER06-coverage-guided-fuzz-engine.md) specified; canonical fuzz-v1 corpus (25 cases in cases.json/cases.tfv), standard-library Python reference validator, private failure-output policy, 98% line cov |
 | done / VER-P014 | Rust fuzz engine | #19022 merged as cbc5befeaf9; [VER06](VER06-coverage-guided-fuzz-engine.md) mutator algebra, 65,536-bit coverage bitmap, power scheduling, FNV-1a crash deduplication, minimization, fuzz-v1 corpus test (25 cases), zero third-party deps, 95%+ line/region cov |
 | done / VER-P015 | ct-compare fuzz targets | #19023 merged as e623e7bb5f9; [VER06a](VER06a-ct-compare-fuzz-targets.md) specified; ct_eq, ct_eq_fixed, ct_select_bytes, ct_eq_u64 fuzz suites, negative sabotage detection and minimization, privacy-preserving TAP reporting, 100% coverage, zero third-party deps |
-| ready-local / VER-P016 | Microbenchmark spec/harness | [VER07](VER07-microbenchmarks.md) specified; warmup/calibration, robust statistics (median/MAD/bootstrap CI), deterministic cost counters (steps/allocs/instructions), budgets, zero third-party deps, 90%+ cov |
-| P2 / VER-P017 | Equal-instruction-count measurements | waiting P016; n=16/256/4096; absent counters report not-live |
+| done / VER-P016 | Microbenchmark spec/harness | #19026 merged as 7168cda2272; [VER07](VER07-microbenchmarks.md) specified; warmup/calibration, robust statistics (median/MAD/bootstrap CI), deterministic cost counters (steps/allocs/instructions), budgets, zero third-party deps, 93%+ cov |
+| ready-pr / VER-P017 | Equal-instruction-count measurements | [VER07a](VER07a-ct-compare-microbenchmarks.md) specified; n=16/256/4096 ct_eq, ct_eq_fixed, ct_select_bytes, ct_eq_u64, zero-alloc assertions, equal instruction counts, sabotage detection |
 | done / VER-P021 | WIR core/reference interpreter | [VER25](VER25-wir-core-interpreter.md) specified; WIR core AST, static type checker, cost semantics, provenance-tracking memory model, observable trace recorder, bounded reference interpreter, constant-time validation; 91%+ line/branch cov |
 | done / VER-P022 | Rust-subset grammar | #19014 merged as 3d8a14c46d8; [VER25a](VER25a-rust-subset-grammar.md) specified; real ct-compare source, volatile/unsafe assumptions, zero third-party deps, 93%+ line/branch cov |
 | done / VER-P023 | Rust-to-WIR front end | #19017 merged as b486bf3b28e; [VER25b](VER25b-rust-to-wir-frontend.md) specified; lowered parsed Rust AST to WIR modules, differential validation against ct-compare, zero third-party deps, 92%+ line/branch cov |
@@ -139,6 +139,16 @@ corpus management with 65,536-bit coverage bitmaps, crash deduplication by norma
 policy (VER00 §7.3). It delivers the canonical `fuzz-v1` conformance corpus (25 cases in `cases.json` and `cases.tfv`), the standard-library
 Python reference validator (`code/scripts/fuzz_conformance.py`), and 29 falsification tests with 98% line coverage.
 Next step: VER-P014 (Rust fuzz engine implementation in `test-bootstrap`).
+
+Post-P016 prioritization: VER-P016 merged cleanly in #19026 (commit 7168cda2272) with all CI matrix checks passing.
+It delivers the Level 5 Microbenchmark Harness & Deterministic Cost Counters ([VER07](VER07-microbenchmarks.md))
+in `test-bootstrap::bench`, including warmup/calibration, robust statistics (median, MAD, bootstrap CI),
+deterministic cost counters (StepCounter, AllocCounter, HardwarePerfCounter), and CI-safe deterministic budgeting.
+
+Prioritize VER-P017 (Constant-Time Equal-Instruction-Count Microbenchmark Suite for ct-compare [VER07a](VER07a-ct-compare-microbenchmarks.md)).
+VER-P017 verifies equal instruction counts across equivalence classes (identical, diff first, diff last, diff middle),
+multi-scale input sweeps (n=16, 256, 4096), compile-time fixed widths, branch-free selection, and negative sabotage detection.
+Next step: VER-P027a (Rust capability analyzer / name allowlist).
 
 P006b1 merged in #18913 (commit 964dc3df7bc) with all checks passing on main.
 The source admission contract is active in `rust/warrant-grammar`. Eleven source
