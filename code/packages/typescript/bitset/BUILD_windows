@@ -1,2 +1,3 @@
-npm ci --quiet
-npx vitest run --coverage
+if not exist ..\test-bootstrap\dist\index.js (cd ..\test-bootstrap && call npx tsc)
+call npx tsc
+node --experimental-strip-types --test tests/bitset.test.ts

@@ -1,0 +1,4 @@
+call npx tsc
+node --experimental-strip-types --test --experimental-test-coverage tests/matchers.test.ts tests/conformance.test.ts tests/sabotage.test.ts
+node dist/cli.js
+node dist/cli.js --sabotage always-pass | findstr /C:"not ok "
