@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.0 (2026-11-08)
+
+- Level 2 Coverage-Guided Fuzzing Engine (VER06 / VER06b).
+- Closed mutator algebra: `bitFlip`, `byteFlip`, `byteArithmetic`, `boundaryInsert`, `blockDelete`, `blockInsert`, `blockDuplicate`, `splice`, and compound `mutateSequence`.
+- 65,536-bit (8,192-byte) coverage bitmap interface (`CoverageBitmap`, `corpusAdmit`).
+- Power schedule energy allocation favoring short inputs with high novel edge discovery.
+- Crash deduplication with normalized FNV-1a 64-bit signature hashing (`crashSignature`, `isDuplicateCrash`).
+- Crashing input minimization (`minimizeCrashingInput`) via recursive block deletion and byte zeroing.
+- Closed failure vocabulary enforcement (`fuzz-crash`, `fuzz-timeout`, `fuzz-oom`, `fuzz-leak`, `fuzz-panic`, `isFuzzFailureId`).
+- Privacy-preserving TAP reporting (`formatTapFailure`) strictly redacting raw payload bytes.
+- Full validation of canonical `fuzz-v1` conformance corpus (25 cases in `cases.tfv` / `cases.json`).
+
 ## 0.2.0 (2026-11-08)
 
 - Level 2 Property-Based Testing (PBT) engine (VER05 / VER05a).
