@@ -52,8 +52,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P010 | Rust property engine | #19007 merged as f66f3a2e057; [VER05](VER05-property-engine.md) generator algebra, integrated shrinking, deterministic replay, pbt-v1 corpus (25 cases), zero third-party deps, 92%+ line/branch cov |
 | done / VER-P011 | Warrant claims to properties | #19011 merged as 315447685ec; [VER04f](VER04f-claims-to-properties.md) specified; compiled universal claims to native Level 2 PBT suites, public API calls and broken implementations detected, 93%+ line/branch cov |
 | P1 / VER-P012 | Stateful properties | waiting P011; select only if pilot needs them, otherwise explicitly defer |
-| ready-pr / VER-P013 | Fuzz spec and fuzz-v1 corpus | [VER06](VER06-coverage-guided-fuzz-engine.md) specified; canonical fuzz-v1 corpus (25 cases in cases.json/cases.tfv), standard-library Python reference validator, private failure-output policy, 98% line cov |
-| ready-local / VER-P014 | Rust fuzz engine | waiting P013 merge; bounded runs, replay, honest coverage label |
+| done / VER-P013 | Fuzz spec and fuzz-v1 corpus | #19021 merged as 97618fd2c1f; [VER06](VER06-coverage-guided-fuzz-engine.md) specified; canonical fuzz-v1 corpus (25 cases in cases.json/cases.tfv), standard-library Python reference validator, private failure-output policy, 98% line cov |
+| ready-pr / VER-P014 | Rust fuzz engine | [VER06](VER06-coverage-guided-fuzz-engine.md) mutator algebra, 65,536-bit coverage bitmap, power scheduling, FNV-1a crash deduplication, minimization, fuzz-v1 corpus test (25 cases), zero third-party deps, 95%+ line/region cov |
 | P2 / VER-P015 | ct-compare fuzz targets | waiting P014; no-panic/agreement, private triage of new failures |
 | P2 / VER-P016 | Microbenchmark spec/harness | waiting P003; VER07 counts distinct from measured timing |
 | P2 / VER-P017 | Equal-instruction-count measurements | waiting P016; n=16/256/4096; absent counters report not-live |

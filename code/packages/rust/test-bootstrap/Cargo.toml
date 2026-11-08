@@ -2,7 +2,7 @@
 name = "coding_adventures_test_bootstrap"
 version = "0.2.0"
 edition = "2021"
-description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure verdict core, seeded shuffled runs, TAP v14 output, and VER05 property testing engine"
+description = "The L0 bootstrap test harness (TF01): TFV corpus parser, pure verdict core, seeded shuffled runs, TAP v14 output, VER05 property testing engine, and VER06 coverage-guided fuzz engine"
 
 [dependencies]
 
@@ -17,4 +17,9 @@ harness = false
 [[test]]
 name = "pbt_corpus"
 path = "tests/pbt_corpus.rs"
+harness = false
+
+[[test]]
+name = "fuzz_corpus"
+path = "tests/fuzz_corpus.rs"
 harness = false
