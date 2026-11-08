@@ -58,8 +58,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | P2 / VER-P016 | Microbenchmark spec/harness | waiting P003; VER07 counts distinct from measured timing |
 | P2 / VER-P017 | Equal-instruction-count measurements | waiting P016; n=16/256/4096; absent counters report not-live |
 | done / VER-P021 | WIR core/reference interpreter | [VER25](VER25-wir-core-interpreter.md) specified; WIR core AST, static type checker, cost semantics, provenance-tracking memory model, observable trace recorder, bounded reference interpreter, constant-time validation; 91%+ line/branch cov |
-| in-flight / VER-P022 | Rust-subset grammar | [VER25a](VER25a-rust-subset-grammar.md) specified; real ct-compare source, volatile/unsafe assumptions, zero third-party deps |
-| P1 / VER-P023 | Rust-to-WIR front end | waiting P022; differential checks against real public entry points |
+| done / VER-P022 | Rust-subset grammar | #19014 merged as 3d8a14c46d8; [VER25a](VER25a-rust-subset-grammar.md) specified; real ct-compare source, volatile/unsafe assumptions, zero third-party deps, 93%+ line/branch cov |
+| in-flight / VER-P023 | Rust-to-WIR front end | [VER25b](VER25b-rust-to-wir-frontend.md) specified; differential checks against real public entry points |
 | P1 / VER-P024 | Symbolic execution | waiting P023; VER19, certified UNSAT, honest bounded(k) labels |
 | P1 / VER-P025 | Bounds/constant-time trace proofs | waiting P024; VER20, branch/address self-composition, not counts alone |
 | P2 / VER-P027a | Rust capability analyzer/name allowlist | waiting P023; VER08/23, macro policy, negative corpus |
@@ -118,7 +118,13 @@ interpreter ([VER25](VER25-wir-core-interpreter.md)) in `coding_adventures_warra
 model for proofs with mandatory types, security taint/information-flow lattice (`Public`, `Secret`, `Hostile`), operational cost
 accounting, provenance-tracking memory safety with explicit `Stuck` undefined-behavior detection, and observable event trace
 recording for constant-time self-composition (CWE-208).
-Next on the critical path is VER-P022 (Rust-subset grammar) to parse real ct-compare source into the verified front end pipeline.
+
+Post-P022 prioritization: VER-P022 merged cleanly in #19014 (commit 3d8a14c46d8) with all CI matrix checks passing.
+It delivers the Confined Rust Subset grammar, AST, and recursive-descent parser ([VER25a](VER25a-rust-subset-grammar.md)),
+parsing real `ct-compare/src/lib.rs` (372 lines) with zero third-party dependencies, hardened resource quotas (1 MiB source cap,
+32 recursion depth limit, 65,536 token cap), and 93.7% line / 91.3% region coverage.
+Next on the critical path is VER-P023 (Rust-to-WIR front end) to lower parsed Rust AST into WIR modules and validate differentially
+against native `ct-compare` public entry points.
 
 P006b1 merged in #18913 (commit 964dc3df7bc) with all checks passing on main.
 The source admission contract is active in `rust/warrant-grammar`. Eleven source

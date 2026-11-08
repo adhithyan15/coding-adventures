@@ -208,6 +208,7 @@ pub enum WirExpr {
     TupleMake(Vec<WirExpr>),
     TupleGet { expr: Box<WirExpr>, index: usize },
     PtrOffset { ptr: Box<WirExpr>, offset_bytes: Box<WirExpr> },
+    PtrLen(Box<WirExpr>),
     MakeDynamic { expr: Box<WirExpr>, tag: String },
     CheckDynamic { expr: Box<WirExpr>, expected_tag: String },
 }

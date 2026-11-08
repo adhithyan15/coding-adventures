@@ -18,6 +18,28 @@ pub enum WirValue {
 }
 
 impl WirValue {
+    pub fn bool(b: bool) -> Self {
+        WirValue::Bool(b)
+    }
+
+    pub fn u8(val: u8) -> Self {
+        WirValue::Int {
+            val: val as i128,
+            ty: WirType::U8,
+        }
+    }
+
+    pub fn u64(val: u64) -> Self {
+        WirValue::Int {
+            val: val as i128,
+            ty: WirType::U64,
+        }
+    }
+
+    pub fn ptr(provenance: ProvenanceId, offset: u64) -> Self {
+        WirValue::Ptr { provenance, offset }
+    }
+
     pub fn as_bool(&self) -> Result<bool, UndefinedBehavior> {
         match self {
             WirValue::Bool(b) => Ok(*b),
@@ -80,6 +102,28 @@ pub enum ExecutionOutcome {
         cost: ExecutionCost,
     },
     BudgetExceeded(BudgetLimit),
+}
+
+impl ExecutionOutcome {
+    pub fn is_success(&self) -> bool {
+        matches!(self, ExecutionOutcome::Success { .. })
+    }
+
+    pub fn value(&self) -> Option<&WirValue> {
+        match self {
+            ExecutionOutcome::Success { value, .. } => Some(value),
+            _ => None,
+        }
+    }
+
+    pub fn unwrap_value(self) -> WirValue {
+        match self {
+            ExecutionOutcome::Success { value, .. } => value,
+            ExecutionOutcome::Trap { reason, .. } => panic!("Execution trapped: {reason}"),
+            ExecutionOutcome::Stuck { reason, .. } => panic!("Execution stuck: {reason:?}"),
+            ExecutionOutcome::BudgetExceeded(b) => panic!("Budget exceeded: {b:?}"),
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -275,6 +319,44 @@ impl<'a, D: CapabilityDispatcher> Interpreter<'a, D> {
             trace: ObservableTrace::new(),
             dispatcher,
         }
+    }
+
+    pub fn run(
+        &mut self,
+        entry_function: &str,
+        args: &[WirValue],
+    ) -> ExecutionOutcome {
+        self.execute(entry_function, args.to_vec())
+    }
+
+    pub fn memory(&self) -> &Memory {
+        &self.memory
+    }
+
+    pub fn memory_mut(&mut self) -> &mut Memory {
+        &mut self.memory
+    }
+
+    pub fn cost(&self) -> &ExecutionCost {
+        &self.cost
+    }
+
+    pub fn trace(&self) -> &ObservableTrace {
+        &self.trace
+    }
+
+    pub fn allocate_bytes(&mut self, bytes: &[u8]) -> Result<WirValue, BudgetLimit> {
+        let prov = self.memory.allocate(bytes.len(), self.config.max_memory_bytes)?;
+        let _ = self.memory.store_bytes(prov, 0, bytes);
+        Ok(WirValue::Ptr {
+            provenance: prov,
+            offset: 0,
+        })
+    }
+
+    pub fn read_bytes(&self, ptr: &WirValue, len: usize) -> Result<Vec<u8>, UndefinedBehavior> {
+        let (prov, offset) = ptr.as_ptr()?;
+        self.memory.load_bytes(prov, offset, len)
     }
 
     pub fn execute(
@@ -647,28 +729,58 @@ impl<'a, D: CapabilityDispatcher> Interpreter<'a, D> {
             }
             WirExpr::ZExt { expr, target_ty } => {
                 let inner_val = self.eval_expr(expr, env)?;
-                let (val, from_ty) = inner_val.as_int()?;
-                let mask = from_ty.max_value().unwrap_or(0);
+                let val = match inner_val {
+                    WirValue::Bool(b) => {
+                        if b {
+                            1
+                        } else {
+                            0
+                        }
+                    }
+                    WirValue::Int { val, ty: from_ty } => {
+                        let mask = from_ty.max_value().unwrap_or(0);
+                        val & mask
+                    }
+                    _ => {
+                        return Err(UndefinedBehavior::TypeMismatch(
+                            "Expected integer or bool for ZExt".to_string(),
+                        ))
+                    }
+                };
                 Ok(WirValue::Int {
-                    val: val & mask,
+                    val,
                     ty: target_ty.clone(),
                 })
             }
             WirExpr::SExt { expr, target_ty } => {
                 let inner_val = self.eval_expr(expr, env)?;
-                let (val, from_ty) = inner_val.as_int()?;
-                let width = from_ty.bit_width().unwrap_or(64);
-                let sign_bit = 1i128 << (width - 1);
-                let extended = if (val & sign_bit) != 0 {
-                    let ones = !((1i128 << width) - 1);
-                    val | ones
-                } else {
-                    val
-                };
-                Ok(WirValue::Int {
-                    val: extended,
-                    ty: target_ty.clone(),
-                })
+                match inner_val {
+                    WirValue::Bool(b) => {
+                        let val = if b { -1i128 } else { 0i128 };
+                        let mask = target_ty.max_value().unwrap_or(0);
+                        Ok(WirValue::Int {
+                            val: val & mask,
+                            ty: target_ty.clone(),
+                        })
+                    }
+                    WirValue::Int { val, ty: from_ty } => {
+                        let width = from_ty.bit_width().unwrap_or(64);
+                        let sign_bit = 1i128 << (width - 1);
+                        let extended = if (val & sign_bit) != 0 {
+                            let ones = !((1i128 << width) - 1);
+                            val | ones
+                        } else {
+                            val
+                        };
+                        Ok(WirValue::Int {
+                            val: extended,
+                            ty: target_ty.clone(),
+                        })
+                    }
+                    _ => Err(UndefinedBehavior::TypeMismatch(
+                        "Expected integer or bool for SExt".to_string(),
+                    )),
+                }
             }
             WirExpr::TupleMake(elems) => {
                 let mut vals = Vec::new();
@@ -698,6 +810,18 @@ impl<'a, D: CapabilityDispatcher> Interpreter<'a, D> {
                 Ok(WirValue::Ptr {
                     provenance: prov,
                     offset: new_offset,
+                })
+            }
+            WirExpr::PtrLen(ptr) => {
+                let (prov, _) = self.eval_expr(ptr, env)?.as_ptr()?;
+                let alloc = self
+                    .memory
+                    .allocations
+                    .get(&prov)
+                    .ok_or(UndefinedBehavior::InvalidProvenance(prov))?;
+                Ok(WirValue::Int {
+                    val: alloc.size as i128,
+                    ty: WirType::U64,
                 })
             }
             WirExpr::MakeDynamic { expr, tag } => {
@@ -733,8 +857,20 @@ fn eval_binary(
     rhs: &WirValue,
 ) -> Result<WirValue, UndefinedBehavior> {
     match op {
-        BinaryOp::Eq => Ok(WirValue::Bool(lhs == rhs)),
-        BinaryOp::Ne => Ok(WirValue::Bool(lhs != rhs)),
+        BinaryOp::Eq => {
+            if let (Ok((l, _)), Ok((r, _))) = (lhs.as_int(), rhs.as_int()) {
+                Ok(WirValue::Bool(l == r))
+            } else {
+                Ok(WirValue::Bool(lhs == rhs))
+            }
+        }
+        BinaryOp::Ne => {
+            if let (Ok((l, _)), Ok((r, _))) = (lhs.as_int(), rhs.as_int()) {
+                Ok(WirValue::Bool(l != r))
+            } else {
+                Ok(WirValue::Bool(lhs != rhs))
+            }
+        }
         BinaryOp::Lt => {
             let (l, _) = lhs.as_int()?;
             let (r, _) = rhs.as_int()?;
@@ -882,6 +1018,7 @@ fn encode_value(val: &WirValue) -> Result<Vec<u8>, UndefinedBehavior> {
             WirType::U64 | WirType::I64 => Ok((*val as u64).to_le_bytes().to_vec()),
             _ => Err(UndefinedBehavior::TypeMismatch("Unsupported int encoding".to_string())),
         },
+        WirValue::Ptr { offset, .. } => Ok(offset.to_le_bytes().to_vec()),
         WirValue::Bytes(b) => Ok(b.clone()),
         _ => Err(UndefinedBehavior::TypeMismatch("Cannot encode value into raw bytes".to_string())),
     }
@@ -952,6 +1089,17 @@ fn decode_value(bytes: &[u8], ty: &WirType) -> Result<WirValue, UndefinedBehavio
             Ok(WirValue::Int { val, ty: WirType::I64 })
         }
         WirType::ByteSlice => Ok(WirValue::Bytes(bytes.to_vec())),
+        WirType::Ptr(_) => {
+            if bytes.len() < 8 {
+                return Err(UndefinedBehavior::TypeMismatch("Not enough bytes for ptr".to_string()));
+            }
+            let arr = [bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]];
+            let offset = u64::from_le_bytes(arr);
+            Ok(WirValue::Ptr {
+                provenance: ProvenanceId(1),
+                offset,
+            })
+        }
         _ => Err(UndefinedBehavior::TypeMismatch("Unsupported decode type".to_string())),
     }
 }
