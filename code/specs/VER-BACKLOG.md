@@ -56,7 +56,7 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P014 | Rust fuzz engine | #19022 merged as cbc5befeaf9; [VER06](VER06-coverage-guided-fuzz-engine.md) mutator algebra, 65,536-bit coverage bitmap, power scheduling, FNV-1a crash deduplication, minimization, fuzz-v1 corpus test (25 cases), zero third-party deps, 95%+ line/region cov |
 | done / VER-P015 | ct-compare fuzz targets | #19023 merged as e623e7bb5f9; [VER06a](VER06a-ct-compare-fuzz-targets.md) specified; ct_eq, ct_eq_fixed, ct_select_bytes, ct_eq_u64 fuzz suites, negative sabotage detection and minimization, privacy-preserving TAP reporting, 100% coverage, zero third-party deps |
 | done / VER-P016 | Microbenchmark spec/harness | #19026 merged as 7168cda2272; [VER07](VER07-microbenchmarks.md) specified; warmup/calibration, robust statistics (median/MAD/bootstrap CI), deterministic cost counters (steps/allocs/instructions), budgets, zero third-party deps, 93%+ cov |
-| ready-pr / VER-P017 | Equal-instruction-count measurements | [VER07a](VER07a-ct-compare-microbenchmarks.md) specified; n=16/256/4096 ct_eq, ct_eq_fixed, ct_select_bytes, ct_eq_u64, zero-alloc assertions, equal instruction counts, sabotage detection |
+| done / VER-P017 | Equal-instruction-count measurements | #19027 merged as 36c2252e98a; [VER07a](VER07a-ct-compare-microbenchmarks.md) specified; n=16/256/4096 ct_eq, ct_eq_fixed, ct_select_bytes, ct_eq_u64, zero-alloc assertions, equal instruction counts, sabotage detection |
 | done / VER-P021 | WIR core/reference interpreter | [VER25](VER25-wir-core-interpreter.md) specified; WIR core AST, static type checker, cost semantics, provenance-tracking memory model, observable trace recorder, bounded reference interpreter, constant-time validation; 91%+ line/branch cov |
 | done / VER-P022 | Rust-subset grammar | #19014 merged as 3d8a14c46d8; [VER25a](VER25a-rust-subset-grammar.md) specified; real ct-compare source, volatile/unsafe assumptions, zero third-party deps, 93%+ line/branch cov |
 | done / VER-P023 | Rust-to-WIR front end | #19017 merged as b486bf3b28e; [VER25b](VER25b-rust-to-wir-frontend.md) specified; lowered parsed Rust AST to WIR modules, differential validation against ct-compare, zero third-party deps, 92%+ line/branch cov |
@@ -64,7 +64,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P025 | Bounds/constant-time trace proofs | #19020 merged as e2a4c386892; [VER20](VER20-resource-timing-proofs.md) specified; self-composition 2-safety hyperproperties, timing/address divergence detection, DRAT-certified UNSAT, >90% line/branch cov |
 | done / VER-P027a | Rust capability analyzer/name allowlist | #19028 merged as cbd8b93f0e7; [VER08a](VER08a-rust-capability-analyzer.md) specified; zero third-party deps, 92%+ cov, fail-closed audit |
 | done / VER-P027b | Generated effect module/certificate | #19030 merged as a1a722f32c5; [VER23a](VER23a-rust-effect-modules.md) specified; VER23/24, small checker, empty effects, ct-compare certified |
-| in-progress / VER-P028 | Weakness registry/report-only assurance | [VER15](VER15-weakness-registry.md), [VER01](VER01-assurance-report.md) specified; weakness registry v1 (26 CWE classes), per-package weakness matrix, computed unapproved CWE-208 exemption, not-live rungs, ct-compare report-only assurance |
+| done / VER-P028 | Weakness registry/report-only assurance | #19031 merged as f53d4b45daa; [VER15](VER15-weakness-registry.md), [VER01](VER01-assurance-report.md) specified; weakness registry v1 (26 CWE classes), per-package weakness matrix, computed unapproved CWE-208 exemption, not-live rungs, ct-compare report-only assurance |
+| in-progress / VER-P029 | TypeScript bootstrap harness & test runner | [TF01a](TF01a-typescript-test-bootstrap.md) specified; [TF00](TF00-portable-test-framework.md), [TF01](TF01-bootstrap-harness.md), VER00 §7.1; zero npm dependencies, test-bootstrap-v1 self-corpus (1,256 cases), pure deep-equality, SplitMix64 PRNG, TAP v14 reporting, node:test integration, vitest/jest retirement pilot |
 
 Critical path: P003 -> P004 -> P005-011 -> P021-025. Fuzzing and measurements
 can progress independently once their prerequisites are available.
@@ -145,10 +146,20 @@ It delivers the Level 5 Microbenchmark Harness & Deterministic Cost Counters ([V
 in `test-bootstrap::bench`, including warmup/calibration, robust statistics (median, MAD, bootstrap CI),
 deterministic cost counters (StepCounter, AllocCounter, HardwarePerfCounter), and CI-safe deterministic budgeting.
 
-Prioritize VER-P017 (Constant-Time Equal-Instruction-Count Microbenchmark Suite for ct-compare [VER07a](VER07a-ct-compare-microbenchmarks.md)).
-VER-P017 verifies equal instruction counts across equivalence classes (identical, diff first, diff last, diff middle),
-multi-scale input sweeps (n=16, 256, 4096), compile-time fixed widths, branch-free selection, and negative sabotage detection.
-Next step: VER-P027a (Rust capability analyzer / name allowlist).
+Post-P028 prioritization: VER-P028 merged cleanly in #19031 (commit f53d4b45daa) with all CI matrix checks passing.
+It delivers the Weakness Registry v1 (26 canonical CWE classes across 6 primary security families, [VER15](VER15-weakness-registry.md)),
+the machine-readable assurance report data model and fail-closed gate checker (`ca-assurance-report`, [VER01](VER01-assurance-report.md)),
+and pilot integration for `rust/ct-compare` with non-live rungs and computed unapproved CWE-208 exemptions, completing the entire
+VER26 pilot ladder on `rust/ct-compare`.
+
+Prioritize VER-P029 (TypeScript Bootstrap Harness & Zero-Dependency Test Runner, [TF01a](TF01a-typescript-test-bootstrap.md)).
+Per VER00 §7.1 and TF00 §Sequencing, third-party testing dependencies (`vitest`, `@vitest/coverage-v8`, and their ~94 transitive
+dependencies per package) account for >90% of repository security alerts and update churn across ~450 TypeScript packages.
+VER-P029 delivers the reference TypeScript lane for Level 0 and Level 1 testing (`@coding-adventures/test-bootstrap`):
+zero npm runtime dependencies, strict TFV v1 parser, pure deep equality (§3.1), SplitMix64 PRNG and FNV-1a 64 test-id hashing,
+full validation of the `test-bootstrap-v1` self-corpus (1,256 cases), TAP v14 reporting, failure-detecting sabotage mode,
+drop-in matchers (`describe`, `it`, `expect`), and pilot conversion of a pure TypeScript package (`typescript/bitset`) to retire Vitest.
+
 
 P006b1 merged in #18913 (commit 964dc3df7bc) with all checks passing on main.
 The source admission contract is active in `rust/warrant-grammar`. Eleven source
