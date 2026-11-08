@@ -4,6 +4,10 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18496 item 7)
+
+- Conformance programs `py_nested_def_shadow_param`, `py_nested_def_shadow_local`, and `py_nested_def_shadow_param_returns_closure` in `tests/python_statement_forms.rs`, verifying that nested `def` statements shadowing parameters or prior locals invoke the nested function across all backends.
+
 ### Added (#18490)
 
 - Conformance program `sir_closure_default_param_omitted_call` in `tests/local_shadows_function.rs`, verifying that calling a closure with an omitted default parameter evaluates the default argument expression on all backends.

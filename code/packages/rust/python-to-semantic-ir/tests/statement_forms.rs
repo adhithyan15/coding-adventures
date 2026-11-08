@@ -949,3 +949,91 @@ fn decorated_method_is_refused() {
     assert!(err.message.contains("decorated method"), "{err}");
     assert_eq!(err.line, 2);
 }
+
+/// A nested `def` whose declared name matches an enclosing parameter shadows
+/// that parameter: the closure is bound to the parameter's local alias so that
+/// calling `n()` invokes the nested function rather than performing an indirect
+/// call on the parameter value (#18496 item 7).
+#[test]
+fn nested_def_shadowing_parameter_is_invoked() {
+    let m = lower("def f(n):\n    def n():\n        return 42\n    return n()\n");
+    let f = func(&m, "f");
+    // The call to `n()` should resolve as an IndirectCall targeting the shadowed parameter alias
+    match &f.body.value {
+        semantic_ir::Expr::IndirectCall { target, args, .. } => {
+            assert!(args.is_empty());
+            match target.as_ref() {
+                semantic_ir::Expr::VarRef { name, scope, .. } => {
+                    assert_eq!(*scope, semantic_ir::Scope::Local);
+                    assert!(name.starts_with("__param_n_"), "expected parameter alias, got {name}");
+                }
+                other => panic!("expected VarRef target, got {other:?}"),
+            }
+        }
+        other => panic!("expected IndirectCall, got {other:?}"),
+    }
+    // And the body statements must contain an assignment storing the closure into that alias
+    let has_assign_closure = f.body.stmts.iter().any(|stmt| {
+        matches!(
+            stmt,
+            semantic_ir::Stmt::Assign {
+                name,
+                scope: semantic_ir::Scope::Local,
+                value: semantic_ir::Expr::MakeClosure { fn_name, .. },
+                ..
+            } if name.starts_with("__param_n_") && fn_name == "n"
+        )
+    });
+    assert!(has_assign_closure, "expected Assign of MakeClosure into __param_n_ in {:?}", f.body.stmts);
+    assert!(m.manifest.contains(semantic_ir::Feature::MutableBindings));
+    assert!(m.manifest.contains(semantic_ir::Feature::Closures));
+}
+
+/// A nested `def` whose declared name matches a prior local variable shadows
+/// that local: the closure is assigned to the local variable so that calling
+/// `n()` invokes the nested function (#18496 item 7).
+#[test]
+fn nested_def_shadowing_prior_local_is_invoked() {
+    let m = lower("def f():\n    n = 1\n    def n():\n        return 42\n    return n()\n");
+    let f = func(&m, "f");
+    match &f.body.value {
+        semantic_ir::Expr::IndirectCall { target, args, .. } => {
+            assert!(args.is_empty());
+            match target.as_ref() {
+                semantic_ir::Expr::VarRef { name, scope, .. } => {
+                    assert_eq!(*scope, semantic_ir::Scope::Local);
+                    assert_eq!(name, "n");
+                }
+                other => panic!("expected VarRef target, got {other:?}"),
+            }
+        }
+        other => panic!("expected IndirectCall, got {other:?}"),
+    }
+    let has_assign_closure = f.body.stmts.iter().any(|stmt| {
+        matches!(
+            stmt,
+            semantic_ir::Stmt::Assign {
+                name,
+                scope: semantic_ir::Scope::Local,
+                value: semantic_ir::Expr::MakeClosure { fn_name, .. },
+                ..
+            } if name == "n" && fn_name == "n"
+        )
+    });
+    assert!(has_assign_closure, "expected Assign of MakeClosure into n in {:?}", f.body.stmts);
+}
+
+/// A nested `def` shadowing a parameter returns the closure when referenced as a value.
+#[test]
+fn nested_def_shadowing_parameter_returns_closure() {
+    let m = lower("def f(n):\n    def n():\n        return 42\n    return n\n");
+    let f = func(&m, "f");
+    match &f.body.value {
+        semantic_ir::Expr::VarRef { name, scope, .. } => {
+            assert_eq!(*scope, semantic_ir::Scope::Local);
+            assert!(name.starts_with("__param_n_"), "expected parameter alias, got {name}");
+        }
+        other => panic!("expected VarRef, got {other:?}"),
+    }
+}
+

@@ -2055,14 +2055,39 @@ impl Lowerer {
             "def_stmt" => {
                 // A nested `def` reaching the general statement lowerer:
                 // lift it to a top-level synthesised function with
-                // captures, then yield a `MakeClosure` so the closure
-                // value is produced at this position (e.g. as a block
-                // value to be `return`ed).
+                // captures, producing a `MakeClosure` expression (`mc`).
+                //
+                // In Python, `def` is an executable statement that creates a
+                // closure and binds it to its declared identifier in the current
+                // scope. When the declared name shadows an enclosing value (a
+                // parameter or a prior local variable in `ctx`), subsequent
+                // references and calls in this suite resolve through that enclosing
+                // value (`resolve_var_in`), because an enclosing value wins over
+                // module-level function lookup (see `lower_call_by_name` and
+                // `resolve_name`).
+                //
+                // We therefore bind `mc` into the shadowed target via
+                // `store_target`. If the name was already in `ctx.locals` (e.g. a
+                // copied parameter `__param_n_0` or earlier local), `store_target`
+                // emits a `Stmt::Assign` and declares `MutableBindings`. If it
+                // was an enclosing capture, it emits a `LetStarBinding` to shadow
+                // it locally.
+                //
+                // When the name does NOT shadow any enclosing value, we retain
+                // `Lowered::Expr(mc)` so that unshadowed nested functions can be
+                // called via direct calls (`DirectCall`) or closure calls
+                // (`lower_closure_call`) without allocating redundant local
+                // variable slots.
                 let mc = self.lower_def(inner, ctx, depth)?;
-                // This `MakeClosure` is retained (it becomes the block
-                // value) → the module uses closures.
                 self.observed.add(Feature::Closures);
-                Ok(Lowered::Expr(mc))
+                let name = self.def_name(inner)?;
+                if ctx.is_enclosing_value(&name) {
+                    let span = self.span_of(inner);
+                    let store = self.store_target(Target::Name(name), mc, ctx, span)?;
+                    Ok(Lowered::Stmt(Box::new(store)))
+                } else {
+                    Ok(Lowered::Expr(mc))
+                }
             }
             other => Err(self.err_at(
                 inner,
