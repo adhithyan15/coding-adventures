@@ -3,5 +3,12 @@
   "version": 1,
   "package": "rust/ct-compare",
   "capabilities": [],
-  "justification": "Pure computation. No filesystem, network, process, or environment access."
+  "justification": "Pure computation. No filesystem, network, process, or environment access.",
+  "banned_construct_exceptions": [
+    {
+      "construct": "unsafe_code",
+      "language": "rust",
+      "justification": "Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update."
+    }
+  ]
 }
