@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 (2026-11-08)
+
+- Level 1 Warrant Compiler & Claim Verifier (VER04g).
+- Bounded lexer & layout analyzer: comment stripping, indentation and layout capture (`INDENT`/`DEDENT`), hex byte literals `b"..."`, number suffixes.
+- Recursive-descent guarded parser: modules, nominal error types, mathematical reference models, operation contracts, input contracts (`hostile`, `rejects ... with ...`, `ensures`), and resource bounds.
+- Pure ground model evaluator: bounded call depth (<= 64) and work steps.
+- Test suite compilation: executes ground `example`s as Level 1 unit tests and universal `claim`s (`forall`) as Level 2 property-based tests via `assertProperty` and `Gen`.
+- Full execution and validation of canonical `code/specs/ct-compare.warrant` (11 examples, 1 claim, input rejection, freshness checks).
+
 ## 0.3.0 (2026-11-08)
 
 - Level 2 Coverage-Guided Fuzzing Engine (VER06 / VER06b).

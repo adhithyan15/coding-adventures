@@ -11,3 +11,4 @@ export * from "./cli_builder.js";
 export * from "./cli_spec.js";
 export * from "./pbt.js";
 export * from "./fuzz.js";
+export * from "./warrant.js";
