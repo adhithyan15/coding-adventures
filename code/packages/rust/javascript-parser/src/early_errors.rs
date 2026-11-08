@@ -255,9 +255,7 @@ pub fn check(root: &GrammarASTNode) -> Result<(), String> {
                 let child_in_generator = match child.rule_name.as_str() {
                     "function_body" => is_generator,
                     "concise_body" => false,
-                    "class_declaration" | "class_expression" | "class_body" | "static_block" => {
-                        false
-                    }
+                    "static_block" => false,
                     "function_declaration"
                     | "function_expression"
                     | "async_function_declaration"
@@ -926,5 +924,10 @@ mod tests {
         assert!(ok("function* g() { yield\n{ x; } }"));
         assert!(ok("class C { *m() { yield; } }"));
         assert!(ok("let o = { *m() { yield; } };"));
+        assert!(ok("function* g() { class C { [yield] = 1; } }"));
+        assert!(ok("function* g() { class C { [yield]() {} } }"));
+        assert!(ok("function* g() { class C { get [yield]() {} } }"));
+        assert!(!ok("class C { [yield] = 1; }"));
+        assert!(!ok("function* g() { class C { m() { yield; } } }"));
     }
 }
