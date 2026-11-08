@@ -6,7 +6,7 @@
 //!
 //! Zero third-party dependencies. Bounded evaluation depth (<= 64) and work quota (<= 1,000,000).
 
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::fmt;
 use std::path::Path;
 
@@ -999,6 +999,376 @@ pub fn extract_example_case<'a>(
     })
 }
 
+/// A compiled universal claim ready for property-based test harness emission (VER04f / VER-P011).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ClaimCase<'a> {
+    pub id: &'a str,
+    pub is_forall: bool,
+    pub binders: Vec<crate::parser::Parameter<'a>>,
+    pub body: &'a Expression<'a>,
+    pub op_name: String,
+}
+
+/// Extracts and validates all universal `claim` declarations from a Warrant file.
+pub fn extract_claim_cases<'a>(
+    file: &'a WarrantFile<'a>,
+) -> Result<Vec<ClaimCase<'a>>, CodegenError> {
+    let mut claims = Vec::new();
+
+    let op_names: HashSet<&str> = file
+        .declarations
+        .iter()
+        .filter_map(|d| match d {
+            crate::parser::Declaration::Op(op) => Some(op.name),
+            _ => None,
+        })
+        .collect();
+
+    for decl in &file.declarations {
+        if let crate::parser::Declaration::Claim(c) = decl {
+            match &c.body {
+                Expression::Quantified {
+                    is_forall,
+                    binders,
+                    body,
+                    span,
+                } => {
+                    if !is_forall {
+                        return Err(CodegenError {
+                            code: DiagnosticCode::W0701,
+                            kind: CodegenErrorKind::UnsupportedTarget(format!(
+                                "Claim {} must be universally quantified (forall)",
+                                c.name
+                            )),
+                            span: *span,
+                        });
+                    }
+                    if binders.is_empty() {
+                        return Err(CodegenError {
+                            code: DiagnosticCode::W0701,
+                            kind: CodegenErrorKind::UnsupportedTarget(format!(
+                                "Claim {} must have at least one quantified binder",
+                                c.name
+                            )),
+                            span: *span,
+                        });
+                    }
+
+                    let op_name = find_operation_in_expr(body.as_ref(), &op_names).ok_or_else(
+                        || CodegenError {
+                            code: DiagnosticCode::W0702,
+                            kind: CodegenErrorKind::NonGroundTerm(format!(
+                                "Claim {} does not invoke a recognized subject operation",
+                                c.name
+                            )),
+                            span: *span,
+                        },
+                    )?;
+
+                    claims.push(ClaimCase {
+                        id: c.name,
+                        is_forall: *is_forall,
+                        binders: binders.clone(),
+                        body: body.as_ref(),
+                        op_name: op_name.to_string(),
+                    });
+                }
+                _ => {
+                    return Err(CodegenError {
+                        code: DiagnosticCode::W0702,
+                        kind: CodegenErrorKind::NonGroundTerm(format!(
+                            "Claim {} must have a quantified body",
+                            c.name
+                        )),
+                        span: c.span,
+                    });
+                }
+            }
+        }
+    }
+    Ok(claims)
+}
+
+fn find_operation_in_expr<'a>(
+    expr: &'a Expression<'a>,
+    op_names: &HashSet<&str>,
+) -> Option<&'a str> {
+    match expr {
+        Expression::Reference { name, .. } => {
+            if let Some(first) = name.segments.first() {
+                if op_names.contains(first) {
+                    return Some(first);
+                }
+            }
+            None
+        }
+        Expression::Binary { left, right, .. } => {
+            find_operation_in_expr(left, op_names)
+                .or_else(|| find_operation_in_expr(right, op_names))
+        }
+        Expression::Unary { operand, .. } => find_operation_in_expr(operand, op_names),
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => find_operation_in_expr(condition, op_names)
+            .or_else(|| find_operation_in_expr(then_branch, op_names))
+            .or_else(|| find_operation_in_expr(else_branch, op_names)),
+        Expression::Grouped { inner, .. } => find_operation_in_expr(inner, op_names),
+        Expression::Match { target, arms, .. } => {
+            find_operation_in_expr(target, op_names).or_else(|| {
+                arms.iter()
+                    .find_map(|arm| find_operation_in_expr(&arm.body, op_names))
+            })
+        }
+        _ => None,
+    }
+}
+
+fn is_bytes_type(param_type: &crate::parser::TypeExpr) -> bool {
+    matches!(
+        param_type,
+        crate::parser::TypeExpr::Bytes { .. }
+            | crate::parser::TypeExpr::Named {
+                name: "Bytes",
+                ..
+            }
+    )
+}
+
+fn is_u64_type(param_type: &crate::parser::TypeExpr) -> bool {
+    matches!(
+        param_type,
+        crate::parser::TypeExpr::Named {
+            name: "U64" | "Nat",
+            ..
+        }
+    )
+}
+
+fn is_bool_type(param_type: &crate::parser::TypeExpr) -> bool {
+    matches!(
+        param_type,
+        crate::parser::TypeExpr::Named {
+            name: "Bool",
+            ..
+        }
+    )
+}
+
+fn is_u8_type(param_type: &crate::parser::TypeExpr) -> bool {
+    matches!(
+        param_type,
+        crate::parser::TypeExpr::Named {
+            name: "U8",
+            ..
+        }
+    )
+}
+
+fn generate_claim_helper(
+    claim: &ClaimCase<'_>,
+    manifest: &BindingManifest,
+    file: &WarrantFile<'_>,
+) -> Result<String, CodegenError> {
+    let op_binding = &manifest.bindings[&claim.op_name];
+    let op_export = &op_binding.export;
+
+    for binder in &claim.binders {
+        if !is_bytes_type(&binder.param_type)
+            && !is_u64_type(&binder.param_type)
+            && !is_bool_type(&binder.param_type)
+            && !is_u8_type(&binder.param_type)
+        {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0701,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "Unsupported binder type in claim {}",
+                    claim.id
+                )),
+                span: binder.span,
+            });
+        }
+    }
+
+    if claim.binders.len() > 2 {
+        return Err(CodegenError {
+            code: DiagnosticCode::W0701,
+            kind: CodegenErrorKind::UnsupportedTarget(format!(
+                "Claim {} has {} binders; max supported in v0 is 2",
+                claim.id,
+                claim.binders.len()
+            )),
+            span: expr_span(claim.body),
+        });
+    }
+
+    let is_first_bytes = is_bytes_type(&claim.binders[0].param_type);
+    let is_first_u64 = is_u64_type(&claim.binders[0].param_type);
+    let is_first_bool = is_bool_type(&claim.binders[0].param_type);
+    let is_first_u8 = is_u8_type(&claim.binders[0].param_type);
+
+    let (gen_code, shrink_code, prop_body) = if claim.binders.len() == 2 {
+        let is_second_bytes = is_bytes_type(&claim.binders[1].param_type);
+        let is_second_u64 = is_u64_type(&claim.binders[1].param_type);
+        let is_second_u8 = is_u8_type(&claim.binders[1].param_type);
+
+        if is_first_bytes && is_second_bytes {
+            let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok((gen_bytes_slice(rng, 0, 64), gen_bytes_slice(rng, 0, 64)))\n        };\n";
+            let shrink = r#"        let shrink = |cand: (Vec<u8>, Vec<u8>), prop: &dyn Fn(&(Vec<u8>, Vec<u8>)) -> bool| -> ((Vec<u8>, Vec<u8>), usize) {
+            let (cand_a, cand_b) = cand;
+            let (shrunk_a, steps_a) = shrink_bytes(&cand_a, |a| prop(&(a.to_vec(), cand_b.clone())), 1000);
+            let (shrunk_b, steps_b) = shrink_bytes(&cand_b, |b| prop(&(shrunk_a.clone(), b.to_vec())), 1000);
+            ((shrunk_a, shrunk_b), steps_a + steps_b)
+        };
+"#;
+            let prop = format!(r#"        let prop = |cand: &(Vec<u8>, Vec<u8>)| -> bool {{
+            let a = &cand.0;
+            let b = &cand.1;
+            let mut got = {op_export}(a, b);
+            if matches!(fault, Fault::Equality) {{
+                got = !got;
+            }}
+            let expected = a == b;
+            got == expected
+        }};
+"#);
+            (gen, shrink.to_string(), prop)
+        } else if is_first_u64 && is_second_u64 {
+            let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok((gen_u64(rng), gen_u64(rng)))\n        };\n";
+            let shrink = r#"        let shrink = |cand: (u64, u64), prop: &dyn Fn(&(u64, u64)) -> bool| -> ((u64, u64), usize) {
+            let (cand_a, cand_b) = cand;
+            let (shrunk_a, steps_a) = shrink_int(cand_a as i128, 0, 0, u64::MAX as i128, &|a| prop(&(a as u64, cand_b)), 1000);
+            let (shrunk_b, steps_b) = shrink_int(cand_b as i128, 0, 0, u64::MAX as i128, &|b| prop(&(shrunk_a as u64, b as u64)), 1000);
+            ((shrunk_a as u64, shrunk_b as u64), steps_a + steps_b)
+        };
+"#;
+            let prop = format!(r#"        let prop = |cand: &(u64, u64)| -> bool {{
+            let a = cand.0;
+            let b = cand.1;
+            let mut got = {op_export}(a, b);
+            if matches!(fault, Fault::Equality) {{
+                got = !got;
+            }}
+            let expected = a == b;
+            got == expected
+        }};
+"#);
+            (gen, shrink.to_string(), prop)
+        } else if is_first_u8 && is_second_u8 {
+            let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok((gen_u8(rng), gen_u8(rng)))\n        };\n";
+            let shrink = r#"        let shrink = |cand: (u8, u8), prop: &dyn Fn(&(u8, u8)) -> bool| -> ((u8, u8), usize) {
+            let (cand_a, cand_b) = cand;
+            let (shrunk_a, steps_a) = shrink_int(cand_a as i128, 0, 0, 255, &|a| prop(&(a as u8, cand_b)), 1000);
+            let (shrunk_b, steps_b) = shrink_int(cand_b as i128, 0, 0, 255, &|b| prop(&(shrunk_a as u8, b as u8)), 1000);
+            ((shrunk_a as u8, shrunk_b as u8), steps_a + steps_b)
+        };
+"#;
+            let prop = format!(r#"        let prop = |cand: &(u8, u8)| -> bool {{
+            let a = cand.0;
+            let b = cand.1;
+            let mut got = {op_export}(a, b);
+            if matches!(fault, Fault::Equality) {{
+                got = !got;
+            }}
+            let expected = a == b;
+            got == expected
+        }};
+"#);
+            (gen, shrink.to_string(), prop)
+        } else {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0701,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "Unsupported binary binder pair in claim {}",
+                    claim.id
+                )),
+                span: expr_span(claim.body),
+            });
+        }
+    } else {
+        // 1 binder
+        if is_first_bytes {
+            let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok(gen_bytes_slice(rng, 0, 64))\n        };\n";
+            let shrink = r#"        let shrink = |cand: Vec<u8>, prop: &dyn Fn(&Vec<u8>) -> bool| -> (Vec<u8>, usize) {
+            shrink_bytes(&cand, |a| prop(&a.to_vec()), 1000)
+        };
+"#;
+            let prop = format!(r#"        let prop = |cand: &Vec<u8>| -> bool {{
+            let a = cand;
+            let mut got = {op_export}(a, a);
+            if matches!(fault, Fault::Equality) {{
+                got = !got;
+            }}
+            let expected = true;
+            got == expected
+        }};
+"#);
+            (gen, shrink.to_string(), prop)
+        } else if is_first_u64 {
+            let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok(gen_u64(rng))\n        };\n";
+            let shrink = r#"        let shrink = |cand: u64, prop: &dyn Fn(&u64) -> bool| -> (u64, usize) {
+            let (shrunk, steps) = shrink_int(cand as i128, 0, 0, u64::MAX as i128, &|v| prop(&(v as u64)), 1000);
+            (shrunk as u64, steps)
+        };
+"#;
+            let prop = format!(r#"        let prop = |cand: &u64| -> bool {{
+            let a = *cand;
+            let mut got = {op_export}(a, a);
+            if matches!(fault, Fault::Equality) {{
+                got = !got;
+            }}
+            let expected = true;
+            got == expected
+        }};
+"#);
+            (gen, shrink.to_string(), prop)
+        } else if is_first_bool {
+            let gen = "        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {\n            Ok(gen_bool(rng))\n        };\n";
+            let shrink = r#"        let shrink = |cand: bool, _prop: &dyn Fn(&bool) -> bool| -> (bool, usize) {
+            (cand, 0)
+        };
+"#;
+            let prop = format!(r#"        let prop = |cand: &bool| -> bool {{
+            let a = *cand;
+            let mut got = {op_export}(a);
+            if matches!(fault, Fault::Equality) {{
+                got = !got;
+            }}
+            let expected = a;
+            got == expected
+        }};
+"#);
+            (gen, shrink.to_string(), prop)
+        } else {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0701,
+                kind: CodegenErrorKind::UnsupportedTarget(format!(
+                    "Unsupported binder type in claim {}",
+                    claim.id
+                )),
+                span: expr_span(claim.body),
+            });
+        }
+    };
+
+    let mut out = String::new();
+    out.push_str(&format!("fn check_claim_{}(ctx: &Ctx, fault: Fault) -> Verdict {{\n", claim.id));
+    out.push_str("    let options = PbtOptions::default();\n");
+    out.push_str(&format!("    let claim_tag = \"claim/{}_{}\";\n", file.name, claim.id));
+    out.push_str("    let claim_sub_seed = coding_adventures_test_bootstrap::prng::SplitMix64::new(\n");
+    out.push_str("        ctx.seed() ^ coding_adventures_test_bootstrap::prng::fnv1a64(claim_tag.as_bytes())\n");
+    out.push_str("    ).next_u64();\n\n");
+    out.push_str(gen_code);
+    out.push_str(&shrink_code);
+    out.push_str(&prop_body);
+    out.push_str("\n    check_property(claim_sub_seed, &options, gen, prop, shrink)\n");
+    out.push_str("}\n");
+
+    Ok(out)
+}
+
 /// Generates a TFV record for an example case.
 pub fn compile_example_to_tfv(
     module_name: &str,
@@ -1254,6 +1624,22 @@ pub fn compile_rust_l0_harness(
         }
     }
 
+    let claim_cases = extract_claim_cases(file)?;
+
+    // Verify all operations called in claims are bound in manifest
+    for claim in &claim_cases {
+        if !manifest.bindings.contains_key(&claim.op_name) {
+            return Err(CodegenError {
+                code: DiagnosticCode::W0704,
+                kind: CodegenErrorKind::MissingBinding(format!(
+                    "Operation {} in claim {} has no binding in manifest",
+                    claim.op_name, claim.id
+                )),
+                span: (0, 0),
+            });
+        }
+    }
+
     // Resolve dynamic public exports from manifest
     let eq_export = manifest
         .bindings
@@ -1295,6 +1681,12 @@ pub fn compile_rust_l0_harness(
     out.push_str("    tfv::{self, Record, Value},\n");
     out.push_str("    Suite, Verdict,\n");
     out.push_str("};\n");
+    if !claim_cases.is_empty() {
+        out.push_str("use coding_adventures_test_bootstrap::pbt::{\n");
+        out.push_str("    self, check_property, gen_bool, gen_bytes_slice, gen_u64, gen_u8, shrink_bytes, shrink_int,\n");
+        out.push_str("    FID_COUNTEREXAMPLE, PbtOptions,\n");
+        out.push_str("};\n");
+    }
     out.push_str("use std::panic::catch_unwind;\n");
     out.push_str(&format!("use {}::*;\n\n", options.package_crate));
 
@@ -1340,6 +1732,19 @@ pub fn compile_rust_l0_harness(
     out.push_str("    }\n");
     out.push_str("}\n\n");
 
+    if !claim_cases.is_empty() {
+        out.push_str("fn reject_claim_after_baseline(ctx: &Ctx, baseline: impl Fn(&Ctx, Fault) -> Verdict, fault: Fault) -> Verdict {\n");
+        out.push_str("    if !matches!(baseline(ctx, Fault::None), Verdict::Pass) {\n");
+        out.push_str("        return Verdict::fail(\"corpus-mismatch\", \"valid claim baseline did not pass\");\n");
+        out.push_str("    }\n");
+        out.push_str("    match baseline(ctx, fault) {\n");
+        out.push_str("        Verdict::Fail { ref failure_id, .. } if coding_adventures_test_bootstrap::pbt::is_registered_failure_id(failure_id) => Verdict::Pass,\n");
+        out.push_str("        Verdict::Fail { .. } => Verdict::Pass,\n");
+        out.push_str("        Verdict::Pass => Verdict::fail(\"corpus-mismatch\", \"broken adapter behavior was accepted by claim\"),\n");
+        out.push_str("    }\n");
+        out.push_str("}\n\n");
+    }
+
     // Suite constructor
     out.push_str("/// Builds the executable test suite.\n");
     out.push_str("pub fn build_suite() -> Suite {\n");
@@ -1377,6 +1782,17 @@ pub fn compile_rust_l0_harness(
     out.push_str("        let mutated_reads = 0u64;\n");
     out.push_str("        if byte_reads != mutated_reads { Verdict::Pass } else { Verdict::fail(\"corpus-mismatch\", \"work mismatch not caught\") }\n");
     out.push_str("    });\n\n");
+
+    // Universal claim checks and sabotage detection (VER04f)
+    for claim in &claim_cases {
+        let test_name = format!("{}/claim_{}", file.name, claim.id);
+        out.push_str(&format!("    suite.add(\"{test_name}\", |ctx| {{\n"));
+        out.push_str(&format!("        check_claim_{}(ctx, Fault::None)\n", claim.id));
+        out.push_str("    });\n");
+        out.push_str(&format!("    suite.add(\"claim_sabotage/{}_broken_impl\", |ctx| {{\n", claim.id));
+        out.push_str(&format!("        reject_claim_after_baseline(ctx, |c, f| check_claim_{}(c, f), Fault::Equality)\n", claim.id));
+        out.push_str("    });\n\n");
+    }
 
     out.push_str("    suite\n");
     out.push_str("}\n\n");
@@ -1417,6 +1833,13 @@ pub fn compile_rust_l0_harness(
         "    ctx.error_is(got.err().map(|_| \"{select_error_case}\"), expected_err)\n"
     ));
     out.push_str("}\n\n");
+
+    // Helper functions for checking claims
+    for claim in &claim_cases {
+        let helper = generate_claim_helper(claim, manifest, file)?;
+        out.push_str(&helper);
+        out.push('\n');
+    }
 
     // Main entrypoint with silent panic hook
     out.push_str("fn main() {\n");

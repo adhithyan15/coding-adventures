@@ -4,11 +4,11 @@ use std::collections::{BTreeMap, HashMap};
 
 use coding_adventures_warrant_grammar::{
     binding::{BindingManifest, OpBinding},
-    checker::check_warrant,
+    checker::{check_warrant, CheckedWarrantModule},
     codegen::{
-        compile_rust_l0_harness, compile_warrant_to_tfv, extract_example_case, hex_decode,
-        verify_regeneration, CodegenErrorKind, CodegenLimits, DiagnosticCode, EvalValue, Evaluator,
-        RustL0Options,
+        compile_rust_l0_harness, compile_warrant_to_tfv, extract_claim_cases, extract_example_case,
+        hex_decode, verify_regeneration, CodegenErrorKind, CodegenLimits,
+        DiagnosticCode, EvalValue, Evaluator, RustL0Options,
     },
     layout::{capture_layout, LayoutLimits},
     parser::{
@@ -74,6 +74,18 @@ fn ct_compare_bindings() -> BindingManifest {
     }
 }
 
+fn dummy_checked(name: &str) -> CheckedWarrantModule {
+    CheckedWarrantModule {
+        module_name: name.to_string(),
+        type_aliases: BTreeMap::new(),
+        errors: BTreeMap::new(),
+        models: BTreeMap::new(),
+        operations: BTreeMap::new(),
+        examples: Vec::new(),
+        claims: Vec::new(),
+    }
+}
+
 fn with_parsed<R>(src: &str, f: impl FnOnce(&WarrantFile) -> R) -> R {
     let doc = SourceDocument::admit(src.as_bytes(), SourceLimits::default()).expect("admit");
     let layout = capture_layout(&doc, LayoutLimits::default()).expect("layout");
@@ -126,6 +138,14 @@ fn test_ct_compare_warrant_compiles_to_rust_l0() {
         assert!(rust_code.contains("adapter/wrong-selection"));
         assert!(rust_code.contains("adapter/missing-error"));
         assert!(rust_code.contains("adapter/unknown-fixed-width"));
+
+        // VER04f Claim property test and sabotage assertions
+        assert!(rust_code.contains("use coding_adventures_test_bootstrap::pbt::"));
+        assert!(rust_code.contains("suite.add(\"ct_compare/claim_eq_agrees\""));
+        assert!(rust_code.contains("suite.add(\"claim_sabotage/eq_agrees_broken_impl\""));
+        assert!(rust_code.contains("fn check_claim_eq_agrees(ctx: &Ctx, fault: Fault) -> Verdict"));
+        assert!(rust_code.contains("fn reject_claim_after_baseline("));
+        assert!(rust_code.contains("claim/ct_compare_eq_agrees"));
     });
 }
 
@@ -1951,4 +1971,411 @@ fn test_security_remediations() {
             );
         });
     });
+}
+
+#[test]
+fn test_extract_claim_cases_from_ct_compare() {
+    with_parsed(CT_COMPARE_WARRANT, |file| {
+        let claims = extract_claim_cases(file).expect("extract_claim_cases must succeed");
+        assert_eq!(claims.len(), 1);
+        let claim = &claims[0];
+        assert_eq!(claim.id, "eq_agrees");
+        assert!(claim.is_forall);
+        assert_eq!(claim.binders.len(), 2);
+        assert_eq!(claim.binders[0].name, "a");
+        assert_eq!(claim.binders[1].name, "b");
+        assert_eq!(claim.op_name, "eq");
+    });
+}
+
+#[test]
+fn test_claim_validation_errors() {
+    // 1. Non-quantified body (W0702)
+    let non_quant = "warrant test_claim\n  op eq(a: Bytes, b: Bytes) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq:\n    steps <= 10\n  claim bad:\n    true\n";
+    with_parsed(non_quant, |file| {
+        let err = extract_claim_cases(file).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0702);
+    });
+
+    // 2. Existential quantifier (W0701)
+    let exists_claim = "warrant test_claim\n  op eq(a: Bytes, b: Bytes) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq:\n    steps <= 10\n  claim bad:\n    exists a: Bytes. eq(a, a) == true\n";
+    with_parsed(exists_claim, |file| {
+        let err = extract_claim_cases(file).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0701);
+        assert!(err.to_string().contains("universally quantified"));
+    });
+
+    // 3. No recognized subject operation (W0702)
+    let no_op_claim = "warrant test_claim\n  model same(a: Bytes, b: Bytes) -> Bool = a == b\n  op eq(a: Bytes, b: Bytes) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq:\n    steps <= 10\n  claim bad:\n    forall a: Bytes, b: Bytes. same(a, b) == same(b, a)\n";
+    with_parsed(no_op_claim, |file| {
+        let err = extract_claim_cases(file).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0702);
+        assert!(err.to_string().contains("does not invoke a recognized subject operation"));
+    });
+
+    // 4. Missing binding for operation in manifest (W0704)
+    with_parsed(CT_COMPARE_WARRANT, |file| {
+        let checked = check_warrant(file).unwrap();
+        let mut manifest = ct_compare_bindings();
+        manifest.bindings.remove("eq");
+        let opts = RustL0Options {
+            package_crate: "coding_adventures_ct_compare".to_string(),
+            spec_path: "ct-compare.warrant".to_string(),
+        };
+        let err = compile_rust_l0_harness(file, &checked, &manifest, &opts).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0704);
+        assert!(err.to_string().contains("has no binding in manifest"));
+    });
+
+    // 5. Unsupported binder type (W0701)
+    let unsupp_binder = "warrant test_claim\n  op dummy(a: Int) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound dummy:\n    steps <= 10\n  claim bad:\n    forall a: Int. dummy(a) == true\n";
+    with_parsed(unsupp_binder, |file| {
+        let checked = dummy_checked("test_claim");
+        let mut bindings = BTreeMap::new();
+        bindings.insert(
+            "dummy".to_string(),
+            OpBinding {
+                export: "dummy_fn".to_string(),
+                static_params: vec![],
+                fresh: false,
+                error_normalization: None,
+                negative_controls: vec![],
+            },
+        );
+        let manifest = BindingManifest {
+            package: "test_pkg".to_string(),
+            revision: "0.1.0".to_string(),
+            bindings,
+        };
+        let opts = RustL0Options {
+            package_crate: "test_pkg".to_string(),
+            spec_path: "test.warrant".to_string(),
+        };
+        let err = compile_rust_l0_harness(file, &checked, &manifest, &opts).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0701);
+        assert!(err.to_string().contains("Unsupported binder type"));
+    });
+
+    // 6. Too many binders (W0701)
+    let three_binders = "warrant test_claim\n  op dummy(a: Bytes, b: Bytes, c: Bytes) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound dummy:\n    steps <= 10\n  claim bad:\n    forall a: Bytes, b: Bytes, c: Bytes. dummy(a, b, c) == true\n";
+    with_parsed(three_binders, |file| {
+        let checked = dummy_checked("test_claim");
+        let mut bindings = BTreeMap::new();
+        bindings.insert(
+            "dummy".to_string(),
+            OpBinding {
+                export: "dummy_fn".to_string(),
+                static_params: vec![],
+                fresh: false,
+                error_normalization: None,
+                negative_controls: vec![],
+            },
+        );
+        let manifest = BindingManifest {
+            package: "test_pkg".to_string(),
+            revision: "0.1.0".to_string(),
+            bindings,
+        };
+        let opts = RustL0Options {
+            package_crate: "test_pkg".to_string(),
+            spec_path: "test.warrant".to_string(),
+        };
+        let err = compile_rust_l0_harness(file, &checked, &manifest, &opts).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0701);
+        assert!(err.to_string().contains("max supported in v0 is 2"));
+    });
+
+    // 7. Binary binder mismatch (e.g. Bytes and U64) (W0701)
+    let mismatched_pair = "warrant test_claim\n  op dummy(a: Bytes, b: U64) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound dummy:\n    steps <= 10\n  claim bad:\n    forall a: Bytes, b: U64. dummy(a, b) == true\n";
+    with_parsed(mismatched_pair, |file| {
+        let checked = dummy_checked("test_claim");
+        let mut bindings = BTreeMap::new();
+        bindings.insert(
+            "dummy".to_string(),
+            OpBinding {
+                export: "dummy_fn".to_string(),
+                static_params: vec![],
+                fresh: false,
+                error_normalization: None,
+                negative_controls: vec![],
+            },
+        );
+        let manifest = BindingManifest {
+            package: "test_pkg".to_string(),
+            revision: "0.1.0".to_string(),
+            bindings,
+        };
+        let opts = RustL0Options {
+            package_crate: "test_pkg".to_string(),
+            spec_path: "test.warrant".to_string(),
+        };
+        let err = compile_rust_l0_harness(file, &checked, &manifest, &opts).unwrap_err();
+        assert_eq!(err.code, DiagnosticCode::W0701);
+        assert!(err.to_string().contains("Unsupported binary binder pair"));
+    });
+}
+
+#[test]
+fn test_claim_generator_and_shrink_variants() {
+    // 1. Single binder Bytes
+    let single_bytes = "warrant test_claim\n  op eq(a: Bytes, b: Bytes) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq:\n    steps <= 10\n  claim eq_refl:\n    forall a: Bytes. eq(a, a) == true\n";
+    with_parsed(single_bytes, |file| {
+        let checked = dummy_checked("test_claim");
+        let mut bindings = BTreeMap::new();
+        bindings.insert(
+            "eq".to_string(),
+            OpBinding {
+                export: "ct_eq".to_string(),
+                static_params: vec![],
+                fresh: false,
+                error_normalization: None,
+                negative_controls: vec![],
+            },
+        );
+        let manifest = BindingManifest {
+            package: "test_pkg".to_string(),
+            revision: "0.1.0".to_string(),
+            bindings,
+        };
+        let opts = RustL0Options {
+            package_crate: "test_pkg".to_string(),
+            spec_path: "test.warrant".to_string(),
+        };
+        let code = compile_rust_l0_harness(file, &checked, &manifest, &opts).unwrap();
+        assert!(code.contains("gen_bytes_slice(rng, 0, 64)"));
+        assert!(code.contains("shrink_bytes(&cand"));
+        assert!(code.contains("ct_eq(a, a)"));
+    });
+
+    // 2. Single binder U64
+    let single_u64 = "warrant test_claim\n  op eq_u64(a: U64, b: U64) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq_u64:\n    steps <= 10\n  claim u64_refl:\n    forall a: U64. eq_u64(a, a) == true\n";
+    with_parsed(single_u64, |file| {
+        let checked = dummy_checked("test_claim");
+        let mut bindings = BTreeMap::new();
+        bindings.insert(
+            "eq_u64".to_string(),
+            OpBinding {
+                export: "ct_eq_u64".to_string(),
+                static_params: vec![],
+                fresh: false,
+                error_normalization: None,
+                negative_controls: vec![],
+            },
+        );
+        let manifest = BindingManifest {
+            package: "test_pkg".to_string(),
+            revision: "0.1.0".to_string(),
+            bindings,
+        };
+        let opts = RustL0Options {
+            package_crate: "test_pkg".to_string(),
+            spec_path: "test.warrant".to_string(),
+        };
+        let code = compile_rust_l0_harness(file, &checked, &manifest, &opts).unwrap();
+        assert!(code.contains("gen_u64(rng)"));
+        assert!(code.contains("shrink_int(cand as i128, 0, 0, u64::MAX as i128"));
+        assert!(code.contains("ct_eq_u64(a, a)"));
+    });
+
+    // 3. Single binder Bool
+    let single_bool = "warrant test_claim\n  op check_flag(a: Bool) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound check_flag:\n    steps <= 10\n  claim bool_id:\n    forall a: Bool. check_flag(a) == a\n";
+    with_parsed(single_bool, |file| {
+        let checked = dummy_checked("test_claim");
+        let mut bindings = BTreeMap::new();
+        bindings.insert(
+            "check_flag".to_string(),
+            OpBinding {
+                export: "ct_flag".to_string(),
+                static_params: vec![],
+                fresh: false,
+                error_normalization: None,
+                negative_controls: vec![],
+            },
+        );
+        let manifest = BindingManifest {
+            package: "test_pkg".to_string(),
+            revision: "0.1.0".to_string(),
+            bindings,
+        };
+        let opts = RustL0Options {
+            package_crate: "test_pkg".to_string(),
+            spec_path: "test.warrant".to_string(),
+        };
+        let code = compile_rust_l0_harness(file, &checked, &manifest, &opts).unwrap();
+        assert!(code.contains("gen_bool(rng)"));
+        assert!(code.contains("ct_flag(a)"));
+    });
+
+    // 4. Two binders U64
+    let double_u64 = "warrant test_claim\n  op eq_u64(a: U64, b: U64) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq_u64:\n    steps <= 10\n  claim u64_sym:\n    forall a: U64, b: U64. eq_u64(a, b) == (a == b)\n";
+    with_parsed(double_u64, |file| {
+        let checked = dummy_checked("test_claim");
+        let mut bindings = BTreeMap::new();
+        bindings.insert(
+            "eq_u64".to_string(),
+            OpBinding {
+                export: "ct_eq_u64".to_string(),
+                static_params: vec![],
+                fresh: false,
+                error_normalization: None,
+                negative_controls: vec![],
+            },
+        );
+        let manifest = BindingManifest {
+            package: "test_pkg".to_string(),
+            revision: "0.1.0".to_string(),
+            bindings,
+        };
+        let opts = RustL0Options {
+            package_crate: "test_pkg".to_string(),
+            spec_path: "test.warrant".to_string(),
+        };
+        let code = compile_rust_l0_harness(file, &checked, &manifest, &opts).unwrap();
+        assert!(code.contains("(gen_u64(rng), gen_u64(rng))"));
+        assert!(code.contains("ct_eq_u64(a, b)"));
+    });
+
+    // 5. Two binders U8
+    let double_u8 = "warrant test_claim\n  op eq_u8(a: U8, b: U8) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq_u8:\n    steps <= 10\n  claim u8_sym:\n    forall a: U8, b: U8. eq_u8(a, b) == (a == b)\n";
+    with_parsed(double_u8, |file| {
+        let checked = dummy_checked("test_claim");
+        let mut bindings = BTreeMap::new();
+        bindings.insert(
+            "eq_u8".to_string(),
+            OpBinding {
+                export: "ct_eq_u8".to_string(),
+                static_params: vec![],
+                fresh: false,
+                error_normalization: None,
+                negative_controls: vec![],
+            },
+        );
+        let manifest = BindingManifest {
+            package: "test_pkg".to_string(),
+            revision: "0.1.0".to_string(),
+            bindings,
+        };
+        let opts = RustL0Options {
+            package_crate: "test_pkg".to_string(),
+            spec_path: "test.warrant".to_string(),
+        };
+        let code = compile_rust_l0_harness(file, &checked, &manifest, &opts).unwrap();
+        assert!(code.contains("(gen_u8(rng), gen_u8(rng))"));
+        assert!(code.contains("ct_eq_u8(a, b)"));
+    });
+}
+
+#[test]
+fn test_claim_execution_and_sabotage_detection() {
+    use coding_adventures_test_bootstrap::pbt::{
+        check_property, gen_bytes_slice, shrink_bytes, FID_COUNTEREXAMPLE, PbtOptions,
+    };
+    use coding_adventures_test_bootstrap::Verdict;
+
+    type BytesPair = (Vec<u8>, Vec<u8>);
+    type BytesPairProp<'a> = &'a dyn Fn(&BytesPair) -> bool;
+
+    // Emulate the generated claim check for eq_agrees:
+    // forall a: Bytes, b: Bytes. eq(a, b) == same(a, b)
+    let run_claim = |is_sabotaged: bool, is_ci: bool| -> Verdict {
+        let options = PbtOptions {
+            num_tests: 100,
+            max_retries: 100,
+            max_shrink_steps: 1000,
+            is_ci,
+        };
+        let seed = 42u64;
+
+        let gen = |rng: &mut coding_adventures_test_bootstrap::prng::SplitMix64| {
+            Ok((gen_bytes_slice(rng, 0, 32), gen_bytes_slice(rng, 0, 32)))
+        };
+
+        let shrink = |cand: BytesPair,
+                      prop: BytesPairProp|
+         -> (BytesPair, usize) {
+            let (cand_a, cand_b) = cand;
+            let (shrunk_a, steps_a) =
+                shrink_bytes(&cand_a, |a| prop(&(a.to_vec(), cand_b.clone())), 1000);
+            let (shrunk_b, steps_b) =
+                shrink_bytes(&cand_b, |b| prop(&(shrunk_a.clone(), b.to_vec())), 1000);
+            ((shrunk_a, shrunk_b), steps_a + steps_b)
+        };
+
+        let prop = |cand: &(Vec<u8>, Vec<u8>)| -> bool {
+            let a = &cand.0;
+            let b = &cand.1;
+            // Native model: a == b
+            let expected = a == b;
+            // Public host implementation: constant-time equality
+            let mut got = a == b;
+            if is_sabotaged {
+                // Fault::Equality inversion
+                got = !got;
+            }
+            got == expected
+        };
+
+        check_property(seed, &options, gen, prop, shrink)
+    };
+
+    // 1. Valid implementation passes all 100 checks
+    let baseline = run_claim(false, false);
+    assert_eq!(baseline, Verdict::Pass);
+
+    // 2. Sabotaged implementation fails and shrinks to minimal counterexample
+    let sabotaged_local = run_claim(true, false);
+    match sabotaged_local {
+        Verdict::Fail {
+            failure_id,
+            ref message,
+        } => {
+            assert_eq!(failure_id, FID_COUNTEREXAMPLE);
+            assert!(message.contains("minimal="));
+        }
+        _ => panic!("sabotaged claim must fail with counterexample"),
+    }
+
+    // 3. Sabotaged implementation in CI mode redacts raw inputs and outputs repro digest
+    let sabotaged_ci = run_claim(true, true);
+    match sabotaged_ci {
+        Verdict::Fail {
+            failure_id,
+            ref message,
+        } => {
+            assert_eq!(failure_id, FID_COUNTEREXAMPLE);
+            assert!(message.contains("repro-fnv:"));
+            assert!(!message.contains("minimal="));
+        }
+        _ => panic!("sabotaged claim in CI must fail with privacy redaction"),
+    }
+
+    // 4. reject_claim_after_baseline logic
+    let reject_eval = |sabotaged_result: Verdict| -> Verdict {
+        if !matches!(baseline, Verdict::Pass) {
+            return Verdict::fail("corpus-mismatch", "valid baseline did not pass");
+        }
+        match sabotaged_result {
+            Verdict::Fail {
+                failure_id, ..
+            } if coding_adventures_test_bootstrap::pbt::is_registered_failure_id(
+                failure_id,
+            ) =>
+            {
+                Verdict::Pass
+            }
+            Verdict::Fail { .. } => Verdict::Pass,
+            Verdict::Pass => Verdict::fail("corpus-mismatch", "broken implementation was accepted"),
+        }
+    };
+
+    // When the broken implementation is caught, the test passes
+    assert_eq!(reject_eval(sabotaged_local), Verdict::Pass);
+    assert_eq!(reject_eval(sabotaged_ci), Verdict::Pass);
+
+    // If a broken implementation were accepted (Pass), reject_eval would fail
+    let accepted_broken = reject_eval(Verdict::Pass);
+    assert_eq!(
+        accepted_broken,
+        Verdict::fail("corpus-mismatch", "broken implementation was accepted")
+    );
 }

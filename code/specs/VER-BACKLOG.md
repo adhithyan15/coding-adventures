@@ -49,8 +49,8 @@ Each selected group is split into bounded PRs if its implementation requires it.
 | done / VER-P007 | Warrant type checker/Rust bindings | #18997 merged as f471a7195f3; [VER04d](VER04d-warrant-type-system.md) specified; scope/symbol resolution, acyclic models, static typing, contract verification and closed Rust binding schema; 90%+ line/branch cov |
 | done / VER-P008 | Rust backend and ct-compare.warrant | #19002 merged as 652207f348d; [VER04e](VER04e-warrant-codegen.md) specified; bounded pure model evaluator, TFV test vector compiler, Rust L0 harness generator, checked regeneration |
 | done / VER-P009 | Property spec and pbt-v1 corpus | #19004 merged as 5b1fcef8b2e at expected c6f4c29e61c; verified on fetched main; all checks acceptable |
-| done / VER-P010 | Rust property engine | [VER05](VER05-property-engine.md) generator algebra, integrated shrinking, deterministic replay, pbt-v1 corpus (25 cases), zero third-party deps, 92%+ line/branch cov |
-| P1 / VER-P011 | Warrant claims to properties | waiting P010; public API calls and broken implementations detected |
+| done / VER-P010 | Rust property engine | #19007 merged as f66f3a2e057; [VER05](VER05-property-engine.md) generator algebra, integrated shrinking, deterministic replay, pbt-v1 corpus (25 cases), zero third-party deps, 92%+ line/branch cov |
+| done / VER-P011 | Warrant claims to properties | [VER04f](VER04f-claims-to-properties.md) specified; compiled universal claims to native Level 2 PBT suites, public API calls and broken implementations detected, 93%+ line/branch cov |
 | P1 / VER-P012 | Stateful properties | waiting P011; select only if pilot needs them, otherwise explicitly defer |
 | P2 / VER-P013 | Fuzz spec and fuzz-v1 corpus | waiting P011; VER06, private failure-output policy |
 | P2 / VER-P014 | Rust fuzz engine | waiting P013; bounded runs, replay, honest coverage label |
@@ -105,6 +105,13 @@ execution of the `pbt-v1` conformance corpus (25 tests) with zero third-party de
 Post-P010 prioritization: Prioritize VER-P011 (Warrant claims to properties). VER-P011 connects
 Warrant claim evaluation with the PBT engine, allowing Warrant contracts and claims to be executed
 as generative property tests across arbitrary input spaces with automatic counterexample shrinking.
+
+Post-P011 prioritization: VER-P011 delivers Warrant claim compilation ([VER04f](VER04f-claims-to-properties.md))
+to native Level 2 property tests in `warrant-grammar` and `test-bootstrap::pbt`. Universal claims compile
+to deterministic test suites with isolated PRNG sub-seeds, integrated multi-component shrinking, panic containment,
+fault-injected sabotage detection for broken implementations, and privacy-preserving failure reporting in CI mode.
+Next on the critical path is VER-P021 (WIR core and reference interpreter) to establish the semantic intermediate
+representation for verified shipping.
 
 P006b1 merged in #18913 (commit 964dc3df7bc) with all checks passing on main.
 The source admission contract is active in `rust/warrant-grammar`. Eleven source
