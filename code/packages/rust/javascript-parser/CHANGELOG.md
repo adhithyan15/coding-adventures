@@ -9,6 +9,7 @@ All notable changes to the `coding-adventures-javascript-parser` crate will be d
 - Support bare `yield` expressions and restricted-production ASI after `yield` (#17939):
   - In `code/grammars/ecmascript/es2015.grammar` through `es2025.grammar`, `yield_expression` now permits an optional operand (`"yield" STAR assignment_expression | "yield" [ assignment_expression ]`), allowing bare `yield;` and `yield\n` to parse cleanly.
   - In typed AST `bridge.rs`, `convert_yield_expression` handles operand-less `yield_expression` by producing `YieldExpression { argument: None, delegate }`.
+  - In `early_errors.rs`, enforce ECMA-262 early SyntaxErrors for yield expressions: forbidden in formal parameters, class static initialization blocks, as assignment/update targets, and in strict mode outside generators.
   - Regenerated compiled grammars `src/_grammar.rs` (rustfmt).
 
 ## [0.67.1] - 2026-11-08
