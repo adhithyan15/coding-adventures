@@ -49,6 +49,11 @@ pub fn is_registered_failure_id(id: &str) -> bool {
             | "property-exhausted"
             | "property-timeout"
             | "property-panic"
+            | "fuzz-crash"
+            | "fuzz-timeout"
+            | "fuzz-oom"
+            | "fuzz-leak"
+            | "fuzz-panic"
     )
 }
 
