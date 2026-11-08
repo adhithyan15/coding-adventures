@@ -119,10 +119,16 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
     ),
     GT::GrammarRule.new(
       name: "yield_expression",
-      body: GT::Sequence.new(elements: [
-        GT::Literal.new(value: "yield"),
-        GT::OptionalElement.new(element: GT::RuleReference.new(name: "STAR", is_token: true)),
-        GT::RuleReference.new(name: "assignment_expression", is_token: false),
+      body: GT::Alternation.new(choices: [
+        GT::Sequence.new(elements: [
+          GT::Literal.new(value: "yield"),
+          GT::RuleReference.new(name: "STAR", is_token: true),
+          GT::RuleReference.new(name: "assignment_expression", is_token: false),
+        ]),
+        GT::Sequence.new(elements: [
+          GT::Literal.new(value: "yield"),
+          GT::OptionalElement.new(element: GT::RuleReference.new(name: "assignment_expression", is_token: false)),
+        ]),
       ]),
       line_number: 78,
     ),

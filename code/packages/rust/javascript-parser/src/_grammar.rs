@@ -7185,20 +7185,8 @@ mod v_es2015 {
                             GrammarElement::RuleReference {
                                 name: r#"arrow_function"#.to_string(),
                             },
-                            GrammarElement::Sequence {
-                                elements: vec![
-                                    GrammarElement::Literal {
-                                        value: r#"yield"#.to_string(),
-                                    },
-                                    GrammarElement::Optional {
-                                        element: Box::new(GrammarElement::TokenReference {
-                                            name: r#"STAR"#.to_string(),
-                                        }),
-                                    },
-                                    GrammarElement::RuleReference {
-                                        name: r#"assignment_expression"#.to_string(),
-                                    },
-                                ],
+                            GrammarElement::RuleReference {
+                                name: r#"yield_expression"#.to_string(),
                             },
                             GrammarElement::Sequence {
                                 elements: vec![
@@ -8502,6 +8490,39 @@ mod v_es2015 {
                     },
                     line_number: 505,
                 },
+                GrammarRule {
+                    name: r#"yield_expression"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
+                            },
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    line_number: 522,
+                },
             ],
             version: 1,
         }
@@ -8755,18 +8776,32 @@ mod v_es2016 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -11928,18 +11963,32 @@ mod v_es2017 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -15316,18 +15365,32 @@ mod v_es2018 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -18900,18 +18963,32 @@ mod v_es2019 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -22490,18 +22567,32 @@ mod v_es2020 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -26234,18 +26325,32 @@ mod v_es2021 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -29987,18 +30092,32 @@ mod v_es2022 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -34083,18 +34202,32 @@ mod v_es2023 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -38179,18 +38312,32 @@ mod v_es2024 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
@@ -42278,18 +42425,32 @@ mod v_es2025 {
                 },
                 GrammarRule {
                     name: r#"yield_expression"#.to_string(),
-                    body: GrammarElement::Sequence {
-                        elements: vec![
-                            GrammarElement::Literal {
-                                value: r#"yield"#.to_string(),
+                    body: GrammarElement::Alternation {
+                        choices: vec![
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::TokenReference {
+                                        name: r#"STAR"#.to_string(),
+                                    },
+                                    GrammarElement::RuleReference {
+                                        name: r#"assignment_expression"#.to_string(),
+                                    },
+                                ],
                             },
-                            GrammarElement::Optional {
-                                element: Box::new(GrammarElement::TokenReference {
-                                    name: r#"STAR"#.to_string(),
-                                }),
-                            },
-                            GrammarElement::RuleReference {
-                                name: r#"assignment_expression"#.to_string(),
+                            GrammarElement::Sequence {
+                                elements: vec![
+                                    GrammarElement::Literal {
+                                        value: r#"yield"#.to_string(),
+                                    },
+                                    GrammarElement::Optional {
+                                        element: Box::new(GrammarElement::RuleReference {
+                                            name: r#"assignment_expression"#.to_string(),
+                                        }),
+                                    },
+                                ],
                             },
                         ],
                     },
