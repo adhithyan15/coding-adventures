@@ -35,6 +35,7 @@
 //! What it deliberately lacks (fixtures, hooks, parallelism, rich assertions)
 //! is listed in TF01 §7; all of it belongs to the layers built on this one.
 
+pub mod fuzz;
 pub mod pbt;
 pub mod prng;
 pub mod run;

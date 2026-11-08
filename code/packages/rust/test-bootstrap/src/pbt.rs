@@ -664,12 +664,8 @@ mod tests {
     #[test]
     fn shrink_list_and_bytes_minimize_correctly() {
         let list_data = vec![1, 2, 3, 3, 4, 5];
-        let (min_list, _) = shrink_list(
-            &list_data,
-            0,
-            |l| l.windows(2).all(|w| w[0] != w[1]),
-            1000,
-        );
+        let (min_list, _) =
+            shrink_list(&list_data, 0, |l| l.windows(2).all(|w| w[0] != w[1]), 1000);
         assert_eq!(min_list, vec![3, 3]);
 
         // Empty list match
@@ -759,7 +755,10 @@ mod tests {
             |cand, prop| shrink_int(cand, 0, 0, 200, |x| prop(&x), 1000),
         );
         match fail_verdict {
-            Verdict::Fail { failure_id, message } => {
+            Verdict::Fail {
+                failure_id,
+                message,
+            } => {
                 assert_eq!(failure_id, FID_COUNTEREXAMPLE);
                 assert!(message.contains("minimal=51"));
             }
@@ -781,7 +780,10 @@ mod tests {
             |cand, prop| shrink_int(cand, 0, 0, 200, |x| prop(&x), 1000),
         );
         match ci_fail_verdict {
-            Verdict::Fail { failure_id, message } => {
+            Verdict::Fail {
+                failure_id,
+                message,
+            } => {
                 assert_eq!(failure_id, FID_COUNTEREXAMPLE);
                 assert!(message.contains("repro-fnv:"));
             }
@@ -802,7 +804,10 @@ mod tests {
             |cand, _| (cand, 0),
         );
         match panic_verdict {
-            Verdict::Fail { failure_id, message } => {
+            Verdict::Fail {
+                failure_id,
+                message,
+            } => {
                 assert_eq!(failure_id, FID_PANIC);
                 assert!(message.contains("panicked"));
             }
@@ -833,7 +838,10 @@ mod tests {
             |cand, _| (cand, 0),
         );
         match gen_err_verdict {
-            Verdict::Fail { failure_id, message } => {
+            Verdict::Fail {
+                failure_id,
+                message,
+            } => {
                 assert_eq!(failure_id, FID_EXHAUSTED);
                 assert!(message.contains("custom-error"));
             }

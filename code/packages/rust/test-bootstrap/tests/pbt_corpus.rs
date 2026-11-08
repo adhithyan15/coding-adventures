@@ -104,7 +104,9 @@ fn check(ctx: &Ctx, record: &Record) -> Result<Verdict, String> {
             if got_minimal != expected_minimal {
                 Verdict::fail(
                     "corpus-mismatch",
-                    format!("minimal list mismatch: got {got_minimal:?}, want {expected_minimal:?}"),
+                    format!(
+                        "minimal list mismatch: got {got_minimal:?}, want {expected_minimal:?}"
+                    ),
                 )
             } else if got_steps != expected_steps {
                 Verdict::fail(
@@ -134,7 +136,9 @@ fn check(ctx: &Ctx, record: &Record) -> Result<Verdict, String> {
             if got_minimal != expected_minimal {
                 Verdict::fail(
                     "corpus-mismatch",
-                    format!("minimal bytes mismatch: got {got_minimal:?}, want {expected_minimal:?}"),
+                    format!(
+                        "minimal bytes mismatch: got {got_minimal:?}, want {expected_minimal:?}"
+                    ),
                 )
             } else if got_steps != expected_steps {
                 Verdict::fail(
@@ -151,10 +155,9 @@ fn check(ctx: &Ctx, record: &Record) -> Result<Verdict, String> {
             let expected_init = int_i128(record, "initial_fail")?;
             let expected_minimal = int_i128(record, "expected_minimal")?;
 
-            let (got_init, got_min) = pbt::simulate_replay(seed, |x| {
-                eval_int_property(prop_name, x).unwrap_or(false)
-            })
-            .map_err(|e| e.to_string())?;
+            let (got_init, got_min) =
+                pbt::simulate_replay(seed, |x| eval_int_property(prop_name, x).unwrap_or(false))
+                    .map_err(|e| e.to_string())?;
 
             if got_init != expected_init {
                 Verdict::fail(
