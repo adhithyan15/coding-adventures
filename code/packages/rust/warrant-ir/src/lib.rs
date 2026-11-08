@@ -6,6 +6,7 @@ pub mod check;
 pub mod constant_time;
 pub mod cost;
 pub mod interp;
+pub mod rust_subset;
 pub mod trace;
 
 pub use ast::*;
