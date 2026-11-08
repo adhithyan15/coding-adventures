@@ -478,7 +478,7 @@ TOKEN_GRAMMAR = GT::TokenGrammar.new(
   skip_definitions: [
       GT::TokenDefinition.new(
         name: "WHITESPACE",
-        pattern: "[ \\t\\r\\n\\v\\f]+",
+        pattern: "[ \\t\\r\\n\\v\\f\\u2028\\u2029]+",
         is_regex: true,
         line_number: 346,
         alias_name: nil,
