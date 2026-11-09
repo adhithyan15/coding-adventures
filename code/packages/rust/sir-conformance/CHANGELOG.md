@@ -4,6 +4,10 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18798 item 23)
+
+- Conformance program `rb_block_with_no_parameters` in `tests/ruby_sir_gaps.rs`, verifying that yielding or passing arguments to a zero-parameter block discards the surplus arguments across iterators and methods on all backends.
+
 ### Added (#18798)
 
 - Conformance program `rb_begin_without_rescue_or_ensure` in `tests/ruby_sir_gaps.rs`, verifying that `begin ... end` with no `rescue` or `ensure` executes its statements inline across all backends (TypeScript, JavaScript, Python, Go, Rust, C).

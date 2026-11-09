@@ -2810,6 +2810,40 @@ fn each_runs_a_user_classs_own_each_and_returns_the_receiver() {
     }
 }
 
+/// #18798 (item 23): a block with no parameters over an Array or a Hash
+/// discards the yielded elements rather than raising ArgumentError.
+#[test]
+fn each_with_zero_parameter_block_runs_over_array_and_hash() {
+    let rb = ruby_to_ruby(
+        "xs = [1, 2]\nxs.each do\n  puts 42\nend\n{a: 1, b: 2}.each { puts 99 }\n",
+    );
+    assert!(
+        rb.contains("sir_each(xs, ->(*sir_args) { sir_fn___block_0() }, 0)"),
+        "got:\n{rb}"
+    );
+    assert!(
+        rb.contains("sir_each({:a => 1, :b => 2}, ->(*sir_args) { sir_fn___block_1() }, 0)"),
+        "got:\n{rb}"
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "42\n42\n99\n99"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+/// #18798 (item 23): yielding arguments to a block with no parameters
+/// discards the surplus arguments (Ruby non-lambda Proc semantics).
+#[test]
+fn yield_to_zero_parameter_block_discards_arguments() {
+    let rb = ruby_to_ruby(
+        "def greet\n  yield 1\n  yield 2, 3\nend\ngreet { puts \"hello\" }\n",
+    );
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "hello\nhello"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
 /// Any other built-in method is still refused cleanly, and so is `each`
 /// without a block.
 #[test]
