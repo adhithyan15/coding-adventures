@@ -6,6 +6,20 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ### Fixed
 
+- **Box outer variables in cells when mutated inside blocks (#18798, Item 5).**
+  In Ruby, blocks are closures sharing the outer local variable scope. When an
+  outer variable or parameter was assigned or mutated inside a block (such as
+  `t = 0; xs.each { |x| t = t + x }`), it lowered to a fresh local binding
+  `Stmt::LetBinding`, leaving the outer variable unmutated and causing subsequent
+  reads of the local to fail the SIR validator (`references unknown name`).
+  Outer variables and parameters assigned inside blocks or lambdas are now
+  identified and boxed into 1-element sequences (`__cell_<name>_<n> = [init]`).
+  Reads lower to `Expr::SeqIndex(cell, 0)` and writes lower to
+  `Stmt::SeqSet(cell, 0, value)`. When a block or lambda references an outer cell,
+  the cell sequence itself is captured into `Function.captures` and `MakeClosure.captures`
+  with `Scope::Capture`. Block parameters and block-local variables continue to
+  shadow outer cell variables cleanly.
+
 - **Dispatch bare-name calls to methods of `self` inside classes (#18798, Item 21).**
   In Ruby, calling a method with no receiver (`m`, `m(...)`, or `m { ... }`) inside
   an instance method of a class or module invokes `self.m` if the method exists in the
