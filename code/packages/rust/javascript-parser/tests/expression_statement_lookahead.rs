@@ -81,3 +81,42 @@ fn let_bracket_and_async_function_start_declarations_from_es2015_and_es2017() {
         assert!(parses(src, EsVersion::Es2025), "{src:?} must parse");
     }
 }
+
+#[test]
+fn lexical_declarations_cannot_appear_in_single_statement_contexts() {
+    // ECMA-262 forbids lexical declarations as the direct subordinate statement
+    // of if, while, for, with, or labelled statements (#18146).
+    for version in [
+        EsVersion::Es2015,
+        EsVersion::Es2016,
+        EsVersion::Es2020,
+        EsVersion::Es2025,
+    ] {
+        for src in [
+            "if (x) let a = 1;",
+            "if (x) const a = 1;",
+            "if (1) let\nx = 1;",
+            "while (x) let a = 1;",
+            "while (x) const a = 1;",
+            "for (;;) let a = 1;",
+            "for (;;) const a = 1;",
+            "with (x) let a = 1;",
+            "label: let a = 1;",
+            "label: const a = 1;",
+        ] {
+            assert!(!parses(src, version), "{version:?}: {src:?} must not parse");
+        }
+
+        // Inside a block, case clause, default clause, or top level, they parse.
+        for src in [
+            "let a = 1;",
+            "const a = 1;",
+            "{ let a = 1; }",
+            "{ const a = 1; }",
+            "if (x) { let a = 1; }",
+            "switch (x) { case 1: let a = 1; break; default: const b = 2; }",
+        ] {
+            assert!(parses(src, version), "{version:?}: {src:?} must parse");
+        }
+    }
+}

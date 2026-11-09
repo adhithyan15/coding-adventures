@@ -8571,6 +8571,9 @@ mod v_es2016 {
                                 name: r#"class_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
                             },
                         ],
@@ -9716,9 +9719,6 @@ mod v_es2016 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"expression_statement"#.to_string(),
                             },
                         ],
@@ -9744,6 +9744,9 @@ mod v_es2016 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -10326,6 +10329,9 @@ mod v_es2016 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -10358,6 +10364,9 @@ mod v_es2016 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -11753,6 +11762,9 @@ mod v_es2017 {
                                 name: r#"class_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
                             },
                         ],
@@ -13075,9 +13087,6 @@ mod v_es2017 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"expression_statement"#.to_string(),
                             },
                         ],
@@ -13106,6 +13115,9 @@ mod v_es2017 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -13701,6 +13713,9 @@ mod v_es2017 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -13736,6 +13751,9 @@ mod v_es2017 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -15153,6 +15171,9 @@ mod v_es2018 {
                             },
                             GrammarElement::RuleReference {
                                 name: r#"class_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
@@ -16589,9 +16610,6 @@ mod v_es2018 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"expression_statement"#.to_string(),
                             },
                         ],
@@ -16623,6 +16641,9 @@ mod v_es2018 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -17289,6 +17310,9 @@ mod v_es2018 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -17327,6 +17351,9 @@ mod v_es2018 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -18751,6 +18778,9 @@ mod v_es2019 {
                             },
                             GrammarElement::RuleReference {
                                 name: r#"class_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
@@ -20187,9 +20217,6 @@ mod v_es2019 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"expression_statement"#.to_string(),
                             },
                         ],
@@ -20221,6 +20248,9 @@ mod v_es2019 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -20887,6 +20917,9 @@ mod v_es2019 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -20925,6 +20958,9 @@ mod v_es2019 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -22355,6 +22391,9 @@ mod v_es2020 {
                             },
                             GrammarElement::RuleReference {
                                 name: r#"class_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
@@ -23791,9 +23830,6 @@ mod v_es2020 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"expression_statement"#.to_string(),
                             },
                         ],
@@ -23825,6 +23861,9 @@ mod v_es2020 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -24491,6 +24530,9 @@ mod v_es2020 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -24529,6 +24571,9 @@ mod v_es2020 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -26115,6 +26160,9 @@ mod v_es2021 {
                                 name: r#"class_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
                             },
                         ],
@@ -27549,9 +27597,6 @@ mod v_es2021 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"expression_statement"#.to_string(),
                             },
                         ],
@@ -27583,6 +27628,9 @@ mod v_es2021 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -28249,6 +28297,9 @@ mod v_es2021 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -28287,6 +28338,9 @@ mod v_es2021 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -29882,6 +29936,9 @@ mod v_es2022 {
                                 name: r#"class_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
                             },
                         ],
@@ -30812,6 +30869,9 @@ mod v_es2022 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -31586,9 +31646,6 @@ mod v_es2022 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"expression_statement"#.to_string(),
                             },
                         ],
@@ -31620,6 +31677,9 @@ mod v_es2022 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -32286,6 +32346,9 @@ mod v_es2022 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -32324,6 +32387,9 @@ mod v_es2022 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -33992,6 +34058,9 @@ mod v_es2023 {
                                 name: r#"class_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
                             },
                         ],
@@ -34922,6 +34991,9 @@ mod v_es2023 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -35696,9 +35768,6 @@ mod v_es2023 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"expression_statement"#.to_string(),
                             },
                         ],
@@ -35730,6 +35799,9 @@ mod v_es2023 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -36396,6 +36468,9 @@ mod v_es2023 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -36434,6 +36509,9 @@ mod v_es2023 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -38102,6 +38180,9 @@ mod v_es2024 {
                                 name: r#"class_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
                             },
                         ],
@@ -39032,6 +39113,9 @@ mod v_es2024 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -39806,9 +39890,6 @@ mod v_es2024 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"expression_statement"#.to_string(),
                             },
                         ],
@@ -39840,6 +39921,9 @@ mod v_es2024 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -40506,6 +40590,9 @@ mod v_es2024 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -40544,6 +40631,9 @@ mod v_es2024 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -42215,6 +42305,9 @@ mod v_es2025 {
                                 name: r#"class_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
+                                name: r#"lexical_declaration"#.to_string(),
+                            },
+                            GrammarElement::RuleReference {
                                 name: r#"statement"#.to_string(),
                             },
                         ],
@@ -43243,6 +43336,9 @@ mod v_es2025 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -44126,9 +44222,6 @@ mod v_es2025 {
                                 name: r#"debugger_statement"#.to_string(),
                             },
                             GrammarElement::RuleReference {
-                                name: r#"lexical_declaration"#.to_string(),
-                            },
-                            GrammarElement::RuleReference {
                                 name: r#"using_declaration"#.to_string(),
                             },
                             GrammarElement::RuleReference {
@@ -44169,6 +44262,9 @@ mod v_es2025 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
@@ -44871,6 +44967,9 @@ mod v_es2025 {
                                                 name: r#"class_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
                                             },
                                         ],
@@ -44912,6 +45011,9 @@ mod v_es2025 {
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"class_declaration"#.to_string(),
+                                            },
+                                            GrammarElement::RuleReference {
+                                                name: r#"lexical_declaration"#.to_string(),
                                             },
                                             GrammarElement::RuleReference {
                                                 name: r#"statement"#.to_string(),
