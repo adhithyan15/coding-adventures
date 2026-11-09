@@ -32,6 +32,7 @@ harness = false
 [[test]]
 name = "warrant_evidence"
 path = "tests/warrant_evidence.rs"
+harness = false
 
 # VER08b: runs the public API inside a manifest-derived sandbox (Linux live;
 # elsewhere reports NOT-LIVE). The BUILD runs every [[test]] target via

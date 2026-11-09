@@ -188,12 +188,14 @@ fn install_landlock(policy: &RuntimePolicy, abi: i64) -> Result<(), ArmError> {
 
     for (path, rights) in &policy.landlock_paths {
         let mask = rights_mask(rights, abi) & attr.handled_access_fs;
-        let c_path = CString::new(path.as_str()).map_err(|_| {
-            ArmError::Syscall(
+        let Ok(c_path) = CString::new(path.as_str()) else {
+            // SAFETY: closing the ruleset fd we own (nothing is restricted yet).
+            unsafe { libc::close(ruleset_fd) };
+            return Err(ArmError::Syscall(
                 "landlock path",
                 io::Error::new(io::ErrorKind::InvalidInput, "NUL in path"),
-            )
-        })?;
+            ));
+        };
         // SAFETY: `c_path` is a valid NUL-terminated string for the call.
         let parent_fd = unsafe { libc::open(c_path.as_ptr(), libc::O_PATH | libc::O_CLOEXEC) };
         if parent_fd < 0 {
@@ -296,4 +298,96 @@ pub fn arm(policy: &RuntimePolicy) -> Result<ArmReport, ArmError> {
         landlock_enforced,
         seccomp_enforced: true,
     })
+}
+
+// These tests run in the (unarmed) test process. They cover everything that
+// can be exercised without irreversibly sandboxing the process: the rights
+// arithmetic, the Landlock probe, and every *failure* path of the installers,
+// each of which returns before `landlock_restrict_self`/a valid seccomp
+// program takes effect. The success path (`arm`) is exercised for real, in a
+// child process, by the `selftest_*` targets.
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::policy::PolicyOptions;
+
+    const PURE: &str =
+        r#"{"version":1,"package":"rust/arm-unit","capabilities":[],"justification":"unit"}"#;
+
+    fn policy() -> RuntimePolicy {
+        RuntimePolicy::from_manifest_json(PURE, PolicyOptions::default()).unwrap()
+    }
+
+    #[test]
+    fn rights_masks_respect_the_abi() {
+        assert_eq!(handled_fs_mask(0), 0);
+        assert_eq!(handled_fs_mask(1), (1 << 13) - 1, "ABI 1 has bits 0..=12");
+        assert_eq!(handled_fs_mask(2) & (1 << 13), 1 << 13, "REFER is ABI 2");
+        assert_eq!(handled_fs_mask(3) & (1 << 14), 1 << 14, "TRUNCATE is ABI 3");
+        assert_eq!(
+            handled_fs_mask(5) & (1 << 15),
+            1 << 15,
+            "IOCTL_DEV is ABI 5"
+        );
+        assert_eq!(rights_mask(&["READ_FILE", "READ_DIR"], 1), 0b1100);
+        assert_eq!(rights_mask(&["TRUNCATE"], 1), 0, "too new for ABI 1");
+        assert_eq!(rights_mask(&["TRUNCATE"], 3), 1 << 14);
+        assert_eq!(rights_mask(&["NOT_A_RIGHT"], 5), 0);
+    }
+
+    #[test]
+    fn landlock_probe_is_non_negative() {
+        assert!(landlock_abi() >= 0);
+    }
+
+    #[test]
+    fn arm_error_display_names_the_failing_call() {
+        let text =
+            ArmError::Syscall("seccomp", io::Error::from_raw_os_error(libc::EINVAL)).to_string();
+        assert!(text.starts_with("seccomp failed: "), "{text}");
+        assert_eq!(
+            ArmError::LandlockRequired.to_string(),
+            "Landlock required but unavailable"
+        );
+    }
+
+    #[test]
+    fn an_empty_seccomp_program_is_refused_by_the_kernel() {
+        // Length 0 is EINVAL (or EACCES without privileges): either way no
+        // filter is installed and the process stays unrestricted.
+        let error = install_seccomp(&[]).unwrap_err();
+        assert!(matches!(error, ArmError::Syscall("seccomp", _)), "{error}");
+    }
+
+    #[test]
+    fn landlock_installer_failures_leave_the_process_unrestricted() {
+        let abi = landlock_abi();
+        if abi == 0 {
+            return; // no Landlock here; nothing to install
+        }
+        let mut nul = policy();
+        nul.landlock_paths = vec![("/tmp/a\0b".into(), vec!["READ_FILE"])];
+        let error = install_landlock(&nul, abi).unwrap_err();
+        assert!(
+            matches!(error, ArmError::Syscall("landlock path", _)),
+            "{error}"
+        );
+
+        let mut missing = policy();
+        missing.landlock_paths = vec![("/nonexistent/rcg-arm-unit".into(), vec!["READ_FILE"])];
+        let error = install_landlock(&missing, abi).unwrap_err();
+        assert!(
+            matches!(error, ArmError::Syscall("open(O_PATH)", _)),
+            "{error}"
+        );
+
+        // A rule with an empty access mask is rejected by landlock_add_rule.
+        let mut empty = policy();
+        empty.landlock_paths = vec![("/tmp".into(), vec![])];
+        let error = install_landlock(&empty, abi).unwrap_err();
+        assert!(
+            matches!(error, ArmError::Syscall("landlock_add_rule", _)),
+            "{error}"
+        );
+    }
 }

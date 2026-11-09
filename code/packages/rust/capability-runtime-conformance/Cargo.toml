@@ -30,3 +30,7 @@ harness = false
 [[test]]
 name = "selftest_arm"
 harness = false
+
+[[test]]
+name = "selftest_controls"
+harness = false

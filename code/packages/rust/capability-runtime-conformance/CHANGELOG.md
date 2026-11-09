@@ -28,3 +28,16 @@
   time + Landlock-scoped fs read, misbehaving).
 - Registered in the Rust workspace. Non-Linux targets compile and report
   NOT-LIVE (`RCG010`).
+- Coverage work: in-process unit tests for `arm` (rights arithmetic, Landlock
+  probe, every installer failure path that returns before restricting the
+  process), `sabotage` (every harmless control plus the unknown-name path) and
+  `harness` (`not_live`, evidence write failure, manifest refusal,
+  `unexpected_fds`); new `selftest_controls` target runs the full gate with all
+  rings (18 negative controls, env-leak, time-vdso known gap, Docker ring
+  NOT-LIVE when no daemon). Fixed a ruleset-fd leak when a Landlock path
+  contained a NUL byte. Measured line coverage (llvm-cov, this crate sources,
+  including in-source test modules): 82.0%; production lines only: 80.2%. The
+  remainder is `child_main`, the successful `arm` path and the Docker success
+  path, which run only inside a sandboxed child that ends in `_exit` and so
+  cannot flush profile data; they are asserted end to end by the `selftest_*`
+  targets and ct-compare gate instead.

@@ -242,3 +242,43 @@ pub fn attempt(name: &str, nonce: &str) -> bool {
     }
     true
 }
+
+// In-process tests. Run unarmed, the harmless controls simply succeed, which
+// proves each match arm issues a well-formed call and returns `true`. The
+// controls that could damage or hang the test process are omitted here and are
+// exercised for real, inside the armed child, by the gate's negative controls:
+// `proc-exec` (would replace the test process), `stdin-read` (could block),
+// `bad-fd-write` (writes to fd 7, which may be open).
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const NOT_RUN_UNARMED: &[&str] = &["proc-exec", "stdin-read", "bad-fd-write"];
+
+    #[test]
+    fn harmless_controls_are_known_and_return_true() {
+        for control in CONTROLS {
+            if NOT_RUN_UNARMED.contains(&control.name) {
+                continue;
+            }
+            assert!(attempt(control.name, "unit"), "{}", control.name);
+        }
+        assert!(attempt(TIME_VDSO, "unit"));
+        let _ = std::fs::remove_file("/tmp/rcg-sabotage-unit");
+    }
+
+    #[test]
+    fn unknown_control_is_reported_unknown() {
+        assert!(!attempt("no-such-control", "unit"));
+        assert!(!attempt(ENV_LEAK, "unit"), "env-leak is parent-driven");
+    }
+
+    #[test]
+    fn control_names_are_unique_and_expect_something() {
+        let mut names: Vec<_> = CONTROLS.iter().map(|c| c.name).collect();
+        names.sort_unstable();
+        names.dedup();
+        assert_eq!(names.len(), CONTROLS.len());
+        assert!(CONTROLS.iter().all(|c| !c.expected.is_empty()));
+    }
+}

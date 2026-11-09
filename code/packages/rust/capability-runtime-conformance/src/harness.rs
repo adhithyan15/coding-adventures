@@ -1276,4 +1276,74 @@ mod linux {
             control_detected,
         }
     }
+
+    // In-process tests of the parent-side and pre-arm helpers. The armed child
+    // body (`child_main`) cannot report coverage (it ends in `_exit` inside a
+    // seccomp sandbox); its behaviour is asserted end to end by the
+    // `selftest_*` targets instead.
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        fn pure_config(dir: PathBuf, manifest: &'static str) -> GateConfig {
+            GateConfig {
+                package: "rust/harness-unit",
+                manifest_json: manifest,
+                evidence_dir: Some(dir),
+                prepare: || Box::new(Vec::new),
+                options: PolicyOptions::default(),
+                rings: Rings::MAIN_ONLY,
+            }
+        }
+
+        fn scratch(name: &str) -> PathBuf {
+            let dir = std::env::temp_dir()
+                .join(format!("rcg-harness-unit-{name}-{}", std::process::id()));
+            let _ = std::fs::remove_dir_all(&dir);
+            dir
+        }
+
+        #[test]
+        fn unexpected_fds_reports_an_open_descriptor_above_stderr() {
+            let file = std::fs::File::open("/proc/self/exe").unwrap();
+            let found = unexpected_fds();
+            assert!(!found.is_empty(), "{found:?}");
+            drop(file);
+        }
+
+        #[test]
+        fn not_live_writes_honest_evidence_and_only_fails_when_strict() {
+            let dir = scratch("notlive");
+            let config = pure_config(dir.clone(), "{}");
+            let code = not_live(&config, "unit test reason", FailureId::Rcg013);
+            assert_eq!(code, i32::from(strict()));
+            let evidence =
+                std::fs::read_to_string(dir.join("capability_runtime_evidence.json")).unwrap();
+            assert!(evidence.contains("\"overall\": \"not-live\""), "{evidence}");
+            assert!(evidence.contains("unit test reason"));
+            assert!(evidence.contains("\"live\": false"));
+            let _ = std::fs::remove_dir_all(dir);
+        }
+
+        #[test]
+        fn evidence_write_failure_is_reported_not_fatal() {
+            let blocker = scratch("blocker");
+            std::fs::write(&blocker, b"a file, not a directory").unwrap();
+            let config = pure_config(blocker.join("sub"), "{}");
+            write_evidence(&config, &Json::obj([("k", Json::str("v"))]));
+            let _ = std::fs::remove_file(blocker);
+        }
+
+        #[test]
+        fn a_manifest_the_planner_rejects_is_refused_with_evidence() {
+            let dir = scratch("refused");
+            let config = pure_config(dir.clone(), "{ not json");
+            assert_eq!(run(&config), 1);
+            let evidence =
+                std::fs::read_to_string(dir.join("capability_runtime_evidence.json")).unwrap();
+            assert!(evidence.contains("\"overall\": \"fail\""), "{evidence}");
+            assert!(evidence.contains("RCG006"), "{evidence}");
+            let _ = std::fs::remove_dir_all(dir);
+        }
+    }
 }
