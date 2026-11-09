@@ -268,8 +268,13 @@ struct Alphabet {
 
 impl Alphabet {
     fn new() -> Alphabet {
+        Alphabet::over(proof_universe())
+    }
+
+    /// An add and a delete for each non-empty clause, plus `0` and `d 0`.
+    fn over(clauses: Vec<Clause>) -> Alphabet {
         let mut steps = Vec::new();
-        for c in proof_universe() {
+        for c in clauses {
             if c.is_empty() {
                 continue;
             }
@@ -527,3 +532,58 @@ fn differential_against_the_full_scan_reference_on_all_enumerated_proofs() {
     );
     assert!(t[1] > 1000 && t[2] > 1000 && t[3] > 1000 && t[4] > 1000);
 }
+
+/// The width-2 domain never gives a clause a *third* literal, so the
+/// watched-literal replacement search (`for k in 2..len`) is dead code there.
+/// This domain fills the gap: clauses are all non-empty literal sets of size
+/// at most three over x1..x3 (6 + 15 + 20 = 41, tautologies included), and
+/// formulas are the multisets of at most three of them (13,244). Proof steps
+/// are adds and deletes of those 41 clauses plus the fresh units x4 and -x4.
+/// Every sampled proof is judged by the full-scan reference, and no proof may
+/// be accepted when brute force says the formula is satisfiable.
+#[test]
+fn width_three_domain_differential_and_soundness() {
+    let t0 = std::time::Instant::now();
+    let lits = [1, -1, 2, -2, 3, -3];
+    let mut universe: Vec<Clause> = Vec::new();
+    for mask in 1u32..64 {
+        if mask.count_ones() <= 3 {
+            universe.push((0..6).filter(|b| mask >> b & 1 == 1).map(|b| lits[b]).collect());
+        }
+    }
+    assert_eq!(universe.len(), 41);
+    let fs = formulas(&universe, 3);
+    assert_eq!(fs.len(), 1 + 41 + 861 + 12341);
+    let mut proof_clauses = universe.clone();
+    proof_clauses.push(vec![4]);
+    proof_clauses.push(vec![-4]);
+    let alpha = Alphabet::over(proof_clauses);
+    let items: Vec<(usize, &Vec<Clause>)> = fs.iter().enumerate().collect();
+    let t = par_sum(&items, |&(idx, f), acc| {
+        if idx % W3_FORMULA_SAMPLE != 0 {
+            return;
+        }
+        let sat = satisfiable(3, f);
+        for p in alpha.proofs(W3_STRIDE) {
+            let steps = alpha.steps_of(&p);
+            let (k, r) = (kernel(f, &steps), ref_check(f, &steps));
+            assert_eq!(k, r, "kernel and reference disagree\nformula: {f:?}\nproof: {steps:?}");
+            assert!(!(sat && k == Verdict::Accepted), "accepted a proof for a SATISFIABLE formula {f:?}: {steps:?}");
+            acc[0] += 1;
+            acc[match k {
+                Verdict::Accepted => 1,
+                Verdict::NotImplied(_) => 2,
+                Verdict::DeleteAbsent(_) => 3,
+                Verdict::NoEmptyClause => 4,
+            }] += 1;
+        }
+    });
+    println!(
+        "width3: compared={} accepted={} not_implied={} delete_absent={} no_empty={} in {:?}",
+        t[0], t[1], t[2], t[3], t[4], t0.elapsed()
+    );
+    assert!(t[1] > 100 && t[2] > 1000 && t[3] > 1000 && t[4] > 1000);
+}
+
+const W3_FORMULA_SAMPLE: usize = 5;
+const W3_STRIDE: usize = 97;

@@ -445,6 +445,29 @@ fn r_is_ok(f: &str, p: &str, budget: u64) -> bool {
     check_with_limits(f, p, Limits { max_work: budget, ..Limits::default() }).is_ok()
 }
 
+/// Every budget, one after the other, on a proof whose only lemma needs the
+/// RAT check with two partner clauses. Somewhere in the sweep the budget runs
+/// out *while a resolvent is being built* (the charge `is_rat` makes before
+/// calling `is_rup`); the verdict must then be `ResourceLimit`, never an
+/// acceptance, and never `NotImplied` (the lemma is valid RAT).
+#[test]
+fn c8_budget_sweep_through_the_rat_check() {
+    // x1 is RAT: partners (-1 2) and (-1 3) give resolvents (1 2), (1 3),
+    // both RUP through the units 2 and 3. The formula is satisfiable.
+    let f = "p cnf 3 4\n-1 2 0\n2 0\n-1 3 0\n3 0\n";
+    let p = "1 0\n";
+    assert_eq!(check_with_limits(f, p, Limits::default()), Err(Rejection::NoEmptyClause));
+    let (mut limit, mut done) = (0, 0);
+    for budget in 0..400 {
+        match check_with_limits(f, p, Limits { max_work: budget, ..Limits::default() }) {
+            Err(Rejection::ResourceLimit { step: 0, line: 1 }) => limit += 1,
+            Err(Rejection::NoEmptyClause) => done += 1,
+            other => panic!("budget {budget}: {other:?}"),
+        }
+    }
+    assert!(limit > 10 && done > 10, "limit={limit} done={done}");
+}
+
 #[test]
 fn c8_budget_on_invalid_proofs_still_rejects() {
     // A satisfiable formula: nothing is implied, so no budget may accept.
