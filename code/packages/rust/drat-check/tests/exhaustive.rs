@@ -29,6 +29,9 @@
 //!   over the same enumerated proofs (UNSAT formulas included, which is
 //!   where RAT-vs-RUP and deletion interplay matter).
 
+// `is_multiple_of` is too new for older toolchains the repo still builds on.
+#![allow(unknown_lints, clippy::manual_is_multiple_of)]
+
 use drat_check::{check, Rejection};
 
 type Clause = Vec<i32>;
@@ -424,15 +427,11 @@ fn refutation(f: &[Clause]) -> Option<Vec<Clause>> {
                 }
             }
         }
-        match fresh {
-            None => return None,
-            Some(r) => {
-                db.push(r.clone());
-                lemmas.push(r.clone());
-                if r.is_empty() {
-                    return Some(lemmas);
-                }
-            }
+        let r = fresh?;
+        db.push(r.clone());
+        lemmas.push(r.clone());
+        if r.is_empty() {
+            return Some(lemmas);
         }
     }
 }
@@ -468,7 +467,7 @@ fn completeness_every_unsatisfiable_formula_has_an_accepted_resolution_proof() {
         assert_eq!(ok2.lemmas, lemmas.len());
 
         // Variant: without the final empty clause the proof is incomplete.
-        if lemmas.len() >= 1 {
+        if !lemmas.is_empty() {
             let cut = &base[..base.len() - 1];
             assert_eq!(check(&text, &proof_text(cut)), Err(Rejection::NoEmptyClause), "{text} {cut:?}");
         }
