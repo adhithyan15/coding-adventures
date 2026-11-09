@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - refuse lexical declarations in single-statement contexts (#18146)
+
+- In ECMAScript (§14.1.1), `Statement` excludes lexical declarations (`let` and `const`), which are only valid in statement-list contexts (blocks, case/default clauses, class static blocks, and module/script roots).
+- Because `es2016.grammar` through `es2025.grammar` previously included `lexical_declaration` in `statement`, inputs like `if (1) let\nx = 1` and `if (1) const x = 1` were incorrectly parsed as lexical declarations inside the `if` body, miscompiling to `let x=1;` or `const x=1;`.
+- Moved `lexical_declaration` out of `statement` into `source_element`, `block`, `case_clause`, `default_clause`, and `static_block` across `es2016.grammar` through `es2025.grammar`, ensuring single-statement contexts fail closed and are never miscompiled to a different program.
+- Added regression tests in `tests/regression_if_let_statement_18146.rs` and `tests/regression_expression_statement_lookahead.rs`.
+
 ### Fixed - preserve statement break after identifier yield in WHITESPACE_ONLY (#17887)
 
 - In sloppy mode outside a generator, `yield` is a valid identifier. When minifying code where `yield` was used as an identifier or assignment target (e.g. `var yield = 4\nvar x = yield\n/ 2;` or `var a = 10\nyield = 6\nvar x = yield\n/ 2;`), `WHITESPACE_ONLY` previously dropped statement breaks before statement-starting keywords or assignment targets, resulting in syntax errors.

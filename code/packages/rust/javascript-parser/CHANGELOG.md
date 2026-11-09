@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.67.3] - 2026-11-08
+
+### Fixed
+
+- Prevent lexical declarations in single-statement contexts (#18146):
+  - In `code/grammars/ecmascript/es2016.grammar` through `es2025.grammar`, `lexical_declaration` is moved from `statement` to `source_element`, `block`, `case_clause`, `default_clause`, and `static_block`.
+  - ECMA-262 specifies that `Statement` excludes lexical declarations (`let` and `const`). By excluding `lexical_declaration` from `statement`, single-statement contexts (such as `if`, `while`, `for`, `with`, and labelled statements) refuse declarations fail-closed rather than miscompiling `if (1) let\nx = 1` or `if (1) const x = 1` into `let x=1;`.
+  - Regenerated compiled grammars in `src/_grammar.rs`.
+
 ## [0.67.2] - 2026-11-08
 
 ### Fixed
