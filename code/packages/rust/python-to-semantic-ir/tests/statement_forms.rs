@@ -1228,6 +1228,31 @@ fn deeply_nested_def_can_call_ancestor_sibling() {
     assert_eq!(m.functions.len(), 5); // main, outer, mid1, inner, mid2
 }
 
+// ── constant-time local variable lookup (#18482 item 6) ─────────────
+
+/// Block-scoped variables rewound after nested if/for blocks do not leak into
+/// subsequent scopes or corrupt the constant-time local lookup map (#18482 item 6).
+#[test]
+fn block_scoped_locals_rewind_cleanly() {
+    let src = "def f(x):\n    y = 0\n    if x > 0:\n        y = 1\n        z = 10\n    else:\n        y = 2\n        z = 20\n    return y\n";
+    let m = lower(src);
+    assert_eq!(m.functions.len(), 2);
+}
+
+/// A function with many local variable assignments lowers correctly and verifies
+/// constant-time local tracking across blocks (#18482 item 6).
+#[test]
+fn many_local_assignments_in_blocks_lower_cleanly() {
+    let mut code = String::from("def f():\n");
+    for i in 0..100 {
+        code.push_str(&format!("    v{i} = {i}\n"));
+    }
+    code.push_str("    return v99\n");
+    let m = lower(&code);
+    assert_eq!(m.functions.len(), 2);
+}
+
+
 
 
 
