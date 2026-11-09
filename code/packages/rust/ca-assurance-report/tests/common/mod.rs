@@ -35,6 +35,9 @@ impl Sandbox {
         copy_dir(&real.join("evidence"), &pkg.join("evidence"));
         copy_dir(&real.join("src"), &pkg.join("src"));
         fs::copy(real.join("effect_certificate.json"), pkg.join("effect_certificate.json")).unwrap();
+        // `--generate` names the report after the package directory and reads
+        // its version from Cargo.toml.
+        fs::copy(real.join("Cargo.toml"), pkg.join("Cargo.toml")).unwrap();
         fs::create_dir_all(root.join("code/specs")).unwrap();
         fs::copy(
             manifest.join("../../../specs/ct-compare.warrant"),
