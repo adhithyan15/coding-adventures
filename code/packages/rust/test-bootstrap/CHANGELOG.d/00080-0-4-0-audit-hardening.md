@@ -1,4 +1,4 @@
-## Unreleased: leaf audit and hardening
+## 0.4.0 — leaf audit and hardening
 
 An audit of every module against TF01/VER05/VER06/VER07, with exhaustive tests
 and hand-made mutants. Behaviour that could report a false pass, hang, panic or
