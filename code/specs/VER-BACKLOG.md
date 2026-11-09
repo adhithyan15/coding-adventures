@@ -358,3 +358,198 @@ platforms; update package/pilot/quirk docs; run Rust/Python/Go checks and securi
 review; publish a dependent draft, then retarget/mark ready after P003's merge is
 verified (now done). Reprioritize again after P004's actual merge before selecting
 P005. The local Warrant notes are preparation, not an accepted spec or code.
+
+## Polyglot Warrant-derived evidence (coordinator queue)
+
+Goal: a Warrant spec is the single source that is mechanically translated into
+example, bounded-exhaustive, property, fuzz and proof evidence, in every
+language lane the repo supports, and every assurance report is computed from
+the evidence those runs actually wrote. Started 2026-11-09 after an audit found
+`rust/ct-compare`'s report was a hand-written literal (see WD-001).
+
+Architecture (three layers, so every lane gets real Warrant-derived tests early):
+
+1. Portable layer (all lanes): the canonical Rust Warrant compiler expands a
+   spec into a language-neutral corpus (examples, bounded-exhaustive cases,
+   seeded biased property cases, negative controls). Each lane executes it
+   through its own L0 runner against its own implementation, runs the sabotage
+   mode, and writes an evidence manifest. Modelled on the der-tlv-v1
+   cases.json/consumers.json pattern (TF00 "Portable architecture").
+2. Native layer: per-lane Warrant backends emit native L2 property and fuzz
+   suites over that lane's engine (gated by the pbt-v1 / fuzz-v1 corpora).
+3. Proof layer: per-lane WIR front ends (VER14); labelled not-live until real.
+
+Lanes, in order: rust, python, typescript, go, ruby, c, cpp, java, kotlin,
+csharp, fsharp, elixir (have ct-compare today); then lua, perl, haskell,
+swift, dart, ocaml (need a CT01 ct-compare port first).
+
+| Priority / ID | Work | State / acceptance |
+|---|---|---|
+| P0 / WD-001 | Rust ct-compare: Warrant -> executed example/exhaustive/PBT/fuzz suites, Warrant-driven CT and bound proofs, evidence-derived report with fail-closed `--check`; VER04h spec (VER-P030) | in PR; 9 claims, 71 generated tests, exhaustive up to 240,818 cases/op, proofs bounded(128) except ct_eq_u64 proved; certificates are trivial miter refutations (recorded honestly) |
+| P1 / WD-002 | Spec VER04i: polyglot evidence corpus format, consumers registry, per-lane manifest schema, report generalization | waiting WD-001 |
+| P1 / WD-003 | Rust Warrant compiler emits the language-neutral expanded corpus for ct-compare + Python reference validator + regeneration check | waiting WD-002 |
+| P1 / WD-004 | Generalize ca-assurance-report beyond `rust/` (per-lane manifests, honest not-live rungs) | waiting WD-002 |
+| P2 / WD-1xx | One PR per lane: L0 corpus runner + sabotage + manifest + report for ct-compare (python, typescript, go, ruby, c, cpp, java, kotlin, csharp, fsharp, elixir) | waiting WD-003/004 |
+| P3 / WD-2xx | Native Warrant backends emitting L2 PBT/fuzz suites per lane (TypeScript first: engines exist) | waiting WD-1xx per lane |
+| P3 / WD-3xx | CT01 ct-compare ports for lua, perl, haskell, swift, dart, ocaml, then their WD-1xx lanes | independent |
+| P4 / WD-4xx | Proof lanes via WIR front ends (VER14), C first | waiting VER14 spec |
+| P2 / WD-901 | Deduplicate TypeScript engines: test-bootstrap/src copies vs standalone sat-solver/pbt/fuzz/warrant-compiler/test-matchers (already diverged) | independent |
+| watch / WD-902 | Main full build red: repository-source-input-boundary missing six TS packages; fixed by open #19050 (not ours) | watch only |
+| P2 / WD-903 | PR CI does not run repo-wide contract tests when a new package directory appears | independent |
+| P2 / WD-904 | VER-P040 (TS bounded model checker) marked in-progress with no branch or PR anywhere; confirm owner or reset to ready | independent |
+| P2 / WD-905 | TypeScript Vitest retirement stalled: only `bitset` uses test-bootstrap; 436/482 packages still depend on vitest | continue TF01 conversion in batches after WD-901 |
+| P3 / WD-906 | `typescript/bitset` imports `../../test-bootstrap/dist/index.js` by relative path; dependency undeclared in package.json (only BUILD wires it) | fold into WD-905 conversion pattern |
+| P2 / WD-907 | VER02 repository-wide test-tier enforcement has no spec; it is the repo-wide validation gate | spec after WD-004 |
+
+### Leaf-library conversion program (user direction 2026-11-09)
+
+"Leaf" means a real library package with no internal dependencies, like
+`ct-compare`. 280 Rust crates have zero `[dependencies]`; many exist in 17-18
+languages (e.g. gf256, wasm-leb128, sha1, md5, lzss, caesar/vigenere ciphers,
+trie, heap, bitset). Each is converted one at a time:
+
+1. Careful spec (CT01-style) + Warrant spec as the single source of truth.
+2. Warrant generates every test kind (WD-001 pipeline); exhaustive where the
+   domain is enumerable; proofs where WIR can lower the code.
+3. Evidence-derived assurance report; release-ready verdict.
+4. Port the same Warrant-derived evidence to every language lane (WD-1xx).
+
+"Release-ready" here means the evidence gate passes. Actual publishing stays
+BLOCKED by VER00 section 12.1 (approval clients and the maintainer's computer
+in the trust base, malicious build hooks) until the owner resolves it.
+
+| Priority / ID | Work | State / acceptance |
+|---|---|---|
+| done / LP-000 | Survey + rank pure leaf libraries (scratchpad leaf-survey.md; to be committed as code/specs/VER-LEAF-SURVEY.md) | done 2026-11-09, read-only; timings are estimates |
+| P0 / SEC-001 | lz77/lz78/lzss/lzw (+ huffman-compression, brotli, huffman-tree) untrusted-header allocation/loop/OOB fixes across 18 lanes | local, branch worktree-agent-ada735047ffb1aece (19 commits); real bugs in rust/go (OOM), c/cpp (OOB read), fsharp (4e9 loop), swift (traps), quadratic decode in several; C#, F#, Dart, Swift, Haskell, Elixir, Lua not run locally; queued for PR after WD-001 |
+| P1 / LP-001 | gf256: field laws, all 65,536 pairs (2^24 triples) exhaustive, cross-language table fixture | after WD-001 template |
+| P1 / LP-002 | x25519: RFC 7748 known answers, DH commutativity, secret labels; CT proof needs VER20 lowering | after LP-001 |
+| P1 / LP-003 | lzw, then lzss, lz77, lz78: round trip + hostile decompress, exhaustive to length 3; needs an error channel (API change across ports) and `max_output` bound | after SEC-001 |
+| P1 / LP-004 | sha512, blake2b, sha1, md5 shared template (known answers, block-boundary sweep, bounds); thin without extension E | after LP-001 |
+| P2 / LP-005 | des; then Tier 2 (wasm-leb128, der-tlv, protobuf varint, zeroize, bitset) as Warrant extensions land | after WX items |
+| P2 / LP-006 | Add missing `required_capabilities.json` (sha512 found without one); audit all leaves | independent, small (haiku) |
+| P2 / LP-007 | Negative/malformed-input tests absent in lzss, lz77, lz78, sha1, md5, x25519, range-coder, caesar/atbash, irc-framing | folded into each LP item |
+
+Warrant extensions, cheapest unlock-per-cost first (from survey): WX-B fixed-width
+ints U16/U32/I64; WX-C bitwise ops; WX-A tuples/records/non-recursive sums;
+WX-E external oracle / vector-table construct + per-language fixture generator;
+WX-F binding-level sequence drivers for stateful objects; WX-D bounded
+fold/count/map; WX-G in-out postconditions; WX-H `max_output` bounds;
+WX-I recursive sums; WX-J strings/floats/maps/stateful models (Tier 3).
+
+### Bottom-up hardening and self-hosting (user direction 2026-11-09)
+
+The three "LH" audits below cover the bootstrap tooling itself (the test
+harness, proof checker and capability analyzer), which must be READY before
+Warrant and test-bootstrap can be trusted to test themselves and the leaves.
+
+Order: harden leaf packages first (careful spec, exhaustive tests, honest
+READY / READY-WITH-CAVEATS / NOT-READY verdict), then climb the dependency
+graph. Once the bootstrap is ready, the stack tests itself: each package gets a
+Warrant spec, and its tests are generated by Warrant and executed on
+test-bootstrap.
+
+Rust dependency graph (verification stack): leaves `drat-check`,
+`test-bootstrap`, `ca-capability-analyzer`, `ct-compare`; then `cdcl-sat`
+(drat-check) -> `bit-blaster` (cdcl-sat, drat-check) -> `warrant-grammar`
+(test-bootstrap + shared grammar-tools/lexer/parser) and `warrant-ir`
+(bit-blaster, cdcl-sat, drat-check, ct-compare, test-bootstrap) ->
+`ca-assurance-report`.
+
+Trust anchor for self-hosting: a harness cannot be the only judge of itself.
+Self-generated suites for test-bootstrap must also be cross-checked by the
+independent standard-library Python reference validators (tfv.py,
+bootstrap_harness_conformance.py, pbt_/fuzz_conformance.py), and the L0 core
+stays small enough to review by hand.
+
+| Priority / ID | Work | State / acceptance |
+|---|---|---|
+| P0 / LH-001 | Leaf audit `drat-check` (VER11): soundness spec, bounded-exhaustive SAT/UNSAT proofs, mutants, coverage | in progress (sonnet, worktree) |
+| P0 / LH-002 | Leaf audit `ca-capability-analyzer` (VER08a/23a) | local, branch worktree-agent-a274a2c279c1b0d70 (5 commits); READY-WITH-CAVEATS; 141 tests (was 45), 348+7 evasion cases with no misses, 20/20 mutants killed, 96.6% lines measured; fixed brace-group `use std::{fs, process}` evasion, unscanned capabilities.rs, nested target/ skip, unknown-std-is-pure, ABI list, include!/#[path]/proc-macro now fail closed, `--emit-cert` writing `proved` for violators, truncated ct-compare cert signature; excepted unsafe now visible (`SUMMARY unsafe_code=present-excepted(2)`). Queued for PR |
+| P1 / LH-002a | Assurance report must read the analyzer's SUMMARY line: memory-safety CWE exclusions require `unsafe_code=absent`; no injection/FFI exclusions when `unanalyzed_dependencies>0` or `ffi=present` | after LH-002 + WD-001 merge |
+| P2 / LH-002b | Analyzer caveats G-1..G-9 (deps assumed pure, tests/benches not analysed, macros unexpanded, cfg ignored, cert digest omits Cargo.toml/build.rs); runtime CAP-RT covers part | backlog |
+| P2 / OPS-001 | Agents must use unique scratch directories: one agent's mutation run was clobbered by another in the shared scratchpad | apply in every brief |
+| P0 / LH-003 | Leaf audit `test-bootstrap` (TF01, VER05-07): false-pass tests, TFV cross-check with Python oracle, mutants | in progress (sonnet, worktree) |
+| P0 / LH-004 | Leaf audit `ct-compare` (CT01) | after WD-001 lands (WD-001 rewrites its tests) |
+| P1 / LH-005 | `cdcl-sat` (VER09) audit | after LH-001 |
+| P1 / LH-006 | `bit-blaster` (VER10) audit | after LH-005 |
+| P1 / LH-007 | `warrant-grammar` (VER04a-g) and `warrant-ir` (VER25, 19, 20) audits | after LH-003/006 |
+| P1 / LH-008 | TypeScript leaves: test-bootstrap + standalone engines (after WD-901 dedupe) | after WD-901 |
+| P1 / SH-001 | Self-hosting gap analysis: can Warrant v0 express each leaf's contracts (needs sequences/lists, records, error results, parser-shaped ops?) -> Warrant language extensions spec | after LH-001..003 verdicts |
+| P1 / SH-002 | Warrant specs for leaves (`ct-compare` done by WD-001; then prng, tfv, verdict, drat-check, sha256) with generated suites run on test-bootstrap + Python oracle cross-check | after SH-001 |
+| P2 / SH-003 | Self-host up the graph: cdcl-sat, bit-blaster, warrant-grammar (Warrant compiler tests itself), warrant-ir, ca-assurance-report | after SH-002 |
+
+### Assumption reduction, programs to logic gates (user direction 2026-11-09)
+
+Every proof label carries assumptions (today: `compiler.preserves_timing`,
+`memory.unaliased`, and the unapproved CWE-208 gate-level exemption). The long
+arc removes them one at a time, from source down to a simulated netlist, so a
+claim such as "constant time" is eventually proved on gates, not assumed below
+WIR. Work starts at the leaves and climbs.
+
+| Priority / ID | Work | State / acceptance |
+|---|---|---|
+| P2 / AS-001 | Assumption catalogue (VER13): every assumption used by any report, its meaning, what would discharge it, which packages depend on it | after WD-001 |
+| P2 / AS-002 | Discharge `memory.unaliased` for ct-compare via WIR provenance proof or Miri evidence on the unsafe region | after AS-001 |
+| P3 / AS-003 | `compiler.preserves_timing`: translation validation of the optimized IR / machine code against WIR for ct-compare (existing optimized_ir tests are a start) | after AS-001 |
+| P3 / AS-004 | Gate-level constant time: compile ct-compare's kernel to the repo's gate/CPU simulators (Busicom/Intel 4004 track, VER18) and prove trace equivalence on a simulated netlist; retire EXEMPT-CWE-208-GATE-LEVEL | long-term |
+| P3 / AS-005 | Repeat AS-002..004 per leaf as each converts | long-term |
+
+### Audit findings (2026-11-09) on the delivered implementation
+
+Each finding is tracked to the item that closes it. A finding is closed only
+when the fix is merged and verified on fetched main.
+
+| ID | Finding (verified by reading code and running `cargo test`) | Closed by |
+|---|---|---|
+| AF-01 | `ca-assurance-report::generate_ct_compare_report` builds the whole ct-compare report from literals; no number is measured | WD-001 phase 3 |
+| AF-02 | Report claims 10,000 property cases per op; no property test ever calls ct-compare | WD-001 phase 1 |
+| AF-03 | `warrant-grammar/tests/codegen.rs::test_claim_execution_and_sabotage_detection` compares `a == b` with `a == b`; it never calls `ct_eq` | WD-001 phase 1 |
+| AF-04 | `compile_rust_l0_harness` output for ct-compare is only string-matched (`suite.add(...)`), never compiled or executed | WD-001 phase 1 |
+| AF-05 | Bytes-pair generators draw 0..32 random bytes, so equal pairs almost never occur; the equal branch is barely exercised | WD-001 phase 1 (biased generators) |
+| AF-06 | Report claims 100,000 fuzz iterations per op; the campaigns run 300-500, and are hand-written rather than Warrant-derived | WD-001 phase 1 |
+| AF-07 | No bounded-exhaustive unit tests over any small domain | WD-001 phase 1 |
+| AF-08 | `ct_eq` is "proved" only via internal `ct_eq_equal_length` on 4-byte buffers; length-mismatch path unproved | WD-001 phase 2 |
+| AF-09 | `ct_select_bytes` proof runs on 4-byte buffers while the report says `bounded(4096)` | WD-001 phase 2 |
+| AF-10 | Certificate `drat:sha256:e2a4c386892...` is PR #19020's commit hash plus literal `...`, pasted into all four claims | WD-001 phase 2/3 |
+| AF-11 | CWE-400 "discharged" by a linear step bound; the only `BoundProver` test targets a synthetic 3-step function | WD-001 phase 2 |
+| AF-12 | Evidence IDs (e.g. `bench_instruction_counts::equal-retired-instructions`, `warrant-ir::linear-step-bound`) match no real test | WD-001 phase 3 |
+| AF-13 | `--check` validates shape/consistency only; never cross-checks evidence or certificate files | WD-001 phase 3 |
+| AF-14 | `--check` hard-requires a `rust/` package prefix, blocking other lanes | WD-004 |
+| AF-15 | `ct-compare.warrant` has one claim (`eq_agrees`); `eq_fixed`, `select_bytes`, `eq_u64` have no claims | WD-001 phase 0 |
+| AF-16 | VER-BACKLOG entries P010-P028 restate the inflated evidence; Discoveries stop at P029; P021 and P039 lack merge evidence (#19013, #19045) | WD-001 phase 0 |
+| AF-17 | TS engines exist twice (test-bootstrap/src vs standalone packages) and already differ by 60-560 lines each | WD-901 |
+| AF-18 | Six new TS packages never added to repository-source-input-boundary.json; main full build red | WD-902 (#19050) |
+| AF-19 | PR CI diff detection skipped the repo-wide contract test that would have caught AF-18 | WD-903 |
+| AF-20 | VER-P040 recorded as in-progress without any branch or PR | WD-904 |
+| AF-21 | Vitest retirement covers 1 of ~450 packages; bitset's test-bootstrap dependency is undeclared | WD-905, WD-906 |
+| AF-22 | ct-compare has two `unsafe` blocks (volatile barrier) declared as a `banned_construct_exceptions` entry, yet the report excludes CWE-416/787/125/415/476/190 because "analyzer proved no unsafe blocks" | WD-001 phase 3 + LH-002 |
+| AF-23 | Capability conformance is only checked statically; no runtime evidence that a package uses nothing beyond `required_capabilities.json` | CAP-RT |
+| AF-24 | lz77 (and by reading, lz78/lzss) preallocate from untrusted headers: a 4-byte input aborts the process with a 16 GiB allocation | SEC-001 |
+| AF-25 | lz* `decompress` has no error channel, so malformed input cannot be rejected or specified | LP-003 |
+
+### Runtime capability conformance (user direction 2026-11-09)
+
+| Priority / ID | Work | State / acceptance |
+|---|---|---|
+| P0 / CAP-RT-001 | Spec VER08b + new crate capability-runtime-conformance; ct-compare pilot | local, branch worktree-agent-a9f1811c0377a9acf (6 commits); READY-WITH-CAVEATS: 6-syscall armed baseline, 18/18 negative controls caught by both rings, Docker ring live; coverage 72.7% (sandboxed child cannot flush profiles); vDSO time reads invisible; CI runner strace/Docker unverified |
+| P1 / CAP-RT-002 | Feed runtime evidence into the evidence-derived assurance report (new rung; `--check` requires it on Linux) | after WD-001 + CAP-RT-001 |
+| P1 / CAP-RT-003 | Make CAP-RT a required step of every leaf-library conversion (LP-0xx) | after CAP-RT-001 |
+| P2 / CAP-RT-1xx | Per-language lanes: arm the filter after interpreter/VM startup (Python, TypeScript/Node, Go, JVM, .NET, ...) | after CAP-RT-001 |
+
+### Follow-ups logged 2026-11-09 from agent reports
+
+| Priority / ID | Work |
+|---|---|
+| P1 / SEC-002 | Decompression-bomb surface remains: declared lengths up to 4 GiB satisfiable by real tokens; LZ78 chains quadratic; LZW ~2700x amplification. Needs `max_output`/error channel (LP-003, WX-H) |
+| P2 / SEC-003 | huffman-compression: crafted code-length table overflows `code <<= len - prev_len` |
+| P2 / SEC-004 | elixir lz77 decode O(n^2) list appends |
+| P1 / SEC-005 | Run the C#, F#, Dart, Swift, Haskell, Elixir, Lua lz* fixes in CI or a local toolchain; perl Test2::V0 suites; ruby standardrb |
+| P1 / CAP-RT-004 | CI wiring: set RCG_STRICT=1 and RCG_REQUIRE_DOCKER=1 on Linux runners once strace/Docker availability is confirmed |
+| P2 / CAP-RT-005 | Coverage of sandboxed child code (flush profile before arming or via pre-opened fd); crate at 72.7% < 80% |
+| P2 / CAP-RT-006 | vDSO-backed time reads are invisible to both rings; document as residual or detect via vDSO unmapping |
+| P2 / WD-005 | Non-trivial 2-safety miters (current DRAT certificates are the fixed x and not-x refutation); prover support for traps as path outcomes; heap/depth bound proofs |
+| P2 / WD-006 | Single binding table: op->export map duplicated in gen_evidence.rs and warrant_proofs.rs |
+| P2 / WD-007 | Retire or derive remaining hand-written ct-compare tests (conformance, fuzz_targets, optimized_ir) |
+| P2 / WD-008 | Miri evidence for CWE-416/415/476/190; tools behind the nine `unverified::` attestations |
+| P2 / OPS-002 | `cargo build --workspace` cannot run in this sandbox (skia-bindings download 403); rely on CI for workspace builds |
