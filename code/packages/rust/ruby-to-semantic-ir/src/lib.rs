@@ -5995,7 +5995,7 @@ mod tests {
                 assert_eq!(rescues.len(), 1);
                 let r = &rescues[0];
                 assert_eq!(r.exception_types, vec!["StandardError".to_string()]);
-                assert!(r.binding.as_ref().map_or(false, |b| b.starts_with("__rescue_binding_")));
+                assert!(r.binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
                 assert!(matches!(&r.body[0], Stmt::Assign { name, .. } if name == "e"));
                 assert!(matches!(&r.body[1], Stmt::LetBinding { name, .. } if name == "y"));
                 assert!(ensure_body.is_none());
@@ -6082,7 +6082,7 @@ mod tests {
                     vec!["Foo".to_string(), "Bar".to_string()],
                     "both exception classes preserved in order"
                 );
-                assert!(rescues[0].binding.as_ref().map_or(false, |b| b.starts_with("__rescue_binding_")));
+                assert!(rescues[0].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
             }
             other => panic!("expected Stmt::TryCatch, got {:?}", other),
         }
@@ -6108,9 +6108,9 @@ mod tests {
             Stmt::TryCatch { rescues, .. } => {
                 assert_eq!(rescues.len(), 2, "two rescue clauses");
                 assert_eq!(rescues[0].exception_types, vec!["TypeError".to_string()]);
-                assert!(rescues[0].binding.as_ref().map_or(false, |b| b.starts_with("__rescue_binding_")));
+                assert!(rescues[0].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
                 assert_eq!(rescues[1].exception_types, vec!["NameError".to_string()]);
-                assert!(rescues[1].binding.as_ref().map_or(false, |b| b.starts_with("__rescue_binding_")));
+                assert!(rescues[1].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
             }
             other => panic!("expected Stmt::TryCatch, got {:?}", other),
         }
@@ -6274,7 +6274,7 @@ mod tests {
                 assert!(!body.is_empty(), "try body has the method statements");
                 assert_eq!(rescues.len(), 1);
                 assert_eq!(rescues[0].exception_types, vec!["Foo".to_string()]);
-                assert!(rescues[0].binding.as_ref().map_or(false, |b| b.starts_with("__rescue_binding_")));
+                assert!(rescues[0].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
                 assert!(ensure_body.is_none());
             }
             other => panic!("expected Stmt::TryCatch, got {:?}", other),
@@ -10595,7 +10595,7 @@ b = "y"
             Stmt::TryCatch { rescues, .. } => {
                 assert_eq!(rescues.len(), 1);
                 assert!(rescues[0].exception_types.is_empty());
-                assert!(rescues[0].binding.as_ref().map_or(false, |b| b.starts_with("__rescue_binding_")));
+                assert!(rescues[0].binding.as_ref().is_some_and(|b| b.starts_with("__rescue_binding_")));
                 assert_eq!(rescues[0].body.len(), 2);
                 assert!(matches!(&rescues[0].body[0], Stmt::Assign { name, .. } if name == "e"));
             }
