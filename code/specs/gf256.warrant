@@ -1,0 +1,309 @@
+-- GF01 / MA01 -- GF(2^8) arithmetic, Reed-Solomon polynomial 0x11D.
+--
+-- Warrant document for rust/gf256 (VER04h; the second Warrant-derived package
+-- after ct-compare).  Every example and claim below is compiled into
+-- tests/generated/warrant_evidence.rs and executed against the real public
+-- exports of the `gf256` crate: add, subtract, multiply, divide, power,
+-- inverse.  The `Field` type (parameterised polynomial) is NOT in this
+-- document; MA01 section "Verification status" records that gap.
+--
+-- Field facts used as the oracle (derived independently of the crate):
+--   * elements are the bytes 0..255; addition is XOR.  xor1..xor8 below build
+--     XOR out of comparisons and +/- because Warrant v0 has no bitwise operator;
+--   * multiplication is polynomial multiplication reduced by
+--     x^8 + x^4 + x^3 + x^2 + 1 (0x11D).  gmul below is the shift-and-add
+--     (Horner) definition, with xtime(x) = 2x and XOR 0x1D when bit 7 is set;
+--   * every model branch is written so no U8 expression wraps: `a - 128u8` is
+--     only reached when a >= 128 and `x * 2u8` only when x < 128.  The
+--     generated evaluator uses exact integers, so a wrapping expression would
+--     diverge from the Warrant type rules; this style makes the two agree.
+--
+-- Not expressible in Warrant v0 (recorded, not faked): a bitwise XOR
+-- primitive; a U32 type (power's exponent is u32 in Rust and is declared here
+-- as U64 bounded by a refinement); a `rejects` row for a Rust export that
+-- panics (divide and inverse are normalised to a Result by the binding, as
+-- ct-compare normalises ct_select_bytes); the private LOG/ALOG tables, which
+-- have no public surface and are observable only through the operations.
+warrant gf256
+  error Gf256Error = DIVIDE_BY_ZERO | ZERO_HAS_NO_INVERSE
+
+  model xor1(a: U8, b: U8) -> U8 = if a == b then 0u8 else 1u8
+  model xor2(a: U8, b: U8) -> U8 = if a >= 2u8 then (if b >= 2u8 then xor1(a - 2u8, b - 2u8) else 2u8 + xor1(a - 2u8, b)) else (if b >= 2u8 then 2u8 + xor1(a, b - 2u8) else xor1(a, b))
+  model xor3(a: U8, b: U8) -> U8 = if a >= 4u8 then (if b >= 4u8 then xor2(a - 4u8, b - 4u8) else 4u8 + xor2(a - 4u8, b)) else (if b >= 4u8 then 4u8 + xor2(a, b - 4u8) else xor2(a, b))
+  model xor4(a: U8, b: U8) -> U8 = if a >= 8u8 then (if b >= 8u8 then xor3(a - 8u8, b - 8u8) else 8u8 + xor3(a - 8u8, b)) else (if b >= 8u8 then 8u8 + xor3(a, b - 8u8) else xor3(a, b))
+  model xor5(a: U8, b: U8) -> U8 = if a >= 16u8 then (if b >= 16u8 then xor4(a - 16u8, b - 16u8) else 16u8 + xor4(a - 16u8, b)) else (if b >= 16u8 then 16u8 + xor4(a, b - 16u8) else xor4(a, b))
+  model xor6(a: U8, b: U8) -> U8 = if a >= 32u8 then (if b >= 32u8 then xor5(a - 32u8, b - 32u8) else 32u8 + xor5(a - 32u8, b)) else (if b >= 32u8 then 32u8 + xor5(a, b - 32u8) else xor5(a, b))
+  model xor7(a: U8, b: U8) -> U8 = if a >= 64u8 then (if b >= 64u8 then xor6(a - 64u8, b - 64u8) else 64u8 + xor6(a - 64u8, b)) else (if b >= 64u8 then 64u8 + xor6(a, b - 64u8) else xor6(a, b))
+  model xor8(a: U8, b: U8) -> U8 = if a >= 128u8 then (if b >= 128u8 then xor7(a - 128u8, b - 128u8) else 128u8 + xor7(a - 128u8, b)) else (if b >= 128u8 then 128u8 + xor7(a, b - 128u8) else xor7(a, b))
+  model xtime(x: U8) -> U8 = if x >= 128u8 then xor8((x - 128u8) * 2u8, 29u8) else x * 2u8
+  model gstep(acc: U8, a: U8, bit: Bool) -> U8 = if bit then xor8(xtime(acc), a) else xtime(acc)
+  model gm0(acc: U8, a: U8, b: U8) -> U8 = gstep(acc, a, b >= 1u8)
+  model gm1(acc: U8, a: U8, b: U8) -> U8 = gm0(gstep(acc, a, b >= 2u8), a, if b >= 2u8 then b - 2u8 else b)
+  model gm2(acc: U8, a: U8, b: U8) -> U8 = gm1(gstep(acc, a, b >= 4u8), a, if b >= 4u8 then b - 4u8 else b)
+  model gm3(acc: U8, a: U8, b: U8) -> U8 = gm2(gstep(acc, a, b >= 8u8), a, if b >= 8u8 then b - 8u8 else b)
+  model gm4(acc: U8, a: U8, b: U8) -> U8 = gm3(gstep(acc, a, b >= 16u8), a, if b >= 16u8 then b - 16u8 else b)
+  model gm5(acc: U8, a: U8, b: U8) -> U8 = gm4(gstep(acc, a, b >= 32u8), a, if b >= 32u8 then b - 32u8 else b)
+  model gm6(acc: U8, a: U8, b: U8) -> U8 = gm5(gstep(acc, a, b >= 64u8), a, if b >= 64u8 then b - 64u8 else b)
+  model gm7(acc: U8, a: U8, b: U8) -> U8 = gm6(gstep(acc, a, b >= 128u8), a, if b >= 128u8 then b - 128u8 else b)
+  model gmul(a: U8, b: U8) -> U8 = gm7(0u8, a, b)
+
+  op add(a: U8, b: U8) -> U8
+  op subtract(a: U8, b: U8) -> U8
+  op multiply(a: U8, b: U8) -> U8
+  op divide(a: U8, b: U8) -> Result<U8, Gf256Error>
+  op inverse(a: U8) -> Result<U8, Gf256Error>
+  op power(base: U8, exp: U64 | exp <= 4294967295u64) -> U8
+
+  assume platform:
+    none
+  assume environment:
+    none
+
+  -- Every operand is labelled secret: GF(2^8) is the arithmetic of AES, and
+  -- multiply/divide/inverse/power index lookup tables by operand-derived
+  -- values.  The labels therefore state the threat model, not a proof: no
+  -- constant-time proof is live for this package (CWE-208 stays applicable and
+  -- unaddressed; see MA01 "Constant-time status").
+  labels add:
+    a secret
+    b secret
+  labels subtract:
+    a secret
+    b secret
+  labels multiply:
+    a secret
+    b secret
+  labels divide:
+    a secret
+    b secret
+  labels inverse:
+    a secret
+  labels power:
+    base secret
+    exp secret
+
+  input add.a:
+    hostile
+    ensures no_panic, terminates
+  input add.b:
+    hostile
+    ensures no_panic, terminates
+  input subtract.a:
+    hostile
+    ensures no_panic, terminates
+  input subtract.b:
+    hostile
+    ensures no_panic, terminates
+  input multiply.a:
+    hostile
+    ensures no_panic, terminates
+  input multiply.b:
+    hostile
+    ensures no_panic, terminates
+  input divide.a:
+    hostile
+    ensures no_panic, terminates
+  input divide.b:
+    hostile
+    rejects b == 0u8 with Gf256Error.DIVIDE_BY_ZERO
+    ensures no_panic, terminates
+  input inverse.a:
+    hostile
+    rejects a == 0u8 with Gf256Error.ZERO_HAS_NO_INVERSE
+    ensures no_panic, terminates
+  input power.base:
+    hostile
+    ensures no_panic, terminates
+  input power.exp:
+    hostile
+    ensures no_panic, terminates
+
+  -- Declared bounds.  The first call of multiply/divide/power/inverse builds
+  -- the 255-entry tables (about 3000 steps); later calls are O(1).  These rows
+  -- are declarations: no step-bound prover run backs them (see MA01).
+  bound add:
+    steps <= 16
+    heap <= 0
+    depth <= 8
+  bound subtract:
+    steps <= 16
+    heap <= 0
+    depth <= 8
+  bound multiply:
+    steps <= 4096
+    heap <= 0
+    depth <= 8
+  bound divide:
+    steps <= 4096
+    heap <= 0
+    depth <= 8
+  bound inverse:
+    steps <= 4096
+    heap <= 0
+    depth <= 8
+  bound power:
+    steps <= 4096
+    heap <= 0
+    depth <= 8
+
+  -- Known values.  0x53 = 83, 0x8C = 140, 0xCA = 202, 0x99 = 153, 0x1D = 29.
+  example add_known_vector:
+    add(83u8, 202u8) == 153u8
+  example add_zero_left:
+    add(0u8, 200u8) == 200u8
+  example add_cancels:
+    add(255u8, 255u8) == 0u8
+  example subtract_known_vector:
+    subtract(83u8, 202u8) == 153u8
+  example subtract_equals_add_at_top:
+    subtract(255u8, 1u8) == 254u8
+
+  example multiply_zero:
+    multiply(0u8, 7u8) == 0u8
+  example multiply_zero_right:
+    multiply(7u8, 0u8) == 0u8
+  example multiply_one:
+    multiply(200u8, 1u8) == 200u8
+  example multiply_small:
+    multiply(3u8, 7u8) == 9u8
+  example multiply_first_reduction:
+    multiply(128u8, 2u8) == 29u8
+  example multiply_inverse_pair:
+    multiply(83u8, 140u8) == 1u8
+  example multiply_not_the_aes_pair:
+    multiply(83u8, 202u8) == 143u8
+  example multiply_not_the_aes_vector:
+    multiply(87u8, 131u8) == 49u8
+  example multiply_top:
+    multiply(255u8, 255u8) == 226u8
+  example multiply_squares:
+    multiply(128u8, 128u8) == 19u8
+
+  example divide_one_by_pair:
+    divide(1u8, 83u8) == Ok(140u8)
+  example divide_zero_over_five:
+    divide(0u8, 5u8) == Ok(0u8)
+  example divide_known:
+    divide(79u8, 100u8) == Ok(200u8)
+  example divide_by_zero:
+    divide(5u8, 0u8) == Err(Gf256Error.DIVIDE_BY_ZERO)
+  example divide_zero_by_zero:
+    divide(0u8, 0u8) == Err(Gf256Error.DIVIDE_BY_ZERO)
+
+  example inverse_pair:
+    inverse(83u8) == Ok(140u8)
+  example inverse_of_one:
+    inverse(1u8) == Ok(1u8)
+  example inverse_of_generator:
+    inverse(2u8) == Ok(142u8)
+  example inverse_of_top:
+    inverse(255u8) == Ok(253u8)
+  example inverse_of_zero:
+    inverse(0u8) == Err(Gf256Error.ZERO_HAS_NO_INVERSE)
+
+  example power_first_reduction:
+    power(2u8, 8u64) == 29u8
+  example power_after_reduction:
+    power(2u8, 9u64) == 58u8
+  example power_generator_order:
+    power(2u8, 255u64) == 1u8
+  example power_generator_inverse:
+    power(2u8, 254u64) == 142u8
+  example power_zero_zero:
+    power(0u8, 0u64) == 1u8
+  example power_zero_positive:
+    power(0u8, 5u64) == 0u8
+  example power_exponent_zero:
+    power(77u8, 0u64) == 1u8
+  example power_u32_max_exponent:
+    power(2u8, 4294967295u64) == 1u8
+  example power_u32_max_minus_one:
+    power(2u8, 4294967294u64) == 142u8
+  example power_cube_of_three:
+    power(3u8, 1000u64) == 116u8
+
+  -- Addition and subtraction: the elementary abelian 2-group of bytes, pinned
+  -- to real XOR by the bit-level model.
+  claim add_commutative:
+    forall a: U8, b: U8. add(a, b) == add(b, a)
+  claim add_associative:
+    forall a: U8, b: U8, c: U8. add(add(a, b), c) == add(a, add(b, c))
+  claim add_zero_identity:
+    forall a: U8. add(a, 0u8) == a
+  claim add_self_inverse:
+    forall a: U8. add(a, a) == 0u8
+  claim add_matches_xor_model:
+    forall a: U8, b: U8. add(a, b) == xor8(a, b)
+  claim subtract_equals_add:
+    forall a: U8, b: U8. subtract(a, b) == add(a, b)
+  claim subtract_matches_xor_model:
+    forall a: U8, b: U8. subtract(a, b) == xor8(a, b)
+  claim subtract_undoes_add:
+    forall a: U8, b: U8. subtract(add(a, b), b) == a
+
+  -- Multiplication: field laws, plus the independent shift-and-add model that
+  -- pins the reduction polynomial.
+  claim multiply_matches_peasant_model:
+    forall a: U8, b: U8. multiply(a, b) == gmul(a, b)
+  claim multiply_by_generator_is_xtime:
+    forall a: U8. multiply(a, 2u8) == xtime(a)
+  claim multiply_commutative:
+    forall a: U8, b: U8. multiply(a, b) == multiply(b, a)
+  claim multiply_one_identity:
+    forall a: U8. multiply(a, 1u8) == a
+  claim multiply_zero_absorbs:
+    forall a: U8. multiply(a, 0u8) == 0u8
+  claim multiply_has_no_zero_divisors:
+    forall a: U8, b: U8 | a != 0u8 and b != 0u8. multiply(a, b) != 0u8
+  claim multiply_associative:
+    forall a: U8, b: U8, c: U8. multiply(multiply(a, b), c) == multiply(a, multiply(b, c))
+  claim multiply_distributes_over_add:
+    forall a: U8, b: U8, c: U8. multiply(a, add(b, c)) == add(multiply(a, b), multiply(a, c))
+
+  -- Division and inverse.
+  claim divide_by_zero_rejected:
+    forall a: U8. divide(a, 0u8) == Err(Gf256Error.DIVIDE_BY_ZERO)
+  claim divide_undoes_multiply:
+    forall a: U8, b: U8 | b != 0u8. divide(multiply(a, b), b) == Ok(a)
+  claim divide_zero_numerator:
+    forall b: U8 | b != 0u8. divide(0u8, b) == Ok(0u8)
+  claim divide_self_is_one:
+    forall a: U8 | a != 0u8. divide(a, a) == Ok(1u8)
+  claim divide_is_multiply_by_fermat_inverse:
+    forall a: U8, b: U8 | b != 0u8. divide(a, b) == Ok(multiply(a, power(b, 254u64)))
+  claim inverse_total_and_rejects_zero:
+    forall a: U8. inverse(a) == (if a == 0u8 then Err(Gf256Error.ZERO_HAS_NO_INVERSE) else divide(1u8, a))
+  claim inverse_is_the_multiplicative_inverse:
+    forall a: U8, x: U8 | a != 0u8 and gmul(a, x) == 1u8. inverse(a) == Ok(x)
+  claim inverse_is_an_involution:
+    forall a: U8, x: U8 | a != 0u8 and gmul(a, x) == 1u8. inverse(x) == Ok(a)
+  claim inverse_matches_fermat:
+    forall a: U8 | a != 0u8. inverse(a) == Ok(power(a, 254u64))
+
+  -- Exponentiation.  The exponent binder is U64 restricted to the u32 range of
+  -- the Rust export; its exhaustive domain is 0..255, every power of two up to
+  -- 2^31, and the neighbours of the u32 boundary reachable by the refinement.
+  claim power_zero_exponent:
+    forall a: U8. power(a, 0u64) == 1u8
+  claim power_first_exponent:
+    forall a: U8. power(a, 1u64) == a
+  claim power_of_zero:
+    forall e: U64 | e <= 4294967295u64. power(0u8, e) == (if e == 0u64 then 1u8 else 0u8)
+  claim power_successor:
+    forall a: U8, e: U64 | e <= 4294967294u64. power(a, e + 1u64) == multiply(power(a, e), a)
+  claim power_group_order:
+    forall a: U8 | a != 0u8. power(a, 255u64) == 1u8
+  claim power_reduces_mod_group_order:
+    forall a: U8, e: U64 | a != 0u8 and e <= 4294967040u64. power(a, e + 255u64) == power(a, e)
+  claim power_doubles_exponent:
+    forall a: U8, e: U64 | e <= 2147483647u64. power(a, e + e) == multiply(power(a, e), power(a, e))
+  claim power_nonzero_for_nonzero_base:
+    forall a: U8, e: U64 | a != 0u8 and e <= 4294967295u64. power(a, e) != 0u8
+  claim power_frobenius_is_additive:
+    forall a: U8, b: U8. power(add(a, b), 2u64) == add(power(a, 2u64), power(b, 2u64))
+  claim power_cube_is_multiplicative:
+    forall a: U8, b: U8. power(multiply(a, b), 3u64) == multiply(power(a, 3u64), power(b, 3u64))
+  claim generator_has_order_255:
+    forall e: U64 | e >= 1u64 and e < 255u64. power(2u8, e) != 1u8
+  claim generator_powers_are_distinct:
+    forall e: U64, f: U64 | e < 255u64 and f < 255u64 and e != f. power(2u8, e) != power(2u8, f)
