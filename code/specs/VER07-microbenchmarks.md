@@ -59,7 +59,7 @@ Timer APIs (e.g. `clock_gettime(CLOCK_MONOTONIC)` or `mach_absolute_time`) have 
 - **Calibration Loop:**
   1. Start with $B = 1$.
   2. Measure duration $t$ of running $f$ in a loop $B$ times.
-  3. If $t < \Delta t_{\min}$, scale $B \leftarrow \max(B \times 2, \lceil B \times \frac{\Delta t_{\min}}{t} \rceil)$ up to a safety ceiling $B_{\max} = 10^8$.
+  3. If $t < \Delta t_{\min}$, scale $B \leftarrow \max(B \times 2, \lceil B \times \frac{\Delta t_{\min}}{t} \rceil)$ up to a safety ceiling $B_{\max}$ (default $10^7$, configurable).
   4. Repeat until $t \ge \Delta t_{\min}$ or $B = B_{\max}$.
 
 ### 2.3 Stage 3: Sample Collection
@@ -101,7 +101,10 @@ To quantify estimation uncertainty without assuming parametric normality:
 - Perform $M = 1000$ bootstrap resamples of size $K$ using the deterministic SplitMix64 PRNG (**TF01 §5.1**).
 - For each resample $m$, calculate resample median $\tilde{x}^{*(m)}$.
 - Sort the $M$ resample medians. The 95% two-sided confidence interval $[\text{CI}_{\text{lower}}, \text{CI}_{\text{upper}}]$ is:
-  $$\text{CI}_{\text{lower}} = \tilde{x}^{*}_{(\lfloor 0.025 \cdot M \rfloor)}, \quad \text{CI}_{\text{upper}} = \tilde{x}^{*}_{(\lceil 0.975 \cdot M \rceil)}$$
+  $$\text{CI}_{\text{lower}} = P_{0.025}\big(\tilde{x}^{*(1)}, \dots, \tilde{x}^{*(M)}\big), \quad \text{CI}_{\text{upper}} = P_{0.975}\big(\tilde{x}^{*(1)}, \dots, \tilde{x}^{*(M)}\big)$$
+  where $P_p$ is the same linear-interpolation percentile as §3.3 (amended in
+  the audit, §8: the earlier order-statistic wording differed from it only in
+  interpolation weight).
 
 ---
 
@@ -229,3 +232,73 @@ Acceptance for VER-P016 requires:
 4. Deterministic step, allocation, and hardware counter abstraction reporting `Live`, `NotLive`, and `Unsupported`.
 5. Budget validation tests (passing, failing on hard counters, and graceful `NotLive` handling).
 6. Comprehensive test suite achieving $\ge 90\%$ line and branch coverage.
+
+---
+
+## 8. Audit of the Rust lane: testable contracts and divergences
+
+Tests: `code/packages/rust/test-bootstrap/tests/bench_statistics.rs`
+(20 tests) plus the unit tests in `bench.rs`. Wall-clock values are never
+asserted; everything else is.
+
+### 8.1 Statistics, as hand-checked contracts
+
+- Percentile by linear interpolation at rank `p (K - 1)`, `p` clamped to
+  `[0, 1]`: for `[1,2,3,4,5]`, p25 = 2, p75 = 4, p95 = 4.8, p99 = 4.96; for
+  `[1,2,3,4]`, p25 = 1.75, median = 2.5, p75 = 3.25. An empty slice panics.
+- Median = the odd/even definition of §3.1; MAD = median of absolute
+  deviations (a single outlier does not move it): `[1,2,3,4,100]` has median
+  3 and MAD 1; `[1,2,3,4]` has MAD 1.0.
+- nMAD = `1.482602218505602 x MAD`, i.e. `1 / Phi^-1(0.75)`. The earlier text
+  quoted `1.4826`; the constant agrees to the digits quoted and the full value
+  is the contract.
+- Bootstrap interval: `M = 1000` resamples of size `K` with SplitMix64
+  `bounded(K)` draws, medians sorted, bounds taken by **the same linear
+  interpolation as the percentiles** at p = 0.025 and 0.975. The earlier text
+  (order statistics `floor(0.025 M)` and `ceil(0.975 M)`) is replaced by this
+  rule; the two differ by interpolation weight only. It is checked against an
+  independent re-derivation for several seeds and resample counts, always lies
+  inside `[min, max]` of the samples, and is `(c, c)` for a constant sample.
+
+### 8.2 Budgets
+
+The hard rules of §5.1 hold exactly at the limit (a step budget of 10 passes at
+exactly 10 per iteration and fails at 9 with `observed = 10, limit = 9`; an
+allocation budget of 0 fails on 1 recorded byte). A soft timing budget
+produces `PassWithWarning` and never a failure.
+
+**New contract: a declared hard budget that could not be checked is reported.**
+`BenchmarkResult::unchecked_hard_budgets` lists the hard budgets
+(`steps`, `alloc_bytes`, `instructions`) that were declared but not measured:
+no counter of that kind attached, an unknown counter name, or a counter that
+was `NotLive`/`Unsupported`. The verdict rules are unchanged (a `NotLive`
+instruction budget is still a Pass, §5.1 rule 3) but the TAP YAML
+(`unchecked_hard_budgets: [..]`) and JSON now say so. `bench()` with
+`max_steps: Some(1)` used to be indistinguishable from a budget that held.
+
+**`AllocCounter` is cooperative.** It counts what the benchmarked closure
+records with `record_alloc`; it does not observe the heap. A closure that
+allocates 4 KiB without recording passes `max_alloc_bytes: Some(0)`. Any
+"zero allocation" claim made through `AllocCounter` (including the
+`ct-compare` microbenchmarks, whose closures record nothing) is therefore
+unproven by the counter. Measuring real allocation needs a counting
+`#[global_allocator]` installed by the benchmark binary; this crate does not
+provide one.
+
+### 8.3 Output
+
+Benchmark names are escaped (`"`, `\`, control and line-separator
+characters) in both the YAML block and the JSON, so a name cannot break the
+JSON or add a TAP line.
+
+### 8.4 Divergences found in the audit
+
+| # | Spec | Rust lane | Resolution |
+|---|---|---|---|
+| 1 | §2.2 `B_max = 10^8` | `max_batch_size` defaults to `10^7` | Spec amended to the default in `BenchmarkConfig` (configurable) |
+| 2 | §2.3 minimum `K = 10` samples | Any `K >= 1` runs (`K = 0` panics) | Open: recorded; statistics on fewer than 10 samples are not meaningful |
+| 3 | §3.4 CI by order statistics | Linear interpolation | Spec amended (8.1) |
+| 4 | §3.2 `nMAD = 1.4826 x MAD` | `1.482602218505602 x MAD` | Spec amended (8.1) |
+| 5 | §6.1 / §6.2 field names (`samples`, `timing:`, `verdict: pass` ... `version`, `ci_95_lower_ns`, `steps`, `budget_verdict: "pass"`) | `sample_count`, `timing_ns:` with unsuffixed keys, `steps_per_iter`, `budget_verdict` strings `"failed: <reason>"`/`"warning: <reason>"`, no `version`, no `ok N - bench/...` line | Open: the Rust output is the de facto format; a consumer written to the spec examples will not parse it |
+| 6 | §5 hard budgets | Declared but unmeasurable budgets were silent | Fixed (`unchecked_hard_budgets`) |
+| 7 | §4.2 "monitors heap activity" | Cooperative counter only | Documented (8.2) |

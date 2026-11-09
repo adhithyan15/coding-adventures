@@ -32,6 +32,13 @@ pub fn is_registered_failure_id(id: &str) -> bool {
 /// Invert `count` consecutive bits starting at `bit_offset` modulo total bit length.
 ///
 /// If `data` is empty, returns an empty vector.
+///
+/// The positions wrap around the buffer, so once `count` exceeds the number
+/// of bits every bit is flipped `count / total_bits` times and the first
+/// `count % total_bits` bits (from the start offset) once more. Only the
+/// parity of those flips matters, so the work is O(len), never O(count): the
+/// obvious `for i in 0..count` loop never terminates for `count = usize::MAX`,
+/// which a corpus entry may legitimately name.
 pub fn bit_flip(data: &[u8], bit_offset: usize, count: usize) -> Vec<u8> {
     if data.is_empty() {
         return Vec::new();
@@ -39,11 +46,14 @@ pub fn bit_flip(data: &[u8], bit_offset: usize, count: usize) -> Vec<u8> {
     let mut buf = data.to_vec();
     let total_bits = buf.len() * 8;
     let base = bit_offset % total_bits;
-    for i in 0..count {
-        let pos = (base + (i % total_bits)) % total_bits;
-        let byte_idx = pos / 8;
-        let bit_idx = pos % 8;
-        buf[byte_idx] ^= 1 << bit_idx;
+    let full_cycles = count / total_bits;
+    let remainder = count % total_bits;
+    for step in 0..total_bits {
+        let flips = full_cycles + usize::from(step < remainder);
+        if flips % 2 == 1 {
+            let pos = (base + step) % total_bits;
+            buf[pos / 8] ^= 1 << (pos % 8);
+        }
     }
     buf
 }
@@ -51,7 +61,8 @@ pub fn bit_flip(data: &[u8], bit_offset: usize, count: usize) -> Vec<u8> {
 /// Invert `count` consecutive bytes via XOR 0xFF starting at `byte_offset`
 /// modulo total byte length.
 ///
-/// If `data` is empty, returns an empty vector.
+/// If `data` is empty, returns an empty vector. Wrap-around is handled by
+/// parity exactly as in [`bit_flip`], so a huge `count` costs O(len).
 pub fn byte_flip(data: &[u8], byte_offset: usize, count: usize) -> Vec<u8> {
     if data.is_empty() {
         return Vec::new();
@@ -59,9 +70,13 @@ pub fn byte_flip(data: &[u8], byte_offset: usize, count: usize) -> Vec<u8> {
     let mut buf = data.to_vec();
     let total_bytes = buf.len();
     let base = byte_offset % total_bytes;
-    for i in 0..count {
-        let pos = (base + (i % total_bytes)) % total_bytes;
-        buf[pos] ^= 0xFF;
+    let full_cycles = count / total_bytes;
+    let remainder = count % total_bytes;
+    for step in 0..total_bytes {
+        let flips = full_cycles + usize::from(step < remainder);
+        if flips % 2 == 1 {
+            buf[(base + step) % total_bytes] ^= 0xFF;
+        }
     }
     buf
 }
@@ -388,6 +403,23 @@ impl CoverageBitmap {
         (count_new > 0, count_new)
     }
 
+    /// Every covered edge, ascending. Skips all-zero bytes, so a sparse map
+    /// costs far less than probing each of the 65,536 bits (the engine calls
+    /// this once per target execution).
+    pub fn covered_edges(&self) -> Vec<usize> {
+        let mut edges = Vec::new();
+        for (index, &byte) in self.bytes.iter().enumerate() {
+            if byte != 0 {
+                for bit in 0..8 {
+                    if byte & (1 << bit) != 0 {
+                        edges.push(index * 8 + bit);
+                    }
+                }
+            }
+        }
+        edges
+    }
+
     /// Total number of distinct covered edges.
     pub fn count(&self) -> usize {
         self.bytes.iter().map(|&b| b.count_ones() as usize).sum()
@@ -427,13 +459,30 @@ pub fn is_duplicate_crash(
 /// Format privacy-preserving TAP failure line (VER00 §7.3 / VER06 §5.2).
 ///
 /// Contains NO raw input bytes: only target ID, failure vocabulary ID, and sig hash.
+///
+/// Each argument is reduced to the characters its grammar allows (ids:
+/// `[A-Za-z0-9._/-]`; the hash: lowercase hex), every other character becoming
+/// `_`. Without that, a target id containing a newline would let a caller
+/// forge a second TAP line (`ok 2 - forged`) inside "an opaque closed token".
+/// Well-formed arguments are untouched, so the pinned fuzz-v1 vectors hold.
 pub fn format_tap_failure(
     test_num: usize,
     target_id: &str,
     failure_id: &str,
     sig_hash: &str,
 ) -> String {
-    format!("not ok {test_num} - {target_id} [{failure_id}:{sig_hash}]")
+    fn token(text: &str, allowed: fn(char) -> bool) -> String {
+        text.chars()
+            .map(|c| if allowed(c) { c } else { '_' })
+            .collect()
+    }
+    let id_char = |c: char| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '/' | '-');
+    format!(
+        "not ok {test_num} - {} [{}:{}]",
+        token(target_id, id_char),
+        token(failure_id, id_char),
+        token(sig_hash, |c| matches!(c, '0'..='9' | 'a'..='f')),
+    )
 }
 
 // --- Energy Scheduling (VER06 §4.3) -----------------------------------------
@@ -502,10 +551,29 @@ pub struct CrashRecord {
 /// Summary report returned after a bounded fuzzing run.
 #[derive(Clone, Debug)]
 pub struct FuzzReport {
+    /// Mutation iterations executed (initial-corpus triage is not counted).
     pub iterations: usize,
     pub admitted_seeds: usize,
     pub total_edges: usize,
     pub crashes: Vec<CrashRecord>,
+    /// Executions (triage included) that returned [`FuzzOutcome::Timeout`].
+    /// Before the audit these were silently dropped: a target that timed out
+    /// on every input produced a report indistinguishable from a clean run.
+    pub timeouts: usize,
+    /// Executions (triage included) that returned [`FuzzOutcome::Oom`].
+    pub ooms: usize,
+}
+
+impl FuzzReport {
+    /// Can this report be read as "the campaign found nothing"?
+    ///
+    /// Only if at least one mutation iteration ran and no execution, triage
+    /// included, crashed, timed out or ran out of memory. A campaign that never
+    /// got past triage (every seed crashed or timed out, or
+    /// `max_iterations == 0`) fuzzed nothing and is never clean.
+    pub fn is_clean(&self) -> bool {
+        self.iterations > 0 && self.crashes.is_empty() && self.timeouts == 0 && self.ooms == 0
+    }
 }
 
 /// Minimize a crashing input while preserving its exact crash signature (VER06 §5.3).
@@ -521,7 +589,9 @@ where
         return current;
     }
 
-    let mut chunk_size = current.len() / 2;
+    // Start at half the input, but never below one byte: with a one-byte
+    // input `len / 2` is 0 and the empty input would never be tried.
+    let mut chunk_size = (current.len() / 2).max(1);
     while chunk_size > 0 {
         let mut offset = 0;
         while offset < current.len() {
@@ -566,6 +636,39 @@ where
     current
 }
 
+/// Record one crash into `crashes`, deduplicating by signature (VER06 §5.2).
+///
+/// A signature seen before only increments `hits` (keeping the shorter input);
+/// a new one is minimized (VER06 §5.3) with `probe`, which re-runs the target
+/// on a candidate, before being stored.
+fn record_crash<P>(
+    crashes: &mut Vec<CrashRecord>,
+    kind: String,
+    frames: Vec<String>,
+    input: Vec<u8>,
+    mut probe: P,
+) where
+    P: FnMut(&[u8]) -> FuzzOutcome,
+{
+    let frame_refs: Vec<&str> = frames.iter().map(String::as_str).collect();
+    let signature = crash_signature(&kind, &frame_refs);
+    if let Some(existing) = crashes.iter_mut().find(|c| c.signature == signature) {
+        existing.hits += 1;
+        if input.len() < existing.minimal_input.len() {
+            existing.minimal_input = input;
+        }
+    } else {
+        let minimal_input = minimize_crashing_input(&input, &signature, &mut probe);
+        crashes.push(CrashRecord {
+            signature,
+            kind,
+            frames,
+            minimal_input,
+            hits: 1,
+        });
+    }
+}
+
 /// Seed entry held in the active corpus.
 #[derive(Clone, Debug)]
 pub struct CorpusSeed {
@@ -583,6 +686,7 @@ where
     let mut cumulative_coverage = CoverageBitmap::new();
     let mut corpus: Vec<CorpusSeed> = Vec::new();
     let mut crashes: Vec<CrashRecord> = Vec::new();
+    let (mut timeouts, mut ooms) = (0usize, 0usize);
 
     // 1. Initial corpus triage
     let seeds = if initial_corpus.is_empty() {
@@ -596,12 +700,7 @@ where
         let outcome = target(&seed, &mut step_coverage);
         match outcome {
             FuzzOutcome::Pass => {
-                let mut trace = Vec::new();
-                for edge in 0..COVERAGE_MAP_SIZE {
-                    if step_coverage.has_edge(edge) {
-                        trace.push(edge);
-                    }
-                }
+                let trace = step_coverage.covered_edges();
                 let (has_new, new_count) = cumulative_coverage.admit_trace(&trace);
                 if has_new || corpus.is_empty() {
                     corpus.push(CorpusSeed {
@@ -612,17 +711,12 @@ where
                 }
             }
             FuzzOutcome::Crash { kind, frames } => {
-                let frame_refs: Vec<&str> = frames.iter().map(String::as_str).collect();
-                let sig = crash_signature(&kind, &frame_refs);
-                crashes.push(CrashRecord {
-                    signature: sig,
-                    kind,
-                    frames,
-                    minimal_input: seed,
-                    hits: 1,
+                record_crash(&mut crashes, kind, frames, seed, |data| {
+                    target(data, &mut CoverageBitmap::new())
                 });
             }
-            _ => {}
+            FuzzOutcome::Timeout => timeouts += 1,
+            FuzzOutcome::Oom => ooms += 1,
         }
     }
 
@@ -662,12 +756,7 @@ where
 
             match outcome {
                 FuzzOutcome::Pass => {
-                    let mut trace = Vec::new();
-                    for edge in 0..COVERAGE_MAP_SIZE {
-                        if step_cov.has_edge(edge) {
-                            trace.push(edge);
-                        }
-                    }
+                    let trace = step_cov.covered_edges();
                     let (has_new, new_count) = cumulative_coverage.admit_trace(&trace);
                     if has_new {
                         corpus.push(CorpusSeed {
@@ -678,25 +767,12 @@ where
                     }
                 }
                 FuzzOutcome::Crash { kind, frames } => {
-                    let frame_refs: Vec<&str> = frames.iter().map(String::as_str).collect();
-                    let sig = crash_signature(&kind, &frame_refs);
-
-                    if let Some(existing) = crashes.iter_mut().find(|c| c.signature == sig) {
-                        existing.hits += 1;
-                        if candidate.len() < existing.minimal_input.len() {
-                            existing.minimal_input = candidate;
-                        }
-                    } else {
-                        crashes.push(CrashRecord {
-                            signature: sig,
-                            kind,
-                            frames,
-                            minimal_input: candidate,
-                            hits: 1,
-                        });
-                    }
+                    record_crash(&mut crashes, kind, frames, candidate, |data| {
+                        target(data, &mut CoverageBitmap::new())
+                    });
                 }
-                _ => {}
+                FuzzOutcome::Timeout => timeouts += 1,
+                FuzzOutcome::Oom => ooms += 1,
             }
         }
     }
@@ -706,6 +782,8 @@ where
         admitted_seeds: corpus.len(),
         total_edges: cumulative_coverage.count(),
         crashes,
+        timeouts,
+        ooms,
     }
 }
 

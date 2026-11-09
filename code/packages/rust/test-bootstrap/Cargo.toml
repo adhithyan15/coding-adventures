@@ -23,3 +23,11 @@ harness = false
 name = "fuzz_corpus"
 path = "tests/fuzz_corpus.rs"
 harness = false
+
+# A real `fn main()` suite whose contents `l0_contracts.rs` selects through the
+# TFB_FIXTURE environment variable, so exit statuses can be observed from
+# outside the process. With no variable set it is two passing tests.
+[[test]]
+name = "exit_fixture"
+path = "tests/exit_fixture.rs"
+harness = false

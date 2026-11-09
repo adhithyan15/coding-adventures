@@ -223,3 +223,90 @@ The `pbt-v1` corpus is the standard cross-language validation suite for property
 2. An independent Python validator (`code/scripts/pbt_conformance.py`) re-derives every expected value from first principles.
 3. Falsification tests (`code/scripts/tests/test_pbt_conformance.py`) verify that deliberate corruptions of every case category are rejected.
 4. Line and branch coverage for the conformance reference and native test suites must be **≥ 90%**.
+
+---
+
+## 7. Audit of the Rust lane: testable contracts and divergences
+
+The tests are `code/packages/rust/test-bootstrap/tests/pbt_properties.rs`
+(37 tests) and the pbt-v1 corpus run (`pbt_corpus.rs`, `pbt_conformance.py`).
+
+### 7.1 Verdict honesty (must hold for every lane)
+
+1. A property that evaluated **zero** cases (`num_tests == 0`) is a failure
+   (`property-exhausted`), never a pass: a property that never ran proves
+   nothing.
+2. The reported minimal witness is **re-verified**: the engine calls the
+   property on the shrinker's result and reports it only if the property still
+   fails. If the shrinker returns a passing value, panics, or hits a property
+   that panics on smaller input, the engine reports the *original* falsifying
+   candidate with zero shrink steps. The verdict is `property-counterexample`
+   in every case; the witness is always a real counterexample.
+3. A generator error is `property-exhausted`; a panic in the property is
+   `property-panic`; any falsification is `property-counterexample`. No path
+   returns `Pass` other than "every case evaluated and held".
+4. In CI mode the message carries no concrete value (`initial=`, `minimal=`).
+
+### 7.2 Generators
+
+- `gen_bounded_int(min, max)` is uniform over the **inclusive** range for every
+  `min <= max` including the full `i128` range. The span is computed modulo
+  2^128 (a computed span of 0 means the full range). Spans up to 2^64 use the
+  conformance-pinned draws of §2.2; wider spans use 128-bit rejection sampling
+  with `t = (2^128 - span) mod span`, as §3.1 requires ("rejection
+  sampling"). (The first Rust implementation used `raw % span` for spans above
+  2^64, which drew the low third of a `3 * 2^126` span with probability 1/2
+  instead of 1/3; fixed.)
+- Independent draws of two `Bytes` values **almost never collide**: for fixed
+  length 16 the probability is 2^-128 (0 hits in 200,000 pairs measured); for
+  lengths `0..=8` it is about 1.2%, nearly all of it the pair
+  (empty, empty). Therefore a property whose interesting branch is "the two
+  inputs are equal, or differ only in the last byte" is **not exercised** by
+  independent generators. Measured consequence: an equality property
+  `buggy_eq(a, b) == (a == b)` over independent 16-byte pairs passes for 1000
+  cases against a comparison that ignores the last byte; a correlated
+  generator (half copies, half copies with the last byte flipped, built from
+  `one_of` and `map`) finds the bug. A conforming engine SHOULD provide a
+  paired generator `gen_bytes_pair(min_len, max_len, p_equal, p_near)`; until
+  it does, equality claims must be generated with an explicit correlated
+  generator. The harness cannot detect a vacuous property: a property
+  `a == b` compared with itself passes by construction.
+- `frequency` never selects a zero-weight arm and follows its weights;
+  `one_of` is uniform; `filter` samples exactly `max_retries` times before
+  `property-exhausted`; `list` lengths are inclusive. `frequency` requires a
+  total weight of at most 2^32 (it uses the bounded draw).
+
+### 7.3 Shrinking: what is actually guaranteed
+
+§4.1 speaks of a "canonical minimal counterexample". The implementation
+guarantees a **local minimum**, which is the contract:
+
+- Integers: the result falsifies the property, is inside `[min, max]`, and is
+  never farther from the target than the start. For a **monotone** property
+  (`x < t` holds) the result is exactly the threshold `t` from every failing
+  start (checked for every `t` in 1..=120 and every start, both signs). For an
+  arbitrary failing set the result is a local minimum (neither the bisection
+  step nor the unit step falsifies); it is not claimed global.
+- Lists and bytes: the result falsifies, is no longer than the start, keeps
+  every element inside its original value range, and is **1-minimal by
+  deletion**: removing any single element makes the property hold. Checked over
+  every list of length 0..=4 over `{0,1,2,3}` (341 lists) for six property
+  shapes. Element values are shrunk one at a time, so a property such as "no
+  two adjacent equal elements" shrinks `[1,2,3,3,4,5]` to `[3,3]`, not the
+  global minimum `[0,0]`.
+- Budgets: `max_steps == 0` returns the start unchanged; any budget returns a
+  falsifying value. `shrink_int`/`shrink_list` panic on a start that does not
+  falsify (a caller bug, loud by design); `check_property` guards that case.
+- Extremes: `i128::MIN`/`MAX` starts and opposite-extreme targets no longer
+  overflow (saturating difference, unsigned absolute value).
+
+### 7.4 Divergences found in the audit
+
+| # | Spec | Rust lane | Resolution |
+|---|---|---|---|
+| 1 | §3.1 `gen_i128(min, max)` rejection sampling | `raw % span` above 2^64; overflow above 2^127 | Fixed (7.2) |
+| 2 | §5.1 / §4.4 witness is a counterexample | shrinker result was trusted; `num_tests == 0` passed | Fixed (7.1) |
+| 3 | §5.2 SHA-256 digest of the reproducer bundle | CI message carries `repro-fnv`, a 64-bit FNV-1a of `iter;steps;shrunk` and also prints `iteration` and `steps`; the digest preimage space is tiny, so it is **brute-forceable**, which a SHA-256 of the same low-entropy string would also be | Open caveat: a keyed digest (HMAC with a private key) is the only real fix; not implemented. CI output must still be treated as potentially revealing for small input domains |
+| 4 | §3.1 lists `gen_nat`, `gen_ascii` | Not implemented (`Gen::bounded` covers `gen_nat`) | Open: spec lists them, nothing consumes them |
+| 5 | §5.1 `property-timeout` | Registered but never produced; `PbtOptions.max_retries` and `max_shrink_steps` are not read by `check_property` (budgets live in the caller's shrinker and filters) | Open: documented, harmless |
+| 6 | §4.3 chunk removal by powers of two | Bisection then single-element deletion | Equivalent guarantee (1-minimal), recorded |
