@@ -88,6 +88,10 @@ and [VER23a](../../../specs/VER23a-rust-effect-modules.md). Out of scope, stated
 - macros are not expanded (authority produced only by another crate's macros is invisible);
 - implicit authority that is never named in source (HashMap entropy seeding, allocation, panic output).
 
+Bounded by design: every resolver stage has a work ceiling (VER08a section 5) and exceeding it is a
+`CAP003`, never a hang or an allocation abort. `Cargo.toml` is read by a small tokenizing TOML reader
+that fails closed on anything it cannot parse (VER08a section 3.5.1).
+
 ## Certificates
 
 `--emit-cert` refuses to write a certificate unless the whole-package analysis is clean.

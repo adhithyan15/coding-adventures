@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.3.1 - Security-review fixes (VER08a divergence D14-D21)
+
+Specs first: VER08a updated (rules §3.2-3.5.1, work ceilings §5, divergence log D14-D21).
+Every fix has a regression that fails on 0.3.0 (corpus group `SECFIX` in
+`tests/test_evasion_corpus.rs`; `tests/test_secfix_regression.rs`).
+
+- [false negative, M1] `Path::exists(p)`, `std::path::Path::metadata(p)`, `PathBuf::read_dir(p)`, `<PathBuf>::is_file(p)` and `let g = Path::canonicalize;` were pure. Any `…::Path/PathBuf::<fs method>` is now `fs:list`; `std::path::absolute` is `env:read`. The path reader understands `>::item` and turbofish.
+- [false negative, M2] `m!(include, "../tests/evil.rs")` through `macro_rules! m { ($mac:ident, $f:expr) => { $mac!($f) } }` evaded `CAP003`. A bare `include`/`include_str`/`include_bytes` argument of a macro invocation and any `$name!(..)` in a `macro_rules!` body are now `CAP003`.
+- [false negative, M3] The line-oriented `Cargo.toml` reader missed top-level inline tables, `bin = [{ path = .. }]`, `package = { build = .. }`, `lib = { proc-macro = true }`, quoted table names, multi-line strings and multi-line arrays that reset the "current section". Replaced by a tokenizing reader that flattens every value to a key path, flags `path`/`build`/`proc-macro`/`proc_macro` anywhere outside dependency tables, refuses unverifiable values (multi-line strings, escapes, tables, arrays) and fails closed on anything it cannot parse. A line the old reader ignored (garbage without `=`) is now a finding.
+- [denial of service, M4] Alias expansion materialised (entries x targets) before checking its cap (264 KB input -> 2.3 GB abort); candidate generation was quadratic in path length; `matching_close` rescanned from every `#[` (O(n^2) on `#[#[#[…`); glob count was uncapped. Now: de-dup before expansion and caps inside the loops, 64 segments / 64 spellings per path, per-file work budget, a single-pass bracket table, 256-glob cap, macro-body scan budget. All reviewer inputs finish in well under a second in a debug build and yield `CAP003`.
+- [false negative, L1] `type F = File; F::create(..)`, `<File>::create(..)`, `type U = UdpSocket; U::bind(..)` escalated within a category. `type` aliases are bindings and `<T>::item` is classified as `T::item`.
+- [false negative, L2] `core::arch`/`std::arch` `_rdrand*`/`_rdseed*` intrinsics are `rand:read` (`__cpuid` documented as informational).
+- [false negative, L3] `extern "Rust" { … }` blocks are `foreign_linkage` + `ffi:call`.
+- [false positive, L4] The `.canonicalize()`-style method heuristic now resolves the one receiver shape it can prove (`Local::ctor(..)[.unwrap()/.expect()/.clone()/?]` with an inherent method of that name on a package-local type). `url-parser` no longer needs a false `fs:list` declaration; its manifest is corrected to `capabilities: []`.
+- [behaviour] New type-alias bindings mean `type Handle = *mut std::ffi::c_void;` makes each later use of `Handle` an `ffi:call` detection, as the `use` form already did (packages already failing the analyzer: audio-device-coreaudio, iocp, objc-bridge, transport-platform).
+
+Tests: 64 new SECFIX corpus cases (each with decoys), 17 regression tests (M3 bypasses and legitimate manifests, M4 timings).
+
 ## 0.3.0 - Audit hardening (VER08a / VER23a contract revision)
 
 Specs first: `code/specs/VER08a-rust-capability-analyzer.md` and

@@ -3,22 +3,43 @@
 //! Rust source is not the only thing that decides what code runs: `Cargo.toml`
 //! can mark the crate as a procedural macro, point the library or a build script
 //! at a file the scanner skips, and pull in third-party dependencies.  This module
-//! extracts exactly those facts with a deliberately small line-oriented reader
-//! (no TOML parser; zero dependencies).
+//! extracts exactly those facts with a deliberately small TOML-subset reader
+//! (zero dependencies).
 //!
 //! ```text
-//!   [lib]                       proc-macro = true   -> CAP003
-//!   [lib] / [[bin]]             path = "tests/x.rs" -> CAP003 (shipped, but never scanned)
-//!   [package]                   build = "../b.rs"   -> CAP003
+//!   proc-macro = true            anywhere outside a dependency table -> CAP003
+//!   path = "tests/x.rs"          anywhere outside a dependency table -> CAP003
+//!                                (if it escapes the scanned source set)
+//!   build = "../b.rs"            same rule as `path`
 //!   [dependencies] / [build-dependencies] / [target.*.dependencies]
-//!                               names               -> reported as unanalyzed
+//!                  names         -> reported as unanalyzed
 //! ```
 //!
-//! The reader understands: `[section]`, `[[array-of-tables]]`, `key = value`
-//! lines, `#` comments outside strings, and `[dependencies.name]` sub-tables.
-//! Anything fancier (dotted keys on one line such as `lib.proc-macro = true`
-//! at the top level) is handled for the keys we care about; everything else is
-//! ignored, never trusted.
+//! ## Why not a line reader
+//!
+//! The first version read one line at a time.  A line reader loses every bit of
+//! state TOML carries *between* lines, and each loss was an evasion route:
+//! `lib = { path = ".." }` (inline table at the top level), `bin = [{ path = .. }]`
+//! (array of inline tables), `package = { build = ".." }`, quoted table names
+//! (`["lib"]`), multi-line `'''..'''` strings whose body *looks like* a header, and
+//! multi-line arrays containing `[` lines that reset the "current section".
+//!
+//! This reader tokenises the whole file, so strings, arrays and inline tables
+//! are consumed as units.  It then flattens every value into a full key path
+//! (`bin`, `[]`, `path`) and applies one rule to that path, however the author
+//! spelled it.
+//!
+//! ## Fail closed
+//!
+//! * any syntax the reader does not understand -> one finding (CAP003);
+//! * the keys `path`, `build`, `proc-macro`, `proc_macro` must have a value the
+//!   reader can verify (a plain single-line string without escapes that stays
+//!   inside the scanned set; `false` for `build`/`proc-macro`).  A multi-line
+//!   string, an escape sequence (`"t\u0065sts/x.rs"`), a table or an array there
+//!   is a finding, because the analyzer cannot tell where it points;
+//! * the exemptions are exactly the dependency tables (a dependency's `path`
+//!   names *another* crate), `[features]`, and `path` inside `[[test]]` /
+//!   `[[bench]]` / `[[example]]` (not shipped, VER08a G-5).
 
 use std::fs;
 use std::path::Path;
@@ -41,32 +62,6 @@ pub struct CargoFacts {
 
 const UNSCANNED_ROOTS: &[&str] = &["tests", "benches", "examples", "target", "node_modules", "_build"];
 
-/// Strip a trailing `#` comment that is not inside a quoted string.
-fn strip_comment(line: &str) -> &str {
-    let mut in_str: Option<char> = None;
-    for (i, c) in line.char_indices() {
-        match in_str {
-            Some(q) if c == q => in_str = None,
-            Some(_) => {}
-            None if c == '"' || c == '\'' => in_str = Some(c),
-            None if c == '#' => return &line[..i],
-            None => {}
-        }
-    }
-    line
-}
-
-fn unquote(v: &str) -> Option<&str> {
-    let v = v.trim();
-    if v.len() >= 2
-        && ((v.starts_with('"') && v.ends_with('"')) || (v.starts_with('\'') && v.ends_with('\'')))
-    {
-        Some(&v[1..v.len() - 1])
-    } else {
-        None
-    }
-}
-
 /// True if a Cargo `path`/`build` value would point outside the scanned set.
 pub fn path_escapes_scan(raw: &str) -> bool {
     let p = raw.replace('\\', "/");
@@ -87,88 +82,439 @@ pub fn path_escapes_scan(raw: &str) -> bool {
     }
 }
 
-fn is_dependency_section(sec: &str) -> bool {
-    let s = sec.trim();
-    s == "dependencies"
-        || s == "build-dependencies"
-        || s.ends_with(".dependencies") && s.starts_with("target.")
-        || s.ends_with(".build-dependencies") && s.starts_with("target.")
+/// Keys whose value decides which code is compiled.
+const WATCHED_KEYS: &[&str] = &["path", "build", "proc-macro", "proc_macro"];
+
+/// Maximum nesting of arrays / inline tables before the reader gives up.
+const MAX_VALUE_DEPTH: usize = 32;
+
+/// A parsed TOML value (only as much structure as the rules need).
+#[derive(Debug)]
+enum Val {
+    /// A string; `multi` is true for `"""` / `'''`, `escaped` if a basic string held a `\`.
+    Str { text: String, multi: bool, escaped: bool },
+    /// Any other scalar, as written (`true`, `1`, a date ...).
+    Scalar(String),
+    Array(Vec<(usize, Val)>),
+    Table(Vec<(Vec<String>, usize, Val)>),
+}
+
+struct Reader {
+    c: Vec<char>,
+    i: usize,
+    line: usize,
+}
+
+type R<T> = Result<T, String>;
+
+impl Reader {
+    fn peek(&self, off: usize) -> Option<char> {
+        self.c.get(self.i + off).copied()
+    }
+
+    fn bump(&mut self) -> Option<char> {
+        let ch = self.c.get(self.i).copied()?;
+        self.i += 1;
+        if ch == '\n' {
+            self.line += 1;
+        }
+        Some(ch)
+    }
+
+    fn starts_with3(&self, q: char) -> bool {
+        self.peek(0) == Some(q) && self.peek(1) == Some(q) && self.peek(2) == Some(q)
+    }
+
+    /// Spaces and tabs only.
+    fn skip_blank(&mut self) {
+        while matches!(self.peek(0), Some(' ' | '\t')) {
+            self.bump();
+        }
+    }
+
+    fn skip_comment(&mut self) {
+        while !matches!(self.peek(0), None | Some('\n')) {
+            self.bump();
+        }
+    }
+
+    /// Blanks, newlines (incl. CR) and `#` comments.
+    fn skip_all(&mut self) {
+        loop {
+            match self.peek(0) {
+                Some(' ' | '\t' | '\n' | '\r') => {
+                    self.bump();
+                }
+                Some('#') => self.skip_comment(),
+                _ => return,
+            }
+        }
+    }
+
+    /// After a statement: only blanks, an optional comment, then newline / EOF.
+    fn end_of_statement(&mut self) -> R<()> {
+        self.skip_blank();
+        if self.peek(0) == Some('#') {
+            self.skip_comment();
+        }
+        match self.peek(0) {
+            None => Ok(()),
+            Some('\n') => {
+                self.bump();
+                Ok(())
+            }
+            Some('\r') if self.peek(1) == Some('\n') => {
+                self.bump();
+                self.bump();
+                Ok(())
+            }
+            Some(ch) => Err(format!("unexpected `{ch}` after a value")),
+        }
+    }
+
+    fn string(&mut self) -> R<Val> {
+        let quote = self.peek(0).ok_or("unexpected end of file")?;
+        let multi = self.starts_with3(quote);
+        let mut text = String::new();
+        let mut escaped = false;
+        if multi {
+            for _ in 0..3 {
+                self.bump();
+            }
+            loop {
+                if self.starts_with3(quote) {
+                    for _ in 0..3 {
+                        self.bump();
+                    }
+                    // Up to two further quotes belong to the body.
+                    for _ in 0..2 {
+                        if self.peek(0) == Some(quote) {
+                            text.push(quote);
+                            self.bump();
+                        }
+                    }
+                    return Ok(Val::Str { text, multi, escaped });
+                }
+                match self.bump() {
+                    None => return Err("unterminated multi-line string".into()),
+                    Some('\\') if quote == '"' => {
+                        escaped = true;
+                        text.push('\\');
+                        if let Some(n) = self.bump() {
+                            text.push(n);
+                        }
+                    }
+                    Some(ch) => text.push(ch),
+                }
+            }
+        }
+        self.bump();
+        loop {
+            match self.bump() {
+                None | Some('\n') => return Err("unterminated string".into()),
+                Some(ch) if ch == quote => return Ok(Val::Str { text, multi, escaped }),
+                Some('\\') if quote == '"' => {
+                    escaped = true;
+                    text.push('\\');
+                    match self.bump() {
+                        None | Some('\n') => return Err("unterminated string".into()),
+                        Some(n) => text.push(n),
+                    }
+                }
+                Some(ch) => text.push(ch),
+            }
+        }
+    }
+
+    /// A dotted key: `a`, `"a"`, `a . 'b'`.
+    fn key(&mut self) -> R<Vec<String>> {
+        let is_bare = |ch: char| ch.is_ascii_alphanumeric() || ch == '_' || ch == '-';
+        let mut parts = Vec::new();
+        loop {
+            self.skip_blank();
+            match self.peek(0) {
+                Some('"') | Some('\'') => match self.string()? {
+                    Val::Str { text, multi: false, escaped: false } => parts.push(text),
+                    _ => return Err("quoted key with an escape or multi-line form".into()),
+                },
+                Some(ch) if is_bare(ch) => {
+                    let mut s = String::new();
+                    while let Some(ch) = self.peek(0).filter(|&ch| is_bare(ch)) {
+                        s.push(ch);
+                        self.bump();
+                    }
+                    parts.push(s);
+                }
+                _ => return Err("expected a key".into()),
+            }
+            self.skip_blank();
+            if self.peek(0) == Some('.') {
+                self.bump();
+            } else {
+                return Ok(parts);
+            }
+        }
+    }
+
+    fn value(&mut self, depth: usize) -> R<Val> {
+        if depth > MAX_VALUE_DEPTH {
+            return Err("values nested too deeply".into());
+        }
+        self.skip_blank();
+        match self.peek(0) {
+            Some('"') | Some('\'') => self.string(),
+            Some('[') => {
+                self.bump();
+                let mut items = Vec::new();
+                loop {
+                    self.skip_all();
+                    if self.peek(0) == Some(']') {
+                        self.bump();
+                        return Ok(Val::Array(items));
+                    }
+                    let line = self.line;
+                    let v = self.value(depth + 1)?;
+                    items.push((line, v));
+                    self.skip_all();
+                    match self.peek(0) {
+                        Some(',') => {
+                            self.bump();
+                        }
+                        Some(']') => {}
+                        _ => return Err("expected `,` or `]` in an array".into()),
+                    }
+                }
+            }
+            Some('{') => {
+                self.bump();
+                let mut entries = Vec::new();
+                loop {
+                    self.skip_all();
+                    if self.peek(0) == Some('}') {
+                        self.bump();
+                        return Ok(Val::Table(entries));
+                    }
+                    let line = self.line;
+                    let k = self.key()?;
+                    self.skip_blank();
+                    if self.peek(0) != Some('=') {
+                        return Err("expected `=` in an inline table".into());
+                    }
+                    self.bump();
+                    let v = self.value(depth + 1)?;
+                    entries.push((k, line, v));
+                    self.skip_all();
+                    match self.peek(0) {
+                        Some(',') => {
+                            self.bump();
+                        }
+                        Some('}') => {}
+                        _ => return Err("expected `,` or `}` in an inline table".into()),
+                    }
+                }
+            }
+            _ => {
+                let mut s = String::new();
+                while let Some(ch) = self.peek(0) {
+                    if ch.is_whitespace() || matches!(ch, ',' | ']' | '}' | '#' | '"' | '\'' | '=' | '[' | '{') {
+                        break;
+                    }
+                    s.push(ch);
+                    self.bump();
+                }
+                if s.is_empty() {
+                    Err("expected a value".into())
+                } else {
+                    Ok(Val::Scalar(s))
+                }
+            }
+        }
+    }
+}
+
+/// Dependency-like tables whose entries name *other* crates.
+fn is_dep_table_name(s: &str) -> bool {
+    matches!(
+        s,
+        "dependencies" | "dev-dependencies" | "build-dependencies" | "dev_dependencies" | "build_dependencies"
+    )
+}
+
+/// `Some(index of the dependency name within the path)` for a dependency table path.
+fn dependency_name_index(path: &[String]) -> Option<usize> {
+    if path.first().map(String::as_str) == Some("target") && path.len() >= 3 && is_dep_table_name(&path[2]) {
+        return Some(3);
+    }
+    if path.first().is_some_and(|p| is_dep_table_name(p)) {
+        return Some(1);
+    }
+    None
+}
+
+/// Tables exempt from the watched-key rule that are not reported as dependencies.
+fn is_exempt_table(path: &[String]) -> bool {
+    let first = path.first().map(String::as_str);
+    first == Some("features")
+        || first == Some("patch")
+        || first == Some("replace")
+        || (first == Some("workspace") && path.get(1).map(String::as_str) == Some("dependencies"))
+}
+
+struct Checker<'a> {
+    facts: &'a mut CargoFacts,
+}
+
+impl Checker<'_> {
+    fn finding(&mut self, line: usize, reason: String, evidence: String) {
+        self.facts.findings.push(CargoFinding { line, reason, evidence });
+    }
+
+    /// Apply the rules to one full key path (and its value, if it has one).
+    fn check(&mut self, path: &[String], val: Option<&Val>, line: usize) {
+        if let Some(idx) = dependency_name_index(path) {
+            let is_dev = path[0].starts_with("dev")
+                || (path[0] == "target" && path[2].starts_with("dev"));
+            if !is_dev {
+                if let Some(name) = path.get(idx) {
+                    self.facts.dependencies.push(name.clone());
+                }
+            }
+            return;
+        }
+        if path.is_empty() || is_exempt_table(path) {
+            return;
+        }
+        let Some(k) = path.iter().position(|s| WATCHED_KEYS.contains(&s.as_str())) else {
+            return;
+        };
+        let key = path[k].clone();
+        if matches!(path[0].as_str(), "test" | "bench" | "example") && key == "path" {
+            return;
+        }
+        let evidence = format!("{} ...", path.join("."));
+        let ambiguous = |this: &mut Self, why: &str| {
+            this.finding(
+                line,
+                format!("Cargo.toml key `{key}` has {why}; the analyzer cannot verify what it selects"),
+                evidence.clone(),
+            );
+        };
+        if k + 1 != path.len() {
+            ambiguous(self, "a nested structure under it");
+            return;
+        }
+        let Some(val) = val else {
+            ambiguous(self, "a table header form");
+            return;
+        };
+        match (key.as_str(), val) {
+            ("path" | "build", Val::Str { text, multi: false, escaped: false }) => {
+                if path_escapes_scan(text) {
+                    self.finding(
+                        line,
+                        format!("{key} points outside the scanned source set"),
+                        format!("{key} = \"{text}\""),
+                    );
+                }
+            }
+            ("build", Val::Scalar(s)) if s == "false" => {}
+            ("proc-macro" | "proc_macro", Val::Scalar(s)) if s == "false" => {}
+            ("proc-macro" | "proc_macro", Val::Scalar(s)) if s == "true" => {
+                self.finding(
+                    line,
+                    "proc-macro crate runs arbitrary code at compile time".into(),
+                    "proc-macro = true".into(),
+                );
+            }
+            (_, Val::Str { multi: true, .. }) => ambiguous(self, "a multi-line string value"),
+            (_, Val::Str { escaped: true, .. }) => ambiguous(self, "an escape sequence in its value"),
+            (_, Val::Array(_)) | (_, Val::Table(_)) => ambiguous(self, "an array or table value"),
+            _ => ambiguous(self, "a value of an unexpected form"),
+        }
+    }
+
+    fn visit(&mut self, path: &[String], val: &Val, line: usize) {
+        self.check(path, Some(val), line);
+        match val {
+            Val::Table(entries) => {
+                for (k, l, v) in entries {
+                    let mut p = path.to_vec();
+                    p.extend(k.iter().cloned());
+                    self.visit(&p, v, *l);
+                }
+            }
+            Val::Array(items) => {
+                for (l, v) in items {
+                    let mut p = path.to_vec();
+                    p.push("[]".into());
+                    self.visit(&p, v, *l);
+                }
+            }
+            _ => {}
+        }
+    }
+}
+
+/// Parse one statement (table header or `key = value`).  `Ok(false)` at end of file.
+fn statement(rd: &mut Reader, section: &mut Vec<String>, facts: &mut CargoFacts) -> R<bool> {
+    rd.skip_all();
+    let line = rd.line;
+    if rd.peek(0).is_none() {
+        return Ok(false);
+    }
+    if rd.peek(0) == Some('[') {
+        let array = rd.peek(1) == Some('[');
+        rd.bump();
+        if array {
+            rd.bump();
+        }
+        let key = rd.key()?;
+        rd.skip_blank();
+        for _ in 0..(if array { 2 } else { 1 }) {
+            if rd.peek(0) != Some(']') {
+                return Err("unterminated table header".into());
+            }
+            rd.bump();
+        }
+        rd.end_of_statement()?;
+        *section = key;
+        Checker { facts }.check(section, None, line);
+        return Ok(true);
+    }
+    let key = rd.key()?;
+    rd.skip_blank();
+    if rd.peek(0) != Some('=') {
+        return Err("expected `=` after a key".into());
+    }
+    rd.bump();
+    let v = rd.value(0)?;
+    rd.end_of_statement()?;
+    let mut full = section.clone();
+    full.extend(key);
+    Checker { facts }.visit(&full, &v, line);
+    Ok(true)
 }
 
 /// Analyse the text of a `Cargo.toml`.
 pub fn analyze_cargo_text(text: &str) -> CargoFacts {
     let mut facts = CargoFacts::default();
-    let mut section = String::new();
-    for (idx, raw_line) in text.lines().enumerate() {
-        let lineno = idx + 1;
-        let line = strip_comment(raw_line).trim();
-        if line.is_empty() {
-            continue;
-        }
-        if line.starts_with('[') {
-            let inner = line.trim_start_matches('[').trim_end_matches(']').trim();
-            section = inner.to_string();
-            // [dependencies.foo] / [target.x.dependencies.foo]
-            for pre in ["dependencies.", "build-dependencies."] {
-                if let Some(rest) = section.strip_prefix(pre) {
-                    facts.dependencies.push(rest.trim_matches('"').to_string());
-                }
-            }
-            if section.starts_with("target.") {
-                for marker in [".dependencies.", ".build-dependencies."] {
-                    if let Some(pos) = section.find(marker) {
-                        facts
-                            .dependencies
-                            .push(section[pos + marker.len()..].trim_matches('"').to_string());
-                    }
-                }
-            }
-            continue;
-        }
-        let Some((key, value)) = line.split_once('=') else {
-            continue;
-        };
-        let key = key.trim().trim_matches('"');
-        let value = value.trim();
-
-        if is_dependency_section(&section) {
-            facts.dependencies.push(key.split('.').next().unwrap_or(key).to_string());
-            continue;
-        }
-
-        // Top-level dotted keys such as `lib.proc-macro = true`.
-        let effective_section = if let Some((tbl, k)) = key.split_once('.') {
-            if tbl == "lib" && section.is_empty() {
-                format!("lib:{k}")
-            } else {
-                format!("{section}:{key}")
-            }
-        } else {
-            format!("{section}:{key}")
-        };
-
-        let sec_name = section.as_str();
-        // [[test]] / [[bench]] / [[example]] are not shipped (VER08a G-5), so their
-        // paths into tests/ benches/ examples/ are legitimate and not flagged.
-        let target_section = matches!(sec_name, "lib" | "bin");
-        if (sec_name == "lib" && matches!(key, "proc-macro" | "proc_macro") && value == "true")
-            || effective_section == "lib:proc-macro" && value == "true"
-        {
-            facts.findings.push(CargoFinding {
-                line: lineno,
-                reason: "proc-macro crate runs arbitrary code at compile time".into(),
-                evidence: "proc-macro = true".into(),
-            });
-        }
-        if (target_section && key == "path") || (sec_name == "package" && key == "build") {
-            if let Some(p) = unquote(value) {
-                if path_escapes_scan(p) {
-                    facts.findings.push(CargoFinding {
-                        line: lineno,
-                        reason: format!("{key} points outside the scanned source set"),
-                        evidence: format!("{key} = \"{p}\""),
-                    });
-                }
+    let mut rd = Reader {
+        c: text.strip_prefix('\u{feff}').unwrap_or(text).chars().collect(),
+        i: 0,
+        line: 1,
+    };
+    let mut section: Vec<String> = Vec::new();
+    loop {
+        match statement(&mut rd, &mut section, &mut facts) {
+            Ok(true) => {}
+            Ok(false) => break,
+            Err(msg) => {
+                facts.findings.push(CargoFinding {
+                    line: rd.line,
+                    reason: "Cargo.toml could not be parsed; the analyzer fails closed".into(),
+                    evidence: msg,
+                });
+                break;
             }
         }
     }

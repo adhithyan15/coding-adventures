@@ -414,6 +414,115 @@ const FALSE_POSITIVES: &[Case] = &[
     ("FP: whole std::ffi module (OsStr, CStr)", "use std::ffi::OsStr;", &["ffi:call"]),
 ];
 
+/// Security-review regressions (VER08a divergence log D14-D21).  Every case here
+/// FAILED before the fix named in its prefix: M1 UFCS Path methods, M2
+/// metavariable-chosen include!, L1 type aliases / qualified paths, L2 hardware
+/// randomness, L3 `extern "Rust" {}`, L4 receiver resolution.
+const SECFIX: &[Case] = &[
+    // ---- M1: path-qualified calls to Path/PathBuf filesystem methods are not pure
+    ("M1 Path::exists UFCS", "fn f(){ Path::exists(Path::new(\"/etc/passwd\")); }", &["fs:list"]),
+    ("M1 std::path::Path::metadata", "fn f(p: &std::path::Path){ std::path::Path::metadata(p); }", &["fs:list"]),
+    ("M1 PathBuf::read_dir", "fn f(p: &PathBuf){ PathBuf::read_dir(p); }", &["fs:list"]),
+    ("M1 <PathBuf>::is_file", "fn f(p: &PathBuf){ <PathBuf>::is_file(p); }", &["fs:list"]),
+    ("M1 fn item Path::canonicalize", "fn f(){ let g = Path::canonicalize; }", &["fs:list"]),
+    ("M1 Path::try_exists", "fn f(p: &Path){ Path::try_exists(p); }", &["fs:list"]),
+    ("M1 Path::symlink_metadata", "fn f(p: &Path){ Path::symlink_metadata(p); }", &["fs:list"]),
+    ("M1 Path::read_link", "fn f(p: &Path){ Path::read_link(p); }", &["fs:list"]),
+    ("M1 Path::is_dir", "fn f(p: &Path){ Path::is_dir(p); }", &["fs:list"]),
+    ("M1 Path::is_symlink", "fn f(p: &Path){ Path::is_symlink(p); }", &["fs:list"]),
+    ("M1 use Path then UFCS", "use std::path::Path; fn f(p: &Path){ Path::exists(p); }", &["fs:list"]),
+    ("M1 use Path as alias then UFCS", "use std::path::Path as P; fn f(p: &P){ P::exists(p); }", &["fs:list"]),
+    ("M1 core::path is not special", "fn f(p: &Path){ core::path::Path::exists(p); }", &["fs:list"]),
+    ("M1 <Path as Foo>::exists", "fn f(p: &Path){ <Path as Foo>::exists(p); }", &["fs:list"]),
+    ("M1 std::path::absolute reads cwd", "fn f(){ let _ = std::path::absolute(\"x\"); }", &["env:read"]),
+    ("M1 use path::absolute", "use std::path::absolute; fn f(){ let _ = absolute(\"x\"); }", &["env:read"]),
+    ("M1 glob path::*", "use std::path::*; fn f(){ let _ = absolute(\"x\"); }", &["env:read"]),
+    ("M1 decoy Path::new", "fn f(){ let _ = std::path::Path::new(\"x\"); }", &[]),
+    ("M1 decoy PathBuf::from", "fn f(){ let _ = std::path::PathBuf::from(\"x\"); }", &[]),
+    ("M1 decoy Path::join / extension", "fn f(p: &Path){ p.join(\"a\").extension(); Path::file_name(p); }", &[]),
+    ("M1 decoy turbofish Vec::<u8>::new", "fn f(){ let _ = Vec::<u8>::new(); }", &[]),
+    ("M1 decoy <[u8]>::len", "fn f(x: &[u8]){ let _ = <[u8]>::len(x); }", &[]),
+    // ---- M2: a macro name passed as an argument is invoked out of sight
+    ("M2 $mac!(..) invoked with include", "macro_rules! m { ($mac:ident, $f:expr) => { $mac!($f) } } pub fn f(){ m!(include, \"../tests/evil.rs\"); }", &["?"]),
+    ("M2 $mac!(..) definition alone", "macro_rules! m { ($mac:ident) => { $mac!() } }", &["?"]),
+    ("M2 bare include as macro argument", "pub fn f(){ m!(include, \"../tests/evil.rs\"); }", &["?"]),
+    ("M2 bare include_str as macro argument", "pub fn f(){ m!(include_str, \"x\"); }", &["?"]),
+    ("M2 bare include_bytes as macro argument", "pub fn f(){ m!(include_bytes, \"x\"); }", &["?"]),
+    ("M2 bare include in bracket macro", "pub fn f(){ m![include]; }", &["?"]),
+    ("M2 bare include nested in args", "pub fn f(){ a!(b!(c, include)); }", &["?"]),
+    ("M2 decoy include variable outside macro", "fn f(include: bool){ if include { g(include); } }", &[]),
+    ("M2 decoy include_str! proper", "fn f(){ let _ = include_str!(\"x.txt\"); }", &[]),
+    ("M2 decoy $a != 1 in macro_rules", "macro_rules! m { ($a:expr) => { $a != 1 } }", &[]),
+    ("M2 decoy !$x in macro_rules", "macro_rules! m { ($x:expr) => { !$x } }", &[]),
+    ("M2 decoy field named include after dot", "fn f(c: C){ assert!(c.include); }", &[]),
+    // ---- L1: type aliases and qualified paths do not hide a more powerful member
+    ("L1 type alias then create", "type F = std::fs::File; fn f(){ F::create(\"x\"); }", &["fs:read", "fs:write"]),
+    ("L1 type alias of imported File", "use std::fs::File; type F = File; fn f(){ F::create(\"x\"); }", &["fs:read", "fs:write"]),
+    ("L1 generic type alias", "type F<T> = std::fs::File; fn f(){ F::<u8>::create(\"x\"); }", &["fs:read", "fs:write"]),
+    ("L1 alias of alias", "use std::fs::File; type A = File; type B = A; fn f(){ B::create(\"x\"); }", &["fs:read", "fs:write"]),
+    ("L1 <File>::create", "use std::fs::File; fn f(){ <File>::create(\"x\"); }", &["fs:read", "fs:write"]),
+    ("L1 <std::fs::File>::create", "fn f(){ <std::fs::File>::create(\"x\"); }", &["fs:read", "fs:write"]),
+    ("L1 <File as T>::create", "use std::fs::File; fn f(){ <File as Foo>::create(\"x\"); }", &["fs:read", "fs:write"]),
+    ("L1 type alias UdpSocket::bind", "use std::net::UdpSocket; type U = UdpSocket; fn f(){ U::bind(\"x\"); }", &["net:connect", "net:listen"]),
+    ("L1 <UdpSocket>::bind", "use std::net::UdpSocket; fn f(){ <UdpSocket>::bind(\"x\"); }", &["net:connect", "net:listen"]),
+    ("L1 decoy type alias of integer", "type Id = u32; fn f(){ let _ = Id::from(1u8); }", &[]),
+    ("L1 decoy assoc type without value", "trait T { type Item; type Out: Clone; }", &[]),
+    ("L1 decoy alias of Vec", "type V = Vec<u8>; fn f(){ let _ = V::new(); }", &[]),
+    // ---- L2: hardware randomness
+    ("L2 _rdrand64_step", "fn f(){ let mut v = 0u64; unsafe { core::arch::x86_64::_rdrand64_step(&mut v); } }", &["!unsafe_code", "rand:read"]),
+    ("L2 _rdseed32_step via std", "fn f(){ let mut v = 0u32; unsafe { std::arch::x86_64::_rdseed32_step(&mut v); } }", &["!unsafe_code", "rand:read"]),
+    ("L2 glob arch", "use core::arch::x86_64::*; fn f(){ let mut v = 0u16; unsafe { _rdrand16_step(&mut v); } }", &["!unsafe_code", "rand:read"]),
+    ("L2 module alias", "use core::arch::x86_64 as a; fn f(){ let mut v = 0u64; unsafe { a::_rdrand64_step(&mut v); } }", &["!unsafe_code", "rand:read"]),
+    ("L2 decoy other intrinsic stays pure", "fn f(){ unsafe { let _ = core::arch::x86_64::_mm_add_epi32; } }", &["!unsafe_code"]),
+    ("L2 decoy cpuid is informational only", "fn f(){ unsafe { let _ = core::arch::x86_64::__cpuid(0); } }", &["!unsafe_code"]),
+    // ---- L3: extern "Rust" blocks
+    ("L3 extern Rust block", "extern \"Rust\" { fn f(); }", &["!foreign_linkage", "ffi:call"]),
+    ("L3 unsafe extern Rust block", "unsafe extern \"Rust\" { pub fn f(); }", &["!foreign_linkage", "!unsafe_code", "ffi:call"]),
+    ("L3 decoy extern Rust fn definition", "pub extern \"Rust\" fn f() {}", &[]),
+    ("L3 decoy extern Rust fn pointer type", "type Cb = extern \"Rust\" fn(u8);", &[]),
+    // ---- L4: receiver resolution for the `.canonicalize()` heuristic
+    (
+        "L4 local type's own canonicalize via ctor+unwrap",
+        "struct Url; impl Url { pub fn parse(s: &str) -> Result<Url, E> { todo!() } pub fn canonicalize(&self) -> Result<Url, E> { todo!() } } fn t(){ Url::parse(\"x\").unwrap().canonicalize().unwrap(); }",
+        &[],
+    ),
+    (
+        "L4 local ctor returning Option<Self> with expect",
+        "struct U; impl U { pub fn new() -> Option<Self> { None } pub fn exists(&self) -> bool { true } } fn t() -> bool { U::new().expect(\"m\").exists() }",
+        &[],
+    ),
+    (
+        "L4 not resolved: ctor returns a PathBuf",
+        "struct Url; impl Url { pub fn parse(s: &str) -> PathBuf { todo!() } pub fn canonicalize(&self) -> u8 { 0 } } fn t(){ Url::parse(\"x\").canonicalize(); }",
+        &["fs:list"],
+    ),
+    (
+        "L4 not resolved: local type has no such method of its own",
+        "struct Url; impl Url { pub fn parse(s: &str) -> Result<Url, E> { todo!() } } fn t(){ Url::parse(\"x\").unwrap().canonicalize(); }",
+        &["fs:list"],
+    ),
+    (
+        "L4 not resolved: receiver is a variable",
+        "struct Url; impl Url { pub fn parse(s: &str) -> Url { todo!() } pub fn canonicalize(&self) -> u8 { 0 } } fn t(u: Url){ u.canonicalize(); }",
+        &["fs:list"],
+    ),
+    (
+        "L4 not resolved: unknown adapter between ctor and call",
+        "struct Url; impl Url { pub fn parse(s: &str) -> Url { todo!() } pub fn canonicalize(&self) -> u8 { 0 } } fn t(){ Url::parse(\"x\").into_inner().canonicalize(); }",
+        &["fs:list"],
+    ),
+    (
+        "L4 not resolved: trait impl does not count as inherent",
+        "struct Url; trait T { fn canonicalize(&self); } impl T for Url { fn canonicalize(&self) {} } impl Url { pub fn parse(s: &str) -> Url { todo!() } } fn t(){ Url::parse(\"x\").canonicalize(); }",
+        &["fs:list"],
+    ),
+    (
+        "L4 not resolved: type name rebound by use",
+        "use std::path::PathBuf as Url; fn t(){ Url::new().unwrap().canonicalize(); }",
+        &["fs:list"],
+    ),
+];
+
 fn run(label: &str, cases: &[Case]) -> usize {
     let mut failures = Vec::new();
     for (name, src, expected) in cases {
@@ -439,6 +548,7 @@ fn evasion_corpus_every_case_has_its_exact_verdict() {
     total += run("pure", PURE);
     total += run("decoys", DECOYS);
     total += run("documented false positives", FALSE_POSITIVES);
+    total += run("security-review regressions", SECFIX);
     total += multi_file_cases();
     // The corpus is a contract: shrinking it needs a deliberate edit of this number.
     assert!(total >= 300, "corpus shrank to {total} cases");

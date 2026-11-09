@@ -441,8 +441,13 @@ version = "1"
 #[test]
 fn cargo_text_reader_edge_cases() {
     // Comments inside strings are not comments; keys with quotes; empty and garbage lines.
-    let f = analyze_cargo_text("[dependencies]\n\"quoted-dep\" = \"1\"\nplain = \"a # not comment\"\n\n# only comment\ngarbage line without equals\n");
+    let f = analyze_cargo_text("[dependencies]\n\"quoted-dep\" = \"1\"\nplain = \"a # not comment\"\n\n# only comment\n");
     assert_eq!(f.dependencies, ["plain", "quoted-dep"]);
+    assert!(f.findings.is_empty());
+    // A line the reader cannot parse is a finding (fail closed), never skipped.
+    let f = analyze_cargo_text("[dependencies]\nplain = \"1\"\ngarbage line without equals\n");
+    assert_eq!(f.findings.len(), 1);
+    assert_eq!(f.findings[0].line, 3);
     let f = analyze_cargo_text("[lib]\npath = \"tests/x.rs\" # why\n");
     assert_eq!(f.findings.len(), 1);
     assert_eq!(f.findings[0].line, 2);

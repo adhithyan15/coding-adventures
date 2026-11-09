@@ -78,6 +78,24 @@ pub const FS_LIST_METHODS: &[&str] = &[
     "is_symlink",
 ];
 
+/// `…::Path::<fs method>` / `…::PathBuf::<fs method>` reach the filesystem
+/// exactly as `p.<fs method>()` does, so they get the same `fs:list` verdict.
+pub fn path_method_rule(segs: &[&str]) -> Option<Classification> {
+    let n = segs.len();
+    if n >= 2
+        && matches!(segs[n - 2], "Path" | "PathBuf")
+        && FS_LIST_METHODS.contains(&segs[n - 1])
+    {
+        return Some(cap("fs", "list"));
+    }
+    None
+}
+
+/// `core`/`std` intrinsics that read hardware randomness (`_rdrand64_step`, `_rdseed32_step`).
+fn is_hw_random_intrinsic(name: &str) -> bool {
+    name.starts_with("_rdrand") || name.starts_with("_rdseed")
+}
+
 /// Attribute identifiers that create or alter foreign linkage.
 pub const FOREIGN_LINKAGE_ATTRS: &[&str] = &[
     "no_mangle",
@@ -176,6 +194,14 @@ pub fn classify_segments(segs: &[&str], is_macro: bool) -> Classification {
         return cap("rand", "read");
     }
 
+    // `Path::exists(p)`, `PathBuf::read_dir(p)`, `<Path>::metadata(p)`, `let g = Path::canonicalize;`:
+    // the method-call form is caught after a `.`; the path form is caught here,
+    // whatever precedes it (`std::path::`, `core::`, nothing).  Over-approximates
+    // a user type that happens to be called `Path` (VER08a §3.3).
+    if let Some(c) = path_method_rule(segs) {
+        return c;
+    }
+
     // Bare stdout macros (also reached via `use std::println`).
     if segs.len() == 1 && STDOUT_MACROS.contains(&head) {
         return cap("stdout", "write");
@@ -247,6 +273,12 @@ fn classify_std(segs: &[&str], is_macro: bool) -> Classification {
             }
         }
         "backtrace" => cap("env", "read"),
+        // `std::path::absolute` joins the current directory (env:read); the
+        // `Path`/`PathBuf` fs methods are handled by `path_method_rule`.
+        "path" if rest == ["absolute"] => cap("env", "read"),
+        // Hardware randomness; every other `arch` intrinsic is arithmetic.
+        // (`__cpuid` reveals the CPU model: informational, VER08a §3.3.)
+        "arch" if rest.iter().any(|s| is_hw_random_intrinsic(s)) => cap("rand", "read"),
         "thread" => match rest.first() {
             Some(&"sleep") | Some(&"sleep_ms") | Some(&"park_timeout") => cap("time", "sleep"),
             _ => cap("thread", "spawn"),
