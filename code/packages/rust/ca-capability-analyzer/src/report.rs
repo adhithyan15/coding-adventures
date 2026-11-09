@@ -5,7 +5,7 @@
 use std::collections::BTreeSet;
 
 /// Specific violation types defined in Spec 13 / VER08a.
-#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Violation {
     /// CAP001: Undeclared capability access.
     UndeclaredCapability {
@@ -31,6 +31,24 @@ pub enum Violation {
         col: usize,
         evidence: String,
     },
+}
+
+/// Violations sort by location first (file, line, column), then code, then text.
+///
+/// The derived `Ord` ordered by enum variant first, so CAP002 findings were
+/// listed before CAP001 ones regardless of where they were; the documented
+/// intent ("sort by file, line, col") was not met.
+impl Ord for Violation {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        let key = |v: &Violation| (v.file().to_string(), v.line(), v.col(), v.code(), v.format_line());
+        key(self).cmp(&key(other))
+    }
+}
+
+impl PartialOrd for Violation {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
 }
 
 impl Violation {
