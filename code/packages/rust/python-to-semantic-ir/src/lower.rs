@@ -645,6 +645,18 @@ struct FunctionCtx {
     /// ([`Lowerer::resolve_var_in`]) and store ([`Lowerer::store_target`])
     /// of a local goes through [`Self::ir_local`].
     aliases: std::collections::HashMap<String, String>,
+    /// Variables boxed into 1-element sequences (`[value]`) to implement
+    /// Python's closure cell-variable semantics (#18496 item 5).
+    ///
+    /// In Python, closures capture variable bindings (cells), not snapshots
+    /// of values at closure definition time. When an enclosing function modifies
+    /// a variable captured by a closure, or a closure is created in a loop or
+    /// before the variable is initialized, the variable is stored in a 1-element
+    /// heap-allocated sequence (a cell). Every read of the variable becomes
+    /// `Expr::SeqIndex(cell, 0)`, and every store becomes `Stmt::SeqSet(cell, 0, v)`.
+    /// Closures receive the cell reference itself (`Expr::VarRef`) in their
+    /// capture vector.
+    cells: HashSet<String>,
 }
 
 impl FunctionCtx {
@@ -658,6 +670,26 @@ impl FunctionCtx {
             owner: owner.to_string(),
             in_method: false,
             aliases: std::collections::HashMap::new(),
+            cells: HashSet::new(),
+        }
+    }
+
+    /// A context for a function with inherited cell variables from its enclosing
+    /// scope, owned by the function named `owner`.
+    fn new_with_cells(
+        params: HashSet<String>,
+        captures: HashSet<String>,
+        cells: HashSet<String>,
+        owner: &str,
+    ) -> Self {
+        Self {
+            params,
+            captures,
+            locals: Vec::new(),
+            owner: owner.to_string(),
+            in_method: false,
+            aliases: std::collections::HashMap::new(),
+            cells,
         }
     }
 
@@ -675,6 +707,7 @@ impl FunctionCtx {
             owner: DETACHED_OWNER.to_string(),
             in_method: true,
             aliases: std::collections::HashMap::new(),
+            cells: HashSet::new(),
         }
     }
 
@@ -690,9 +723,6 @@ impl FunctionCtx {
         Self::new(HashSet::new(), HashSet::new(), DETACHED_OWNER)
     }
 
-    /// Is `name` an enclosing-scope value (local / param / capture) of
-    /// *this* function?  Such a name, when read inside a nested
-    /// `lambda`/`def`, must be **captured**.
     /// The IR name of the local spelled `name` in the source: its alias
     /// if it has one, else `name` itself.
     fn ir_local(&self, name: &str) -> String {
@@ -706,6 +736,7 @@ impl FunctionCtx {
         self.locals.iter().any(|n| n == name)
             || self.params.contains(name)
             || self.captures.contains(name)
+            || self.cells.contains(name)
     }
 }
 
@@ -858,7 +889,12 @@ impl Lowerer {
 
         // ── Pass 2: lower each top-level statement. ──
         let mut ctx = FunctionCtx::top_level();
+        let span = Span::point(FILE, 1, 1);
+        let cell_prologue = self.cell_prologue_for_node(file, &mut ctx, &span)?;
         let mut items: Vec<Lowered> = Vec::new();
+        for stmt in cell_prologue {
+            items.push(Lowered::Stmt(Box::new(stmt)));
+        }
         for child in &file.children {
             if let ASTNodeOrToken::Node(stmt) = child {
                 if let Some(item) = self.lower_top_statement(stmt, &mut ctx, 0)? {
@@ -1835,6 +1871,23 @@ impl Lowerer {
     ) -> Result<Stmt, PythonLowerError> {
         match target {
             Target::Name(name) => {
+                if ctx.cells.contains(&name) {
+                    self.observed.add(Feature::Sequences);
+                    let cell_ref = Expr::VarRef {
+                        name: ctx.ir_local(&name),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    };
+                    return Ok(Stmt::SeqSet {
+                        seq: cell_ref,
+                        index: Expr::IntLit {
+                            value: 0,
+                            span: span.clone(),
+                        },
+                        value,
+                        span,
+                    });
+                }
                 if ctx.locals.iter().any(|n| n == &name) {
                     self.observed.add(Feature::MutableBindings);
                     Ok(Stmt::Assign {
@@ -1900,6 +1953,280 @@ impl Lowerer {
         }
     }
 
+    /// Identify cell variables in `suite` and generate prologue statements creating
+    /// 1-element sequences (`[initial_value]`) for each cell variable (#18496 item 5).
+    ///
+    /// ## Python Closure Cell Variables
+    ///
+    /// In Python, closures capture variable *bindings* (cells), not snapshot values
+    /// at closure definition time.
+    ///
+    /// Consider:
+    /// ```python
+    /// def f():
+    ///     x = 10
+    ///     g = lambda: x
+    ///     x = 20
+    ///     return g()
+    /// ```
+    /// Under value capture, `g` captures 10 when created, returning 10 instead of 20.
+    /// With cell boxing, `x` is stored in a 1-element sequence `[nil]` at prologue.
+    /// `x = 10` does `SeqSet(cell_x, 0, 10)`. `g` captures `cell_x`. `x = 20` does
+    /// `SeqSet(cell_x, 0, 20)`. When `g()` runs, it reads `SeqIndex(cell_x, 0)` -> 20.
+    ///
+    /// Similarly, if a closure is defined before the variable is assigned, or in a loop:
+    /// all closures share the cell reference and observe subsequent mutations.
+    fn cell_prologue(
+        &mut self,
+        suite: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        span: &Span,
+    ) -> Result<Vec<Stmt>, PythonLowerError> {
+        self.cell_prologue_for_node(suite, ctx, span)
+    }
+
+    fn cell_prologue_for_node(
+        &mut self,
+        root: &GrammarASTNode,
+        ctx: &mut FunctionCtx,
+        span: &Span,
+    ) -> Result<Vec<Stmt>, PythonLowerError> {
+        let cell_vars = self.identify_cell_vars(root, ctx)?;
+        if cell_vars.is_empty() {
+            return Ok(Vec::new());
+        }
+        self.observed.add(Feature::Sequences);
+        let mut stmts = Vec::with_capacity(cell_vars.len());
+        for name in cell_vars {
+            let alias = self.fresh_temp_name(&format!("cell_{name}"));
+            let is_param = ctx.params.contains(&name);
+            let init_val = if is_param {
+                Expr::VarRef {
+                    name: sir_var_name(&name),
+                    scope: Scope::Param,
+                    span: span.clone(),
+                }
+            } else {
+                Expr::NilLit { span: span.clone() }
+            };
+            stmts.push(Stmt::LetStarBinding {
+                name: alias.clone(),
+                sir_type: None,
+                value: Expr::SeqLit {
+                    items: vec![init_val],
+                    span: span.clone(),
+                },
+                span: span.clone(),
+            });
+            ctx.cells.insert(name.clone());
+            ctx.aliases.insert(name.clone(), alias);
+            ctx.locals.push(name);
+        }
+        Ok(stmts)
+    }
+
+    fn identify_cell_vars(
+        &self,
+        root: &GrammarASTNode,
+        ctx: &FunctionCtx,
+    ) -> Result<Vec<String>, PythonLowerError> {
+        let mut closure_reads = HashSet::new();
+        self.collect_closure_reads(root, &mut closure_reads)?;
+
+        if closure_reads.is_empty() {
+            return Ok(Vec::new());
+        }
+
+        // Single linear pass over top-level statements in root:
+        let mut assign_counts: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
+        let mut in_control_flow: HashSet<String> = HashSet::new();
+        let mut assigned_after_closure: HashSet<String> = HashSet::new();
+        let mut seen_closures_reading: HashSet<String> = HashSet::new();
+
+        for child in &root.children {
+            if let ASTNodeOrToken::Node(stmt) = child {
+                if stmt.rule_name != "statement" {
+                    continue;
+                }
+                let mut targets = Vec::new();
+                self.node_local_assign_targets(stmt, &mut targets, 0)?;
+
+                let is_cf = Self::stmt_is_control_flow(stmt);
+                let mut reads_in_stmt = HashSet::new();
+                self.collect_closure_reads(stmt, &mut reads_in_stmt)?;
+
+                for t in targets {
+                    *assign_counts.entry(t.clone()).or_insert(0) += 1;
+                    if is_cf {
+                        in_control_flow.insert(t.clone());
+                    }
+                    if seen_closures_reading.contains(&t) || reads_in_stmt.contains(&t) {
+                        assigned_after_closure.insert(t);
+                    }
+                }
+
+                for r in reads_in_stmt {
+                    seen_closures_reading.insert(r);
+                }
+            }
+        }
+
+        let mut cell_vars = Vec::new();
+        for name in closure_reads {
+            let is_param = ctx.params.contains(&name);
+            let count = assign_counts.get(&name).copied().unwrap_or(0);
+            if is_param {
+                if count > 0 {
+                    cell_vars.push(name);
+                }
+            } else if count > 0 {
+                let mutated = count > 1
+                    || in_control_flow.contains(&name)
+                    || assigned_after_closure.contains(&name);
+                if mutated {
+                    cell_vars.push(name);
+                }
+            }
+        }
+        cell_vars.sort();
+        Ok(cell_vars)
+    }
+
+    fn collect_closure_reads(
+        &self,
+        node: &GrammarASTNode,
+        captured: &mut HashSet<String>,
+    ) -> Result<(), PythonLowerError> {
+        if node.rule_name == "def_stmt" {
+            let mut inner_bound = HashSet::new();
+            if let Ok(specs) = self.def_param_specs(node) {
+                for (pname, _, _) in specs {
+                    inner_bound.insert(pname);
+                }
+            }
+            if let Some(suite) = self.first_child_named(node, "suite") {
+                let _ = self.collect_suite_bound_names(suite, &mut inner_bound);
+                let mut free = Vec::new();
+                let mut seen = HashSet::new();
+                let _ = self.collect_free_names(suite, &inner_bound, &mut free, &mut seen, 0);
+                for f in free {
+                    if !self.function_names.contains(&f) {
+                        captured.insert(f);
+                    }
+                }
+                for child in &suite.children {
+                    if let ASTNodeOrToken::Node(n) = child {
+                        self.collect_closure_reads(n, captured)?;
+                    }
+                }
+            }
+            return Ok(());
+        }
+        if node.rule_name == "lambda_expr" {
+            let mut inner_bound = HashSet::new();
+            if let Ok(ps) = self.lambda_params(node) {
+                for p in ps {
+                    inner_bound.insert(p);
+                }
+            }
+            if let Some(body) = self.first_child_named(node, "expression") {
+                let mut free = Vec::new();
+                let mut seen = HashSet::new();
+                let _ = self.collect_free_names(body, &inner_bound, &mut free, &mut seen, 0);
+                for f in free {
+                    if !self.function_names.contains(&f) {
+                        captured.insert(f);
+                    }
+                }
+                for child in &body.children {
+                    if let ASTNodeOrToken::Node(n) = child {
+                        self.collect_closure_reads(n, captured)?;
+                    }
+                }
+            }
+            return Ok(());
+        }
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                self.collect_closure_reads(n, captured)?;
+            }
+        }
+        Ok(())
+    }
+
+    fn node_local_assign_targets(
+        &self,
+        node: &GrammarASTNode,
+        out: &mut Vec<String>,
+        depth: usize,
+    ) -> Result<(), PythonLowerError> {
+        if depth > MAX_EXPR_DEPTH {
+            return Err(self.err_at(
+                node,
+                format!("expression nesting too deep (exceeds {MAX_EXPR_DEPTH} levels)"),
+            ));
+        }
+        if node.rule_name == "def_stmt" {
+            return Ok(());
+        }
+        match node.rule_name.as_str() {
+            "assign_stmt" => {
+                let kids = child_nodes(node);
+                let mut target_lists: Vec<&GrammarASTNode> = Vec::new();
+                if let [lhs, tail] = kids.as_slice() {
+                    target_lists.push(lhs);
+                    if tail.rule_name == "assign_suffix" {
+                        let more = child_nodes(tail);
+                        if let Some((_value, rest)) = more.split_last() {
+                            target_lists.extend(rest.iter().copied());
+                        }
+                    }
+                }
+                for list in target_lists {
+                    if let Ok(Some(name)) = self.single_expr(list).and_then(|e| self.target_name(e))
+                    {
+                        out.push(name);
+                    }
+                }
+            }
+            "for_stmt" => {
+                if let Some(tl) = self.first_child_named(node, "target_list") {
+                    for t in child_nodes(tl) {
+                        if let Ok(Some(name)) = self.target_name(t) {
+                            out.push(name);
+                        }
+                    }
+                }
+            }
+            _ => {}
+        }
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                self.node_local_assign_targets(n, out, depth + 1)?;
+            }
+        }
+        Ok(())
+    }
+
+
+    fn stmt_is_control_flow(stmt: &GrammarASTNode) -> bool {
+        for child in &stmt.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "compound_stmt" {
+                    for c in &n.children {
+                        if let ASTNodeOrToken::Node(inner) = c {
+                            if matches!(inner.rule_name.as_str(), "if_stmt" | "while_stmt" | "for_stmt") {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        false
+    }
+
     /// The statements that start a function body by copying each
     /// parameter the body **assigns** into a fresh local, and the matching
     /// alias in `ctx` (see [`FunctionCtx::aliases`]).
@@ -1946,7 +2273,7 @@ impl Lowerer {
         self.collect_suite_bound_names(suite, &mut assigned)?;
         let mut copied: Vec<String> = assigned
             .into_iter()
-            .filter(|n| ctx.params.contains(n))
+            .filter(|n| ctx.params.contains(n) && !ctx.cells.contains(n))
             .collect();
         // Deterministic output: a `HashSet` has no stable order.
         copied.sort();
@@ -2979,8 +3306,18 @@ impl Lowerer {
         let capture_values = self.capture_values(&captures, enclosing, &span)?;
 
         // Lower the body in the synthesised function's own context.
-        let mut inner =
-            FunctionCtx::new(bound.clone(), captures.iter().cloned().collect(), &fn_name);
+        let mut inner_cells = HashSet::new();
+        for c in &captures {
+            if enclosing.cells.contains(c) {
+                inner_cells.insert(c.clone());
+            }
+        }
+        let mut inner = FunctionCtx::new_with_cells(
+            bound.clone(),
+            captures.iter().cloned().collect(),
+            inner_cells,
+            &fn_name,
+        );
         let value = self.lower_expr_in(body_expr, &mut inner, depth + 1)?;
         let body = Block {
             stmts: vec![],
@@ -3117,14 +3454,23 @@ impl Lowerer {
         let capture_values = self.capture_values(&captures, enclosing, &span)?;
 
         // ── Lower the body in the function's own context. ──
-        let mut inner = FunctionCtx::new(
+        let mut inner_cells = HashSet::new();
+        for c in &captures {
+            if enclosing.cells.contains(c) {
+                inner_cells.insert(c.clone());
+            }
+        }
+        let mut inner = FunctionCtx::new_with_cells(
             params.iter().map(|(n, _, _)| n.clone()).collect(),
             captures.iter().cloned().collect(),
+            inner_cells,
             name,
         );
-        let prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
+        let cell_prologue = self.cell_prologue(suite, &mut inner, &span)?;
+        let param_prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
         let mut body = self.lower_function_suite(suite, &mut inner, depth + 1)?;
-        body.stmts.splice(0..0, prologue);
+        body.stmts.splice(0..0, param_prologue);
+        body.stmts.splice(0..0, cell_prologue);
 
         self.push_function(name, params, &captures, body, span.clone());
 
@@ -3479,6 +3825,10 @@ impl Lowerer {
 
     /// The value of each capture in `names`, read in the `enclosing`
     /// context where the closure is built.
+    ///
+    /// For a cell variable (#18496 item 5), the closure must receive the
+    /// cell sequence reference itself (`Expr::VarRef`), not an indexed read
+    /// of the cell (`Expr::SeqIndex`).
     fn capture_values(
         &self,
         names: &[String],
@@ -3487,7 +3837,31 @@ impl Lowerer {
     ) -> Result<Vec<Expr>, PythonLowerError> {
         names
             .iter()
-            .map(|n| self.resolve_var_in(enclosing, n, span.clone()))
+            .map(|n| {
+                if enclosing.cells.contains(n) {
+                    if enclosing.locals.iter().rev().any(|loc| loc == n) {
+                        Ok(Expr::VarRef {
+                            name: enclosing.ir_local(n),
+                            scope: Scope::Local,
+                            span: span.clone(),
+                        })
+                    } else if enclosing.captures.contains(n) {
+                        Ok(Expr::VarRef {
+                            name: sir_var_name(n),
+                            scope: Scope::Capture,
+                            span: span.clone(),
+                        })
+                    } else {
+                        Err(PythonLowerError {
+                            message: format!("unresolved cell capture `{n}`"),
+                            line: span.start_line,
+                            column: span.start_col,
+                        })
+                    }
+                } else {
+                    self.resolve_var_in(enclosing, n, span.clone())
+                }
+            })
             .collect()
     }
 
@@ -5351,9 +5725,26 @@ impl Lowerer {
                 line: span.start_line,
                 column: span.start_col,
             };
-            let value = self
-                .resolve_var_in(ctx, cn, span.clone())
-                .map_err(|_| not_in_scope())?;
+            let value = if ctx.cells.contains(cn) {
+                if ctx.locals.iter().rev().any(|loc| loc == cn) {
+                    Expr::VarRef {
+                        name: ctx.ir_local(cn),
+                        scope: Scope::Local,
+                        span: span.clone(),
+                    }
+                } else if ctx.captures.contains(cn) {
+                    Expr::VarRef {
+                        name: sir_var_name(cn),
+                        scope: Scope::Capture,
+                        span: span.clone(),
+                    }
+                } else {
+                    return Err(not_in_scope());
+                }
+            } else {
+                self.resolve_var_in(ctx, cn, span.clone())
+                    .map_err(|_| not_in_scope())?
+            };
             let is_capture = matches!(
                 value,
                 Expr::VarRef {
@@ -5379,6 +5770,35 @@ impl Lowerer {
         name: &str,
         span: Span,
     ) -> Result<Expr, PythonLowerError> {
+        if ctx.cells.contains(name) {
+            let cell_ref = if ctx.locals.iter().rev().any(|n| n == name) {
+                Expr::VarRef {
+                    name: ctx.ir_local(name),
+                    scope: Scope::Local,
+                    span: span.clone(),
+                }
+            } else if ctx.captures.contains(name) {
+                Expr::VarRef {
+                    name: sir_var_name(name),
+                    scope: Scope::Capture,
+                    span: span.clone(),
+                }
+            } else {
+                return Err(PythonLowerError {
+                    message: format!("unresolved cell variable `{name}`"),
+                    line: span.start_line,
+                    column: span.start_col,
+                });
+            };
+            return Ok(Expr::SeqIndex {
+                seq: Box::new(cell_ref),
+                index: Box::new(Expr::IntLit {
+                    value: 0,
+                    span: span.clone(),
+                }),
+                span,
+            });
+        }
         if ctx.locals.iter().rev().any(|n| n == name) {
             return Ok(Expr::VarRef {
                 name: ctx.ir_local(name),

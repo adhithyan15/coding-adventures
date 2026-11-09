@@ -362,6 +362,32 @@ const PROGRAMS: &[(&str, &str, &str)] = &[
         "def f(n):\n    def n():\n        return 42\n    return n\n\nprint(f(10)())\n",
         "42",
     ),
+    // ── closure cell variables (#18496 item 5) ────────────────────────
+    (
+        "py_param_captured_then_assigned",
+        "def f(x):\n    def g():\n        return x\n    x = 20\n    return g()\n\nprint(f(10))\n",
+        "20",
+    ),
+    (
+        "py_local_captured_then_assigned",
+        "def f():\n    x = 10\n    g = lambda: x\n    x = 20\n    return g()\n\nprint(f())\n",
+        "20",
+    ),
+    (
+        "py_closure_defined_before_variable_assigned",
+        "def f():\n    def g():\n        return x\n    x = 42\n    return g()\n\nprint(f())\n",
+        "42",
+    ),
+    (
+        "py_loop_closure_captures_variable",
+        "def f():\n    fn = lambda: 0\n    for i in [1, 2, 3]:\n        fn = lambda: i\n    return fn()\n\nprint(f())\n",
+        "3",
+    ),
+    (
+        "py_nested_closure_cell_variable",
+        "def outer():\n    x = 1\n    def mid():\n        def inner():\n            return x\n        return inner\n    fn = mid()\n    x = 100\n    return fn()\n\nprint(outer())\n",
+        "100",
+    ),
 ];
 
 /// `(program, backend, why)`: cells that fail for a reason outside what
