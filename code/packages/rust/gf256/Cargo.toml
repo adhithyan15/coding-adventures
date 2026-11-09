@@ -1,8 +1,18 @@
 [package]
 name = "gf256"
-version = "0.1.0"
+version = "0.2.1"
 edition = "2021"
 description = "Galois Field GF(2^8) arithmetic — the math behind Reed-Solomon error correction"
 
 [dependencies]
 # none
+
+[dev-dependencies]
+coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+
+# Generated from code/specs/gf256.warrant (VER04h): examples, bounded
+# exhaustive suites, property suites, fuzz suites and sabotage controls.
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false

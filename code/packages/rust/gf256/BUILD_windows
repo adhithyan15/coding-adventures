@@ -1,0 +1,12 @@
+cargo test -q -p gf256 --lib --test gf256_test -- --nocapture
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check gf256
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p gf256 --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=or-for-xor&& set WARRANT_EVIDENCE_FILTER=/exhaustive/add_matches_xor_model&& cargo test -q -p gf256 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=wrapping-sub&& set WARRANT_EVIDENCE_FILTER=/exhaustive/subtract_matches_xor_model&& cargo test -q -p gf256 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=mul-as-add&& set WARRANT_EVIDENCE_FILTER=/exhaustive/multiply_matches_peasant_model&& cargo test -q -p gf256 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=alt-poly&& set WARRANT_EVIDENCE_FILTER=/exhaustive/multiply_matches_peasant_model&& cargo test -q -p gf256 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=generator-shift&& set WARRANT_EVIDENCE_FILTER=/exhaustive/multiply_matches_peasant_model&& cargo test -q -p gf256 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/divide_by_zero_rejected&& cargo test -q -p gf256 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=exp-mod-256&& set WARRANT_EVIDENCE_FILTER=/exhaustive/power_reduces_mod_group_order&& cargo test -q -p gf256 --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test gf256_proofs
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json

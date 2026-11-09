@@ -2,6 +2,14 @@
 
 ## 0.1.0
 
+- Add `tests/gf256_proofs.rs` (VER04h, gf256): attempts the Warrant `labels`/`bound`
+  obligations of `code/specs/gf256.warrant` on the real `gf256/src/lib.rs`. The
+  Rust-subset front end refuses the file (`&'static` lifetime at 188:17; also
+  struct field access `t.log[..]`, `return if ... {..}` and `OnceLock`), so every
+  constant-time and steps-bound obligation is written to `proof-manifest.json` as
+  `not-live` with the front end's own message and a per-export probe, never as a
+  proof. The `lowering-blocker` test fails the day the front end accepts the file.
+
 - VER04h / VER-P030: add `inline` (WIR call inlining) so the symbolic executor and provers analyse a public export itself (`ct_eq`, `ct_eq_fixed`) rather than only its helper; differential-tested against the un-inlined program and the real Rust function.
 - `ConstantTimeProver` and `BoundProver` keep every DRAT-checked refutation (`ProofCertificate`, with a `trivial` flag for miter-collapsed proofs) in `certificates`.
 - Lowering fidelity: `assert!`/`assert_eq!` now lower to a branch into a trap (previously no-ops, which made `ct_select_bytes`'s length-mismatch path an out-of-bounds scan); `vec![0; n]` no longer emits a first-element store (wrote past a zero-length buffer). `debug_assert*` unchanged.

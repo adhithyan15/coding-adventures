@@ -3,5 +3,5 @@
   "version": 1,
   "package": "rust/gf256",
   "capabilities": [],
-  "justification": "Pure computation. No filesystem, network, process, or environment access needed."
+  "justification": "Pure computation. No filesystem, network, process, or environment access needed. The only shared state is a process-global, lazily initialised pair of lookup tables behind std::sync::OnceLock (thread-safe, allocation-free, no I/O)."
 }
