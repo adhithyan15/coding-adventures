@@ -1756,6 +1756,8 @@ impl Lowerer {
             "module_statement" => self.lower_module_statement_multi(node),
             // #18778 — a `for` may declare its loop variable before the loop.
             "for_statement" => self.lower_for_statement(node),
+            // #18798 — `while` and `until` do not open a scope in Ruby.
+            "while_statement" | "until_statement" => self.lower_while_or_until_multi(node),
             _ => Ok(vec![self.lower_statement_inner(node)?]),
         }
     }
@@ -1890,7 +1892,17 @@ impl Lowerer {
                 // Phase 6c: SIR's `Stmt::While` is the canonical
                 // top-level loop — `until cond` lowers to
                 // `while !cond` (wrap the condition in `not`).
-                self.lower_while_or_until(node)
+                let mut stmts = self.lower_while_or_until_multi(node)?;
+                if stmts.len() == 1 {
+                    Ok(stmts.remove(0))
+                } else {
+                    Err(RubyLowerError {
+                        message: "unsupported: a loop with unhoisted declarations in a single-statement position"
+                            .to_string(),
+                        line: node.start_line.unwrap_or(0),
+                        column: node.start_column.unwrap_or(0),
+                    })
+                }
             }
             "for_statement" => {
                 // #18778 — every body path goes through
@@ -2460,18 +2472,48 @@ impl Lowerer {
     // Phase 6c — `while cond … end` / `until cond … end`
     // -------------------------------------------------------------------
 
-    /// Lower a `while_statement` or `until_statement` into a
-    /// `Stmt::While`.  `until cond` lowers to `while !cond`
-    /// (condition wrapped in `BuiltinCall("not", ...)`).
-    fn lower_while_or_until(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
+    /// Lower a `while_statement` or `until_statement` into a sequence of
+    /// statements: pre-declarations for any locals first assigned in the
+    /// condition or body (since in Ruby loops open no scope), followed by
+    /// the canonical `Stmt::While` loop (`until cond` lowers to `while !cond`,
+    /// with condition wrapped in `BuiltinCall("not", ...)`).
+    fn lower_while_or_until_multi(
+        &mut self,
+        node: &GrammarASTNode,
+    ) -> Result<Vec<Stmt>, RubyLowerError> {
+        let span = self.span_of(node);
+        let err = |message: &str| RubyLowerError {
+            message: message.to_string(),
+            line: node.start_line.unwrap_or(0),
+            column: node.start_column.unwrap_or(0),
+        };
+
+        // In Ruby, `while` and `until` do not open a scope. Any local variable
+        // first assigned in the condition or body is an ordinary local of the
+        // enclosing scope and is visible after the loop (or initialized to nil
+        // if the loop never ran).
+        let mut names: Vec<String> = Vec::new();
+        collect_loop_assigned_names(node, &mut names);
+        names.retain(|n| !self.current_params.contains(n) && !self.declared_locals.contains(n));
+
+        let mut out: Vec<Stmt> = Vec::new();
+        for name in names {
+            if self.cell_vars.contains_key(&name) {
+                continue;
+            }
+            self.declared_locals.insert(name.clone());
+            out.push(Stmt::LetBinding {
+                name,
+                sir_type: None,
+                value: Expr::NilLit { span: span.clone() },
+                span: span.clone(),
+            });
+        }
+
         let is_until = node.rule_name == "until_statement";
         let cond_node = self
             .find_node_child(node, "expression")
-            .ok_or_else(|| RubyLowerError {
-                message: format!("{} missing condition expression", node.rule_name),
-                line: node.start_line.unwrap_or(0),
-                column: node.start_column.unwrap_or(0),
-            })?;
+            .ok_or_else(|| err(&format!("{} missing condition expression", node.rule_name)))?;
         let mut cond = self.lower_expression(cond_node)?;
         if is_until {
             cond = Expr::BuiltinCall {
@@ -2487,11 +2529,12 @@ impl Lowerer {
         // declared whenever the module emits a `Stmt::While` /
         // `Stmt::ForRange` / `Stmt::ForEach`.
         self.features_used.insert(Feature::Loops);
-        Ok(Stmt::While {
+        out.push(Stmt::While {
             cond,
             body,
-            span: self.span_of(node),
-        })
+            span,
+        });
+        Ok(out)
     }
 
     // -------------------------------------------------------------------
@@ -8454,6 +8497,29 @@ impl Lowerer {
     /// a one-element `Vec<Stmt>` (the `TryCatch`) so its call site — which
     /// flattens statement lists — stays uniform with the other
     /// multi-statement lowerings.
+    /// Collect the variable names bound by `rescue => e` clauses under `node`.
+    fn collect_rescue_binding_names(node: &GrammarASTNode, out: &mut Vec<String>) {
+        for child in &node.children {
+            if let ASTNodeOrToken::Node(n) = child {
+                if n.rule_name == "rescue_clause" {
+                    let mut saw_arrow = false;
+                    for cc in &n.children {
+                        if let ASTNodeOrToken::Token(t) = cc {
+                            if t.value == "=>" {
+                                saw_arrow = true;
+                            } else if saw_arrow && t.type_ == TokenType::Name {
+                                if is_plain_local_name(&t.value) && !out.contains(&t.value) {
+                                    out.push(t.value.clone());
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fn lower_begin_statement(
         &mut self,
         node: &GrammarASTNode,
@@ -8465,14 +8531,41 @@ impl Lowerer {
         // them.
         let outer_span = self.span_of(node);
         self.features_used.insert(Feature::Exceptions);
+
+        // #18798 Comment 1 — In Ruby, `begin ... rescue => e ... end` does not
+        // open a scope; `e` is an ordinary local of the enclosing scope that
+        // persists after the rescue clause. If `e` is not yet declared, declare
+        // it as `nil` before the `TryCatch`.
+        let mut bindings = Vec::new();
+        Self::collect_rescue_binding_names(node, &mut bindings);
+        let mut prefix = Vec::new();
+        for b in bindings {
+            if !self.declared_locals.contains(&b)
+                && !self.current_params.contains(&b)
+                && !self.cell_vars.contains_key(&b)
+            {
+                self.declared_locals.insert(b.clone());
+                prefix.push(Stmt::LetBinding {
+                    name: b,
+                    sir_type: None,
+                    value: Expr::NilLit {
+                        span: outer_span.clone(),
+                    },
+                    span: outer_span.clone(),
+                });
+            }
+        }
+
         let body = self.lower_flat_statements(node)?;
         let (rescues, ensure_body) = self.lower_rescue_ensure_clauses(node)?;
-        Ok(vec![Stmt::TryCatch {
+        let mut out = prefix;
+        out.push(Stmt::TryCatch {
             body,
             rescues,
             ensure_body,
             span: outer_span,
-        }])
+        });
+        Ok(out)
     }
 
     /// Lower the direct `statement` children of `node` into a flat
@@ -8541,22 +8634,47 @@ impl Lowerer {
         self.features_used.insert(Feature::DynamicTyping);
         let result = self.fresh_name("__rescue_value_");
         self.declared_locals.insert(result.clone());
+
+        // #18798 Comment 1 — In Ruby, `rescue => e` binds into an ordinary local
+        // of the enclosing scope that persists after the rescue clause. If `e`
+        // is not yet declared, declare it as `nil` before the `TryCatch`.
+        let mut bindings = Vec::new();
+        Self::collect_rescue_binding_names(node, &mut bindings);
+        let mut prefix = Vec::new();
+        for b in bindings {
+            if !self.declared_locals.contains(&b)
+                && !self.current_params.contains(&b)
+                && !self.cell_vars.contains_key(&b)
+            {
+                self.declared_locals.insert(b.clone());
+                prefix.push(Stmt::LetBinding {
+                    name: b,
+                    sir_type: None,
+                    value: Expr::NilLit {
+                        span: span.clone(),
+                    },
+                    span: span.clone(),
+                });
+            }
+        }
+
         let try_body = self.lower_statements_storing_last(node, &result)?;
         let (rescues, ensure_body) = self.rescue_ensure_clauses(node, Some(&result))?;
-        let stmts = vec![
+        let mut stmts = vec![
             Stmt::LetBinding {
                 name: result.clone(),
                 sir_type: None,
                 value: Expr::NilLit { span: span.clone() },
                 span: span.clone(),
             },
-            Stmt::TryCatch {
-                body: try_body,
-                rescues,
-                ensure_body,
-                span: span.clone(),
-            },
         ];
+        stmts.extend(prefix);
+        stmts.push(Stmt::TryCatch {
+            body: try_body,
+            rescues,
+            ensure_body,
+            span: span.clone(),
+        });
         let value = Expr::VarRef {
             name: result,
             scope: Scope::Local,
@@ -8668,28 +8786,66 @@ impl Lowerer {
                         }
                         found
                     };
-                    // #18778 — the binding is a local of the clause body, so
-                    // a bare `e` there reads it, even when a method `e`
-                    // exists (see `bare_name_call`).  `rescue => e` with no
-                    // class (Ruby's default `StandardError`) reaches here
-                    // too, now that the grammar parses it: the `=>` and the
-                    // name are direct children, and `exception_types` stays
-                    // empty — a catch-all clause, as every backend renders
-                    // an empty type list.
-                    let newly_bound = binding
-                        .as_ref()
-                        .filter(|b| self.declared_locals.insert((*b).clone()));
-                    let rescue_body = match result {
+                    // #18778 Comment 1 — in Ruby, `rescue => e` binds the exception
+                    // into an ordinary local of the enclosing scope that stays visible
+                    // after the clause and writes through to any existing local `e`.
+                    // To prevent backends (JS, Go, Rust, C) from creating a catch-block
+                    // local that shadows the outer `e`, we bind the clause to a fresh
+                    // internal name and assign into the outer `e` at the top of the clause.
+                    let (clause_binding, store_stmt) = if let Some(ref b) = binding {
+                        let fresh = self.fresh_name("__rescue_binding_");
+                        self.features_used.insert(Feature::MutableBindings);
+                        let store = if let Some(cell) = self.cell_vars.get(b).cloned() {
+                            self.features_used.insert(Feature::Sequences);
+                            Stmt::SeqSet {
+                                seq: Expr::VarRef {
+                                    name: cell.cell_name,
+                                    scope: cell.scope,
+                                    span: self.span_of(n),
+                                },
+                                index: Expr::IntLit {
+                                    value: 0,
+                                    span: self.span_of(n),
+                                },
+                                value: Expr::VarRef {
+                                    name: fresh.clone(),
+                                    scope: Scope::Local,
+                                    span: self.span_of(n),
+                                },
+                                span: self.span_of(n),
+                            }
+                        } else {
+                            let target = self
+                                .param_aliases
+                                .get(b)
+                                .cloned()
+                                .unwrap_or_else(|| b.clone());
+                            Stmt::Assign {
+                                name: target,
+                                scope: Scope::Local,
+                                value: Expr::VarRef {
+                                    name: fresh.clone(),
+                                    scope: Scope::Local,
+                                    span: self.span_of(n),
+                                },
+                                span: self.span_of(n),
+                            }
+                        };
+                        (Some(fresh), Some(store))
+                    } else {
+                        (None, None)
+                    };
+
+                    let mut rescue_body = match result {
                         Some(result) => self.lower_statements_storing_last(n, result),
                         None => self.lower_flat_statements(n),
-                    };
-                    if let Some(b) = newly_bound {
-                        self.declared_locals.remove(b);
+                    }?;
+                    if let Some(store) = store_stmt {
+                        rescue_body.insert(0, store);
                     }
-                    let rescue_body = rescue_body?;
                     rescues.push(RescueClause {
                         exception_types,
-                        binding,
+                        binding: clause_binding,
                         body: rescue_body,
                         span: self.span_of(n),
                     });
