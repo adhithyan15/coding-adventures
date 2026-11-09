@@ -44,7 +44,9 @@ type error = Select_length_mismatch | Invalid_choice
 let difference left right =
   let acc = ref 0 in
   for i = 0 to String.length left - 1 do
-    acc := !acc lor (Char.code (String.get left i) lxor Char.code (String.get right i))
+    acc :=
+      !acc
+      lor (Char.code (String.get left i) lxor Char.code (String.get right i))
   done;
   !acc
 
@@ -69,15 +71,15 @@ let ct_eq_fixed = ct_eq
 let ct_select_bytes left right bit =
   if String.length left <> String.length right then Error Select_length_mismatch
   else if bit land lnot 1 <> 0 then Error Invalid_choice
-  else begin
+  else
     let mask = -bit land 0xFF in
     let out = Bytes.create (String.length left) in
     for i = 0 to String.length left - 1 do
-      let l = Char.code (String.get left i) and r = Char.code (String.get right i) in
-      Bytes.set out i (Char.chr (r lxor ((l lxor r) land mask)))
+      let l = Char.code (String.get left i)
+      and r = Char.code (String.get right i) in
+      Bytes.set out i (Char.chr (r lxor (l lxor r land mask)))
     done;
     Ok (Bytes.unsafe_to_string out)
-  end
 
 (* d = x xor y is zero exactly when the values are equal.  (d lor -d) has its
    top bit set exactly when d <> 0 (for a non-zero d either d or its two's

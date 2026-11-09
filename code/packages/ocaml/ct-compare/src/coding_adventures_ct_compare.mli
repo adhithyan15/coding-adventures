@@ -13,9 +13,9 @@
     wall-clock constant time, cache or speculation guarantee is made.
 
     {b Selection bit.} OCaml's [Bool.to_int] and [if] on the secret are
-    conditionals, so the bit is an [int] that must be exactly [0] (pick
-    [right]) or [1] (pick [left]), and each equality has a bit-returning
-    variant: [ct_select_bytes a b (ct_eq_bit x y)] converts no boolean. *)
+    conditionals, so the bit is an [int] that must be exactly [0] (pick [right])
+    or [1] (pick [left]), and each equality has a bit-returning variant:
+    [ct_select_bytes a b (ct_eq_bit x y)] converts no boolean. *)
 
 type error =
   | Select_length_mismatch
