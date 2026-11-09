@@ -959,9 +959,9 @@ mod tests {
     }
 
     #[test]
-    fn block_reassigning_outer_name_is_not_captured() {
-        // A name assigned inside the block is block-local (v0: capture-then-
-        // reassign would need by-reference capture), so it is NOT captured.
+    fn block_reassigning_outer_name_is_captured_via_cell() {
+        // #18798 Item 5 — an outer local mutated inside a block is boxed into
+        // a 1-element cell sequence (__cell_<name>_<n>) and captured by reference.
         let m = lower("def run\n  x = 1\n  [1, 2, 3].each do |n|\n    x = n\n    x\n  end\nend\n");
         let blk = m
             .functions
@@ -970,9 +970,139 @@ mod tests {
             .expect("hoisted block function");
         assert!(
             !blk.captures.iter().any(|c| c.name == "x"),
-            "an in-block-assigned name must not be captured; captures = {:?}",
+            "outer variable name 'x' is replaced by cell capture; captures = {:?}",
             blk.captures.iter().map(|c| &c.name).collect::<Vec<_>>()
         );
+        assert!(
+            blk.captures.iter().any(|c| c.name.starts_with("__cell_x_")),
+            "expected cell capture for x; captures = {:?}",
+            blk.captures.iter().map(|c| &c.name).collect::<Vec<_>>()
+        );
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+    }
+
+    #[test]
+    fn ruby_block_mutating_outer_local_validates_and_boxes_cells() {
+        // #18798 Item 5: `t = 0; [1, 2, 3].each { |x| t = t + x }; puts t`
+        let src = "t = 0\n[1, 2, 3].each { |x| t = t + x }\nputs t\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let blk = m
+            .functions
+            .iter()
+            .find(|f| f.name == "__block_0")
+            .expect("hoisted block function");
+        assert!(
+            blk.captures.iter().any(|c| c.name.starts_with("__cell_t_")),
+            "block should capture cell for t; captures = {:?}",
+            blk.captures
+        );
+
+        // Check main body has LetStarBinding for __cell_t_0
+        let main = m.functions.iter().find(|f| f.name == "main").unwrap();
+        assert!(
+            main.body.stmts.iter().any(|s| match s {
+                Stmt::LetStarBinding { name, value, .. } => {
+                    name.starts_with("__cell_t_") && matches!(value, Expr::SeqLit { .. })
+                }
+                _ => false,
+            }),
+            "main must initialize cell for t: {:?}",
+            main.body.stmts
+        );
+    }
+
+    #[test]
+    fn ruby_block_compound_assign_outer_local_validates() {
+        let src = "total = 10\n[1, 2].each do |x|\n  total += x\nend\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+    }
+
+    #[test]
+    fn ruby_block_mutating_method_param_validates() {
+        let src = "def sum(xs, acc)\n  xs.each { |x| acc += x }\n  acc\nend\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let f = m
+            .functions
+            .iter()
+            .find(|f| f.name == "sum")
+            .expect("sum function");
+        // Parameter acc should be boxed in cell prologue
+        assert!(
+            f.body.stmts.iter().any(|s| match s {
+                Stmt::LetStarBinding { name, value, .. } => {
+                    name.starts_with("__cell_acc_") && matches!(value, Expr::SeqLit { .. })
+                }
+                _ => false,
+            }),
+            "sum prologue must initialize cell for acc: {:?}",
+            f.body.stmts
+        );
+    }
+
+    #[test]
+    fn ruby_nested_blocks_mutating_outer_local_validates() {
+        let src = "count = 0\n[1].each do |x|\n  [2].each do |y|\n    count += x + y\n  end\nend\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let blk0 = m.functions.iter().find(|f| f.name == "__block_0").expect("block 0");
+        let blk1 = m.functions.iter().find(|f| f.name == "__block_1").expect("block 1");
+        assert!(blk0.captures.iter().any(|c| c.name.starts_with("__cell_count_")));
+        assert!(blk1.captures.iter().any(|c| c.name.starts_with("__cell_count_")));
+    }
+
+    #[test]
+    fn ruby_block_param_shadowing_outer_local_does_not_mutate_outer() {
+        let src = "t = 100\n[1, 2].each do |t|\n  t = t + 1\nend\nputs t\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let blk = m.functions.iter().find(|f| f.name == "__block_0").expect("block 0");
+        // Because t is shadowed by block parameter, it's not a cell variable
+        assert!(!blk.captures.iter().any(|c| c.name.starts_with("__cell_t_")));
+    }
+
+    #[test]
+    fn ruby_block_local_shadowing_outer_local_does_not_mutate_outer() {
+        let src = "t = 100\n[1, 2].each do |x; t|\n  t = x * 2\nend\nputs t\n";
+        let m = lower(src);
+        assert!(
+            semantic_ir::validate(&m).is_ok(),
+            "issues: {:?}",
+            semantic_ir::validate(&m).issues
+        );
+
+        let blk = m.functions.iter().find(|f| f.name == "__block_0").expect("block 0");
+        assert!(!blk.captures.iter().any(|c| c.name.starts_with("__cell_t_")));
     }
 
     #[test]
