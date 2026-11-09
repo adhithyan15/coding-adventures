@@ -122,13 +122,72 @@ pub fn output_path(var: &str) -> Option<PathBuf> {
 }
 
 /// Write `doc` to `path`, creating parent directories.
+///
+/// The write is hardened against a planted path (audit A4):
+///
+/// * a `path` that is a symlink is refused (`symlink_metadata` does not follow
+///   it), so a manifest cannot be redirected onto some other file;
+/// * the bytes go to a fresh temp file in the **same directory**, opened with
+///   `create_new` (never follows or truncates a pre-existing entry), and the
+///   temp file is then `rename`d over the target, so a reader never sees a
+///   half-written manifest and the target's inode is replaced, not written
+///   through.
 pub fn write(path: &Path, doc: &Json) -> io::Result<()> {
-    if let Some(parent) = path.parent() {
-        if !parent.as_os_str().is_empty() {
-            std::fs::create_dir_all(parent)?;
+    use std::io::Write as _;
+
+    let parent = match path.parent() {
+        Some(p) if !p.as_os_str().is_empty() => {
+            std::fs::create_dir_all(p)?;
+            p.to_path_buf()
         }
+        _ => PathBuf::from("."),
+    };
+    match std::fs::symlink_metadata(path) {
+        Ok(meta) if meta.file_type().is_symlink() => {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!("refusing to write through symlink {}", path.display()),
+            ));
+        }
+        Ok(meta) if meta.is_dir() => {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!("{} is a directory", path.display()),
+            ));
+        }
+        Ok(_) => {}
+        Err(e) if e.kind() == io::ErrorKind::NotFound => {}
+        Err(e) => return Err(e),
     }
-    std::fs::write(path, doc.render())
+    let name = path
+        .file_name()
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidInput, "path has no file name"))?
+        .to_string_lossy()
+        .into_owned();
+    let bytes = doc.render();
+    for attempt in 0..16u32 {
+        let tmp = parent.join(format!(".{name}.{}.{attempt}.tmp", std::process::id()));
+        let mut file = match std::fs::OpenOptions::new().write(true).create_new(true).open(&tmp) {
+            Ok(f) => f,
+            Err(e) if e.kind() == io::ErrorKind::AlreadyExists => continue,
+            Err(e) => return Err(e),
+        };
+        let result = file
+            .write_all(bytes.as_bytes())
+            .and_then(|()| file.sync_all())
+            .and_then(|()| {
+                drop(file);
+                std::fs::rename(&tmp, path)
+            });
+        if result.is_err() {
+            let _ = std::fs::remove_file(&tmp);
+        }
+        return result;
+    }
+    Err(io::Error::new(
+        io::ErrorKind::AlreadyExists,
+        "could not create a unique temporary manifest file",
+    ))
 }
 
 #[cfg(test)]
@@ -169,6 +228,53 @@ mod tests {
         let path = dir.join("nested/m.json");
         write(&path, &Json::obj([("k", Json::Num(1))])).unwrap();
         assert_eq!(std::fs::read_to_string(&path).unwrap(), "{\n  \"k\": 1\n}\n");
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    #[test]
+    fn write_replaces_atomically_and_leaves_no_temp_files() {
+        let dir = std::env::temp_dir().join(format!("tb-manifest-atomic-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let path = dir.join("m.json");
+        write(&path, &Json::obj([("k", Json::Num(1))])).unwrap();
+        write(&path, &Json::obj([("k", Json::Num(2))])).unwrap();
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), "{\n  \"k\": 2\n}\n");
+        let names: Vec<_> = std::fs::read_dir(&dir).unwrap().map(|e| e.unwrap().file_name()).collect();
+        assert_eq!(names, vec![std::ffi::OsString::from("m.json")], "temp file must be renamed away");
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn write_refuses_a_symlink_target_and_never_touches_what_it_points_at() {
+        let dir = std::env::temp_dir().join(format!("tb-manifest-symlink-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let victim = dir.join("victim.txt");
+        std::fs::write(&victim, "precious").unwrap();
+        let link = dir.join("m.json");
+        std::os::unix::fs::symlink(&victim, &link).unwrap();
+        let err = write(&link, &Json::obj([("k", Json::Num(1))])).unwrap_err();
+        assert!(err.to_string().contains("symlink"), "{err}");
+        assert_eq!(std::fs::read_to_string(&victim).unwrap(), "precious");
+        // A dangling symlink is refused as well (it would create its target).
+        let dangling = dir.join("d.json");
+        std::os::unix::fs::symlink(dir.join("nowhere"), &dangling).unwrap();
+        assert!(write(&dangling, &Json::obj([])).is_err());
+        assert!(!dir.join("nowhere").exists());
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    #[test]
+    fn write_never_reuses_a_preexisting_temp_name() {
+        let dir = std::env::temp_dir().join(format!("tb-manifest-tmp-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        // Pre-plant the first temp name an attacker could predict.
+        let planted = dir.join(format!(".m.json.{}.0.tmp", std::process::id()));
+        std::fs::write(&planted, "attacker").unwrap();
+        write(&dir.join("m.json"), &Json::obj([("k", Json::Num(1))])).unwrap();
+        assert_eq!(std::fs::read_to_string(&planted).unwrap(), "attacker");
         std::fs::remove_dir_all(&dir).unwrap();
     }
 }
