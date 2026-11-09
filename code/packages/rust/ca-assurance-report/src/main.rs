@@ -22,9 +22,21 @@ fn print_usage() {
     eprintln!("  --package-dir <DIR>    Package directory holding evidence/ (default: the report's directory, or .)");
     eprintln!("  --generate             Generate and emit assurance_report.json");
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
+    eprintln!("  --allow-unverified     Accept `unverified::` evidence ids (static attestations no tool checks);");
+    eprintln!("                         without it --check fails on any such id");
     eprintln!("  --registry <FILE>      Path to weakness-registry-v1.json");
     eprintln!("  --commit <SHA>         Commit SHA to record in generated report");
     eprintln!("  --help                 Display this help message");
+}
+
+/// Read the report with the same size cap as the manifests.
+fn read_report(path: &std::path::Path) -> Result<String, String> {
+    let bytes = coding_adventures_ca_assurance_report::evidence::read_capped(
+        path,
+        coding_adventures_ca_assurance_report::evidence::MAX_MANIFEST_BYTES,
+    )
+    .map_err(|e| e.0)?;
+    String::from_utf8(bytes).map_err(|_| "report is not UTF-8".to_string())
 }
 
 fn find_default_registry() -> WeaknessRegistry {
@@ -53,6 +65,7 @@ fn main() {
     let mut package_dir: Option<PathBuf> = None;
     let mut check_file: Option<PathBuf> = None;
     let mut generate = false;
+    let mut allow_unverified = false;
     let mut registry_file: Option<PathBuf> = None;
     let mut commit_sha = "HEAD".to_string();
 
@@ -77,6 +90,9 @@ fn main() {
             }
             "--generate" => {
                 generate = true;
+            }
+            "--allow-unverified" => {
+                allow_unverified = true;
             }
             "--registry" => {
                 i += 1;
@@ -120,7 +136,7 @@ fn main() {
     };
 
     if let Some(file_path) = check_file {
-        let content = match fs::read_to_string(&file_path) {
+        let content = match read_report(&file_path) {
             Ok(c) => c,
             Err(e) => {
                 eprintln!("Error reading report file {}: {e}", file_path.display());
@@ -154,8 +170,19 @@ fn main() {
         match verify_evidence(&report, &evidence) {
             Ok(unverified) => {
                 if !unverified.is_empty() {
+                    // The honest default is to refuse: an `unverified::` id is a
+                    // sentence somebody wrote, not evidence any tool produced.
+                    if !allow_unverified {
+                        eprintln!(
+                            "ASSURANCE VERIFICATION FAILED: {} evidence id(s) are static attestations no tool checks \
+                             (pass --allow-unverified to accept them): {}",
+                            unverified.len(),
+                            unverified.join(", ")
+                        );
+                        exit(1);
+                    }
                     println!(
-                        "note: {} evidence id(s) are static attestations no tool checks",
+                        "note: {} evidence id(s) are static attestations no tool checks (accepted by --allow-unverified)",
                         unverified.len()
                     );
                 }

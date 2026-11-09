@@ -23,6 +23,16 @@ fn real_evidence() -> Evidence {
         .expect("ct-compare evidence manifests must load")
 }
 
+/// A fully live report has discharged every obligation, so no claim carries an
+/// `:unchecked` assumption any more (a `pass` verdict may not carry one).
+fn discharge_unchecked(report: &mut AssuranceReport) {
+    for c in &mut report.claims {
+        if let Some(p) = c.proof.as_mut() {
+            p.assumptions.retain(|a| !a.ends_with(":unchecked"));
+        }
+    }
+}
+
 /// Evidence ids for tests that exercise the matrix builder directly.
 fn evid() -> AuditEvidence {
     AuditEvidence {
@@ -368,18 +378,28 @@ fn test_cli_execution_and_flags() {
     let report_file = tmp.join("assurance_report.json");
     assert!(report_file.is_file());
 
+    // The derived report cites `unverified::` attestations: refused by default.
     let out = std::process::Command::new(bin)
         .args(["--check", report_file.to_str().unwrap()])
+        .output()
+        .expect("binary must run");
+    assert_eq!(out.status.code(), Some(1));
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(stderr.contains("--allow-unverified") && stderr.contains("unverified::"), "{stderr}");
+    // ... and accepted, visibly, with the explicit flag.
+    let out = std::process::Command::new(bin)
+        .args(["--check", report_file.to_str().unwrap(), "--allow-unverified"])
         .output()
         .expect("binary must run");
     assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(stdout.contains("ASSURANCE VERDICT: REPORT-ONLY"));
+    assert!(stdout.contains("accepted by --allow-unverified"));
 
     // 8. The same report fails closed once its evidence is corrupted.
     sandbox.edit("evidence/test-manifest.json", r#""verdict": "pass""#, r#""verdict": "fail""#);
     let out = std::process::Command::new(bin)
-        .args(["--check", report_file.to_str().unwrap()])
+        .args(["--check", report_file.to_str().unwrap(), "--allow-unverified"])
         .output()
         .expect("binary must run");
     assert_eq!(out.status.code(), Some(1));
@@ -410,6 +430,7 @@ fn test_full_pass_verdict_when_all_rungs_pass() {
         }
     }
     report.claims[0].proof.as_mut().unwrap().label = "proved-to-gate-level".into();
+    discharge_unchecked(&mut report);
     report.exemptions.clear();
     report.rungs.e2 = "pass".into();
     report.verdict = "pass".into();
@@ -637,6 +658,7 @@ fn test_checker_edge_cases_and_rejections() {
         w.status = WeaknessStatus::Discharged;
     }
     report.claims[0].proof.as_mut().unwrap().label = "proved-to-gate-level".into();
+    discharge_unchecked(&mut report);
     report.verdict = "pass".into();
     report.capabilities.analyzer = "fail".into();
     assert!(matches!(

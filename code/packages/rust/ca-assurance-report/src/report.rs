@@ -41,6 +41,10 @@ pub struct ProofEvidence {
     pub label: String,
     pub assumptions: Vec<String>,
     pub certificate: String,
+    /// `"trivial-miter"` when any backing certificate is a collapsed miter (the
+    /// proof is valid but vacuous at the SAT level), `"miter"` otherwise.
+    /// Absent in legacy reports (parsed as `""`).
+    pub certificate_kind: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -208,6 +212,10 @@ impl AssuranceReport {
                 p_map.insert(
                     "certificate".into(),
                     JsonValue::String(proof.certificate.clone()),
+                );
+                p_map.insert(
+                    "certificate_kind".into(),
+                    JsonValue::String(proof.certificate_kind.clone()),
                 );
                 c_map.insert("proof".into(), JsonValue::Object(p_map));
             } else {
@@ -447,10 +455,16 @@ impl AssuranceReport {
                     .and_then(|v| v.as_str())
                     .unwrap_or("")
                     .to_string();
+                let certificate_kind = p_obj
+                    .get("certificate_kind")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
                 Some(ProofEvidence {
                     label,
                     assumptions,
                     certificate: cert,
+                    certificate_kind,
                 })
             } else {
                 None

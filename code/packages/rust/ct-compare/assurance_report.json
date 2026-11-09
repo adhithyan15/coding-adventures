@@ -46,6 +46,7 @@
           "memory.unaliased"
         ],
         "certificate": "drat:sha256:70ada280885daf682ac466ba32a29f832f00f086f8f4db607ff5503b361d89e9",
+        "certificate_kind": "trivial-miter",
         "label": "bounded(128)"
       },
       "property": {
@@ -105,6 +106,7 @@
           "memory.unaliased"
         ],
         "certificate": "drat:sha256:70ada280885daf682ac466ba32a29f832f00f086f8f4db607ff5503b361d89e9",
+        "certificate_kind": "trivial-miter",
         "label": "bounded(128)"
       },
       "property": {
@@ -155,6 +157,7 @@
           "memory.unaliased"
         ],
         "certificate": "drat:sha256:70ada280885daf682ac466ba32a29f832f00f086f8f4db607ff5503b361d89e9",
+        "certificate_kind": "trivial-miter",
         "label": "bounded(128)"
       },
       "property": {
@@ -200,6 +203,7 @@
           "heap-bound:unchecked"
         ],
         "certificate": "drat:sha256:70ada280885daf682ac466ba32a29f832f00f086f8f4db607ff5503b361d89e9",
+        "certificate_kind": "trivial-miter",
         "label": "proved"
       },
       "property": {

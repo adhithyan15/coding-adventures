@@ -17,4 +17,7 @@ WARRANT_PROOF_FAULT=secret-branch cargo test -q -p coding_adventures_warrant_ir 
 WARRANT_BENCH_OUT=evidence/bench-manifest.json cargo test -q -p coding_adventures_ct_compare --test microbenchmarks
 # VER04h: the report is derived from the manifests written above; --check
 # cross-checks it against them and fails closed on any disagreement.
-cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json
+# --allow-unverified: the report still cites `unverified::` static attestations
+# (AST audits no tool re-runs); the default is to refuse them, and this flag
+# makes the dependence visible here until they are replaced by checked evidence.
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified

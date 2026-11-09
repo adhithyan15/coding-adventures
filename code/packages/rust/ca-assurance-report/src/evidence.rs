@@ -19,6 +19,17 @@
 //!    files that do not match their hashes, Warrant claims without evidence,
 //!    stale manifests, and a "no unsafe" claim next to a declared unsafe
 //!    exception.
+//!
+//! ## Hardening (security review B1-B9)
+//!
+//! Everything read from disk is untrusted until proven otherwise: manifests and
+//! certificates are size-capped ([`MAX_MANIFEST_BYTES`], [`MAX_CERTIFICATE_BYTES`]),
+//! JSON objects with duplicate keys are rejected by the parser, ids may not
+//! repeat (within or across manifests) or collide with attestation ids, the
+//! Warrant path must be the package's own spec and may not escape the
+//! repository, the effect certificate must be well typed and is cross-checked
+//! against a scan of `src/**/*.rs` for `unsafe`, and every claim is matched to
+//! the derived one by exact id with no duplicates or extras.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -79,6 +90,36 @@ pub struct CertRef {
     pub kind: String,
 }
 
+/// `CertRef::kind` of a certificate whose miter collapsed to a constant before
+/// any SAT work: valid, but vacuous evidence the report must label as such.
+pub const TRIVIAL_CERT_KIND: &str = "trivial-miter-collapsed";
+/// `certificate_kind` value of a claim backed by at least one trivial certificate.
+pub const TRIVIAL_MARK: &str = "trivial-miter";
+/// `certificate_kind` value of a claim backed only by non-trivial miters.
+pub const MITER_MARK: &str = "miter";
+
+/// Largest manifest / effect certificate / spec / source file we will read.
+pub const MAX_MANIFEST_BYTES: u64 = 16 * 1024 * 1024;
+/// Largest DIMACS or DRAT certificate file we will read.
+pub const MAX_CERTIFICATE_BYTES: u64 = 64 * 1024 * 1024;
+
+/// Attestation ids derived from the effect certificate.  A manifest entry may
+/// not use one of these ids, or it could vouch for them by itself.
+pub const ATTESTATION_IDS: [&str; 12] = [
+    "effect-certificate::proved",
+    "analyzer::no-unsafe-or-ffi",
+    "effect-certificate::unsafe-exception",
+    "capability-audit::proc-empty",
+    "capability-audit::fs-empty",
+    "capability-audit::ui-empty",
+    "capability-audit::stdout-empty",
+    "capability-audit::rand-empty",
+    "capability-audit::thread-empty",
+    "capability-audit::no-external-resources",
+    "capability-audit::no-database-sinks",
+    "capability-audit::banned-constructs-clean",
+];
+
 #[derive(Clone, Debug, Default)]
 pub struct ProofEntry {
     pub id: String,
@@ -89,6 +130,9 @@ pub struct ProofEntry {
     pub verdict: String,
     pub max_len: u64,
     pub certificates: Vec<CertRef>,
+    /// SHA-256 binding the entry to the lowered function and obligation
+    /// (`warrant_proofs.rs`); empty when the manifest carries none.
+    pub obligation_sha256: String,
 }
 
 /// Facts read from the Warrant document that the manifests must cover.
@@ -123,6 +167,10 @@ pub struct CertFacts {
 pub struct Evidence {
     pub tests: Vec<TestEntry>,
     pub test_spec_sha256: String,
+    pub test_source_sha256: String,
+    pub bench_source_sha256: String,
+    /// Files under `src/` whose code (not comments or strings) contains `unsafe`.
+    pub unsafe_source_files: Vec<String>,
     pub proofs: Vec<ProofEntry>,
     pub proof_spec_sha256: String,
     pub proof_source_sha256: String,
@@ -134,14 +182,40 @@ pub struct Evidence {
     pub proofs_dir: PathBuf,
 }
 
+/// Read `path` as bytes, refusing anything larger than `cap`.  The limit is
+/// enforced on the bytes actually read (`take(cap + 1)`), not on a metadata
+/// length that could change between the check and the read.
+pub fn read_capped(path: &Path, cap: u64) -> Result<Vec<u8>, EvidenceError> {
+    use std::io::Read as _;
+    let file = std::fs::File::open(path)
+        .map_err(|e| EvidenceError(format!("cannot read {}: {e}", path.display())))?;
+    let mut bytes = Vec::new();
+    file.take(cap + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|e| EvidenceError(format!("cannot read {}: {e}", path.display())))?;
+    if bytes.len() as u64 > cap {
+        return err(format!("{} is larger than the {cap}-byte limit", path.display()));
+    }
+    Ok(bytes)
+}
+
 fn read(path: &Path) -> Result<String, EvidenceError> {
-    std::fs::read_to_string(path)
-        .map_err(|e| EvidenceError(format!("cannot read {}: {e}", path.display())))
+    String::from_utf8(read_capped(path, MAX_MANIFEST_BYTES)?)
+        .map_err(|_| EvidenceError(format!("{} is not UTF-8", path.display())))
 }
 
 fn parse(path: &Path) -> Result<JsonValue, EvidenceError> {
     JsonValue::parse(&read(path)?)
         .map_err(|e| EvidenceError(format!("{} is not valid JSON: {e}", path.display())))
+}
+
+/// A required string field; wrong type or absence is an error, not `""`.
+fn req_text(v: &JsonValue, key: &str, what: &str) -> Result<String, EvidenceError> {
+    match v.get(key) {
+        Some(JsonValue::String(s)) => Ok(s.clone()),
+        Some(_) => err(format!("{what}: `{key}` must be a string")),
+        None => err(format!("{what}: missing `{key}`")),
+    }
 }
 
 fn text(v: &JsonValue, key: &str) -> String {
@@ -161,8 +235,7 @@ fn schema(v: &JsonValue, want: &str, path: &Path) -> Result<(), EvidenceError> {
 }
 
 fn load_spec(path: &Path) -> Result<SpecFacts, EvidenceError> {
-    let source = std::fs::read(path)
-        .map_err(|e| EvidenceError(format!("cannot read {}: {e}", path.display())))?;
+    let source = read_capped(path, MAX_MANIFEST_BYTES)?;
     let doc = SourceDocument::admit(&source, SourceLimits::default())
         .map_err(|e| EvidenceError(format!("spec admission: {e:?}")))?;
     let layout = capture_layout(&doc, LayoutLimits::default())
@@ -211,27 +284,51 @@ fn load_spec(path: &Path) -> Result<SpecFacts, EvidenceError> {
     Ok(facts)
 }
 
+/// Does an exception name `unsafe` or foreign-function code?  Any construct
+/// whose name mentions either (case-insensitively) counts, so renaming the
+/// construct (`Unsafe_Code`, `ffi_call`, `UNSAFE-block`) cannot hide it.
+pub fn is_unsafe_bearing(construct: &str) -> bool {
+    let c = construct.to_ascii_lowercase();
+    c.contains("unsafe") || c.contains("ffi")
+}
+
+/// Parse the effect certificate strictly: every field the report relies on must
+/// be present and of the right type.  A malformed certificate used to default to
+/// "no effects, no exceptions", i.e. clean.
 fn load_cert(path: &Path) -> Result<CertFacts, EvidenceError> {
     let v = parse(path)?;
-    let strings = |key: &str| -> Vec<String> {
-        v.get(key)
-            .and_then(|x| x.as_array())
-            .map(|a| a.iter().filter_map(|s| s.as_str().map(String::from)).collect())
-            .unwrap_or_default()
+    let what = "effect certificate";
+    if v.as_object().is_none() {
+        return err(format!("{what} must be a JSON object"));
+    }
+    let label = req_text(&v, "label", what)?;
+    let list = |key: &str| -> Result<&[JsonValue], EvidenceError> {
+        match v.get(key) {
+            Some(x) => x
+                .as_array()
+                .ok_or_else(|| EvidenceError(format!("{what}: `{key}` must be an array"))),
+            None => err(format!("{what}: missing `{key}`")),
+        }
     };
+    let mut declared_effects = Vec::new();
+    for e in list("declared_effects")? {
+        match e.as_str() {
+            Some(s) => declared_effects.push(s.to_string()),
+            None => return err(format!("{what}: `declared_effects` entries must be strings")),
+        }
+    }
     let mut facts = CertFacts {
-        label: text(&v, "label"),
-        declared_effects: strings("declared_effects"),
+        label,
+        declared_effects,
         ..CertFacts::default()
     };
-    for ex in v
-        .get("banned_construct_exceptions")
-        .and_then(|x| x.as_array())
-        .unwrap_or(&[])
-    {
-        let construct = text(ex, "construct");
-        let why = text(ex, "justification");
-        if construct == "unsafe_code" {
+    for ex in list("banned_construct_exceptions")? {
+        if ex.as_object().is_none() {
+            return err(format!("{what}: `banned_construct_exceptions` entries must be objects"));
+        }
+        let construct = req_text(ex, "construct", what)?;
+        let why = req_text(ex, "justification", what)?;
+        if is_unsafe_bearing(&construct) {
             facts.unsafe_exceptions.push(why);
         } else {
             facts.other_exceptions.push(construct);
@@ -240,9 +337,155 @@ fn load_cert(path: &Path) -> Result<CertFacts, EvidenceError> {
     Ok(facts)
 }
 
+/// Does Rust source text contain the keyword `unsafe` outside comments and
+/// string/char literals?  A small lexer, deliberately conservative: it knows
+/// line comments, nested block comments, `"..."`, raw strings `r#"..."#`, byte
+/// strings and char literals, and treats every other occurrence of the whole
+/// word `unsafe` (including inside attributes and macros) as unsafe code.
+pub fn has_unsafe_token(src: &str) -> bool {
+    let c: Vec<char> = src.chars().collect();
+    let n = c.len();
+    let mut i = 0;
+    while i < n {
+        match c[i] {
+            '/' if c.get(i + 1) == Some(&'/') => {
+                while i < n && c[i] != '\n' {
+                    i += 1;
+                }
+            }
+            '/' if c.get(i + 1) == Some(&'*') => {
+                let mut depth = 1;
+                i += 2;
+                while i < n && depth > 0 {
+                    if c[i] == '/' && c.get(i + 1) == Some(&'*') {
+                        depth += 1;
+                        i += 2;
+                    } else if c[i] == '*' && c.get(i + 1) == Some(&'/') {
+                        depth -= 1;
+                        i += 2;
+                    } else {
+                        i += 1;
+                    }
+                }
+            }
+            '"' => i = skip_string(&c, i + 1),
+            '\'' => {
+                // Char literal ('x', '\n', '\u{..}') or lifetime ('a).
+                if c.get(i + 1) == Some(&'\\') {
+                    i += 2;
+                    while i < n && c[i] != '\'' {
+                        i += 1;
+                    }
+                    i += 1;
+                } else if c.get(i + 2) == Some(&'\'') {
+                    i += 3;
+                } else {
+                    i += 1;
+                }
+            }
+            ch if ch.is_alphabetic() || ch == '_' => {
+                let start = i;
+                while i < n && (c[i].is_alphanumeric() || c[i] == '_') {
+                    i += 1;
+                }
+                let word: String = c[start..i].iter().collect();
+                if (word == "r" || word == "br" || word == "cr")
+                    && matches!(c.get(i), Some('#') | Some('"'))
+                {
+                    let mut hashes = 0;
+                    let mut j = i;
+                    while c.get(j) == Some(&'#') {
+                        hashes += 1;
+                        j += 1;
+                    }
+                    if c.get(j) == Some(&'"') {
+                        i = skip_raw_string(&c, j + 1, hashes);
+                        continue;
+                    }
+                }
+                if word == "unsafe" {
+                    return true;
+                }
+            }
+            _ => i += 1,
+        }
+    }
+    false
+}
+
+fn skip_string(c: &[char], mut i: usize) -> usize {
+    while i < c.len() {
+        match c[i] {
+            '\\' => i += 2,
+            '"' => return i + 1,
+            _ => i += 1,
+        }
+    }
+    i
+}
+
+fn skip_raw_string(c: &[char], mut i: usize, hashes: usize) -> usize {
+    while i < c.len() {
+        if c[i] == '"' && (0..hashes).all(|k| c.get(i + 1 + k) == Some(&'#')) {
+            return i + 1 + hashes;
+        }
+        i += 1;
+    }
+    i
+}
+
+/// Every `src/**/*.rs` file (symlinks are not followed) whose code contains
+/// `unsafe`, as paths relative to `src`, sorted.
+pub fn scan_unsafe_sources(package_dir: &Path) -> Result<Vec<String>, EvidenceError> {
+    fn walk(dir: &Path, rel: &str, depth: usize, out: &mut Vec<String>) -> Result<(), EvidenceError> {
+        if depth > 32 {
+            return err("src tree is nested too deeply");
+        }
+        let entries = std::fs::read_dir(dir)
+            .map_err(|e| EvidenceError(format!("cannot read {}: {e}", dir.display())))?;
+        let mut entries: Vec<_> = entries.filter_map(Result::ok).collect();
+        entries.sort_by_key(|e| e.file_name());
+        for entry in entries {
+            let name = entry.file_name().to_string_lossy().into_owned();
+            let path = entry.path();
+            let rel_name = if rel.is_empty() { name.clone() } else { format!("{rel}/{name}") };
+            let ty = entry
+                .file_type()
+                .map_err(|e| EvidenceError(format!("cannot stat {}: {e}", path.display())))?;
+            if ty.is_dir() {
+                walk(&path, &rel_name, depth + 1, out)?;
+            } else if ty.is_file() && name.ends_with(".rs") {
+                let bytes = read_capped(&path, MAX_MANIFEST_BYTES)?;
+                if has_unsafe_token(&String::from_utf8_lossy(&bytes)) {
+                    out.push(rel_name);
+                }
+            }
+        }
+        Ok(())
+    }
+    let mut out = Vec::new();
+    walk(&package_dir.join("src"), "", 0, &mut out)?;
+    Ok(out)
+}
+
+/// A manifest-supplied spec path must stay inside the repository: relative,
+/// made only of normal components (no `..`, no root or drive prefix).
+fn check_spec_path(relative: &str) -> Result<(), EvidenceError> {
+    use std::path::Component;
+    if relative.is_empty() || relative.contains('\\') {
+        return err(format!("spec path {relative:?} is empty or contains a backslash"));
+    }
+    let p = Path::new(relative);
+    if p.is_absolute() || !p.components().all(|c| matches!(c, Component::Normal(_))) {
+        return err(format!("spec path {relative:?} must be relative with no `..` components"));
+    }
+    Ok(())
+}
+
 /// Locate the Warrant document named by a manifest by walking up from the
 /// package directory (the manifest stores a repository-relative path).
 fn find_spec(package_dir: &Path, relative: &str) -> Result<PathBuf, EvidenceError> {
+    check_spec_path(relative)?;
     let start = package_dir
         .canonicalize()
         .map_err(|e| EvidenceError(format!("package dir {}: {e}", package_dir.display())))?;
@@ -255,82 +498,151 @@ fn find_spec(package_dir: &Path, relative: &str) -> Result<PathBuf, EvidenceErro
     err(format!("spec {relative} not found above {}", package_dir.display()))
 }
 
+/// The Warrant document a package's evidence must describe: `ct-compare` is
+/// specified by `code/specs/ct-compare.warrant`.  Pinning the path to the
+/// package name stops a manifest from naming some other document.
+fn expected_spec(package_dir: &Path) -> Result<String, EvidenceError> {
+    let canon = package_dir
+        .canonicalize()
+        .map_err(|e| EvidenceError(format!("package dir {}: {e}", package_dir.display())))?;
+    let name = canon
+        .file_name()
+        .and_then(|n| n.to_str())
+        .ok_or_else(|| EvidenceError("package dir has no name".into()))?;
+    Ok(format!("code/specs/{name}.warrant"))
+}
+
+/// Record `id`, failing when it was already seen or collides with an
+/// attestation id.
+fn claim_id(seen: &mut BTreeSet<String>, id: &str, what: &str) -> Result<(), EvidenceError> {
+    if id.is_empty() {
+        return err(format!("{what} entry has an empty id"));
+    }
+    if ATTESTATION_IDS.contains(&id) || id.starts_with(UNVERIFIED_PREFIX) {
+        return err(format!("{what} id `{id}` collides with a reserved attestation id"));
+    }
+    if !seen.insert(id.to_string()) {
+        return err(format!("duplicate evidence id `{id}` ({what})"));
+    }
+    Ok(())
+}
+
 impl Evidence {
     /// Load every manifest under `<package_dir>/evidence`.
     pub fn load(package_dir: &Path) -> Result<Evidence, EvidenceError> {
         let dir = package_dir.join("evidence");
+        let mut seen: BTreeSet<String> = BTreeSet::new();
 
         let tpath = dir.join("test-manifest.json");
         let tv = parse(&tpath)?;
         schema(&tv, "warrant-test-evidence-v1", &tpath)?;
-        let tests = tv
+        let mut tests = Vec::new();
+        for t in tv
             .get("tests")
             .and_then(|x| x.as_array())
             .ok_or_else(|| EvidenceError("test manifest has no tests".into()))?
-            .iter()
-            .map(|t| TestEntry {
-                id: text(t, "id"),
-                kind: text(t, "kind"),
+        {
+            let what = "test manifest";
+            let id = req_text(t, "id", what)?;
+            claim_id(&mut seen, &id, what)?;
+            tests.push(TestEntry {
+                id,
+                kind: req_text(t, "kind", what)?,
                 op: text(t, "op"),
                 claim: text(t, "claim"),
-                verdict: text(t, "verdict"),
+                verdict: req_text(t, "verdict", what)?,
                 cases: num(t, "cases"),
                 iterations: num(t, "iterations"),
                 admitted: num(t, "admitted"),
                 equal_cases: num(t, "equal_cases"),
                 caught_by: text(t, "caught_by"),
-            })
-            .collect();
-        let spec_rel = text(&tv, "spec");
+            });
+        }
+        let spec_rel = req_text(&tv, "spec", "test manifest")?;
 
         let ppath = dir.join("proof-manifest.json");
         let pv = parse(&ppath)?;
         schema(&pv, "warrant-proof-evidence-v1", &ppath)?;
-        let proofs = pv
+        let mut proofs = Vec::new();
+        for p in pv
             .get("proofs")
             .and_then(|x| x.as_array())
             .ok_or_else(|| EvidenceError("proof manifest has no proofs".into()))?
-            .iter()
-            .map(|p| ProofEntry {
-                id: text(p, "id"),
+        {
+            let what = "proof manifest";
+            let id = req_text(p, "id", what)?;
+            claim_id(&mut seen, &id, what)?;
+            let mut certificates = Vec::new();
+            for c in p.get("certificates").and_then(|x| x.as_array()).unwrap_or(&[]) {
+                let kind = req_text(c, "kind", what)?;
+                if kind != TRIVIAL_CERT_KIND && kind != "miter" {
+                    return err(format!("{id}: unknown certificate kind `{kind}`"));
+                }
+                certificates.push(CertRef {
+                    id: req_text(c, "id", what)?,
+                    kind,
+                });
+            }
+            proofs.push(ProofEntry {
+                id,
                 op: text(p, "op"),
                 function: text(p, "function"),
-                kind: text(p, "kind"),
+                kind: req_text(p, "kind", what)?,
                 label: text(p, "label"),
-                verdict: text(p, "verdict"),
+                verdict: req_text(p, "verdict", what)?,
                 max_len: num(p, "max_len"),
-                certificates: p
-                    .get("certificates")
-                    .and_then(|x| x.as_array())
-                    .unwrap_or(&[])
-                    .iter()
-                    .map(|c| CertRef {
-                        id: text(c, "id"),
-                        kind: text(c, "kind"),
-                    })
-                    .collect(),
-            })
-            .collect();
+                certificates,
+                obligation_sha256: text(p, "obligation_sha256"),
+            });
+        }
 
         let bpath = dir.join("bench-manifest.json");
         let bv = parse(&bpath)?;
         schema(&bv, "warrant-bench-evidence-v1", &bpath)?;
-        let bench = bv
-            .get("tests")
-            .and_then(|x| x.as_array())
-            .unwrap_or(&[])
-            .iter()
-            .map(|t| (text(t, "id"), text(t, "verdict")))
-            .collect();
+        let mut bench = Vec::new();
+        for t in bv.get("tests").and_then(|x| x.as_array()).unwrap_or(&[]) {
+            let what = "bench manifest";
+            let id = req_text(t, "id", what)?;
+            claim_id(&mut seen, &id, what)?;
+            bench.push((id, req_text(t, "verdict", what)?));
+        }
 
-        let spec = load_spec(&find_spec(package_dir, &spec_rel)?)?;
+        // The Warrant document is the package's own, named identically by every
+        // manifest, and every manifest describes the same module.
+        let want_spec = expected_spec(package_dir)?;
+        let proof_spec = req_text(&pv, "spec", "proof manifest")?;
+        for (who, got) in [("test", &spec_rel), ("proof", &proof_spec)] {
+            if *got != want_spec {
+                return err(format!("{who} manifest names spec {got:?}, expected {want_spec:?}"));
+            }
+        }
+        let spec = load_spec(&find_spec(package_dir, &want_spec)?)?;
+        for (who, v) in [("test", &tv), ("proof", &pv), ("bench", &bv)] {
+            let module = req_text(v, "module", &format!("{who} manifest"))?;
+            if module != spec.module {
+                return err(format!(
+                    "{who} manifest is for module {module:?} but the spec defines {:?}",
+                    spec.module
+                ));
+            }
+        }
+
         let cert = load_cert(&package_dir.join("effect_certificate.json"))?;
-        let source = std::fs::read(package_dir.join("src/lib.rs"))
-            .map_err(|e| EvidenceError(format!("cannot read src/lib.rs: {e}")))?;
+        let source = read_capped(&package_dir.join("src/lib.rs"), MAX_MANIFEST_BYTES)?;
+        let unsafe_source_files = scan_unsafe_sources(package_dir)?;
+        if !unsafe_source_files.is_empty() && cert.unsafe_exceptions.is_empty() {
+            return err(format!(
+                "source contains `unsafe` ({}) but the effect certificate declares no unsafe exception",
+                unsafe_source_files.join(", ")
+            ));
+        }
 
         Ok(Evidence {
             tests,
             test_spec_sha256: text(&tv, "spec_sha256"),
+            test_source_sha256: text(&tv, "source_sha256"),
+            bench_source_sha256: text(&bv, "source_sha256"),
+            unsafe_source_files,
             proofs,
             proof_spec_sha256: text(&pv, "spec_sha256"),
             proof_source_sha256: text(&pv, "source_sha256"),
@@ -371,7 +683,7 @@ impl Evidence {
         if self.cert.label == "proved" {
             ids.insert("effect-certificate::proved".to_string());
         }
-        if self.cert.unsafe_exceptions.is_empty() {
+        if self.cert.unsafe_exceptions.is_empty() && self.unsafe_source_files.is_empty() {
             ids.insert("analyzer::no-unsafe-or-ffi".into());
         } else {
             ids.insert("effect-certificate::unsafe-exception".into());
@@ -460,7 +772,7 @@ impl Evidence {
         };
         PackageAuditContext {
             package_id: package_id.to_string(),
-            is_safe_rust: self.cert.unsafe_exceptions.is_empty(),
+            is_safe_rust: self.cert.unsafe_exceptions.is_empty() && self.unsafe_source_files.is_empty(),
             declared_capabilities: self.cert.declared_effects.clone(),
             has_wir_timing_proof: proof_ok(&ct),
             has_instruction_benchmarks: bench_ok,
@@ -471,27 +783,47 @@ impl Evidence {
         }
     }
 
+    /// Names of the operations the Warrant document states claims about: the
+    /// ones whose exhaustive, property and fuzz evidence is *required*.
+    fn claimed_ops(&self) -> BTreeSet<&str> {
+        self.spec.claims.iter().map(|(_, op)| op.as_str()).collect()
+    }
+
+    /// Does every claimed operation have a non-empty, all-passing entry set of
+    /// each of `kinds`?  Per operation, not pooled: one operation's passing
+    /// suites must not paper over another operation with none.
+    fn per_op_ok(&self, kinds: &[&str]) -> bool {
+        let ops = self.claimed_ops();
+        !ops.is_empty()
+            && ops.iter().all(|op| {
+                kinds.iter().all(|k| Self::all_pass_nonempty(self.entries(k, op)))
+            })
+    }
+
+    /// Does every operation of the document have at least one constant-time or
+    /// steps-bound obligation, all of which passed with a ranked label?
+    /// (`unknown`, `falsified`, `exceeded`, `unchecked` have no rank.)
+    fn proofs_ok(&self) -> bool {
+        !self.spec.ops.is_empty()
+            && self.spec.ops.iter().all(|op| {
+                let v: Vec<&ProofEntry> = self.proof_obligations(&op.name).collect();
+                !v.is_empty() && v.iter().all(|p| p.verdict == "pass" && label_rank(&p.label).is_some())
+            })
+    }
+
     /// Rung statuses computed from which kinds of evidence exist and pass.
     pub fn rungs(&self) -> RungsSummary {
         let status = |ok: bool| if ok { "pass" } else { "fail" }.to_string();
         let kind_ok =
             |k: &[&str]| Self::all_pass_nonempty(self.tests.iter().filter(|t| k.contains(&t.kind.as_str())));
-        let proofs_ok = {
-            let v: Vec<&ProofEntry> = self
-                .proofs
-                .iter()
-                .filter(|p| p.kind == "constant-time" || p.kind == "steps-bound")
-                .collect();
-            !v.is_empty() && v.iter().all(|p| p.verdict == "pass")
-        };
         RungsSummary {
             e0: status(self.cert.label == "proved" && self.cert.declared_effects.is_empty()),
             e1: status(kind_ok(&["example"])),
             // No manifest of simulated-host or integration runs exists.
             e2: "not-live".into(),
-            e3: status(kind_ok(&["property", "exhaustive"])),
-            e4: status(kind_ok(&["fuzz"])),
-            e5: status(proofs_ok),
+            e3: status(self.per_op_ok(&["property", "exhaustive"])),
+            e4: status(self.per_op_ok(&["fuzz"])),
+            e5: status(self.proofs_ok()),
         }
     }
 }
@@ -534,6 +866,19 @@ pub fn certificate_digest(ev: &Evidence, op: &str) -> Option<String> {
         joined.push('\n');
     }
     Some(format!("drat:sha256:{}", sha256_hex(joined.as_bytes())))
+}
+
+/// How the certificates backing `op` should be described in the report:
+/// [`TRIVIAL_MARK`] when any of them is a miter that collapsed to a constant
+/// (valid, but the SAT solver and DRAT checker had nothing to do), else
+/// [`MITER_MARK`].  The mark is derived, never typed in, and `--check` fails a
+/// report that omits it.
+pub fn certificate_kind(ev: &Evidence, op: &str) -> &'static str {
+    let trivial = ev
+        .proof_obligations(op)
+        .flat_map(|p| p.certificates.iter())
+        .any(|c| c.kind == TRIVIAL_CERT_KIND);
+    if trivial { TRIVIAL_MARK } else { MITER_MARK }
 }
 
 /// Derive one claim per Warrant operation from the manifests.
@@ -610,6 +955,7 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
                 label: proof_label,
                 assumptions,
                 certificate,
+                certificate_kind: certificate_kind(ev, &op.name).to_string(),
             }),
             evidence: evidence_ids,
         });
@@ -640,6 +986,11 @@ pub enum EvidenceCheckError {
     UnsafeContradiction(String),
     /// The manifests could not be read.
     Load(String),
+    /// The same claim id appears twice in the report.
+    DuplicateId(String),
+    /// A trivial (collapsed-miter) certificate is presented without the
+    /// `certificate_kind: "trivial-miter"` marking.
+    TrivialCertificateUnmarked(String),
 }
 
 impl fmt::Display for EvidenceCheckError {
@@ -653,6 +1004,8 @@ impl fmt::Display for EvidenceCheckError {
             Self::StaleEvidence(m) => ("stale evidence", m),
             Self::UnsafeContradiction(m) => ("unsafe claim contradicts declared exception", m),
             Self::Load(m) => ("cannot load evidence", m),
+            Self::DuplicateId(m) => ("duplicate id", m),
+            Self::TrivialCertificateUnmarked(m) => ("trivial certificate presented as a full proof", m),
         };
         write!(f, "{name}: {m}")
     }
@@ -690,6 +1043,46 @@ pub fn verify_evidence(
         ));
     }
 
+    if ev.test_source_sha256 != ev.source_sha256 {
+        return Err(E::StaleEvidence(
+            "test manifest was generated from a different src/lib.rs".into(),
+        ));
+    }
+    if ev.bench_source_sha256 != ev.source_sha256 {
+        return Err(E::StaleEvidence(
+            "bench manifest was generated from a different src/lib.rs".into(),
+        ));
+    }
+
+    // 1b. Source/certificate cross-check: `unsafe` in the code needs a declared
+    //     exception, whatever the certificate's own fields say.
+    if !ev.unsafe_source_files.is_empty() && ev.cert.unsafe_exceptions.is_empty() {
+        return Err(E::UnsafeContradiction(format!(
+            "source contains `unsafe` ({}) but the effect certificate declares no unsafe exception",
+            ev.unsafe_source_files.join(", ")
+        )));
+    }
+
+    // 1c. Every discharged obligation cites a certificate and is bound to the
+    //     obligation it proves.  (Negative controls and `unchecked` rows prove
+    //     nothing and are exempt.)  Full recomputation of the binding from the
+    //     source is follow-up WD-009 (VER04h section 10).
+    for p in ev.proofs.iter().filter(|p| p.kind == "constant-time" || p.kind == "steps-bound") {
+        if p.verdict != "pass" {
+            continue;
+        }
+        if p.certificates.is_empty() {
+            return Err(E::BadCertificate(format!("{}: verdict pass but no certificate is cited", p.id)));
+        }
+        let h = &p.obligation_sha256;
+        if h.len() != 64 || !h.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')) {
+            return Err(E::BadCertificate(format!(
+                "{}: obligation_sha256 is missing or not 64 lowercase hex digits",
+                p.id
+            )));
+        }
+    }
+
     // 2. Certificates: file present, name == sha256(cnf ++ 0 ++ drat), and the
     //    DRAT checker still accepts it.
     let mut seen = BTreeSet::new();
@@ -698,10 +1091,10 @@ pub fn verify_evidence(
             if !seen.insert(c.id.clone()) {
                 continue;
             }
-            let cnf = std::fs::read(ev.proofs_dir.join(format!("{}.cnf", c.id)))
-                .map_err(|e| E::BadCertificate(format!("{}: cnf unreadable: {e}", c.id)))?;
-            let drat = std::fs::read(ev.proofs_dir.join(format!("{}.drat", c.id)))
-                .map_err(|e| E::BadCertificate(format!("{}: drat unreadable: {e}", c.id)))?;
+            let cnf = read_capped(&ev.proofs_dir.join(format!("{}.cnf", c.id)), MAX_CERTIFICATE_BYTES)
+                .map_err(|e| E::BadCertificate(format!("{}: cnf unreadable: {}", c.id, e.0)))?;
+            let drat = read_capped(&ev.proofs_dir.join(format!("{}.drat", c.id)), MAX_CERTIFICATE_BYTES)
+                .map_err(|e| E::BadCertificate(format!("{}: drat unreadable: {}", c.id, e.0)))?;
             let mut bytes = cnf.clone();
             bytes.push(0);
             bytes.extend_from_slice(&drat);
@@ -748,15 +1141,28 @@ pub fn verify_evidence(
         }
     }
 
-    // 3b. A declared unsafe exception forbids a "no unsafe" exclusion.
+    // 3b. A declared unsafe exception forbids a "no unsafe" exclusion.  Judged
+    //     on structured fields only (status, CWE class, evidence ids), never on
+    //     the free-text reason, which a rewording would defeat:
+    //       * no row may cite the no-unsafe attestation;
+    //       * no memory-safety row may be `excluded`;
+    //       * the classes the bounds-checked proofs do not cover (416, 415, 476,
+    //         190) must stay unapproved exemptions;
+    //       * 125/787 may be `discharged` only on a proof-manifest id.
     if !ev.cert.unsafe_exceptions.is_empty() {
+        let proof_ids: BTreeSet<&str> = ev.proofs.iter().map(|p| p.id.as_str()).collect();
         for w in &report.weaknesses {
-            let claims_no_unsafe = w.evidence.iter().any(|e| e == "analyzer::no-unsafe-or-ffi")
-                || w.reason.contains("no unsafe blocks")
-                || (w.status == WeaknessStatus::Excluded && MEMORY_SAFETY_CWES.contains(&w.cwe));
-            if claims_no_unsafe {
+            let memory = MEMORY_SAFETY_CWES.contains(&w.cwe);
+            let bounds_only = matches!(w.cwe, 125 | 787);
+            let cites_attestation = w.evidence.iter().any(|e| e == "analyzer::no-unsafe-or-ffi");
+            let excluded = w.status == WeaknessStatus::Excluded && memory;
+            let uncovered_class = memory && !bounds_only && w.status != WeaknessStatus::Exemption;
+            let unproven_bounds = bounds_only
+                && w.status == WeaknessStatus::Discharged
+                && !w.evidence.iter().any(|e| proof_ids.contains(e.as_str()));
+            if cites_attestation || excluded || uncovered_class || unproven_bounds {
                 return Err(E::UnsafeContradiction(format!(
-                    "CWE-{} is {} on a no-unsafe basis but the effect certificate declares an unsafe_code exception",
+                    "CWE-{} is {} without evidence compatible with the declared unsafe_code exception",
                     w.cwe,
                     w.status.as_str()
                 )));
@@ -792,12 +1198,30 @@ pub fn verify_evidence(
         check_ids(&x.evidence)?;
     }
 
-    // 5. Counts, labels and digests equal what the manifests say.
+    // 5. Counts, labels and digests equal what the manifests say.  Claims are
+    //    matched by exact id; an id may appear once, every derived claim must be
+    //    present, and nothing else may be.
     let derived = derive_claims(ev).map_err(|e| E::Load(e.0))?;
+    let mut claim_ids = BTreeSet::new();
+    for c in &report.claims {
+        if !claim_ids.insert(c.id.as_str()) {
+            return Err(E::DuplicateId(format!("claim `{}` appears more than once", c.id)));
+        }
+    }
     for want in &derived {
         let Some(got) = report.claims.iter().find(|c| c.id == want.id) else {
             return Err(E::UncoveredClaim(format!("report has no claim `{}`", want.id)));
         };
+        if let (Some(wp), got_proof) = (&want.proof, got.proof.as_ref()) {
+            if wp.certificate_kind == TRIVIAL_MARK
+                && got_proof.map(|p| p.certificate_kind.as_str()) != Some(TRIVIAL_MARK)
+            {
+                return Err(E::TrivialCertificateUnmarked(format!(
+                    "claim {} is backed by a collapsed-miter certificate and must say certificate_kind \"{TRIVIAL_MARK}\"",
+                    want.id
+                )));
+            }
+        }
         let fields: Vec<(&str, String, String)> = vec![
             ("symbol", got.symbol.clone(), want.symbol.clone()),
             ("example status", got.example.clone(), want.example.clone()),
@@ -825,6 +1249,13 @@ pub fn verify_evidence(
         if !derived.iter().any(|d| d.id == c.id) {
             return Err(E::UnknownEvidence(format!("claim `{}` is backed by no manifest entry", c.id)));
         }
+    }
+    if report.claims.len() != derived.len() {
+        return Err(E::EvidenceMismatch(format!(
+            "report has {} claims but the manifests derive {}",
+            report.claims.len(),
+            derived.len()
+        )));
     }
     let want_rungs = ev.rungs();
     if report.rungs != want_rungs {

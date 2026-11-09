@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Security review fixes: test and bench manifests record `source_sha256` (dev-dependency `coding_adventures_sha256`); proof entries record `obligation_sha256`; the generated harness is regenerated (checked exhaustive budget, `run_main(source)`); `assurance_report.json` gains `certificate_kind` per claim; BUILD passes `--allow-unverified` to `--check` because the report still cites nine `unverified::` static attestations.
+
 - Add the Warrant-derived evidence harness (VER04h): `tests/warrant_evidence.rs`
   runs `tests/generated/warrant_evidence.rs`, generated from
   `code/specs/ct-compare.warrant`, against the real public API: every example,
