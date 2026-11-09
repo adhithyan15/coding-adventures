@@ -2,6 +2,15 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.67.4] - 2026-11-08
+
+### Fixed
+
+- Speculative ASI insertion performance on labeled blocks (#17882):
+  - In `src/asi.rs`, `opens_block` now recognizes `{` preceded by a label (and switch `default`) so that semicolons before `}` are speculated in a single linear pass rather than requiring quadratic retries in `retry_on_error`.
+  - In `ends_object_literal`, require `!opens_block(o)` to prevent erroneously classifying a labeled block's closing `}` as an object literal closing brace, which previously caused spurious semicolon insertion after the block.
+  - Resolves pathological parser latency and timeout when parsing many labeled blocks (e.g. 400 lines reduced from >50s to <300ms).
+
 ## [0.67.3] - 2026-11-08
 
 ### Fixed

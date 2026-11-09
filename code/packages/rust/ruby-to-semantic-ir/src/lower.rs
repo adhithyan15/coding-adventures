@@ -75,6 +75,8 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         in_block_body: false,
         current_class: None,
         current_method: None,
+        current_method_params: Vec::new(),
+        param_aliases: std::collections::HashMap::new(),
         top_level_methods: HashSet::new(),
         nested_methods: HashSet::new(),
         enclosing_visible: HashSet::new(),
@@ -1136,6 +1138,13 @@ struct Lowerer {
     /// (`__super__(method_name, class_name, …)`).  Set by
     /// `lower_def_statement` around its body lowering and restored after.
     current_method: Option<String>,
+    /// #18798 Item 20 — parameter names of the enclosing method in their
+    /// exact declaration order. Read by bare `super` (`zsuper`) to forward
+    /// parameters in source declaration order rather than alphabetical order.
+    current_method_params: Vec<String>,
+    /// #18798 Item 4 — parameter aliases for parameters assigned in callable bodies.
+    /// Maps source parameter name -> local variable name.
+    param_aliases: std::collections::HashMap<String, String>,
     /// #18778 — names of the methods `def`ined at the top level (no
     /// receiver, not inside a `class`/`module`), collected before any body is
     /// lowered.  A top-level `def` is a private method of `Object`, callable
@@ -2260,21 +2269,27 @@ impl Lowerer {
                 _ => None,
             })
             .ok_or_else(|| err("for_statement missing its loop variable"))?;
-        let var = var_tok.value.clone();
-        if !is_plain_local_name(&var) {
+        if !is_plain_local_name(&var_tok.value) {
             return Err(err(&format!(
-                "unsupported: a `for` loop variable that is not a local (`{var}`)"
+                "unsupported: a `for` loop variable that is not a local (`{}`)",
+                var_tok.value
             )));
         }
         // Storing into a parameter is not something every backend can do (a
         // Rust parameter is immutable; see the lesson "A frontend cannot
         // store into a SIR parameter"), and this lowerer has no parameter
         // copy yet, so a parameter as the loop variable is refused cleanly.
-        if self.current_params.contains(&var) {
+        if self.current_params.contains(&var_tok.value) {
             return Err(err(&format!(
-                "unsupported: a `for` loop variable that is a parameter (`{var}`)"
+                "unsupported: a `for` loop variable that is a parameter (`{}`)",
+                var_tok.value
             )));
         }
+        let var = self
+            .param_aliases
+            .get(&var_tok.value)
+            .cloned()
+            .unwrap_or_else(|| var_tok.value.clone());
         let iter_node = self
             .find_node_child(node, "expression")
             .ok_or_else(|| err("for_statement missing its iterable"))?;
@@ -2472,6 +2487,38 @@ impl Lowerer {
                 return candidate;
             }
         }
+    }
+
+    /// #18798 Item 4 — scan `assigned_names` and for each parameter that is
+    /// assigned in the callable body, mint a fresh local alias `__param_<name>_<n>`,
+    /// register it in `self.param_aliases` and `self.declared_locals`, and
+    /// emit a prologue `Stmt::LetBinding` initializing the alias from `Scope::Param`.
+    fn setup_param_aliases_and_prologue(
+        &mut self,
+        params: &[Param],
+        assigned_names: &[String],
+    ) -> Vec<Stmt> {
+        let mut prologue = Vec::new();
+        for p in params {
+            self.current_params.insert(p.name.clone());
+            if assigned_names.contains(&p.name) {
+                let alias = self.fresh_name(&format!("__param_{}_", p.name));
+                self.declared_locals.insert(alias.clone());
+                self.param_aliases.insert(p.name.clone(), alias.clone());
+                self.features_used.insert(Feature::MutableBindings);
+                prologue.push(Stmt::LetBinding {
+                    name: alias,
+                    sir_type: None,
+                    value: Expr::VarRef {
+                        name: p.name.clone(),
+                        scope: Scope::Param,
+                        span: p.span.clone(),
+                    },
+                    span: p.span.clone(),
+                });
+            }
+        }
+        prologue
     }
 
     // -------------------------------------------------------------------
@@ -6409,10 +6456,12 @@ impl Lowerer {
         let saved_block_cap = self.block_captures_enclosing;
         self.in_def_body = true;
         self.block_captures_enclosing = false;
-        for p in &params {
-            self.declared_locals.insert(p.name.clone());
-            self.current_params.insert(p.name.clone());
-        }
+        // O2 / #18798 Item 20 — record method name and parameter declaration order.
+        let saved_method = self.current_method.take();
+        self.current_method = Some(name.clone());
+        let saved_method_params = std::mem::take(&mut self.current_method_params);
+        self.current_method_params = params.iter().map(|p| p.name.clone()).collect();
+        let saved_param_aliases = std::mem::take(&mut self.param_aliases);
 
         // The body is the single `expression` Node child.  PEG
         // guarantees exactly one such child (the grammar rule has it
@@ -6429,25 +6478,37 @@ impl Lowerer {
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
             })?;
+
+        let mut assigned_names: Vec<String> = Vec::new();
+        collect_loop_assigned_names(expr_node, &mut assigned_names);
+        let prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
+
         let value = self.lower_expression(expr_node)?;
 
         // Restore the outer scope.
+        self.param_aliases = saved_param_aliases;
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
+        self.in_def_body = saved_in_def;
+        self.block_captures_enclosing = saved_block_cap;
+        self.current_method = saved_method;
+        self.current_method_params = saved_method_params;
 
         // Phase Q9e — an endless def may also `yield` (`def t = yield`);
         // thread the explicit block param if so.
+        let mut body = Block {
+            stmts: prologue,
+            value,
+            span: self.span_of(node),
+        };
+        sequentialize_let_bindings(&mut body.stmts);
         let func = Function {
             name,
             params,
             return_type: None,
             captures: Vec::new(),
-            body: Block {
-                stmts: Vec::new(),
-                value,
-                span: self.span_of(node),
-            },
+            body,
             effects: EffectSet::PURE,
             metadata: Metadata::new(),
             span: self.span_of(node),
@@ -6523,15 +6584,27 @@ impl Lowerer {
         let saved_block_cap = self.block_captures_enclosing;
         self.in_def_body = true;
         self.block_captures_enclosing = false;
-        // O2 — record the method name so a `super` lowered inside this body
-        // knows which method to re-dispatch on the parent.  Saved/restored so
-        // a nested `def`/block does not leak this method's name outward.
+        // O2 / #18798 Item 20 — record the method name and parameter declaration
+        // order so a `super` lowered inside this body knows which method to re-dispatch
+        // on the parent and forwards parameters in their declared source order.
         let saved_method = self.current_method.take();
         self.current_method = Some(name.clone());
-        for p in &params {
-            self.declared_locals.insert(p.name.clone());
-            self.current_params.insert(p.name.clone());
+        let saved_method_params = std::mem::take(&mut self.current_method_params);
+        self.current_method_params = params.iter().map(|p| p.name.clone()).collect();
+        let saved_param_aliases = std::mem::take(&mut self.param_aliases);
+
+        let mut assigned_names: Vec<String> = Vec::new();
+        for c in &node.children {
+            if let ASTNodeOrToken::Node(n) = c {
+                if matches!(
+                    n.rule_name.as_str(),
+                    "statement" | "rescue_clause" | "ensure_clause"
+                ) {
+                    collect_loop_assigned_names(n, &mut assigned_names);
+                }
+            }
         }
+        let prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
 
         // The body is every `statement` child of the def_statement
         // that *isn't* the method's own def_statement (we already
@@ -6600,14 +6673,17 @@ impl Lowerer {
                 }),
             )
         };
+        stmts_out.splice(0..0, prologue);
 
         // Restore the outer scope's locals + params so the rest of
         // the program lowers correctly.
+        self.param_aliases = saved_param_aliases;
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
-        // O2 — restore the enclosing method name (usually `None`).
+        // O2 / #18798 Item 20 — restore the enclosing method name and parameters.
         self.current_method = saved_method;
+        self.current_method_params = saved_method_params;
 
         // Sequential-assignment fix-up for the method body (see
         // `sequentialize_let_bindings`) — `def f; a = 1; x = a; end` must
@@ -6645,7 +6721,8 @@ impl Lowerer {
 
     fn lower_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
         // Shape (post-6p): NAME ( EQUALS | "+=" | "-=" | "*=" | "/=" | "||=" | "&&=" ) expression
-        let (name, name_span) = self.expect_first_name_token(node)?;
+        let (raw_name, name_span) = self.expect_first_name_token(node)?;
+        let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
         let expr_node = self
             .find_node_child(node, "expression")
             .ok_or_else(|| RubyLowerError {
@@ -6995,7 +7072,8 @@ impl Lowerer {
                 line: node.start_line.unwrap_or(0),
                 column: node.start_column.unwrap_or(0),
             })?;
-        let name = name_token.value.clone();
+        let raw_name = name_token.value.clone();
+        let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
         let span = self.span_of(node);
 
         // Step 3: dispatch on whether the local is already declared —
@@ -7277,7 +7355,10 @@ impl Lowerer {
         // so nested or repeated multi-assignments don't collide.  Names
         // are double-underscore-prefixed so they can't collide with
         // user-typeable Ruby locals.
-        let lhs_name_set: HashSet<String> = lhs_names.iter().map(|(n, _)| n.clone()).collect();
+        let lhs_name_set: HashSet<String> = lhs_names
+            .iter()
+            .map(|(n, _)| self.param_aliases.get(n).cloned().unwrap_or_else(|| n.clone()))
+            .collect();
         let needs_temps = lowered_rhs
             .iter()
             .any(|e| expr_references_any_name(e, &lhs_name_set));
@@ -7315,7 +7396,8 @@ impl Lowerer {
             }
 
             // Pass 2: assign each LHS from its temp.
-            for ((name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs) {
+            for ((raw_name, name_span), tmp_ref) in lhs_names.into_iter().zip(temp_refs) {
+                let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
@@ -7340,7 +7422,8 @@ impl Lowerer {
             // Fast path: no LHS appears in any RHS, so the sequential
             // lowering Phase 6r used is observably equivalent to the
             // truly-parallel form.  Emit one Stmt per pair.
-            for ((name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs) {
+            for ((raw_name, name_span), value) in lhs_names.into_iter().zip(lowered_rhs) {
+                let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
                 let span = name_span.clone();
                 let stmt = if self.declared_locals.contains(&name) {
                     self.features_used.insert(Feature::MutableBindings);
@@ -7438,7 +7521,8 @@ impl Lowerer {
         self.features_used.insert(Feature::Sequences);
 
         // Pass 2: bind each LHS from `temp[i]`.
-        for (i, (name, _is_splat, name_span)) in lhs_targets.into_iter().enumerate() {
+        for (i, (raw_name, _is_splat, name_span)) in lhs_targets.into_iter().enumerate() {
+            let name = self.param_aliases.get(&raw_name).cloned().unwrap_or(raw_name);
             let span = name_span.clone();
             let index_expr = Expr::SeqIndex {
                 seq: Box::new(Expr::VarRef {
@@ -7539,7 +7623,12 @@ impl Lowerer {
         let splat_temps_start = splat_idx;
         let splat_temps_end = rhs_len - (lhs_len - 1 - splat_idx);
 
-        for (i, (name, is_splat, name_span)) in lhs_targets.iter().enumerate() {
+        for (i, (raw_name, is_splat, name_span)) in lhs_targets.iter().enumerate() {
+            let name = self
+                .param_aliases
+                .get(raw_name)
+                .cloned()
+                .unwrap_or_else(|| raw_name.clone());
             let span = name_span.clone();
             let value = if *is_splat {
                 // Build a Sequence from the middle slice of temps.
@@ -7576,7 +7665,7 @@ impl Lowerer {
                 }
             };
 
-            let stmt = if self.declared_locals.contains(name) {
+            let stmt = if self.declared_locals.contains(&name) {
                 self.features_used.insert(Feature::MutableBindings);
                 Stmt::Assign {
                     name: name.clone(),
@@ -8413,14 +8502,15 @@ impl Lowerer {
         let nested_in_block = self.in_block_body;
         let saved_in_block = self.in_block_body;
         self.in_block_body = true;
+        let saved_param_aliases = self.param_aliases.clone();
         for p in &params {
-            self.declared_locals.insert(p.name.clone());
-            self.current_params.insert(p.name.clone());
+            self.param_aliases.remove(&p.name);
         }
         // Block-local variables (Phase 21a): fresh locals scoped to the
         // block body.  Declared so VarRefs resolve, but NOT params —
         // they shadow outer bindings and start unbound.
         for name in &block_locals {
+            self.param_aliases.remove(name);
             self.declared_locals.insert(name.clone());
         }
 
@@ -8436,6 +8526,11 @@ impl Lowerer {
                 _ => None,
             })
             .collect();
+        let mut assigned_names: Vec<String> = Vec::new();
+        for s in &body_stmts {
+            collect_loop_assigned_names(s, &mut assigned_names);
+        }
+        let prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
         let mut stmts_out: Vec<Stmt> = Vec::new();
         let mut value: Option<Expr> = None;
         if body_stmts.is_empty() {
@@ -8498,8 +8593,10 @@ impl Lowerer {
             prefix.append(&mut stmts_out);
             stmts_out = prefix;
         }
+        stmts_out.splice(0..0, prologue);
 
         // Restore outer scope.
+        self.param_aliases = saved_param_aliases;
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
@@ -8728,8 +8825,7 @@ impl Lowerer {
                 column: block_node.start_column.unwrap_or(0),
             })?;
 
-        // Lower body with fresh scope (params pre-declared as locals
-        // + tracked in current_params so VarRefs get Scope::Param).
+        // Lower body with fresh scope.
         let saved_locals = std::mem::take(&mut self.declared_locals);
         let saved_params = std::mem::take(&mut self.current_params);
         // #18778 — as for a block: the scopes around stay visible to a bare
@@ -8737,9 +8833,9 @@ impl Lowerer {
         let saved_visible = self.enclosing_visible.clone();
         self.enclosing_visible.extend(saved_locals.iter().cloned());
         self.enclosing_visible.extend(saved_params.iter().cloned());
+        let saved_param_aliases = self.param_aliases.clone();
         for p in &params {
-            self.declared_locals.insert(p.name.clone());
-            self.current_params.insert(p.name.clone());
+            self.param_aliases.remove(&p.name);
         }
 
         // Body statements (same tail-expression promotion rule as the
@@ -8752,6 +8848,11 @@ impl Lowerer {
                 _ => None,
             })
             .collect();
+        let mut assigned_names: Vec<String> = Vec::new();
+        for s in &body_stmts {
+            collect_loop_assigned_names(s, &mut assigned_names);
+        }
+        let prologue = self.setup_param_aliases_and_prologue(&params, &assigned_names);
         let mut stmts_out: Vec<Stmt> = Vec::new();
         let mut value: Option<Expr> = None;
         if body_stmts.is_empty() {
@@ -8792,8 +8893,10 @@ impl Lowerer {
         let value = value.unwrap_or(Expr::NilLit {
             span: self.span_of(inner),
         });
+        stmts_out.splice(0..0, prologue);
 
         // Restore outer scope.
+        self.param_aliases = saved_param_aliases;
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
@@ -9020,11 +9123,11 @@ impl Lowerer {
     ///     lowered args are forwarded verbatim.
     ///   - absent  → bare `super` ("zsuper") forwards ALL of the enclosing
     ///     method's arguments implicitly.  Real Ruby re-passes the *current*
-    ///     method's parameters; O2 makes that concrete by forwarding a `VarRef`
-    ///     to each of the enclosing method's params (declaration order — well,
-    ///     sorted for determinism, since `current_params` is a set), so
-    ///     `def describe; super; end` inside a param-taking method forwards
-    ///     them.  A method that takes no params forwards nothing.
+    ///     method's parameters; O2 / #18798 Item 20 makes that concrete by forwarding a `VarRef`
+    ///     to each of the enclosing method's params in their exact source declaration
+    ///     order ([`Self::current_method_params`]), so `def describe; super; end`
+    ///     inside a param-taking method forwards them. A method that takes no
+    ///     params forwards nothing.
     ///
     /// O2 (OOP production) — `super` is emitted as the OOP-runtime builtin
     /// `__super__(method_name, class_name, …args)`.  The runtime walks from
@@ -9057,14 +9160,27 @@ impl Lowerer {
                 .map(|n| self.lower_call_arg(n))
                 .collect::<Result<Vec<_>, _>>()?
         } else {
-            let mut params: Vec<String> = self.current_params.iter().cloned().collect();
-            params.sort();
-            params
-                .into_iter()
-                .map(|p| Expr::VarRef {
-                    name: p,
-                    scope: Scope::Param,
-                    span: self.span_of(node),
+            // #18798 Item 20: bare `super` forwards the enclosing method's
+            // parameters in their exact source declaration order.
+            // #18798 Item 4: an aliased (mutated) parameter forwards its current
+            // local value; an unmutated parameter forwards Scope::Param.
+            self.current_method_params
+                .iter()
+                .cloned()
+                .map(|p| {
+                    if let Some(alias) = self.param_aliases.get(&p) {
+                        Expr::VarRef {
+                            name: alias.clone(),
+                            scope: Scope::Local,
+                            span: self.span_of(node),
+                        }
+                    } else {
+                        Expr::VarRef {
+                            name: p,
+                            scope: Scope::Param,
+                            span: self.span_of(node),
+                        }
+                    }
                 })
                 .collect()
         };
@@ -9791,13 +9907,15 @@ impl Lowerer {
             // exists in `current_params`, mark it `Param`; otherwise
             // mark it `Local` and let the validator catch any unbound
             // reference.
-            let scope = if self.current_params.contains(&key_tok.value) {
-                Scope::Param
+            let (name, scope) = if let Some(alias) = self.param_aliases.get(&key_tok.value) {
+                (alias.clone(), Scope::Local)
+            } else if self.current_params.contains(&key_tok.value) {
+                (key_tok.value.clone(), Scope::Param)
             } else {
-                Scope::Local
+                (key_tok.value.clone(), Scope::Local)
             };
             Expr::VarRef {
-                name: key_tok.value.clone(),
+                name,
                 scope,
                 span: key_span,
             }
@@ -10385,13 +10503,15 @@ impl Lowerer {
             if let Some(call) = self.bare_name_call(trimmed, &span) {
                 return call;
             }
-            let scope = if self.current_params.contains(trimmed) {
-                Scope::Param
+            let (name, scope) = if let Some(alias) = self.param_aliases.get(trimmed) {
+                (alias.clone(), Scope::Local)
+            } else if self.current_params.contains(trimmed) {
+                (trimmed.to_string(), Scope::Param)
             } else {
-                Scope::Local
+                (trimmed.to_string(), Scope::Local)
             };
             return Expr::VarRef {
-                name: trimmed.to_string(),
+                name,
                 scope,
                 span,
             };
@@ -10764,6 +10884,12 @@ impl Lowerer {
                             } else if is_constant_name(&tok.value) {
                                 self.features_used.insert(Feature::Constants);
                                 Scope::Const
+                            } else if let Some(alias) = self.param_aliases.get(&tok.value) {
+                                return Ok(Expr::VarRef {
+                                    name: alias.clone(),
+                                    scope: Scope::Local,
+                                    span,
+                                });
                             } else if self.current_params.contains(&tok.value) {
                                 Scope::Param
                             } else if let Some(call) = self.bare_name_call(&tok.value, &span) {
@@ -10879,6 +11005,7 @@ impl Lowerer {
     fn bare_name_call(&self, name: &str, span: &Span) -> Option<Expr> {
         let is_local = self.declared_locals.contains(name)
             || self.current_params.contains(name)
+            || self.param_aliases.contains_key(name)
             || self.enclosing_visible.contains(name);
         if is_local || !self.top_level_methods.contains(name) || self.nested_methods.contains(name)
         {
@@ -10919,6 +11046,7 @@ impl Lowerer {
         }
         let shadowed = self.declared_locals.contains(name)
             || self.current_params.contains(name)
+            || self.param_aliases.contains_key(name)
             || self.enclosing_visible.contains(name)
             || self.top_level_methods.contains(name)
             || self.nested_methods.contains(name);
@@ -11048,11 +11176,13 @@ impl Lowerer {
     /// expression, just consumed as an intermediate `receiver` rather
     /// than the statement's final value.
     fn lower_index_assignment(&mut self, node: &GrammarASTNode) -> Result<Stmt, RubyLowerError> {
-        let (name, name_span) = self.expect_first_name_token(node)?;
-        let scope = if self.current_params.contains(&name) {
-            Scope::Param
+        let (raw_name, name_span) = self.expect_first_name_token(node)?;
+        let (name, scope) = if let Some(alias) = self.param_aliases.get(&raw_name) {
+            (alias.clone(), Scope::Local)
+        } else if self.current_params.contains(&raw_name) {
+            (raw_name, Scope::Param)
         } else {
-            Scope::Local
+            (raw_name, Scope::Local)
         };
         let mut receiver = Expr::VarRef {
             name,

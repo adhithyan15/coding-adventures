@@ -484,16 +484,63 @@ fn speculate_line_semicolons(tokens: &[Token], original: &[bool]) -> (Vec<Token>
             _ => {}
         }
     }
-    let opens_block = |o: usize| {
-        o == 0 || {
-            let before = &tokens[o - 1];
-            matches!(
+    let opens_block = |o: usize| -> bool {
+        let mut curr_o = o;
+        loop {
+            if curr_o == 0 {
+                return true;
+            }
+            let before = &tokens[curr_o - 1];
+            if matches!(
                 before.value.as_str(),
-                ")" | "else" | "do" | "try" | "finally" | ";" | "{" | "}"
-            ) || (before.value == "=>"
-                // `() => {a:1}`: the grammar buckets a `{ name :` arrow
-                // body as an object literal, so leave that shape to retry.
-                && tokens.get(o + 2).is_none_or(|t| t.value != ":"))
+                ")" | "else" | "do" | "try" | "finally" | ";" | "}"
+            ) {
+                return true;
+            }
+            if before.value == "{" {
+                curr_o -= 1;
+                continue;
+            }
+            if before.value == "=>" {
+                return tokens.get(curr_o + 2).is_none_or(|t| t.value != ":");
+            }
+            if before.value == ":" && curr_o >= 2 {
+                let colon_target = &tokens[curr_o - 2];
+                if colon_target.value == "default" {
+                    return true;
+                }
+                if colon_target.type_ == TokenType::Name
+                    || colon_target.type_name.is_none()
+                    || colon_target.type_ == TokenType::Keyword
+                {
+                    let id_idx = curr_o - 2;
+                    if id_idx == 0 {
+                        return true;
+                    }
+                    let prev = &tokens[id_idx - 1];
+                    if matches!(
+                        prev.value.as_str(),
+                        ";" | "}" | ")" | "else" | "do" | ":"
+                    ) {
+                        return true;
+                    }
+                    if prev.value == "{" {
+                        curr_o = id_idx - 1;
+                        continue;
+                    }
+                    if colon_target.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0 {
+                        let is_expr_continuer = matches!(
+                            prev.value.as_str(),
+                            "=" | "(" | "[" | "," | "?" | "+" | "-" | "*" | "/" | "%" | "!"
+                                | "~" | "&&" | "||" | "??" | "==" | "!=" | "===" | "!==" | "<"
+                                | ">" | "<=" | ">=" | "return" | "throw" | "typeof" | "void"
+                                | "delete"
+                        );
+                        return !is_expr_continuer;
+                    }
+                }
+            }
+            return false;
         }
     };
     let ends_statement_unterminated = |k: usize| {
@@ -526,7 +573,8 @@ fn speculate_line_semicolons(tokens: &[Token], original: &[bool]) -> (Vec<Token>
             // operator (`x = {}⏎y()`). A block or class body `}` doesn't.
             let ends_object_literal = prev.value == "}"
                 && open_of.get(&(i - 1)).is_some_and(|&o| {
-                    o > 0
+                    !opens_block(o)
+                        && o > 0
                         && matches!(
                             tokens[o - 1].value.as_str(),
                             "=" | "(" | "," | ":" | "?" | "[" | "return" | "+" | "-" | "||"
@@ -1150,6 +1198,33 @@ mod tests {
         let tokens = tokenize(src);
         let l_idx = tokens.iter().position(|t| t.value == "l").unwrap();
         assert!(points.contains(&l_idx), "points {points:?} must contain l_idx {l_idx}");
+    }
+
+    #[test]
+    fn performance_many_labeled_blocks() {
+        // Issue #17882: Many labeled blocks must not trigger pathological O(N^2)
+        // retry loops or fail parse because speculative ASI missed block semicolons.
+        for pattern in ["l:{a()}\n", "l:{break l}\n", "l:{let x}\n"] {
+            let src = pattern.repeat(400);
+            let start = std::time::Instant::now();
+            let ok = parses_with_asi(&src);
+            let elapsed = start.elapsed();
+            assert!(ok, "Must parse successfully with ASI: {pattern}");
+            assert!(
+                elapsed < std::time::Duration::from_secs(2),
+                "Pattern {pattern} took too long: {elapsed:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn labeled_block_asi_insertion() {
+        // Labeled block should have semicolon inserted before `}` when missing
+        let src = "l: {\n  a()\n}\nb()\n";
+        assert!(parses_with_asi(src));
+        let points = asi_insertion_points(tokenize(src), EsVersion::Es2025).unwrap();
+        // Semicolon before closing brace of labeled block and semicolon after b()
+        assert_eq!(points.len(), 2);
     }
 }
 

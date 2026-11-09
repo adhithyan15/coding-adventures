@@ -6,6 +6,28 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ### Fixed
 
+- **Copy assigned parameters into local aliases (#18798, Item 4).**
+  In Ruby, parameters are mutable local bindings. Methods, blocks, and lambdas
+  may reassign parameter names (`def f(n); n = n + 1; n; end`). In SIR, parameters
+  exist exclusively in `env.params` and cannot be mutated directly without
+  failing validation or violating backend constraints (such as immutable parameter
+  signatures in Rust or redeclaration conflicts in JavaScript/TypeScript). Callable
+  scopes now scan for assignments to parameter names, mint a fresh local alias
+  (`__param_<name>_<counter>`) via a prologue `Stmt::LetBinding`, and route subsequent
+  reads and assignments to that local alias. Unassigned parameters continue to resolve
+  directly to `Scope::Param`. Zero-argument `super` forwards mutated parameters as their
+  current local value.
+
+- **Preserve parameter declaration order for zero-argument `super` (#18798, Item 20).**
+  Zero-argument `super` (`zsuper`) forwards the enclosing method's parameters
+  to the parent method. `lower_super_expr` collected parameters from
+  `current_params` (a `HashSet`) and sorted them alphabetically, passing
+  arguments in inverted or scrambled order for any method whose parameters were
+  not declared in alphabetical order (e.g. `def m(b, a); super; end` forwarded
+  `(a, b)`). `RubyLowerer` now tracks `current_method_params: Vec<String>` in
+  exact declaration order across `lower_def_statement` and `lower_endless_def_statement`,
+  and `lower_super_expr` forwards parameters directly in declaration order.
+
 - **Security review: a method of thousands of jumps aborted the process.**
   `jumps::lower_list` nested the statements after each jump one guard
   deeper, recursing on (and copying) the rest of the list once per jump: 5000

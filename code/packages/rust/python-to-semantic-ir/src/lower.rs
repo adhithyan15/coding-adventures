@@ -622,6 +622,10 @@ struct FunctionCtx {
     params: HashSet<String>,
     captures: HashSet<String>,
     locals: Vec<String>,
+    /// Number of active bindings for each local variable currently on the stack.
+    /// Enables O(1) membership checks (`is_local`) instead of O(V) linear scans
+    /// over `locals` (#18482 item 6).
+    locals_counts: std::collections::HashMap<String, usize>,
     /// The *owner* key of this context: the name of the `def` whose body
     /// it lowers ([`MODULE_OWNER`] for `main`, a sentinel for a method
     /// body or a throwaway default-value context).  It is compared with
@@ -675,6 +679,7 @@ impl FunctionCtx {
             params,
             captures,
             locals: Vec::new(),
+            locals_counts: std::collections::HashMap::new(),
             owner: owner.to_string(),
             parent_owner: None,
             lexical_ancestors: Vec::new(),
@@ -700,6 +705,7 @@ impl FunctionCtx {
             params,
             captures,
             locals: Vec::new(),
+            locals_counts: std::collections::HashMap::new(),
             owner: owner.to_string(),
             parent_owner: Some(enclosing.owner.clone()),
             lexical_ancestors,
@@ -718,6 +724,7 @@ impl FunctionCtx {
             params,
             captures: HashSet::new(),
             locals: Vec::new(),
+            locals_counts: std::collections::HashMap::new(),
             // No `def` records this sentinel as its parent, so nothing is
             // ever planned from inside a method body (see `DefFacts`).
             owner: DETACHED_OWNER.to_string(),
@@ -750,8 +757,36 @@ impl FunctionCtx {
             .unwrap_or_else(|| sir_var_name(name))
     }
 
+    /// Push a local variable onto the scope stack in O(1) time (#18482 item 6).
+    fn push_local(&mut self, name: String) {
+        *self.locals_counts.entry(name.clone()).or_insert(0) += 1;
+        self.locals.push(name);
+    }
+
+    /// Rewind local variables back to `mark` in O(popped) time (#18482 item 6).
+    fn rewind_locals(&mut self, mark: usize) {
+        for popped in self.locals.drain(mark..) {
+            if let std::collections::hash_map::Entry::Occupied(mut occ) =
+                self.locals_counts.entry(popped)
+            {
+                if *occ.get() <= 1 {
+                    occ.remove();
+                } else {
+                    *occ.get_mut() -= 1;
+                }
+            }
+        }
+    }
+
+    /// Check whether `name` is currently bound as a local variable in O(1) time (#18482 item 6).
+    fn is_local(&self, name: &str) -> bool {
+        self.locals_counts.contains_key(name)
+    }
+
+    /// Check whether `name` is bound in this function context (as a local,
+    /// parameter, capture, or cell) in O(1) time (#18482 item 6).
     fn is_enclosing_value(&self, name: &str) -> bool {
-        self.locals.iter().any(|n| n == name)
+        self.is_local(name)
             || self.params.contains(name)
             || self.captures.contains(name)
             || self.cells.contains(name)
@@ -869,7 +904,7 @@ impl Lowerer {
 
     /// Drop every local bound since `mark`, leaving the enclosing scope.
     fn scope_rewind(ctx: &mut FunctionCtx, mark: usize) {
-        ctx.locals.truncate(mark);
+        ctx.rewind_locals(mark);
     }
 
     // -------------------------------------------------------------------
@@ -1519,7 +1554,7 @@ impl Lowerer {
             value,
             span: span.clone(),
         }];
-        ctx.locals.push(tmp.clone());
+        ctx.push_local(tmp.clone());
         for list in target_lists {
             let target = self.classify_target(self.single_expr(list)?, ctx)?;
             let read_tmp = Expr::VarRef {
@@ -1770,7 +1805,7 @@ impl Lowerer {
                 value,
                 span: span.clone(),
             };
-            ctx.locals.push(tmp.clone());
+            ctx.push_local(tmp.clone());
             let read_tmp = Expr::VarRef {
                 name: tmp,
                 scope: Scope::Local,
@@ -1912,7 +1947,7 @@ impl Lowerer {
                         span,
                     });
                 }
-                if ctx.locals.iter().any(|n| n == &name) {
+                if ctx.is_local(&name) {
                     self.observed.add(Feature::MutableBindings);
                     Ok(Stmt::Assign {
                         name: ctx.ir_local(&name),
@@ -1921,7 +1956,7 @@ impl Lowerer {
                         span,
                     })
                 } else {
-                    ctx.locals.push(name.clone());
+                    ctx.push_local(name.clone());
                     Ok(Stmt::LetStarBinding {
                         name: ctx.ir_local(&name),
                         sir_type: None,
@@ -2044,7 +2079,7 @@ impl Lowerer {
             });
             ctx.cells.insert(name.clone());
             ctx.aliases.insert(name.clone(), alias);
-            ctx.locals.push(name);
+            ctx.push_local(name);
         }
         Ok(stmts)
     }
@@ -2314,7 +2349,7 @@ impl Lowerer {
                 },
                 span: span.clone(),
             });
-            ctx.locals.push(name.clone());
+            ctx.push_local(name.clone());
             ctx.aliases.insert(name, alias);
         }
         Ok(stmts)
@@ -2901,14 +2936,14 @@ impl Lowerer {
     ) -> Result<(String, Block), PythonLowerError> {
         // A parameter used as a loop variable is a local by now (the
         // function prologue copies it, see `param_copy_prologue`).
-        let already_bound = ctx.locals.iter().any(|n| n == var);
+        let already_bound = ctx.is_local(var);
         if !already_bound {
-            ctx.locals.push(var.to_string());
+            ctx.push_local(var.to_string());
             let body = loop_body(self.lower_suite_no_mark(suite, ctx, depth + 1)?);
             return Ok((var.to_string(), body));
         }
         let tmp = self.fresh_temp_name("for");
-        ctx.locals.push(tmp.clone());
+        ctx.push_local(tmp.clone());
         let read_tmp = Expr::VarRef {
             name: tmp.clone(),
             scope: Scope::Local,
@@ -3905,7 +3940,7 @@ impl Lowerer {
             .iter()
             .map(|n| {
                 if enclosing.cells.contains(n) {
-                    if enclosing.locals.iter().rev().any(|loc| loc == n) {
+                    if enclosing.is_local(n) {
                         Ok(Expr::VarRef {
                             name: enclosing.ir_local(n),
                             scope: Scope::Local,
@@ -5824,7 +5859,7 @@ impl Lowerer {
                 column: span.start_col,
             };
             let value = if ctx.cells.contains(cn) {
-                if ctx.locals.iter().rev().any(|loc| loc == cn) {
+                if ctx.is_local(cn) {
                     Expr::VarRef {
                         name: ctx.ir_local(cn),
                         scope: Scope::Local,
@@ -5869,7 +5904,7 @@ impl Lowerer {
         span: Span,
     ) -> Result<Expr, PythonLowerError> {
         if ctx.cells.contains(name) {
-            let cell_ref = if ctx.locals.iter().rev().any(|n| n == name) {
+            let cell_ref = if ctx.is_local(name) {
                 Expr::VarRef {
                     name: ctx.ir_local(name),
                     scope: Scope::Local,
@@ -5897,7 +5932,7 @@ impl Lowerer {
                 span,
             });
         }
-        if ctx.locals.iter().rev().any(|n| n == name) {
+        if ctx.is_local(name) {
             return Ok(Expr::VarRef {
                 name: ctx.ir_local(name),
                 scope: Scope::Local,
