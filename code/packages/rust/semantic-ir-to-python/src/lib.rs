@@ -1688,7 +1688,7 @@ mod tests {
             "got:\n{}",
             src
         );
-        assert!(src.contains("e = __exc"), "got:\n{}", src);
+        assert!(src.contains("e = __rescue_binding_0"), "got:\n{}", src);
         assert!(src.contains("raise\n"), "got:\n{}", src);
         assert!(src.contains("finally:"), "got:\n{}", src);
     }

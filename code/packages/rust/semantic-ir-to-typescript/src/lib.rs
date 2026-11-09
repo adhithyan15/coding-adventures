@@ -883,22 +883,53 @@ mod tests {
             "got:\n{}",
             src
         );
-        assert!(src.contains("const e: __Sir.Val = __exc;"), "got:\n{}", src);
+        assert!(src.contains("e = __rescue_binding_0;"), "got:\n{}", src);
         assert!(src.contains("throw __exc;"), "got:\n{}", src);
         assert!(src.contains("finally {"), "got:\n{}", src);
     }
 
     #[test]
     fn rescue_binding_that_the_clause_reassigns_is_let_ts() {
-        // #18798 — `rescue => e` ⏎ `e = 5`: the binding was always `const`,
-        // so the reassignment did not compile.  It is `let` when the clause
-        // stores into it, `const` otherwise.
+        // #18798 — `rescue => e` ⏎ `e = 5`: the outer local `e` is declared as
+        // `let e: __Sir.Val = null;` before the try-catch, and `e = 5` reassigns
+        // it cleanly inside the rescue body.
         let module = ruby_to_semantic_ir::compile_source(
             "begin\n  raise \"q\"\nrescue => e\n  e = 5\n  puts e\nend\n",
             "demo",
         )
         .expect("lower ruby");
         let src = compile(&module).expect("compile to ts").source;
+        assert!(src.contains("let e: __Sir.Val = null;"), "got:\n{}", src);
+        assert!(src.contains("e = 5;"), "got:\n{}", src);
+    }
+
+    #[test]
+    fn direct_sir_rescue_binding_that_the_clause_reassigns_is_let_ts() {
+        // Direct SIR RescueClause with a binding mutated inside the clause:
+        // emitted as `let e` (not `const e`).
+        use semantic_ir::{RescueClause, Scope, Stmt};
+        let try_stmt = Stmt::TryCatch {
+            body: vec![],
+            rescues: vec![RescueClause {
+                exception_types: vec![],
+                binding: Some("e".to_string()),
+                body: vec![Stmt::Assign {
+                    name: "e".to_string(),
+                    scope: Scope::Local,
+                    value: Expr::IntLit { value: 5, span: s() },
+                    span: s(),
+                }],
+                span: s(),
+            }],
+            ensure_body: None,
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![try_stmt],
+            Expr::NilLit { span: s() },
+            &[Feature::Exceptions, Feature::MutableBindings],
+        );
+        let src = compile(&m).expect("compile to ts").source;
         assert!(src.contains("let e: __Sir.Val = __exc;"), "got:\n{}", src);
     }
 
