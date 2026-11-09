@@ -1097,4 +1097,70 @@ fn closure_defined_before_variable_assignment_is_cell_boxed() {
     assert!(matches!(&f.body.stmts[2], semantic_ir::Stmt::SeqSet { .. }));
 }
 
+/// A `*args` call argument is refused with a positioned error (#18482 item 2).
+#[test]
+fn starred_call_argument_is_refused() {
+    let src = "def f(a, b):\n    return a + b\nxs = [1, 2]\nf(*xs)\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: *starred argument in call (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 4);
+}
+
+/// A `**kwargs` call argument is refused with a positioned error (#18482 item 2).
+#[test]
+fn double_starred_call_argument_is_refused() {
+    let src = "def f(a=1):\n    return a\nd = {\"a\": 2}\nf(**d)\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: **double-starred keyword argument in call (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 4);
+}
+
+/// A `*args` method call argument is refused with a positioned error (#18482 item 2).
+#[test]
+fn starred_method_call_argument_is_refused() {
+    let src = "class C:\n    def m(self, x):\n        return x\nc = C()\nxs = [1]\nc.m(*xs)\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: *starred argument in call (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 6);
+}
+
+/// A `*args` in a `range(...)` call inside a `for` loop header is refused (#18482 item 2).
+#[test]
+fn starred_range_in_for_header_is_refused() {
+    let src = "xs = [5]\nfor i in range(*xs):\n    pass\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: *starred argument in call (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 2);
+}
+
+/// A `*args` in a class base list is refused with a positioned error (#18482 item 2).
+#[test]
+fn starred_base_class_is_refused() {
+    let src = "class C(*xs):\n    pass\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unsupported: *starred argument in base class list (deferred)"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 1);
+}
+
+
 
