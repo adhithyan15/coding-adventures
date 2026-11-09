@@ -87,6 +87,11 @@ fn write_bench_manifest(outcomes: &[Outcome]) {
         ("schema", Json::str("warrant-bench-evidence-v1")),
         ("module", Json::str("ct_compare")),
         ("hw_instruction_counters", Json::str(probe_hardware_counters())),
+        // Same definition as the proof manifest: SHA-256 of src/lib.rs.
+        (
+            "source_sha256",
+            Json::str(coding_adventures_sha256::sha256_hex(include_bytes!("../src/lib.rs"))),
+        ),
         ("tests", Json::Arr(tests)),
     ]);
     manifest::write(&path, &doc).expect("write bench manifest");

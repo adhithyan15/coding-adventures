@@ -2,6 +2,7 @@
   "evidence_seed": "6287397068022371361",
   "module": "ct_compare",
   "schema": "warrant-test-evidence-v1",
+  "source_sha256": "ba1a4fc10911acadc7d4f31fbe87edcc387333fa4005cd8b2f77aee2d897b5fa",
   "spec": "code/specs/ct-compare.warrant",
   "spec_sha256": "45eaa88e9d65524c62f9262883278202a3cc33792d73e58d1884dba31d2013c0",
   "tests": [

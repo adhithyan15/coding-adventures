@@ -8,6 +8,7 @@ description = "Constant-time byte-slice equality — no early exit on first diff
 
 [dev-dependencies]
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
 
 [[test]]
 name = "conformance"

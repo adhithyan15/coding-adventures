@@ -7,6 +7,7 @@
 // the three suite runners (exhaustive / property / fuzz) and manifest output.
 // ---------------------------------------------------------------------------
 
+use coding_adventures_sha256::sha256_hex;
 use coding_adventures_test_bootstrap::fuzz::{
     self, CoverageBitmap, FuzzOptions, FuzzOutcome, FID_FUZZ_CRASH,
 };
@@ -636,6 +637,9 @@ struct Meta {
 
 static META: Mutex<Vec<Meta>> = Mutex::new(Vec::new());
 static STATS: Mutex<BTreeMap<String, (Stats, String)>> = Mutex::new(BTreeMap::new());
+/// SHA-256 of the crate source the target was built against (`run_main`'s
+/// argument), recorded so a checker can detect a manifest older than the source.
+static SOURCE_SHA256: Mutex<String> = Mutex::new(String::new());
 
 fn reg(
     suite: &mut Suite,
@@ -731,6 +735,7 @@ fn write_manifest(outcomes: &[Outcome]) {
         ("module", Json::str(MODULE)),
         ("spec", Json::str(SPEC_PATH)),
         ("spec_sha256", Json::str(SPEC_SHA256)),
+        ("source_sha256", Json::Str(SOURCE_SHA256.lock().unwrap().clone())),
         ("evidence_seed", Json::Str(EVIDENCE_SEED.to_string())),
         ("tests", Json::Arr(tests)),
     ]);
@@ -766,7 +771,12 @@ pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
 }
 
 /// Entry point of the generated test target. Returns the process exit code.
-pub fn run_main() -> i32 {
+///
+/// `source` is the crate source the evidence is about (the hand-written shim
+/// passes `include_bytes!("../src/lib.rs")`); its digest goes into the manifest
+/// as `source_sha256`, the same definition the proof manifest uses.
+pub fn run_main(source: &[u8]) -> i32 {
+    *SOURCE_SHA256.lock().unwrap() = sha256_hex(source);
     std::panic::set_hook(Box::new(|_| ()));
     let fault_var = std::env::var("WARRANT_EVIDENCE_FAULT").ok();
     let filter_var = std::env::var("WARRANT_EVIDENCE_FILTER").ok();

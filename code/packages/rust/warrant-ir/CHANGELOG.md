@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- `tests/warrant_proofs.rs` records `obligation_sha256` per discharged proof entry: SHA-256 of the canonical text of the lowered, inlined WIR function plus the textual obligation (security review B4c). `ca-assurance-report --check` verifies it is present and well formed; recomputation is follow-up WD-009.
+
 ## 0.1.0
 
 - VER04h / VER-P030: add `inline` (WIR call inlining) so the symbolic executor and provers analyse a public export itself (`ct_eq`, `ct_eq_fixed`) rather than only its helper; differential-tested against the un-inlined program and the real Rust function.

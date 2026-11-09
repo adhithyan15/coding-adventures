@@ -14,5 +14,7 @@ mod generated {
 }
 
 fn main() {
-    std::process::exit(generated::run_main());
+    // The crate source the evidence describes; its SHA-256 is recorded in the
+    // manifest (`source_sha256`) so the report checker can detect staleness.
+    std::process::exit(generated::run_main(include_bytes!("../src/lib.rs")));
 }

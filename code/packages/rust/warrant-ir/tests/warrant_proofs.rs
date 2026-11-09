@@ -99,6 +99,9 @@ struct Record {
     /// Shapes whose public length check traps before any secret is read.
     traps: u64,
     max_steps: u64,
+    /// SHA-256 binding this entry to the lowered function and the obligation
+    /// (empty for rows with nothing to bind).
+    obligation_sha256: String,
     /// certificate id -> (kind, count)
     certs: BTreeMap<String, (&'static str, u64)>,
     note: String,
@@ -184,6 +187,21 @@ fn lower(source: &str, op: &str, export: &str) -> Result<Function, String> {
     )
     .map_err(|e| format!("lower {op}: {e:?}"))?;
     inline_calls(&program, export).map_err(|e| format!("inline {op}: {e}"))
+}
+
+/// Binding of a proof entry to the thing that was proved (VER04h section 9,
+/// audit B4c): SHA-256 over the canonical text of the **lowered, inlined** WIR
+/// function (its derived `Debug` rendering, which is deterministic because
+/// `Function` holds no hash maps) followed by the textual obligation (kind,
+/// operation, secret mask, length shapes, bounds).  A checker that re-lowers the
+/// source can recompute it (follow-up WD-009); today `--check` only verifies it
+/// is present and well formed, so an entry that does not carry it fails.
+fn obligation_digest(f: &Function, obligation: &str) -> String {
+    let mut text = String::from("warrant-obligation-v1\n");
+    text.push_str(obligation);
+    text.push_str("\n--wir--\n");
+    text.push_str(&format!("{f:#?}"));
+    sha256_hex(text.as_bytes())
 }
 
 fn config(max_len: usize) -> SymbolicConfig {
@@ -350,6 +368,12 @@ fn ct_obligation(
     let equal_only = !info.decl.static_params.is_empty();
     let all_shapes = shapes(ptr_count(&f), equal_only);
     rec.max_len = MAX_LEN as u64;
+    rec.obligation_sha256 = obligation_digest(
+        &f,
+        &format!(
+            "kind={kind}\nop={op}\nfunction={export}\nsecret={secret:?}\nmax_len={MAX_LEN}\nequal_only={equal_only}\nshapes={all_shapes:?}"
+        ),
+    );
     let mut bounded_any = false;
     let mut first_bad: Option<String> = None;
     for sizes in &all_shapes {
@@ -420,11 +444,13 @@ fn steps_obligation(
     rec.max_len = MAX_LEN as u64;
     let equal_only = !info.decl.static_params.is_empty();
     let mut bounded_any = false;
+    let mut obligation = format!("kind=steps-bound\nop={op}\nfunction={export}\nmax_len={MAX_LEN}\nequal_only={equal_only}\n");
     for sizes in shapes(ptr_count(&f), equal_only) {
         let bound = match steps_bound(file, info, &sizes) {
             Ok(b) => b,
             Err(e) => return (failure(e, false), rec),
         };
+        obligation.push_str(&format!("shape={sizes:?} bound={bound}\n"));
         let (verdict, certs) = bound_once(&f, &sizes, bound);
         rec.runs += 1;
         match verdict {
@@ -447,6 +473,7 @@ fn steps_obligation(
         }
     }
     rec.label = label_for(ptr_count(&f), bounded_any);
+    rec.obligation_sha256 = obligation_digest(&f, &obligation);
     (Verdict::Pass, rec)
 }
 
@@ -528,6 +555,7 @@ fn write_outputs(outcomes: &[Outcome]) {
             ("max_steps", Json::Num(r.max_steps)),
             ("certificates", Json::Arr(certs)),
             ("note", Json::str(r.note)),
+            ("obligation_sha256", Json::str(r.obligation_sha256)),
         ]));
     }
     for (id, (dimacs, drat)) in CERTS.lock().unwrap().iter() {
