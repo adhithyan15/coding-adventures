@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "profile": "ct-compare-v1",
+  "cases": [
+    {
+      "id": "eq-empty",
+      "operation": "eq",
+      "left_hex": "",
+      "right_hex": "",
+      "expected": {
+        "equal": true
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "eq-one-equal",
+      "operation": "eq",
+      "left_hex": "7f",
+      "right_hex": "7f",
+      "expected": {
+        "equal": true
+      },
+      "expected_work": {
+        "byte_positions": 1,
+        "byte_reads": 2,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "eq-first-different",
+      "operation": "eq",
+      "left_hex": "00aabbcc",
+      "right_hex": "01aabbcc",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 4,
+        "byte_reads": 8,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "eq-middle-different",
+      "operation": "eq",
+      "left_hex": "00aabbcc",
+      "right_hex": "00abbbcc",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 4,
+        "byte_reads": 8,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "eq-last-different",
+      "operation": "eq",
+      "left_hex": "00aabbcc",
+      "right_hex": "00aabbcd",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 4,
+        "byte_reads": 8,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "eq-all-different",
+      "operation": "eq",
+      "left_hex": "00000000",
+      "right_hex": "ffffffff",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 4,
+        "byte_reads": 8,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "eq-public-length-mismatch",
+      "operation": "eq",
+      "left_hex": "00",
+      "right_hex": "0000",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "eq-high-bit",
+      "operation": "eq",
+      "left_hex": "80ff",
+      "right_hex": "80ff",
+      "expected": {
+        "equal": true
+      },
+      "expected_work": {
+        "byte_positions": 2,
+        "byte_reads": 4,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "eq-256-byte-last-different",
+      "operation": "eq",
+      "left_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "right_hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 256,
+        "byte_reads": 512,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "fixed-empty",
+      "operation": "eq_fixed",
+      "fixed_size_bytes": 0,
+      "left_hex": "",
+      "right_hex": "",
+      "expected": {
+        "equal": true
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "fixed-16-equal",
+      "operation": "eq_fixed",
+      "fixed_size_bytes": 16,
+      "left_hex": "0123456789abcdef0123456789abcdef",
+      "right_hex": "0123456789abcdef0123456789abcdef",
+      "expected": {
+        "equal": true
+      },
+      "expected_work": {
+        "byte_positions": 16,
+        "byte_reads": 32,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "fixed-16-last-different",
+      "operation": "eq_fixed",
+      "fixed_size_bytes": 16,
+      "left_hex": "0123456789abcdef0123456789abcdef",
+      "right_hex": "0123456789abcdef0123456789abcdee",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 16,
+        "byte_reads": 32,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "select-empty-left",
+      "operation": "select_bytes",
+      "left_hex": "",
+      "right_hex": "",
+      "choice": true,
+      "expected": {
+        "output_hex": "",
+        "fresh_output": true
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "select-left-fresh",
+      "operation": "select_bytes",
+      "left_hex": "00ff80",
+      "right_hex": "ff0080",
+      "choice": true,
+      "expected": {
+        "output_hex": "00ff80",
+        "fresh_output": true
+      },
+      "expected_work": {
+        "byte_positions": 3,
+        "byte_reads": 6,
+        "byte_writes": 3,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "select-right-fresh",
+      "operation": "select_bytes",
+      "left_hex": "00ff80",
+      "right_hex": "ff0080",
+      "choice": false,
+      "expected": {
+        "output_hex": "ff0080",
+        "fresh_output": true
+      },
+      "expected_work": {
+        "byte_positions": 3,
+        "byte_reads": 6,
+        "byte_writes": 3,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "select-public-length-mismatch",
+      "operation": "select_bytes",
+      "left_hex": "00",
+      "right_hex": "0000",
+      "choice": true,
+      "expected": {
+        "error_id": "CT_SELECT_LENGTH_MISMATCH"
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 0
+      }
+    },
+    {
+      "id": "u64-zero-equal",
+      "operation": "eq_u64",
+      "left_u64": "0000000000000000",
+      "right_u64": "0000000000000000",
+      "expected": {
+        "equal": true
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 64
+      }
+    },
+    {
+      "id": "u64-max-equal",
+      "operation": "eq_u64",
+      "left_u64": "ffffffffffffffff",
+      "right_u64": "ffffffffffffffff",
+      "expected": {
+        "equal": true
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 64
+      }
+    },
+    {
+      "id": "u64-low-bit-different",
+      "operation": "eq_u64",
+      "left_u64": "0000000000000000",
+      "right_u64": "0000000000000001",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 64
+      }
+    },
+    {
+      "id": "u64-middle-bit-different",
+      "operation": "eq_u64",
+      "left_u64": "0000000000000000",
+      "right_u64": "0000000100000000",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 64
+      }
+    },
+    {
+      "id": "u64-sign-bit-different",
+      "operation": "eq_u64",
+      "left_u64": "0000000000000000",
+      "right_u64": "8000000000000000",
+      "expected": {
+        "equal": false
+      },
+      "expected_work": {
+        "byte_positions": 0,
+        "byte_reads": 0,
+        "byte_writes": 0,
+        "u64_bits": 64
+      }
+    }
+  ]
+}

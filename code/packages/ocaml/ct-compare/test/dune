@@ -1,0 +1,5 @@
+(test
+ (name test_ct_compare)
+ (deps
+  (glob_files_rec fixtures/*))
+ (libraries alcotest coding_adventures_ct_compare))
