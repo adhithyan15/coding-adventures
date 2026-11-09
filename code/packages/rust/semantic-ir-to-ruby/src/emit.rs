@@ -2324,6 +2324,8 @@ fn is_each_with_block(args: &[Expr]) -> bool {
 /// | `[]`                | 1         | `sir_index`     |
 /// | `[]=`               | 2         | `sir_index_set` |
 /// | `size` / `length`   | 0         | `sir_size`      |
+/// | `append` / `push`   | varargs   | `sir_append`    |
+/// | `message`           | 0         | `sir_message`   |
 fn collection_access(args: &[Expr]) -> Option<&'static str> {
     let Some(Expr::StrLit { value, .. }) = args.get(1) else {
         return None;
@@ -2333,6 +2335,7 @@ fn collection_access(args: &[Expr]) -> Option<&'static str> {
         ("[]=", 4) => Some("sir_index_set"),
         ("size" | "length", 2) => Some("sir_size"),
         ("append" | "push", _) => Some("sir_append"),
+        ("message", 2) => Some("sir_message"),
         _ => None,
     }
 }

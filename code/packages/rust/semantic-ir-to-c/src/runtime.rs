@@ -3580,6 +3580,17 @@ static SirValue _sir_builtin_method_v(SirValue recv, const char *m, int argc, Si
         if (recv.tag == SIR_SYM) return _sir_str(recv.as.s);  /* Symbol#to_s -- the bare name, no `:` */
     } else if (strcmp(m, "inspect") == 0) {
         if (recv.tag == SIR_SYM) return _sir_sym_inspect(recv.as.s);
+    } else if (strcmp(m, "message") == 0 && argc == 0) {
+        /* Built-in `.message` accessor on exception values (#18798 item 8).
+         * Ruby and SIR exception objects provide `.message` to inspect the
+         * payload. When no explicit message was supplied (e.g. `raise Class`),
+         * the message defaults to the class name as a string. */
+        if (recv.tag == SIR_ERROR) {
+            if (recv.as.err->msg.tag == SIR_NIL) {
+                return _sir_str(recv.as.err->sir_class);
+            }
+            return recv.as.err->msg;
+        }
     }
     /* Collections slice 3: 0-arg Array query/transform methods. */
     else if (strcmp(m, "count") == 0) {

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — Exception message method (#18798 item 8)
+
+- **Exception `message` builtin method.** Added `sir_message` helper in `runtime.rs` and mapped zero-argument `("message", 2)` in `collection_access` in `emit.rs`. Dispatches `:sir_um_message` on user classes, returns `.message` on `Exception` instances, and raises `NoMethodError` otherwise.
+
 ## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
 
 - **Array `append` and `push`.** Added `sir_append` helper to runtime and mapped `"append"` and `"push"` in `collection_access`. Appends elements in place and returns the receiver.
