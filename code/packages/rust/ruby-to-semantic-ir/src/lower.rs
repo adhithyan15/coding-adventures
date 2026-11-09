@@ -74,11 +74,16 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         block_captures_enclosing: false,
         in_block_body: false,
         current_class: None,
+        current_module: None,
         current_method: None,
         current_method_params: Vec::new(),
         param_aliases: std::collections::HashMap::new(),
         top_level_methods: HashSet::new(),
         nested_methods: HashSet::new(),
+        class_instance_methods: std::collections::HashMap::new(),
+        class_superclasses: std::collections::HashMap::new(),
+        class_includes: std::collections::HashMap::new(),
+        module_instance_methods: std::collections::HashMap::new(),
         enclosing_visible: HashSet::new(),
         fresh_counter: 0,
         used_names: HashSet::new(),
@@ -92,14 +97,18 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
     // (`__for_<n>`, `__rescue_value_<n>`) can never be one of them, even
     // one assigned later in the program (see `Lowerer::fresh_name`).
     collect_source_names(program, &mut lw.used_names);
-    // #18778 — learn every method name before lowering any body, so a bare
-    // `g` can be told apart from a local (see `Lowerer::bare_name_call`).
-    collect_method_names(
-        program,
-        false,
-        &mut lw.top_level_methods,
-        &mut lw.nested_methods,
-    );
+    // #18778 / #18798 — learn every method name and class hierarchy before
+    // lowering any body, so a bare `g` can be dispatched to `self.g` or told
+    // apart from a local (see `Lowerer::bare_name_call`).
+    let mut collector = MethodCollector {
+        top: &mut lw.top_level_methods,
+        nested: &mut lw.nested_methods,
+        class_instance_methods: &mut lw.class_instance_methods,
+        class_superclasses: &mut lw.class_superclasses,
+        class_includes: &mut lw.class_includes,
+        module_instance_methods: &mut lw.module_instance_methods,
+    };
+    collector.collect(program, None, None);
     // Phase 6a: hoist `def name(params) … end` declarations to
     // top-level Functions BEFORE walking the rest of the program so
     // the main-body lowerer knows which names resolve as
@@ -1131,6 +1140,9 @@ struct Lowerer {
     /// name).  Modules do NOT set this — `super` in a module method has no
     /// class to anchor and is out of the v0 OOP-production scope.
     current_class: Option<String>,
+    /// #18798 Item 21 — the name of the module whose body / method bodies are
+    /// currently being lowered, or `None` outside any module.
+    current_module: Option<String>,
     /// Milestone O2 — the name of the method (`def m`) whose body is
     /// currently being lowered, or `None` outside any method.  Threaded
     /// alongside [`Self::current_class`] so a bare/`super(args)` inside the
@@ -1155,6 +1167,14 @@ struct Lowerer {
     /// cannot yet tell from the top-level `m`, so such a name is never
     /// rewritten into a call there.
     nested_methods: HashSet<String>,
+    /// #18798 Item 21 — names of the instance methods defined on each class.
+    class_instance_methods: std::collections::HashMap<String, HashSet<String>>,
+    /// #18798 Item 21 — declared superclass for each class (`class Child < Parent`).
+    class_superclasses: std::collections::HashMap<String, String>,
+    /// #18798 Item 21 — modules included in each class (`include M`).
+    class_includes: std::collections::HashMap<String, Vec<String>>,
+    /// #18798 Item 21 — names of the instance methods defined on each module.
+    module_instance_methods: std::collections::HashMap<String, HashSet<String>>,
     /// #18778 — while a block or lambda body is lowered, the locals and
     /// parameters of the scopes around it.  `declared_locals` restarts empty
     /// for a block body (its captures are found afterwards), but Ruby lets a
@@ -1238,54 +1258,187 @@ fn collect_source_names(node: &GrammarASTNode, out: &mut HashSet<String>) {
     }
 }
 
-/// #18778 — collect the names of the `def`s among `node`'s statements: a
-/// top-level `def m` (no receiver) into `top`, and any `def` inside a
-/// `class`/`module`, at any depth, into `nested`.  A top-level `def self.m`
-/// goes into neither: it is a singleton method of the main object, not a
-/// method that every scope can call by a bare name.
-fn collect_method_names(
-    node: &GrammarASTNode,
-    in_decl: bool,
-    top: &mut HashSet<String>,
-    nested: &mut HashSet<String>,
-) {
-    for child in &node.children {
-        let ASTNodeOrToken::Node(stmt) = child else {
-            continue;
-        };
-        if stmt.rule_name != "statement" {
-            continue;
-        }
-        let Some(ASTNodeOrToken::Node(inner)) = stmt
-            .children
-            .iter()
-            .find(|c| matches!(c, ASTNodeOrToken::Node(_)))
-        else {
-            continue;
-        };
-        match inner.rule_name.as_str() {
-            "def_statement" | "endless_def_statement" => {
-                let has_receiver = inner.children.iter().any(
-                    |c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "def_receiver"),
-                );
-                let name = inner.children.iter().find_map(|c| match c {
-                    ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
-                    _ => None,
-                });
-                if let Some(name) = name {
-                    if in_decl {
-                        nested.insert(name);
-                    } else if !has_receiver {
-                        top.insert(name);
+/// #18778 / #18798 Item 21 — collect the names of the `def`s among `node`'s statements:
+/// a top-level `def m` (no receiver) into `top`, any `def` inside a `class`/`module`,
+/// at any depth, into `nested`, and record per-class/per-module instance methods and
+/// inheritance hierarchy (`class_instance_methods`, `class_superclasses`, `class_includes`,
+/// `module_instance_methods`).
+struct MethodCollector<'a> {
+    top: &'a mut HashSet<String>,
+    nested: &'a mut HashSet<String>,
+    class_instance_methods: &'a mut std::collections::HashMap<String, HashSet<String>>,
+    class_superclasses: &'a mut std::collections::HashMap<String, String>,
+    class_includes: &'a mut std::collections::HashMap<String, Vec<String>>,
+    module_instance_methods: &'a mut std::collections::HashMap<String, HashSet<String>>,
+}
+
+impl<'a> MethodCollector<'a> {
+    fn collect(
+        &mut self,
+        node: &GrammarASTNode,
+        in_class: Option<&str>,
+        in_module: Option<&str>,
+    ) {
+        for child in &node.children {
+            let ASTNodeOrToken::Node(stmt) = child else {
+                continue;
+            };
+            if stmt.rule_name != "statement" {
+                continue;
+            }
+            let Some(ASTNodeOrToken::Node(inner)) = stmt
+                .children
+                .iter()
+                .find(|c| matches!(c, ASTNodeOrToken::Node(_)))
+            else {
+                continue;
+            };
+            match inner.rule_name.as_str() {
+                "def_statement" | "endless_def_statement" => {
+                    let has_receiver = inner.children.iter().any(
+                        |c| matches!(c, ASTNodeOrToken::Node(n) if n.rule_name == "def_receiver"),
+                    );
+                    let name = inner.children.iter().find_map(|c| match c {
+                        ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+                        _ => None,
+                    });
+                    if let Some(name) = name {
+                        if in_class.is_some() || in_module.is_some() {
+                            self.nested.insert(name.clone());
+                            if !has_receiver {
+                                if let Some(c) = in_class {
+                                    self.class_instance_methods.entry(c.to_string()).or_default().insert(name.clone());
+                                } else if let Some(m) = in_module {
+                                    self.module_instance_methods.entry(m.to_string()).or_default().insert(name.clone());
+                                }
+                            }
+                        } else if !has_receiver {
+                            self.top.insert(name);
+                        }
                     }
                 }
+                "class_statement" => {
+                    let name_token = inner.children.iter().find_map(|c| match c {
+                        ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.clone()),
+                        _ => None,
+                    });
+                    if let Some(cname) = name_token {
+                        let mut seen_lt = false;
+                        for c in &inner.children {
+                            if let ASTNodeOrToken::Token(t) = c {
+                                if seen_lt && matches!(t.type_, TokenType::Name) {
+                                    self.class_superclasses.insert(cname.clone(), t.value.clone());
+                                    break;
+                                }
+                                if t.value == "<" {
+                                    seen_lt = true;
+                                }
+                            }
+                        }
+                        self.collect(inner, Some(&cname), None);
+                    }
+                }
+                "module_statement" => {
+                    let name_token = inner.children.iter().find_map(|c| match c {
+                        ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => Some(t.value.clone()),
+                        _ => None,
+                    });
+                    if let Some(mname) = name_token {
+                        self.collect(inner, None, Some(&mname));
+                    }
+                }
+                "method_call" | "method_call_no_paren" => {
+                    if let Some(c) = in_class {
+                        let callee = inner.children.iter().find_map(|c| match c {
+                            ASTNodeOrToken::Token(t) if matches!(t.type_, TokenType::Name) => {
+                                Some(t.value.as_str())
+                            }
+                            _ => None,
+                        });
+                        match callee {
+                            Some("attr_reader") | Some("attr_accessor") => {
+                                for attr in extract_symbol_names_from_call(inner) {
+                                    self.nested.insert(attr.clone());
+                                    self.class_instance_methods.entry(c.to_string()).or_default().insert(attr);
+                                }
+                            }
+                            Some("attr_writer") => {
+                                for attr in extract_symbol_names_from_call(inner) {
+                                    let setter = format!("{attr}=");
+                                    self.nested.insert(setter.clone());
+                                    self.class_instance_methods.entry(c.to_string()).or_default().insert(setter);
+                                }
+                            }
+                            Some("include") => {
+                                if let Some(mod_name) = extract_first_const_name_arg(inner) {
+                                    self.class_includes.entry(c.to_string()).or_default().push(mod_name);
+                                }
+                            }
+                            _ => {}
+                        }
+                    }
+                }
+                _ => {}
             }
-            "class_statement" | "module_statement" => {
-                collect_method_names(inner, true, top, nested);
+        }
+    }
+}
+
+fn extract_symbol_names_from_call(node: &GrammarASTNode) -> Vec<String> {
+    let mut names = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "expression" || n.rule_name == "call_arg" {
+                if let Some(sym) = find_symbol_name_in_ast(n) {
+                    names.push(sym);
+                }
+            }
+        }
+    }
+    names
+}
+
+fn find_symbol_name_in_ast(node: &GrammarASTNode) -> Option<String> {
+    if node.rule_name == "symbol_literal" {
+        return node.children.iter().find_map(|c| match c {
+            ASTNodeOrToken::Token(t)
+                if matches!(
+                    t.type_,
+                    TokenType::Name | TokenType::Keyword | TokenType::String
+                ) =>
+            {
+                Some(t.value.clone())
+            }
+            _ => None,
+        });
+    }
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if let Some(name) = find_symbol_name_in_ast(n) {
+                return Some(name);
+            }
+        }
+    }
+    None
+}
+
+fn extract_first_const_name_arg(node: &GrammarASTNode) -> Option<String> {
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Token(t)
+                if matches!(t.type_, TokenType::Name) && is_constant_name(&t.value) =>
+            {
+                return Some(t.value.clone());
+            }
+            ASTNodeOrToken::Node(sub) => {
+                if let Some(found) = extract_first_const_name_arg(sub) {
+                    return Some(found);
+                }
             }
             _ => {}
         }
     }
+    None
 }
 
 /// Phase Q9e (FC) — the reserved name of the synthesized trailing block
@@ -2113,6 +2266,7 @@ impl Lowerer {
                 self.lower_expression(expr_node)?
             }
             "method_call" | "method_call_no_paren" => self.lower_method_call(inner)?,
+            "method_with_block" => self.lower_method_with_block(inner)?,
             "if_statement" | "unless_statement" => self.lower_if_or_unless(inner)?,
             // A `case` (both `case/when` value-matching and `case/in` pattern
             // matching) already lowers to a chained `Expr::If` whose arms are
@@ -4089,7 +4243,10 @@ impl Lowerer {
         // use, keyed by the module name: method `def`s → `__def_method__` /
         // `__def_class_method__`, `include`/`extend` directives → their mixin
         // builtins, everything else preserved in `ModuleDef.body`.
+        let saved_module = self.current_module.take();
+        self.current_module = Some(name.clone());
         let (body, registrations) = self.lower_class_body(&name, node)?;
+        self.current_module = saved_module;
 
         let mut out: Vec<Stmt> = Vec::with_capacity(1 + registrations.len());
         out.push(Stmt::ModuleDef {
@@ -8050,6 +8207,27 @@ impl Lowerer {
         }
         let head: Expr = if let Some(effects) = ruby_builtin_effects(&callee) {
             self.builtin_call_or_sys_write(callee, args, effects, span)
+        } else if self.self_has_instance_method(&callee) {
+            self.features_used.insert(Feature::Classes);
+            self.features_used.insert(Feature::Strings);
+            let mut full_args = Vec::with_capacity(args.len() + 2);
+            full_args.push(Expr::BuiltinCall {
+                name: "__self__".to_string(),
+                args: Vec::new(),
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            });
+            full_args.push(Expr::StrLit {
+                value: callee,
+                span: span.clone(),
+            });
+            full_args.extend(args);
+            Expr::BuiltinCall {
+                name: "__method__".to_string(),
+                args: full_args,
+                effects: EffectSet::PURE,
+                span,
+            }
         } else {
             // Unrecognised name — fall back to DirectCall.  SIR
             // backends that can't resolve the name will surface a
@@ -8366,6 +8544,27 @@ impl Lowerer {
         let span = self.span_of(node);
         if let Some(effects) = ruby_builtin_effects(&callee) {
             Ok(self.builtin_call_or_sys_write(callee, all_args, effects, span))
+        } else if self.self_has_instance_method(&callee) {
+            self.features_used.insert(Feature::Classes);
+            self.features_used.insert(Feature::Strings);
+            let mut full_args = Vec::with_capacity(all_args.len() + 2);
+            full_args.push(Expr::BuiltinCall {
+                name: "__self__".to_string(),
+                args: Vec::new(),
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            });
+            full_args.push(Expr::StrLit {
+                value: callee,
+                span: span.clone(),
+            });
+            full_args.extend(all_args);
+            Ok(Expr::BuiltinCall {
+                name: "__method__".to_string(),
+                args: full_args,
+                effects: EffectSet::PURE,
+                span,
+            })
         } else {
             Ok(Expr::DirectCall {
                 fn_name: callee,
@@ -11002,13 +11201,120 @@ impl Lowerer {
     /// a bare `m` means `self.m`, which a `DirectCall` to the top-level `m`
     /// would get wrong, and refusing (the validator's unknown-name error) is
     /// better than a wrong answer.  The last two rows keep today's refusal.
-    fn bare_name_call(&self, name: &str, span: &Span) -> Option<Expr> {
+    /// Check whether a receiver class or module (by name) defines or inherits
+    /// an instance method with the given name, traversing its superclass chain
+    /// and any included module mixins.
+    fn receiver_has_instance_method(&self, target: &str, method: &str) -> bool {
+        let mut visited = HashSet::new();
+        let mut queue = vec![target.to_string()];
+        while let Some(curr) = queue.pop() {
+            if !visited.insert(curr.clone()) {
+                continue;
+            }
+            if let Some(methods) = self.class_instance_methods.get(&curr) {
+                if methods.contains(method) {
+                    return true;
+                }
+            }
+            if let Some(methods) = self.module_instance_methods.get(&curr) {
+                if methods.contains(method) {
+                    return true;
+                }
+            }
+            if let Some(super_name) = self.class_superclasses.get(&curr) {
+                queue.push(super_name.clone());
+            }
+            if let Some(included) = self.class_includes.get(&curr) {
+                for inc in included {
+                    queue.push(inc.clone());
+                }
+            }
+        }
+        false
+    }
+
+    /// #18798 Item 21 — Check whether `self` has an instance method named
+    /// `method` in the current lowerer scope.
+    ///
+    /// This is true only when:
+    /// 1. We are inside an instance method body (`self.current_method.is_some()`).
+    /// 2. We are within an enclosing `class` or `module` definition.
+    /// 3. That class or module (or an ancestor superclass or included module mixin)
+    ///    defines an instance method matching `method`.
+    fn self_has_instance_method(&self, method: &str) -> bool {
+        if self.current_method.is_none() {
+            return false;
+        }
+        if let Some(ref class_name) = self.current_class {
+            if self.receiver_has_instance_method(class_name, method) {
+                return true;
+            }
+        }
+        if let Some(ref mod_name) = self.current_module {
+            if self.receiver_has_instance_method(mod_name, method) {
+                return true;
+            }
+        }
+        false
+    }
+
+    /// #18778 / #18798 Item 21 — parse-order dispatch for bare identifiers.
+    ///
+    /// In Ruby, a bare name `m` with no receiver and no arguments can mean:
+    /// 1. A local variable or parameter (if assigned before this point).
+    /// 2. An instance method call on `self` (`self.m`) if inside a method of
+    ///    a class or module that defines/inherits `m`.
+    /// 3. A top-level method call (`DirectCall(m)`).
+    ///
+    /// The rule here:
+    ///
+    /// | `name` is …                                        | lowers to                          |
+    /// |----------------------------------------------------|------------------------------------|
+    /// | a local or parameter assigned before this point    | `VarRef` (caller)                  |
+    /// | a local of a scope around this block or lambda     | `VarRef` (caller)                  |
+    /// | an instance method of `self` (inside a class/mod)  | `__method__(__self__(), "name")`   |
+    /// | a top-level `def` only                             | `DirectCall(name)`                 |
+    /// | also a method of some other `class`/`module`       | `VarRef` (caller, validator error) |
+    /// | not a method at all                                | `VarRef` (caller, validator error) |
+    ///
+    /// "Before this point" is `declared_locals`, which grows as assignments
+    /// are lowered, in source order: the parse-order rule Ruby uses.
+    fn bare_name_call(&mut self, name: &str, span: &Span) -> Option<Expr> {
         let is_local = self.declared_locals.contains(name)
             || self.current_params.contains(name)
             || self.param_aliases.contains_key(name)
             || self.enclosing_visible.contains(name);
-        if is_local || !self.top_level_methods.contains(name) || self.nested_methods.contains(name)
-        {
+        if is_local {
+            return None;
+        }
+
+        // #18798 Item 21 — Inside a class or module method, if the current
+        // target (class/module hierarchy) defines or inherits an instance method
+        // with this name, dispatch it as `self.m`:
+        // BuiltinCall("__method__", [__self__(), StrLit(name)]).
+        if self.self_has_instance_method(name) {
+            self.features_used.insert(Feature::Classes);
+            self.features_used.insert(Feature::Strings);
+            return Some(Expr::BuiltinCall {
+                name: "__method__".to_string(),
+                args: vec![
+                    Expr::BuiltinCall {
+                        name: "__self__".to_string(),
+                        args: Vec::new(),
+                        effects: EffectSet::PURE,
+                        span: span.clone(),
+                    },
+                    Expr::StrLit {
+                        value: name.to_string(),
+                        span: span.clone(),
+                    },
+                ],
+                effects: EffectSet::PURE,
+                span: span.clone(),
+            });
+        }
+
+        if !self.top_level_methods.contains(name) || self.nested_methods.contains(name) {
             return None;
         }
         Some(Expr::DirectCall {
