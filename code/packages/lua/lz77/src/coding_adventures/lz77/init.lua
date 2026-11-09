@@ -169,6 +169,14 @@ function M.decode(tokens, initial_buffer)
 
     for _, tok in ipairs(tokens) do
         if tok.length > 0 then
+            -- Security: a zero offset, or one reaching before the start of the
+            -- output, is invalid (corrupt or hostile input).  Stop decoding and
+            -- return what has been produced so far instead of reading nil
+            -- slots.  Valid streams are unaffected.
+            if tok.offset < 1 or tok.offset > #output then
+                return output
+            end
+
             -- Copy length bytes from position (output_len - offset + 1).
             -- Use 1-indexed positions.
             local start = #output - tok.offset + 1
@@ -237,7 +245,12 @@ function M.deserialise_tokens(data)
 
     -- Read token count (big-endian uint32).
     local b1, b2, b3, b4 = data:byte(1, 4)
-    local count = b1 * 16777216 + b2 * 65536 + b3 * 256 + b4
+    local claimed = b1 * 16777216 + b2 * 65536 + b3 * 256 + b4
+
+    -- Security: the header count is attacker-controlled (up to 2^32-1).  Clamp
+    -- it to the number of complete 4-byte tokens actually present so the loop
+    -- never follows the claim; a larger claim is treated as truncated.
+    local count = math.min(claimed, (#data - 4) // 4)
 
     local tokens = {}
 
