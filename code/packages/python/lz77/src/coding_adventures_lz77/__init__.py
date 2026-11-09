@@ -253,6 +253,12 @@ def decode(
 
     for token in tokens:
         if token.length > 0:
+            # A zero offset, or one reaching before the start of the output, is
+            # invalid (corrupt or hostile input). Negative indices would silently
+            # read from the end of the buffer, and too-large ones would raise
+            # IndexError, so stop decoding and return what was produced so far.
+            if token.offset < 1 or token.offset > len(output):
+                break
             # Copy length bytes from position (current_output_length - offset).
             start = len(output) - token.offset
             # Copy byte-by-byte to handle overlapping matches.
