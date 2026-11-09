@@ -1507,10 +1507,19 @@ fn stage2_file(
                 }
                 // Read a whole path: seg (:: seg)*.  After `>::` the item belongs to
                 // the qualified self type: `<File>::create`, `<File as T>::create`.
-                let mut segs: Vec<String> = Vec::new();
-                if i >= 2 && is_pathsep(toks, i - 1) && is_punct(toks, i - 2, '>') {
+                //
+                // `=> ::std::fs::read(..)` and `-> ::std::io::Result` have the same
+                // token shape (`>` `::` ident) but no angle bracket to close, and a
+                // comparison `a > ::std::x` is ambiguous; so the path as written is
+                // *always* classified too, and the qualified reading only adds to it.
+                let mut qualified_prefix: Vec<String> = Vec::new();
+                let closes_angle = i >= 2
+                    && is_pathsep(toks, i - 1)
+                    && is_punct(toks, i - 2, '>')
+                    && !(i >= 3 && (is_punct(toks, i - 3, '=') || is_punct(toks, i - 3, '-')));
+                if closes_angle {
                     match qualified_self_path(toks, i - 2) {
-                        Ok(Some(prefix)) => segs = prefix,
+                        Ok(Some(prefix)) => qualified_prefix = prefix,
                         Ok(None) => {}
                         Err(()) => sink.unanalyzable(
                             t.line,
@@ -1520,7 +1529,7 @@ fn stage2_file(
                         ),
                     }
                 }
-                segs.push(name.clone());
+                let mut segs: Vec<String> = vec![name.clone()];
                 let mut j = i + 1;
                 while is_pathsep(toks, j) {
                     match ident_at(toks, j + 1) {
@@ -1544,6 +1553,11 @@ fn stage2_file(
                     );
                 }
                 sink.path(res, &segs, is_macro, t.line, t.col);
+                if !qualified_prefix.is_empty() {
+                    let mut q = qualified_prefix;
+                    q.extend(segs);
+                    sink.path(res, &q, is_macro, t.line, t.col);
+                }
                 i = if is_macro { j + 1 } else { j };
             }
             _ => i += 1,

@@ -468,6 +468,11 @@ const SECFIX: &[Case] = &[
     ("L1 decoy type alias of integer", "type Id = u32; fn f(){ let _ = Id::from(1u8); }", &[]),
     ("L1 decoy assoc type without value", "trait T { type Item; type Out: Clone; }", &[]),
     ("L1 decoy alias of Vec", "type V = Vec<u8>; fn f(){ let _ = V::new(); }", &[]),
+    // ---- qualified-path reading must never hide a plainly written path
+    ("QP fat arrow before ::std path", "fn f(v: Vec<u8>){ match v.len() { 0 => ::std::fs::read(\"x\"), _ => todo!() }; }", &["fs:read"]),
+    ("QP thin arrow before ::std path", "fn f<T: Clone>() -> ::std::fs::File { todo!() }", &["fs:read"]),
+    ("QP generic closes then ::std path in comparison", "fn f(a: Vec<u8>, b: u8){ let _ = a.len() as u8 > b; let _ = ::std::fs::read(\"x\"); }", &["fs:read"]),
+    ("QP qualified path keeps the plain reading", "use std::fs::*; fn f(){ <u8>::read(\"x\"); }", &["fs:read"]),
     // ---- L2: hardware randomness
     ("L2 _rdrand64_step", "fn f(){ let mut v = 0u64; unsafe { core::arch::x86_64::_rdrand64_step(&mut v); } }", &["!unsafe_code", "rand:read"]),
     ("L2 _rdseed32_step via std", "fn f(){ let mut v = 0u32; unsafe { std::arch::x86_64::_rdseed32_step(&mut v); } }", &["!unsafe_code", "rand:read"]),

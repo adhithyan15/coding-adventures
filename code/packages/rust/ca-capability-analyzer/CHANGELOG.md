@@ -16,7 +16,7 @@ Every fix has a regression that fails on 0.3.0 (corpus group `SECFIX` in
 - [false positive, L4] The `.canonicalize()`-style method heuristic now resolves the one receiver shape it can prove (`Local::ctor(..)[.unwrap()/.expect()/.clone()/?]` with an inherent method of that name on a package-local type). `url-parser` no longer needs a false `fs:list` declaration; its manifest is corrected to `capabilities: []`.
 - [behaviour] New type-alias bindings mean `type Handle = *mut std::ffi::c_void;` makes each later use of `Handle` an `ffi:call` detection, as the `use` form already did (packages already failing the analyzer: audio-device-coreaudio, iocp, objc-bridge, transport-platform).
 
-Tests: 64 new SECFIX corpus cases (each with decoys), 17 regression tests (M3 bypasses and legitimate manifests, M4 timings).
+Tests: 68 new SECFIX corpus cases (each with decoys), 17 regression tests (M3 bypasses and legitimate manifests, M4 timings).
 
 ## 0.3.0 - Audit hardening (VER08a / VER23a contract revision)
 
