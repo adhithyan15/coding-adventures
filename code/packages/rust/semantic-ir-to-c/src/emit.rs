@@ -1521,6 +1521,7 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
         Expr::MakeClosure {
             fn_name, captures, ..
         } => {
+            let nparam = SIGNATURES.with(|a| a.borrow().get(fn_name).map_or(0, |p| p.len()));
             let _ = writeln!(out, "{pad}{{");
             let inner = indent + 1;
             let ipad = indent_str(inner);
@@ -1536,6 +1537,7 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
                 let _ = write!(out, ", {n}");
             }
             out.push_str(");\n");
+            let _ = writeln!(out, "{ipad}_sir_closure_set_nparam(&{dst}, {nparam});");
             let _ = writeln!(out, "{pad}}}");
         }
         // A call whose arguments contain control flow: hoist every argument
@@ -2215,9 +2217,10 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::MakeClosure {
             fn_name, captures, ..
         } => {
+            let nparam = SIGNATURES.with(|a| a.borrow().get(fn_name).map_or(0, |p| p.len()));
             let _ = write!(
                 out,
-                "_sir_make_closure({}, {}",
+                "_sir_closure_with_nparam(_sir_make_closure({}, {}",
                 thunk_name(fn_name),
                 captures.len()
             );
@@ -2225,7 +2228,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 out.push_str(", ");
                 emit_expr(out, &c.value, indent);
             }
-            out.push(')');
+            let _ = write!(out, "), {nparam})");
         }
         Expr::Block(b) => {
             // Simple only when stmts empty (guaranteed by is_simple).

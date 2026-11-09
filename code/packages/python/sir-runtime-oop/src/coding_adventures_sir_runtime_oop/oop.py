@@ -1436,6 +1436,18 @@ def _hash_method(recv: dict[Val, Val], name: str, args: list[Val]) -> Val:
     return _MISS
 
 
+def _yield_hash_pair(block: Closure, key: Val, value: Val) -> Val:
+    """Yield a key-value entry to a Hash block.
+
+    Ruby gives a one-parameter block over a Hash the `[key, value]` pair
+    (e.g. `{a: 1}.each { |pair| ... }`), and a two-parameter (or variadic)
+    block the key and value as separate arguments (`|k, v|`).
+    """
+    if getattr(block, "arity", None) == 1:
+        return apply(block, [[key, value]])
+    return apply(block, [key, value])
+
+
 def _hash_block_method(recv: dict[Val, Val], name: str, args: list[Val], block: Closure) -> Val:
     """Block-taking ``Hash`` methods; the block receives ``[key, value]`` (or a
     single key/value for ``each_key``/``each_value``).  ``args`` holds the
@@ -1444,7 +1456,7 @@ def _hash_block_method(recv: dict[Val, Val], name: str, args: list[Val], block: 
     :data:`_MISS` if ``name`` is not a hash block method."""
     if name in ("each", "each_pair"):
         for key, value in list(recv.items()):
-            apply(block, [key, value])
+            _yield_hash_pair(block, key, value)
         return recv
     if name == "each_key":
         for key in list(recv.keys()):
@@ -1455,11 +1467,11 @@ def _hash_block_method(recv: dict[Val, Val], name: str, args: list[Val], block: 
             apply(block, [value])
         return recv
     if name == "map":
-        return [apply(block, [key, value]) for key, value in recv.items()]
+        return [_yield_hash_pair(block, key, value) for key, value in recv.items()]
     if name in ("select", "filter"):
-        return {k: v for k, v in recv.items() if truthy(apply(block, [k, v]))}
+        return {k: v for k, v in recv.items() if truthy(_yield_hash_pair(block, k, v))}
     if name == "reject":
-        return {k: v for k, v in recv.items() if not truthy(apply(block, [k, v]))}
+        return {k: v for k, v in recv.items() if not truthy(_yield_hash_pair(block, k, v))}
     if name == "transform_values":
         # ``transform_values { |v| … }`` — a NEW hash with each value replaced by
         # the block's result; keys are untouched.  Non-mutating (Ruby's bang
@@ -1480,24 +1492,24 @@ def _hash_block_method(recv: dict[Val, Val], name: str, args: list[Val], block: 
     if name in ("find", "detect"):
         # First ``[k, v]`` pair whose block result is truthy; ``nil`` if none.
         for key, value in recv.items():
-            if truthy(apply(block, [key, value])):
+            if truthy(_yield_hash_pair(block, key, value)):
                 return [key, value]
         return None
     if name == "any?":
-        return any(truthy(apply(block, [k, v])) for k, v in recv.items())
+        return any(truthy(_yield_hash_pair(block, k, v)) for k, v in recv.items())
     if name == "all?":
-        return all(truthy(apply(block, [k, v])) for k, v in recv.items())
+        return all(truthy(_yield_hash_pair(block, k, v)) for k, v in recv.items())
     if name == "none?":
-        return not any(truthy(apply(block, [k, v])) for k, v in recv.items())
+        return not any(truthy(_yield_hash_pair(block, k, v)) for k, v in recv.items())
     if name == "count":
         # ``count { |k, v| pred }`` — number of pairs with a truthy block result.
-        return sum(1 for k, v in recv.items() if truthy(apply(block, [k, v])))
+        return sum(1 for k, v in recv.items() if truthy(_yield_hash_pair(block, k, v)))
     if name == "sort_by":
         # A NEW Array of ``[k, v]`` pairs sorted by the block key.  Python's sort
         # is stable, matching Ruby; a non-comparable key raises ``TypeError``.
         return sorted(
             ([k, v] for k, v in recv.items()),
-            key=lambda pair: apply(block, [pair[0], pair[1]]),
+            key=lambda pair: _yield_hash_pair(block, pair[0], pair[1]),
         )
     if name in ("min_by", "max_by"):
         # The ``[k, v]`` pair minimising / maximising the block key; ``nil`` on an

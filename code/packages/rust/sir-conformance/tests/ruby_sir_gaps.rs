@@ -381,6 +381,14 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "h = {a: 1}\nputs h[:a]\nputs h[:b] == nil\nh[:b] = 2\nputs h[:b]\nputs h.size\n",
         "1\ntrue\n2\n2",
     ),
+    // #18798 Comment 1 — `Hash#each` with a one-parameter block yields the
+    // `[key, value]` pair as an Array, while a two-parameter block yields
+    // `k` and `v` separately.
+    (
+        "rb_hash_each_one_parameter_block",
+        "h = {a: 1, b: 2}\nh.each do |pair|\n  for v in pair\n    puts v\n  end\nend\nh.each { |k, v| puts k; puts v }\n",
+        "a\n1\nb\n2\na\n1\nb\n2",
+    ),
     // #18798 item 14 — `return` before the end of a method: inside a method
     // with `rescue` (Python, JavaScript and Go printed 2, the `rescue`
     // catching an "unknown builtin: return"; Rust panicked; C and Ruby refused

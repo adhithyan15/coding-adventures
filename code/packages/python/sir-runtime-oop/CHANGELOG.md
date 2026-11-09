@@ -14,6 +14,7 @@ The Ruby frontend lowers `z[1]` and `z[0] = 5` to the method calls `[]` and
   past `_ARRAY_MAX_INDEX` (2^28), the limit every SIR backend shares.  It
   bounds one write's padding; it is not a memory budget.
 - A non-integer index (a `bool` included) is `TypeError`.
+- `Hash#each` with a one-parameter block: yields the `[key, value]` pair as an Array to a one-parameter block across Hash block methods (e.g. `{a: 1}.each { |pair| ... }`), matching Ruby semantics (#18798).
 - `Hash#[]`: the value, or `nil` for a missing key.
 - `respond_to?` reports all three.
 

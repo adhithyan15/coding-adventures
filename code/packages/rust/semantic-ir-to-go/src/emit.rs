@@ -906,7 +906,7 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 }
                 emit_expr(out, &c.value, indent);
             }
-            out.push_str("})");
+            let _ = write!(out, "}}, {params_arity})");
         }
         Expr::Intrinsic { name, span, .. } => {
             panic!(

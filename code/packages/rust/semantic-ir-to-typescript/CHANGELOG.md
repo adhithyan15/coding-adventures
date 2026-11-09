@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — Hash#each with one-parameter block arity forwarding (#18798)
+
+- `Expr::MakeClosure` emits the closure's parameter count as `new __Sir.Closure(..., arity)` so the runtime can yield `[key, value]` pairs to 1-param blocks.
+
 ## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
 
 - **In-place addition `+=`.** `BuiltinCall("+=", [lhs, rhs])` now routes to `__Sir.iadd` in `emit_builtin_call`.

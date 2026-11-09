@@ -2533,7 +2533,7 @@ fn emit_make_closure(
         out.push_str("__it.next().unwrap_or(__sir::Value::Missing)");
     }
     out.push_str(")\n");
-    let _ = writeln!(out, "{}}}) }}))", pad);
+    let _ = writeln!(out, "{}}}), arity: {arity} }}))", pad);
     let _ = write!(out, "{}}}", indent_str(indent));
 }
 
