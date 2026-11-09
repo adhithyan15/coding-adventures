@@ -5956,6 +5956,81 @@ mod tests {
         );
     }
 
+    #[test]
+    fn arrow_lambda_call_lowers_to_indirect_call() {
+        let m = lower("f = ->(x) { x + 1 }\nf.call(2)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator error: {:?}", result);
+        let b = main_body(&m);
+        match &b.value {
+            Expr::IndirectCall { target, args, .. } => {
+                assert!(matches!(**target, Expr::VarRef { ref name, .. } if name == "f"));
+                assert_eq!(args.len(), 1);
+            }
+            other => panic!("expected IndirectCall, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn arrow_lambda_captures_outer_local() {
+        let m = lower("x = 10\nf = ->(y) { x + y }\nf.call(5)\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator error: {:?}", result);
+        let hoisted = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("__block_"))
+            .expect("expected hoisted block function");
+        assert_eq!(hoisted.captures.len(), 1);
+        assert_eq!(hoisted.captures[0].name, "x");
+
+        let b = main_body(&m);
+        let closure = b.stmts.iter().find_map(|s| match s {
+            Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } if name == "f" => match value {
+                Expr::BuiltinCall { name, args, .. } if name == "lambda" => Some(&args[0]),
+                _ => None,
+            },
+            _ => None,
+        }).expect("expected f lambda binding");
+
+        match closure {
+            Expr::MakeClosure { captures, .. } => {
+                assert_eq!(captures.len(), 1);
+                assert_eq!(captures[0].name, "x");
+            }
+            other => panic!("expected MakeClosure, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn arrow_lambda_captures_enclosing_param() {
+        let m = lower("def make_adder(n)\n  f = ->(x) { x + n }\n  f\nend\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator error: {:?}", result);
+        let hoisted = m
+            .functions
+            .iter()
+            .find(|f| f.name.starts_with("__block_"))
+            .expect("expected hoisted block function");
+        assert_eq!(hoisted.captures.len(), 1);
+        assert_eq!(hoisted.captures[0].name, "n");
+    }
+
+    #[test]
+    fn arrow_lambda_zero_args_call() {
+        let m = lower("f = -> { 42 }\nf.call\n");
+        let result = semantic_ir::validate(&m);
+        assert!(result.is_ok(), "validator error: {:?}", result);
+        let b = main_body(&m);
+        match &b.value {
+            Expr::IndirectCall { target, args, .. } => {
+                assert!(matches!(**target, Expr::VarRef { ref name, .. } if name == "f"));
+                assert!(args.is_empty());
+            }
+            other => panic!("expected IndirectCall with 0 args, got {:?}", other),
+        }
+    }
+
     // -----------------------------------------------------------------
     // Phase 6v / 16a — `begin … rescue … ensure … end`
     // -----------------------------------------------------------------
