@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Security
+
+- CWE-789: `decompress` no longer preallocates the output from the untrusted `original_length` header; the capacity hint is capped at the number of payload bits. The decode loop no longer uses `chars().nth(pos)` (quadratic time on large inputs); it indexes bytes directly.
+- Added `tests/hostile_headers.rs`.
+
 ## [0.1.0] - 2026-04-12
 
 ### Added
