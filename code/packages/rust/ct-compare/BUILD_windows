@@ -3,3 +3,10 @@ cargo run -p coding_adventures_ca_capability_analyzer -- --dir . --verify-cert e
 cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json
 cargo test -p coding_adventures_ct_compare -- --nocapture
 python3 ../../../scripts/ct_compare_tfv.py
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check
+set WARRANT_EVIDENCE_OUT=evidence/test-manifest.json&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence
+set WARRANT_EVIDENCE_FAULT=invert&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ignore-last-byte&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=ignore-high-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=swap-choice&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "

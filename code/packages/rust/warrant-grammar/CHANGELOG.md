@@ -2,6 +2,20 @@
 
 ## 0.1.0 — Unreleased
 
+- Add `evidence` (VER04h / VER-P030): compile a checked Warrant document into a
+  Rust evidence harness (examples, bounded-exhaustive, property, fuzz and
+  sabotage suites) whose oracle is the *translated claim body*, not a hand-copied
+  `a == b`; supports any number of binders and `Bytes<N>` widths. New diagnostic
+  `W0706` (exhaustive domain over budget). `examples/gen_evidence` regenerates or
+  `--check`s `ct-compare/tests/generated/warrant_evidence.rs`.
+- Stop emitting claim helpers from `compile_rust_l0_harness`: the old helper
+  hard-coded `a == b`, accepted at most two binders and was never compiled.
+  Removed the tests that string-matched it and the `a == b` vs `a == b`
+  "sabotage" emulation; `tests/evidence.rs` compiles and runs the generated
+  harness against the real `ct-compare` crate instead.
+- Add `ct-compare/warrant` claims for `eq_fixed` (widths 0/1/2/4/16),
+  `select_bytes` (pick + length mismatch) and `eq_u64`.
+
 - Add VER04f/P011 Warrant Universal Claims to Property Tests Compiler:
   - Extract and validate universally quantified `claim` declarations (`ClaimCase`) calling bound host operations.
   - Compile claims into Level 2 property-based tests executed on `coding_adventures_test_bootstrap::pbt`.

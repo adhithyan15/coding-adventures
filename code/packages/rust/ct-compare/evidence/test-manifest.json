@@ -1,0 +1,704 @@
+{
+  "evidence_seed": "6287397068022371361",
+  "module": "ct_compare",
+  "schema": "warrant-test-evidence-v1",
+  "spec": "code/specs/ct-compare.warrant",
+  "spec_sha256": "45eaa88e9d65524c62f9262883278202a3cc33792d73e58d1884dba31d2013c0",
+  "tests": [
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/eq_empty",
+      "kind": "example",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/eq_one_equal",
+      "kind": "example",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/eq_one_diff",
+      "kind": "example",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/eq_diff_len",
+      "kind": "example",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/fixed_zero",
+      "kind": "example",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/fixed_16_equal",
+      "kind": "example",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/fixed_16_diff",
+      "kind": "example",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/select_left_fresh",
+      "kind": "example",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/select_right_fresh",
+      "kind": "example",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/select_length_mismatch",
+      "kind": "example",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/u64_equal",
+      "kind": "example",
+      "op": "eq_u64",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/ct_compare/example/u64_diff",
+      "kind": "example",
+      "op": "eq_u64",
+      "verdict": "pass"
+    },
+    {
+      "cases": 120409,
+      "claim": "eq_agrees",
+      "discarded": 0,
+      "domain": "Bytes[347] x Bytes[347]",
+      "id": "warrant/ct_compare/exhaustive/eq_agrees",
+      "kind": "exhaustive",
+      "op": "eq",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "eq_agrees",
+      "discarded": 0,
+      "equal_cases": 1019,
+      "id": "warrant/ct_compare/property/eq_agrees",
+      "kind": "property",
+      "op": "eq",
+      "seed": "9228272942847863353",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "eq_agrees",
+      "id": "warrant/ct_compare/fuzz/eq_agrees",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "eq",
+      "seed": "8704009581956082568",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "eq_fixed_agrees_w0",
+      "discarded": 0,
+      "domain": "BytesN(0)[1] x BytesN(0)[1]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w0",
+      "kind": "exhaustive",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "eq_fixed_agrees_w0",
+      "discarded": 0,
+      "equal_cases": 4096,
+      "id": "warrant/ct_compare/property/eq_fixed_agrees_w0",
+      "kind": "property",
+      "op": "eq_fixed",
+      "seed": "6809904108297809723",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "eq_fixed_agrees_w0",
+      "id": "warrant/ct_compare/fuzz/eq_fixed_agrees_w0",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "eq_fixed",
+      "seed": "4666200631643149160",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "eq_fixed_agrees_w1",
+      "discarded": 0,
+      "domain": "BytesN(1)[256] x BytesN(1)[256]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w1",
+      "kind": "exhaustive",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "eq_fixed_agrees_w1",
+      "discarded": 0,
+      "equal_cases": 1582,
+      "id": "warrant/ct_compare/property/eq_fixed_agrees_w1",
+      "kind": "property",
+      "op": "eq_fixed",
+      "seed": "10304230651140471830",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "eq_fixed_agrees_w1",
+      "id": "warrant/ct_compare/fuzz/eq_fixed_agrees_w1",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "eq_fixed",
+      "seed": "14706986698317948793",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "eq_fixed_agrees_w2",
+      "discarded": 0,
+      "domain": "BytesN(2)[16] x BytesN(2)[16]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w2",
+      "kind": "exhaustive",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "eq_fixed_agrees_w2",
+      "discarded": 0,
+      "equal_cases": 1572,
+      "id": "warrant/ct_compare/property/eq_fixed_agrees_w2",
+      "kind": "property",
+      "op": "eq_fixed",
+      "seed": "16864116793289812099",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "eq_fixed_agrees_w2",
+      "id": "warrant/ct_compare/fuzz/eq_fixed_agrees_w2",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "eq_fixed",
+      "seed": "7999819145218622193",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "eq_fixed_agrees_w4",
+      "discarded": 0,
+      "domain": "BytesN(4)[16] x BytesN(4)[16]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w4",
+      "kind": "exhaustive",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "eq_fixed_agrees_w4",
+      "discarded": 0,
+      "equal_cases": 1512,
+      "id": "warrant/ct_compare/property/eq_fixed_agrees_w4",
+      "kind": "property",
+      "op": "eq_fixed",
+      "seed": "5665963194736272853",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "eq_fixed_agrees_w4",
+      "id": "warrant/ct_compare/fuzz/eq_fixed_agrees_w4",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "eq_fixed",
+      "seed": "6464821345149830669",
+      "verdict": "pass"
+    },
+    {
+      "cases": 2704,
+      "claim": "eq_fixed_agrees_w16",
+      "discarded": 0,
+      "domain": "BytesN(16)[52] x BytesN(16)[52]",
+      "id": "warrant/ct_compare/exhaustive/eq_fixed_agrees_w16",
+      "kind": "exhaustive",
+      "op": "eq_fixed",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "eq_fixed_agrees_w16",
+      "discarded": 0,
+      "equal_cases": 1501,
+      "id": "warrant/ct_compare/property/eq_fixed_agrees_w16",
+      "kind": "property",
+      "op": "eq_fixed",
+      "seed": "3519801504272107097",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "eq_fixed_agrees_w16",
+      "id": "warrant/ct_compare/fuzz/eq_fixed_agrees_w16",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "eq_fixed",
+      "seed": "5816492252975325895",
+      "verdict": "pass"
+    },
+    {
+      "cases": 139818,
+      "claim": "select_picks",
+      "discarded": 101000,
+      "domain": "Bytes[347] x Bytes[347] x Bool[2]",
+      "id": "warrant/ct_compare/exhaustive/select_picks",
+      "kind": "exhaustive",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "select_picks",
+      "discarded": 2463,
+      "equal_cases": 1654,
+      "id": "warrant/ct_compare/property/select_picks",
+      "kind": "property",
+      "op": "select_bytes",
+      "seed": "12995661427333467367",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 1769,
+      "claim": "select_picks",
+      "id": "warrant/ct_compare/fuzz/select_picks",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "select_bytes",
+      "seed": "10941342882567451515",
+      "verdict": "pass"
+    },
+    {
+      "cases": 101000,
+      "claim": "select_rejects_mismatch",
+      "discarded": 139818,
+      "domain": "Bytes[347] x Bytes[347] x Bool[2]",
+      "id": "warrant/ct_compare/exhaustive/select_rejects_mismatch",
+      "kind": "exhaustive",
+      "op": "select_bytes",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "select_rejects_mismatch",
+      "discarded": 6998,
+      "equal_cases": 0,
+      "id": "warrant/ct_compare/property/select_rejects_mismatch",
+      "kind": "property",
+      "op": "select_bytes",
+      "seed": "13388969283231778079",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 3314,
+      "claim": "select_rejects_mismatch",
+      "id": "warrant/ct_compare/fuzz/select_rejects_mismatch",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "select_bytes",
+      "seed": "14130339892574797885",
+      "verdict": "pass"
+    },
+    {
+      "cases": 142129,
+      "claim": "eq_u64_agrees",
+      "discarded": 0,
+      "domain": "U64[377] x U64[377]",
+      "id": "warrant/ct_compare/exhaustive/eq_u64_agrees",
+      "kind": "exhaustive",
+      "op": "eq_u64",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "eq_u64_agrees",
+      "discarded": 0,
+      "equal_cases": 1785,
+      "id": "warrant/ct_compare/property/eq_u64_agrees",
+      "kind": "property",
+      "op": "eq_u64",
+      "seed": "17543503447592218271",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "eq_u64_agrees",
+      "id": "warrant/ct_compare/fuzz/eq_u64_agrees",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "eq_u64",
+      "seed": "11225346953889206651",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_empty,eq_one_equal,eq_one_diff,eq_diff_len",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/example/eq/invert",
+      "kind": "negctl",
+      "op": "eq",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_one_diff",
+      "claim": "",
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/example/eq/ignore-last-byte",
+      "kind": "negctl",
+      "op": "eq",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_agrees",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq/invert",
+      "kind": "negctl",
+      "op": "eq",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_agrees",
+      "claim": "",
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq/ignore-last-byte",
+      "kind": "negctl",
+      "op": "eq",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_agrees",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/property/eq/invert",
+      "kind": "negctl",
+      "op": "eq",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_agrees",
+      "claim": "",
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/property/eq/ignore-last-byte",
+      "kind": "negctl",
+      "op": "eq",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_agrees",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/fuzz/eq/invert",
+      "kind": "negctl",
+      "op": "eq",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_agrees",
+      "claim": "",
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/fuzz/eq/ignore-last-byte",
+      "kind": "negctl",
+      "op": "eq",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "fixed_zero,fixed_16_equal,fixed_16_diff",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/example/eq_fixed/invert",
+      "kind": "negctl",
+      "op": "eq_fixed",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "fixed_16_diff",
+      "claim": "",
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/example/eq_fixed/ignore-last-byte",
+      "kind": "negctl",
+      "op": "eq_fixed",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_fixed_agrees_w0,eq_fixed_agrees_w1,eq_fixed_agrees_w2,eq_fixed_agrees_w4,eq_fixed_agrees_w16",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq_fixed/invert",
+      "kind": "negctl",
+      "op": "eq_fixed",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_fixed_agrees_w1,eq_fixed_agrees_w2,eq_fixed_agrees_w4,eq_fixed_agrees_w16",
+      "claim": "",
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq_fixed/ignore-last-byte",
+      "kind": "negctl",
+      "op": "eq_fixed",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_fixed_agrees_w0,eq_fixed_agrees_w1,eq_fixed_agrees_w2,eq_fixed_agrees_w4,eq_fixed_agrees_w16",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/property/eq_fixed/invert",
+      "kind": "negctl",
+      "op": "eq_fixed",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_fixed_agrees_w1,eq_fixed_agrees_w2,eq_fixed_agrees_w4,eq_fixed_agrees_w16",
+      "claim": "",
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/property/eq_fixed/ignore-last-byte",
+      "kind": "negctl",
+      "op": "eq_fixed",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_fixed_agrees_w0,eq_fixed_agrees_w1,eq_fixed_agrees_w2,eq_fixed_agrees_w4,eq_fixed_agrees_w16",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/fuzz/eq_fixed/invert",
+      "kind": "negctl",
+      "op": "eq_fixed",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_fixed_agrees_w1,eq_fixed_agrees_w2,eq_fixed_agrees_w4,eq_fixed_agrees_w16",
+      "claim": "",
+      "fault": "ignore-last-byte",
+      "id": "warrant/ct_compare/negctl/fuzz/eq_fixed/ignore-last-byte",
+      "kind": "negctl",
+      "op": "eq_fixed",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "u64_equal,u64_diff",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/example/eq_u64/invert",
+      "kind": "negctl",
+      "op": "eq_u64",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "u64_diff",
+      "claim": "",
+      "fault": "ignore-high-bit",
+      "id": "warrant/ct_compare/negctl/example/eq_u64/ignore-high-bit",
+      "kind": "negctl",
+      "op": "eq_u64",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_u64_agrees",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq_u64/invert",
+      "kind": "negctl",
+      "op": "eq_u64",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_u64_agrees",
+      "claim": "",
+      "fault": "ignore-high-bit",
+      "id": "warrant/ct_compare/negctl/exhaustive/eq_u64/ignore-high-bit",
+      "kind": "negctl",
+      "op": "eq_u64",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_u64_agrees",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/property/eq_u64/invert",
+      "kind": "negctl",
+      "op": "eq_u64",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_u64_agrees",
+      "claim": "",
+      "fault": "ignore-high-bit",
+      "id": "warrant/ct_compare/negctl/property/eq_u64/ignore-high-bit",
+      "kind": "negctl",
+      "op": "eq_u64",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_u64_agrees",
+      "claim": "",
+      "fault": "invert",
+      "id": "warrant/ct_compare/negctl/fuzz/eq_u64/invert",
+      "kind": "negctl",
+      "op": "eq_u64",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "eq_u64_agrees",
+      "claim": "",
+      "fault": "ignore-high-bit",
+      "id": "warrant/ct_compare/negctl/fuzz/eq_u64/ignore-high-bit",
+      "kind": "negctl",
+      "op": "eq_u64",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "select_left_fresh,select_right_fresh",
+      "claim": "",
+      "fault": "swap-choice",
+      "id": "warrant/ct_compare/negctl/example/select_bytes/swap-choice",
+      "kind": "negctl",
+      "op": "select_bytes",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "select_length_mismatch",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/ct_compare/negctl/example/select_bytes/missing-error",
+      "kind": "negctl",
+      "op": "select_bytes",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "select_picks",
+      "claim": "",
+      "fault": "swap-choice",
+      "id": "warrant/ct_compare/negctl/exhaustive/select_bytes/swap-choice",
+      "kind": "negctl",
+      "op": "select_bytes",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "select_rejects_mismatch",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/ct_compare/negctl/exhaustive/select_bytes/missing-error",
+      "kind": "negctl",
+      "op": "select_bytes",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "select_picks",
+      "claim": "",
+      "fault": "swap-choice",
+      "id": "warrant/ct_compare/negctl/property/select_bytes/swap-choice",
+      "kind": "negctl",
+      "op": "select_bytes",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "select_rejects_mismatch",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/ct_compare/negctl/property/select_bytes/missing-error",
+      "kind": "negctl",
+      "op": "select_bytes",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "select_picks",
+      "claim": "",
+      "fault": "swap-choice",
+      "id": "warrant/ct_compare/negctl/fuzz/select_bytes/swap-choice",
+      "kind": "negctl",
+      "op": "select_bytes",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "select_rejects_mismatch",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/ct_compare/negctl/fuzz/select_bytes/missing-error",
+      "kind": "negctl",
+      "op": "select_bytes",
+      "target": "fuzz",
+      "verdict": "pass"
+    }
+  ]
+}

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add the Warrant-derived evidence harness (VER04h): `tests/warrant_evidence.rs`
+  runs `tests/generated/warrant_evidence.rs`, generated from
+  `code/specs/ct-compare.warrant`, against the real public API: every example,
+  bounded-exhaustive suites (120,409 `eq` cases; 65,536 `eq_fixed<1>` cases;
+  142,129 `eq_u64` cases; ...), relation-biased property suites (4,096 cases
+  each), fuzz suites (5,000 iterations each) and per-operation sabotage
+  controls. `evidence/test-manifest.json` records what the run did.
+  BUILD fails if the generated file drifts and checks each sabotage mode.
+
 - Add equal-instruction-count microbenchmarks and deterministic cost budgeting
   (`tests/microbenchmarks.rs`, VER07 / VER07a / VER-P017):
   - Multi-scale $n \in \{16, 256, 4096\}$ sweeps for `ct_eq` with zero-allocation budget;

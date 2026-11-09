@@ -23,3 +23,10 @@ harness = false
 name = "microbenchmarks"
 path = "tests/microbenchmarks.rs"
 harness = false
+
+# Generated from code/specs/ct-compare.warrant (VER04h): examples, bounded
+# exhaustive suites, property suites, fuzz suites and sabotage controls.
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
+harness = false

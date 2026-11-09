@@ -1,5 +1,13 @@
 # VER04f — Warrant Claims to Property-Based Tests (VER-P011)
 
+> **Superseded in part by [VER04h](VER04h-warrant-derived-evidence.md).** The
+> emitted claim helper described in §3–§4 hard-coded `a == b` as its oracle,
+> allowed at most two binders and was only string-matched. Claims now compile
+> through `warrant-grammar::evidence`, which translates the claim body itself,
+> supports any number of binders, replaces uniform `Gen::bytes_gen` with
+> relation-biased generators (VER04h §4) and adds bounded-exhaustive and fuzz
+> suites. The pbt engine (§5–§6 failure vocabulary, replay, privacy) is unchanged.
+
 **Parent:** [VER04 §5–§6](VER04-warrant-language.md), [VER04c](VER04c-guarded-warrant-parser.md), [VER04d](VER04d-warrant-type-system.md), [VER04e](VER04e-warrant-codegen.md), [VER05](VER05-property-engine.md), [TF01](TF01-bootstrap-harness.md).
 
 This specification defines the compilation of Warrant first-order `claim` declarations into generative property-based tests (Level 2) powered by the native `coding_adventures_test_bootstrap::pbt` engine.

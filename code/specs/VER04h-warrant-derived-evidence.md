@@ -97,7 +97,7 @@ Cartesian product of the binder domains, filtered by refinements.
 |---|---|
 | `Bool` | `{false, true}` |
 | `U8` | all 256 values |
-| `U64` | all of `0..=255`; every single-bit value `1<<i`; `MAX`; every `MAX ^ (1<<i)` (385 values) |
+| `U64` | all of `0..=255`; every single-bit value `1<<i` for `i >= 8`; `MAX`; every `MAX ^ (1<<i)` (377 values) |
 | `Nat` | `0..=64` |
 | `Bytes` | (i) every string of length 0 or 1 over all 256 bytes; (ii) every string of length 2..=3 over the alphabet `A = {00, 01, 80, ff}`; (iii) for each length 4..=8 the fills `00…` and `a5…` (347 strings) |
 | `Bytes<N>`, `N <= 3` | the members of `D(Bytes)` of length `N` (for `N = 1` this is all 256 bytes) |
@@ -158,13 +158,16 @@ adapter (the crate is never modified):
 | Fault | Applies to | Behaviour |
 |---|---|---|
 | `invert` | any `Bool`-returning op | result negated |
-| `drop-last-byte` | `eq`, `eq_fixed` | both inputs truncated by one byte before the call (models an off-by-one scan) |
+| `ignore-last-byte` | `eq`, `eq_fixed` | the last byte of both inputs is zeroed before the call (models a scan that stops one byte early) |
 | `ignore-high-bit` | `eq_u64` | bit 63 masked from both operands |
 | `swap-choice` | `select_bytes` | `choice` negated |
 | `missing-error` | `select_bytes` | length mismatch returns `Ok(a)` instead of an error |
 
-A `negctl` test passes iff the suite, run with the fault, *fails* with a
-registered failure id (`property-counterexample`, `fuzz-crash`, …). The same
+Negative controls are per (suite kind, operation, fault): the test passes iff
+at least one suite of that kind for that operation, run with the fault, *fails*
+with a registered failure id (`property-counterexample`, `fuzz-crash`,
+`not-deep-equal`), and the manifest records which claims caught it
+(`caught_by`). A fault that no claim catches fails the control. The same
 faults are selectable from the command line for BUILD-level checking:
 `WARRANT_EVIDENCE_FAULT=<fault> cargo test … --test warrant_evidence` must print
 `not ok` lines (and exit non-zero) for the affected suites. The BUILD files run
@@ -245,7 +248,8 @@ the generated test target when `WARRANT_EVIDENCE_OUT=<path>` is set:
 ```
 
 `kind` ∈ `example | exhaustive | property | fuzz | negctl`. Property entries
-add `seed`; fuzz entries add `iterations` and `seed`; negctl entries add `fault`
+add `seed` and `equal_cases` (generated cases that took the equal branch, so the
+relation bias is measurable); fuzz entries add `iterations` and `seed`; negctl entries add `fault`
 and `target` (the suite id attacked).
 
 `evidence/proof-manifest.json` (`schema: "warrant-proof-evidence-v1"`) lists

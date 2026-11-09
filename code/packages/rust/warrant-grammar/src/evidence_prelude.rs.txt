@@ -1,0 +1,748 @@
+// ---------------------------------------------------------------------------
+// Runtime prelude (identical in every generated evidence harness).
+//
+// A claim body is compiled to Rust over the small dynamic value type `V`, so
+// the *claim itself* (not a hand-copied `a == b`) is the oracle.  The sections
+// below are: values, faults, per-type domains, relation-biased generation,
+// the three suite runners (exhaustive / property / fuzz) and manifest output.
+// ---------------------------------------------------------------------------
+
+use coding_adventures_test_bootstrap::fuzz::{
+    self, CoverageBitmap, FuzzOptions, FuzzOutcome, FID_FUZZ_CRASH,
+};
+use coding_adventures_test_bootstrap::manifest::{self, Json};
+use coding_adventures_test_bootstrap::pbt::{
+    check_property, shrink_bytes, shrink_int, PbtOptions, FID_EXHAUSTED,
+};
+use coding_adventures_test_bootstrap::prng::{fnv1a64, SplitMix64};
+use coding_adventures_test_bootstrap::run::{self, Outcome, Suite};
+use coding_adventures_test_bootstrap::Verdict;
+use std::cell::Cell;
+use std::collections::BTreeMap;
+use std::panic::{catch_unwind, AssertUnwindSafe};
+use std::sync::Mutex;
+
+/// Dynamic value of the Warrant pure profile (VER04e section 2.1 subset).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum V {
+    Bool(bool),
+    Nat(u64),
+    U64(u64),
+    Bytes(Vec<u8>),
+    Ok(Box<V>),
+    Err(String),
+    Name(String),
+}
+
+impl V {
+    pub fn truthy(&self) -> bool {
+        matches!(self, V::Bool(true))
+    }
+    pub fn length(&self) -> V {
+        match self {
+            V::Bytes(b) => V::Nat(b.len() as u64),
+            _ => panic!("len of a non-bytes value"),
+        }
+    }
+    pub fn err_of(v: V) -> V {
+        match v {
+            V::Name(n) => V::Err(n),
+            _ => panic!("Err needs an error constructor"),
+        }
+    }
+    fn num(&self) -> u64 {
+        match self {
+            V::Nat(n) | V::U64(n) => *n,
+            _ => panic!("numeric operand expected"),
+        }
+    }
+    pub fn compare(l: &V, r: &V, op: &str) -> V {
+        let (a, b) = (l.num(), r.num());
+        V::Bool(match op {
+            "<" => a < b,
+            ">" => a > b,
+            "<=" => a <= b,
+            _ => a >= b,
+        })
+    }
+    pub fn arith(l: &V, r: &V, op: char) -> V {
+        let (a, b) = (l.num(), r.num());
+        let n = match op {
+            '+' => a.checked_add(b),
+            '-' => a.checked_sub(b),
+            _ => a.checked_mul(b),
+        };
+        V::Nat(n.expect("model arithmetic overflow"))
+    }
+    fn bytes(&self) -> &[u8] {
+        match self {
+            V::Bytes(b) => b,
+            _ => panic!("bytes expected"),
+        }
+    }
+    fn u64v(&self) -> u64 {
+        self.num()
+    }
+    fn boolv(&self) -> bool {
+        matches!(self, V::Bool(true))
+    }
+}
+
+/// Deliberate adapter faults (VER04h section 6). `None` is the real adapter.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Fault {
+    None,
+    Invert,
+    IgnoreLastByte,
+    IgnoreHighBit,
+    SwapChoice,
+    MissingError,
+}
+
+impl Fault {
+    pub fn name(self) -> &'static str {
+        match self {
+            Fault::None => "none",
+            Fault::Invert => "invert",
+            Fault::IgnoreLastByte => "ignore-last-byte",
+            Fault::IgnoreHighBit => "ignore-high-bit",
+            Fault::SwapChoice => "swap-choice",
+            Fault::MissingError => "missing-error",
+        }
+    }
+    pub fn parse(text: &str) -> Option<Fault> {
+        [
+            Fault::None,
+            Fault::Invert,
+            Fault::IgnoreLastByte,
+            Fault::IgnoreHighBit,
+            Fault::SwapChoice,
+            Fault::MissingError,
+        ]
+        .into_iter()
+        .find(|f| f.name() == text)
+    }
+}
+
+fn mask_last_byte(bytes: &[u8]) -> Vec<u8> {
+    let mut v = bytes.to_vec();
+    if let Some(last) = v.last_mut() {
+        *last = 0;
+    }
+    v
+}
+
+/// Run `body`, converting a panic into `None` (used for declared panic errors).
+fn contained<T>(body: impl FnOnce() -> T) -> Option<T> {
+    catch_unwind(AssertUnwindSafe(body)).ok()
+}
+
+/// Binder types the generator understands.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Ty {
+    Bool,
+    U8,
+    U64,
+    Nat,
+    Bytes,
+    BytesN(usize),
+}
+
+const ALPHABET: [u8; 4] = [0x00, 0x01, 0x80, 0xff];
+
+fn alpha_strings(len: usize) -> Vec<Vec<u8>> {
+    let total = 4usize.pow(len as u32);
+    (0..total)
+        .map(|mut n| {
+            let mut s = vec![0u8; len];
+            for slot in s.iter_mut() {
+                *slot = ALPHABET[n % 4];
+                n /= 4;
+            }
+            s
+        })
+        .collect()
+}
+
+/// The finite domain of one binder (VER04h section 3).
+pub fn domain(ty: Ty) -> Vec<V> {
+    match ty {
+        Ty::Bool => vec![V::Bool(false), V::Bool(true)],
+        Ty::U8 => (0..=255u64).map(V::Nat).collect(),
+        Ty::Nat => (0..=64u64).map(V::Nat).collect(),
+        Ty::U64 => {
+            let mut v: Vec<u64> = (0..=255u64).collect();
+            v.extend((8..64).map(|i| 1u64 << i));
+            v.push(u64::MAX);
+            v.extend((0..64).map(|i| u64::MAX ^ (1u64 << i)));
+            v.into_iter().map(V::U64).collect()
+        }
+        Ty::Bytes => {
+            let mut v: Vec<Vec<u8>> = vec![Vec::new()];
+            v.extend((0..=255u8).map(|b| vec![b]));
+            v.extend(alpha_strings(2));
+            v.extend(alpha_strings(3));
+            for len in 4..=8 {
+                v.push(vec![0x00; len]);
+                v.push(vec![0xa5; len]);
+            }
+            v.into_iter().map(V::Bytes).collect()
+        }
+        Ty::BytesN(0) => vec![V::Bytes(Vec::new())],
+        Ty::BytesN(1) => (0..=255u8).map(|b| V::Bytes(vec![b])).collect(),
+        Ty::BytesN(n) if n <= 3 => alpha_strings(n).into_iter().map(V::Bytes).collect(),
+        Ty::BytesN(n) => {
+            let mut v: Vec<Vec<u8>> = ALPHABET.iter().map(|&s| vec![s; n]).collect();
+            for pos in 0..n {
+                for &s in &ALPHABET[1..] {
+                    let mut x = vec![0u8; n];
+                    x[pos] = s;
+                    v.push(x);
+                }
+            }
+            v.into_iter().map(V::Bytes).collect()
+        }
+    }
+}
+
+fn describe(tys: &[Ty]) -> String {
+    tys.iter()
+        .map(|t| format!("{:?}[{}]", t, domain(*t).len()))
+        .collect::<Vec<_>>()
+        .join(" x ")
+}
+
+/// Per-test counters that end up in the manifest.
+#[derive(Clone, Debug, Default)]
+pub struct Stats {
+    pub cases: u64,
+    pub discarded: u64,
+    pub iterations: u64,
+    pub admitted: u64,
+    /// Property cases whose first two binders were equal (the equal branch).
+    pub equal: u64,
+}
+
+fn counterexample_message(what: &str, env: &[V]) -> String {
+    let repr = format!("{env:?}");
+    if std::env::var("CI").is_ok() {
+        format!("{what}; repro-fnv: {:016x}", fnv1a64(repr.as_bytes()))
+    } else {
+        format!("{what}; counterexample: {repr}")
+    }
+}
+
+type Admit = fn(&[V]) -> bool;
+type Holds = fn(&[V], Fault) -> bool;
+
+/// Bounded-exhaustive enumeration of the Cartesian product of binder domains.
+pub fn exhaustive(tys: &[Ty], admit: Admit, holds: Holds, fault: Fault) -> (Verdict, Stats) {
+    let domains: Vec<Vec<V>> = tys.iter().map(|t| domain(*t)).collect();
+    let mut stats = Stats::default();
+    let product: u64 = domains.iter().map(|d| d.len() as u64).product();
+    if product > EXHAUSTIVE_BUDGET {
+        return (
+            Verdict::fail("corpus-malformed", "exhaustive domain exceeds the budget"),
+            stats,
+        );
+    }
+    let mut idx = vec![0usize; domains.len()];
+    loop {
+        let env: Vec<V> = idx.iter().zip(&domains).map(|(i, d)| d[*i].clone()).collect();
+        if admit(&env) {
+            stats.cases += 1;
+            if !holds(&env, fault) {
+                return (
+                    Verdict::fail(
+                        "property-counterexample",
+                        counterexample_message("exhaustive suite falsified the claim", &env),
+                    ),
+                    stats,
+                );
+            }
+        } else {
+            stats.discarded += 1;
+        }
+        let mut pos = idx.len();
+        loop {
+            if pos == 0 {
+                if stats.cases == 0 {
+                    return (
+                        Verdict::fail("property-exhausted", "refinement admitted no case"),
+                        stats,
+                    );
+                }
+                return (Verdict::Pass, stats);
+            }
+            pos -= 1;
+            idx[pos] += 1;
+            if idx[pos] < domains[pos].len() {
+                break;
+            }
+            idx[pos] = 0;
+        }
+    }
+}
+
+// ----- relation-biased generation (shared by property and fuzz) -----------
+
+trait Src {
+    fn byte(&mut self) -> u8;
+    fn bounded(&mut self, n: u64) -> u64;
+    fn word(&mut self) -> u64;
+}
+
+struct RngSrc<'a>(&'a mut SplitMix64);
+impl Src for RngSrc<'_> {
+    fn byte(&mut self) -> u8 {
+        self.0.bounded(256) as u8
+    }
+    fn bounded(&mut self, n: u64) -> u64 {
+        self.0.bounded(n)
+    }
+    fn word(&mut self) -> u64 {
+        self.0.next_u64()
+    }
+}
+
+/// Fuzz input as a randomness source; exhausted input reads as zeros.
+struct StreamSrc<'a> {
+    data: &'a [u8],
+    pos: usize,
+}
+impl Src for StreamSrc<'_> {
+    fn byte(&mut self) -> u8 {
+        let b = self.data.get(self.pos).copied().unwrap_or(0);
+        self.pos += 1;
+        b
+    }
+    fn bounded(&mut self, n: u64) -> u64 {
+        u64::from(self.byte()) % n
+    }
+    fn word(&mut self) -> u64 {
+        let mut w = 0u64;
+        for i in 0..8 {
+            w |= u64::from(self.byte()) << (8 * i);
+        }
+        w
+    }
+}
+
+fn fresh(ty: Ty, src: &mut dyn Src) -> V {
+    match ty {
+        Ty::Bool => V::Bool(src.bounded(2) == 1),
+        Ty::U8 => V::Nat(u64::from(src.byte())),
+        Ty::Nat => V::Nat(src.bounded(65)),
+        Ty::U64 => V::U64(match src.bounded(8) {
+            0 => 0,
+            1 => u64::MAX,
+            2 => 1u64 << src.bounded(64),
+            _ => src.word(),
+        }),
+        Ty::Bytes => {
+            let len = src.bounded(65) as usize;
+            V::Bytes((0..len).map(|_| src.byte()).collect())
+        }
+        Ty::BytesN(n) => V::Bytes((0..n).map(|_| src.byte()).collect()),
+    }
+}
+
+/// Derive a second binder from the first (mode 0..8, see VER04h section 4).
+fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
+    match (prev, mode) {
+        (_, 0) | (_, 1) => fresh(ty, src),
+        (p, 2) | (p, 3) => p.clone(),
+        (V::Bytes(b), 4) | (V::Bytes(b), 5) if !b.is_empty() => {
+            let mut o = b.clone();
+            let bit = src.bounded(8 * o.len() as u64) as usize;
+            o[bit / 8] ^= 1 << (bit % 8);
+            V::Bytes(o)
+        }
+        (V::Bytes(b), 6) if !b.is_empty() => {
+            let mut o = b.clone();
+            let at = src.bounded(o.len() as u64) as usize;
+            o[at] = o[at].wrapping_add(1 + src.bounded(255) as u8);
+            V::Bytes(o)
+        }
+        (V::Bytes(b), 7) if !matches!(ty, Ty::BytesN(_)) => {
+            let mut o = b.clone();
+            if o.is_empty() || src.bounded(2) == 0 {
+                o.push(src.byte());
+            } else {
+                o.pop();
+            }
+            V::Bytes(o)
+        }
+        (V::U64(n), 4) | (V::U64(n), 5) => V::U64(n ^ (1u64 << src.bounded(64))),
+        (V::U64(n), 6) => V::U64(n | (1u64 << src.bounded(64))),
+        (V::Nat(n), 4..=7) => V::Nat(n.wrapping_add(1)),
+        (p, _) => p.clone(),
+    }
+}
+
+fn build(tys: &[Ty], src: &mut dyn Src, mode: u8) -> Vec<V> {
+    let mut env: Vec<V> = Vec::with_capacity(tys.len());
+    for (i, ty) in tys.iter().enumerate() {
+        let partner = (0..i).find(|j| tys[*j] == *ty);
+        let v = match partner {
+            Some(j) => relate(&env[j].clone(), *ty, mode, src),
+            None => fresh(*ty, src),
+        };
+        env.push(v);
+    }
+    env
+}
+
+fn decode(input: &[u8], tys: &[Ty]) -> Vec<V> {
+    let mode = input.first().copied().unwrap_or(0) % 8;
+    let mut src = StreamSrc { data: input, pos: 1 };
+    build(tys, &mut src, mode)
+}
+
+fn shrink_vals(cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> (Vec<V>, usize) {
+    // A shrink candidate may leave the operation's domain (a `Bytes<N>` binder
+    // made shorter panics inside the adapter).  Such a candidate is not a
+    // counterexample, so a panic counts as "the claim holds".
+    let prop = |t: &Vec<V>| catch_unwind(AssertUnwindSafe(|| prop_raw(t))).unwrap_or(true);
+    let mut cur = cand;
+    let mut steps = 0;
+    for i in 0..cur.len() {
+        let base = cur.clone();
+        match &base[i] {
+            V::Bytes(bytes) => {
+                let (s, n) = shrink_bytes(
+                    bytes,
+                    |b| {
+                        let mut t = base.clone();
+                        t[i] = V::Bytes(b.to_vec());
+                        prop(&t)
+                    },
+                    1000,
+                );
+                cur[i] = V::Bytes(s);
+                steps += n;
+            }
+            V::U64(v) => {
+                let (s, n) = shrink_int(
+                    *v as i128,
+                    0,
+                    0,
+                    u64::MAX as i128,
+                    |x| {
+                        let mut t = base.clone();
+                        t[i] = V::U64(x as u64);
+                        prop(&t)
+                    },
+                    1000,
+                );
+                cur[i] = V::U64(s as u64);
+                steps += n;
+            }
+            _ => {}
+        }
+    }
+    (cur, steps)
+}
+
+/// L2 property suite over relation-biased generators.
+pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault) -> (Verdict, Stats) {
+    let seed = SplitMix64::new(EVIDENCE_SEED ^ fnv1a64(tag.as_bytes())).next_u64();
+    let options = PbtOptions {
+        num_tests: PROPERTY_CASES as usize,
+        max_retries: 100,
+        max_shrink_steps: 1000,
+        is_ci: std::env::var("CI").is_ok(),
+    };
+    let cases = Cell::new(0u64);
+    let discarded = Cell::new(0u64);
+    let equal = Cell::new(0u64);
+    let gen = |rng: &mut SplitMix64| -> Result<Vec<V>, String> {
+        for _ in 0..100 {
+            let mode = rng.bounded(8) as u8;
+            let env = build(tys, &mut RngSrc(rng), mode);
+            if admit(&env) {
+                cases.set(cases.get() + 1);
+                if env.len() >= 2 && env[0] == env[1] {
+                    equal.set(equal.get() + 1);
+                }
+                return Ok(env);
+            }
+            discarded.set(discarded.get() + 1);
+        }
+        Err(FID_EXHAUSTED.to_string())
+    };
+    let verdict = check_property(
+        seed,
+        &options,
+        gen,
+        move |env: &Vec<V>| holds(env, fault),
+        shrink_vals,
+    );
+    let stats = Stats {
+        cases: cases.get(),
+        discarded: discarded.get(),
+        equal: equal.get(),
+        ..Stats::default()
+    };
+    (verdict, stats)
+}
+
+fn cover(cov: &mut CoverageBitmap, env: &[V]) {
+    for (i, v) in env.iter().enumerate() {
+        match v {
+            V::Bytes(b) => cov.record_edge(300 + b.len().min(64)),
+            V::U64(n) => cov.record_edge(500 + n.count_ones() as usize),
+            V::Bool(x) => cov.record_edge(600 + usize::from(*x)),
+            _ => {}
+        }
+        for w in &env[i + 1..] {
+            match (v, w) {
+                (V::Bytes(a), V::Bytes(b)) => {
+                    cov.record_edge(if a == b { 1 } else { 2 });
+                    cov.record_edge(if a.len() == b.len() { 3 } else { 4 + (a.len() ^ b.len()) % 64 });
+                    let pre = a.iter().zip(b.iter()).take_while(|(x, y)| x == y).count();
+                    cov.record_edge(1000 + pre.min(64));
+                }
+                (V::U64(a), V::U64(b)) => {
+                    cov.record_edge(if a == b { 700 } else { 701 + (a ^ b).count_ones() as usize });
+                }
+                _ => {}
+            }
+        }
+    }
+}
+
+/// Coverage-guided fuzz campaign; the claim body is the oracle.
+pub fn fuzz_claim(
+    tag: &str,
+    tys: &[Ty],
+    admit: Admit,
+    holds: Holds,
+    fault: Fault,
+    iterations: u64,
+) -> (Verdict, Stats) {
+    let opts = FuzzOptions {
+        max_iterations: iterations as usize,
+        seed: SplitMix64::new(EVIDENCE_SEED ^ fnv1a64(tag.as_bytes())).next_u64(),
+        max_input_len: 256,
+        base_energy: 10,
+    };
+    let corpus: Vec<Vec<u8>> = (0..8u8)
+        .map(|m| {
+            let mut s = vec![m, 4];
+            s.extend((0..40u8).map(|i| i.wrapping_mul(37).wrapping_add(m)));
+            s
+        })
+        .collect();
+    let admitted = Cell::new(0u64);
+    let report = fuzz::fuzz_target(&corpus, &opts, |input, cov| {
+        let env = decode(input, tys);
+        cover(cov, &env);
+        if !admit(&env) {
+            cov.record_edge(4000);
+            return FuzzOutcome::Pass;
+        }
+        admitted.set(admitted.get() + 1);
+        match catch_unwind(AssertUnwindSafe(|| holds(&env, fault))) {
+            Ok(true) => FuzzOutcome::Pass,
+            Ok(false) => FuzzOutcome::Crash {
+                kind: "claim-violated".into(),
+                frames: vec![tag.to_string()],
+            },
+            Err(_) => FuzzOutcome::Crash {
+                kind: "panic".into(),
+                frames: vec![tag.to_string()],
+            },
+        }
+    });
+    let stats = Stats {
+        iterations: report.iterations as u64,
+        admitted: admitted.get(),
+        ..Stats::default()
+    };
+    if let Some(c) = report.crashes.first() {
+        return (
+            Verdict::fail(FID_FUZZ_CRASH, format!("fuzz campaign found {} ({} hits)", c.kind, c.hits)),
+            stats,
+        );
+    }
+    if stats.admitted == 0 {
+        return (Verdict::fail("corpus-mismatch", "fuzz campaign admitted no input"), stats);
+    }
+    (Verdict::Pass, stats)
+}
+
+// ----- manifest recording ---------------------------------------------------
+
+#[derive(Clone, Debug)]
+struct Meta {
+    id: String,
+    kind: &'static str,
+    op: String,
+    claim: String,
+    fault: String,
+    target: String,
+    domain: String,
+    seed: String,
+}
+
+static META: Mutex<Vec<Meta>> = Mutex::new(Vec::new());
+static STATS: Mutex<BTreeMap<String, (Stats, String)>> = Mutex::new(BTreeMap::new());
+
+fn reg(
+    suite: &mut Suite,
+    meta: Meta,
+    body: impl Fn() -> (Verdict, Stats, String) + 'static,
+) {
+    // WARRANT_EVIDENCE_FILTER=<substring> keeps only matching test ids; it
+    // exists so BUILD can run a sabotage mode against a cheap subset.  A
+    // filtered run never writes a manifest (see `write_manifest`).
+    if let Ok(filter) = std::env::var("WARRANT_EVIDENCE_FILTER") {
+        if !meta.id.contains(&filter) {
+            return;
+        }
+    }
+    let id = meta.id.clone();
+    META.lock().unwrap().push(meta);
+    suite.add(id.clone(), move |_ctx| {
+        let (verdict, stats, note) = body();
+        STATS.lock().unwrap().insert(id.clone(), (stats, note));
+        verdict
+    });
+}
+
+fn is_detected(v: &Verdict) -> bool {
+    match v {
+        Verdict::Fail { failure_id, .. } => {
+            coding_adventures_test_bootstrap::verdict::is_registered_failure_id(failure_id)
+        }
+        Verdict::Pass => false,
+    }
+}
+
+fn seed_of(tag: &str) -> u64 {
+    SplitMix64::new(EVIDENCE_SEED ^ fnv1a64(tag.as_bytes())).next_u64()
+}
+
+fn write_manifest(outcomes: &[Outcome]) {
+    let Some(path) = manifest::output_path("WARRANT_EVIDENCE_OUT") else {
+        return;
+    };
+    if std::env::var("WARRANT_EVIDENCE_FAULT").is_ok()
+        || std::env::var("WARRANT_EVIDENCE_FILTER").is_ok()
+    {
+        eprintln!("refusing to write an evidence manifest from a sabotaged or filtered run");
+        return;
+    }
+    let metas = META.lock().unwrap().clone();
+    let stats = STATS.lock().unwrap().clone();
+    let mut tests: Vec<Json> = Vec::new();
+    for m in metas {
+        let verdict = outcomes
+            .iter()
+            .find(|o| o.id == m.id)
+            .map(|o| if o.passed() { "pass" } else { "fail" })
+            .unwrap_or("not-run");
+        let (s, note) = stats.get(&m.id).cloned().unwrap_or_default();
+        let mut e: BTreeMap<String, Json> = BTreeMap::new();
+        e.insert("id".into(), Json::Str(m.id));
+        e.insert("kind".into(), Json::str(m.kind));
+        e.insert("op".into(), Json::Str(m.op));
+        e.insert("claim".into(), Json::Str(m.claim));
+        e.insert("verdict".into(), Json::str(verdict));
+        match m.kind {
+            "example" => {
+                e.insert("cases".into(), Json::Num(1));
+            }
+            "exhaustive" => {
+                e.insert("cases".into(), Json::Num(s.cases));
+                e.insert("discarded".into(), Json::Num(s.discarded));
+                e.insert("domain".into(), Json::Str(m.domain));
+            }
+            "property" => {
+                e.insert("cases".into(), Json::Num(s.cases));
+                e.insert("discarded".into(), Json::Num(s.discarded));
+                e.insert("equal_cases".into(), Json::Num(s.equal));
+                e.insert("seed".into(), Json::Str(m.seed));
+            }
+            "fuzz" => {
+                e.insert("iterations".into(), Json::Num(s.iterations));
+                e.insert("admitted".into(), Json::Num(s.admitted));
+                e.insert("seed".into(), Json::Str(m.seed));
+            }
+            _ => {
+                e.insert("fault".into(), Json::Str(m.fault));
+                e.insert("target".into(), Json::Str(m.target));
+                e.insert("caught_by".into(), Json::Str(note));
+            }
+        }
+        tests.push(Json::Obj(e));
+    }
+    let doc = Json::obj([
+        ("schema", Json::str("warrant-test-evidence-v1")),
+        ("module", Json::str(MODULE)),
+        ("spec", Json::str(SPEC_PATH)),
+        ("spec_sha256", Json::str(SPEC_SHA256)),
+        ("evidence_seed", Json::Str(EVIDENCE_SEED.to_string())),
+        ("tests", Json::Arr(tests)),
+    ]);
+    if let Err(e) = manifest::write(&path, &doc) {
+        eprintln!("cannot write evidence manifest: {e}");
+    }
+}
+
+/// Entry point of the generated test target. Returns the process exit code.
+pub fn run_main() -> i32 {
+    std::panic::set_hook(Box::new(|_| ()));
+    let fault = match std::env::var("WARRANT_EVIDENCE_FAULT") {
+        Ok(text) => match Fault::parse(&text) {
+            Some(f) => f,
+            None => {
+                eprintln!("unknown WARRANT_EVIDENCE_FAULT {text:?}");
+                return 2;
+            }
+        },
+        Err(_) => Fault::None,
+    };
+    let suite = build_suite(fault);
+    run::main_recorded(&suite, write_manifest)
+}
+
+impl Meta {
+    fn new(id: &str, kind: &'static str, op: &str, claim: &str) -> Meta {
+        Meta {
+            id: id.to_string(),
+            kind,
+            op: op.to_string(),
+            claim: claim.to_string(),
+            fault: String::new(),
+            target: String::new(),
+            domain: String::new(),
+            seed: String::new(),
+        }
+    }
+}
+
+fn example_verdict(ok: bool) -> Verdict {
+    if ok {
+        Verdict::Pass
+    } else {
+        Verdict::fail("not-deep-equal", "example expression did not evaluate to true")
+    }
+}
+
+/// A negative control passes iff at least one suite caught the injected fault.
+fn negctl_result(caught: Vec<&str>, fault: &str) -> (Verdict, Stats, String) {
+    if caught.is_empty() {
+        (
+            Verdict::fail(
+                "corpus-mismatch",
+                format!("fault {fault} was accepted by every suite of the operation"),
+            ),
+            Stats::default(),
+            String::new(),
+        )
+    } else {
+        (Verdict::Pass, Stats::default(), caught.join(","))
+    }
+}

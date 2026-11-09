@@ -29,6 +29,8 @@ pub enum DiagnosticCode {
     W0704,
     /// W0705: Duplicate or conflicting test case identifier.
     W0705,
+    /// W0706: Bounded-exhaustive domain exceeds the case budget (VER04h §3).
+    W0706,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -39,6 +41,7 @@ impl fmt::Display for DiagnosticCode {
             Self::W0703 => write!(f, "W0703"),
             Self::W0704 => write!(f, "W0704"),
             Self::W0705 => write!(f, "W0705"),
+            Self::W0706 => write!(f, "W0706"),
         }
     }
 }
@@ -1089,7 +1092,7 @@ pub fn extract_claim_cases<'a>(
     Ok(claims)
 }
 
-fn find_operation_in_expr<'a>(
+pub(crate) fn find_operation_in_expr<'a>(
     expr: &'a Expression<'a>,
     op_names: &HashSet<&str>,
 ) -> Option<&'a str> {
@@ -1624,7 +1627,12 @@ pub fn compile_rust_l0_harness(
         }
     }
 
-    let claim_cases = extract_claim_cases(file)?;
+    // Universal claims are no longer compiled here.  The former claim helper
+    // hard-coded `a == b` as its oracle, accepted at most two binders and was
+    // only ever string-matched.  Claims now compile through
+    // `evidence::compile_rust_evidence_harness` (VER04h), which translates the
+    // claim body itself.  `extract_claim_cases` remains for tooling.
+    let claim_cases: Vec<ClaimCase<'_>> = Vec::new();
 
     // Verify all operations called in claims are bound in manifest
     for claim in &claim_cases {
