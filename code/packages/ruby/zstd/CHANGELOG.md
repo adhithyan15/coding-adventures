@@ -3,6 +3,12 @@
 All notable changes to this package are recorded here.
 Follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) conventions.
 
+## [Unreleased]
+
+### Changed
+
+- Add BUILD_windows (standardrb skips Layout/EndOfLine; repo forces LF).
+
 ## [0.1.1] — 2026-04-26
 
 ### Tests
