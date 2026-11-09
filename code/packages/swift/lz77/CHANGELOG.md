@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Security
+
+- Memory safety / DoS: decode indexed output[start + i] with start = count - offset unchecked, so a token with offset 0 or beyond the output trapped (crashed the process). Decoding now stops at the first such token and returns what was produced. deserialiseTokens clamps the untrusted header count to the complete tokens present. NOT RUN locally (toolchain unavailable in the review environment).
+- Added Tests/*/HostileHeadersTests.swift (XCTest): hostile headers with a wall-clock bound, plus round trips over every byte string of length <= 2 and a seeded random sample. NOT RUN locally (toolchain unavailable in the review environment).
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

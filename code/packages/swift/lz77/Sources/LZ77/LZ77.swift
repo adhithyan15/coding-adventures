@@ -185,6 +185,12 @@ public func decode(_ tokens: [Token], initialBuffer: [UInt8] = []) -> [UInt8] {
 
     for token in tokens {
         if token.length > 0 {
+            // Security: a zero offset, or one reaching before the start of the
+            // output, is invalid (corrupt or hostile input).  Indexing with it
+            // would trap (crash the process); stop decoding and return what has
+            // been produced so far instead.  Valid streams are unaffected.
+            guard token.offset > 0, Int(token.offset) <= output.count else { return output }
+
             // Copy length bytes from position (output.count - offset).
             let start = output.count - Int(token.offset)
             // Copy byte-by-byte to handle overlapping matches (offset < length).
@@ -234,8 +240,12 @@ public func serialiseTokens(_ tokens: [Token]) -> [UInt8] {
 public func deserialiseTokens(_ data: [UInt8]) -> [Token] {
     guard data.count >= 4 else { return [] }
 
-    let count = Int(UInt32(data[0]) << 24 | UInt32(data[1]) << 16
-                    | UInt32(data[2]) << 8 | UInt32(data[3]))
+    // Security: the header count is attacker-controlled (up to 2^32-1).  Clamp
+    // it to the number of complete 4-byte tokens actually present so iteration
+    // never follows the claim; a larger claim is treated as truncated.
+    let claimed = Int(UInt32(data[0]) << 24 | UInt32(data[1]) << 16
+                      | UInt32(data[2]) << 8 | UInt32(data[3]))
+    let count = min(claimed, (data.count - 4) / 4)
     var tokens: [Token] = []
 
     for i in 0..<count {
