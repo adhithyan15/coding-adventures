@@ -57,18 +57,48 @@ assert_eq!(accepted.lemmas, 2);
 assert!(drat_check::check(formula, "0\n").is_err());
 ```
 
+## Accepted input, precisely
+
+The contract is VER11 section 3.4; the short version:
+
+- **Text only.** DIMACS CNF and DRAT *text*. **Binary DRAT is not
+  supported** (it will fail as a bad token; never feed it).
+- **Integers** are `-?[0-9]+` in `i64` range. `+1` and `-0` are rejected
+  (they used to be accepted, and `-0` acted as a clause terminator).
+- **Comments** are whole lines starting with `c`; `%` alone on a line ends a
+  formula. CRLF and tabs are fine; a BOM is not.
+- **The proof must contain the `0` step.** An empty proof is never accepted.
+  The proof is parsed completely first, so a malformed tail after the empty
+  clause still rejects; well-formed steps after it are not checked.
+- **Soundness (S).** If `check` returns `Ok`, the formula text is
+  unsatisfiable. The argument is in VER11 section 3.4.1.
+
 ## How it is tested
 
-- **Unit tests** cover every parse error, RUP, RAT, deletion and verdict.
-- **Reference checker:** `tests/reference.rs` re-implements DRAT checking
-  in the most naive way (full-scan propagation). On 4000 random proofs, the
-  two must give the same verdict at the same step, across accepted, not
-  implied, absent deletion and no empty clause.
-- **Soundness:** for 2000 formulas that brute force shows are satisfiable,
-  no generated proof may be accepted.
-- **Real solver proofs:** in `cdcl-sat`'s tests, every UNSAT answer in its
-  differential corpus is certified by this crate. A negative corpus of
-  truncated, reordered and tampered proofs is rejected in full.
+Run `cargo test -p drat-check` (about 30 s, most of it the exhaustive file).
+
+- **Unit tests** (`src/*.rs`): every parse error, RUP, RAT, deletion and
+  verdict path.
+- **`tests/exhaustive.rs`**: bounded-exhaustive. Every CNF over x1..x3 with
+  at most three clauses of width at most two (15,180 formulas: 13,494 SAT,
+  1,686 UNSAT, satisfiability by brute force). For SAT formulas, no
+  candidate proof is accepted (about 5 million: empty, every one-step, a
+  deterministic sample of two-step proofs over an alphabet with a fresh
+  variable so RAT occurs, each with and without a final empty clause). For
+  UNSAT formulas, a resolution refutation generated in the test is accepted
+  in five syntactic variants. The kernel is compared with an independent
+  full-scan checker on 1.65 million proofs, verdict and step.
+- **`tests/contract.rs`**: one test per rule of VER11 section 3.4: grammar,
+  RAT pivot and partner rules, deletion of unit and reason clauses,
+  duplicates, tautologies, a work-budget sweep and large inputs.
+- **`tests/reference.rs`**: the older random differential against a naive
+  checker, and a soundness check on 2000 random satisfiable formulas.
+- **Real solver proofs:** in `cdcl-sat`'s tests every UNSAT answer in its
+  differential corpus is certified by this crate.
+- **Mutation check (by hand, 2026-11-09):** deliberate bugs in a scratch copy
+  of the kernel are caught by the suite; the table is in the CHANGELOG.
+- **Coverage** (`cargo llvm-cov`, measured on a standalone copy of the crate
+  because the workspace invocation fails with E2BIG): see the CHANGELOG.
 
 ## Capabilities
 
