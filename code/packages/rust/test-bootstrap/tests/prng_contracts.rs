@@ -272,7 +272,11 @@ fn sub_seeds_are_distinct_over_an_exhaustive_id_domain() {
     assert_eq!(ids.len(), 6 + 36 + 216 + 1296);
     for run_seed in 0..4u64 {
         let seeds: HashSet<u64> = ids.iter().map(|id| sub_seed(run_seed, id)).collect();
-        assert_eq!(seeds.len(), ids.len(), "collision under run seed {run_seed}");
+        assert_eq!(
+            seeds.len(),
+            ids.len(),
+            "collision under run seed {run_seed}"
+        );
     }
     // FNV-1a itself has no collisions on this domain either.
     let hashes: HashSet<u64> = ids.iter().map(|id| fnv1a64(id.as_bytes())).collect();

@@ -146,7 +146,7 @@ fn a_shrinker_that_returns_a_passing_value_cannot_forge_the_witness() {
         3,
         &options(50),
         |r| Ok(gen_bounded_int(r, 100, 200)),
-        |&x| x < 100, // false everywhere in 100..=200
+        |&x| x < 100,      // false everywhere in 100..=200
         |_, _| (0i128, 5), // 0 satisfies the property: not a counterexample
     );
     let (id, message) = failure(verdict);
@@ -286,7 +286,8 @@ fn independent_short_bytes_pairs_collide_only_through_the_empty_string() {
 }
 
 #[test]
-fn an_equality_property_over_independent_pairs_cannot_see_a_last_byte_bug_but_a_correlated_generator_can() {
+fn an_equality_property_over_independent_pairs_cannot_see_a_last_byte_bug_but_a_correlated_generator_can(
+) {
     // Property: buggy_eq(a, b) == (a == b). The bug only shows on pairs that
     // differ in the LAST byte alone. Independent 16-byte draws never
     // produce such a pair, so the property "passes" against broken code.
@@ -410,7 +411,10 @@ fn bounded_int_is_unbiased_for_spans_above_two_to_the_64() {
         }
     }
     let share = f64::from(low) / f64::from(draws);
-    assert!((0.32..0.347).contains(&share), "P(r < 2^126) = {share}, want 1/3");
+    assert!(
+        (0.32..0.347).contains(&share),
+        "P(r < 2^126) = {share}, want 1/3"
+    );
 }
 
 #[test]
@@ -521,7 +525,9 @@ fn filter_returns_only_values_satisfying_the_predicate() {
 fn list_lengths_are_inclusive_and_element_errors_propagate() {
     let gen = list(Gen::bounded(0, 1), 0, 3);
     let mut rng = SplitMix64::new(6);
-    let lengths: BTreeSet<usize> = (0..400).map(|_| gen.sample(&mut rng).unwrap().len()).collect();
+    let lengths: BTreeSet<usize> = (0..400)
+        .map(|_| gen.sample(&mut rng).unwrap().len())
+        .collect();
     assert_eq!(lengths, BTreeSet::from([0, 1, 2, 3]));
     let failing = list(Gen::bounded(0, 1).filter(|_| false, 1), 2, 2);
     assert_eq!(failing.sample(&mut rng), Err(FID_EXHAUSTED.to_string()));
@@ -656,11 +662,15 @@ type ListProperty = (&'static str, fn(&[i128]) -> bool);
 
 const LIST_PROPERTIES: [ListProperty; 6] = [
     ("no element >= 2", |l| l.iter().all(|&x| x < 2)),
-    ("no adjacent equal pair", |l| l.windows(2).all(|w| w[0] != w[1])),
+    ("no adjacent equal pair", |l| {
+        l.windows(2).all(|w| w[0] != w[1])
+    }),
     ("sum < 5", |l| l.iter().sum::<i128>() < 5),
     ("length < 3", |l| l.len() < 3),
     ("sorted ascending", |l| l.windows(2).all(|w| w[0] <= w[1])),
-    ("fewer than two 3s", |l| l.iter().filter(|&&x| x == 3).count() < 2),
+    ("fewer than two 3s", |l| {
+        l.iter().filter(|&&x| x == 3).count() < 2
+    }),
 ];
 
 #[test]
@@ -671,7 +681,10 @@ fn shrink_list_result_always_falsifies_and_is_no_larger_over_every_small_list() 
     for (name, holds) in LIST_PROPERTIES {
         for list in lists.iter().filter(|l| !holds(l)) {
             let (min, steps) = shrink_list(list, 0, holds, 1000);
-            assert!(!holds(&min), "{name}: {list:?} -> {min:?} satisfies the property");
+            assert!(
+                !holds(&min),
+                "{name}: {list:?} -> {min:?} satisfies the property"
+            );
             assert!(min.len() <= list.len(), "{name}: grew {list:?} -> {min:?}");
             assert!(steps <= 1000);
             // Elements never leave the original alphabet {0..3}.

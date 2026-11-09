@@ -545,7 +545,10 @@ fn bounded_exhaustive_documents_parse_canonically() {
         for y in ALPHABET_28 {
             // Each field is a single token, so each must be a complete value.
             let want = oracle_value_sequence(x) && oracle_value_sequence(y);
-            assert_eq!(parse_file(&doc(&format!("r R2 Kv {x} Kw {y}"))).is_ok(), want);
+            assert_eq!(
+                parse_file(&doc(&format!("r R2 Kv {x} Kw {y}"))).is_ok(),
+                want
+            );
         }
     }
 
@@ -617,7 +620,10 @@ fn bounded_exhaustive_documents_parse_canonically() {
     }
     assert_eq!(d_docs.len(), 4_665);
     let d_ok = check_docs(&mut dump, &d_docs);
-    assert_eq!(d_ok, d_oracle, "digit-string oracle disagrees with the parser");
+    assert_eq!(
+        d_ok, d_oracle,
+        "digit-string oracle disagrees with the parser"
+    );
     for s in &strings {
         assert_eq!(
             parse_file(&doc(&format!("r R1 Kv I{s}"))).is_ok(),
@@ -635,7 +641,10 @@ fn bounded_exhaustive_documents_parse_canonically() {
     accepted += a1_ok + a2_ok + a3_ok + a4_ok + b_ok + c_ok + d_ok;
     dump.finish();
     // Reported in the audit; asserted so a silent shrink of the domain fails.
-    assert_eq!(total, 22_764 + 20_736 + 784 + 196 + 233_376 + 81_892 + 4_665);
+    assert_eq!(
+        total,
+        22_764 + 20_736 + 784 + 196 + 233_376 + 81_892 + 4_665
+    );
     eprintln!("tfv exhaustive: {total} documents, {accepted} accepted");
 }
 
@@ -666,7 +675,10 @@ fn deep_equality_is_an_equivalence_over_the_whole_universe() {
     let at = |t: &str| tokens.iter().position(|x| x == t).expect(t);
     let eq = |a: &str, b: &str| matrix[at(a)][at(b)];
     assert!(eq("D7ff8000000000000", "D7ff0000000000001"), "NaN = NaN");
-    assert!(eq("D7ff8000000000000", "Dfff8000000000000"), "any NaN = any NaN");
+    assert!(
+        eq("D7ff8000000000000", "Dfff8000000000000"),
+        "any NaN = any NaN"
+    );
     assert!(!eq("D0000000000000000", "D8000000000000000"), "+0 != -0");
     assert!(!eq("D7ff8000000000000", "D7ff0000000000000"), "NaN != inf");
     assert!(!eq("X", "S"), "bytes are not text");
@@ -675,7 +687,10 @@ fn deep_equality_is_an_equivalence_over_the_whole_universe() {
     assert!(!eq("L0", "M0"), "empty list is not empty map");
     assert!(eq("M2 N N T I0", "M2 T I0 N N"), "map order is irrelevant");
     assert!(!eq("L2 N T", "L2 T N"), "list order matters");
-    assert!(eq("M1 D7ff8000000000000 N", "M1 D7ff0000000000001 N"), "NaN keys");
+    assert!(
+        eq("M1 D7ff8000000000000 N", "M1 D7ff0000000000001 N"),
+        "NaN keys"
+    );
 
     // Differential: emit the matrix for the Python reference.
     let mut dump = Dump::open_append();
@@ -726,7 +741,10 @@ fn malformed_corpus_is_rejected() {
         ("CRLF header", "tfv 1\r\nr R0\r\n".into()),
         ("CR in record", "tfv 1\nr R0\r\n".into()),
         ("lone CR line", "tfv 1\n\r\n".into()),
-        ("blank line between header and nothing, then junk", "tfv 1\n\njunk\n".into()),
+        (
+            "blank line between header and nothing, then junk",
+            "tfv 1\n\njunk\n".into(),
+        ),
         ("leading space", "tfv 1\n r R0\n".into()),
         ("trailing space", "tfv 1\nr R0 \n".into()),
         ("double space", "tfv 1\nr  R0\n".into()),
@@ -751,7 +769,10 @@ fn malformed_corpus_is_rejected() {
         ("empty field name", "tfv 1\nr R1 K N\n".into()),
         ("duplicate field", "tfv 1\nr R2 Kv N Kv T\n".into()),
         ("duplicate record id", "tfv 1\nr R0\nr R0\n".into()),
-        ("duplicate id across a comment", "tfv 1\nr R0\n# x\nr R0\n".into()),
+        (
+            "duplicate id across a comment",
+            "tfv 1\nr R0\n# x\nr R0\n".into(),
+        ),
         ("missing value", "tfv 1\nr R1 Kv\n".into()),
         ("trailing tokens", "tfv 1\nr R1 Kv N N\n".into()),
         ("lowercase null", "tfv 1\nr R1 Kv n\n".into()),
@@ -768,7 +789,10 @@ fn malformed_corpus_is_rejected() {
         ("int over 1000 digits", int_1001),
         ("float short", "tfv 1\nr R1 Kv D0\n".into()),
         ("float long", "tfv 1\nr R1 Kv D00000000000000000\n".into()),
-        ("float uppercase hex", "tfv 1\nr R1 Kv D7FF8000000000000\n".into()),
+        (
+            "float uppercase hex",
+            "tfv 1\nr R1 Kv D7FF8000000000000\n".into(),
+        ),
         ("float decimal", "tfv 1\nr R1 Kv D1.5\n".into()),
         ("bytes odd length", "tfv 1\nr R1 Kv X0\n".into()),
         ("bytes uppercase", "tfv 1\nr R1 Kv X0A\n".into()),
@@ -787,10 +811,16 @@ fn malformed_corpus_is_rejected() {
         ("list leading zero", "tfv 1\nr R1 Kv L01 N\n".into()),
         ("list no count", "tfv 1\nr R1 Kv L\n".into()),
         ("list negative count", "tfv 1\nr R1 Kv L-1\n".into()),
-        ("list huge count", format!("tfv 1\nr R1 Kv L{big_count} N\n")),
+        (
+            "list huge count",
+            format!("tfv 1\nr R1 Kv L{big_count} N\n"),
+        ),
         ("map odd tokens", "tfv 1\nr R1 Kv M1 N\n".into()),
         ("map duplicate keys", "tfv 1\nr R1 Kv M2 I1 N I1 T\n".into()),
-        ("map NaN duplicate keys", "tfv 1\nr R1 Kv M2 D7ff8000000000000 N D7ff0000000000001 N\n".into()),
+        (
+            "map NaN duplicate keys",
+            "tfv 1\nr R1 Kv M2 D7ff8000000000000 N D7ff0000000000001 N\n".into(),
+        ),
         ("nesting 65", nested_65),
         ("unknown tag", "tfv 1\nr R1 Kv Q1\n".into()),
         ("non-ASCII tag", "tfv 1\nr R1 Kv \u{e9}1\n".into()),
@@ -813,20 +843,41 @@ fn well_formed_corner_cases_are_accepted() {
         ("header only, no newline", "tfv 1"),
         ("header only, newline", "tfv 1\n"),
         ("comments and blanks", "tfv 1\n\n# a\n#\n\nr R0\n# end\n"),
-        ("CR inside a comment is not a record CR", "tfv 1\n# c\r\nr R0\n"),
+        (
+            "CR inside a comment is not a record CR",
+            "tfv 1\n# c\r\nr R0\n",
+        ),
         ("empty record", "tfv 1\nr R0"),
         ("id with every allowed punctuation", "tfv 1\nA.b/c-d_9 R0\n"),
-        ("1000-digit integer", &format!("tfv 1\nr R1 Kv I{}\n", "9".repeat(1000))),
-        ("negative 1000-digit integer", &format!("tfv 1\nr R1 Kv I-{}\n", "9".repeat(1000))),
-        ("nesting 64", &format!("tfv 1\nr R1 Kv {}N\n", "L1 ".repeat(64))),
-        ("maps nest as deep as lists", &format!("tfv 1\nr R1 Kv {}N\n", "M1 N ".repeat(64))),
+        (
+            "1000-digit integer",
+            &format!("tfv 1\nr R1 Kv I{}\n", "9".repeat(1000)),
+        ),
+        (
+            "negative 1000-digit integer",
+            &format!("tfv 1\nr R1 Kv I-{}\n", "9".repeat(1000)),
+        ),
+        (
+            "nesting 64",
+            &format!("tfv 1\nr R1 Kv {}N\n", "L1 ".repeat(64)),
+        ),
+        (
+            "maps nest as deep as lists",
+            &format!("tfv 1\nr R1 Kv {}N\n", "M1 N ".repeat(64)),
+        ),
         ("text with a space inside", "tfv 1\nr R1 Kv S612062\n"),
         ("text NUL", "tfv 1\nr R1 Kv S00\n"),
         ("text U+10FFFF", "tfv 1\nr R1 Kv Sf48fbfbf\n"),
-        ("noncharacter U+FFFF is valid UTF-8", "tfv 1\nr R1 Kv Sefbfbf\n"),
+        (
+            "noncharacter U+FFFF is valid UTF-8",
+            "tfv 1\nr R1 Kv Sefbfbf\n",
+        ),
         ("U+FEFF inside text", "tfv 1\nr R1 Kv Sefbbbf\n"),
         ("keys are not sorted", "tfv 1\nr R2 Kz N Ka N\n"),
-        ("same field name in two records", "tfv 1\na R1 Kx N\nb R1 Kx N\n"),
+        (
+            "same field name in two records",
+            "tfv 1\na R1 Kx N\nb R1 Kx N\n",
+        ),
         ("record ids differing only in case", "tfv 1\na R0\nA R0\n"),
     ];
     for (reason, text) in accepted {

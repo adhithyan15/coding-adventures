@@ -68,8 +68,10 @@ fn sibling_binary(name: &str) -> PathBuf {
             }
         }
     }
-    best.unwrap_or_else(|| panic!("no built {name} binary in {dir:?}; run `cargo test` for the whole package"))
-        .1
+    best.unwrap_or_else(|| {
+        panic!("no built {name} binary in {dir:?}; run `cargo test` for the whole package")
+    })
+    .1
 }
 
 fn spawn_fixture(mode: &str, args: &[&str]) -> Output {
@@ -181,7 +183,11 @@ fn equal_pairs_pass() {
         ("L2 I1 L1 N", "L2 I1 L1 N"),
         ("M2 N T I1 F", "M2 I1 F N T"),
     ] {
-        assert_eq!(deep_equal(&text_of(a), &text_of(b)), Verdict::Pass, "{a} {b}");
+        assert_eq!(
+            deep_equal(&text_of(a), &text_of(b)),
+            Verdict::Pass,
+            "{a} {b}"
+        );
     }
 }
 
@@ -197,13 +203,31 @@ fn error_is_covers_all_three_rows_and_never_passes_a_mismatch() {
         (Some("A"), "AA"),
     ] {
         assert!(
-            matches!(error_is(raised, expected), Verdict::Fail { failure_id: "wrong-error", .. }),
+            matches!(
+                error_is(raised, expected),
+                Verdict::Fail {
+                    failure_id: "wrong-error",
+                    ..
+                }
+            ),
             "{raised:?} vs {expected:?}"
         );
     }
-    assert!(matches!(error_is(None, "A"), Verdict::Fail { failure_id: "no-error", .. }));
+    assert!(matches!(
+        error_is(None, "A"),
+        Verdict::Fail {
+            failure_id: "no-error",
+            ..
+        }
+    ));
     // "no error expected" is not a thing at this layer: None never passes.
-    assert!(matches!(error_is(None, ""), Verdict::Fail { failure_id: "no-error", .. }));
+    assert!(matches!(
+        error_is(None, ""),
+        Verdict::Fail {
+            failure_id: "no-error",
+            ..
+        }
+    ));
     // Two empty ids are equal (an empty id is a valid text), by the table.
     assert_eq!(error_is(Some(""), ""), Verdict::Pass);
 }
@@ -287,10 +311,21 @@ fn no_one_edit_neighbour_of_a_registered_id_is_registered() {
 
 #[test]
 fn the_module_vocabularies_are_subsets_of_the_closed_one() {
-    for id in ["property-counterexample", "property-exhausted", "property-timeout", "property-panic"] {
+    for id in [
+        "property-counterexample",
+        "property-exhausted",
+        "property-timeout",
+        "property-panic",
+    ] {
         assert!(pbt::is_registered_failure_id(id) && verdict::is_registered_failure_id(id));
     }
-    for id in ["fuzz-crash", "fuzz-timeout", "fuzz-oom", "fuzz-leak", "fuzz-panic"] {
+    for id in [
+        "fuzz-crash",
+        "fuzz-timeout",
+        "fuzz-oom",
+        "fuzz-leak",
+        "fuzz-panic",
+    ] {
         assert!(
             coding_adventures_test_bootstrap::fuzz::is_registered_failure_id(id)
                 && verdict::is_registered_failure_id(id)
@@ -313,7 +348,11 @@ fn each_registered_failure_id_is_reported_not_ok_with_exit_one() {
         let (tap, summary) = run_suite(&suite, &Options::default());
         assert_eq!(
             summary,
-            Summary { passed: 0, failed: 1, bailed: false },
+            Summary {
+                passed: 0,
+                failed: 1,
+                bailed: false
+            },
             "{id}"
         );
         assert_eq!(summary.exit_code(), 1);
@@ -335,10 +374,7 @@ fn every_failing_core_path_through_a_suite_is_not_ok() {
         assert!(tap.contains("not ok 1 - neq\n"));
         assert!(tap.contains("  failure_id: \"not-deep-equal\"\n"));
     }
-    for (raised, expected, id) in [
-        (None, "E", "no-error"),
-        (Some("F"), "E", "wrong-error"),
-    ] {
+    for (raised, expected, id) in [(None, "E", "no-error"), (Some("F"), "E", "wrong-error")] {
         let mut suite = Suite::new();
         suite.add("err", move |ctx| ctx.error_is(raised, expected));
         let (tap, summary) = run_suite(&suite, &Options::default());
@@ -381,7 +417,14 @@ fn panics_of_every_shape_are_failures_never_passes() {
     });
     suite.add("z/control-pass", |_| Verdict::Pass);
     let (tap, summary) = run_suite(&suite, &Options::default());
-    assert_eq!(summary, Summary { passed: 1, failed: 8, bailed: false });
+    assert_eq!(
+        summary,
+        Summary {
+            passed: 1,
+            failed: 8,
+            bailed: false
+        }
+    );
     assert_eq!(summary.exit_code(), 1);
     assert_eq!(tap.matches("  failure_id: \"panic\"\n").count(), 8);
     assert_eq!(
@@ -403,7 +446,12 @@ fn panics_of_every_shape_are_failures_never_passes() {
         .collect::<Vec<_>>()
     );
     // The panic text never reaches TAP (it may quote inputs; VER00 §7.3).
-    for leaked in ["a static message", "formatted", "late", "outer still counts"] {
+    for leaked in [
+        "a static message",
+        "formatted",
+        "late",
+        "outer still counts",
+    ] {
         assert!(!tap.contains(leaked), "{leaked:?} leaked into TAP");
     }
 }
@@ -423,7 +471,14 @@ fn a_body_with_zero_checks_passes_by_design() {
         ctx.deep_equal(&Value::Null, &Value::Bool(true))
     });
     let (tap, summary) = run_suite(&suite, &Options::default());
-    assert_eq!(summary, Summary { passed: 2, failed: 0, bailed: false });
+    assert_eq!(
+        summary,
+        Summary {
+            passed: 2,
+            failed: 0,
+            bailed: false
+        }
+    );
     assert_eq!(not_ok_count(&tap), 0);
 }
 
@@ -464,7 +519,13 @@ fn every_test_runs_exactly_once_and_numbers_are_dense() {
         for id in &ids {
             suite.add(id.clone(), |_| Verdict::Pass);
         }
-        let (tap, _) = run_suite(&suite, &Options { seed, sabotage: false });
+        let (tap, _) = run_suite(
+            &suite,
+            &Options {
+                seed,
+                sabotage: false,
+            },
+        );
         let mut seen = Vec::new();
         for (index, line) in tap.lines().filter(|l| l.starts_with("ok ")).enumerate() {
             let (number, id) = line["ok ".len()..].split_once(" - ").unwrap();
@@ -485,7 +546,9 @@ fn every_test_runs_exactly_once_and_numbers_are_dense() {
 #[test]
 fn tap_golden_output_for_a_mixed_suite() {
     let mut suite = Suite::new();
-    suite.add("a", |ctx| ctx.deep_equal(&Value::Bool(true), &Value::Bool(true)));
+    suite.add("a", |ctx| {
+        ctx.deep_equal(&Value::Bool(true), &Value::Bool(true))
+    });
     suite.add("b", |ctx| ctx.error_is(None, "E"));
     // Seed 0 shuffles ["a","b"] to ["a","b"]: the first output of
     // SplitMix64(0) is odd, so bounded(2) = 1 and swap(1, 1) is a no-op.
@@ -509,7 +572,13 @@ fn tap_golden_output_for_a_mixed_suite() {
 fn tap_golden_output_for_a_panic_a_bail_and_a_seed() {
     let mut suite = Suite::new();
     suite.add("x", |_| panic!("hidden"));
-    let (tap, summary) = run_suite(&suite, &Options { seed: 18446744073709551615, sabotage: false });
+    let (tap, summary) = run_suite(
+        &suite,
+        &Options {
+            seed: 18446744073709551615,
+            sabotage: false,
+        },
+    );
     assert_eq!(
         tap,
         "TAP version 14\n\
@@ -536,7 +605,9 @@ fn tap_golden_output_for_a_panic_a_bail_and_a_seed() {
 #[test]
 fn test_id_validation_matches_the_grammar_exhaustively() {
     // Every id of length 0..=2 over an alphabet mixing valid and hostile characters.
-    let alphabet = ['a', 'Z', '0', '.', '_', '/', '-', ' ', '\n', '#', '\u{e9}', '\r', '\t'];
+    let alphabet = [
+        'a', 'Z', '0', '.', '_', '/', '-', ' ', '\n', '#', '\u{e9}', '\r', '\t',
+    ];
     let mut ids = vec![String::new()];
     let mut frontier = vec![String::new()];
     for _ in 0..2 {
@@ -567,7 +638,9 @@ fn test_id_validation_matches_the_grammar_exhaustively() {
             // A bad id never produces a result line, and its bytes cannot
             // add a line to the output: exactly one `Bail out!` line.
             assert_eq!(tap.lines().count(), 4, "{id:?}: {tap:?}");
-            assert!(!tap.lines().any(|l| l.starts_with("ok ") || l.starts_with("not ok ")));
+            assert!(!tap
+                .lines()
+                .any(|l| l.starts_with("ok ") || l.starts_with("not ok ")));
         }
     }
 }
@@ -576,7 +649,9 @@ fn test_id_validation_matches_the_grammar_exhaustively() {
 fn no_message_character_can_forge_a_tap_line() {
     // Every char U+0000..=U+2FFF in the middle of a failure message.
     for code in 0u32..0x3000 {
-        let Some(c) = char::from_u32(code) else { continue };
+        let Some(c) = char::from_u32(code) else {
+            continue;
+        };
         let message = format!("a{c}ok 1 - forged{c}b");
         let mut suite = Suite::new();
         suite.add("m", move |_| Verdict::fail("no-error", message.clone()));
@@ -584,10 +659,16 @@ fn no_message_character_can_forge_a_tap_line() {
         assert_eq!((summary.passed, summary.failed), (0, 1), "U+{code:04X}");
         let lines: Vec<&str> = tap.split('\n').collect();
         // header(4) + not ok + --- + failure_id + message + ... + trailing "".
-        assert_eq!(lines.len(), 10, "U+{code:04X} changed the line structure: {tap:?}");
+        assert_eq!(
+            lines.len(),
+            10,
+            "U+{code:04X} changed the line structure: {tap:?}"
+        );
         assert!(lines[7].starts_with("  message: \"") && lines[7].ends_with('"'));
         assert_eq!(ok_count(&tap), 0, "U+{code:04X} forged an ok line");
-        assert!(!lines.iter().any(|l| l.contains('\r') || l.contains('\u{2028}')));
+        assert!(!lines
+            .iter()
+            .any(|l| l.contains('\r') || l.contains('\u{2028}')));
     }
 }
 
@@ -597,7 +678,10 @@ fn no_message_character_can_forge_a_tap_line() {
 
 #[test]
 fn sabotage_turns_every_core_verdict_into_pass_but_nothing_else() {
-    let sabotage = Options { seed: 0, sabotage: true };
+    let sabotage = Options {
+        seed: 0,
+        sabotage: true,
+    };
     // 1. Every unequal pair now "passes" through Ctx...
     let mut suite = Suite::new();
     for (i, (a, b)) in unequal_pairs().into_iter().enumerate() {
@@ -618,17 +702,25 @@ fn sabotage_turns_every_core_verdict_into_pass_but_nothing_else() {
     // 2. Sabotage does NOT hide panics, hand-built failures, or bad ids.
     let mut rest = Suite::new();
     rest.add("panics", |_| panic!("still a panic"));
-    rest.add("direct-fail", |_| Verdict::fail("corpus-mismatch", "constructed directly"));
+    rest.add("direct-fail", |_| {
+        Verdict::fail("corpus-mismatch", "constructed directly")
+    });
     let (_, summary) = run_suite(&rest, &sabotage);
     assert_eq!((summary.passed, summary.failed), (0, 2));
     let mut bad = Suite::new();
-    bad.add("bad", |_| Verdict::Fail { failure_id: "nope", message: String::new() });
+    bad.add("bad", |_| Verdict::Fail {
+        failure_id: "nope",
+        message: String::new(),
+    });
     let (tap, summary) = run_suite(&bad, &sabotage);
     assert!(summary.bailed);
     assert!(tap.contains("Bail out! invalid failure id"));
 
     // 3. The pure functions in `verdict` are not sabotaged (only Ctx is).
-    assert!(matches!(deep_equal(&Value::Null, &Value::Bool(true)), Verdict::Fail { .. }));
+    assert!(matches!(
+        deep_equal(&Value::Null, &Value::Bool(true)),
+        Verdict::Fail { .. }
+    ));
 }
 
 #[test]
@@ -648,7 +740,10 @@ fn sabotaged_self_corpus_fails_exactly_the_expected_fail_cases() {
             }
         }
     }
-    assert!(expected.len() >= 10, "the corpus must carry real fail cases");
+    assert!(
+        expected.len() >= 10,
+        "the corpus must carry real fail cases"
+    );
     assert!(core_cases > expected.len(), "and real pass cases");
 
     let binary = sibling_binary("self_corpus");
@@ -657,7 +752,11 @@ fn sabotaged_self_corpus_fails_exactly_the_expected_fail_cases() {
         .output()
         .expect("spawn self_corpus");
     let tap = stdout_of(&sabotaged);
-    assert_eq!(sabotaged.status.code(), Some(1), "sabotaged run must exit 1");
+    assert_eq!(
+        sabotaged.status.code(),
+        Some(1),
+        "sabotaged run must exit 1"
+    );
     assert_eq!(not_ok_ids(&tap), expected);
     assert!(tap_is_complete(&tap));
     // Every sabotage failure is a corpus disagreement, nothing else.
@@ -690,12 +789,21 @@ fn exit_status_zero_only_for_a_clean_run() {
     assert!(stdout_of(&empty).contains("1..0"));
 
     let vacuous = spawn_fixture("vacuous", &[]);
-    assert_eq!(vacuous.status.code(), Some(0), "a vacuous pass is a pass (documented)");
+    assert_eq!(
+        vacuous.status.code(),
+        Some(0),
+        "a vacuous pass is a pass (documented)"
+    );
 }
 
 #[test]
 fn exit_status_one_for_failure_panic_and_bailout() {
-    for (mode, want_not_ok) in [("fail", 1), ("panic", 1), ("bad-failure-id", 0), ("duplicate", 0)] {
+    for (mode, want_not_ok) in [
+        ("fail", 1),
+        ("panic", 1),
+        ("bad-failure-id", 0),
+        ("duplicate", 0),
+    ] {
         let out = spawn_fixture(mode, &[]);
         assert_eq!(out.status.code(), Some(1), "{mode}");
         let tap = stdout_of(&out);
@@ -756,7 +864,10 @@ fn parse_args_accepts_exactly_the_documented_forms() {
     let none: [&str; 0] = [];
     assert_eq!(parse_args(none), Ok(Options::default()));
     assert_eq!(parse_args(["--seed", "0"]).unwrap().seed, 0);
-    assert_eq!(parse_args(["--seed", "00000000000000000000"]).unwrap().seed, 0);
+    assert_eq!(
+        parse_args(["--seed", "00000000000000000000"]).unwrap().seed,
+        0
+    );
     assert!(parse_args(["--seed", "18446744073709551615"]).is_ok());
     assert!(parse_args(["--seed", "18446744073709551616"]).is_err());
     assert!(parse_args(["--seed", "1 "]).is_err());
@@ -790,9 +901,16 @@ fn an_early_process_exit_leaves_a_truncated_report_that_a_supervisor_can_detect(
     // with the result lines sees the run is incomplete.
     let out = spawn_fixture("exit-zero", &[]);
     let tap = stdout_of(&out);
-    assert_eq!(out.status.code(), Some(0), "exit status alone cannot see this");
+    assert_eq!(
+        out.status.code(),
+        Some(0),
+        "exit status alone cannot see this"
+    );
     assert!(tap.contains("1..2\n"));
-    assert!(!tap_is_complete(&tap), "a supervisor must treat this as a failure: {tap}");
+    assert!(
+        !tap_is_complete(&tap),
+        "a supervisor must treat this as a failure: {tap}"
+    );
 }
 
 #[test]
@@ -802,7 +920,10 @@ fn a_closed_pipe_mid_report_is_not_a_pass() {
     impl Write for FailsAfter {
         fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
             if self.0 == 0 {
-                return Err(std::io::Error::new(std::io::ErrorKind::BrokenPipe, "closed"));
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::BrokenPipe,
+                    "closed",
+                ));
             }
             let n = self.0.min(bytes.len());
             self.0 -= n;
@@ -817,7 +938,10 @@ fn a_closed_pipe_mid_report_is_not_a_pass() {
     suite.add("b", |_| Verdict::Pass);
     for budget in 0..60 {
         let result = suite.run(&Options::default(), &mut FailsAfter(budget));
-        assert!(result.is_err(), "budget {budget}: a truncated report returned Ok");
+        assert!(
+            result.is_err(),
+            "budget {budget}: a truncated report returned Ok"
+        );
     }
     let _ = run::LANE;
 }
