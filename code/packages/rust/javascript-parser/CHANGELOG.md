@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.67.5] - 2026-11-09
+
+### Fixed
+
+- Support template literals with substitutions across modern ECMAScript editions (#17854):
+  - In `code/grammars/ecmascript/es2016.grammar` through `es2025.grammar`, replaced the broken `template_literal` and `template_span` rules with `template_literal = TEMPLATE_NO_SUB | TEMPLATE_HEAD { expression TEMPLATE_MIDDLE } expression TEMPLATE_TAIL ;`, matching `es2015.grammar` and standard ECMA-262 structure. Previously the grammar lacked a final expression before `TEMPLATE_TAIL`, causing all template literals with substitutions to fail to parse.
+  - In `src/bridge.rs`, updated `convert_template_literal` to parse multi-part template literals into `TemplateLiteral` with $N + 1$ `TemplateElement` quasis interleaved with $N$ expressions, properly tracking `tail: false` for heads/middles and `tail: true` for tails.
+  - Regenerated compiled grammars in `src/_grammar.rs`.
+  - Added unit tests for single substitution, multiple substitutions, adjacent substitutions, expression substitutions, and tagged templates with substitutions across all modern ECMAScript editions (ES2015-ES2025).
+
 ## [0.67.4] - 2026-11-08
 
 ### Fixed

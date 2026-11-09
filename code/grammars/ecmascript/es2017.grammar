@@ -470,9 +470,7 @@ function_expression = "function" [ NAME ] LPAREN [ formal_parameters ] RPAREN
 # --- Template literals (ES2015) ---
 
 template_literal = TEMPLATE_NO_SUB
-                 | TEMPLATE_HEAD { template_span } TEMPLATE_TAIL ;
-
-template_span = expression TEMPLATE_MIDDLE ;
+                 | TEMPLATE_HEAD { expression TEMPLATE_MIDDLE } expression TEMPLATE_TAIL ;
 
 # ============================================================================
 # ExpressionStatement lookahead (F12 phase 0)

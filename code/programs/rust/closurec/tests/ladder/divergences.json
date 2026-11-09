@@ -370,30 +370,6 @@
    "upstream_exit": 0,
    "upstream_stdout": "console.log(3);\n"
   },
-  "ladder_t6_template_advanced": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "ADVANCED compilation failed at parse stage:",
-   "closurec_stdout": "",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "ADVANCED",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: a template literal with a substitution fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
-   "rung": "template",
-   "tier": 6,
-   "upstream_exit": 0,
-   "upstream_stdout": "console.log(\"v1\");\n"
-  },
-  "ladder_t6_template_simple": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "SIMPLE compilation failed at parse stage:",
-   "closurec_stdout": "",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "SIMPLE",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: a template literal with a substitution fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
-   "rung": "template",
-   "tier": 6,
-   "upstream_exit": 0,
-   "upstream_stdout": "var n=1;console.log(`v${n}`);\n"
-  },
   "ladder_t7_async_fn_advanced": {
    "closurec_exit": 1,
    "closurec_stderr_starts_with": "ADVANCED compilation failed at typed AST bridge stage:",

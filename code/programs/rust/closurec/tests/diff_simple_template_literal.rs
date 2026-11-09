@@ -69,3 +69,17 @@ fn simple_template_literal_fixture_matches_expected_stdout() {
     assert!(a.contains(",3)"), "1+2 not folded — did it fall back to WHITESPACE_ONLY? {actual}");
     assert!(!a.contains("1+2"), "a pre-fold expression survived: {actual}");
 }
+
+/// Template literals with substitutions parse and compile through SIMPLE and ADVANCED (#17854).
+#[test]
+fn substituted_template_literal_compiles_at_simple_and_advanced() {
+    let path = std::env::temp_dir().join(format!("closurec-template-sub-{}.js", std::process::id()));
+    std::fs::write(&path, "function greet(x) { return `hello ${x.name}!`; }\ngreet(window);\n").unwrap();
+    for level in ["SIMPLE", "ADVANCED"] {
+        let out = Command::new(BINARY).args(["-O", level, "--js", path.to_str().unwrap()]).output().unwrap();
+        assert!(out.status.success(), "level {level}: {}", String::from_utf8_lossy(&out.stderr));
+        let stdout = String::from_utf8_lossy(&out.stdout);
+        assert!(stdout.contains("`hello ${"), "level {level} did not emit template: {stdout}");
+    }
+    let _ = std::fs::remove_file(&path);
+}
