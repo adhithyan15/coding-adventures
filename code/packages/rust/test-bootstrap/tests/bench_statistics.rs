@@ -285,6 +285,29 @@ impl CostCounter for Scripted {
 }
 
 #[test]
+fn a_counter_passed_by_mutable_reference_is_forwarded_faithfully() {
+    // ct-compare hands `&mut HardwarePerfCounter` to run_with_counter; the
+    // `&mut C` impl must forward name, start and sample.
+    let harness = fast(10);
+    let budget = Budget {
+        max_steps: Some(3),
+        ..Default::default()
+    };
+    let steps = StepCounter::new();
+    let mut counter = &steps;
+    let result = harness.run_with_counter("by-mut-ref", &budget, &mut counter, || steps.advance(3));
+    assert_eq!(result.steps_per_iter, Some(3.0));
+    assert_eq!(result.budget_verdict, BudgetVerdict::Pass);
+
+    let mut scripted = Scripted {
+        name: "steps",
+        sample: CounterSample::Live(0),
+    };
+    let result = harness.run_with_counter("by-mut-ref-scripted", &budget, &mut scripted, || 1 + 1);
+    assert_eq!(result.steps_per_iter, Some(0.0));
+}
+
+#[test]
 fn instruction_budget_rules_for_live_not_live_and_unsupported() {
     // min_batch_duration of 1 ns is met by a single iteration, so the batch
     // size is exactly 1 on every run and Live(n) means n instructions/iter.

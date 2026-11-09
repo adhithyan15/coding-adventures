@@ -267,6 +267,30 @@ fn timeouts_and_ooms_are_counted_and_never_look_clean() {
 }
 
 #[test]
+fn an_all_oom_campaign_counts_the_triage_oom_and_is_never_clean() {
+    let report = fuzz_target(&[vec![1]], &opts(1, 50), |_, _| FuzzOutcome::Oom);
+    assert_eq!((report.ooms, report.timeouts, report.iterations), (1, 0, 0));
+    assert!(!report.is_clean());
+}
+
+#[test]
+fn a_shorter_input_for_a_known_signature_replaces_the_stored_one() {
+    // Two crashing seeds with one signature: the record keeps the shorter
+    // input, and counts both hits. (The first, longer seed is minimized only
+    // as far as the target allows: it crashes for any non-empty input.)
+    let report = fuzz_target(&[vec![9, 9, 9, 9], vec![7]], &opts(1, 10), |input, _| {
+        if input.is_empty() {
+            FuzzOutcome::Pass
+        } else {
+            crash("same", "frame")
+        }
+    });
+    assert_eq!(report.crashes.len(), 1);
+    assert_eq!(report.crashes[0].hits, 2);
+    assert_eq!(report.crashes[0].minimal_input.len(), 1);
+}
+
+#[test]
 fn a_genuinely_clean_campaign_is_clean_and_a_vacuous_one_is_not() {
     let clean = fuzz_target(&[vec![1]], &opts(1, 100), |_, cov| {
         cov.record_edge(7);
