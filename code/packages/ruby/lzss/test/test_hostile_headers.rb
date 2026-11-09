@@ -80,4 +80,34 @@ class TestHostileHeaders < Minitest::Test
       assert_equal d, decompress(CODEC.compress(d))
     end
   end
+
+  # Windows portability: C long is 32 bits there, so any native call given a
+  # header-derived value above 2**31-1 raises RangeError.  Simulate that limit
+  # on Array#[] and assert hostile headers never reach it unclamped.
+  module Win32Long
+    class << self
+      attr_accessor :active
+    end
+
+    def [](*args)
+      if Win32Long.active && args.any? { |a| a.is_a?(Integer) && a > 2**31 - 1 }
+        raise RangeError, "bignum too big to convert into 'long'"
+      end
+      super
+    end
+  end
+
+  def with_win32_long_limit
+    Array.prepend(Win32Long) unless Array.ancestors.include?(Win32Long)
+    Win32Long.active = true
+    yield
+  ensure
+    Win32Long.active = false
+  end
+
+  def test_max_declared_values_stay_within_32_bit_long
+    with_win32_long_limit do
+      assert_equal "".b, decompress("\xFF".b * 8)
+    end
+  end
 end

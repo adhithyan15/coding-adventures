@@ -4,6 +4,7 @@
 
 ### Security
 
+- Windows fix: decode clamps the header-declared length to the decoded size before Array#[] (0xFFFFFFFF overflowed a 32-bit C long and raised RangeError); test simulates the 32-bit limit.
 - decode stops once original_length is reached and skips invalid back-references (previously appended nil). block_count was already capped.
 - Added test/test_hostile_headers.rb: hostile headers checked for bounded time and sane results, plus round trips over every byte string of length <= 2 and a seeded random sample.
 

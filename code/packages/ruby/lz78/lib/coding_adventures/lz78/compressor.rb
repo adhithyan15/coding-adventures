@@ -170,7 +170,11 @@ module CodingAdventures
           dict_table << [tok.dict_index, tok.next_char]
         end
 
-        original_length ? output.byteslice(0, original_length) : output
+        # Windows portability: a hostile header can declare 0xFFFFFFFF, which
+        # does not fit a 32-bit C long, so byteslice would raise RangeError.
+        # Clamp to the bytes actually produced (never longer than the input
+        # supports) before the native call; the result is identical.
+        original_length ? output.byteslice(0, [original_length, output.bytesize].min) : output
       end
 
       # Serialises tokens to the CMP01 wire format.

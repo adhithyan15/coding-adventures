@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Security
 
+- Test: the length<=2 round-trip sweep samples sixteen first bytes (all second bytes) so it finishes well under the 60 s ExUnit timeout on Windows CI.
 - No code change: no allocation is sized from the header; output is trimmed to it. NOT RUN locally (toolchain unavailable in the review environment).
 - Added test/hostile_headers_test.exs (ExUnit): hostile headers return only the data actually present, plus round trips over every byte string of length <= 2 and a seeded random sample. NOT RUN locally (toolchain unavailable in the review environment).
 

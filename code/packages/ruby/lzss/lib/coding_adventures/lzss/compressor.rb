@@ -110,7 +110,10 @@ module CodingAdventures
           end
         end
 
-        output = output[0, original_length] if original_length
+        # Windows portability: clamp the header-declared length to what was
+        # actually decoded before the native Array#[] call (0xFFFFFFFF does not
+        # fit a 32-bit C long and would raise RangeError); result is identical.
+        output = output[0, [original_length, output.length].min] if original_length
         output.pack("C*")
       end
 
