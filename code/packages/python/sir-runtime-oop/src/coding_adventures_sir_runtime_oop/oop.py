@@ -31,6 +31,7 @@ receivers into method bodies (out of scope for the backend).  See
 
 from __future__ import annotations
 
+import inspect
 import math
 import re
 from collections.abc import Callable
@@ -1443,7 +1444,18 @@ def _yield_hash_pair(block: Closure, key: Val, value: Val) -> Val:
     (e.g. `{a: 1}.each { |pair| ... }`), and a two-parameter (or variadic)
     block the key and value as separate arguments (`|k, v|`).
     """
-    if getattr(block, "arity", None) == 1:
+    arity = getattr(block, "arity", None)
+    if arity is None and hasattr(block, "fn"):
+        try:
+            params = [
+                p
+                for p in inspect.signature(block.fn).parameters.values()
+                if p.kind in (inspect.Parameter.POSITIONAL_ONLY, inspect.Parameter.POSITIONAL_OR_KEYWORD)
+            ]
+            arity = len(params)
+        except (TypeError, ValueError):
+            pass
+    if arity == 1:
         return apply(block, [[key, value]])
     return apply(block, [key, value])
 

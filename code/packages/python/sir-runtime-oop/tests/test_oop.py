@@ -598,11 +598,11 @@ def test_hash_each_one_parameter_block() -> None:
     # #18798 Comment 1: A one-parameter block over a Hash receives the [key, value] pair.
     seen: list[Val] = []
     h = {"a": 1, "b": 2}
-    result = oop.call_method(h, "each", Closure(lambda pair: seen.append(pair)))
+    result = oop.call_method(h, "each", Closure(lambda pair: seen.append(pair), arity=1))
     assert seen == [["a", 1], ["b", 2]]
     assert result is h
     # Map with a one-parameter block also receives the pair.
-    assert oop.call_method(h, "map", Closure(lambda pair: pair[0])) == ["a", "b"]
+    assert oop.call_method(h, "map", Closure(lambda pair: pair[0], arity=1)) == ["a", "b"]
 
 
 def test_hash_each_key_each_value() -> None:

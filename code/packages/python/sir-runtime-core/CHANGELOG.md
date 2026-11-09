@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — Closure arity introspection default (#18798)
+
+- `Closure.__init__` now defaults `arity` to `_positional_arity(fn)` when `arity is None`, allowing directly-instantiated closures to report their arity to block dispatchers.
+
 ## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
 
 - Added `iadd(a, b)` for in-place addition `+=`. Mutates lists in place via `.extend()` / `.append()`, preserving object identity across aliases, and falls back to `add(a, b)` otherwise.
