@@ -188,20 +188,35 @@ for each op:
 2. **`bound … steps <= f(len(a))`** → `BoundProver` obligation evaluated at each
    concrete length with `f` evaluated by the Warrant model evaluator.
 
-Obligations are discharged for every length *shape* in the domain
-`{(len_a, len_b) : 0 <= len_a, len_b <= K}` for two-buffer ops (every shape for
-`ct_select_bytes`, whose precondition makes unequal shapes the trap path) and
-`0..=K` for fixed width. `K` is the largest value that completes in CI time
-(recorded as `max_len` in the manifest). The honest label is therefore
-`bounded(K)` (all shapes up to length `K`) — **never `proved`** for byte-slice
-operations — and `proved` only for operations with no loop and no buffer, where
-the claim is over the full input domain (`eq_u64`).
+Obligations are discharged for every length *shape* up to `K`: all
+`(len_a, len_b)` with `0 <= len_a, len_b <= K` for two-buffer operations
+(equal shapes only for `eq_fixed`, whose widths are equal by type). The pilot
+uses `K = 128` (about 22 s in CI; 16,641 shapes for `ct_eq`), recorded as
+`max_len`. The honest label is therefore `bounded(K)` — **never `proved`** for
+byte-slice operations — and `proved` only for operations with no loop and no
+buffer, where the claim is over the full input domain (`eq_u64`).
+
+`bounded(K)` means: every *non-trapping* shape with lengths `<= K`. A shape on
+which the export's own `assert_eq!` on the public lengths fails
+(`ct_select_bytes` with `len_a != len_b`) panics before reading any byte; the
+symbolic executor reports a trap as an error, not a path outcome, so these
+shapes are *counted, not proved* (`trap_shapes` in the manifest: 16,512 of
+16,641 for `ct_select_bytes`) and are covered by the
+`select_rejects_mismatch` claim's exhaustive/property/fuzz suites instead.
+
+**Lowering fidelity fixes made for this.** `assert!`/`assert_eq!` lowered to
+no-ops, which turned the mismatch path into an out-of-bounds scan; they now
+lower to a branch into a trap (`debug_assert*` stays a no-op, as in release).
+`vec![0; n]` stored a first element, which wrote past a zero-length buffer;
+allocation is zero-filled so a zero fill emits no store.
 
 ### 7.1 What a certificate is
 
 Each successful obligation records the CNF and DRAT proof text that the
 `drat-check` kernel accepted, content-addressed as
-`evidence/proofs/<sha256>.cnf` / `.drat`. The *kind* is recorded:
+`evidence/proofs/<id>.cnf` / `.drat` where `<id>` is the SHA-256 of
+`cnf-bytes ++ 0x00 ++ drat-bytes`, so a file's name can be re-derived from its
+contents. The *kind* is recorded:
 
 * `trivial-miter-collapsed`: the divergence miter simplified structurally to
   `FALSE` (both runs produce identical observable traces by construction, which
@@ -217,8 +232,10 @@ Each successful obligation records the CNF and DRAT proof text that the
 For each op the driver also lowers a *mutated* copy of the source with a
 secret-dependent early exit in the scan loop (or a secret-indexed table read)
 and requires the prover to return `Falsified`. This is recorded as
-`proofneg/<op>/<mutation>`. `WARRANT_PROOF_FAULT=<mutation>` makes the main
-obligations use the mutated source, which must fail.
+`proofneg/<op>/<mutation>`. `WARRANT_PROOF_FAULT=secret-branch` makes the main
+obligations use the mutated source, which must fail; a too-small bound
+(`bound-too-small`) must be `Exceeded`. Mutated runs never write a manifest.
+**Observed:** every certificate in the pilot is `trivial-miter-collapsed`.
 
 ### 7.3 What stays out of scope
 

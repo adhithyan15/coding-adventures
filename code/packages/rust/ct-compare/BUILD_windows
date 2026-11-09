@@ -10,3 +10,5 @@ set WARRANT_EVIDENCE_FAULT=ignore-last-byte&& set WARRANT_EVIDENCE_FILTER=/exhau
 set WARRANT_EVIDENCE_FAULT=ignore-high-bit&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_EVIDENCE_FAULT=swap-choice&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
 set WARRANT_EVIDENCE_FAULT=missing-error&& set WARRANT_EVIDENCE_FILTER=/exhaustive/&& cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>NUL | findstr /B /C:"not ok "
+set WARRANT_PROOF_OUT=%CD%\evidence&& cargo test -q -p coding_adventures_warrant_ir --test warrant_proofs
+set WARRANT_PROOF_FAULT=secret-branch&& cargo test -q -p coding_adventures_warrant_ir --test warrant_proofs 2>NUL | findstr /B /C:"not ok "

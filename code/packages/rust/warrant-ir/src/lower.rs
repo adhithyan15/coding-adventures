@@ -568,11 +568,20 @@ pub fn lower_expr(
                     var: buf.clone(),
                     size_expr: len_expr,
                 });
-                // Initialize first element if non-zero
-                ctx.emit_inst(WirInst::Store {
-                    ptr_expr: WirExpr::Var(buf.clone()),
-                    val_expr,
-                });
+                // Allocation is zero-filled, so a zero fill needs no store.  The
+                // store matters for another fill value, and it is *wrong* for a
+                // zero-length vector (it would write past a 0-byte buffer), which
+                // is why it is skipped rather than emitted unconditionally.
+                let zero_fill = matches!(
+                    &val_expr,
+                    WirExpr::ConstInt { val: 0, .. } | WirExpr::ConstBool(false)
+                );
+                if !zero_fill {
+                    ctx.emit_inst(WirInst::Store {
+                        ptr_expr: WirExpr::Var(buf.clone()),
+                        val_expr,
+                    });
+                }
                 return Ok((WirExpr::Var(buf), WirType::Ptr(Box::new(val_ty)), Label::PUBLIC));
             }
             if name == "assert_eq" || name == "debug_assert_eq" || name == "assert" {
@@ -754,6 +763,42 @@ pub fn lower_block(
                 }
             }
             rust_ast::Stmt::Expr(expr, _) => {
+                // `assert!` / `assert_eq!` are active in release builds: a failed
+                // check traps before anything after it runs.  Lowering them as
+                // no-ops made the mismatch path of `ct_select_bytes` look like an
+                // out-of-bounds scan, so it is lowered as a branch to a trap.
+                // (`debug_assert*` is compiled out of release builds and stays a
+                // no-op.)  Both operands are evaluated for their side effects.
+                if let rust_ast::Expr::MacroCall(name, args, _) = expr {
+                    let cond = match (name.as_str(), args.len()) {
+                        ("assert_eq", n) if n >= 2 => {
+                            let (l, _, _) = lower_expr(ctx, &args[0])?;
+                            let (r, _, _) = lower_expr(ctx, &args[1])?;
+                            Some(WirExpr::Binary {
+                                op: BinaryOp::Eq,
+                                lhs: Box::new(l),
+                                rhs: Box::new(r),
+                            })
+                        }
+                        ("assert", n) if n >= 1 => Some(lower_expr(ctx, &args[0])?.0),
+                        _ => None,
+                    };
+                    if let Some(cond) = cond {
+                        let ok_id = ctx.fresh_block_id();
+                        let trap_id = ctx.fresh_block_id();
+                        ctx.finish_block(
+                            current_block,
+                            WirTerminator::Branch {
+                                cond,
+                                then_block: ok_id,
+                                else_block: trap_id,
+                            },
+                        );
+                        ctx.finish_block(trap_id, WirTerminator::Trap("assertion failed".into()));
+                        current_block = ok_id;
+                        continue;
+                    }
+                }
                 if let rust_ast::Expr::If(cond, then_b, else_b, _) = expr {
                     let (cond_expr, _, _) = lower_expr(ctx, cond)?;
                     let then_id = ctx.fresh_block_id();

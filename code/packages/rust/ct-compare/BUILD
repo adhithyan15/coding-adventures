@@ -13,3 +13,5 @@ WARRANT_EVIDENCE_FAULT=ignore-last-byte WARRANT_EVIDENCE_FILTER=/exhaustive/ car
 WARRANT_EVIDENCE_FAULT=ignore-high-bit WARRANT_EVIDENCE_FILTER=/exhaustive/ cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=swap-choice WARRANT_EVIDENCE_FILTER=/exhaustive/ cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=missing-error WARRANT_EVIDENCE_FILTER=/exhaustive/ cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>/dev/null | grep -q '^not ok '
+WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --test warrant_proofs
+WARRANT_PROOF_FAULT=secret-branch cargo test -q -p coding_adventures_warrant_ir --test warrant_proofs 2>/dev/null | grep -q '^not ok '
