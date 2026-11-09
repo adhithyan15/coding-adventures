@@ -265,9 +265,9 @@ Proof (DRAT text):
   work in literal visits. Once exceeded, every further RUP check answers "no
   conflict", so a failing lemma is reported as `ResourceLimit`. A budget can
   only turn what an unlimited run would accept into a rejection, never the
-  reverse. A *successful* check may report `work` above the budget (a
-  conflict found in the very round that crossed it is genuine and is kept):
-  `work` is a report, not a promise. Callers passing `usize::MAX` to
+  reverse. Every charge is made *before* the work it pays for, and a
+  conflict is only reported after its charge succeeded, so an `Ok` always
+  has `Accepted::work <= Limits::max_work`. Callers passing `usize::MAX` to
   `check_with_limit` accept up to 2^30 variables (tens of GB of tables).
 
 #### 3.4.4 What "verified" means
@@ -364,7 +364,8 @@ Both crates are pure computation over strings and in-memory data. Their
      reader sees a syntax error. A parser differential on the trusted side is
      exactly what the kernel's own-parser rule (3.1) exists to avoid. Rule L4
      now rejects both.
-   - **D7 (spec).** `Accepted.work` can exceed `max_work` on success (C8).
+   - **D7 (spec).** The relation between `Accepted.work` and `max_work` was
+     unstated. It is now a contract: `work <= max_work` on every `Ok` (C8).
    - **D8 (spec).** `Accepted::{empty_clause_line, work}`, `Limits` and
      `check_with_limits` were undocumented; they are API contract now.
    - **D9 (spec).** Section 5 claimed 95% coverage and "thousands of random
