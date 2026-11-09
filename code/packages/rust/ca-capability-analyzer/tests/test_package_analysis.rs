@@ -396,7 +396,7 @@ fn lib_bin_and_build_paths_outside_scan_fail_closed() {
 
 #[test]
 fn path_escape_predicate() {
-    for bad in ["tests/a.rs", "./tests/a.rs", "..", "../a.rs", "a/../b.rs", "/a", "C:\\a", "C:/a", ".x/a.rs", "src/.x/a.rs", "target/a.rs", "tests\\a.rs"] {
+    for bad in ["tests/a.rs", "./tests/a.rs", "..", "../a.rs", "a/../b.rs", "/a", "C:\\a", "C:/a", ".x/a.rs", "src/.x/a.rs", "target/a.rs", "tests\\a.rs", "Tests/evil.rs", "TESTS/a.rs", "./Target/a.rs", "Benches\\a.rs", "Examples/a.rs"] {
         assert!(path_escapes_scan(bad), "{bad}");
     }
     for good in ["src/lib.rs", "./src/lib.rs", "src/tests/a.rs", "build.rs", "", "src/a/b/c.rs", "lib.rs"] {

@@ -1006,6 +1006,34 @@ fn is_include_name(name: &str) -> bool {
     matches!(name, "include" | "include_str" | "include_bytes")
 }
 
+/// Longest `<..>` group (in tokens) searched backwards by `angle_group_has_meta`.
+const ANGLE_SCAN_LIMIT: usize = 512;
+
+/// Is the `>` at `gt` the end of a `<..>` group that contains a `$` metavariable
+/// (or is too long / unbalanced to tell)?  Fails closed.
+fn angle_group_has_meta(toks: &[Token], gt: usize) -> bool {
+    let mut depth = 0usize;
+    let mut saw_dollar = false;
+    let lo = gt.saturating_sub(ANGLE_SCAN_LIMIT);
+    let mut i = gt + 1;
+    while i > lo {
+        i -= 1;
+        match &toks[i].tok {
+            Tok::Punct('>') => depth += 1,
+            Tok::Punct('<') => {
+                depth -= 1;
+                if depth == 0 {
+                    return saw_dollar;
+                }
+            }
+            Tok::Punct('$') => saw_dollar = true,
+            _ => {}
+        }
+    }
+    // No matching `<` within the limit: could be `->`/`>>` noise or a huge group.
+    saw_dollar
+}
+
 /// Flag metavariables spliced next to `::` inside a `macro_rules!` body.
 fn check_macro_body(sink: &mut Sink, toks: &[Token], br: &Brackets, open: usize, close: usize) {
     // `macro_rules!` nested inside `macro_rules!` is re-scanned by its outer
@@ -1080,8 +1108,22 @@ fn check_macro_body(sink: &mut Sink, toks: &[Token], br: &Brackets, open: usize,
                     && ident_at(toks, k - 1).is_some()
                     && is_punct(toks, k - 2, '$')
                     && ident_at(toks, k - 1) != Some(("crate", false));
-                let prev_is_repeat = k >= 1 && closed_at == k - 1 && last_closed_repeat;
-                if next_is_meta || prev_is_meta || prev_is_repeat {
+                // `$(..)::`, `$(..)*::` and `$(..),*::`: a repetition group (with or without
+                // separator / kleene operator) directly before `::` splices unseen path parts.
+                let is_kleene = |i: usize| is_punct(toks, i, '*') || is_punct(toks, i, '+') || is_punct(toks, i, '?');
+                let prev_is_repeat = last_closed_repeat
+                    && k >= 1
+                    && (closed_at == k - 1
+                        || (k >= 2 && closed_at == k - 2 && is_kleene(k - 1))
+                        || (k >= 3 && closed_at == k - 3 && is_kleene(k - 1)));
+                // `<$t>::method`: a metavariable inside a `<..>` qualified-path group.
+                // Exception: `<$t>::MAX` / `<$t>::INFINITY` (SCREAMING_CASE) is an associated
+                // constant; a constant cannot perform I/O, and no `Path` method is spelled so.
+                let screaming_const = matches!(ident_at(toks, k + 1), Some((n, false))
+                    if n.len() > 1 && n.bytes().all(|b| b.is_ascii_uppercase() || b.is_ascii_digit() || b == b'_'));
+                let angle_splice =
+                    k >= 1 && is_punct(toks, k - 1, '>') && !screaming_const && angle_group_has_meta(toks, k - 1);
+                if next_is_meta || prev_is_meta || prev_is_repeat || angle_splice {
                     sink.unanalyzable(
                         toks[k].line,
                         toks[k].col,

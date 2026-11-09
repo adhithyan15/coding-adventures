@@ -76,8 +76,11 @@ pub fn path_escapes_scan(raw: &str) -> bool {
     if comp_vec.iter().any(|c| c.starts_with('.')) {
         return true;
     }
+    // Case-insensitive filesystems resolve `Tests/` to `tests/`.  Only the first component
+    // is a root: the scanner skips the unscanned names at the package root only (D7), so
+    // `src/tests/a.rs` is scanned.
     match comp_vec.first() {
-        Some(first) => UNSCANNED_ROOTS.contains(first),
+        Some(first) => UNSCANNED_ROOTS.iter().any(|r| first.eq_ignore_ascii_case(r)),
         None => false,
     }
 }

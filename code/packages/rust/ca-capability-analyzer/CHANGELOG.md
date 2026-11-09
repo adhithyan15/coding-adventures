@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.2 - Round-2 security fixes (VER08a divergence D22-D24)
+
+- [false negative, N1] `macro_rules! ls { ($t:ty, $p:expr) => { <$t>::read_dir($p) } }` (also `<$t>::exists`, `try_exists`, `read_link`, `canonicalize`, `<$t as Foo>::exists`) hid `Path` UFCS. A `$` metavariable inside a `<..>` group followed by `::` in a `macro_rules!` body is now `CAP003` (general rule, not a method list).
+- [false negative, N2] `$($t)*::read_dir` / `$($t)+::` / `$($t),*::` evaded the repetition rule. Any `$(..)` repetition, with or without separator and kleene operator, followed by `::` is now `CAP003`.
+- [false negative, L-A] `Cargo.toml` unscanned-root comparison (`tests`, `benches`, `examples`, `target`, ..) is now ASCII case-insensitive (`path = "Tests/evil.rs"`).
+- [false-positive guard] `<$t>::MAX` (SCREAMING_CASE associated constant) is exempt from the N1 rule; `segment-tree` uses it and a constant cannot do I/O.
+- [docs, L-B] VER08a documents why `include_str!`/`include_bytes!` are not flagged.
+
 ## 0.3.1 - Security-review fixes (VER08a divergence D14-D21)
 
 Specs first: VER08a updated (rules §3.2-3.5.1, work ceilings §5, divergence log D14-D21).
