@@ -6,6 +6,18 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ### Fixed
 
+- **Copy assigned parameters into local aliases (#18798, Item 4).**
+  In Ruby, parameters are mutable local bindings. Methods, blocks, and lambdas
+  may reassign parameter names (`def f(n); n = n + 1; n; end`). In SIR, parameters
+  exist exclusively in `env.params` and cannot be mutated directly without
+  failing validation or violating backend constraints (such as immutable parameter
+  signatures in Rust or redeclaration conflicts in JavaScript/TypeScript). Callable
+  scopes now scan for assignments to parameter names, mint a fresh local alias
+  (`__param_<name>_<counter>`) via a prologue `Stmt::LetBinding`, and route subsequent
+  reads and assignments to that local alias. Unassigned parameters continue to resolve
+  directly to `Scope::Param`. Zero-argument `super` forwards mutated parameters as their
+  current local value.
+
 - **Preserve parameter declaration order for zero-argument `super` (#18798, Item 20).**
   Zero-argument `super` (`zsuper`) forwards the enclosing method's parameters
   to the parent method. `lower_super_expr` collected parameters from

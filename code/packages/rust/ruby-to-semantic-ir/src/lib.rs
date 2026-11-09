@@ -1019,17 +1019,169 @@ mod tests {
 
     #[test]
     fn def_with_param_reassignment_routes_through_assign() {
-        // Parameters are pre-declared as locals inside the method,
-        // so `x = 2` re-binds and emits `Stmt::Assign`.
+        // #18798 Item 4 — parameters assigned in the body are copied to
+        // fresh local aliases via a prologue LetBinding; subsequent
+        // assignments re-bind that alias via Stmt::Assign.
         let m = lower("def f(x)\n  x = 2\nend\n");
+        assert!(semantic_ir::validate(&m).is_ok(), "{:?}", semantic_ir::validate(&m).issues);
         let f = m.functions.iter().find(|f| f.name == "f").unwrap();
-        match &f.body.stmts[0] {
+        assert_eq!(f.body.stmts.len(), 2);
+        let alias = match &f.body.stmts[0] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert!(name.starts_with("__param_x_"));
+                match value {
+                    Expr::VarRef { name: param_name, scope, .. } => {
+                        assert_eq!(param_name, "x");
+                        assert_eq!(*scope, Scope::Param);
+                    }
+                    other => panic!("expected VarRef(x, Param), got {:?}", other),
+                }
+                name.clone()
+            }
+            other => panic!("expected LetBinding for alias, got {:?}", other),
+        };
+        match &f.body.stmts[1] {
             Stmt::Assign { name, scope, .. } => {
-                assert_eq!(name, "x");
+                assert_eq!(name, &alias);
                 assert_eq!(*scope, Scope::Local);
             }
-            other => panic!("expected Assign(x), got {:?}", other),
+            other => panic!("expected Assign(alias), got {:?}", other),
         }
+    }
+
+    #[test]
+    fn def_param_increment_validates_and_reads_local_alias() {
+        // #18798 Item 4 reproducer: `def f(n); n = n + 1; n; end`
+        let m = lower("def f(n)\n  n = n + 1\n  n\nend\n");
+        assert!(semantic_ir::validate(&m).is_ok(), "{:?}", semantic_ir::validate(&m).issues);
+        let f = m.functions.iter().find(|f| f.name == "f").unwrap();
+        // Prologue + Assign
+        assert_eq!(f.body.stmts.len(), 2);
+        let alias = match &f.body.stmts[0] {
+            Stmt::LetBinding { name, .. } => name.clone(),
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        // Tail expression returns the alias at Scope::Local
+        match &f.body.value {
+            Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, &alias);
+                assert_eq!(*scope, Scope::Local);
+            }
+            other => panic!("expected VarRef(alias, Local), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn def_multiple_params_only_assigned_is_aliased() {
+        // Only `a` is assigned; `b` is unassigned and stays Scope::Param.
+        let m = lower("def f(a, b)\n  a = a + b\n  a\nend\n");
+        assert!(semantic_ir::validate(&m).is_ok(), "{:?}", semantic_ir::validate(&m).issues);
+        let f = m.functions.iter().find(|f| f.name == "f").unwrap();
+        assert_eq!(f.body.stmts.len(), 2);
+        let alias_a = match &f.body.stmts[0] {
+            Stmt::LetBinding { name, value, .. } => {
+                assert!(name.starts_with("__param_a_"));
+                match value {
+                    Expr::VarRef { name, scope, .. } => {
+                        assert_eq!(name, "a");
+                        assert_eq!(*scope, Scope::Param);
+                    }
+                    other => panic!("expected VarRef(a, Param), got {:?}", other),
+                }
+                name.clone()
+            }
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        // Assignment RHS reads `alias_a` (Local) and `b` (Param)
+        match &f.body.stmts[1] {
+            Stmt::Assign { name, value, .. } => {
+                assert_eq!(name, &alias_a);
+                match value {
+                    Expr::BuiltinCall { args, .. } => {
+                        assert_eq!(args.len(), 2);
+                        match &args[0] {
+                            Expr::VarRef { name, scope, .. } => {
+                                assert_eq!(name, &alias_a);
+                                assert_eq!(*scope, Scope::Local);
+                            }
+                            other => panic!("expected VarRef(alias_a, Local), got {:?}", other),
+                        }
+                        match &args[1] {
+                            Expr::VarRef { name, scope, .. } => {
+                                assert_eq!(name, "b");
+                                assert_eq!(*scope, Scope::Param);
+                            }
+                            other => panic!("expected VarRef(b, Param), got {:?}", other),
+                        }
+                    }
+                    other => panic!("expected BuiltinCall, got {:?}", other),
+                }
+            }
+            other => panic!("expected Assign, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn param_assignment_in_while_loop_validates() {
+        let m = lower("def countdown(n)\n  while n > 0\n    n -= 1\n  end\n  n\nend\n");
+        assert!(semantic_ir::validate(&m).is_ok(), "{:?}", semantic_ir::validate(&m).issues);
+    }
+
+    #[test]
+    fn block_param_assignment_validates() {
+        let m = lower("[1, 2].each do |x|\n  x = x + 1\n  x\nend\n");
+        assert!(semantic_ir::validate(&m).is_ok(), "{:?}", semantic_ir::validate(&m).issues);
+    }
+
+    #[test]
+    fn lambda_param_assignment_validates() {
+        let m = lower("f = ->(n) { n = n * 2; n }\n");
+        assert!(semantic_ir::validate(&m).is_ok(), "{:?}", semantic_ir::validate(&m).issues);
+    }
+
+    #[test]
+    fn super_forwards_mutated_param_as_local_alias() {
+        let m = lower("class Base\n  def m(a, b); super; end\nend\nclass Derived < Base\n  def m(a, b)\n    a = a + 1\n    super\n  end\nend\n");
+        assert!(semantic_ir::validate(&m).is_ok(), "{:?}", semantic_ir::validate(&m).issues);
+        let derived_m = m.functions.iter().find(|f| f.name == "Derived__m").unwrap();
+        // The super call is the tail expression of derived_m
+        let (alias_a, _) = match &derived_m.body.stmts[0] {
+            Stmt::LetBinding { name, value, .. } => (name.clone(), value.clone()),
+            other => panic!("expected LetBinding, got {:?}", other),
+        };
+        match &derived_m.body.value {
+            Expr::BuiltinCall { name, args, .. } if name == "__super__" => {
+                // args: [method_name, class_name, a, b]
+                assert_eq!(args.len(), 4);
+                match &args[2] {
+                    Expr::VarRef { name, scope, .. } => {
+                        assert_eq!(name, &alias_a);
+                        assert_eq!(*scope, Scope::Local);
+                    }
+                    other => panic!("expected VarRef(alias_a, Local), got {:?}", other),
+                }
+                match &args[3] {
+                    Expr::VarRef { name, scope, .. } => {
+                        assert_eq!(name, "b");
+                        assert_eq!(*scope, Scope::Param);
+                    }
+                    other => panic!("expected VarRef(b, Param), got {:?}", other),
+                }
+            }
+            other => panic!("expected BuiltinCall(__super__), got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn multi_assignment_to_params_validates() {
+        let m = lower("def swap(a, b)\n  a, b = b, a\n  a\nend\n");
+        assert!(semantic_ir::validate(&m).is_ok(), "{:?}", semantic_ir::validate(&m).issues);
+    }
+
+    #[test]
+    fn rightward_assignment_to_param_validates() {
+        let m = lower("def f(n)\n  10 => n\n  n\nend\n");
+        assert!(semantic_ir::validate(&m).is_ok(), "{:?}", semantic_ir::validate(&m).issues);
     }
 
     // -----------------------------------------------------------------
