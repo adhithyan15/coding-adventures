@@ -128,14 +128,21 @@ fn collect_rs_files(
 
         let name = entry.file_name().to_string_lossy().to_string();
 
-        // Skip ignored directories
+        // Skip ignored directories.
+        //
+        // Hidden directories cannot be named by `mod` (a module name is an
+        // identifier), so they are only reachable through `#[path]`, which the
+        // parser reports as CAP003.  The build/vendor/test directories are
+        // skipped at the package ROOT only: a nested `src/target/mod.rs` is an
+        // ordinary module (`mod target;`) and must be scanned.
         if meta.is_dir() {
+            let at_root = current_dir == root;
             if name.starts_with('.')
-                || name == "target"
-                || name == "node_modules"
-                || name == "_build"
-                || (current_dir == root
-                    && (name == "tests" || name == "benches" || name == "examples"))
+                || (at_root
+                    && matches!(
+                        name.as_str(),
+                        "target" | "node_modules" | "_build" | "tests" | "benches" | "examples"
+                    ))
             {
                 continue;
             }

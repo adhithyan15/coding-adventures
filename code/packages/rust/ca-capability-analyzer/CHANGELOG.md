@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.3.0 - Audit hardening (VER08a / VER23a contract revision)
+
+Specs first: `code/specs/VER08a-rust-capability-analyzer.md` and
+`VER23a-rust-effect-modules.md` now state exact, testable contracts, the
+out-of-scope limits of a lexical analyzer (G-1..G-9), and divergence logs
+(D1-D13, V1-V10).
+
+Bugs fixed (severity in brackets):
+
+- [false negative] `use std::{fs, process::Command};` and every brace group were read as a bare `std` (pure). The scanner is now a real lexer plus a package-wide `use`/alias/glob/`extern crate` resolver.
+- [false negative] `src/capabilities.rs` was never scanned; nested directories named `target`/`node_modules`/`_build` were skipped (`mod target;` hid code). Everything is scanned; exclusions apply at the package root only.
+- [false negative] Unknown `std`/`core`/`alloc` paths defaulted to pure. They are now `CAP003` (deny by default).
+- [false negative] Only six `extern` ABI names counted as FFI (`"C-unwind"` escaped); now every ABI except `"Rust"`. Attributes matched by substring; now exact identifiers, plus `link`, `link_section`, `link_ordinal`, `linkage`, `naked`.
+- [false negative] `include!`, `#[path]`, proc-macro crates/attributes, metavariable-spliced paths and attributes in `macro_rules!`, and `Cargo.toml` paths into unscanned directories are now `CAP003` (never waivable).
+- [false negative, AF-22] A clean report hid that `unsafe` was present under a manifest exception. Reports now list `excepted_constructs`, print them on every PASS, and end with a machine-readable `SUMMARY` line; `AnalysisReport::construct_status` distinguishes absent / present-excepted / present-violation.
+- [false negative] `Path::exists()`-style filesystem probes (method heuristic), `RandomState`/rand crates (`rand` category), `std::os::*`, `std::backtrace`, `_print` and `dbg!` are now detected.
+- [false claim] `--emit-cert` hard-coded `proved` without analysing; it now refuses unless the analysis is clean. Entry-point signatures were truncated at the first `;` (the committed ct-compare certificate was wrong and is regenerated). Entry effects of capability-bearing packages are now the sound over-approximation (all declared effects).
+- [tamper] The certificate checker ignored `unconditional_roots`, exception justifications, unknown fields and duplicate keys, and matched entry points by name. It now recomputes the whole expected certificate and compares every field; JSON output is fully escaped; the digest walker refuses symlinks and exempts only the top-level `src/capabilities.rs`.
+- [robustness] Manifest JSON: duplicate keys, lenient numbers/whitespace/control characters, duplicate or unknown banned-construct exceptions are rejected. Violations sorted by enum variant instead of file/line/col; now by location.
+- [false positive] `std::time::Duration`, `std::net::IpAddr` and other data types are pure.
+
+Tests: 350-case evasion corpus with exact verdicts, 224 hashlib-generated SHA-256 vectors plus NIST examples, 30 certificate tamper tests, 17 manifest tests, 34 package/scanner/Cargo/CLI tests (all in addition to the previous 42). Measured coverage 96.6% lines / 96.4% regions (`cargo llvm-cov`). 20 hand-made mutants, all killed.
+
+Known limits (documented, not fixed): third-party dependencies are only reported; capability `target` is not enforced; `tests/`, `benches/`, `examples/` are not analysed; macros are not expanded.
+
 ## 0.2.0 — 2026-11-08
 
 - Generated capability module and canonical effect certificate support (VER23 / VER24 / VER-P027b):

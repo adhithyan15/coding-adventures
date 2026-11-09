@@ -14,6 +14,7 @@
   controls. `evidence/test-manifest.json` records what the run did.
   BUILD fails if the generated file drifts and checks each sabotage mode.
 
+- Regenerate `effect_certificate.json`: the previous `ct_eq_fixed` entry-point signature was truncated at the first `;` by the analyzer (`pub fn ct_eq_fixed<const N: usize>(a: &[u8`); digests are unchanged.
 - Add equal-instruction-count microbenchmarks and deterministic cost budgeting
   (`tests/microbenchmarks.rs`, VER07 / VER07a / VER-P017):
   - Multi-scale $n \in \{16, 256, 4096\}$ sweeps for `ct_eq` with zero-allocation budget;
