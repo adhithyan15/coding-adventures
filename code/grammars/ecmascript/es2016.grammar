@@ -438,8 +438,8 @@ element_list = [ spread_element | assignment_expression ]
 object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
 
 property_definition = property_name COLON assignment_expression
-                    | NAME
                     | method_definition
+                    | NAME
                     | ELLIPSIS assignment_expression ;
 
 property_name = NAME

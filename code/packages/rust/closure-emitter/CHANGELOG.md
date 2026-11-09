@@ -2,6 +2,14 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.63.4] - 2026-11-09
+
+### Fixed — emit concise object method shorthand and getters/setters (#17941)
+
+- In `src/lib.rs`, `emit_property` now checks `p.method`. When `p.method` is true and the property value is a `FunctionExpression`, it emits concise method syntax `[async ][*]key(params){body}` without the redundant `:function` tokens.
+- For `PropertyKind::Get` and `PropertyKind::Set`, methods now format parameters and bodies directly following `get key()` / `set key(v)`.
+- Added unit test coverage in `tests/upstream/code_printer_object_literal_test.rs`.
+
 ## [0.63.3] - 2026-11-08
 
 ### Fixed — wrap leftmost object expressions in arrow concise bodies (#18146)

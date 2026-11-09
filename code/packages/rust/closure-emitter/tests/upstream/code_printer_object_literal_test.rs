@@ -254,3 +254,28 @@ fn string_value_property() {
         "({k:\"v\"});",
     );
 }
+
+#[test]
+fn method_shorthand_emits_concise_syntax() {
+    use coding_adventures_javascript_ast::{statement::BlockStatement, FunctionExpression};
+    let method_fn = FunctionExpression {
+        cv: None,
+        id: None,
+        params: vec![],
+        body: BlockStatement { cv: None, body: vec![] },
+        generator: false,
+        is_async: false,
+    };
+    assert_emits(
+        object(vec![Property {
+            cv: None,
+            kind: PropertyKind::Init,
+            key: ident_key("f"),
+            value: Box::new(Expression::FunctionExpression(method_fn)),
+            computed: false,
+            shorthand: false,
+            method: true,
+        }]),
+        "({f(){}});",
+    );
+}
