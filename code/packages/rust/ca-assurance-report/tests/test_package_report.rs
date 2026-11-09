@@ -51,6 +51,7 @@ impl Copy {
         fs::create_dir_all(pkg.join("src")).unwrap();
         fs::copy(real.join("src/lib.rs"), pkg.join("src/lib.rs")).unwrap();
         fs::copy(real.join("effect_certificate.json"), pkg.join("effect_certificate.json")).unwrap();
+        fs::copy(real.join("evidence.bindings"), pkg.join("evidence.bindings")).unwrap();
         fs::create_dir_all(root.join("code/specs")).unwrap();
         fs::copy(
             Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../specs/gf256.warrant"),

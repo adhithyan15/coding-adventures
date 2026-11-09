@@ -16,7 +16,7 @@
 use std::{env, fs, path::PathBuf};
 
 use coding_adventures_sha256::sha256_hex;
-use coding_adventures_warrant_grammar::binding::parse_evidence_bindings;
+use coding_adventures_warrant_grammar::binding::{is_package_dir_name, parse_evidence_bindings};
 use coding_adventures_warrant_grammar::checker::check_warrant;
 use coding_adventures_warrant_grammar::evidence::{compile_rust_evidence_harness, EvidenceOptions};
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
@@ -24,8 +24,17 @@ use coding_adventures_warrant_grammar::parser::{parse_document, ParserLimits};
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
 fn generate_one(root: &std::path::Path, package: &str, check: bool) -> Result<(), Box<dyn std::error::Error>> {
+    // The package name is joined into filesystem paths: refuse anything but a
+    // plain directory name before it is used.
+    if !is_package_dir_name(package) {
+        return Err(format!("package `{package}` must match [A-Za-z0-9][A-Za-z0-9_-]*").into());
+    }
     let bindings_path = root.join("code/packages/rust").join(package).join("evidence.bindings");
     let b = parse_evidence_bindings(&fs::read_to_string(&bindings_path)?)
+        .map_err(|e| format!("{}: {e}", bindings_path.display()))?;
+    // spec and output are pinned to this package: the file cannot redirect the
+    // generator to another document or make it write elsewhere.
+    b.validate_paths(package)
         .map_err(|e| format!("{}: {e}", bindings_path.display()))?;
     let spec = fs::read(root.join(&b.spec))?;
     let doc = SourceDocument::admit(&spec, SourceLimits::default()).map_err(|e| format!("{e:?}"))?;

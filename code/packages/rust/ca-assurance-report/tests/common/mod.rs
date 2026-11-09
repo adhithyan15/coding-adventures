@@ -35,6 +35,9 @@ impl Sandbox {
         copy_dir(&real.join("evidence"), &pkg.join("evidence"));
         copy_dir(&real.join("src"), &pkg.join("src"));
         fs::copy(real.join("effect_certificate.json"), pkg.join("effect_certificate.json")).unwrap();
+        // The reviewed bindings file: it is where a package declares an
+        // operation's proofs `not-live`.
+        fs::copy(real.join("evidence.bindings"), pkg.join("evidence.bindings")).unwrap();
         // `--generate` names the report after the package directory and reads
         // its version from Cargo.toml.
         fs::copy(real.join("Cargo.toml"), pkg.join("Cargo.toml")).unwrap();

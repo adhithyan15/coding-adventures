@@ -36,6 +36,7 @@ use std::fmt;
 use std::path::{Path, PathBuf};
 
 use coding_adventures_sha256::sha256_hex;
+use coding_adventures_warrant_grammar::binding::parse_evidence_bindings;
 use coding_adventures_warrant_grammar::codegen::{extract_claim_cases, find_operation_in_expr};
 use coding_adventures_warrant_grammar::layout::{capture_layout, LayoutLimits};
 use coding_adventures_warrant_grammar::parser::{
@@ -599,6 +600,52 @@ fn expected_spec(package_dir: &Path) -> Result<String, EvidenceError> {
     Ok(format!("code/specs/{name}.warrant"))
 }
 
+/// A `not-live` proof entry is an acknowledged absence of proof, and it makes
+/// the report *weaker* (no proof block, an unapproved exemption), so a manifest
+/// must not be able to reach it by itself.  Each such entry must carry no
+/// certificate, the label `not-live` and a non-empty blocker note, and its
+/// operation must be declared `proofs_not_live=<reason>` in the package's
+/// reviewed `evidence.bindings`.  Without that declaration the entry is
+/// rejected, so dropping a proof to `not-live` is a visible change to a second
+/// file, not a one-line edit to a generated manifest.
+fn check_not_live_entries(package_dir: &Path, proofs: &[ProofEntry]) -> Result<(), EvidenceError> {
+    let not_live: Vec<&ProofEntry> = proofs.iter().filter(|p| p.verdict == "not-live").collect();
+    if not_live.is_empty() {
+        return Ok(());
+    }
+    let path = package_dir.join("evidence.bindings");
+    let declared = if path.is_file() {
+        let bytes = read_capped(&path, MAX_MANIFEST_BYTES)?;
+        let text = String::from_utf8(bytes)
+            .map_err(|_| EvidenceError(format!("{} is not UTF-8", path.display())))?;
+        parse_evidence_bindings(&text)
+            .map_err(|e| EvidenceError(format!("{}: {e}", path.display())))?
+            .proofs_not_live
+    } else {
+        BTreeMap::new()
+    };
+    for p in not_live {
+        if !p.certificates.is_empty() {
+            return err(format!("{}: a `not-live` entry cannot cite certificates", p.id));
+        }
+        if p.label != "not-live" {
+            return err(format!("{}: a `not-live` entry must carry the label `not-live`, not {:?}", p.id, p.label));
+        }
+        if p.note.trim().is_empty() {
+            return err(format!("{}: a `not-live` entry must record the blocker in `note`", p.id));
+        }
+        if !declared.contains_key(&p.op) {
+            return err(format!(
+                "{}: recorded `not-live` but operation `{}` is not declared `proofs_not_live=<reason>` in {}",
+                p.id,
+                p.op,
+                path.display()
+            ));
+        }
+    }
+    Ok(())
+}
+
 /// Record `id`, failing when it was already seen or collides with an
 /// attestation id.
 fn claim_id(seen: &mut BTreeSet<String>, id: &str, what: &str) -> Result<(), EvidenceError> {
@@ -731,6 +778,8 @@ impl Evidence {
             }
         }
 
+        check_not_live_entries(package_dir, &proofs)?;
+
         let cert = load_cert(&package_dir.join("effect_certificate.json"))?;
         // The binding covers every `src/**/*.rs` (audit N2), with the framing
         // the producers share via `test_bootstrap::manifest::frame_sources`.
@@ -854,18 +903,22 @@ impl Evidence {
         package_id: &str,
         profile: AuditProfile,
     ) -> PackageAuditContext {
-        // Only obligations that produced a verdict about the code may be cited
-        // as evidence; a `not-live` one is acknowledged separately.
-        let ct: Vec<&ProofEntry> = self
-            .proofs
-            .iter()
-            .filter(|p| p.kind == "constant-time" && p.is_live())
-            .collect();
-        let steps: Vec<&ProofEntry> = self
-            .proofs
-            .iter()
-            .filter(|p| p.kind == "steps-bound" && p.is_live())
-            .collect();
+        // Every constant-time and steps-bound obligation is considered, live or
+        // not (as on main before the generalisation): a `not-live` or
+        // `unchecked` entry is an operation with no proof, and it must block a
+        // discharge that the other operations' passing proofs would otherwise
+        // support.  Only a proven entry (verdict `pass`, ranked label) is ever
+        // *cited* as evidence.
+        let ct: Vec<&ProofEntry> = self.proofs.iter().filter(|p| p.kind == "constant-time").collect();
+        let steps: Vec<&ProofEntry> = self.proofs.iter().filter(|p| p.kind == "steps-bound").collect();
+        let proven = |p: &ProofEntry| p.verdict == "pass" && label_rank(&p.label).is_some();
+        let ids_of = |v: &[&ProofEntry], keep: &dyn Fn(&ProofEntry) -> bool| -> Vec<String> {
+            v.iter().filter(|p| keep(p)).map(|p| p.id.clone()).collect()
+        };
+        let (ct_unproven, steps_unproven) = (
+            ids_of(&ct, &|p| !proven(p)),
+            ids_of(&steps, &|p| !proven(p)),
+        );
         let not_live = |kind: &str| -> Vec<&ProofEntry> {
             self.proofs
                 .iter()
@@ -876,9 +929,7 @@ impl Evidence {
         let mut notes: Vec<&str> = ct_nl.iter().chain(steps_nl.iter()).map(|p| p.note.as_str()).collect();
         notes.sort_unstable();
         notes.dedup();
-        let proof_ok = |v: &[&ProofEntry]| {
-            !v.is_empty() && v.iter().all(|p| p.verdict == "pass" && label_rank(&p.label).is_some())
-        };
+        let proof_ok = |v: &[&ProofEntry]| !v.is_empty() && v.iter().all(|p| proven(p));
         let bench_ct: Vec<&(String, String)> = self
             .bench
             .iter()
@@ -893,19 +944,23 @@ impl Evidence {
         };
         let evidence = AuditEvidence {
             unsafe_exceptions: self.cert.unsafe_exceptions.clone(),
-            step_bound_ids: steps.iter().map(|p| p.id.clone()).collect(),
+            step_bound_ids: ids_of(&steps, &proven),
             step_bound_label: weakest(&steps),
             alloc_ids: bench_ct.iter().map(|(id, _)| id.clone()).collect(),
-            ct_proof_ids: ct.iter().map(|p| p.id.clone()).collect(),
+            ct_proof_ids: ids_of(&ct, &proven),
             ct_proof_label: weakest(&ct),
             bench_ids: bench_ct.iter().map(|(id, _)| id.clone()).collect(),
             hw_counters: self.hw_instruction_counters.clone(),
-            oob_ids: ct
-                .iter()
-                .chain(steps.iter())
-                .map(|p| p.id.clone())
-                .collect(),
+            // Bounds-checking is claimed for the lowered code only when every
+            // obligation ran; one unproven operation leaves the row open.
+            oob_ids: if ct_unproven.is_empty() && steps_unproven.is_empty() {
+                ct.iter().chain(steps.iter()).map(|p| p.id.clone()).collect()
+            } else {
+                Vec::new()
+            },
             oob_label: weakest(&ct),
+            ct_unproven,
+            step_unproven: steps_unproven,
             ct_not_live: ct_nl.iter().map(|p| p.id.clone()).collect(),
             step_not_live: steps_nl.iter().map(|p| p.id.clone()).collect(),
             not_live_note: notes.join(" | "),
@@ -1438,6 +1493,34 @@ pub fn verify_evidence(
             derived.len()
         )));
     }
+    // 6. Weakness rows that rest on a proof kind are re-derived against every
+    //    obligation of that kind, live or not.  A report whose CWE-400 row
+    //    claims a discharge, or whose CWE-208 / CWE-400 row cites proof ids,
+    //    while any steps-bound / constant-time obligation is not a ranked
+    //    pass (`not-live`, `unchecked`, `fail`...) is rejected here, so the
+    //    checker enforces what the generator does.
+    for (cwe, kind) in [(400u32, "steps-bound"), (208u32, "constant-time")] {
+        let of_kind: Vec<&ProofEntry> = ev.proofs.iter().filter(|p| p.kind == kind).collect();
+        let unproven: Vec<&str> = of_kind
+            .iter()
+            .filter(|p| !(p.verdict == "pass" && label_rank(&p.label).is_some()))
+            .map(|p| p.id.as_str())
+            .collect();
+        if unproven.is_empty() {
+            continue;
+        }
+        for w in report.weaknesses.iter().filter(|w| w.cwe == cwe) {
+            let cites_proof = w.evidence.iter().any(|e| of_kind.iter().any(|p| p.id == *e));
+            if w.status == WeaknessStatus::Discharged || cites_proof {
+                return Err(E::EvidenceMismatch(format!(
+                    "CWE-{cwe} is {} on {kind} proofs, but {} obligation(s) are not proven ({})",
+                    w.status.as_str(),
+                    unproven.len(),
+                    unproven.join(", ")
+                )));
+            }
+        }
+    }
     let want_rungs = ev.rungs();
     if report.rungs != want_rungs {
         return Err(E::EvidenceMismatch(format!(
@@ -1447,4 +1530,51 @@ pub fn verify_evidence(
     }
 
     Ok(unverified)
+}
+
+// ---------------------------------------------------------------------------
+// Package identity
+// ---------------------------------------------------------------------------
+
+/// The `version = "..."` of the `[package]` table of a `Cargo.toml`.
+///
+/// Only that table is consulted: a `version = "..."` line in `[dependencies]`
+/// (spelled one key per line), in a `[dependencies.foo]` sub-table or in
+/// `[workspace.package]` is not the package's version and must not be reported
+/// as it.  Comments and blank lines are skipped; `version.workspace = true` is
+/// refused because the version then lives elsewhere.
+pub fn package_version(cargo_toml: &str) -> Result<String, EvidenceError> {
+    let mut in_package = false;
+    for raw in cargo_toml.lines() {
+        let line = raw.trim();
+        if line.is_empty() || line.starts_with('#') {
+            continue;
+        }
+        if line.starts_with('[') {
+            in_package = line.split('#').next().map(str::trim_end) == Some("[package]");
+            continue;
+        }
+        if !in_package {
+            continue;
+        }
+        let Some((key, value)) = line.split_once('=') else { continue };
+        let key = key.trim();
+        if key == "version.workspace" {
+            return err("Cargo.toml [package] inherits its version from the workspace".to_string());
+        }
+        if key != "version" {
+            continue;
+        }
+        if let Some(rest) = value.trim().strip_prefix('"') {
+            if let Some(end) = rest.find('"') {
+                let version = &rest[..end];
+                let tail = rest[end + 1..].trim();
+                if !version.is_empty() && (tail.is_empty() || tail.starts_with('#')) {
+                    return Ok(version.to_string());
+                }
+            }
+        }
+        return err("Cargo.toml [package] has a malformed `version`".to_string());
+    }
+    err("Cargo.toml has no `version = \"...\"` in its [package] table".to_string())
 }

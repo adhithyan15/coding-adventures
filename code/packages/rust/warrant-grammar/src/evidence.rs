@@ -30,7 +30,7 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fmt::Write as _;
 
-use crate::binding::{validate_bindings, BindingManifest};
+use crate::binding::{is_rust_identifier, validate_bindings, BindingManifest};
 use crate::checker::CheckedWarrantModule;
 use crate::codegen::{
     find_operation_in_expr, hex_decode, CodegenError, CodegenErrorKind, DiagnosticCode,
@@ -830,6 +830,35 @@ pub fn generate_evidence_harness(
     manifest: &BindingManifest,
     options: &EvidenceOptions,
 ) -> Result<String, CodegenError> {
+    // Everything spliced into generated Rust source as code must be an
+    // identifier; the spec path lands inside a string literal and must not be
+    // able to close it.  The bindings parser checks the same things, but a
+    // caller may build a manifest by hand, so the generator checks again.
+    if !is_rust_identifier(&options.package_crate) {
+        return Err(unsupported(
+            format!("package `{}` is not a Rust identifier", options.package_crate),
+            (0, 0),
+        ));
+    }
+    if options.spec_path.contains(['"', '\\', '\n', '\r']) {
+        return Err(unsupported(format!("spec path {:?} cannot be embedded", options.spec_path), (0, 0)));
+    }
+    for (op, b) in &manifest.bindings {
+        if !is_rust_identifier(&b.export) {
+            return Err(unsupported(
+                format!("export `{}` of operation `{op}` is not a Rust identifier", b.export),
+                (0, 0),
+            ));
+        }
+        if let Some(n) = &b.error_normalization {
+            if !is_rust_identifier(&n.error_case) {
+                return Err(unsupported(
+                    format!("error case `{}` of operation `{op}` is not an identifier", n.error_case),
+                    (0, 0),
+                ));
+            }
+        }
+    }
     for d in &file.declarations {
         if let Declaration::Op(o) = d {
             if !manifest.bindings.contains_key(o.name) {

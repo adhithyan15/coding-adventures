@@ -25,14 +25,15 @@ fn package_identity(dir: &std::path::Path) -> Result<(String, String), String> {
         .and_then(|n| n.to_str())
         .ok_or("package directory has no name")?
         .to_string();
-    let cargo = fs::read_to_string(canon.join("Cargo.toml"))
-        .map_err(|e| format!("{}/Cargo.toml: {e}", canon.display()))?;
-    let version = cargo
-        .lines()
-        .map(str::trim)
-        .find_map(|l| l.strip_prefix("version = \"").and_then(|r| r.strip_suffix('"')))
-        .ok_or("Cargo.toml has no `version = \"...\"` line")?
-        .to_string();
+    // Same size cap as every other input; the version comes from the
+    // `[package]` table only.
+    let cargo = coding_adventures_ca_assurance_report::evidence::read_capped(
+        &canon.join("Cargo.toml"),
+        coding_adventures_ca_assurance_report::evidence::MAX_MANIFEST_BYTES,
+    )
+    .map_err(|e| format!("{}/Cargo.toml: {}", canon.display(), e.0))?;
+    let cargo = String::from_utf8(cargo).map_err(|_| format!("{}/Cargo.toml is not UTF-8", canon.display()))?;
+    let version = coding_adventures_ca_assurance_report::evidence::package_version(&cargo).map_err(|e| e.0)?;
     Ok((format!("rust/{name}"), version))
 }
 

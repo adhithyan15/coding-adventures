@@ -414,6 +414,30 @@ Further checks added by the security review (each has a falsification test in
 16. **Inputs are size-capped**: manifests, the effect certificate, the Warrant
     document, sources and the report at 16 MiB, certificate files at 64 MiB.
 
+17. **Weakness rows are re-derived against every obligation of their kind.**
+    CWE-400 rests on the steps-bound obligations and CWE-208 on the
+    constant-time obligations *of every operation*, not only the live ones.  If
+    any obligation of the kind is not a ranked `pass` (`not-live`, `unchecked`,
+    failed, unranked), the generator emits no discharge and cites no proof id
+    for the row (`not-live` becomes the unapproved computed exemption, `unchecked`
+    alone leaves the row open), and `--check` rejects a report whose CWE-400 row
+    is `discharged`, or whose CWE-400 / CWE-208 row cites a proof id of that kind
+    (`EvidenceMismatch`).  A mix of proven and unproven operations therefore
+    cannot be laundered into a discharge by the proven ones plus the benchmarks.
+18. **`not-live` is declared, not asserted.**  A `not-live` proof entry must have
+    no certificates, the label `not-live` and a non-empty `note`, and its
+    operation must carry `proofs_not_live=<reason>` in the package's
+    `evidence.bindings` (reviewed input, parsed by the same
+    `parse_evidence_bindings` the generator uses).  `Evidence::load` refuses it
+    otherwise, so weakening a proof to `not-live` needs a visible edit to a
+    second file.
+19. **Bindings are validated before use** (`warrant-grammar`): `package` and
+    `export` are Rust identifiers, `exhaustive_budget` is at most 2^26, `spec`
+    and `output` are plain relative paths pinned by `gen_evidence` to
+    `code/specs/<package>.warrant` and `code/packages/rust/<package>/tests/generated/*.rs`,
+    and the `<package>` argument is a plain directory name.  `--generate` reads the
+    package version from the `[package]` table of `Cargo.toml` only.
+
 Evidence ids come from three places: manifest entries (`warrant/...`,
 `bench/...`; must exist and have verdict `pass`), attestations derived from the
 effect certificate (`effect-certificate::proved`, `capability-audit::*-empty`,

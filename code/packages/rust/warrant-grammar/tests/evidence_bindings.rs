@@ -186,3 +186,93 @@ fn scalar_adapter_has_one_arm_per_declared_fault() {
     assert!(body.contains("Fault::ExpMod256"), "{body}");
     assert!(!body.contains("Fault::OrForXor"), "{body}");
 }
+
+const BASE: &str = "package p\nrevision 1\nspec code/specs/p.warrant\noutput code/packages/rust/p/tests/generated/e.rs\nseed 1\nproperty_cases 1\nfuzz_iterations 1\nnegctl_fuzz_iterations 1\n";
+
+#[test]
+fn exhaustive_budget_is_capped_at_two_to_the_26() {
+    // L3: the parser refuses a budget above 2^26; gf256's 2^24 and 2^26 itself pass.
+    let op = "op a export=a faults=invert\n";
+    let at = |n: u64| parse_evidence_bindings(&format!("{BASE}exhaustive_budget {n}\n{op}"));
+    assert!(at(1 << 24).is_ok());
+    assert!(at(1 << 26).is_ok());
+    let e = at((1 << 26) + 1).unwrap_err();
+    assert!(e.contains("exhaustive_budget") && e.contains("67108864"), "{e}");
+    assert!(at(u64::MAX).is_err());
+}
+
+#[test]
+fn export_and_package_must_be_rust_identifiers() {
+    // L4: nothing but an identifier may reach the generated source.
+    let ok = format!("{BASE}op a export=a faults=invert\n");
+    assert!(parse_evidence_bindings(&ok).is_ok());
+    for bad in ["a;drop()", "a::b", "1a", "a-b", "a(", "a\"b"] {
+        let t = format!("{BASE}op a export={bad} faults=invert\n");
+        let e = parse_evidence_bindings(&t).unwrap_err();
+        assert!(e.contains("not a Rust identifier"), "{bad}: {e}");
+    }
+    for bad in ["p;q", "p-q", "p::q", "9p"] {
+        let t = ok.replace("package p\n", &format!("package {bad}\n"));
+        let e = parse_evidence_bindings(&t).unwrap_err();
+        assert!(e.contains("not a Rust identifier"), "{bad}: {e}");
+    }
+}
+
+#[test]
+fn spec_and_output_are_plain_relative_paths_pinned_to_the_package() {
+    let ok = format!("{BASE}op a export=a faults=invert\n");
+    let b = parse_evidence_bindings(&ok).unwrap();
+    assert!(b.validate_paths("p").is_ok());
+    // Wrong package for the pinned paths.
+    assert!(b.validate_paths("q").is_err());
+    for bad in ["../p", "p/x", "/p", "p;q", "", "p q", ".."] {
+        assert!(b.validate_paths(bad).is_err(), "package arg {bad:?}");
+    }
+    let with = |from: &str, to: &str| parse_evidence_bindings(&ok.replace(from, to));
+    for bad in ["/etc/p.warrant", "../p.warrant", "code/specs/../p.warrant", "C:/p.warrant", "code\\specs\\p.warrant"] {
+        assert!(with("code/specs/p.warrant", bad).is_err(), "spec {bad:?} rejected by the parser");
+    }
+    for bad in ["/tmp/e.rs", "code/packages/rust/p/tests/generated/../../e.rs", "../e.rs"] {
+        assert!(with("code/packages/rust/p/tests/generated/e.rs", bad).is_err(), "output {bad:?} rejected by the parser");
+    }
+    // Plain but not pinned: another package's spec, a deeper or non-.rs output.
+    for (from, to) in [
+        ("code/specs/p.warrant", "code/specs/other.warrant"),
+        ("code/packages/rust/p/tests/generated/e.rs", "code/packages/rust/other/tests/generated/e.rs"),
+        ("code/packages/rust/p/tests/generated/e.rs", "code/packages/rust/p/tests/generated/sub/e.rs"),
+        ("code/packages/rust/p/tests/generated/e.rs", "code/packages/rust/p/src/lib.rs"),
+        ("code/packages/rust/p/tests/generated/e.rs", "code/packages/rust/p/tests/generated/e.txt"),
+    ] {
+        let b = with(from, to).expect("plain relative path parses");
+        assert!(b.validate_paths("p").is_err(), "{to} must not be pinned-valid");
+    }
+    // The checked-in files satisfy the pin.
+    gf().validate_paths("gf256").unwrap();
+    parse_evidence_bindings(CT_BINDINGS).unwrap().validate_paths("ct-compare").unwrap();
+}
+
+#[test]
+fn the_generator_refuses_a_hand_built_manifest_with_a_hostile_export() {
+    let mut b = gf();
+    b.manifest.bindings.get_mut("add").unwrap().export = "add(); std::process::exit(0); fn x".into();
+    let (code, msg) = generate(GF_SPEC, &b).unwrap_err();
+    assert_eq!(code, DiagnosticCode::W0701);
+    assert!(msg.contains("not a Rust identifier"), "{msg}");
+    let mut b = gf();
+    b.manifest.package = "gf256\"; evil".into();
+    assert!(generate(GF_SPEC, &b).is_err());
+}
+
+#[test]
+fn proofs_not_live_is_a_per_op_declaration() {
+    let g = gf();
+    assert_eq!(g.proofs_not_live.len(), 6, "every gf256 op declares its proofs not live");
+    assert!(g.proofs_not_live.contains_key("power"));
+    let c = parse_evidence_bindings(CT_BINDINGS).unwrap();
+    assert!(c.proofs_not_live.is_empty(), "ct-compare proves its operations");
+    let t = format!("{BASE}op a export=a faults=invert proofs_not_live=x\nop b export=b faults=invert\n");
+    let b = parse_evidence_bindings(&t).unwrap();
+    assert_eq!(b.proofs_not_live.keys().collect::<Vec<_>>(), vec!["a"]);
+    // An empty reason is a malformed option, not a declaration.
+    assert!(parse_evidence_bindings(&format!("{BASE}op a export=a faults=invert proofs_not_live=\n")).is_err());
+}

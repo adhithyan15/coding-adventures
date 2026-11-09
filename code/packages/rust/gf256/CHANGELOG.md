@@ -5,6 +5,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Unreleased
+
+- `evidence.bindings`: every operation declares `proofs_not_live=frontend-refuses-lib`, the explicit opt-in `ca-assurance-report --check` now requires for the `not-live` proof entries (VER04h section 9). No change to the library or to the generated harness.
+
 ## 0.2.1 — 2026-11-09
 
 No change to the public API or to any operation's behaviour.

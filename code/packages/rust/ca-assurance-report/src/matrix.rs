@@ -148,6 +148,11 @@ pub struct AuditEvidence {
     /// (attempted, refused by the tooling): an *acknowledged* absence of
     /// proof, as opposed to an absent manifest, which stays an open row.
     pub ct_not_live: Vec<String>,
+    /// Ids of every constant-time / steps-bound obligation that is not a
+    /// ranked pass (`not-live`, `unchecked`, failed, unranked).  Any entry
+    /// here blocks the discharge of the rows that rest on that proof kind.
+    pub ct_unproven: Vec<String>,
+    pub step_unproven: Vec<String>,
     /// Same for step-bound obligations.
     pub step_not_live: Vec<String>,
     /// The blocker text the manifest recorded for the not-live obligations.
@@ -379,7 +384,10 @@ fn evaluate_row(
 
         // Parsing / DoS
         400 => {
-            if ctx.has_zero_alloc_proof && !ctx.evidence.step_bound_ids.is_empty() {
+            if ctx.has_zero_alloc_proof
+                && !ctx.evidence.step_bound_ids.is_empty()
+                && ctx.evidence.step_unproven.is_empty()
+            {
                 let mut ids = ctx.evidence.alloc_ids.clone();
                 ids.extend(ctx.evidence.step_bound_ids.iter().cloned());
                 Ok(WeaknessRow {
@@ -459,7 +467,10 @@ fn evaluate_row(
 
         // Cryptography: CWE-208 observable timing discrepancy
         208 => {
-            if ctx.has_wir_timing_proof && ctx.has_instruction_benchmarks {
+            if ctx.has_wir_timing_proof
+                && ctx.has_instruction_benchmarks
+                && ctx.evidence.ct_unproven.is_empty()
+            {
                 // Computed exemption: proof floor is proved-to-gate-level (CPU netlist).
                 // Backed by the WIR self-composition proofs and the benchmark
                 // manifest, but gate-level proof is deferred to the Busicom

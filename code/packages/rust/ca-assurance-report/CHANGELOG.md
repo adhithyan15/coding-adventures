@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Security fixes (review of the gf256 / package-agnostic branch):
+  - M1: the CWE-400 and CWE-208 rows are derived from *every* steps-bound / constant-time obligation, not only the live ones. A manifest in which some operations pass and others are `not-live` or `unchecked` can no longer discharge CWE-400 or cite WIR proofs for CWE-208 on the strength of the passing operations (`AuditEvidence::{step,ct}_unproven`; `weakest()` and the CWE-125/787 bounds row consider every obligation; `unchecked` blocks as it did before the generalisation). `--check` re-derives the same rule (`verify_evidence` step 6): a report whose CWE-400 row is `discharged`, or whose CWE-400 / CWE-208 row cites a proof id of that kind, while any obligation of the kind is not a ranked pass, is an `EvidenceMismatch`.
+  - L1: a `not-live` proof entry is an opt-in. It must carry no certificates, the label `not-live` and a non-empty `note`, and its operation must be declared `proofs_not_live=<reason>` in the package's `evidence.bindings`; `Evidence::load` (hence `--check` and `--generate`) rejects it otherwise.
+  - L5: `--generate` reads `Cargo.toml` through `read_capped` and takes the version from the `[package]` table only (`evidence::package_version`); a `version` in `[dependencies.*]` or `[workspace.package]` is no longer picked up.
+  - `effect_certificate.json` regenerated. Tests: `tests/test_mixed_proofs.rs`.
 - Integration of package-agnostic generation with the hardened checker: E5 is `pass` only when every operation has a ranked-label pass (the hardened per-operation rule), `not-live` only when the remaining obligations are recorded `not-live`, and `fail` otherwise; an absent optional bench manifest has no source binding to go stale while a present one is still checked; `effect_certificate.json` regenerated for the new `generate_package_report` entry point.
 - Round-2 security fixes:
   - N1: `has_unsafe_token` is a stricter lexer (char/byte literals are exactly `'` + escape-or-char + `'`, lifetimes/labels distinguished, `b""`/`c""`/raw strings with any `#` count, nested comments) and fails closed: an untokenisable file counts as containing `unsafe`.

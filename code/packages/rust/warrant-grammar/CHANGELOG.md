@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Security fixes (review of the gf256 / package-agnostic branch):
+  - L3: `exhaustive_budget` is capped at 2^26 (`MAX_EXHAUSTIVE_BUDGET`) by the `evidence.bindings` parser, with a clear error above it; gf256's 2^24 is unchanged.
+  - L4: `package` and every `export` must be Rust identifiers (also re-checked by the generator, together with error cases and the embedded spec path); `spec` / `output` must be plain relative paths (no absolute path, `..`, backslash, drive letter) and `EvidenceBindingFile::validate_paths` pins them to `code/specs/<pkg>.warrant` and a `.rs` file directly under `code/packages/rust/<pkg>/tests/generated/`; `gen_evidence` validates its `<package>` argument (`[A-Za-z0-9][A-Za-z0-9_-]*`) and calls `validate_paths`.
+  - L1 (support): a new per-op option `proofs_not_live=<reason>` (`EvidenceBindingFile::proofs_not_live`) declares that an operation's proof obligations cannot run; `ca-assurance-report` accepts a `not-live` proof entry only for such an operation.
+  - Generated harnesses (ct-compare, gf256) are byte-identical.
 - Round-2: `resolve_sabotage` rejects a filter unless the fault is a real (non-`none`) one; `run_main` takes the crate's `src/` directory and records the framed `src/**/*.rs` digest as `source_sha256`. Generated harness regenerated.
 - Security review fixes (VER04h section 3 and 6):
   - A1: exhaustive-domain size uses checked arithmetic in the generator and in
