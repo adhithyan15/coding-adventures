@@ -122,6 +122,20 @@ pub struct Suite {
     problems: Vec<String>,
 }
 
+/// One test's verdict as the runner reported it.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Outcome {
+    pub id: String,
+    pub verdict: Verdict,
+}
+
+impl Outcome {
+    /// True when the runner reported `ok` for this test.
+    pub fn passed(&self) -> bool {
+        matches!(self.verdict, Verdict::Pass)
+    }
+}
+
 /// The tally of one run.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Summary {
@@ -170,6 +184,19 @@ impl Suite {
     /// Run tests in shuffled order, writing TAP v14 to `out`.
     /// A malformed callback verdict bails out before it can escape as invalid TAP.
     pub fn run(&self, options: &Options, out: &mut dyn Write) -> io::Result<Summary> {
+        self.run_recorded(options, out).map(|(summary, _)| summary)
+    }
+
+    /// [`Suite::run`], but also return every test's verdict in execution
+    /// order. Evidence manifests (VER04h) are built from these outcomes, so a
+    /// manifest records what the runner actually reported rather than what the
+    /// test body believed.
+    pub fn run_recorded(
+        &self,
+        options: &Options,
+        out: &mut dyn Write,
+    ) -> io::Result<(Summary, Vec<Outcome>)> {
+        let mut outcomes = Vec::new();
         writeln!(out, "TAP version 14")?;
         writeln!(out, "# tf-lane: {LANE}")?;
         writeln!(out, "# tf-seed: {}", options.seed)?;
@@ -182,7 +209,7 @@ impl Suite {
             // Ids are printed with {:?}, so no newline can escape this line.
             writeln!(out, "Bail out! {}", self.problems.join("; "))?;
             summary.bailed = true;
-            return Ok(summary);
+            return Ok((summary, outcomes));
         }
         let bodies: HashMap<&str, &Body> = self
             .tests
@@ -204,6 +231,10 @@ impl Suite {
             let verdict = catch_unwind(AssertUnwindSafe(|| body(&ctx)))
                 .unwrap_or_else(|_| Verdict::fail("panic", "the test panicked"));
             let number = index + 1;
+            outcomes.push(Outcome {
+                id: id.clone(),
+                verdict: verdict.clone(),
+            });
             match verdict {
                 Verdict::Pass => {
                     summary.passed += 1;
@@ -219,7 +250,7 @@ impl Suite {
                     if !verdict::is_registered_failure_id(failure_id) {
                         writeln!(out, "Bail out! invalid failure id")?;
                         summary.bailed = true;
-                        return Ok(summary);
+                        return Ok((summary, outcomes));
                     }
                     summary.failed += 1;
                     writeln!(out, "not ok {number} - {id}")?;
@@ -230,7 +261,7 @@ impl Suite {
                 }
             }
         }
-        Ok(summary)
+        Ok((summary, outcomes))
     }
 }
 
@@ -246,6 +277,15 @@ impl Suite {
 /// }
 /// ```
 pub fn main(suite: &Suite) -> i32 {
+    main_recorded(suite, |_| ())
+}
+
+/// [`main`], handing every test's verdict to `finish` once the run is over
+/// and before the exit status is returned. `finish` is where a harness writes
+/// its evidence manifest (see [`crate::manifest`]). It is not called when the
+/// command line is rejected or stdout closes early, because no complete run
+/// exists to record then.
+pub fn main_recorded(suite: &Suite, finish: impl FnOnce(&[Outcome])) -> i32 {
     let mut args = Vec::new();
     for arg in std::env::args_os().skip(1) {
         match arg.into_string() {
@@ -267,10 +307,13 @@ pub fn main(suite: &Suite) -> i32 {
     let stdout = io::stdout();
     let mut out = stdout.lock();
     match suite
-        .run(&options, &mut out)
+        .run_recorded(&options, &mut out)
         .and_then(|s| out.flush().map(|()| s))
     {
-        Ok(summary) => summary.exit_code(),
+        Ok((summary, outcomes)) => {
+            finish(&outcomes);
+            summary.exit_code()
+        }
         // stdout closed early (say, `| grep -q`): the run cannot be reported,
         // so it cannot count as a pass.
         Err(_) => 1,
@@ -312,6 +355,30 @@ mod tests {
 
     fn tally(suite: &Suite) -> Summary {
         output(suite, &Options::default()).1
+    }
+
+    #[test]
+    fn run_recorded_returns_each_verdict_by_id() {
+        let mut suite = Suite::new();
+        suite.add("good", |_| Verdict::Pass);
+        suite.add("bad", |ctx| ctx.error_is(None, "E"));
+        let mut buffer = Vec::new();
+        let (summary, outcomes) = suite
+            .run_recorded(&Options::default(), &mut buffer)
+            .unwrap();
+        assert_eq!((summary.passed, summary.failed), (1, 1));
+        assert_eq!(outcomes.len(), 2);
+        let good = outcomes.iter().find(|o| o.id == "good").unwrap();
+        let bad = outcomes.iter().find(|o| o.id == "bad").unwrap();
+        assert!(good.passed());
+        assert!(!bad.passed());
+        // A bailed run (duplicate id) records nothing and still reports.
+        let mut dup = Suite::new();
+        dup.add("x", |_| Verdict::Pass);
+        dup.add("x", |_| Verdict::Pass);
+        let (summary, outcomes) = dup.run_recorded(&Options::default(), &mut Vec::new()).unwrap();
+        assert!(summary.bailed);
+        assert!(outcomes.is_empty());
     }
 
     #[test]

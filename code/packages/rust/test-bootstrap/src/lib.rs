@@ -37,6 +37,7 @@
 
 pub mod bench;
 pub mod fuzz;
+pub mod manifest;
 pub mod pbt;
 pub mod prng;
 pub mod run;
@@ -47,6 +48,6 @@ pub use bench::{
     bench, BenchmarkConfig, BenchmarkHarness, BenchmarkResult, Budget, BudgetVerdict, CostCounter,
     CounterSample,
 };
-pub use run::{Ctx, Options, Suite, Summary};
+pub use run::{Ctx, Options, Outcome, Suite, Summary};
 pub use tfv::{Record, TfvError, Value};
 pub use verdict::Verdict;
