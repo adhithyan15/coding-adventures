@@ -16,3 +16,12 @@ Next time: before pushing a change to any shared crate, run
 `cargo tree -i <crate> -e normal,build --prefix none` and look for consumers that
 ship committed generated artifacts (`pkg/*.wasm`, vendored bundles); regenerate
 them after the final source edit, since any later source change re-stales them.
+
+The digest also depends on crates.io versions, not just this repo's sources.
+`code/packages/rust/Cargo.lock` is gitignored, so CI resolves dependencies
+fresh on every run. Any upstream release (for example `syn` 3.0.9 -> 3.0.10)
+therefore changes the inputs digest and makes the committed `.wasm` "stale" in
+CI even though no file in the repo changed. Always regenerate the artifact
+after a fresh `cargo generate-lockfile` (delete the local lock, then regenerate),
+so the stamp matches what CI will compute. The permanent fix is to stop
+committing the wasm at all; that is tracked by backlog item BUILD-001.
