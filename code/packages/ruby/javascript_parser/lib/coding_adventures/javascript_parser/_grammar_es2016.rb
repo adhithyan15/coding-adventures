@@ -1342,8 +1342,8 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
           GT::RuleReference.new(name: "COLON", is_token: true),
           GT::RuleReference.new(name: "assignment_expression", is_token: false),
         ]),
-        GT::RuleReference.new(name: "NAME", is_token: true),
         GT::RuleReference.new(name: "method_definition", is_token: false),
+        GT::RuleReference.new(name: "NAME", is_token: true),
         GT::Sequence.new(elements: [
           GT::RuleReference.new(name: "ELLIPSIS", is_token: true),
           GT::RuleReference.new(name: "assignment_expression", is_token: false),

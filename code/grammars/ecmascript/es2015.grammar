@@ -481,10 +481,7 @@ array_element = ELLIPSIS assignment_expression
 object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
 
 property_definition = property_name COLON assignment_expression
-                    | property_name LPAREN [ formal_parameters ] RPAREN LBRACE function_body RBRACE
-                    | "get" property_name LPAREN RPAREN LBRACE function_body RBRACE
-                    | "set" property_name LPAREN formal_parameter RPAREN LBRACE function_body RBRACE
-                    | STAR property_name LPAREN [ formal_parameters ] RPAREN LBRACE function_body RBRACE
+                    | method_definition
                     | NAME ;
 
 # Property names: ES2015 adds computed property names using [expression].

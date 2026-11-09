@@ -4,6 +4,14 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - parse object method shorthand and async function expressions (#17941)
+
+- Object method shorthand declarations (e.g. `var o = { f() { return 1; } };` and `{ valueOf() { return 1; } }`) previously failed to parse in all compilation levels (`SIMPLE`, `ADVANCED`, `WHITESPACE_ONLY`) with `Expected COLON or COMMA or RBRACE, got "("`.
+- Async function expressions (e.g. `var p = async function () {};` and `var o = 1 ? 2 : async function () { return 1; };`) previously failed to parse with `Expected ARROW or NAME or LPAREN ..., got "function"` because `async` was eagerly tokenized/parsed as an identifier before considering async function expressions.
+- Fixed grammar alternative ordering in `es2015.grammar` through `es2025.grammar`, updated AST bridging to preserve `method` and `is_async` flags, and updated the code emitter to output concise method syntax and getter/setter syntax.
+- Advanced ladder rungs `ladder_t7_getter_setter_advanced` and `ladder_t7_getter_setter_simple` from exit 1 (parser failure) to exit 0 (clean compilation).
+- Added integration test suite in `tests/regression_object_methods_async_17941.rs`.
+
 ### Fixed - support template literals with substitutions at SIMPLE and ADVANCED (#17854)
 
 - In `SIMPLE` and `ADVANCED` compilation modes, template literals with substitutions (e.g. `` `hello ${name}!` ``) previously failed to parse with syntax error or unsupported syntax because the underlying grammar in ES2016-ES2025 omitted the trailing substitution before `TEMPLATE_TAIL` and the typed-AST bridge declined substitution templates.

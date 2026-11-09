@@ -56,7 +56,7 @@ use coding_adventures_javascript_ast::{
     },
     expression::{
         ArrayExpression, ArrowBody, ArrowFunctionExpression, AssignmentExpression,
-        AssignmentOperator, AssignmentTarget,
+        AssignmentOperator, AssignmentTarget, AwaitExpression,
         BigIntLiteral, BinaryExpression, BinaryOperator, BooleanLiteral, CallExpression,
         ClassExpression, ClassMember, MethodDefinition, MethodKind, PropertyDefinition,
         ConditionalExpression, Expression, FunctionExpression, Identifier, LogicalExpression,
@@ -1365,9 +1365,11 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
     // scope. So a missing name is NOT an error here — it's the common case.
     // As with declarations, a `*` marks a generator expression (CLOC12.163 PR2):
     // skip it during name extraction and record it in `generator`.
+    let is_async = has_token(node, "async");
     let name = node.children.iter().find_map(|c| match c {
         ASTNodeOrToken::Token(t)
-            if t.value != "function"
+            if t.value != "async"
+                && t.value != "function"
                 && t.value != "*"
                 && t.value != "("
                 && t.value != ")"
@@ -1406,7 +1408,7 @@ fn convert_function_expression(node: &GrammarASTNode) -> Result<FunctionExpressi
         params,
         body,
         generator: has_token(node, "*"),
-        is_async: false,
+        is_async,
     })
 }
 
@@ -1805,6 +1807,7 @@ fn convert_method_definition(
     let mut saw_get = false;
     let mut saw_set = false;
     let mut saw_star = false;
+    let mut saw_async = false;
     for c in &node.children {
         match c {
             ASTNodeOrToken::Node(n) if n.rule_name == "property_name" => break,
@@ -1812,6 +1815,7 @@ fn convert_method_definition(
                 "get" => saw_get = true,
                 "set" => saw_set = true,
                 "*" => saw_star = true,
+                "async" => saw_async = true,
                 _ => {}
             },
             _ => {}
@@ -1838,6 +1842,7 @@ fn convert_method_definition(
         MethodKind::Set
     } else if !is_static
         && !saw_star
+        && !saw_async
         && matches!(&key, PropertyKey::Identifier(id) if id.name == "constructor")
     {
         // `*constructor(){}` is a SyntaxError in real JS — a generator is never a
@@ -1878,7 +1883,7 @@ fn convert_method_definition(
             body,
             // `*gen(){}` → a generator method; the emitter re-prints the `*`.
             generator: saw_star,
-            is_async: false,
+            is_async: saw_async,
         },
         computed,
         is_static,
@@ -2021,6 +2026,23 @@ fn convert_yield_expression(node: &GrammarASTNode) -> Result<Expression, BridgeE
         cv: None,
         delegate,
         argument,
+    }))
+}
+
+/// Convert an `await_expression` grammar node into an [`AwaitExpression`].
+///
+/// ```text
+///   await_expression = "await" unary_expression ;
+/// ```
+fn convert_await_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> {
+    let nodes = node_children(node);
+    let arg_node = nodes
+        .first()
+        .ok_or_else(|| internal(node, "await_expression: missing operand"))?;
+    let argument = convert_expression(arg_node)?;
+    Ok(Expression::AwaitExpression(AwaitExpression {
+        cv: None,
+        argument: Box::new(argument),
     }))
 }
 
@@ -2478,24 +2500,19 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
         "array_literal" => convert_array_literal(node),
         "object_literal" => convert_object_literal(node),
 
-        // A plain (non-generator, non-async) function in value position —
+        // A plain, generator, or async function in value position —
         // an IIFE `(function(){})()`, an assigned function
         // `x = function(){}`, a named recursive `function f(){…f()…}`, a
-        // callback `arr.map(function(x){return x})`. Now that the typed AST
-        // has `Expression::FunctionExpression` (CLOC12.149), convert it
-        // instead of declining, so closurec optimises through it rather than
-        // falling back to WHITESPACE_ONLY. (gap-153.)
-        "function_expression" => {
+        // callback `arr.map(function(x){return x})`, `async function(){}`, etc.
+        "function_expression"
+        | "generator_expression"
+        | "async_function_expression"
+        | "async_generator_expression" => {
             convert_function_expression(node).map(Expression::FunctionExpression)
         }
 
-        // A generator function in value position (`x = function*(){…}`,
-        // `(function*(){…})()`). Same converter as `function_expression` — the
-        // `*` sets the `generator` flag so the emitter re-prints `function*`
-        // (CLOC12.163 PR2, gap-164).
-        "generator_expression" => {
-            convert_function_expression(node).map(Expression::FunctionExpression)
-        }
+        // An `await` expression inside an async function body.
+        "await_expression" => convert_await_expression(node),
 
         // A `yield` / `yield* x` expression inside a generator body
         // (CLOC12.163 PR2, gap-164). Now that the typed AST has
@@ -2549,10 +2566,7 @@ fn convert_expression(node: &GrammarASTNode) -> Result<Expression, BridgeError> 
             convert_class_expression(node).map(Expression::ClassExpression)
         }
 
-        "await_expression"
-        | "async_function_expression"
-        | "async_generator_expression"
-        | "tagged_template_expression"
+        "tagged_template_expression"
         | "new_target_expression" => Err(unsupported(node)),
 
         other => Err(BridgeError::InternalError {
@@ -4031,8 +4045,9 @@ fn convert_object_literal(node: &GrammarASTNode) -> Result<Expression, BridgeErr
 
 fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, BridgeError> {
     // property_definition = property_name COLON assignment_expression
+    //                     | method_definition
+    //                     | async_method
     //                     | NAME  (shorthand)
-    //                     | method_definition  (unsupported Phase 2)
     //
     // The ELLIPSIS spread form `...expr` is NOT handled here — `convert_object_literal`
     // detects it (`has_token`) and builds `ObjectMember::Spread` directly, since a
@@ -4056,6 +4071,29 @@ fn convert_property_definition(node: &GrammarASTNode) -> Result<Property, Bridge
             computed,
             method: false,
         });
+    }
+    if nodes.len() == 1 {
+        let child = nodes[0];
+        match child.rule_name.as_str() {
+            "method_definition" | "async_method" => {
+                let m = convert_method_definition(child, false)?;
+                let (kind, method) = match m.kind {
+                    MethodKind::Get => (PropertyKind::Get, false),
+                    MethodKind::Set => (PropertyKind::Set, false),
+                    MethodKind::Constructor | MethodKind::Method => (PropertyKind::Init, true),
+                };
+                return Ok(Property {
+                    cv: m.cv,
+                    key: m.key,
+                    value: Box::new(Expression::FunctionExpression(m.value)),
+                    kind,
+                    computed: m.computed,
+                    shorthand: false,
+                    method,
+                });
+            }
+            _ => {}
+        }
     }
     if nodes.is_empty() {
         // Shorthand NAME property: { x } == { x: x }
@@ -5049,6 +5087,72 @@ mod tests {
         assert!(prop.computed);
         assert!(matches!(&prop.key, PropertyKey::Expression(e)
             if matches!(&**e, Expression::Identifier(id) if id.name == "k")));
+    }
+
+    #[test]
+    fn object_method_shorthand() {
+        let p = bridge_ok("var o = { f() { return 1; } };");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd))) =
+            &p.body[0]
+        else {
+            panic!("expected var decl");
+        };
+        let Expression::ObjectExpression(o) = vd.declarations[0].init.as_ref().unwrap() else {
+            panic!("expected object");
+        };
+        let ObjectMember::Property(prop) = &o.properties[0] else { panic!("expected property") };
+        assert!(prop.method);
+        assert!(!prop.shorthand);
+        assert!(matches!(&prop.key, PropertyKey::Identifier(id) if id.name == "f"));
+        let Expression::FunctionExpression(fe) = prop.value.as_ref() else {
+            panic!("expected function value");
+        };
+        assert!(!fe.is_async);
+        assert!(!fe.generator);
+
+        // Also test valueOf method shorthand
+        let p2 = bridge_ok("var o = { valueOf() { return 1; } };");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd2))) =
+            &p2.body[0]
+        else {
+            panic!("expected var decl");
+        };
+        let Expression::ObjectExpression(o2) = vd2.declarations[0].init.as_ref().unwrap() else {
+            panic!("expected object");
+        };
+        let ObjectMember::Property(prop2) = &o2.properties[0] else { panic!("expected property") };
+        assert!(prop2.method);
+        assert!(matches!(&prop2.key, PropertyKey::Identifier(id) if id.name == "valueOf"));
+    }
+
+    #[test]
+    fn async_function_expressions_bridge() {
+        let p = bridge_ok("var p = async function () {};");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd))) =
+            &p.body[0]
+        else {
+            panic!("expected var decl");
+        };
+        let Expression::FunctionExpression(fe) = vd.declarations[0].init.as_ref().unwrap() else {
+            panic!("expected function expression");
+        };
+        assert!(fe.is_async);
+        assert!(!fe.generator);
+        assert!(fe.id.is_none());
+
+        let p2 = bridge_ok("var o = 1 ? 2 : async function () { return 1; };");
+        let ProgramItem::Statement(Statement::Declaration(Declaration::VariableDeclaration(vd2))) =
+            &p2.body[0]
+        else {
+            panic!("expected var decl");
+        };
+        let Expression::ConditionalExpression(ce) = vd2.declarations[0].init.as_ref().unwrap() else {
+            panic!("expected conditional");
+        };
+        let Expression::FunctionExpression(fe2) = ce.alternate.as_ref() else {
+            panic!("expected function expression in alternate");
+        };
+        assert!(fe2.is_async);
     }
 
     #[test]

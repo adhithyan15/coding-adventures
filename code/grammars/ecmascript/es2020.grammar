@@ -442,6 +442,8 @@ concise_body = assignment_expression
 # --- CHANGED IN ES2020: primary_expression gains BIGINT, dynamic_import, import_meta ---
 
 primary_expression = "this"
+                   | async_function_expression
+                   | async_generator_expression
                    | NAME
                    | NUMBER
                    | BIGINT
@@ -454,7 +456,6 @@ primary_expression = "this"
                    | object_literal
                    | function_expression
                    | generator_expression
-                   | async_function_expression
                    | class_expression
                    | template_literal
                    | dynamic_import
@@ -492,9 +493,9 @@ element_list = [ spread_element | assignment_expression ]
 object_literal = LBRACE [ property_definition { COMMA property_definition } [ COMMA ] ] RBRACE ;
 
 property_definition = property_name COLON assignment_expression
-                    | NAME
                     | method_definition
                     | async_method
+                    | NAME
                     | object_spread_property ;
 
 object_spread_property = ELLIPSIS assignment_expression ;
