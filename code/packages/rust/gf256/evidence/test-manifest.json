@@ -1,0 +1,2107 @@
+{
+  "evidence_seed": "5135847629189502785",
+  "module": "gf256",
+  "schema": "warrant-test-evidence-v1",
+  "spec": "code/specs/gf256.warrant",
+  "spec_sha256": "fecd88bc5101f9cc58115108b4618bc2818f7786cf98b960822d04502dc541bb",
+  "tests": [
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/add_known_vector",
+      "kind": "example",
+      "op": "add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/add_zero_left",
+      "kind": "example",
+      "op": "add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/add_cancels",
+      "kind": "example",
+      "op": "add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/subtract_known_vector",
+      "kind": "example",
+      "op": "subtract",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/subtract_equals_add_at_top",
+      "kind": "example",
+      "op": "subtract",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_zero",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_zero_right",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_one",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_small",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_first_reduction",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_inverse_pair",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_not_the_aes_pair",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_not_the_aes_vector",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_top",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/multiply_squares",
+      "kind": "example",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/divide_one_by_pair",
+      "kind": "example",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/divide_zero_over_five",
+      "kind": "example",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/divide_known",
+      "kind": "example",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/divide_by_zero",
+      "kind": "example",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/divide_zero_by_zero",
+      "kind": "example",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/inverse_pair",
+      "kind": "example",
+      "op": "inverse",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/inverse_of_one",
+      "kind": "example",
+      "op": "inverse",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/inverse_of_generator",
+      "kind": "example",
+      "op": "inverse",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/inverse_of_top",
+      "kind": "example",
+      "op": "inverse",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/inverse_of_zero",
+      "kind": "example",
+      "op": "inverse",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_first_reduction",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_after_reduction",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_generator_order",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_generator_inverse",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_zero_zero",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_zero_positive",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_exponent_zero",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_u32_max_exponent",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_u32_max_minus_one",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 1,
+      "claim": "",
+      "id": "warrant/gf256/example/power_cube_of_three",
+      "kind": "example",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "add_matches_xor_model",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/add_matches_xor_model",
+      "kind": "exhaustive",
+      "op": "add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "add_matches_xor_model",
+      "discarded": 0,
+      "equal_cases": 960,
+      "id": "warrant/gf256/property/add_matches_xor_model",
+      "kind": "property",
+      "op": "add",
+      "seed": "6157502054445399859",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "add_matches_xor_model",
+      "id": "warrant/gf256/fuzz/add_matches_xor_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "add",
+      "seed": "14171227782175464674",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "add_self_inverse",
+      "discarded": 0,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/add_self_inverse",
+      "kind": "exhaustive",
+      "op": "add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "add_self_inverse",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/add_self_inverse",
+      "kind": "property",
+      "op": "add",
+      "seed": "7725583564003507437",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "add_self_inverse",
+      "id": "warrant/gf256/fuzz/add_self_inverse",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "add",
+      "seed": "16182932194484552461",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "add_zero_identity",
+      "discarded": 0,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/add_zero_identity",
+      "kind": "exhaustive",
+      "op": "add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "add_zero_identity",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/add_zero_identity",
+      "kind": "property",
+      "op": "add",
+      "seed": "4858623819719492283",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "add_zero_identity",
+      "id": "warrant/gf256/fuzz/add_zero_identity",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "add",
+      "seed": "3011151546658808081",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "add_commutative",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/add_commutative",
+      "kind": "exhaustive",
+      "op": "add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "add_commutative",
+      "discarded": 0,
+      "equal_cases": 1025,
+      "id": "warrant/gf256/property/add_commutative",
+      "kind": "property",
+      "op": "add",
+      "seed": "3989627186652889132",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "add_commutative",
+      "id": "warrant/gf256/fuzz/add_commutative",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "add",
+      "seed": "4758729422695122393",
+      "verdict": "pass"
+    },
+    {
+      "cases": 16777216,
+      "claim": "add_associative",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/add_associative",
+      "kind": "exhaustive",
+      "op": "add",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "add_associative",
+      "discarded": 0,
+      "equal_cases": 1020,
+      "id": "warrant/gf256/property/add_associative",
+      "kind": "property",
+      "op": "add",
+      "seed": "1917400944048775851",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "add_associative",
+      "id": "warrant/gf256/fuzz/add_associative",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "add",
+      "seed": "6822897653563489481",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "subtract_matches_xor_model",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/subtract_matches_xor_model",
+      "kind": "exhaustive",
+      "op": "subtract",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "subtract_matches_xor_model",
+      "discarded": 0,
+      "equal_cases": 966,
+      "id": "warrant/gf256/property/subtract_matches_xor_model",
+      "kind": "property",
+      "op": "subtract",
+      "seed": "16760568292799074527",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "subtract_matches_xor_model",
+      "id": "warrant/gf256/fuzz/subtract_matches_xor_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "subtract",
+      "seed": "6478626489568746721",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "subtract_equals_add",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/subtract_equals_add",
+      "kind": "exhaustive",
+      "op": "subtract",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "subtract_equals_add",
+      "discarded": 0,
+      "equal_cases": 1018,
+      "id": "warrant/gf256/property/subtract_equals_add",
+      "kind": "property",
+      "op": "subtract",
+      "seed": "1197439414033104478",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "subtract_equals_add",
+      "id": "warrant/gf256/fuzz/subtract_equals_add",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "subtract",
+      "seed": "16452115877371128260",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "subtract_undoes_add",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/subtract_undoes_add",
+      "kind": "exhaustive",
+      "op": "subtract",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "subtract_undoes_add",
+      "discarded": 0,
+      "equal_cases": 1022,
+      "id": "warrant/gf256/property/subtract_undoes_add",
+      "kind": "property",
+      "op": "subtract",
+      "seed": "7373646028621829261",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "subtract_undoes_add",
+      "id": "warrant/gf256/fuzz/subtract_undoes_add",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "subtract",
+      "seed": "8898639927025550378",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "multiply_matches_peasant_model",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/multiply_matches_peasant_model",
+      "kind": "exhaustive",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "multiply_matches_peasant_model",
+      "discarded": 0,
+      "equal_cases": 1035,
+      "id": "warrant/gf256/property/multiply_matches_peasant_model",
+      "kind": "property",
+      "op": "multiply",
+      "seed": "5824661083694459604",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "multiply_matches_peasant_model",
+      "id": "warrant/gf256/fuzz/multiply_matches_peasant_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "multiply",
+      "seed": "7772536915192948420",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "multiply_by_generator_is_xtime",
+      "discarded": 0,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/multiply_by_generator_is_xtime",
+      "kind": "exhaustive",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "multiply_by_generator_is_xtime",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/multiply_by_generator_is_xtime",
+      "kind": "property",
+      "op": "multiply",
+      "seed": "8663119618744566082",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "multiply_by_generator_is_xtime",
+      "id": "warrant/gf256/fuzz/multiply_by_generator_is_xtime",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "multiply",
+      "seed": "7437578009186919659",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "multiply_one_identity",
+      "discarded": 0,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/multiply_one_identity",
+      "kind": "exhaustive",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "multiply_one_identity",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/multiply_one_identity",
+      "kind": "property",
+      "op": "multiply",
+      "seed": "5380708558965088573",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "multiply_one_identity",
+      "id": "warrant/gf256/fuzz/multiply_one_identity",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "multiply",
+      "seed": "16322398933346202212",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "multiply_zero_absorbs",
+      "discarded": 0,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/multiply_zero_absorbs",
+      "kind": "exhaustive",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "multiply_zero_absorbs",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/multiply_zero_absorbs",
+      "kind": "property",
+      "op": "multiply",
+      "seed": "3452883865914183288",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "multiply_zero_absorbs",
+      "id": "warrant/gf256/fuzz/multiply_zero_absorbs",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "multiply",
+      "seed": "948770610905577711",
+      "verdict": "pass"
+    },
+    {
+      "cases": 255,
+      "claim": "multiply_by_model_inverse_is_one",
+      "discarded": 1,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/multiply_by_model_inverse_is_one",
+      "kind": "exhaustive",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "multiply_by_model_inverse_is_one",
+      "discarded": 25,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/multiply_by_model_inverse_is_one",
+      "kind": "property",
+      "op": "multiply",
+      "seed": "8413500987103695069",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4674,
+      "claim": "multiply_by_model_inverse_is_one",
+      "id": "warrant/gf256/fuzz/multiply_by_model_inverse_is_one",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "multiply",
+      "seed": "4027676657754645682",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65025,
+      "claim": "multiply_has_no_zero_divisors",
+      "discarded": 511,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/multiply_has_no_zero_divisors",
+      "kind": "exhaustive",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "multiply_has_no_zero_divisors",
+      "discarded": 30,
+      "equal_cases": 986,
+      "id": "warrant/gf256/property/multiply_has_no_zero_divisors",
+      "kind": "property",
+      "op": "multiply",
+      "seed": "5590696917629797186",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4501,
+      "claim": "multiply_has_no_zero_divisors",
+      "id": "warrant/gf256/fuzz/multiply_has_no_zero_divisors",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "multiply",
+      "seed": "6766476775740544041",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "multiply_commutative",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/multiply_commutative",
+      "kind": "exhaustive",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "multiply_commutative",
+      "discarded": 0,
+      "equal_cases": 1033,
+      "id": "warrant/gf256/property/multiply_commutative",
+      "kind": "property",
+      "op": "multiply",
+      "seed": "9486623900405428293",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "multiply_commutative",
+      "id": "warrant/gf256/fuzz/multiply_commutative",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "multiply",
+      "seed": "15270396744021628123",
+      "verdict": "pass"
+    },
+    {
+      "cases": 16777216,
+      "claim": "multiply_associative",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/multiply_associative",
+      "kind": "exhaustive",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "multiply_associative",
+      "discarded": 0,
+      "equal_cases": 1009,
+      "id": "warrant/gf256/property/multiply_associative",
+      "kind": "property",
+      "op": "multiply",
+      "seed": "16188268194452170127",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "multiply_associative",
+      "id": "warrant/gf256/fuzz/multiply_associative",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "multiply",
+      "seed": "821995270525876678",
+      "verdict": "pass"
+    },
+    {
+      "cases": 16777216,
+      "claim": "multiply_distributes_over_add",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/multiply_distributes_over_add",
+      "kind": "exhaustive",
+      "op": "multiply",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "multiply_distributes_over_add",
+      "discarded": 0,
+      "equal_cases": 1011,
+      "id": "warrant/gf256/property/multiply_distributes_over_add",
+      "kind": "property",
+      "op": "multiply",
+      "seed": "17334275462574803494",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "multiply_distributes_over_add",
+      "id": "warrant/gf256/fuzz/multiply_distributes_over_add",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "multiply",
+      "seed": "13110580611379200566",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "divide_by_zero_rejected",
+      "discarded": 0,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/divide_by_zero_rejected",
+      "kind": "exhaustive",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "divide_by_zero_rejected",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/divide_by_zero_rejected",
+      "kind": "property",
+      "op": "divide",
+      "seed": "17959699004949067075",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "divide_by_zero_rejected",
+      "id": "warrant/gf256/fuzz/divide_by_zero_rejected",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "divide",
+      "seed": "9518008599064868406",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65280,
+      "claim": "divide_undoes_multiply",
+      "discarded": 256,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/divide_undoes_multiply",
+      "kind": "exhaustive",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "divide_undoes_multiply",
+      "discarded": 19,
+      "equal_cases": 1022,
+      "id": "warrant/gf256/property/divide_undoes_multiply",
+      "kind": "property",
+      "op": "divide",
+      "seed": "2606979010888673949",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4522,
+      "claim": "divide_undoes_multiply",
+      "id": "warrant/gf256/fuzz/divide_undoes_multiply",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "divide",
+      "seed": "8996974455200487629",
+      "verdict": "pass"
+    },
+    {
+      "cases": 255,
+      "claim": "divide_zero_numerator",
+      "discarded": 1,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/divide_zero_numerator",
+      "kind": "exhaustive",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "divide_zero_numerator",
+      "discarded": 18,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/divide_zero_numerator",
+      "kind": "property",
+      "op": "divide",
+      "seed": "1456004201195249392",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4626,
+      "claim": "divide_zero_numerator",
+      "id": "warrant/gf256/fuzz/divide_zero_numerator",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "divide",
+      "seed": "14379435740189037235",
+      "verdict": "pass"
+    },
+    {
+      "cases": 255,
+      "claim": "divide_self_is_one",
+      "discarded": 1,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/divide_self_is_one",
+      "kind": "exhaustive",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "divide_self_is_one",
+      "discarded": 14,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/divide_self_is_one",
+      "kind": "property",
+      "op": "divide",
+      "seed": "18165950750314286737",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4541,
+      "claim": "divide_self_is_one",
+      "id": "warrant/gf256/fuzz/divide_self_is_one",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "divide",
+      "seed": "10684547665365198156",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65280,
+      "claim": "divide_is_multiply_by_fermat_inverse",
+      "discarded": 256,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/divide_is_multiply_by_fermat_inverse",
+      "kind": "exhaustive",
+      "op": "divide",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "divide_is_multiply_by_fermat_inverse",
+      "discarded": 18,
+      "equal_cases": 1092,
+      "id": "warrant/gf256/property/divide_is_multiply_by_fermat_inverse",
+      "kind": "property",
+      "op": "divide",
+      "seed": "7622618539797481807",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4651,
+      "claim": "divide_is_multiply_by_fermat_inverse",
+      "id": "warrant/gf256/fuzz/divide_is_multiply_by_fermat_inverse",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "divide",
+      "seed": "9225869279980601303",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "inverse_total_and_rejects_zero",
+      "discarded": 0,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/inverse_total_and_rejects_zero",
+      "kind": "exhaustive",
+      "op": "inverse",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "inverse_total_and_rejects_zero",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/inverse_total_and_rejects_zero",
+      "kind": "property",
+      "op": "inverse",
+      "seed": "13689684871023803262",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "inverse_total_and_rejects_zero",
+      "id": "warrant/gf256/fuzz/inverse_total_and_rejects_zero",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "inverse",
+      "seed": "2592454162169494567",
+      "verdict": "pass"
+    },
+    {
+      "cases": 255,
+      "claim": "inverse_matches_peasant_model",
+      "discarded": 1,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/inverse_matches_peasant_model",
+      "kind": "exhaustive",
+      "op": "inverse",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "inverse_matches_peasant_model",
+      "discarded": 13,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/inverse_matches_peasant_model",
+      "kind": "property",
+      "op": "inverse",
+      "seed": "18335096004682141622",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4849,
+      "claim": "inverse_matches_peasant_model",
+      "id": "warrant/gf256/fuzz/inverse_matches_peasant_model",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "inverse",
+      "seed": "14712257371013368560",
+      "verdict": "pass"
+    },
+    {
+      "cases": 255,
+      "claim": "inverse_is_an_involution",
+      "discarded": 1,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/inverse_is_an_involution",
+      "kind": "exhaustive",
+      "op": "inverse",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "inverse_is_an_involution",
+      "discarded": 12,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/inverse_is_an_involution",
+      "kind": "property",
+      "op": "inverse",
+      "seed": "11623487940903154244",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4607,
+      "claim": "inverse_is_an_involution",
+      "id": "warrant/gf256/fuzz/inverse_is_an_involution",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "inverse",
+      "seed": "14397182973846406454",
+      "verdict": "pass"
+    },
+    {
+      "cases": 255,
+      "claim": "inverse_matches_fermat",
+      "discarded": 1,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/inverse_matches_fermat",
+      "kind": "exhaustive",
+      "op": "inverse",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "inverse_matches_fermat",
+      "discarded": 16,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/inverse_matches_fermat",
+      "kind": "property",
+      "op": "inverse",
+      "seed": "13106498629098533065",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4305,
+      "claim": "inverse_matches_fermat",
+      "id": "warrant/gf256/fuzz/inverse_matches_fermat",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "inverse",
+      "seed": "4341894295970514353",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "power_zero_exponent",
+      "discarded": 0,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/power_zero_exponent",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_zero_exponent",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/power_zero_exponent",
+      "kind": "property",
+      "op": "power",
+      "seed": "1492941400524959000",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "power_zero_exponent",
+      "id": "warrant/gf256/fuzz/power_zero_exponent",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "13296825655609766803",
+      "verdict": "pass"
+    },
+    {
+      "cases": 256,
+      "claim": "power_first_exponent",
+      "discarded": 0,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/power_first_exponent",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_first_exponent",
+      "discarded": 0,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/power_first_exponent",
+      "kind": "property",
+      "op": "power",
+      "seed": "17344060548160984208",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "power_first_exponent",
+      "id": "warrant/gf256/fuzz/power_first_exponent",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "12897315354867477543",
+      "verdict": "pass"
+    },
+    {
+      "cases": 280,
+      "claim": "power_of_zero",
+      "discarded": 97,
+      "domain": "U64[377]",
+      "id": "warrant/gf256/exhaustive/power_of_zero",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_of_zero",
+      "discarded": 3143,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/power_of_zero",
+      "kind": "property",
+      "op": "power",
+      "seed": "15231651000809060190",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 2588,
+      "claim": "power_of_zero",
+      "id": "warrant/gf256/fuzz/power_of_zero",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "10524627676365796744",
+      "verdict": "pass"
+    },
+    {
+      "cases": 71680,
+      "claim": "power_successor",
+      "discarded": 24832,
+      "domain": "U8[256] x U64[377]",
+      "id": "warrant/gf256/exhaustive/power_successor",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_successor",
+      "discarded": 3373,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/power_successor",
+      "kind": "property",
+      "op": "power",
+      "seed": "6023938035660055404",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 3924,
+      "claim": "power_successor",
+      "id": "warrant/gf256/fuzz/power_successor",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "5226454801087874520",
+      "verdict": "pass"
+    },
+    {
+      "cases": 255,
+      "claim": "power_group_order",
+      "discarded": 1,
+      "domain": "U8[256]",
+      "id": "warrant/gf256/exhaustive/power_group_order",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_group_order",
+      "discarded": 21,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/power_group_order",
+      "kind": "property",
+      "op": "power",
+      "seed": "6673096281079975758",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 4501,
+      "claim": "power_group_order",
+      "id": "warrant/gf256/fuzz/power_group_order",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "4596710202476084312",
+      "verdict": "pass"
+    },
+    {
+      "cases": 71400,
+      "claim": "power_reduces_mod_group_order",
+      "discarded": 25112,
+      "domain": "U8[256] x U64[377]",
+      "id": "warrant/gf256/exhaustive/power_reduces_mod_group_order",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_reduces_mod_group_order",
+      "discarded": 3144,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/power_reduces_mod_group_order",
+      "kind": "property",
+      "op": "power",
+      "seed": "14967291973600245138",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 3216,
+      "claim": "power_reduces_mod_group_order",
+      "id": "warrant/gf256/fuzz/power_reduces_mod_group_order",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "7337686609944610275",
+      "verdict": "pass"
+    },
+    {
+      "cases": 71424,
+      "claim": "power_doubles_exponent",
+      "discarded": 25088,
+      "domain": "U8[256] x U64[377]",
+      "id": "warrant/gf256/exhaustive/power_doubles_exponent",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_doubles_exponent",
+      "discarded": 3173,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/power_doubles_exponent",
+      "kind": "property",
+      "op": "power",
+      "seed": "8273620633785712099",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 3224,
+      "claim": "power_doubles_exponent",
+      "id": "warrant/gf256/fuzz/power_doubles_exponent",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "6866930823863541130",
+      "verdict": "pass"
+    },
+    {
+      "cases": 71400,
+      "claim": "power_nonzero_for_nonzero_base",
+      "discarded": 25112,
+      "domain": "U8[256] x U64[377]",
+      "id": "warrant/gf256/exhaustive/power_nonzero_for_nonzero_base",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_nonzero_for_nonzero_base",
+      "discarded": 3182,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/power_nonzero_for_nonzero_base",
+      "kind": "property",
+      "op": "power",
+      "seed": "7016146568412273218",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 3100,
+      "claim": "power_nonzero_for_nonzero_base",
+      "id": "warrant/gf256/fuzz/power_nonzero_for_nonzero_base",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "15332934327899264647",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "power_frobenius_is_additive",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/power_frobenius_is_additive",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_frobenius_is_additive",
+      "discarded": 0,
+      "equal_cases": 1024,
+      "id": "warrant/gf256/property/power_frobenius_is_additive",
+      "kind": "property",
+      "op": "power",
+      "seed": "13407427978104271158",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "power_frobenius_is_additive",
+      "id": "warrant/gf256/fuzz/power_frobenius_is_additive",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "15775287640358570876",
+      "verdict": "pass"
+    },
+    {
+      "cases": 65536,
+      "claim": "power_cube_is_multiplicative",
+      "discarded": 0,
+      "domain": "U8[256] x U8[256]",
+      "id": "warrant/gf256/exhaustive/power_cube_is_multiplicative",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "power_cube_is_multiplicative",
+      "discarded": 0,
+      "equal_cases": 1048,
+      "id": "warrant/gf256/property/power_cube_is_multiplicative",
+      "kind": "property",
+      "op": "power",
+      "seed": "7529956799050482160",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 5008,
+      "claim": "power_cube_is_multiplicative",
+      "id": "warrant/gf256/fuzz/power_cube_is_multiplicative",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "14569969419688125325",
+      "verdict": "pass"
+    },
+    {
+      "cases": 254,
+      "claim": "generator_has_order_255",
+      "discarded": 123,
+      "domain": "U64[377]",
+      "id": "warrant/gf256/exhaustive/generator_has_order_255",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "generator_has_order_255",
+      "discarded": 8430,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/generator_has_order_255",
+      "kind": "property",
+      "op": "power",
+      "seed": "1781364469864192429",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 928,
+      "claim": "generator_has_order_255",
+      "id": "warrant/gf256/fuzz/generator_has_order_255",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "5472763339094551918",
+      "verdict": "pass"
+    },
+    {
+      "cases": 64770,
+      "claim": "generator_powers_are_distinct",
+      "discarded": 77359,
+      "domain": "U64[377] x U64[377]",
+      "id": "warrant/gf256/exhaustive/generator_powers_are_distinct",
+      "kind": "exhaustive",
+      "op": "power",
+      "verdict": "pass"
+    },
+    {
+      "cases": 4096,
+      "claim": "generator_powers_are_distinct",
+      "discarded": 21546,
+      "equal_cases": 0,
+      "id": "warrant/gf256/property/generator_powers_are_distinct",
+      "kind": "property",
+      "op": "power",
+      "seed": "12019549109280255755",
+      "verdict": "pass"
+    },
+    {
+      "admitted": 767,
+      "claim": "generator_powers_are_distinct",
+      "id": "warrant/gf256/fuzz/generator_powers_are_distinct",
+      "iterations": 5000,
+      "kind": "fuzz",
+      "op": "power",
+      "seed": "15136762674865918683",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "add_known_vector",
+      "claim": "",
+      "fault": "or-for-xor",
+      "id": "warrant/gf256/negctl/example/add/or-for-xor",
+      "kind": "negctl",
+      "op": "add",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "add_known_vector",
+      "claim": "",
+      "fault": "wrapping-sub",
+      "id": "warrant/gf256/negctl/example/add/wrapping-sub",
+      "kind": "negctl",
+      "op": "add",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "add_matches_xor_model",
+      "claim": "",
+      "fault": "or-for-xor",
+      "id": "warrant/gf256/negctl/exhaustive/add/or-for-xor",
+      "kind": "negctl",
+      "op": "add",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "add_matches_xor_model",
+      "claim": "",
+      "fault": "wrapping-sub",
+      "id": "warrant/gf256/negctl/exhaustive/add/wrapping-sub",
+      "kind": "negctl",
+      "op": "add",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "add_matches_xor_model",
+      "claim": "",
+      "fault": "or-for-xor",
+      "id": "warrant/gf256/negctl/property/add/or-for-xor",
+      "kind": "negctl",
+      "op": "add",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "add_matches_xor_model",
+      "claim": "",
+      "fault": "wrapping-sub",
+      "id": "warrant/gf256/negctl/property/add/wrapping-sub",
+      "kind": "negctl",
+      "op": "add",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "add_matches_xor_model",
+      "claim": "",
+      "fault": "or-for-xor",
+      "id": "warrant/gf256/negctl/fuzz/add/or-for-xor",
+      "kind": "negctl",
+      "op": "add",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "add_matches_xor_model",
+      "claim": "",
+      "fault": "wrapping-sub",
+      "id": "warrant/gf256/negctl/fuzz/add/wrapping-sub",
+      "kind": "negctl",
+      "op": "add",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_by_zero",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/gf256/negctl/example/divide/missing-error",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_one_by_pair",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/example/divide/alt-poly",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_one_by_pair",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/example/divide/generator-shift",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_by_zero_rejected",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/gf256/negctl/exhaustive/divide/missing-error",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_undoes_multiply",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/exhaustive/divide/alt-poly",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_undoes_multiply",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/exhaustive/divide/generator-shift",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_by_zero_rejected",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/gf256/negctl/property/divide/missing-error",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_undoes_multiply",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/property/divide/alt-poly",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_undoes_multiply",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/property/divide/generator-shift",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_by_zero_rejected",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/gf256/negctl/fuzz/divide/missing-error",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_undoes_multiply",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/fuzz/divide/alt-poly",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "divide_undoes_multiply",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/fuzz/divide/generator-shift",
+      "kind": "negctl",
+      "op": "divide",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_of_zero",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/gf256/negctl/example/inverse/missing-error",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_pair",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/example/inverse/alt-poly",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_pair",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/example/inverse/generator-shift",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_total_and_rejects_zero",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/gf256/negctl/exhaustive/inverse/missing-error",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_total_and_rejects_zero",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/exhaustive/inverse/alt-poly",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_total_and_rejects_zero",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/exhaustive/inverse/generator-shift",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_total_and_rejects_zero",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/gf256/negctl/property/inverse/missing-error",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_total_and_rejects_zero",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/property/inverse/alt-poly",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_total_and_rejects_zero",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/property/inverse/generator-shift",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_total_and_rejects_zero",
+      "claim": "",
+      "fault": "missing-error",
+      "id": "warrant/gf256/negctl/fuzz/inverse/missing-error",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_total_and_rejects_zero",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/fuzz/inverse/alt-poly",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "inverse_total_and_rejects_zero",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/fuzz/inverse/generator-shift",
+      "kind": "negctl",
+      "op": "inverse",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_zero",
+      "claim": "",
+      "fault": "mul-as-add",
+      "id": "warrant/gf256/negctl/example/multiply/mul-as-add",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_first_reduction",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/example/multiply/alt-poly",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_one",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/example/multiply/generator-shift",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_matches_peasant_model",
+      "claim": "",
+      "fault": "mul-as-add",
+      "id": "warrant/gf256/negctl/exhaustive/multiply/mul-as-add",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_matches_peasant_model",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/exhaustive/multiply/alt-poly",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_matches_peasant_model",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/exhaustive/multiply/generator-shift",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_matches_peasant_model",
+      "claim": "",
+      "fault": "mul-as-add",
+      "id": "warrant/gf256/negctl/property/multiply/mul-as-add",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_matches_peasant_model",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/property/multiply/alt-poly",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_matches_peasant_model",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/property/multiply/generator-shift",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_matches_peasant_model",
+      "claim": "",
+      "fault": "mul-as-add",
+      "id": "warrant/gf256/negctl/fuzz/multiply/mul-as-add",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_matches_peasant_model",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/fuzz/multiply/alt-poly",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "multiply_matches_peasant_model",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/fuzz/multiply/generator-shift",
+      "kind": "negctl",
+      "op": "multiply",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_first_reduction",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/example/power/alt-poly",
+      "kind": "negctl",
+      "op": "power",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_first_reduction",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/example/power/generator-shift",
+      "kind": "negctl",
+      "op": "power",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_cube_of_three",
+      "claim": "",
+      "fault": "exp-mod-256",
+      "id": "warrant/gf256/negctl/example/power/exp-mod-256",
+      "kind": "negctl",
+      "op": "power",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_successor",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/exhaustive/power/alt-poly",
+      "kind": "negctl",
+      "op": "power",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_zero_exponent",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/exhaustive/power/generator-shift",
+      "kind": "negctl",
+      "op": "power",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_of_zero",
+      "claim": "",
+      "fault": "exp-mod-256",
+      "id": "warrant/gf256/negctl/exhaustive/power/exp-mod-256",
+      "kind": "negctl",
+      "op": "power",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_successor",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/property/power/alt-poly",
+      "kind": "negctl",
+      "op": "power",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_zero_exponent",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/property/power/generator-shift",
+      "kind": "negctl",
+      "op": "power",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_of_zero",
+      "claim": "",
+      "fault": "exp-mod-256",
+      "id": "warrant/gf256/negctl/property/power/exp-mod-256",
+      "kind": "negctl",
+      "op": "power",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_successor",
+      "claim": "",
+      "fault": "alt-poly",
+      "id": "warrant/gf256/negctl/fuzz/power/alt-poly",
+      "kind": "negctl",
+      "op": "power",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_zero_exponent",
+      "claim": "",
+      "fault": "generator-shift",
+      "id": "warrant/gf256/negctl/fuzz/power/generator-shift",
+      "kind": "negctl",
+      "op": "power",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "power_of_zero",
+      "claim": "",
+      "fault": "exp-mod-256",
+      "id": "warrant/gf256/negctl/fuzz/power/exp-mod-256",
+      "kind": "negctl",
+      "op": "power",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "subtract_known_vector",
+      "claim": "",
+      "fault": "or-for-xor",
+      "id": "warrant/gf256/negctl/example/subtract/or-for-xor",
+      "kind": "negctl",
+      "op": "subtract",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "subtract_known_vector",
+      "claim": "",
+      "fault": "wrapping-sub",
+      "id": "warrant/gf256/negctl/example/subtract/wrapping-sub",
+      "kind": "negctl",
+      "op": "subtract",
+      "target": "example",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "subtract_matches_xor_model",
+      "claim": "",
+      "fault": "or-for-xor",
+      "id": "warrant/gf256/negctl/exhaustive/subtract/or-for-xor",
+      "kind": "negctl",
+      "op": "subtract",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "subtract_matches_xor_model",
+      "claim": "",
+      "fault": "wrapping-sub",
+      "id": "warrant/gf256/negctl/exhaustive/subtract/wrapping-sub",
+      "kind": "negctl",
+      "op": "subtract",
+      "target": "exhaustive",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "subtract_matches_xor_model",
+      "claim": "",
+      "fault": "or-for-xor",
+      "id": "warrant/gf256/negctl/property/subtract/or-for-xor",
+      "kind": "negctl",
+      "op": "subtract",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "subtract_matches_xor_model",
+      "claim": "",
+      "fault": "wrapping-sub",
+      "id": "warrant/gf256/negctl/property/subtract/wrapping-sub",
+      "kind": "negctl",
+      "op": "subtract",
+      "target": "property",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "subtract_matches_xor_model",
+      "claim": "",
+      "fault": "or-for-xor",
+      "id": "warrant/gf256/negctl/fuzz/subtract/or-for-xor",
+      "kind": "negctl",
+      "op": "subtract",
+      "target": "fuzz",
+      "verdict": "pass"
+    },
+    {
+      "caught_by": "subtract_matches_xor_model",
+      "claim": "",
+      "fault": "wrapping-sub",
+      "id": "warrant/gf256/negctl/fuzz/subtract/wrapping-sub",
+      "kind": "negctl",
+      "op": "subtract",
+      "target": "fuzz",
+      "verdict": "pass"
+    }
+  ]
+}

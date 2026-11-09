@@ -113,7 +113,7 @@ pub fn parse_evidence_bindings(text: &str) -> Result<EvidenceBindingFile, String
             if slot.is_some() {
                 return Err(at(format!("`{key}` appears twice")));
             }
-            *slot = Some(parse_u64(rest).map_err(|e| at(e))?);
+            *slot = Some(parse_u64(rest).map_err(at)?);
             Ok(())
         };
         match key {

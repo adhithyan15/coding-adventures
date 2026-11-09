@@ -295,9 +295,10 @@ pub fn divide(a: u8, b: u8) -> u8 {
 ///
 /// ## Overflow Note
 ///
-/// For very large `exp`, `LOG[base] * exp` could theoretically overflow `u64`
-/// if `exp` is near `u64::MAX`. For the expected use cases in Reed-Solomon
-/// (exp ≤ 255), this is not an issue.
+/// `exp` is a `u32`, so the product `LOG[base] * exp` is at most
+/// `254 * (2^32 - 1)`, which fits in `u64` with room to spare: `power` is total
+/// over its whole domain (the generated Warrant evidence exercises exponents up
+/// to `u32::MAX`).
 pub fn power(base: u8, exp: u32) -> u8 {
     // Special case: 0^0 = 1 by convention.
     if base == 0 {

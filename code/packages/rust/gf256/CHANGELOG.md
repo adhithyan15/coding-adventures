@@ -5,6 +5,47 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## 0.2.1 — 2026-11-09
+
+No change to the public API or to any operation's behaviour.
+
+### Added
+
+- Warrant-derived evidence (VER04h): `code/specs/gf256.warrant` states the
+  contract of the six public operations (known vectors, field laws, and
+  independent bit-level models of XOR and shift-and-add multiplication, the
+  latter pinning the reduction polynomial 0x11D); `evidence.bindings` binds each
+  operation to its export and its sabotage faults. `tests/generated/
+  warrant_evidence.rs` is generated from them (BUILD fails on drift) and run by
+  `tests/warrant_evidence.rs`: 35 examples, 38 claims each with an exhaustive,
+  property and fuzz suite (51,472,354 exhaustive cases, including every one of
+  the 2^24 byte triples for associativity and distributivity) and 64 negative
+  controls (wrong reduction polynomial, off-by-one antilog index, multiplication
+  returning the sum, OR for XOR, exponent modulo 256, missing division-by-zero
+  error, ...), every one failing as it must.
+- `evidence/test-manifest.json` and `evidence/proof-manifest.json` written by real
+  runs, and `assurance_report.json` derived from them (report-only: CWE-208 is
+  applicable and unaddressed, no constant-time or step-bound proof is live, rungs
+  E2/E5 `not-live`).
+- `effect_certificate.json` (analyzer `--emit-cert`), `BUILD_windows`.
+
+### Fixed
+
+- README: `multiply(0x53, 0xca) == 1` and `inverse(0x53) == 0xca` are false under
+  0x11D; the pair is `0x53` and `0x8C`. The `power` doc comment no longer claims an
+  overflow risk that a `u32` exponent cannot have.
+- Version: `Cargo.toml` said `0.1.0` while the `Field` release below was recorded
+  as `0.2.0`; set to `0.2.1`.
+- `required_capabilities.json` now mentions the process-global `OnceLock` tables.
+
+### Known gaps (documented, not fixed)
+
+- `Field::new` accepts any `u16` polynomial without validation, and `Field` is
+  outside the Warrant document.
+- Not constant time (secret-indexed table lookups, branches on zero).
+
+---
+
 ## 0.2.0 — 2026-04-11
 
 ### Added
