@@ -2,6 +2,12 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Add required_capabilities.json (pure computation).
+
 ## [0.1.1] - Unreleased
 
 - Consume the bounded HF04 corpus and promote streaming length accounting to the full 128-bit field.
