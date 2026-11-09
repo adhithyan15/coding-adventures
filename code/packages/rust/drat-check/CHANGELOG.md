@@ -9,6 +9,10 @@ the audit session, none is carried over from earlier docs.
 
 ### Fixed
 
+- **Leading zeros rejected (VER11 L4, D10).** Tokens `00`, `01`, `-01`, `007`
+  and header counts such as `02` are now parse errors, matching the solver's
+  now-strict reader (`cdcl-sat` 0.3.2). Previously accepted.
+
 - **Parser differential (robustness; VER11 D6).** The DIMACS and DRAT lexers
   used Rust's integer parsers, which accept `+1` and read `-0` as `0`, so
   `-0` acted as a clause terminator: `p cnf 1 1` / `-0 1 0` read as two

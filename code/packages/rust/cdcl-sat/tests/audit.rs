@@ -1029,6 +1029,13 @@ fn solver_and_kernel_read_dimacs_identically() {
         "p cnf 2 1\n1 99999999999999999999 0\n",
         "p cnf -2 1\n1 0\n",
         "p cnf 2 1 7\n1 0\n",
+        "p cnf +2 1\n1 0\n",
+        "p cnf 02 1\n1 0\n",
+        "p cnf 2 01\n1 0\n",
+        "p cnf 2 1\n-01 0\n",
+        "p cnf 2 1\n-0 1 0\n",
+        "p cnf 2 1\n+0\n",
+        "p cnf 2 1\n1 0\n+",
     ];
     let mut disagreements = Vec::new();
     for t in texts {
@@ -1042,6 +1049,27 @@ fn solver_and_kernel_read_dimacs_identically() {
         disagreements.is_empty(),
         "solver/kernel DIMACS disagreement (text, solver accepts, kernel accepts): {disagreements:?}"
     );
+}
+
+/// VER09 7.11: the lexer is strict, `-?(0|[1-9][0-9]*)`. Each form below was
+/// once accepted (Rust's `i64::from_str`) and is now a `BadLiteral` /
+/// `BadHeader`, matching `drat-check`.
+#[test]
+fn dimacs_rejects_non_canonical_integers() {
+    for tok in ["+1", "+0", "-0", "-00", "00", "01", "-01", "007", "1-", "--1", "+", "-"] {
+        let text = format!("p cnf 2 1\n{tok} 1 0\n");
+        let e = parse_dimacs(&text).unwrap_err();
+        assert!(matches!(e.kind, DimacsErrorKind::BadLiteral(ref t) if t == tok), "{tok:?} -> {e:?}");
+    }
+    // `-0` must not terminate a clause: it is an error, not two clauses.
+    assert!(parse_dimacs("p cnf 1 2\n1 -0 1 0\n").is_err());
+    for header in ["p cnf +2 1\n", "p cnf 2 +1\n", "p cnf 02 1\n", "p cnf 2 01\n", "p cnf 00 0\n", "p cnf -0 0\n"] {
+        let text = format!("{header}1 0\n");
+        assert!(matches!(parse_dimacs(&text).unwrap_err().kind, DimacsErrorKind::BadHeader(_)), "{header:?}");
+    }
+    // The canonical forms still parse, including a bare `0` count.
+    assert!(parse_dimacs("p cnf 0 0\n").is_ok());
+    assert!(parse_dimacs("p cnf 10 1\n-10 9 0\n").is_ok());
 }
 
 #[test]

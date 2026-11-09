@@ -1,5 +1,16 @@
 # Changelog — `cdcl-sat`
 
+## 0.3.2 — 2026-11-09
+
+### Fixed
+
+- **Strict DIMACS lexer (VER09 7.11).** The reader used Rust's `i64`/`usize`
+  parsers and accepted `+1`, `-0` (as a clause terminator), `00`, `01`, and
+  `+2` in the header. Tokens are now `-?(0|[1-9][0-9]*)`, header counts
+  `0|[1-9][0-9]*`; everything else is `BadLiteral`/`BadHeader`, identical to
+  `drat-check`. Regression test `dimacs_rejects_non_canonical_integers`;
+  `solver_and_kernel_read_dimacs_identically` now passes with more inputs.
+
 ## 0.3.1 — 2026-11-09
 
 Audit release. No behaviour change: the audit found no soundness, proof or

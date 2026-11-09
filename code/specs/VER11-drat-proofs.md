@@ -175,10 +175,11 @@ Lexical rules (both inputs):
   starts with the character `c`; it is ignored whole. A `c` anywhere else
   (after tokens on the same line, say) is an ordinary, invalid token. Blank
   lines are ignored.
-- **L4.** An integer token is `-?[0-9]+` read as a signed 64-bit value.
-  **No `+` sign and no `-0`** (see divergence D6). Leading zeros are
-  accepted (`007` is 7; `00` is the terminator). A token outside the `i64`
-  range is not an integer and is rejected.
+- **L4.** An integer token is `-?(0|[1-9][0-9]*)` read as a signed 64-bit
+  value. **No `+` sign, no `-0`, and no leading zeros** (see divergences D6
+  and D10): `00`, `01`, `-01`, `007` are rejected, so `00` is not a
+  terminator. A token outside the `i64` range is not an integer and is
+  rejected. Header counts follow the same digit rule.
 
 Formula (strict DIMACS CNF):
 
@@ -364,6 +365,10 @@ Both crates are pure computation over strings and in-memory data. Their
      reader sees a syntax error. A parser differential on the trusted side is
      exactly what the kernel's own-parser rule (3.1) exists to avoid. Rule L4
      now rejects both.
+   - **D10 (spec, tightened).** Leading zeros were first accepted (`007` is
+     7, `00` a terminator), matching `cdcl-sat`'s then-lenient reader. Both
+     readers are now strict: leading-zero tokens are rejected in `drat-check`
+     and `cdcl-sat` alike, so no reader can disagree about `00`.
    - **D7 (spec).** The relation between `Accepted.work` and `max_work` was
      unstated. It is now a contract: `work <= max_work` on every `Ok` (C8).
    - **D8 (spec).** `Accepted::{empty_clause_line, work}`, `Limits` and

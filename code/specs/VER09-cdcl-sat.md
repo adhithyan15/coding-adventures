@@ -466,11 +466,13 @@ Recorded while implementing:
     0.95, `CLAUSE_DECAY` 0.999, initial phase false, `max(n_clauses/3, 2000)`
     learned-clause limit growing 1.1x) match §4.5. Restarts are part of the
     contract only through C6 determinism; tests do not pin the numbers.
-11. **DIMACS lexing is lenient in both readers, consistently.** Tokens are
-    parsed as `i64`, so `+1`, `-0` (a clause terminator), `00` and `01` are
-    accepted by `cdcl-sat` and by `drat-check` alike. §5 says "literals are
-    integers"; this is the integer reading. Tightening it is a coordinated
-    change to both readers and is not done here; C10 guards the agreement.
+11. **DIMACS lexing is strict, identically in both readers.** An integer
+    token is `-?(0|[1-9][0-9]*)` in `i64` range; header counts are
+    `0|[1-9][0-9]*`. `+1`, `-0` (which used to be a clause terminator), `00`,
+    `01` and `-01` are errors in `cdcl-sat` and in `drat-check` alike (VER11
+    L4, D6, D10). Earlier text accepted them via Rust's `i64::from_str`; that
+    was changed because a trusted reader must not disagree with other DIMACS
+    readers about where a clause ends. C10 guards the agreement.
 12. **Work-budget resumption.** Each `Unknown` restarts the search at level 0.
     Resuming with a constant work budget smaller than the work to reach one
     conflict never progresses. Callers must grow the budget (documented on

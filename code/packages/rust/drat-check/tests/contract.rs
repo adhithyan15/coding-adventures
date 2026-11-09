@@ -108,8 +108,11 @@ fn f2_f3_f4_f5_clause_rules() {
     assert!(formula_err("p cnf 2 0\n1 0\n").1.contains("declares 0 clauses, found 1"));
     // F2 layout freedom
     assert!(check("p cnf 2 4\n1 2 0 1 -2 0\n-1\n2 0\n-1\n-2\n0\n", "1 0\n0\n").is_ok());
-    // leading zeros are allowed
-    assert!(check("p cnf 2 4\n01 02 0\n001 -2 0\n-1 2 0\n-1 -002 0\n", "1 0\n0\n").is_ok());
+    // leading zeros are rejected (L4), in literals, terminators and headers
+    for f in ["p cnf 2 1\n01 0\n", "p cnf 2 1\n1 00\n", "p cnf 02 1\n1 0\n", "p cnf 2 01\n1 0\n", "p cnf 2 1\n-01 0\n"] {
+        assert!(matches!(check(f, "0\n"), Err(Rejection::Parse(_))), "{f:?}");
+    }
+    assert!(matches!(check("p cnf 1 1\n0\n", "00\n"), Err(Rejection::Parse(_))));
 }
 
 #[test]

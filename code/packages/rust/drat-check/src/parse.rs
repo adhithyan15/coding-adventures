@@ -54,8 +54,10 @@ pub fn var(lit: Lit) -> usize {
     (lit >> 1) as usize
 }
 
-/// The strict integer grammar of VER11 3.4.2 rule L4: `-?[0-9]+` as an `i64`,
-/// where `-0` (any number of zeros) is **not** an integer.
+/// The strict integer grammar of VER11 3.4.2 rule L4: `-?(0|[1-9][0-9]*)` as
+/// an `i64`, where `-0` is **not** an integer and no token has a leading zero
+/// (`00` and `01` are rejected, so no reader can disagree about whether `00`
+/// is a terminator).
 ///
 /// Rust's own `i64::from_str` is more generous: it accepts a leading `+`, and
 /// it reads `-0` as `0`. Taking either would let this reader disagree with
@@ -64,7 +66,7 @@ pub fn var(lit: Lit) -> usize {
 /// to prevent. So the token is vetted byte by byte first.
 fn parse_int(token: &str) -> Option<i64> {
     let digits = token.strip_prefix('-').unwrap_or(token);
-    if digits.is_empty() || !digits.bytes().all(|b| b.is_ascii_digit()) {
+    if !is_canonical_digits(digits) {
         return None;
     }
     let value: i64 = token.parse().ok()?;
@@ -74,9 +76,17 @@ fn parse_int(token: &str) -> Option<i64> {
     Some(value)
 }
 
-/// A non-negative count in a `p cnf` header: ASCII digits only (no `+`).
+/// `0` or a digit string with no leading zero.
+fn is_canonical_digits(digits: &str) -> bool {
+    !digits.is_empty()
+        && digits.bytes().all(|b| b.is_ascii_digit())
+        && (digits == "0" || !digits.starts_with('0'))
+}
+
+/// A non-negative count in a `p cnf` header: canonical ASCII digits only
+/// (no `+`, no leading zeros).
 fn parse_count(token: &str) -> Option<usize> {
-    if token.is_empty() || !token.bytes().all(|b| b.is_ascii_digit()) {
+    if !is_canonical_digits(token) {
         return None;
     }
     token.parse().ok()
@@ -298,17 +308,16 @@ mod tests {
     /// `-0` as `0`, which made `-0` a clause terminator.
     #[test]
     fn integer_tokens_are_strict() {
-        for ok in ["0", "7", "-7", "007", "00", "9223372036854775807", "-9223372036854775808"] {
+        for ok in ["0", "7", "-7", "9223372036854775807", "-9223372036854775808"] {
             assert!(parse_int(ok).is_some(), "{ok}");
         }
         assert_eq!(parse_int("-7"), Some(-7));
-        assert_eq!(parse_int("007"), Some(7));
-        for bad in ["", "-", "+", "+1", "+0", "-0", "-00", "--1", "1-", "1.0", "1e3", "0x1", " 1", "1 ", "9223372036854775808", "-9223372036854775809", "\u{661}"] {
+        for bad in ["", "-", "+", "+1", "+0", "-0", "-00", "00", "01", "007", "-01", "--1", "1-", "1.0", "1e3", "0x1", " 1", "1 ", "9223372036854775808", "-9223372036854775809", "\u{661}"] {
             assert_eq!(parse_int(bad), None, "{bad:?}");
         }
         assert_eq!(parse_count("12"), Some(12));
-        assert_eq!(parse_count("012"), Some(12));
-        for bad in ["", "+1", "-1", "1.0", "x", "99999999999999999999"] {
+        assert_eq!(parse_count("0"), Some(0));
+        for bad in ["", "012", "00", "+1", "-1", "1.0", "x", "99999999999999999999"] {
             assert_eq!(parse_count(bad), None, "{bad:?}");
         }
         // end to end: `-0` must not split a clause or end one.
