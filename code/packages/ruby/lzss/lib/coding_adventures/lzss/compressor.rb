@@ -94,10 +94,17 @@ module CodingAdventures
         output = []
 
         tokens.each do |tok|
+          # Once the declared length is reached nothing more survives the final
+          # truncation, so stop instead of expanding further matches.
+          break if original_length && output.length >= original_length
+
           case tok
           when Literal
             output << tok.byte
           when Match
+            # Invalid back-reference (offset 0 or before the start): skip it.
+            next if tok.offset.zero? || tok.offset > output.length
+
             start = output.length - tok.offset
             tok.length.times { |i| output << output[start + i] }
           end

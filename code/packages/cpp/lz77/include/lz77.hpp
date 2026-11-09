@@ -93,6 +93,14 @@ inline std::vector<std::uint8_t> decode(const std::vector<token> &tokens,
     std::vector<std::uint8_t> out = initial;
     for (const token &t : tokens) {
         if (t.length > 0) {
+            // Security: a zero offset, or one reaching before the start of the
+            // output, is invalid (corrupt/hostile input).  Unchecked, the
+            // unsigned subtraction wraps and the copy reads outside the vector
+            // (undefined behaviour).  Stop decoding and return what has been
+            // produced so far; valid streams are unaffected.
+            if (t.offset == 0 || t.offset > out.size()) {
+                break;
+            }
             std::size_t start = out.size() - t.offset;
             for (std::size_t i = 0; i < t.length; i++) {
                 out.push_back(out[start + i]); // copy handles overlap

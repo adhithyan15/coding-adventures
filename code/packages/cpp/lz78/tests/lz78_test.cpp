@@ -2,6 +2,9 @@
 // trips are taken from the Rust crate's own tests.
 #include "iso_test.h"
 
+#include <initializer_list>
+#include <stdexcept>
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -19,6 +22,70 @@ static Bytes bytes(const char* s) {
     }
     return b;
 }
+
+
+// ---- Security regression tests: hostile headers ---------------------------
+// Each case is a few bytes of input whose header claims an enormous count or
+// length.  An implementation that sized an allocation or loop from the claim
+// would allocate gigabytes or read out of bounds; these checks (best run under
+// ASan/UBSan, see the CHANGELOG) assert the call returns promptly with the data
+// actually present.  Also: round trips over every input of length <= 2 and a
+// seeded random sample.
+namespace hostile {
+using Bytes = std::vector<std::uint8_t>;
+
+static Bytes mk(std::initializer_list<int> v) {
+    Bytes b;
+    for (int x : v) {
+        b.push_back(static_cast<std::uint8_t>(x));
+    }
+    return b;
+}
+
+static std::uint32_t rng_state = 0x5EEDu;
+static unsigned rng() {
+    std::uint32_t x = rng_state;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    rng_state = x;
+    return x;
+}
+
+
+static bool rt(const Bytes &d) {
+    return ca::lz78::decompress(ca::lz78::compress(d, 65536)) == d;
+}
+
+static void run_round_trips() {
+    ISO_CHECK(rt(Bytes{}));
+    for (unsigned a = 0; a < 256; a++) {
+        ISO_CHECK(rt(mk({static_cast<int>(a)})));
+        for (unsigned b = 0; b < 256; b++) {
+            ISO_CHECK(rt(mk({static_cast<int>(a), static_cast<int>(b)})));
+        }
+    }
+    for (unsigned i = 0; i < 300; i++) {
+        unsigned n = 3 + rng() % 597;
+        unsigned alpha = (i % 4 == 0) ? 2 : (i % 4 == 1) ? 4 : (i % 4 == 2) ? 16 : 256;
+        Bytes d;
+        for (unsigned j = 0; j < n; j++) {
+            d.push_back(static_cast<std::uint8_t>(rng() % alpha));
+        }
+        ISO_CHECK(rt(d));
+    }
+}
+static void run() {
+    using ca::lz78::decompress;
+    ISO_CHECK(decompress(Bytes(8, 0xFF)).empty());
+    ISO_CHECK(decompress(mk({255, 255, 255, 255, 0, 0, 0, 1, 0, 0, 'h', 0})) == mk({'h'}));
+    ISO_CHECK(decompress(mk({0, 0, 0, 2, 255, 255, 255, 255, 0, 0, 'h', 0, 0, 0, 'i', 0, 0, 0})) ==
+              mk({'h', 'i'}));
+    // Dangling dictionary index must not read out of bounds.
+    (void)decompress(mk({0, 0, 0, 10, 0, 0, 0, 2, 0, 0, 'a', 0, 0x27, 0x0F, 'b', 0}));
+    run_round_trips();
+}
+} // namespace hostile
 
 int main() {
     const std::size_t MAX_DICT = 65536;
@@ -150,6 +217,8 @@ int main() {
         (void)out;
         ISO_CHECK(true);
     }
+
+    hostile::run();
 
     return ISO_TEST_RESULT();
 }

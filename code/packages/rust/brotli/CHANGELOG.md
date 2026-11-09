@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Security
+
+- CWE-789: `decompress` no longer preallocates the output from the untrusted `original_length` header; the capacity hint is capped at the number of payload bits.
+- Added `tests/hostile_headers.rs`.
+
 ## 0.1.0 — 2026-04-13
 
 ### Added

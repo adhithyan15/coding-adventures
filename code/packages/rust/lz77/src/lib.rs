@@ -186,13 +186,24 @@ pub fn encode(
 /// // Token(1,3,68): start=0, copy output[0..3] → AAA, then append D
 /// assert_eq!(decode(&tokens, &[]), b"AAAAD");
 /// ```
+///
+/// # Malformed tokens
+///
+/// A match token whose `offset` is zero or reaches back past the start of the
+/// output is invalid (it can only come from corrupt or hostile input).  Rather
+/// than panicking, decoding stops at the first such token and the bytes
+/// produced so far are returned.  Valid token streams are unaffected.
 pub fn decode(tokens: &[Token], initial_buffer: &[u8]) -> Vec<u8> {
     let mut output: Vec<u8> = initial_buffer.to_vec();
 
     for token in tokens {
         if token.length > 0 {
+            let offset = token.offset as usize;
+            if offset == 0 || offset > output.len() {
+                break;
+            }
             // Copy length bytes from position (output.len() - offset).
-            let start = output.len() - token.offset as usize;
+            let start = output.len() - offset;
             // Copy byte-by-byte to handle overlapping matches (offset < length).
             for i in 0..token.length as usize {
                 let byte = output[start + i];
@@ -233,23 +244,31 @@ pub fn serialise_tokens(tokens: &[Token]) -> Vec<u8> {
 /// Deserialises bytes back into a token list.
 ///
 /// Inverse of `serialise_tokens`.
+///
+/// # Security: the header count is untrusted
+///
+/// The first four bytes claim how many tokens follow, but an attacker controls
+/// them (`0xFFFF_FFFF` would ask for 17 GB of `Token`s).  We therefore never
+/// size anything from the claim alone: the number of tokens is clamped to what
+/// the remaining bytes can physically hold (`(len - 4) / 4`), and the vector
+/// is allocated for that clamped value.  A header that claims more tokens than
+/// are present is treated as truncated: the complete tokens that *are*
+/// present are returned and the rest is ignored.  A header that claims fewer
+/// tokens than are present stops at the claimed count (trailing bytes are
+/// ignored), exactly as before.
 pub fn deserialise_tokens(data: &[u8]) -> Vec<Token> {
     if data.len() < 4 {
         return Vec::new();
     }
 
-    let count = u32::from_be_bytes([data[0], data[1], data[2], data[3]]) as usize;
+    let claimed = u32::from_be_bytes([data[0], data[1], data[2], data[3]]) as usize;
+    let body = &data[4..];
+    let count = claimed.min(body.len() / 4);
     let mut tokens = Vec::with_capacity(count);
 
-    for i in 0..count {
-        let base = 4 + i * 4;
-        if base + 4 > data.len() {
-            break;
-        }
-        let offset = u16::from_be_bytes([data[base], data[base + 1]]);
-        let length = data[base + 2];
-        let next_char = data[base + 3];
-        tokens.push(Token::new(offset, length, next_char));
+    for chunk in body.chunks_exact(4).take(count) {
+        let offset = u16::from_be_bytes([chunk[0], chunk[1]]);
+        tokens.push(Token::new(offset, chunk[2], chunk[3]));
     }
 
     tokens

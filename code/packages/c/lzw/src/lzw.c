@@ -304,6 +304,13 @@ int lzw_decompress(const uint8_t *data, size_t len, uint8_t **out,
         uint8_t entry_first;
         unsigned c;
 
+        /* Security: original_length is untrusted but bounds what we keep (see
+         * the final trim).  Stop once reached so a tiny stream of long
+         * dictionary entries cannot expand far beyond it.  Valid streams are
+         * unaffected: the trim would have discarded the extra anyway. */
+        if (output.len >= original_length) {
+            break;
+        }
         if (!br_read(&r, code_size, &code)) {
             break;
         }

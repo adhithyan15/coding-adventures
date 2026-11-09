@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Security
+
+- Hardening (CWE-789): _deserialise_tokens clamps the untrusted token count to what the data holds; decode stops once the declared original_length is reached (a hostile chain of tokens previously expanded quadratically before truncation).
+- Added test_hostile_headers.py: hostile headers (0xFFFFFFFF counts/lengths, counts beyond the data) checked for bounded time and memory, plus round trips over every byte string of length <= 2 and a seeded random sample.
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

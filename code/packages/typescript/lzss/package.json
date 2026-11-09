@@ -6,8 +6,8 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "node node_modules/typescript/bin/tsc",
-    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --test dist-test/tests/lzss.test.js",
-    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=80 --test dist-test/tests/lzss.test.js"
+    "test": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --test dist-test/tests/lzss.test.js dist-test/tests/hostile_headers.test.js",
+    "test:coverage": "node node_modules/typescript/bin/tsc -p tsconfig.test.json && node --experimental-test-coverage --test-coverage-exclude=dist-test/tests/** --test-coverage-lines=80 --test dist-test/tests/lzss.test.js dist-test/tests/hostile_headers.test.js"
   },
   "author": "Adhithya Rajasekaran",
   "license": "MIT",

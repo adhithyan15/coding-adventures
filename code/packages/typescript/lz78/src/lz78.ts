@@ -197,8 +197,15 @@ export function decode(tokens: Token[], originalLength = -1): Uint8Array {
   const output: number[] = [];
 
   for (const tok of tokens) {
+    // Security: stop once the declared length is reached (nothing more
+    // survives the truncation; expanding further lets a tiny hostile stream
+    // grow quadratically) and on a dangling dictionary index.
+    if (originalLength >= 0 && output.length >= originalLength) break;
+    if (tok.dictIndex >= table.length) break;
+
     const seq = reconstruct(table, tok.dictIndex);
-    output.push(...seq);
+    // Not output.push(...seq): spreading a long sequence overflows the stack.
+    for (const b of seq) output.push(b);
 
     if (originalLength < 0 || output.length < originalLength) {
       output.push(tok.nextChar);
@@ -244,7 +251,8 @@ export function deserialiseTokens(data: Uint8Array): [Token[], number] {
   if (data.length < 8) return [[], 0];
   const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
   const originalLength = view.getUint32(0, false);
-  const tokenCount = view.getUint32(4, false);
+  // Security: clamp the attacker-controlled count to the complete tokens present.
+  const tokenCount = Math.min(view.getUint32(4, false), Math.floor((data.length - 8) / 4));
   const tokens: Token[] = [];
   for (let i = 0; i < tokenCount; i++) {
     const base = 8 + i * 4;

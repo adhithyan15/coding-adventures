@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Security
+
+- No code change: block count is capped against the payload. NOT RUN locally (toolchain unavailable in the review environment).
+- Added test/hostile_headers_test.exs (ExUnit): hostile headers return only the data actually present, plus round trips over every byte string of length <= 2 and a seeded random sample. NOT RUN locally (toolchain unavailable in the review environment).
+
 ## [0.1.0] - 2026-04-11
 
 ### Added
