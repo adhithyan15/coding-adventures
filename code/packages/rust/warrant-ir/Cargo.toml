@@ -13,3 +13,13 @@ drat-check = { path = "../drat-check" }
 [dev-dependencies]
 coding_adventures_ct_compare = { path = "../ct-compare" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_warrant_grammar = { path = "../warrant-grammar" }
+coding_adventures_sha256 = { path = "../sha256" }
+
+# VER04h: proof obligations derived from the Warrant `labels` / `bound` rows,
+# run over the real lowered ct-compare source; writes the proof manifest and
+# content-addressed DRAT files when WARRANT_PROOF_OUT=<dir> is set.
+[[test]]
+name = "warrant_proofs"
+path = "tests/warrant_proofs.rs"
+harness = false

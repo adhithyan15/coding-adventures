@@ -8,6 +8,7 @@ description = "Constant-time byte-slice equality — no early exit on first diff
 
 [dev-dependencies]
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
 
 [[test]]
 name = "conformance"
@@ -22,4 +23,11 @@ harness = false
 [[test]]
 name = "microbenchmarks"
 path = "tests/microbenchmarks.rs"
+harness = false
+
+# Generated from code/specs/ct-compare.warrant (VER04h): examples, bounded
+# exhaustive suites, property suites, fuzz suites and sabotage controls.
+[[test]]
+name = "warrant_evidence"
+path = "tests/warrant_evidence.rs"
 harness = false

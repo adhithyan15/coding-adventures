@@ -18,6 +18,7 @@ mod _tokens;
 pub mod binding;
 pub mod checker;
 pub mod codegen;
+pub mod evidence;
 pub mod layout;
 pub mod parser;
 pub mod source;

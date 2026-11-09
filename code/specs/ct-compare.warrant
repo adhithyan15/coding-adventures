@@ -1,6 +1,7 @@
 warrant ct_compare
   error SelectError = CT_SELECT_LENGTH_MISMATCH
   model same(a: Bytes, b: Bytes) -> Bool = a == b
+  model same_u64(a: U64, b: U64) -> Bool = a == b
   op eq(a: Bytes, b: Bytes) -> Bool
   op eq_fixed<N: Nat>(a: Bytes<N>, b: Bytes<N>) -> Bool
   op select_bytes(a: Bytes, b: Bytes, choice: Bool) -> Result<Bytes, SelectError> fresh
@@ -111,3 +112,22 @@ warrant ct_compare
 
   claim eq_agrees:
     forall a: Bytes, b: Bytes. eq(a, b) == same(a, b)
+
+  claim eq_fixed_agrees_w0:
+    forall a: Bytes<0>, b: Bytes<0>. eq_fixed<0>(a, b) == same(a, b)
+  claim eq_fixed_agrees_w1:
+    forall a: Bytes<1>, b: Bytes<1>. eq_fixed<1>(a, b) == same(a, b)
+  claim eq_fixed_agrees_w2:
+    forall a: Bytes<2>, b: Bytes<2>. eq_fixed<2>(a, b) == same(a, b)
+  claim eq_fixed_agrees_w4:
+    forall a: Bytes<4>, b: Bytes<4>. eq_fixed<4>(a, b) == same(a, b)
+  claim eq_fixed_agrees_w16:
+    forall a: Bytes<16>, b: Bytes<16>. eq_fixed<16>(a, b) == same(a, b)
+
+  claim select_picks:
+    forall a: Bytes, b: Bytes | len(a) == len(b), choice: Bool. select_bytes(a, b, choice) == Ok(if choice then a else b)
+  claim select_rejects_mismatch:
+    forall a: Bytes, b: Bytes | len(a) != len(b), choice: Bool. select_bytes(a, b, choice) == Err(SelectError.CT_SELECT_LENGTH_MISMATCH)
+
+  claim eq_u64_agrees:
+    forall a: U64, b: U64. eq_u64(a, b) == same_u64(a, b)

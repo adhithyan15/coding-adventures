@@ -22,7 +22,8 @@ use coding_adventures_test_bootstrap::bench::{
     AllocCounter, BenchmarkConfig, BenchmarkHarness, Budget, CounterSample, HardwarePerfCounter,
     StepCounter,
 };
-use coding_adventures_test_bootstrap::run::{self, Ctx, Suite};
+use coding_adventures_test_bootstrap::manifest::{self, Json};
+use coding_adventures_test_bootstrap::run::{self, Ctx, Outcome, Suite};
 use coding_adventures_test_bootstrap::Verdict;
 
 const FID_BENCH_FAIL: &str = "property-counterexample";
@@ -44,7 +45,59 @@ fn main() {
         check_sabotage_divergence_detected,
     );
 
-    std::process::exit(run::main(&suite));
+    std::process::exit(run::main_recorded(&suite, write_bench_manifest));
+}
+
+/// Is a hardware retired-instruction counter live on this host?  The equal
+/// instruction-count assertions above only run when it is, so the report must
+/// know (VER04h): "all benchmarks passed" does not imply "instruction counts
+/// were compared".
+fn probe_hardware_counters() -> &'static str {
+    let harness = BenchmarkHarness::new(fast_bench_config(3));
+    let budget = Budget::default();
+    let a = [0x5au8; 16];
+    let mut counter = HardwarePerfCounter::instructions();
+    let res = harness.run_with_counter("hw_probe", &budget, &mut counter, || {
+        ct_eq(black_box(&a), black_box(&a))
+    });
+    match res.instructions_per_iter {
+        CounterSample::Live(_) => "live",
+        _ => "not-live",
+    }
+}
+
+/// With `WARRANT_BENCH_OUT=<file>`, record what this run reported so the
+/// assurance report can quote it instead of asserting it (VER04h section 8).
+fn write_bench_manifest(outcomes: &[Outcome]) {
+    let Some(path) = manifest::output_path("WARRANT_BENCH_OUT") else {
+        return;
+    };
+    let mut tests: Vec<Json> = outcomes
+        .iter()
+        .map(|o| {
+            Json::obj([
+                ("id", Json::str(o.id.clone())),
+                ("kind", Json::str("bench")),
+                ("verdict", Json::str(if o.passed() { "pass" } else { "fail" })),
+            ])
+        })
+        .collect();
+    tests.sort_by_key(|t| t.render());
+    let doc = Json::obj([
+        ("schema", Json::str("warrant-bench-evidence-v1")),
+        ("module", Json::str("ct_compare")),
+        ("hw_instruction_counters", Json::str(probe_hardware_counters())),
+        // Same definition as the proof manifest: SHA-256 of the framed src/**/*.rs.
+        (
+            "source_sha256",
+            Json::str(coding_adventures_sha256::sha256_hex(
+                &manifest::source_tree_framing(&std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src"))
+                    .expect("bind bench manifest to src"),
+            )),
+        ),
+        ("tests", Json::Arr(tests)),
+    ]);
+    manifest::write(&path, &doc).expect("write bench manifest");
 }
 
 /// Helper creating a fast benchmark configuration suitable for automated test suites.

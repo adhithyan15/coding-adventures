@@ -12,6 +12,8 @@ grammar-tools = { path = "../grammar-tools" }
 lexer = { path = "../lexer" }
 parser = { path = "../parser" }
 coding_adventures_test_bootstrap = { path = "../test-bootstrap" }
+coding_adventures_sha256 = { path = "../sha256" }
+coding_adventures_ct_compare = { path = "../ct-compare" }
 
 [[test]]
 name = "self_corpus"

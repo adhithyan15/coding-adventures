@@ -7,6 +7,7 @@
 use std::collections::{HashMap, HashSet};
 use std::fmt;
 
+use crate::evidence::label_rank;
 use crate::matrix::WeaknessStatus;
 use crate::registry::WeaknessRegistry;
 use crate::report::AssuranceReport;
@@ -55,6 +56,16 @@ impl fmt::Display for CheckError {
 }
 
 impl std::error::Error for CheckError {}
+
+/// The registry's floor label for CWE-208 (gate-level netlist proof).
+const GATE_LEVEL_LABEL: &str = "proved-to-gate-level";
+
+/// A report may carry the labels the evidence layer ranks (`proved`,
+/// `bounded(K)`) and the registry's gate-level floor label.  `unknown`,
+/// `falsified`, `unchecked` and anything unparseable have no rank.
+fn report_label_ranked(label: &str) -> bool {
+    label_rank(label).is_some() || label == GATE_LEVEL_LABEL
+}
 
 /// Verify an assurance report fail-closed against the canonical weakness registry.
 pub fn verify_assurance_report(
@@ -208,6 +219,32 @@ pub fn verify_assurance_report(
                     "claim '{}' fuzz status is '{}', expected 'pass'",
                     claim.id, fuzz.status
                 )));
+            }
+        }
+        if let Some(ex) = &claim.exhaustive {
+            if ex.status != "pass" {
+                return Err(CheckError::FailingClaim(format!(
+                    "claim '{}' exhaustive status is '{}', expected 'pass'",
+                    claim.id, ex.status
+                )));
+            }
+        }
+        if let Some(proof) = &claim.proof {
+            if !report_label_ranked(&proof.label) {
+                return Err(CheckError::FailingClaim(format!(
+                    "claim '{}' proof label '{}' has no rank (expected 'proved', 'bounded(K)' or '{GATE_LEVEL_LABEL}')",
+                    claim.id, proof.label
+                )));
+            }
+            // A `pass` verdict may not rest on obligations the prover did not
+            // discharge; under `report-only` they stay visible as assumptions.
+            if report.verdict == "pass" {
+                if let Some(a) = proof.assumptions.iter().find(|a| a.ends_with(":unchecked")) {
+                    return Err(CheckError::FailingClaim(format!(
+                        "claim '{}' has the unchecked assumption '{a}', which a 'pass' verdict cannot carry",
+                        claim.id
+                    )));
+                }
             }
         }
     }

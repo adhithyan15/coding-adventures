@@ -92,12 +92,29 @@ pub enum BoundVerdict {
     Unknown(String),
 }
 
+/// A refutation accepted by the DRAT checker, kept so it can be written to disk
+/// and hashed (VER04h §7.1).
+///
+/// `trivial` is true when the divergence miter simplified structurally to
+/// `FALSE`: both runs then produce identical observable traces by construction
+/// and the "refutation" is the fixed two-clause formula `x and not-x`.  That is
+/// a valid certificate of the structural fact, but not a non-trivial SAT proof,
+/// and reports must say which kind they hold.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProofCertificate {
+    pub trivial: bool,
+    pub dimacs: String,
+    pub drat: String,
+}
+
 /// Formal verification engine for constant-time 2-safety hyperproperties.
 pub struct ConstantTimeProver {
     /// Shared circuit graph for both symbolic execution runs.
     pub aig: Aig,
     /// Configuration for bounded exploration.
     pub config: SymbolicConfig,
+    /// Every refutation the DRAT kernel accepted, in order (VER04h §7.1).
+    pub certificates: Vec<ProofCertificate>,
 }
 
 impl Default for ConstantTimeProver {
@@ -117,6 +134,7 @@ impl ConstantTimeProver {
         Self {
             aig: Aig::new(),
             config,
+            certificates: Vec::new(),
         }
     }
 
@@ -483,6 +501,11 @@ impl ConstantTimeProver {
                     if let Err(e) = drat_check::check(&dimacs, &proof_text) {
                         return ConstantTimeVerdict::Unknown(format!("DRAT proof rejected: {}", e));
                     }
+                    self.certificates.push(ProofCertificate {
+                        trivial: true,
+                        dimacs: dimacs.clone(),
+                        drat: proof_text.clone(),
+                    });
                     return if any_bounded {
                         ConstantTimeVerdict::ProvedBounded {
                             bound: self.config.unroll_bound,
@@ -535,6 +558,11 @@ impl ConstantTimeProver {
 
                 match drat_check::check(&dimacs, &proof_text) {
                     Ok(_) => {
+                        self.certificates.push(ProofCertificate {
+                            trivial: false,
+                            dimacs: dimacs.clone(),
+                            drat: proof_text.clone(),
+                        });
                         if any_bounded {
                             ConstantTimeVerdict::ProvedBounded {
                                 bound: self.config.unroll_bound,
@@ -617,6 +645,8 @@ impl ConstantTimeProver {
 /// Prover for verifying abstract instruction step bounds.
 pub struct BoundProver {
     pub executor: SymbolicExecutor,
+    /// Every refutation the DRAT kernel accepted, in order (VER04h §7.1).
+    pub certificates: Vec<ProofCertificate>,
 }
 
 impl Default for BoundProver {
@@ -635,6 +665,7 @@ impl BoundProver {
     pub fn with_config(config: SymbolicConfig) -> Self {
         Self {
             executor: SymbolicExecutor::with_config(config),
+            certificates: Vec::new(),
         }
     }
 
@@ -718,6 +749,11 @@ impl BoundProver {
                     if let Err(e) = drat_check::check(&dimacs, &proof_text) {
                         return BoundVerdict::Unknown(format!("DRAT proof rejected: {}", e));
                     }
+                    self.certificates.push(ProofCertificate {
+                        trivial: true,
+                        dimacs: dimacs.clone(),
+                        drat: proof_text.clone(),
+                    });
                     return if any_bounded {
                         BoundVerdict::ProvedBounded {
                             unroll_bound: self.executor.config.unroll_bound,
@@ -758,6 +794,11 @@ impl BoundProver {
 
                 match drat_check::check(&dimacs, &proof_text) {
                     Ok(_) => {
+                        self.certificates.push(ProofCertificate {
+                            trivial: false,
+                            dimacs: dimacs.clone(),
+                            drat: proof_text.clone(),
+                        });
                         if any_bounded {
                             BoundVerdict::ProvedBounded {
                                 unroll_bound: self.executor.config.unroll_bound,

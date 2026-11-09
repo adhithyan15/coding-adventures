@@ -6,6 +6,8 @@ This specification formalizes **VER01**: the machine-readable assurance report f
 
 ---
 
+> **Update (VER04h):** claim numbers, labels, certificates and evidence ids in this document's examples are *computed from evidence manifests* and cross-checked by `--check`; see [VER04h](VER04h-warrant-derived-evidence.md) section 9. Memory-safety rows are `excluded` only when the effect certificate declares no `unsafe_code` exception and the package source contains no `unsafe`. Each claim's `proof` also carries `certificate_kind` (`"trivial-miter"` when a backing certificate is a collapsed miter, else `"miter"`), `--check` fails closed on duplicate claim ids, unranked proof labels, failing exhaustive status and (under a `pass` verdict) unchecked assumptions, and rejects `unverified::` evidence ids unless `--allow-unverified` is given (the flag prints every accepted id; it is temporary and tracked by backlog item WD-008). Evidence is bound to every `src/**/*.rs`, not only `src/lib.rs`.
+
 ## 1. Objectives and Ladder Integration
 
 ```text
@@ -68,13 +70,16 @@ The canonical report is emitted as `<package_root>/assurance_report.json` with t
       "id": "ct_eq_soundness",
       "symbol": "ct_eq",
       "example": "pass",
-      "property": { "cases": 10000, "status": "pass" },
-      "fuzz": { "iterations": 100000, "status": "pass" },
+      "property": { "cases": 4096, "status": "pass" },
+      "exhaustive": { "cases": 120409, "status": "pass" },
+      "fuzz": { "iterations": 5000, "status": "pass" },
       "proof": {
-        "label": "proved",
+        "label": "bounded(128)",
         "assumptions": ["compiler.preserves_timing", "memory.unaliased"],
-        "certificate": "drat:sha256:..."
-      }
+        "certificate": "drat:sha256:<digest of the sorted certificate ids>",
+        "certificate_kind": "trivial-miter | miter"
+      },
+      "evidence": ["warrant/ct_compare/exhaustive/eq_agrees", "warrant/ct_compare/proof/eq/constant-time"]
     }
   ],
   "rungs": {

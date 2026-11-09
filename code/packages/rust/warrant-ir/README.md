@@ -11,3 +11,12 @@ Defines the WIR core abstract syntax tree, static well-formedness and type check
 - **Trace Observation**: Branch conditions, memory access patterns, and capability invocations.
 - **Constant-Time Verification**: Dual-execution check ensuring secret inputs produce identical observable traces.
 - **Memory Model**: Provenance-tracked allocations preventing use-after-free and out-of-bounds accesses.
+
+## Proof obligations from Warrant (VER04h)
+
+`inline` splices callee bodies into a function so provers analyse a public
+export itself. `tests/warrant_proofs.rs` reads `ct-compare.warrant`, lowers the
+real source and proves 2-safety / step bounds for every length shape up to a
+stated bound, writing content-addressed DRAT files and a manifest when
+`WARRANT_PROOF_OUT=<dir>` is set. Labels are `bounded(K)`, never `proved`, for
+byte-slice operations.

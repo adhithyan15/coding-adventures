@@ -383,7 +383,11 @@ impl<'a> JsonParser<'a> {
                 return Err(format!("expected ':' after key '{key}'"));
             }
             let val = self.parse_value(depth + 1)?;
-            map.insert(key, val);
+            // A duplicate key is ambiguous (parsers disagree on which value
+            // wins), so a document containing one is rejected outright.
+            if map.insert(key.clone(), val).is_some() {
+                return Err(format!("duplicate key '{key}' in object"));
+            }
             self.skip_whitespace();
             match self.peek() {
                 Some(',') => {
