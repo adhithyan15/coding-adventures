@@ -1,0 +1,4 @@
+@echo off
+call npm ci --quiet
+call npx tsc
+node --experimental-strip-types --test tests\matchers.test.ts

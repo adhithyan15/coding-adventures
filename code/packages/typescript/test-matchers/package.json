@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/test-matchers",
+  "version": "0.1.0",
+  "description": "Zero-dependency TypeScript Level 1 test matchers and pure deep-equality assertions",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "pretest": "tsc",
+    "test": "node --experimental-strip-types --test tests/matchers.test.ts"
+  },
+  "license": "MIT",
+  "author": "Adhithya Rajasekaran",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
