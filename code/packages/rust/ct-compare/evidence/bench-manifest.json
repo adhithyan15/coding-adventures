@@ -1,0 +1,42 @@
+{
+  "hw_instruction_counters": "not-live",
+  "module": "ct_compare",
+  "schema": "warrant-bench-evidence-v1",
+  "tests": [
+    {
+      "id": "bench/ct_eq/16_bytes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ct_eq/256_bytes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ct_eq/4096_bytes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ct_eq_fixed/fixed_widths",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ct_eq_u64/all_classes",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/ct_select_bytes/branchless_choice",
+      "kind": "bench",
+      "verdict": "pass"
+    },
+    {
+      "id": "bench/sabotage/early_exit_divergence_detected",
+      "kind": "bench",
+      "verdict": "pass"
+    }
+  ]
+}

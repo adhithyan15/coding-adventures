@@ -310,7 +310,19 @@ because they are deterministic, `--check` on a stale or hand-edited report fails
    (`StaleEvidence`);
 6. any manifest entry covering a claim has verdict other than `pass`.
 
-Each failure mode has a falsification test.
+7. the report claims "no unsafe" (an `analyzer::no-unsafe-or-ffi` id, or an
+   `excluded` memory-safety row) while the effect certificate declares an
+   `unsafe_code` exception (`UnsafeContradiction`, AF-22). With such an
+   exception CWE-125/787 are `discharged` from the bounds-checked proofs
+   (bounded, not a Miri run) and CWE-416/415/476/190 are unapproved exemptions.
+
+Evidence ids come from three places: manifest entries (`warrant/...`,
+`bench/...`; must exist and have verdict `pass`), attestations derived from the
+effect certificate (`effect-certificate::proved`, `capability-audit::*-empty`,
+`analyzer::no-unsafe-or-ffi` only while no unsafe exception is declared), and
+`unverified::<id>` static claims that no tool in the repository checks. The last
+group is accepted but counted and printed by `--check`, and the row's reason says
+so. Each failure mode has a falsification test (`tests/test_evidence.rs`).
 
 ## 10. Divergences and follow-ups
 

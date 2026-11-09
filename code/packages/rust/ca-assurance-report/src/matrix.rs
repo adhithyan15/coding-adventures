@@ -126,6 +126,26 @@ impl WeaknessRow {
 }
 
 /// Package facts needed to compute the weakness matrix.
+/// Evidence ids and labels the matrix cites, copied from the manifests.
+/// Nothing here has a meaningful default: an empty list for an obligation the
+/// matrix needs makes the row `OpenRow`.
+#[derive(Clone, Debug, Default)]
+pub struct AuditEvidence {
+    /// Justifications of declared `unsafe_code` exceptions (empty = none).
+    pub unsafe_exceptions: Vec<String>,
+    pub step_bound_ids: Vec<String>,
+    pub step_bound_label: String,
+    pub alloc_ids: Vec<String>,
+    pub ct_proof_ids: Vec<String>,
+    pub ct_proof_label: String,
+    pub bench_ids: Vec<String>,
+    /// `live` or `not-live`: were retired-instruction counters available?
+    pub hw_counters: String,
+    /// Proofs whose symbolic execution bounds-checks every access.
+    pub oob_ids: Vec<String>,
+    pub oob_label: String,
+}
+
 #[derive(Clone, Debug)]
 pub struct PackageAuditContext {
     pub package_id: String,
@@ -136,11 +156,14 @@ pub struct PackageAuditContext {
     pub has_zero_alloc_proof: bool,
     pub has_pbt_coverage: bool,
     pub has_fuzz_coverage: bool,
+    pub evidence: AuditEvidence,
 }
 
 #[derive(Debug)]
 pub enum MatrixError {
     MissingClass(u32),
+    /// The evidence manifests needed to build the report are missing or incomplete.
+    MissingEvidence(String),
     InvalidExclusion(String),
     OpenRow(String),
 }
@@ -148,6 +171,7 @@ pub enum MatrixError {
 impl fmt::Display for MatrixError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            MatrixError::MissingEvidence(msg) => write!(f, "Matrix error: missing evidence: {msg}"),
             MatrixError::MissingClass(cwe) => write!(f, "Matrix error: CWE-{cwe} missing from matrix"),
             MatrixError::InvalidExclusion(msg) => write!(f, "Invalid exclusion: {msg}"),
             MatrixError::OpenRow(msg) => write!(f, "Matrix error: open row left unaddressed: {msg}"),
@@ -165,7 +189,12 @@ pub fn build_weakness_matrix(
     let mut rows = Vec::with_capacity(registry.classes.len());
 
     for class in &registry.classes {
-        let row = evaluate_row(class, ctx)?;
+        let mut row = evaluate_row(class, ctx)?;
+        // Rows resting on a static claim that no tool in the repository checks
+        // say so, rather than borrowing the weight of a verified row.
+        if row.evidence.iter().any(|e| e.starts_with("unverified::")) {
+            row.reason.push_str(" [attestation not machine-checked by any tool]");
+        }
         rows.push(row);
     }
 
@@ -177,7 +206,12 @@ fn evaluate_row(
     ctx: &PackageAuditContext,
 ) -> Result<WeaknessRow, MatrixError> {
     match class.cwe {
-        // Memory safety: excluded by construction in safe Rust
+        // Memory safety: excluded by construction in safe Rust, but only when
+        // the effect certificate declares no `unsafe_code` exception.  With an
+        // exception the exclusion is false, so the row is derived from evidence:
+        // out-of-bounds read/write are discharged by bounds-checked symbolic
+        // execution of the lowered code (bounded), the rest stay unapproved
+        // exemptions until a tool (for example Miri) produces evidence.
         416 | 787 | 125 | 415 | 476 | 190 => {
             if ctx.is_safe_rust {
                 Ok(WeaknessRow {
@@ -188,11 +222,35 @@ fn evaluate_row(
                     reason: "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption".into(),
                     evidence: vec!["analyzer::no-unsafe-or-ffi".into(), "effect-certificate::proved".into()],
                 })
+            } else if matches!(class.cwe, 125 | 787) && !ctx.evidence.oob_ids.is_empty() {
+                Ok(WeaknessRow {
+                    cwe: class.cwe,
+                    name: class.name.clone(),
+                    status: WeaknessStatus::Discharged,
+                    approved: None,
+                    reason: format!(
+                        "unsafe exception declared ({}): every memory access of the lowered code is bounds-checked by symbolic execution for all length shapes covered by {}; not a proof for larger buffers and not a check of the real unsafe block under Miri",
+                        ctx.evidence.unsafe_exceptions.join("; "),
+                        ctx.evidence.oob_label
+                    ),
+                    evidence: {
+                        let mut ids = ctx.evidence.oob_ids.clone();
+                        ids.push("effect-certificate::unsafe-exception".into());
+                        ids
+                    },
+                })
             } else {
-                Err(MatrixError::OpenRow(format!(
-                    "CWE-{} requires memory safety discharge or safe Rust subset",
-                    class.cwe
-                )))
+                Ok(WeaknessRow {
+                    cwe: class.cwe,
+                    name: class.name.clone(),
+                    status: WeaknessStatus::Exemption,
+                    approved: Some(false),
+                    reason: format!(
+                        "computed exemption (unapproved): unsafe exception declared ({}); no evidence for this class beyond inspection (Miri not run)",
+                        ctx.evidence.unsafe_exceptions.join("; ")
+                    ),
+                    evidence: vec!["effect-certificate::unsafe-exception".into()],
+                })
             }
         }
 
@@ -266,7 +324,7 @@ fn evaluate_row(
                 status: WeaknessStatus::Excluded,
                 approved: None,
                 reason: "pure computation: package performs no serialized protocol formatting with unescaped control delimiters".into(),
-                evidence: vec!["ast-audit::no-protocol-sinks".into()],
+                evidence: vec!["unverified::ast-audit::no-protocol-sinks".into()],
             })
         }
         117 => {
@@ -286,17 +344,19 @@ fn evaluate_row(
 
         // Parsing / DoS
         400 => {
-            if ctx.has_zero_alloc_proof {
+            if ctx.has_zero_alloc_proof && !ctx.evidence.step_bound_ids.is_empty() {
+                let mut ids = ctx.evidence.alloc_ids.clone();
+                ids.extend(ctx.evidence.step_bound_ids.iter().cloned());
                 Ok(WeaknessRow {
                     cwe: 400,
                     name: class.name.clone(),
                     status: WeaknessStatus::Discharged,
                     approved: None,
-                    reason: "discharged: static zero-allocation proof verified; linear step bounds (steps <= c*n + d) proved via Warrant IR".into(),
-                    evidence: vec![
-                        "microbenchmark::zero-alloc".into(),
-                        "warrant-ir::linear-step-bound".into(),
-                    ],
+                    reason: format!(
+                        "discharged for bounded inputs: zero-allocation microbenchmark budgets passed; the Warrant steps bound (steps <= c*n + d) holds for every length shape covered by {} (bounded, not for all lengths)",
+                        ctx.evidence.step_bound_label
+                    ),
+                    evidence: ids,
                 })
             } else {
                 Err(MatrixError::OpenRow("CWE-400 resource exhaustion evidence missing".into()))
@@ -309,7 +369,7 @@ fn evaluate_row(
                 status: WeaknessStatus::Excluded,
                 approved: None,
                 reason: "pure computation: package implements no decompression or archive decoding routines".into(),
-                evidence: vec!["ast-audit::no-compression-routines".into()],
+                evidence: vec!["unverified::ast-audit::no-compression-routines".into()],
             })
         }
         674 => {
@@ -319,7 +379,7 @@ fn evaluate_row(
                 status: WeaknessStatus::Excluded,
                 approved: None,
                 reason: "iterative algorithms: package contains zero recursive function calls; call graph is strictly acyclic".into(),
-                evidence: vec!["ast-call-graph::acyclic".into()],
+                evidence: vec!["unverified::ast-call-graph::acyclic".into()],
             })
         }
         1333 => {
@@ -329,7 +389,7 @@ fn evaluate_row(
                 status: WeaknessStatus::Excluded,
                 approved: None,
                 reason: "zero regular expressions: package contains no regular expression engines or pattern matching dependencies".into(),
-                evidence: vec!["analyzer::name-allowlist-regex-free".into()],
+                evidence: vec!["unverified::analyzer::name-allowlist-regex-free".into()],
             })
         }
         407 => {
@@ -339,7 +399,7 @@ fn evaluate_row(
                 status: WeaknessStatus::Excluded,
                 approved: None,
                 reason: "linear complexity: algorithms operate in strict linear time O(n) independent of input values".into(),
-                evidence: vec!["warrant-ir::cost-semantics-linear".into()],
+                evidence: vec!["unverified::warrant-ir::cost-semantics-linear".into()],
             })
         }
 
@@ -347,20 +407,21 @@ fn evaluate_row(
         208 => {
             if ctx.has_wir_timing_proof && ctx.has_instruction_benchmarks {
                 // Computed exemption: proof floor is proved-to-gate-level (CPU netlist).
-                // Backed by WIR self-composition trace proof and equal instruction counts,
-                // but gate-level proof is deferred to Busicom track, and release approval
-                // pipeline is blocked by VER00 §12.1.
+                // Backed by the WIR self-composition proofs and the benchmark
+                // manifest, but gate-level proof is deferred to the Busicom
+                // track, and release approval is blocked by VER00 §12.1.
+                let mut ids = ctx.evidence.ct_proof_ids.clone();
+                ids.extend(ctx.evidence.bench_ids.iter().cloned());
                 Ok(WeaknessRow {
                     cwe: 208,
                     name: class.name.clone(),
                     status: WeaknessStatus::Exemption,
                     approved: Some(false),
-                    reason: "computed exemption (unapproved): floor requires proof to gate-level CPU netlist; backed by Level 3 WIR-level 2-safety self-composition trace proof and Level 5 equal-instruction-count microbenchmarks".into(),
-                    evidence: vec![
-                        "warrant-ir::test_ct_proofs::2-safety-self-composition".into(),
-                        "ct-compare::tests::bench_instruction_counts::equal-retired-instructions".into(),
-                        "warrant::claims::secret-labels-verified".into(),
-                    ],
+                    reason: format!(
+                        "computed exemption (unapproved): floor requires proof to gate-level CPU netlist; backed by WIR-level 2-safety proofs at label {} and microbenchmark runs (no retired-instruction evidence is claimed: hardware counters are host-dependent and recorded in evidence/bench-manifest.json)",
+                        ctx.evidence.ct_proof_label
+                    ),
+                    evidence: ids,
                 })
             } else {
                 Err(MatrixError::OpenRow("CWE-208 timing discrepancy lacks WIR or benchmark evidence".into()))
@@ -387,7 +448,7 @@ fn evaluate_row(
                 status: WeaknessStatus::Excluded,
                 approved: None,
                 reason: "primitive comparison: package implements constant-time comparison primitives rather than legacy ciphers".into(),
-                evidence: vec!["ast-audit::no-legacy-ciphers".into()],
+                evidence: vec!["unverified::ast-audit::no-legacy-ciphers".into()],
             })
         }
         326 => {
@@ -397,7 +458,7 @@ fn evaluate_row(
                 status: WeaknessStatus::Excluded,
                 approved: None,
                 reason: "arbitrary buffer lengths: comparison functions accept arbitrary slice lengths without fixed sub-strength keys".into(),
-                evidence: vec!["type-signatures::unconstrained-slices".into()],
+                evidence: vec!["unverified::type-signatures::unconstrained-slices".into()],
             })
         }
 
@@ -439,7 +500,7 @@ fn evaluate_row(
                 status: WeaknessStatus::Excluded,
                 approved: None,
                 reason: "pure computation: package contains no dynamic object deserialization, polymorphic factories, or reflection".into(),
-                evidence: vec!["ast-audit::no-deserialization".into()],
+                evidence: vec!["unverified::ast-audit::no-deserialization".into()],
             })
         }
         1321 => {
@@ -449,7 +510,7 @@ fn evaluate_row(
                 status: WeaknessStatus::Excluded,
                 approved: None,
                 reason: "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains".into(),
-                evidence: vec!["language-type-system::no-prototype-pollution".into()],
+                evidence: vec!["unverified::language-type-system::no-prototype-pollution".into()],
             })
         }
 

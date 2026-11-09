@@ -124,3 +124,11 @@ API still deliberately refuses indentation/layout synthesis.
 Some parser positives deliberately have duplicate names, a Bool/Int mismatch
 or an unreachable refinement. Those belong to later checkers; their presence
 demonstrates why a parsed tree must not be labelled a checked specification.
+
+## Evidence generation (VER04h)
+
+`warrant_grammar::evidence::compile_rust_evidence_harness` turns a checked
+document into a Rust test target containing, for every `example` and `claim`,
+the L0 case, a bounded-exhaustive suite, a property suite, a fuzz suite and
+sabotage controls. The oracle is the *translated claim body*. See
+`examples/gen_evidence.rs` and [VER04h](../../../specs/VER04h-warrant-derived-evidence.md).

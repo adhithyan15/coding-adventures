@@ -1092,7 +1092,7 @@ pub fn extract_claim_cases<'a>(
     Ok(claims)
 }
 
-pub(crate) fn find_operation_in_expr<'a>(
+pub fn find_operation_in_expr<'a>(
     expr: &'a Expression<'a>,
     op_names: &HashSet<&str>,
 ) -> Option<&'a str> {

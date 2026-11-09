@@ -11,15 +11,15 @@ use std::path::PathBuf;
 use std::process::exit;
 
 use coding_adventures_ca_assurance_report::{
-    generate_ct_compare_report, verify_assurance_report, AssuranceReport, CheckVerdict,
-    WeaknessRegistry,
+    generate_ct_compare_report, verify_assurance_report, verify_evidence, AssuranceReport,
+    CheckVerdict, Evidence, WeaknessRegistry,
 };
 
 fn print_usage() {
     eprintln!("Usage: ca-assurance-report-rs [OPTIONS]");
     eprintln!();
     eprintln!("Options:");
-    eprintln!("  --package-dir <DIR>    Package directory to audit (default: .)");
+    eprintln!("  --package-dir <DIR>    Package directory holding evidence/ (default: the report's directory, or .)");
     eprintln!("  --generate             Generate and emit assurance_report.json");
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
     eprintln!("  --registry <FILE>      Path to weakness-registry-v1.json");
@@ -50,7 +50,7 @@ fn find_default_registry() -> WeaknessRegistry {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    let mut package_dir = PathBuf::from(".");
+    let mut package_dir: Option<PathBuf> = None;
     let mut check_file: Option<PathBuf> = None;
     let mut generate = false;
     let mut registry_file: Option<PathBuf> = None;
@@ -65,7 +65,7 @@ fn main() {
                     eprintln!("Error: --package-dir requires an argument");
                     exit(2);
                 }
-                package_dir = PathBuf::from(&args[i]);
+                package_dir = Some(PathBuf::from(&args[i]));
             }
             "--check" => {
                 i += 1;
@@ -136,6 +136,36 @@ fn main() {
             }
         };
 
+        // Cross-check the report against the evidence manifests (VER04h §9).
+        // The package directory is the report's own directory unless given.
+        let dir = package_dir.clone().unwrap_or_else(|| {
+            match file_path.parent() {
+                Some(p) if !p.as_os_str().is_empty() => p.to_path_buf(),
+                _ => PathBuf::from("."),
+            }
+        });
+        let evidence = match Evidence::load(&dir) {
+            Ok(ev) => ev,
+            Err(e) => {
+                eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
+                exit(1);
+            }
+        };
+        match verify_evidence(&report, &evidence) {
+            Ok(unverified) => {
+                if !unverified.is_empty() {
+                    println!(
+                        "note: {} evidence id(s) are static attestations no tool checks",
+                        unverified.len()
+                    );
+                }
+            }
+            Err(e) => {
+                eprintln!("ASSURANCE VERIFICATION FAILED: {e}");
+                exit(1);
+            }
+        }
+
         match verify_assurance_report(&report, &registry) {
             Ok(verdict) => {
                 match verdict {
@@ -159,8 +189,16 @@ fn main() {
     }
 
     if generate {
+        let package_dir = package_dir.unwrap_or_else(|| PathBuf::from("."));
         let target_file = package_dir.join("assurance_report.json");
-        let report = match generate_ct_compare_report(&commit_sha, &registry) {
+        let evidence = match Evidence::load(&package_dir) {
+            Ok(ev) => ev,
+            Err(e) => {
+                eprintln!("Error: {e}");
+                exit(1);
+            }
+        };
+        let report = match generate_ct_compare_report(&commit_sha, &registry, &evidence) {
             Ok(r) => r,
             Err(e) => {
                 eprintln!("Error generating report: {e}");
@@ -168,9 +206,13 @@ fn main() {
             }
         };
 
-        // Self-check before writing
+        // Self-check before writing: shape, then evidence cross-check.
         if let Err(e) = verify_assurance_report(&report, &registry) {
             eprintln!("Generated report failed internal verification: {e}");
+            exit(1);
+        }
+        if let Err(e) = verify_evidence(&report, &evidence) {
+            eprintln!("Generated report failed evidence verification: {e}");
             exit(1);
         }
 

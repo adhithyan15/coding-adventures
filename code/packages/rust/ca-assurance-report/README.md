@@ -9,6 +9,7 @@ Assurance report generator and weakness registry evaluator for the verified ship
 - **Computed Exemptions:** Automatically derives unapproved exemptions (e.g. CWE-208 timing gate-level floor) when proof floors are not reached.
 - **Rung Assessment:** Honors non-live rungs (e.g. E2 simulated host) by reporting them as `"not-live"`, never `"pass"`.
 - **Tamper-Evident Verification:** Standalone `--check` command validates report integrity fail-closed.
+- **Evidence-derived claims (VER04h):** every number, label, certificate digest and context flag is read from `evidence/*-manifest.json` written by the runs that produced it; `--check` cross-checks the report against them and fails closed on unknown ids, count/label drift, bad certificate hashes, uncovered Warrant claims and stale manifests.
 - **Zero Third-Party Dependencies:** Implemented exclusively with standard library Rust (`std`).
 
 ## Usage
@@ -17,6 +18,8 @@ Assurance report generator and weakness registry evaluator for the verified ship
 # Generate assurance report for a package
 cargo run -p coding_adventures_ca_assurance_report -- --package-dir ../ct-compare --generate
 
-# Verify an existing assurance report
+# (needs <package>/evidence/{test,proof,bench}-manifest.json from the package BUILD)
+
+# Verify an existing assurance report (also cross-checks the evidence manifests)
 cargo run -p coding_adventures_ca_assurance_report -- --check ../ct-compare/assurance_report.json
 ```

@@ -25,6 +25,12 @@ pub struct PropertyEvidence {
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
+pub struct ExhaustiveEvidence {
+    pub cases: u64,
+    pub status: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct FuzzEvidence {
     pub iterations: u64,
     pub status: String,
@@ -43,8 +49,12 @@ pub struct ClaimEvidence {
     pub symbol: String,
     pub example: String,
     pub property: PropertyEvidence,
+    /// Bounded-exhaustive suites (VER04h section 3); absent in legacy reports.
+    pub exhaustive: Option<ExhaustiveEvidence>,
     pub fuzz: Option<FuzzEvidence>,
     pub proof: Option<ProofEvidence>,
+    /// Manifest ids of every test and proof backing this claim.
+    pub evidence: Vec<String>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -165,6 +175,17 @@ impl AssuranceReport {
                 JsonValue::String(c.property.status.clone()),
             );
             c_map.insert("property".into(), JsonValue::Object(prop_map));
+
+            if let Some(ex) = &c.exhaustive {
+                let mut e_map = BTreeMap::new();
+                e_map.insert("cases".into(), JsonValue::Number(ex.cases as f64));
+                e_map.insert("status".into(), JsonValue::String(ex.status.clone()));
+                c_map.insert("exhaustive".into(), JsonValue::Object(e_map));
+            }
+            c_map.insert(
+                "evidence".into(),
+                JsonValue::Array(c.evidence.iter().map(|e| JsonValue::String(e.clone())).collect()),
+            );
 
             if let Some(fuzz) = &c.fuzz {
                 let mut f_map = BTreeMap::new();
@@ -376,6 +397,22 @@ impl AssuranceReport {
                 status: prop_status,
             };
 
+            let exhaustive = c_obj.get("exhaustive").and_then(|v| v.as_object()).map(|e| {
+                ExhaustiveEvidence {
+                    cases: e.get("cases").and_then(|v| v.as_i64()).unwrap_or(0) as u64,
+                    status: e
+                        .get("status")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("")
+                        .to_string(),
+                }
+            });
+            let evidence: Vec<String> = c_obj
+                .get("evidence")
+                .and_then(|v| v.as_array())
+                .map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect())
+                .unwrap_or_default();
+
             let fuzz = if let Some(f_obj) = c_obj.get("fuzz").and_then(|v| v.as_object()) {
                 let iters = f_obj
                     .get("iterations")
@@ -424,8 +461,10 @@ impl AssuranceReport {
                 symbol,
                 example,
                 property,
+                exhaustive,
                 fuzz,
                 proof,
+                evidence,
             });
         }
 

@@ -7,83 +7,203 @@
   },
   "claims": [
     {
+      "evidence": [
+        "warrant/ct_compare/example/eq_diff_len",
+        "warrant/ct_compare/example/eq_empty",
+        "warrant/ct_compare/example/eq_one_diff",
+        "warrant/ct_compare/example/eq_one_equal",
+        "warrant/ct_compare/exhaustive/eq_agrees",
+        "warrant/ct_compare/fuzz/eq_agrees",
+        "warrant/ct_compare/negctl/example/eq/ignore-last-byte",
+        "warrant/ct_compare/negctl/example/eq/invert",
+        "warrant/ct_compare/negctl/exhaustive/eq/ignore-last-byte",
+        "warrant/ct_compare/negctl/exhaustive/eq/invert",
+        "warrant/ct_compare/negctl/fuzz/eq/ignore-last-byte",
+        "warrant/ct_compare/negctl/fuzz/eq/invert",
+        "warrant/ct_compare/negctl/property/eq/ignore-last-byte",
+        "warrant/ct_compare/negctl/property/eq/invert",
+        "warrant/ct_compare/proof/eq/constant-time",
+        "warrant/ct_compare/proof/eq/steps-bound",
+        "warrant/ct_compare/proofneg/eq/bound-too-small",
+        "warrant/ct_compare/proofneg/eq/secret-branch",
+        "warrant/ct_compare/property/eq_agrees"
+      ],
       "example": "pass",
+      "exhaustive": {
+        "cases": 120409,
+        "status": "pass"
+      },
       "fuzz": {
-        "iterations": 100000,
+        "iterations": 5000,
         "status": "pass"
       },
       "id": "ct_eq_soundness",
       "proof": {
         "assumptions": [
           "compiler.preserves_timing",
+          "depth-bound:unchecked",
+          "heap-bound:unchecked",
           "memory.unaliased"
         ],
-        "certificate": "drat:sha256:e2a4c386892...",
-        "label": "proved"
+        "certificate": "drat:sha256:70ada280885daf682ac466ba32a29f832f00f086f8f4db607ff5503b361d89e9",
+        "label": "bounded(128)"
       },
       "property": {
-        "cases": 10000,
+        "cases": 4096,
         "status": "pass"
       },
       "symbol": "ct_eq"
     },
     {
+      "evidence": [
+        "warrant/ct_compare/example/fixed_16_diff",
+        "warrant/ct_compare/example/fixed_16_equal",
+        "warrant/ct_compare/example/fixed_zero",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w0",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w1",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w16",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w2",
+        "warrant/ct_compare/exhaustive/eq_fixed_agrees_w4",
+        "warrant/ct_compare/fuzz/eq_fixed_agrees_w0",
+        "warrant/ct_compare/fuzz/eq_fixed_agrees_w1",
+        "warrant/ct_compare/fuzz/eq_fixed_agrees_w16",
+        "warrant/ct_compare/fuzz/eq_fixed_agrees_w2",
+        "warrant/ct_compare/fuzz/eq_fixed_agrees_w4",
+        "warrant/ct_compare/negctl/example/eq_fixed/ignore-last-byte",
+        "warrant/ct_compare/negctl/example/eq_fixed/invert",
+        "warrant/ct_compare/negctl/exhaustive/eq_fixed/ignore-last-byte",
+        "warrant/ct_compare/negctl/exhaustive/eq_fixed/invert",
+        "warrant/ct_compare/negctl/fuzz/eq_fixed/ignore-last-byte",
+        "warrant/ct_compare/negctl/fuzz/eq_fixed/invert",
+        "warrant/ct_compare/negctl/property/eq_fixed/ignore-last-byte",
+        "warrant/ct_compare/negctl/property/eq_fixed/invert",
+        "warrant/ct_compare/proof/eq_fixed/constant-time",
+        "warrant/ct_compare/proof/eq_fixed/steps-bound",
+        "warrant/ct_compare/proofneg/eq_fixed/bound-too-small",
+        "warrant/ct_compare/proofneg/eq_fixed/secret-branch",
+        "warrant/ct_compare/property/eq_fixed_agrees_w0",
+        "warrant/ct_compare/property/eq_fixed_agrees_w1",
+        "warrant/ct_compare/property/eq_fixed_agrees_w16",
+        "warrant/ct_compare/property/eq_fixed_agrees_w2",
+        "warrant/ct_compare/property/eq_fixed_agrees_w4"
+      ],
       "example": "pass",
+      "exhaustive": {
+        "cases": 68753,
+        "status": "pass"
+      },
       "fuzz": {
-        "iterations": 100000,
+        "iterations": 25000,
         "status": "pass"
       },
       "id": "ct_eq_fixed_soundness",
       "proof": {
         "assumptions": [
-          "compiler.preserves_timing"
+          "compiler.preserves_timing",
+          "depth-bound:unchecked",
+          "heap-bound:unchecked",
+          "memory.unaliased"
         ],
-        "certificate": "drat:sha256:e2a4c386892...",
-        "label": "proved"
+        "certificate": "drat:sha256:70ada280885daf682ac466ba32a29f832f00f086f8f4db607ff5503b361d89e9",
+        "label": "bounded(128)"
       },
       "property": {
-        "cases": 10000,
+        "cases": 20480,
         "status": "pass"
       },
       "symbol": "ct_eq_fixed"
     },
     {
+      "evidence": [
+        "warrant/ct_compare/example/select_left_fresh",
+        "warrant/ct_compare/example/select_length_mismatch",
+        "warrant/ct_compare/example/select_right_fresh",
+        "warrant/ct_compare/exhaustive/select_picks",
+        "warrant/ct_compare/exhaustive/select_rejects_mismatch",
+        "warrant/ct_compare/fuzz/select_picks",
+        "warrant/ct_compare/fuzz/select_rejects_mismatch",
+        "warrant/ct_compare/negctl/example/select_bytes/missing-error",
+        "warrant/ct_compare/negctl/example/select_bytes/swap-choice",
+        "warrant/ct_compare/negctl/exhaustive/select_bytes/missing-error",
+        "warrant/ct_compare/negctl/exhaustive/select_bytes/swap-choice",
+        "warrant/ct_compare/negctl/fuzz/select_bytes/missing-error",
+        "warrant/ct_compare/negctl/fuzz/select_bytes/swap-choice",
+        "warrant/ct_compare/negctl/property/select_bytes/missing-error",
+        "warrant/ct_compare/negctl/property/select_bytes/swap-choice",
+        "warrant/ct_compare/proof/select_bytes/constant-time",
+        "warrant/ct_compare/proof/select_bytes/steps-bound",
+        "warrant/ct_compare/proofneg/select_bytes/bound-too-small",
+        "warrant/ct_compare/proofneg/select_bytes/secret-branch",
+        "warrant/ct_compare/property/select_picks",
+        "warrant/ct_compare/property/select_rejects_mismatch"
+      ],
       "example": "pass",
+      "exhaustive": {
+        "cases": 240818,
+        "status": "pass"
+      },
       "fuzz": {
-        "iterations": 100000,
+        "iterations": 10000,
         "status": "pass"
       },
       "id": "ct_select_bytes_soundness",
       "proof": {
         "assumptions": [
           "compiler.preserves_timing",
+          "depth-bound:unchecked",
+          "heap-bound:unchecked",
           "memory.unaliased"
         ],
-        "certificate": "drat:sha256:e2a4c386892...",
-        "label": "bounded(4096)"
+        "certificate": "drat:sha256:70ada280885daf682ac466ba32a29f832f00f086f8f4db607ff5503b361d89e9",
+        "label": "bounded(128)"
       },
       "property": {
-        "cases": 10000,
+        "cases": 8192,
         "status": "pass"
       },
       "symbol": "ct_select_bytes"
     },
     {
+      "evidence": [
+        "warrant/ct_compare/example/u64_diff",
+        "warrant/ct_compare/example/u64_equal",
+        "warrant/ct_compare/exhaustive/eq_u64_agrees",
+        "warrant/ct_compare/fuzz/eq_u64_agrees",
+        "warrant/ct_compare/negctl/example/eq_u64/ignore-high-bit",
+        "warrant/ct_compare/negctl/example/eq_u64/invert",
+        "warrant/ct_compare/negctl/exhaustive/eq_u64/ignore-high-bit",
+        "warrant/ct_compare/negctl/exhaustive/eq_u64/invert",
+        "warrant/ct_compare/negctl/fuzz/eq_u64/ignore-high-bit",
+        "warrant/ct_compare/negctl/fuzz/eq_u64/invert",
+        "warrant/ct_compare/negctl/property/eq_u64/ignore-high-bit",
+        "warrant/ct_compare/negctl/property/eq_u64/invert",
+        "warrant/ct_compare/proof/eq_u64/constant-time",
+        "warrant/ct_compare/proof/eq_u64/steps-bound",
+        "warrant/ct_compare/proofneg/eq_u64/bound-too-small",
+        "warrant/ct_compare/proofneg/eq_u64/secret-branch",
+        "warrant/ct_compare/property/eq_u64_agrees"
+      ],
       "example": "pass",
+      "exhaustive": {
+        "cases": 142129,
+        "status": "pass"
+      },
       "fuzz": {
-        "iterations": 100000,
+        "iterations": 5000,
         "status": "pass"
       },
       "id": "ct_eq_u64_soundness",
       "proof": {
         "assumptions": [
-          "compiler.preserves_timing"
+          "compiler.preserves_timing",
+          "depth-bound:unchecked",
+          "heap-bound:unchecked"
         ],
-        "certificate": "drat:sha256:e2a4c386892...",
+        "certificate": "drat:sha256:70ada280885daf682ac466ba32a29f832f00f086f8f4db607ff5503b361d89e9",
         "label": "proved"
       },
       "property": {
-        "cases": 10000,
+        "cases": 4096,
         "status": "pass"
       },
       "symbol": "ct_eq_u64"
@@ -92,18 +212,66 @@
   "closure": [
     "rust/ct-compare"
   ],
-  "commit": "a1a722f32c5",
+  "commit": "83b719f9e66",
   "exemptions": [
+    {
+      "approved": false,
+      "cwe": 416,
+      "evidence": [
+        "effect-certificate::unsafe-exception"
+      ],
+      "id": "EXEMPT-CWE-416-UNSAFE-EXCEPTION",
+      "kind": "unsafe-exception",
+      "rationale": "computed exemption (unapproved): unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.); no evidence for this class beyond inspection (Miri not run)"
+    },
+    {
+      "approved": false,
+      "cwe": 415,
+      "evidence": [
+        "effect-certificate::unsafe-exception"
+      ],
+      "id": "EXEMPT-CWE-415-UNSAFE-EXCEPTION",
+      "kind": "unsafe-exception",
+      "rationale": "computed exemption (unapproved): unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.); no evidence for this class beyond inspection (Miri not run)"
+    },
+    {
+      "approved": false,
+      "cwe": 476,
+      "evidence": [
+        "effect-certificate::unsafe-exception"
+      ],
+      "id": "EXEMPT-CWE-476-UNSAFE-EXCEPTION",
+      "kind": "unsafe-exception",
+      "rationale": "computed exemption (unapproved): unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.); no evidence for this class beyond inspection (Miri not run)"
+    },
+    {
+      "approved": false,
+      "cwe": 190,
+      "evidence": [
+        "effect-certificate::unsafe-exception"
+      ],
+      "id": "EXEMPT-CWE-190-UNSAFE-EXCEPTION",
+      "kind": "unsafe-exception",
+      "rationale": "computed exemption (unapproved): unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.); no evidence for this class beyond inspection (Miri not run)"
+    },
     {
       "approved": false,
       "cwe": 208,
       "evidence": [
-        "warrant-ir::test_ct_proofs::2-safety-self-composition",
-        "ct-compare::tests::bench_instruction_counts::equal-retired-instructions"
+        "warrant/ct_compare/proof/eq/constant-time",
+        "warrant/ct_compare/proof/eq_fixed/constant-time",
+        "warrant/ct_compare/proof/eq_u64/constant-time",
+        "warrant/ct_compare/proof/select_bytes/constant-time",
+        "bench/ct_eq/16_bytes",
+        "bench/ct_eq/256_bytes",
+        "bench/ct_eq/4096_bytes",
+        "bench/ct_eq_fixed/fixed_widths",
+        "bench/ct_eq_u64/all_classes",
+        "bench/ct_select_bytes/branchless_choice"
       ],
       "id": "EXEMPT-CWE-208-GATE-LEVEL",
       "kind": "weakness-floor",
-      "rationale": "Hardware gate-level CPU timing proof (Busicom track) is not yet live. Backed by Level 3 WIR-level 2-safety self-composition trace proof and Level 5 equal-instruction-count microbenchmarks."
+      "rationale": "computed exemption (unapproved): floor requires proof to gate-level CPU netlist; backed by WIR-level 2-safety proofs at label bounded(128) and microbenchmark runs (no retired-instruction evidence is claimed: hardware counters are host-dependent and recorded in evidence/bench-manifest.json)"
     }
   ],
   "package": "rust/ct-compare",
@@ -120,64 +288,78 @@
   "version": "0.1.0",
   "weaknesses": [
     {
+      "approved": false,
       "cwe": 416,
       "evidence": [
-        "analyzer::no-unsafe-or-ffi",
-        "effect-certificate::proved"
+        "effect-certificate::unsafe-exception"
       ],
       "name": "Use After Free",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
-      "status": "excluded"
+      "reason": "computed exemption (unapproved): unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.); no evidence for this class beyond inspection (Miri not run)",
+      "status": "exemption"
     },
     {
       "cwe": 787,
       "evidence": [
-        "analyzer::no-unsafe-or-ffi",
-        "effect-certificate::proved"
+        "warrant/ct_compare/proof/eq/constant-time",
+        "warrant/ct_compare/proof/eq_fixed/constant-time",
+        "warrant/ct_compare/proof/eq_u64/constant-time",
+        "warrant/ct_compare/proof/select_bytes/constant-time",
+        "warrant/ct_compare/proof/eq/steps-bound",
+        "warrant/ct_compare/proof/eq_fixed/steps-bound",
+        "warrant/ct_compare/proof/eq_u64/steps-bound",
+        "warrant/ct_compare/proof/select_bytes/steps-bound",
+        "effect-certificate::unsafe-exception"
       ],
       "name": "Out-of-bounds Write",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
-      "status": "excluded"
+      "reason": "unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.): every memory access of the lowered code is bounds-checked by symbolic execution for all length shapes covered by bounded(128); not a proof for larger buffers and not a check of the real unsafe block under Miri",
+      "status": "discharged"
     },
     {
       "cwe": 125,
       "evidence": [
-        "analyzer::no-unsafe-or-ffi",
-        "effect-certificate::proved"
+        "warrant/ct_compare/proof/eq/constant-time",
+        "warrant/ct_compare/proof/eq_fixed/constant-time",
+        "warrant/ct_compare/proof/eq_u64/constant-time",
+        "warrant/ct_compare/proof/select_bytes/constant-time",
+        "warrant/ct_compare/proof/eq/steps-bound",
+        "warrant/ct_compare/proof/eq_fixed/steps-bound",
+        "warrant/ct_compare/proof/eq_u64/steps-bound",
+        "warrant/ct_compare/proof/select_bytes/steps-bound",
+        "effect-certificate::unsafe-exception"
       ],
       "name": "Out-of-bounds Read",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
-      "status": "excluded"
+      "reason": "unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.): every memory access of the lowered code is bounds-checked by symbolic execution for all length shapes covered by bounded(128); not a proof for larger buffers and not a check of the real unsafe block under Miri",
+      "status": "discharged"
     },
     {
+      "approved": false,
       "cwe": 415,
       "evidence": [
-        "analyzer::no-unsafe-or-ffi",
-        "effect-certificate::proved"
+        "effect-certificate::unsafe-exception"
       ],
       "name": "Double Free",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
-      "status": "excluded"
+      "reason": "computed exemption (unapproved): unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.); no evidence for this class beyond inspection (Miri not run)",
+      "status": "exemption"
     },
     {
+      "approved": false,
       "cwe": 476,
       "evidence": [
-        "analyzer::no-unsafe-or-ffi",
-        "effect-certificate::proved"
+        "effect-certificate::unsafe-exception"
       ],
       "name": "NULL Pointer Dereference",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
-      "status": "excluded"
+      "reason": "computed exemption (unapproved): unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.); no evidence for this class beyond inspection (Miri not run)",
+      "status": "exemption"
     },
     {
+      "approved": false,
       "cwe": 190,
       "evidence": [
-        "analyzer::no-unsafe-or-ffi",
-        "effect-certificate::proved"
+        "effect-certificate::unsafe-exception"
       ],
       "name": "Integer Overflow to Buffer Boundary",
-      "reason": "safe Rust: static analyzer proved no unsafe blocks and no FFI reachability; ownership and bounds checks prevent memory corruption",
-      "status": "excluded"
+      "reason": "computed exemption (unapproved): unsafe exception declared (Volatile memory barrier in volatile_barrier::accumulate for constant-time accumulator update.); no evidence for this class beyond inspection (Miri not run)",
+      "status": "exemption"
     },
     {
       "cwe": 78,
@@ -227,10 +409,10 @@
     {
       "cwe": 116,
       "evidence": [
-        "ast-audit::no-protocol-sinks"
+        "unverified::ast-audit::no-protocol-sinks"
       ],
       "name": "Improper Output Encoding",
-      "reason": "pure computation: package performs no serialized protocol formatting with unescaped control delimiters",
+      "reason": "pure computation: package performs no serialized protocol formatting with unescaped control delimiters [attestation not machine-checked by any tool]",
       "status": "excluded"
     },
     {
@@ -245,59 +427,74 @@
     {
       "cwe": 400,
       "evidence": [
-        "microbenchmark::zero-alloc",
-        "warrant-ir::linear-step-bound"
+        "bench/ct_eq/16_bytes",
+        "bench/ct_eq/256_bytes",
+        "bench/ct_eq/4096_bytes",
+        "bench/ct_eq_fixed/fixed_widths",
+        "bench/ct_eq_u64/all_classes",
+        "bench/ct_select_bytes/branchless_choice",
+        "warrant/ct_compare/proof/eq/steps-bound",
+        "warrant/ct_compare/proof/eq_fixed/steps-bound",
+        "warrant/ct_compare/proof/eq_u64/steps-bound",
+        "warrant/ct_compare/proof/select_bytes/steps-bound"
       ],
       "name": "Uncontrolled Resource Consumption",
-      "reason": "discharged: static zero-allocation proof verified; linear step bounds (steps <= c*n + d) proved via Warrant IR",
+      "reason": "discharged for bounded inputs: zero-allocation microbenchmark budgets passed; the Warrant steps bound (steps <= c*n + d) holds for every length shape covered by bounded(128) (bounded, not for all lengths)",
       "status": "discharged"
     },
     {
       "cwe": 409,
       "evidence": [
-        "ast-audit::no-compression-routines"
+        "unverified::ast-audit::no-compression-routines"
       ],
       "name": "Decompression Bomb",
-      "reason": "pure computation: package implements no decompression or archive decoding routines",
+      "reason": "pure computation: package implements no decompression or archive decoding routines [attestation not machine-checked by any tool]",
       "status": "excluded"
     },
     {
       "cwe": 674,
       "evidence": [
-        "ast-call-graph::acyclic"
+        "unverified::ast-call-graph::acyclic"
       ],
       "name": "Uncontrolled Recursion",
-      "reason": "iterative algorithms: package contains zero recursive function calls; call graph is strictly acyclic",
+      "reason": "iterative algorithms: package contains zero recursive function calls; call graph is strictly acyclic [attestation not machine-checked by any tool]",
       "status": "excluded"
     },
     {
       "cwe": 1333,
       "evidence": [
-        "analyzer::name-allowlist-regex-free"
+        "unverified::analyzer::name-allowlist-regex-free"
       ],
       "name": "Inefficient Regular Expression (ReDoS)",
-      "reason": "zero regular expressions: package contains no regular expression engines or pattern matching dependencies",
+      "reason": "zero regular expressions: package contains no regular expression engines or pattern matching dependencies [attestation not machine-checked by any tool]",
       "status": "excluded"
     },
     {
       "cwe": 407,
       "evidence": [
-        "warrant-ir::cost-semantics-linear"
+        "unverified::warrant-ir::cost-semantics-linear"
       ],
       "name": "Inefficient Algorithmic Complexity",
-      "reason": "linear complexity: algorithms operate in strict linear time O(n) independent of input values",
+      "reason": "linear complexity: algorithms operate in strict linear time O(n) independent of input values [attestation not machine-checked by any tool]",
       "status": "excluded"
     },
     {
       "approved": false,
       "cwe": 208,
       "evidence": [
-        "warrant-ir::test_ct_proofs::2-safety-self-composition",
-        "ct-compare::tests::bench_instruction_counts::equal-retired-instructions",
-        "warrant::claims::secret-labels-verified"
+        "warrant/ct_compare/proof/eq/constant-time",
+        "warrant/ct_compare/proof/eq_fixed/constant-time",
+        "warrant/ct_compare/proof/eq_u64/constant-time",
+        "warrant/ct_compare/proof/select_bytes/constant-time",
+        "bench/ct_eq/16_bytes",
+        "bench/ct_eq/256_bytes",
+        "bench/ct_eq/4096_bytes",
+        "bench/ct_eq_fixed/fixed_widths",
+        "bench/ct_eq_u64/all_classes",
+        "bench/ct_select_bytes/branchless_choice"
       ],
       "name": "Observable Timing Discrepancy",
-      "reason": "computed exemption (unapproved): floor requires proof to gate-level CPU netlist; backed by Level 3 WIR-level 2-safety self-composition trace proof and Level 5 equal-instruction-count microbenchmarks",
+      "reason": "computed exemption (unapproved): floor requires proof to gate-level CPU netlist; backed by WIR-level 2-safety proofs at label bounded(128) and microbenchmark runs (no retired-instruction evidence is claimed: hardware counters are host-dependent and recorded in evidence/bench-manifest.json)",
       "status": "exemption"
     },
     {
@@ -312,19 +509,19 @@
     {
       "cwe": 327,
       "evidence": [
-        "ast-audit::no-legacy-ciphers"
+        "unverified::ast-audit::no-legacy-ciphers"
       ],
       "name": "Use of Broken or Risky Cryptographic Algorithm",
-      "reason": "primitive comparison: package implements constant-time comparison primitives rather than legacy ciphers",
+      "reason": "primitive comparison: package implements constant-time comparison primitives rather than legacy ciphers [attestation not machine-checked by any tool]",
       "status": "excluded"
     },
     {
       "cwe": 326,
       "evidence": [
-        "type-signatures::unconstrained-slices"
+        "unverified::type-signatures::unconstrained-slices"
       ],
       "name": "Inadequate Encryption Strength",
-      "reason": "arbitrary buffer lengths: comparison functions accept arbitrary slice lengths without fixed sub-strength keys",
+      "reason": "arbitrary buffer lengths: comparison functions accept arbitrary slice lengths without fixed sub-strength keys [attestation not machine-checked by any tool]",
       "status": "excluded"
     },
     {
@@ -348,19 +545,19 @@
     {
       "cwe": 502,
       "evidence": [
-        "ast-audit::no-deserialization"
+        "unverified::ast-audit::no-deserialization"
       ],
       "name": "Deserialization of Untrusted Data",
-      "reason": "pure computation: package contains no dynamic object deserialization, polymorphic factories, or reflection",
+      "reason": "pure computation: package contains no dynamic object deserialization, polymorphic factories, or reflection [attestation not machine-checked by any tool]",
       "status": "excluded"
     },
     {
       "cwe": 1321,
       "evidence": [
-        "language-type-system::no-prototype-pollution"
+        "unverified::language-type-system::no-prototype-pollution"
       ],
       "name": "Prototype Pollution",
-      "reason": "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains",
+      "reason": "strongly typed language: Rust has no object prototypes or dynamic prototype inheritance chains [attestation not machine-checked by any tool]",
       "status": "excluded"
     }
   ]

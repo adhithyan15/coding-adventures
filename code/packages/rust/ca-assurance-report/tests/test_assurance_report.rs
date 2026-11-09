@@ -2,16 +2,42 @@
 
 #![deny(unsafe_code)]
 
+mod common;
+
 use coding_adventures_ca_assurance_report::checker::{
     verify_assurance_report, CheckError, CheckVerdict,
 };
 use coding_adventures_ca_assurance_report::generate_ct_compare_report;
 use coding_adventures_ca_assurance_report::json::JsonValue;
 use coding_adventures_ca_assurance_report::matrix::{
-    build_weakness_matrix, PackageAuditContext, WeaknessStatus,
+    build_weakness_matrix, AuditEvidence, PackageAuditContext, WeaknessStatus,
 };
+use coding_adventures_ca_assurance_report::Evidence;
 use coding_adventures_ca_assurance_report::registry::WeaknessRegistry;
 use coding_adventures_ca_assurance_report::report::AssuranceReport;
+
+/// The real, checked-in evidence of `rust/ct-compare` (VER04h): the report is
+/// derived from it, never written by hand.
+fn real_evidence() -> Evidence {
+    Evidence::load(&std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../ct-compare"))
+        .expect("ct-compare evidence manifests must load")
+}
+
+/// Evidence ids for tests that exercise the matrix builder directly.
+fn evid() -> AuditEvidence {
+    AuditEvidence {
+        unsafe_exceptions: vec![],
+        step_bound_ids: vec!["warrant/m/proof/op/steps-bound".into()],
+        step_bound_label: "bounded(8)".into(),
+        alloc_ids: vec!["bench/a".into()],
+        ct_proof_ids: vec!["warrant/m/proof/op/constant-time".into()],
+        ct_proof_label: "bounded(8)".into(),
+        bench_ids: vec!["bench/a".into()],
+        hw_counters: "not-live".into(),
+        oob_ids: vec!["warrant/m/proof/op/constant-time".into()],
+        oob_label: "bounded(8)".into(),
+    }
+}
 
 #[test]
 fn test_registry_parsing_and_invariants() {
@@ -55,6 +81,7 @@ fn test_weakness_matrix_generation_safe_rust() {
         has_zero_alloc_proof: true,
         has_pbt_coverage: true,
         has_fuzz_coverage: true,
+        evidence: evid(),
     };
 
     let matrix = build_weakness_matrix(&registry, &ctx).expect("matrix generation must succeed");
@@ -76,15 +103,18 @@ fn test_weakness_matrix_generation_safe_rust() {
 #[test]
 fn test_ct_compare_report_generation_and_self_check() {
     let registry = WeaknessRegistry::embedded();
-    let report = generate_ct_compare_report("a1a722f32c5", &registry)
+    let report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence())
         .expect("report generation must succeed");
 
     assert_eq!(report.package, "rust/ct-compare");
     assert_eq!(report.verdict, "report-only");
     assert_eq!(report.rungs.e2, "not-live");
     assert_eq!(report.weaknesses.len(), 26);
-    assert_eq!(report.exemptions.len(), 1);
-    assert!(!report.exemptions[0].approved);
+    // CWE-208 plus the four memory-safety classes the declared unsafe exception
+    // leaves without evidence (AF-22): every one unapproved.
+    assert_eq!(report.exemptions.len(), 5);
+    assert!(report.exemptions.iter().all(|e| !e.approved));
+    assert!(report.exemptions.iter().any(|e| e.cwe == 208));
     assert!(report.public_symbols_without_claims.is_empty());
 
     let verdict = verify_assurance_report(&report, &registry).expect("verification must succeed");
@@ -100,7 +130,7 @@ fn test_ct_compare_report_generation_and_self_check() {
 #[test]
 fn test_sabotage_non_live_rung_marked_as_pass() {
     let registry = WeaknessRegistry::embedded();
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
 
     // Sabotage: attempt to mark verdict as pass while E2 is not-live
     report.verdict = "pass".into();
@@ -117,7 +147,7 @@ fn test_sabotage_non_live_rung_marked_as_pass() {
 #[test]
 fn test_sabotage_unapproved_exemption_marked_as_pass() {
     let registry = WeaknessRegistry::embedded();
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
 
     // Make all rungs pass, but leave exemption unapproved
     report.rungs.e2 = "pass".into();
@@ -135,7 +165,7 @@ fn test_sabotage_unapproved_exemption_marked_as_pass() {
 #[test]
 fn test_sabotage_missing_weakness_row() {
     let registry = WeaknessRegistry::embedded();
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
 
     // Sabotage: omit CWE-787 from the matrix
     report.weaknesses.retain(|r| r.cwe != 787);
@@ -152,7 +182,7 @@ fn test_sabotage_missing_weakness_row() {
 #[test]
 fn test_sabotage_duplicate_weakness_row() {
     let registry = WeaknessRegistry::embedded();
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
 
     // Sabotage: duplicate first row
     let dup = report.weaknesses[0].clone();
@@ -170,7 +200,7 @@ fn test_sabotage_duplicate_weakness_row() {
 #[test]
 fn test_sabotage_unauthorized_cwe208_exclusion() {
     let registry = WeaknessRegistry::embedded();
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
 
     // Sabotage: illegally mark CWE-208 as excluded
     for w in &mut report.weaknesses {
@@ -193,7 +223,7 @@ fn test_sabotage_unauthorized_cwe208_exclusion() {
 #[test]
 fn test_sabotage_uncovered_public_symbols() {
     let registry = WeaknessRegistry::embedded();
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
 
     // Sabotage: add an exported symbol without claims
     report
@@ -212,7 +242,7 @@ fn test_sabotage_uncovered_public_symbols() {
 #[test]
 fn test_sabotage_invalid_package_format() {
     let registry = WeaknessRegistry::embedded();
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
 
     // Sabotage: bad package prefix
     report.package = "npm/ct-compare".into();
@@ -259,7 +289,7 @@ fn test_json_parsing_and_pretty_printing() {
 #[test]
 fn test_roundtrip_serialization() {
     let registry = WeaknessRegistry::embedded();
-    let report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     let json_str = report.to_json_string();
 
     let deserialized =
@@ -308,10 +338,19 @@ fn test_cli_execution_and_flags() {
         .expect("binary must run");
     assert_eq!(out.status.code(), Some(2));
 
-    // 6. Generate report in temp dir, then check it
-    let tmp = std::env::temp_dir().join(format!("test_ca_assurance_{}", std::process::id()));
-    let _ = std::fs::create_dir_all(&tmp);
+    // 6. Generating needs evidence manifests: an empty directory is an error.
+    let empty = std::env::temp_dir().join(format!("test_ca_assurance_empty_{}", std::process::id()));
+    let _ = std::fs::create_dir_all(&empty);
+    let out = std::process::Command::new(bin)
+        .args(["--package-dir", empty.to_str().unwrap(), "--generate"])
+        .output()
+        .expect("binary must run");
+    assert_eq!(out.status.code(), Some(1));
+    let _ = std::fs::remove_dir_all(&empty);
 
+    // 7. Generate from a copy of the real evidence, then check it.
+    let sandbox = common::Sandbox::new("cli");
+    let tmp = sandbox.pkg.clone();
     let out = std::process::Command::new(bin)
         .args([
             "--package-dir",
@@ -322,7 +361,7 @@ fn test_cli_execution_and_flags() {
         ])
         .output()
         .expect("binary must run");
-    assert!(out.status.success());
+    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(stdout.contains("Generated assurance report"));
 
@@ -333,21 +372,37 @@ fn test_cli_execution_and_flags() {
         .args(["--check", report_file.to_str().unwrap()])
         .output()
         .expect("binary must run");
-    assert!(out.status.success());
+    assert!(out.status.success(), "{}", String::from_utf8_lossy(&out.stderr));
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(stdout.contains("ASSURANCE VERDICT: REPORT-ONLY"));
 
-    let _ = std::fs::remove_dir_all(&tmp);
+    // 8. The same report fails closed once its evidence is corrupted.
+    sandbox.edit("evidence/test-manifest.json", r#""verdict": "pass""#, r#""verdict": "fail""#);
+    let out = std::process::Command::new(bin)
+        .args(["--check", report_file.to_str().unwrap()])
+        .output()
+        .expect("binary must run");
+    assert_eq!(out.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&out.stderr).contains("ASSURANCE VERIFICATION FAILED"));
+
+    // 9. Missing manifests make --check fail rather than skip the cross-check.
+    let _ = std::fs::remove_file(tmp.join("evidence/bench-manifest.json"));
+    let out = std::process::Command::new(bin)
+        .args(["--check", report_file.to_str().unwrap()])
+        .output()
+        .expect("binary must run");
+    assert_eq!(out.status.code(), Some(1));
 }
 
 #[test]
 fn test_full_pass_verdict_when_all_rungs_pass() {
     let registry = WeaknessRegistry::embedded();
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
 
-    // Discharge CWE-208 with proof down to gate level
+    // Discharge every exemption (CWE-208 with proof down to gate level; the
+    // unsafe-exception classes with evidence of some tool's making).
     for w in &mut report.weaknesses {
-        if w.cwe == 208 {
+        if w.status == WeaknessStatus::Exemption {
             w.status = WeaknessStatus::Discharged;
             w.approved = None;
             w.reason = "proved down to gate-level netlist in Busicom pilot".into();
@@ -476,11 +531,11 @@ fn test_checker_edge_cases_and_rejections() {
     assert!(!registry.is_empty());
     assert_eq!(registry.len(), 26);
 
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
 
     // 1. Empty reason for excluded row
     for w in &mut report.weaknesses {
-        if w.cwe == 416 {
+        if w.cwe == 78 {
             w.reason = "".into();
         }
     }
@@ -490,7 +545,7 @@ fn test_checker_edge_cases_and_rejections() {
     ));
 
     // 2. Unknown CWE in report
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     report.weaknesses[0].cwe = 99999;
     assert!(matches!(
         verify_assurance_report(&report, &registry),
@@ -498,10 +553,14 @@ fn test_checker_edge_cases_and_rejections() {
     ));
 
     // 3. Unknown verdict
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     report.rungs.e2 = "pass".into();
-    report.exemptions[0].approved = true;
-    report.weaknesses.iter_mut().find(|w| w.cwe == 208).unwrap().approved = Some(true);
+    for e in &mut report.exemptions {
+        e.approved = true;
+    }
+    for w in report.weaknesses.iter_mut().filter(|w| w.status == WeaknessStatus::Exemption) {
+        w.approved = Some(true);
+    }
     report.verdict = "unrecognized-verdict".into();
     assert!(matches!(
         verify_assurance_report(&report, &registry),
@@ -509,17 +568,19 @@ fn test_checker_edge_cases_and_rejections() {
     ));
 
     // 4. Enforced report-only mode when all rungs pass
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     report.rungs.e2 = "pass".into();
     report.exemptions.clear();
-    report.weaknesses.iter_mut().find(|w| w.cwe == 208).unwrap().status = WeaknessStatus::Discharged;
+    for w in report.weaknesses.iter_mut().filter(|w| w.status == WeaknessStatus::Exemption) {
+        w.status = WeaknessStatus::Discharged;
+    }
     report.claims[0].proof.as_mut().unwrap().label = "proved-to-gate-level".into();
     report.verdict = "report-only".into();
     let verdict = verify_assurance_report(&report, &registry).unwrap();
     assert_eq!(verdict, CheckVerdict::ReportOnly("enforced report-only mode".into()));
 
     // 5. Invalid rung status
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     report.rungs.e1 = "fail".into();
     assert!(matches!(
         verify_assurance_report(&report, &registry),
@@ -527,14 +588,14 @@ fn test_checker_edge_cases_and_rejections() {
     ));
 
     // 6. Failing claim property or fuzz
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     report.claims[0].property.status = "fail".into();
     assert!(matches!(
         verify_assurance_report(&report, &registry),
         Err(CheckError::FailingClaim(_))
     ));
 
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     report.claims[0].fuzz.as_mut().unwrap().status = "crash".into();
     assert!(matches!(
         verify_assurance_report(&report, &registry),
@@ -542,7 +603,7 @@ fn test_checker_edge_cases_and_rejections() {
     ));
 
     // 7. Missing evidence on discharged row
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     let row_400 = report.weaknesses.iter_mut().find(|w| w.cwe == 400).unwrap();
     row_400.evidence.clear();
     assert!(matches!(
@@ -551,7 +612,7 @@ fn test_checker_edge_cases_and_rejections() {
     ));
 
     // 8. Discharged CWE-208 without gate-level proof label
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     let row_208 = report.weaknesses.iter_mut().find(|w| w.cwe == 208).unwrap();
     row_208.status = WeaknessStatus::Discharged;
     row_208.evidence = vec!["wir-proof-only".into()];
@@ -561,7 +622,7 @@ fn test_checker_edge_cases_and_rejections() {
     ));
 
     // 9. Mismatched exemption between matrix and exemptions list
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     report.exemptions[0].approved = true; // matrix says false
     assert!(matches!(
         verify_assurance_report(&report, &registry),
@@ -569,10 +630,12 @@ fn test_checker_edge_cases_and_rejections() {
     ));
 
     // 10. Capabilities analyzer failure when verdict is pass
-    let mut report = generate_ct_compare_report("a1a722f32c5", &registry).unwrap();
+    let mut report = generate_ct_compare_report("a1a722f32c5", &registry, &real_evidence()).unwrap();
     report.rungs.e2 = "pass".into();
     report.exemptions.clear();
-    report.weaknesses.iter_mut().find(|w| w.cwe == 208).unwrap().status = WeaknessStatus::Discharged;
+    for w in report.weaknesses.iter_mut().filter(|w| w.status == WeaknessStatus::Exemption) {
+        w.status = WeaknessStatus::Discharged;
+    }
     report.claims[0].proof.as_mut().unwrap().label = "proved-to-gate-level".into();
     report.verdict = "pass".into();
     report.capabilities.analyzer = "fail".into();
@@ -586,7 +649,11 @@ fn test_checker_edge_cases_and_rejections() {
 fn test_matrix_builder_violations() {
     let registry = WeaknessRegistry::embedded();
 
-    // Unsafe rust causes memory safety error
+    // A declared unsafe exception no longer yields an "excluded" memory-safety
+    // row: OOB read/write are discharged from bounds-checked proofs, the rest
+    // become unapproved exemptions (AF-22).
+    let mut unsafe_ev = evid();
+    unsafe_ev.unsafe_exceptions = vec!["volatile barrier".into()];
     let ctx = PackageAuditContext {
         package_id: "rust/ct-compare".into(),
         is_safe_rust: false,
@@ -596,8 +663,26 @@ fn test_matrix_builder_violations() {
         has_zero_alloc_proof: true,
         has_pbt_coverage: true,
         has_fuzz_coverage: true,
+        evidence: unsafe_ev.clone(),
     };
-    assert!(build_weakness_matrix(&registry, &ctx).is_err());
+    let rows = build_weakness_matrix(&registry, &ctx).unwrap();
+    for cwe in [416, 415, 476, 190] {
+        let row = rows.iter().find(|r| r.cwe == cwe).unwrap();
+        assert_eq!(row.status, WeaknessStatus::Exemption, "CWE-{cwe}");
+        assert_eq!(row.approved, Some(false));
+        assert!(!row.reason.contains("no unsafe blocks"));
+    }
+    for cwe in [125, 787] {
+        let row = rows.iter().find(|r| r.cwe == cwe).unwrap();
+        assert_eq!(row.status, WeaknessStatus::Discharged, "CWE-{cwe}");
+        assert!(row.evidence.contains(&"warrant/m/proof/op/constant-time".to_string()));
+    }
+    // Without bounds-checked proofs the OOB classes fall back to exemptions too.
+    let mut no_oob = unsafe_ev;
+    no_oob.oob_ids.clear();
+    let ctx = PackageAuditContext { evidence: no_oob, ..ctx };
+    let rows = build_weakness_matrix(&registry, &ctx).unwrap();
+    assert_eq!(rows.iter().find(|r| r.cwe == 125).unwrap().status, WeaknessStatus::Exemption);
 
     // Undeclared / unhandled capability triggers open row error
     let ctx = PackageAuditContext {
@@ -609,6 +694,21 @@ fn test_matrix_builder_violations() {
         has_zero_alloc_proof: true,
         has_pbt_coverage: true,
         has_fuzz_coverage: true,
+        evidence: evid(),
+    };
+    assert!(build_weakness_matrix(&registry, &ctx).is_err());
+
+    // No step-bound evidence ids: CWE-400 cannot be discharged on a bare flag.
+    let ctx = PackageAuditContext {
+        package_id: "rust/ct-compare".into(),
+        is_safe_rust: true,
+        declared_capabilities: vec![],
+        has_wir_timing_proof: true,
+        has_instruction_benchmarks: true,
+        has_zero_alloc_proof: true,
+        has_pbt_coverage: true,
+        has_fuzz_coverage: true,
+        evidence: AuditEvidence::default(),
     };
     assert!(build_weakness_matrix(&registry, &ctx).is_err());
 
@@ -622,6 +722,7 @@ fn test_matrix_builder_violations() {
         has_zero_alloc_proof: false,
         has_pbt_coverage: true,
         has_fuzz_coverage: true,
+        evidence: evid(),
     };
     assert!(build_weakness_matrix(&registry, &ctx).is_err());
 
@@ -635,6 +736,7 @@ fn test_matrix_builder_violations() {
         has_zero_alloc_proof: true,
         has_pbt_coverage: true,
         has_fuzz_coverage: true,
+        evidence: evid(),
     };
     assert!(build_weakness_matrix(&registry, &ctx).is_err());
 
