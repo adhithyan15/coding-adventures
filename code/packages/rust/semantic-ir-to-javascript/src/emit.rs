@@ -848,6 +848,16 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ensure_body,
             ..
         } => {
+            // #18798 item 22: a `begin … end` with no `rescue` or `ensure`
+            // clause carries an empty `rescues` and `None` `ensure_body`. Emitting
+            // a bare `try { … }` without `catch` or `finally` is a JavaScript
+            // syntax error. Emit the body statements inline.
+            if rescues.is_empty() && ensure_body.is_none() {
+                for st in body {
+                    emit_stmt(out, st, indent);
+                }
+                return;
+            }
             let _ = writeln!(out, "{pad}try {{");
             for st in body {
                 emit_stmt(out, st, indent + 2);

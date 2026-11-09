@@ -426,6 +426,14 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "def f\n  begin\n    raise \"x\"\n  rescue\n    5\n  end\nend\nputs f\ndef g\n  begin\n    6\n  rescue\n    7\n  end\nend\nputs g\ndef h(n)\n  if n > 0\n    begin\n      raise \"y\"\n    rescue => e\n      \"caught\"\n    ensure\n      puts \"ens\"\n    end\n  else\n    \"none\"\n  end\nend\nputs h(1)\nputs h(0)\n",
         "5\n6\nens\ncaught\nnone",
     ),
+    // #18798 item 22 — `begin … end` with no `rescue` or `ensure` clause.
+    // Python and JS/TS previously emitted a bare `try:` or `try { }` with no
+    // `except`/`finally` or `catch`/`finally`, failing compilation with a syntax error.
+    (
+        "rb_begin_without_rescue_or_ensure",
+        "begin\n  x = 42\n  puts x\nend\nbegin\n  begin\n    puts \"nested\"\n  end\nend\ndef f\n  begin\n    99\n  end\nend\nputs f\n",
+        "42\nnested\n99",
+    ),
 ];
 
 /// `(name, Python source, CPython's stdout)`: class names that are not Ruby

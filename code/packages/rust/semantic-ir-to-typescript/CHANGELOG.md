@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline via `emit_stmt_block`, avoiding invalid bare `try { }` blocks without catch or finally.
+
+
 ## Unreleased — Hash#each with one-parameter block arity forwarding (#18798)
 
 - `Expr::MakeClosure` emits the closure's parameter count as `new __Sir.Closure(..., arity)` so the runtime can yield `[key, value]` pairs to 1-param blocks.

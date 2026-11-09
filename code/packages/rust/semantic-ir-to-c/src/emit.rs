@@ -695,6 +695,15 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ensure_body,
             ..
         } => {
+            // #18798 item 22: a `begin … end` with no `rescue` or `ensure`
+            // clause carries an empty `rescues` and `None` `ensure_body`. Emit the
+            // body statements inline without setjmp handler overhead.
+            if rescues.is_empty() && ensure_body.is_none() {
+                for st in body {
+                    emit_stmt(out, st, indent);
+                }
+                return;
+            }
             let id = fresh_id();
             let i1 = indent + 1;
             let i2 = indent + 2;
