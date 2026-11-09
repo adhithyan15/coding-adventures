@@ -4,6 +4,10 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18496 review)
+
+- Conformance programs `py_class_private_method_mangled` and `py_class_private_attr_isolation` in `tests/python_statement_forms.rs`, verifying Python private name mangling (`__method`, `self.__attr`) in class bodies and subclass isolation across all backends.
+
 ### Added (#18798 item 3)
 
 - Conformance program `rb_lambda_call_and_outer_captures` in `tests/ruby_sir_gaps.rs`, verifying that Ruby arrow lambdas invoked via `.call(...)` correctly receive arguments (multi-arg and zero-arg) and capture outer local variables and enclosing method parameters across all backends (Ruby, Python, C, JavaScript, TypeScript, Go, Rust).
