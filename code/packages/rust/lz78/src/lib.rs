@@ -221,12 +221,28 @@ pub fn encode(data: &[u8], max_dict_size: usize) -> Vec<Token> {
 /// let tokens = encode(b"hello", 65536);
 /// assert_eq!(decode(&tokens, Some(5)), b"hello");
 /// ```
+///
+/// # Malformed input
+///
+/// A token whose `dict_index` names an entry that does not exist yet (it can
+/// only come from corrupt or hostile input) stops decoding; the bytes
+/// produced so far are returned.  When `original_length` is `Some(n)`,
+/// decoding also stops as soon as `n` bytes exist: later tokens could only be
+/// truncated away, and expanding them first would let a tiny hostile stream
+/// burn quadratic time and memory (each token can expand to its whole parent
+/// chain).  Output for valid streams is unchanged.
 pub fn decode(tokens: &[Token], original_length: Option<usize>) -> Vec<u8> {
     // dict_table[i] = (parent_id, byte). Index 0 = root sentinel.
     let mut dict_table: Vec<(u16, u8)> = vec![(0, 0)];
     let mut output = Vec::new();
 
     for tok in tokens {
+        if original_length.is_some_and(|n| output.len() >= n) {
+            break;
+        }
+        if tok.dict_index as usize >= dict_table.len() {
+            break;
+        }
         let seq = reconstruct(&dict_table, tok.dict_index);
         output.extend_from_slice(&seq);
 
@@ -277,16 +293,16 @@ fn deserialise_tokens(data: &[u8]) -> (Vec<Token>, usize) {
         return (Vec::new(), 0);
     }
     let original_length = u32::from_be_bytes([data[0], data[1], data[2], data[3]]) as usize;
-    let token_count = u32::from_be_bytes([data[4], data[5], data[6], data[7]]) as usize;
+    let claimed = u32::from_be_bytes([data[4], data[5], data[6], data[7]]) as usize;
+    // Security: the claimed token count is attacker-controlled.  Clamp it to
+    // what the remaining bytes can hold (4 bytes per token) before sizing or
+    // iterating; a header claiming more is treated as truncated.
+    let body = &data[8..];
+    let token_count = claimed.min(body.len() / 4);
     let mut tokens = Vec::with_capacity(token_count);
-    for i in 0..token_count {
-        let base = 8 + i * 4;
-        if base + 4 > data.len() {
-            break;
-        }
-        let dict_index = u16::from_be_bytes([data[base], data[base + 1]]);
-        let next_char = data[base + 2];
-        tokens.push(Token { dict_index, next_char });
+    for chunk in body.chunks_exact(4).take(token_count) {
+        let dict_index = u16::from_be_bytes([chunk[0], chunk[1]]);
+        tokens.push(Token { dict_index, next_char: chunk[2] });
     }
     (tokens, original_length)
 }

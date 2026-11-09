@@ -145,9 +145,14 @@ export function decode(tokens: Token[], originalLength = -1): Uint8Array {
   const output: number[] = [];
 
   for (const tok of tokens) {
+    // Once the declared length is reached nothing more survives the final
+    // truncation, so stop instead of expanding further matches.
+    if (originalLength >= 0 && output.length >= originalLength) break;
     if (tok.kind === "literal") {
       output.push(tok.byte);
     } else {
+      // Invalid back-reference (offset 0 or before the start): skip it.
+      if (tok.offset === 0 || tok.offset > output.length) continue;
       const start = output.length - tok.offset;
       for (let i = 0; i < tok.length; i++) {
         output.push(output[start + i]); // byte-by-byte for overlap

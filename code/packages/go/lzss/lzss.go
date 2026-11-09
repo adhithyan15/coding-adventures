@@ -155,13 +155,30 @@ func Encode(data []byte, windowSize, maxMatch, minMatch int) []Token {
 // originalLength trims the output to the exact uncompressed size.
 // Pass -1 to return all bytes.
 func Decode(tokens []Token, originalLength int) []byte {
-	output := make([]byte, 0, originalLength)
+	// Security: originalLength comes from an untrusted header (up to 4 GiB) and
+	// may be -1 ("unknown"), so it is only a hint, capped at what the tokens
+	// could plausibly produce.  The slice grows on demand beyond that.
+	capHint := len(tokens) * 4
+	if originalLength >= 0 && originalLength < capHint {
+		capHint = originalLength
+	}
+	output := make([]byte, 0, capHint)
 
 	for _, tok := range tokens {
+		// Once the declared length is reached nothing more survives the final
+		// truncation, so stop instead of expanding further matches.
+		if originalLength >= 0 && len(output) >= originalLength {
+			break
+		}
 		switch tok.Kind {
 		case KindLiteral:
 			output = append(output, tok.Byte)
 		case KindMatch:
+			// Invalid back-references (offset 0 or before the start of the
+			// output) are skipped,.
+			if tok.Offset == 0 || int(tok.Offset) > len(output) {
+				continue
+			}
 			start := len(output) - int(tok.Offset)
 			for i := 0; i < int(tok.Length); i++ {
 				output = append(output, output[start+i]) // byte-by-byte for overlap

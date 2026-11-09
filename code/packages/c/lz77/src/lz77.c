@@ -147,8 +147,17 @@ int lz77_decode(const lz77_token *tokens, size_t count, const uint8_t *initial,
     }
     for (t = 0; t < count && !b.failed; t++) {
         if (tokens[t].length > 0) {
-            size_t start = b.len - tokens[t].offset;
+            size_t start;
             size_t i;
+            /* Security: a zero offset, or one reaching before the start of the
+             * output, is invalid (corrupt/hostile input).  Unchecked, the
+             * unsigned subtraction below wraps and the copy reads far outside
+             * (or through a NULL) buffer.  Reject the stream. */
+            if (tokens[t].offset == 0 || tokens[t].offset > b.len) {
+                free(b.data);
+                return 0;
+            }
+            start = b.len - tokens[t].offset;
             for (i = 0; i < tokens[t].length; i++) {
                 /* Read the source byte BEFORE pushing (push may realloc). */
                 uint8_t byte = b.data[start + i];

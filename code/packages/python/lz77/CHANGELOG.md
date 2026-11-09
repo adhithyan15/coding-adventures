@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Security
+
+- Hardening (CWE-789): _deserialise_tokens clamps the untrusted header token count to the number of complete tokens present instead of looping over the claimed count. Not previously exploitable (the loop broke at the first missing token) but no longer depends on that.
+- Added test_hostile_headers.py: hostile headers (0xFFFFFFFF counts/lengths, counts beyond the data) checked for bounded time and memory, plus round trips over every byte string of length <= 2 and a seeded random sample.
+
 ## [0.1.0] - 2026-04-09
 
 ### Added

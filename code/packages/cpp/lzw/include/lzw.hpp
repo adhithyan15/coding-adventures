@@ -169,7 +169,11 @@ inline std::vector<std::uint8_t> decompress(const std::vector<std::uint8_t> &dat
     if (!r.read(code_size, code) || code != clear_code) {
         throw std::invalid_argument("lzw: expected CLEAR at start");
     }
-    while (r.read(code_size, code)) {
+    while (output.size() < original_length && r.read(code_size, code)) {
+        // Security: original_length is untrusted but bounds what we keep (see
+        // the final resize).  Stopping once it is reached keeps a tiny stream
+        // of long dictionary entries from expanding far beyond it.  Valid
+        // streams are unaffected: the resize would have discarded the extra.
         if (code == clear_code) {
             dict.resize(initial_next_code);
             next_code = initial_next_code;

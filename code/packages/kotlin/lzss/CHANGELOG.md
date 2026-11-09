@@ -3,6 +3,13 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Security
+
+- CWE-789/CWE-400: decode copied the whole output per back-referenced byte (quadratic); it now uses a growable array and stops once originalLength is reached. deserialiseTokens reads block_count as unsigned before capping it to the payload (>= 2^31 previously decoded zero blocks). Match offsets of 0 are rejected with IllegalArgumentException.
+- Added HostileHeadersTest (JUnit 5 via kotlin.test): hostile headers under a preemptive timeout, plus round trips over every byte string of length <= 2 and a seeded random sample.
+
 ## [0.1.0] — 2026-04-25
 
 ### Added

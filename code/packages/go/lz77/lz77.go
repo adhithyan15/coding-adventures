@@ -198,6 +198,12 @@ func Decode(tokens []Token, initialBuffer []byte) []byte {
 	for _, token := range tokens {
 		if token.Length > 0 {
 			// Copy Length bytes from position (current_output_length - Offset).
+			// A zero offset or one reaching before the start of the output is
+			// invalid (corrupt or hostile input): stop decoding and return
+			// what has been produced so far instead of panicking.
+			if token.Offset == 0 || int(token.Offset) > len(output) {
+				return output
+			}
 			start := len(output) - int(token.Offset)
 			// Copy byte-by-byte to handle overlapping matches (Offset < Length).
 			// A bulk copy (copy/append) would read stale data for overlapping cases.
@@ -250,14 +256,18 @@ func deserialiseTokens(data []byte) []Token {
 		return nil
 	}
 
+	// Security: the header count is attacker-controlled (up to 2^32-1), so it
+	// must not size the allocation or the loop.  Clamp it to the number of
+	// complete 4-byte tokens the remaining bytes can hold; a header claiming
+	// more tokens than are present is treated as truncated.
 	count := int(binary.BigEndian.Uint32(data[0:4]))
+	if maxTokens := (len(data) - 4) / 4; count > maxTokens {
+		count = maxTokens
+	}
 	tokens := make([]Token, 0, count)
 
 	for i := range count {
 		base := 4 + i*4
-		if base+4 > len(data) {
-			break
-		}
 		tokens = append(tokens, Token{
 			Offset:   binary.BigEndian.Uint16(data[base : base+2]),
 			Length:   data[base+2],

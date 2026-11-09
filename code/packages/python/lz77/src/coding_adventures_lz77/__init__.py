@@ -300,7 +300,12 @@ def _deserialise_tokens(data: bytes) -> list[Token]:
     if len(data) < 4:
         return []
 
-    token_count = struct.unpack(">I", data[:4])[0]
+    # Security: the header count is attacker-controlled.  Never loop (or size
+    # anything) from it beyond what the remaining bytes can physically hold:
+    # clamp to (len - 4) // 4 complete tokens.  A header claiming more tokens
+    # than are present is treated as truncated; fewer stops at the claim.
+    claimed = struct.unpack(">I", data[:4])[0]
+    token_count = min(claimed, (len(data) - 4) // 4)
     tokens: list[Token] = []
 
     for i in range(token_count):

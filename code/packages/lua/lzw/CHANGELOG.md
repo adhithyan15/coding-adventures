@@ -4,6 +4,13 @@ All notable changes to `coding-adventures-lzw` are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Security
+
+- No code change: no allocation is sized from the header. NOT RUN locally (toolchain unavailable in the review environment).
+- Added tests/test_hostile_headers.lua (busted): hostile headers with a wall-clock bound, plus round trips over every byte string of length <= 2 and a seeded random sample. NOT RUN locally (toolchain unavailable in the review environment).
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

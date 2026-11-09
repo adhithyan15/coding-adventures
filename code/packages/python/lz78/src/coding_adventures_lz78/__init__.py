@@ -213,6 +213,12 @@ def decode(tokens: list[Token], original_length: int = -1) -> bytes:
     output: bytearray = bytearray()
 
     for token in tokens:
+        # Security: once the declared length is reached nothing more survives
+        # the final truncation, so stop.  Without this a tiny hostile stream
+        # (each token extending the previous entry) expands quadratically.
+        if original_length >= 0 and len(output) >= original_length:
+            break
+
         dict_index, next_char = token
 
         # Reconstruct the sequence for dict_index.
@@ -296,7 +302,11 @@ def _deserialise_tokens(data: bytes | bytearray) -> tuple[list[Token], int]:
         return [], 0
 
     original_length = struct.unpack(">I", data[0:4])[0]
-    token_count = struct.unpack(">I", data[4:8])[0]
+    # Security: the token count is attacker-controlled; clamp it to the number
+    # of complete 4-byte tokens actually present (a larger claim is treated as
+    # truncated) so neither allocation nor iteration follows the header.
+    claimed = struct.unpack(">I", data[4:8])[0]
+    token_count = min(claimed, (len(data) - 8) // 4)
     tokens: list[Token] = []
 
     for i in range(token_count):

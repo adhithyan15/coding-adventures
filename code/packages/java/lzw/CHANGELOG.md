@@ -3,6 +3,13 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Security
+
+- No code change: output is capped by DEFAULT_MAX_OUTPUT and nothing is sized from the header.
+- Added HostileHeadersTest (JUnit 5): hostile headers run under a preemptive timeout, plus round trips over every byte string of length <= 2 and a seeded random sample.
+
 ## [0.1.0] — 2026-04-25
 
 ### Added

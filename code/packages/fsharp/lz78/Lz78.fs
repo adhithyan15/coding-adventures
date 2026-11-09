@@ -63,7 +63,10 @@ type Lz78 =
         table.Add(0, 0uy)
         let output = ResizeArray<byte>()
 
-        for token in tokens do
+        // Security: stop once the declared length is reached (nothing more
+        // survives the final truncation); a hostile chain of tokens otherwise
+        // expands quadratically.
+        for token in tokens |> Seq.takeWhile (fun _ -> originalLength < 0 || output.Count < originalLength) do
             if token.DictIndex < 0 || token.DictIndex >= table.Count then
                 invalidOp "Token references a dictionary entry that does not exist"
 
@@ -103,7 +106,9 @@ type Lz78 =
         if data.Length < 8 then
             [], 0
         else
-            let originalLength = int (BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4)))
+            // Security: a raw `int` cast turns lengths >= 2^31 negative, which
+            // Decode treats as "no truncation"; clamp instead.
+            let originalLength = int (min (BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(0, 4))) (uint32 Int32.MaxValue))
             let mutable tokenCount = BinaryPrimitives.ReadUInt32BigEndian(data.AsSpan(4, 4))
             let maxPossibleTokens = uint32 ((data.Length - 8) / 4)
             if tokenCount > maxPossibleTokens then
