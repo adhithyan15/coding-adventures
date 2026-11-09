@@ -1,5 +1,39 @@
 # Changelog — `bit-blaster`
 
+## 0.2.0 — 2026-11-09
+
+Faithfulness audit (VER10 §9). No bug was found in the existing encoding:
+the AIG, the Tseitin clauses and every operator in 0.1.0 matched an
+independent reference on every checked assignment, and 24 hand-made
+mutants of the encoder and circuits were all killed.
+
+### Added
+
+- `bv`: `udiv`, `urem`, `sdiv`, `srem` (restoring division; division by
+  zero follows SMT-LIB with no special case in the circuit), `extract`,
+  `concat`, `zext`, `sext`. The spec §4/§9.1 table lists them.
+- `tests/faithfulness.rs`: AIG, Tseitin and `cdcl-sat` checked together
+  against a Rust reference for every operator (widths 1–4 and 5–6
+  exhaustive, 7–8 corners and samples), with uniqueness of the output
+  certified by `drat-check`; all depth-2 expression trees (ignored test:
+  87 812 circuits, about 3.5 M assignments, about 5 minutes unoptimised;
+  a 1-in-25 slice by default); certified identities and refuted
+  non-identities; structural-hashing and Tseitin functional-exactness
+  checks; incremental encoding.
+
+### Changed
+
+- The signed comparisons (and so `sle`, `sgt`, `sge`) on a width-0 vector
+  now panic with "bit-vectors have width ≥ 1" instead of an opaque index
+  underflow. Width 0 was never supported (spec §4).
+- Spec VER10 gains §9: reference semantics, the faithfulness contract
+  (F1–F4) and the spec-versus-code audit table.
+
+### Measured
+
+- Line coverage 100% (593/593 lines in `aig.rs`, `bv.rs`, `tseitin.rs`),
+  `cargo llvm-cov` on a standalone copy with `cdcl-sat` and `drat-check`.
+
 ## 0.1.0 — 2026-11-02
 
 Initial release: VER10 part 1, encodings and bit-blasting.
