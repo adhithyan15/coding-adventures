@@ -536,7 +536,9 @@ subtest 'the real CLI exits 2 for a Cargo self-edge' => sub {
     my $err = do { local $/; <$stderr> // '' };
     waitpid($pid, 0);
     is($? >> 8, 2, 'exit status 2');
-    like($err, qr/^DEPENDENCY_SELF_EDGE: package=rust\/app manifest=code\/packages\/rust\/app\/Cargo\.toml dependency=rust\/app$/m,
+    # \r? because on Windows the child's stderr line ends in \r\n and `$` under
+    # /m only matches before the \n, so a bare `app$` never matched there.
+    like($err, qr/^DEPENDENCY_SELF_EDGE: package=rust\/app manifest=code\/packages\/rust\/app\/Cargo\.toml dependency=rust\/app\r?$/m,
         'the stable diagnostic on stderr');
     unlike($err, qr/\Q$root\E/, 'no checkout root');
 };

@@ -8,6 +8,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Unreleased
 
+### Fixed
+
+- `t/17-cargo-link-tables.t` no longer fails on Windows: the real-CLI
+  self-edge test matched stderr with `...dependency=rust/app$` under `/m`,
+  but a Windows child process ends that line in `\r\n`, so the anchor never
+  matched. It now allows an optional `\r`. Test-only; no behaviour change.
+
 ### Changed
 
 - Source hashing now consults a complete installed language-specific input
