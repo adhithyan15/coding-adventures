@@ -2178,57 +2178,124 @@ fn convert_concise_body(node: &GrammarASTNode) -> Result<ArrowBody, BridgeError>
 /// correct). When the grammar learns to parse `${…}` this converter grows a
 /// multi-part branch; the AST node already models it.
 ///
-/// The single backtick-delimited token becomes one tail [`TemplateElement`]:
-/// we strip the leading and trailing `` ` `` to get the `raw` inner text.
-/// `cooked` mirrors `raw` here — a no-substitution template with no illegal
-/// escapes has a well-defined cooked value equal to its raw text for the
-/// ASCII cases the SIMPLE pipeline sees (escape *processing* is a future
-/// refinement; the emitter re-emits `raw` verbatim regardless, so this is
-/// never a correctness hazard).
+/// Convert a `template_literal` node into an [`Expression::TemplateLiteral`].
+///
+/// Handles both no-substitution templates (`` `abc` ``) and templates with
+/// substitutions (`` `hello ${name}!` ``).
+///
+/// In the grammar:
+/// `template_literal = TEMPLATE_NO_SUB | TEMPLATE_HEAD { expression TEMPLATE_MIDDLE } expression TEMPLATE_TAIL ;`
+///
+/// For a substitution template with N expressions, ESTree requires N + 1 quasis,
+/// with `tail: false` for all except the final quasi (`tail: true`).
 fn convert_template_literal(node: &GrammarASTNode) -> Result<TemplateLiteral, BridgeError> {
-    // The node must be exactly one token and no child nodes — any child node
-    // (a parsed `${…}` substitution, once the grammar supports it) is out of
-    // scope for this slice.
-    if !node_children(node).is_empty() {
+    // Case 1: no-substitution template literal: single TEMPLATE_NO_SUB token.
+    if node.children.len() == 1 {
+        if let Some(ASTNodeOrToken::Token(tok)) = node.children.first() {
+            if tok.type_name.as_deref() == Some("TEMPLATE_NO_SUB") {
+                let inner = tok
+                    .value
+                    .strip_prefix('`')
+                    .and_then(|s| s.strip_suffix('`'))
+                    .ok_or_else(|| unsupported(node))?
+                    .to_string();
+
+                let element = TemplateElement {
+                    cv: tok.cv.clone(),
+                    raw: inner.clone(),
+                    cooked: Some(inner),
+                    tail: true,
+                };
+                return Ok(TemplateLiteral {
+                    cv: tok.cv.clone(),
+                    quasis: vec![element],
+                    expressions: vec![],
+                });
+            }
+        }
         return Err(unsupported(node));
     }
-    let tokens: Vec<&Token> = node
-        .children
-        .iter()
-        .filter_map(|c| match c {
-            ASTNodeOrToken::Token(t) => Some(t),
-            ASTNodeOrToken::Node(_) => None,
-        })
-        .collect();
 
-    let [tok] = tokens.as_slice() else {
-        // Zero or many tokens → not the single-token no-sub shape.
-        return Err(unsupported(node));
+    // Case 2: substitution template literal.
+    let mut iter = node.children.iter();
+
+    // 1. Must start with a TEMPLATE_HEAD token.
+    let head_tok = match iter.next() {
+        Some(ASTNodeOrToken::Token(t)) if t.type_name.as_deref() == Some("TEMPLATE_HEAD") => t,
+        _ => return Err(unsupported(node)),
     };
-
-    // Guard the exact lexical shape: a `TEMPLATE_NO_SUB` token bounded by
-    // backticks. Anything else (a stray substitution token, a malformed
-    // literal) declines rather than risk mis-slicing.
-    if tok.type_name.as_deref() != Some("TEMPLATE_NO_SUB") {
-        return Err(unsupported(node));
-    }
-    let raw_full = &tok.value;
-    let inner = raw_full
+    let head_inner = head_tok
+        .value
         .strip_prefix('`')
-        .and_then(|s| s.strip_suffix('`'))
+        .and_then(|s| s.strip_suffix("${"))
         .ok_or_else(|| unsupported(node))?
         .to_string();
 
-    let element = TemplateElement {
-        cv: tok.cv.clone(),
-        raw: inner.clone(),
-        cooked: Some(inner),
-        tail: true,
-    };
+    let mut quasis = vec![TemplateElement {
+        cv: head_tok.cv.clone(),
+        raw: head_inner.clone(),
+        cooked: Some(head_inner),
+        tail: false,
+    }];
+    let mut expressions = Vec::new();
+
+    // 2. Loop through alternating (expression, delimiter) pairs.
+    // Delimiter must be TEMPLATE_MIDDLE (continues loop) or TEMPLATE_TAIL (ends loop).
+    loop {
+        let expr_node = match iter.next() {
+            Some(ASTNodeOrToken::Node(n)) => n,
+            _ => return Err(unsupported(node)),
+        };
+        expressions.push(convert_expression(expr_node)?);
+
+        let delim_tok = match iter.next() {
+            Some(ASTNodeOrToken::Token(t)) => t,
+            _ => return Err(unsupported(node)),
+        };
+
+        match delim_tok.type_name.as_deref() {
+            Some("TEMPLATE_MIDDLE") => {
+                let middle_inner = delim_tok
+                    .value
+                    .strip_prefix('}')
+                    .and_then(|s| s.strip_suffix("${"))
+                    .ok_or_else(|| unsupported(node))?
+                    .to_string();
+                quasis.push(TemplateElement {
+                    cv: delim_tok.cv.clone(),
+                    raw: middle_inner.clone(),
+                    cooked: Some(middle_inner),
+                    tail: false,
+                });
+            }
+            Some("TEMPLATE_TAIL") => {
+                let tail_inner = delim_tok
+                    .value
+                    .strip_prefix('}')
+                    .and_then(|s| s.strip_suffix('`'))
+                    .ok_or_else(|| unsupported(node))?
+                    .to_string();
+                quasis.push(TemplateElement {
+                    cv: delim_tok.cv.clone(),
+                    raw: tail_inner.clone(),
+                    cooked: Some(tail_inner),
+                    tail: true,
+                });
+                break;
+            }
+            _ => return Err(unsupported(node)),
+        }
+    }
+
+    // Must have consumed all children.
+    if iter.next().is_some() {
+        return Err(unsupported(node));
+    }
+
     Ok(TemplateLiteral {
-        cv: tok.cv.clone(),
-        quasis: vec![element],
-        expressions: vec![],
+        cv: head_tok.cv.clone(),
+        quasis,
+        expressions,
     })
 }
 
@@ -5713,6 +5780,92 @@ mod tests {
         assert!(json.contains("hello"));
     }
 
+    /// Extract the sole expression from a single-statement expression program.
+    fn expr_of(src: &str) -> Expression {
+        match &bridge_ok(src).body[0] {
+            ProgramItem::Statement(Statement::Tagged(
+                coding_adventures_javascript_ast::statement::TaggedStatement::ExpressionStatement(es),
+            )) => es.expression.clone(),
+            other => panic!("expected an ExpressionStatement for {src}, got {other:?}"),
+        }
+    }
+
+    /// Single substitution template `` `hello ${name}!` `` parses and bridges
+    /// into 2 quasis and 1 expression (#17854).
+    #[test]
+    fn template_literal_single_substitution() {
+        let Expression::TemplateLiteral(t) = expr_of("`hello ${name}!`;") else { panic!("expected TemplateLiteral") };
+        assert_eq!(t.quasis.len(), 2, "2 quasis for 1 substitution");
+        assert_eq!(t.quasis[0].raw, "hello ");
+        assert_eq!(t.quasis[0].cooked.as_deref(), Some("hello "));
+        assert!(!t.quasis[0].tail, "first quasi is not tail");
+        assert_eq!(t.quasis[1].raw, "!");
+        assert_eq!(t.quasis[1].cooked.as_deref(), Some("!"));
+        assert!(t.quasis[1].tail, "second quasi is tail");
+        assert_eq!(t.expressions.len(), 1);
+        assert!(matches!(&t.expressions[0], Expression::Identifier(id) if id.name == "name"));
+    }
+
+    /// Multiple substitution template `` `a ${b} c ${d} e` `` parses and bridges
+    /// into 3 quasis and 2 expressions (#17854).
+    #[test]
+    fn template_literal_multiple_substitutions() {
+        let Expression::TemplateLiteral(t) = expr_of("`a ${b} c ${d} e`;") else { panic!("expected TemplateLiteral") };
+        assert_eq!(t.quasis.len(), 3);
+        assert_eq!(t.quasis[0].raw, "a ");
+        assert!(!t.quasis[0].tail);
+        assert_eq!(t.quasis[1].raw, " c ");
+        assert!(!t.quasis[1].tail);
+        assert_eq!(t.quasis[2].raw, " e");
+        assert!(t.quasis[2].tail);
+        assert_eq!(t.expressions.len(), 2);
+        assert!(matches!(&t.expressions[0], Expression::Identifier(id) if id.name == "b"));
+        assert!(matches!(&t.expressions[1], Expression::Identifier(id) if id.name == "d"));
+    }
+
+    /// Adjacent substitutions `` `${a}${b}` `` with empty string quasis (#17854).
+    #[test]
+    fn template_literal_adjacent_substitutions() {
+        let Expression::TemplateLiteral(t) = expr_of("`${a}${b}`;") else { panic!("expected TemplateLiteral") };
+        assert_eq!(t.quasis.len(), 3);
+        assert_eq!(t.quasis[0].raw, "");
+        assert_eq!(t.quasis[1].raw, "");
+        assert_eq!(t.quasis[2].raw, "");
+        assert!(t.quasis[2].tail);
+        assert_eq!(t.expressions.len(), 2);
+    }
+
+    /// Template literal with complex expression `` `${x + 1}` `` (#17854).
+    #[test]
+    fn template_literal_complex_expression() {
+        let Expression::TemplateLiteral(t) = expr_of("`${x + 1}`;") else { panic!("expected TemplateLiteral") };
+        assert_eq!(t.quasis.len(), 2);
+        assert_eq!(t.expressions.len(), 1);
+        assert!(matches!(&t.expressions[0], Expression::BinaryExpression(_)));
+    }
+
+    /// Template literal with substitutions parses across all modern editions (ES2015-ES2025).
+    #[test]
+    fn template_literal_substitutions_all_modern_editions() {
+        let versions = [
+            EsVersion::Es2015,
+            EsVersion::Es2016,
+            EsVersion::Es2017,
+            EsVersion::Es2018,
+            EsVersion::Es2019,
+            EsVersion::Es2020,
+            EsVersion::Es2021,
+            EsVersion::Es2022,
+            EsVersion::Es2023,
+            EsVersion::Es2024,
+            EsVersion::Es2025,
+        ];
+        for v in versions {
+            let res = crate::parse_javascript_program("`val=${x}`;", v);
+            assert!(res.is_ok(), "failed in version {v:?}: {:?}", res.err());
+        }
+    }
+
     /// `` tag`abc` `` — a tagged template with an identifier tag: the bridge
     /// wraps the tag + template into a `TaggedTemplateExpression` (previously
     /// `UnsupportedSyntax`, gap-162).
@@ -5764,6 +5917,19 @@ mod tests {
             },
             _ => panic!("expected ExpressionStatement"),
         }
+    }
+
+    /// Tagged template with substitutions `` html`<div>${content}</div>` `` (#17854).
+    #[test]
+    fn tagged_template_with_substitutions() {
+        let Expression::TaggedTemplateExpression(t) = expr_of("html`<div>${content}</div>`;")
+        else {
+            panic!("expected TaggedTemplateExpression")
+        };
+        assert_eq!(t.quasi.quasis.len(), 2);
+        assert_eq!(t.quasi.quasis[0].raw, "<div>");
+        assert_eq!(t.quasi.quasis[1].raw, "</div>");
+        assert_eq!(t.quasi.expressions.len(), 1);
     }
 
     /// `` a`x`.length `` — a member access on a tagged template chains: the
