@@ -414,15 +414,15 @@ postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
 left_hand_side_expression = call_expression | new_expression ;
 
 call_expression = member_expression arguments
-                  { arguments | DOT identifier_name | LBRACKET expression RBRACKET
+                  { arguments | DOT NAME | DOT reserved_word | LBRACKET expression RBRACKET
                   | template_literal } ;
 
 new_expression = member_expression
                | "new" new_expression ;
 
-member_expression = primary_expression { DOT identifier_name | LBRACKET expression RBRACKET
+member_expression = primary_expression { DOT NAME | DOT reserved_word | LBRACKET expression RBRACKET
                                        | template_literal }
-                  | "super" DOT identifier_name
+                  | "super" DOT NAME | DOT reserved_word
                   | "super" LBRACKET expression RBRACKET
                   | "new" member_expression arguments ;
 
@@ -486,8 +486,7 @@ property_definition = property_name COLON assignment_expression
 
 # Property names: ES2015 adds computed property names using [expression].
 
-identifier_name = NAME
-                | "await"
+reserved_word = "await"
                 | "break"
                 | "case"
                 | "catch"
@@ -527,7 +526,7 @@ identifier_name = NAME
                 | "with"
                 | "yield" ;
 
-property_name = identifier_name | STRING | NUMBER
+property_name = NAME | reserved_word | STRING | NUMBER
               | LBRACKET assignment_expression RBRACKET ;
 
 # Function and generator expressions

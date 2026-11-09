@@ -203,7 +203,9 @@ fn leftmost_token(node: &GrammarASTNode) -> Option<&str> {
 fn extract_ident_name(item: Option<&ASTNodeOrToken>) -> Option<String> {
     match item {
         Some(ASTNodeOrToken::Token(t)) => Some(t.value.clone()),
-        Some(ASTNodeOrToken::Node(n)) if n.rule_name == "identifier_name" => {
+        Some(ASTNodeOrToken::Node(n))
+            if n.rule_name == "reserved_word" || n.rule_name == "identifier_name" =>
+        {
             leftmost_token(n).map(|s| s.to_string())
         }
         _ => None,
@@ -4160,7 +4162,9 @@ fn convert_property_key(node: &GrammarASTNode) -> Result<PropertyKey, BridgeErro
     }
     for c in &node.children {
         match c {
-            ASTNodeOrToken::Node(inner) if inner.rule_name == "identifier_name" => {
+            ASTNodeOrToken::Node(inner)
+                if inner.rule_name == "reserved_word" || inner.rule_name == "identifier_name" =>
+            {
                 if let Some(name) = leftmost_token(inner) {
                     return Ok(PropertyKey::Identifier(Identifier {
                         cv: None,
