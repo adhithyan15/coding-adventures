@@ -1227,6 +1227,12 @@ impl Lowerer {
                 ))
             }
         };
+        if let Some(kind) = self.splat_arg_kind(base) {
+            return Err(self.err_at(
+                base,
+                format!("unsupported: {kind} argument in base class list (deferred)"),
+            ));
+        }
         if self.keyword_arg_name(base).is_some() {
             return Err(self.err_at(
                 base,
@@ -2921,6 +2927,14 @@ impl Lowerer {
         }
 
         let args = self.call_arguments(suffix);
+        for a in &args {
+            if let Some(kind) = self.splat_arg_kind(a) {
+                return Err(self.err_at(
+                    a,
+                    format!("unsupported: {kind} argument in call (deferred)"),
+                ));
+            }
+        }
 
         let span = self.span_of(primary);
         let int = |v: i64| Expr::IntLit {
@@ -5043,16 +5057,15 @@ impl Lowerer {
     /// declare [`Feature::KeywordParams`] so the manifest matches what the
     /// validator observes.
     ///
-    /// ## Keyword arg vs. `**dict` splat — a deliberate distinction
+    /// ## Keyword arg vs. `*args` / `**kwargs` splat — deliberate refusal
     ///
     /// Only the explicit `NAME = value` spelling becomes a `KeywordArg`.  The
     /// grammar's other two `argument` forms — `STAR expression` (`*seq`) and
     /// `DOUBLE_STAR expression` (`**dict`, keyword-rest splat) — are NOT
-    /// keyword arguments: `**dict` names no single parameter, it unpacks a
-    /// mapping.  Those splat forms keep their existing (subset-external)
-    /// treatment via [`Self::single_arg_expr`], which returns the inner
-    /// `expression`; we detect the `NAME EQUALS` shape *first* by the leading
-    /// NAME + `=` tokens so a `**dict` never masquerades as a keyword arg.
+    /// supported yet in SIR and are refused with positioned errors (#18482 item 2),
+    /// mirroring the refusal on `*args` and `**kwargs` parameter declarations.
+    /// Earlier versions dropped the splat token and collapsed them into single
+    /// positional arguments, which changed program meaning silently.
     fn lower_call_args(
         &mut self,
         suffix: &GrammarASTNode,
@@ -5062,6 +5075,12 @@ impl Lowerer {
         let arg_nodes = self.call_arguments(suffix);
         let mut args = Vec::with_capacity(arg_nodes.len());
         for a in &arg_nodes {
+            if let Some(kind) = self.splat_arg_kind(a) {
+                return Err(self.err_at(
+                    a,
+                    format!("unsupported: {kind} argument in call (deferred)"),
+                ));
+            }
             match self.keyword_arg_name(a) {
                 // `NAME = expression` → a keyword argument.
                 Some(kw_name) => {
@@ -5076,8 +5095,7 @@ impl Lowerer {
                         span,
                     });
                 }
-                // A bare positional argument (or a `*`/`**` splat, whose
-                // token is dropped by `single_arg_expr` — unchanged v0).
+                // A bare positional argument.
                 None => {
                     let e = self.single_arg_expr(a)?;
                     args.push(self.lower_expr_d(e, ctx, depth + 1)?);
@@ -5085,6 +5103,29 @@ impl Lowerer {
             }
         }
         Ok(args)
+    }
+
+    /// If this `argument` node is a `*args` (`STAR`) or `**kwargs`
+    /// (`DOUBLE_STAR`) unpacking form, return a descriptive label for the
+    /// error message (`"*starred"` or `"**double-starred keyword"`).
+    ///
+    /// The CST for `*xs` is `argument[ STAR, expression ]` and for `**d`
+    /// is `argument[ DOUBLE_STAR, expression ]`.  Splat arguments are
+    /// deferred (SIR #18482 item 2); detecting them here prevents
+    /// [`Self::single_arg_expr`] from silently stripping the splat operator
+    /// and treating the argument as a single positional parameter.
+    fn splat_arg_kind(&self, arg: &GrammarASTNode) -> Option<&'static str> {
+        for child in &arg.children {
+            if let ASTNodeOrToken::Token(t) = child {
+                if t.value == "**" {
+                    return Some("**double-starred keyword");
+                }
+                if t.value == "*" {
+                    return Some("*starred");
+                }
+            }
+        }
+        None
     }
 
     /// If this `argument` node is the keyword form `NAME EQUALS expression`,
