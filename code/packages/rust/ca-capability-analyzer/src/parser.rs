@@ -581,18 +581,23 @@ impl Resolver {
         for _ in 0..MAX_ALIAS_ROUNDS {
             let mut changed = false;
             let mut next: Vec<(String, Vec<String>)> = Vec::with_capacity(entries.len());
+            // name -> indices of entries that can serve as substitution targets
+            // (an entry whose own head is its own name cannot: see below).
+            let mut by_name: HashMap<&str, Vec<usize>> = HashMap::new();
+            for (j, (n, p)) in entries.iter().enumerate() {
+                if p[0] != *n {
+                    by_name.entry(n.as_str()).or_default().push(j);
+                }
+            }
             for (k, (name, path)) in entries.iter().enumerate() {
                 // An entry whose own head is its own name (`pub use sha256::sha256;`:
                 // a module and a function sharing a name) cannot be expanded
                 // further and must not serve as a substitution target either,
                 // or every path through it would grow forever.
-                let head = &path[0];
-                let targets: Vec<&Vec<String>> = entries
-                    .iter()
-                    .enumerate()
-                    .filter(|(j, (n, p))| *j != k && n == head && p[0] != *n)
-                    .map(|(_, (_, p))| p)
-                    .collect();
+                let targets: Vec<&Vec<String>> = by_name
+                    .get(path[0].as_str())
+                    .map(|v| v.iter().filter(|&&j| j != k).map(|&j| &entries[j].1).collect())
+                    .unwrap_or_default();
                 if targets.is_empty() {
                     next.push((name.clone(), path.clone()));
                 } else {
@@ -803,6 +808,28 @@ fn check_macro_body(sink: &mut Sink, toks: &[Token], open: usize, close: usize) 
             Tok::Punct(')') | Tok::Punct(']') | Tok::Punct('}') => {
                 last_closed_repeat = stack.pop().unwrap_or(false);
                 closed_at = k;
+            }
+            Tok::Punct('#') => {
+                // `#[$a]` / `#[cfg_attr(x, $a)]`: the attribute's identity is chosen by the
+                // caller, so `m!(no_mangle)` would create `#[no_mangle]` unseen.
+                let mut o = k + 1;
+                if is_punct(toks, o, '!') {
+                    o += 1;
+                }
+                if is_punct(toks, o, '[') {
+                    let c = matching_close(toks, o).min(toks.len());
+                    let spliced_name = is_punct(toks, o + 1, '$');
+                    let cfg_attr_splice = (o + 1..c).any(|x| ident_at(toks, x) == Some(("cfg_attr", false)))
+                        && (o + 1..c).any(|x| is_punct(toks, x, '$'));
+                    if spliced_name || cfg_attr_splice {
+                        sink.unanalyzable(
+                            toks[k].line,
+                            toks[k].col,
+                            "macro_rules! splices a metavariable into an attribute; the expansion is not analysed",
+                            "#[$..]".into(),
+                        );
+                    }
+                }
             }
             Tok::PathSep => {
                 let next_is_meta = is_punct(toks, k + 1, '$') && ident_at(toks, k + 2) != Some(("crate", false));
