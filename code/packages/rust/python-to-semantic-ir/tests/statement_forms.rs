@@ -1037,3 +1037,64 @@ fn nested_def_shadowing_parameter_returns_closure() {
     }
 }
 
+/// A local variable assigned after closure creation is boxed into a cell variable (#18496 item 5).
+#[test]
+fn local_assigned_after_closure_creation_is_cell_boxed() {
+    let m = lower("def f():\n    x = 10\n    g = lambda: x\n    x = 20\n    return g()\n");
+    let f = func(&m, "f");
+    let cell_alias = match &f.body.stmts[0] {
+        semantic_ir::Stmt::LetStarBinding { name, value, .. } => {
+            assert!(name.starts_with("__cell_x_"));
+            assert!(matches!(value, semantic_ir::Expr::SeqLit { .. }));
+            name.clone()
+        }
+        other => panic!("expected cell LetStarBinding for x, got {other:?}"),
+    };
+    assert!(matches!(&f.body.stmts[1], semantic_ir::Stmt::SeqSet { seq, .. } if matches!(seq, semantic_ir::Expr::VarRef { name, .. } if name == &cell_alias)));
+    assert!(matches!(&f.body.stmts[3], semantic_ir::Stmt::SeqSet { seq, .. } if matches!(seq, semantic_ir::Expr::VarRef { name, .. } if name == &cell_alias)));
+    assert!(m.manifest.contains(semantic_ir::Feature::Sequences));
+    assert!(m.manifest.contains(semantic_ir::Feature::Closures));
+}
+
+/// A parameter assigned after closure creation is boxed into a cell variable (#18496 item 5).
+#[test]
+fn parameter_assigned_after_closure_creation_is_cell_boxed() {
+    let m = lower("def f(x):\n    def g():\n        return x\n    x = 20\n    return g()\n");
+    let f = func(&m, "f");
+    let _cell_alias = match &f.body.stmts[0] {
+        semantic_ir::Stmt::LetStarBinding { name, value, .. } => {
+            assert!(name.starts_with("__cell_x_"));
+            match value {
+                semantic_ir::Expr::SeqLit { items, .. } => {
+                    assert_eq!(items.len(), 1);
+                    assert!(matches!(&items[0], semantic_ir::Expr::VarRef { name, scope: semantic_ir::Scope::Param, .. } if name == "x"));
+                }
+                other => panic!("expected SeqLit with param x, got {other:?}"),
+            }
+            name.clone()
+        }
+        other => panic!("expected cell LetStarBinding for x, got {other:?}"),
+    };
+    let g = func(&m, "g");
+    match &g.body.value {
+        semantic_ir::Expr::SeqIndex { seq, .. } => match seq.as_ref() {
+            semantic_ir::Expr::VarRef { name, scope, .. } => {
+                assert_eq!(name, "x");
+                assert_eq!(*scope, semantic_ir::Scope::Capture);
+            }
+            other => panic!("expected VarRef capture, got {other:?}"),
+        },
+        other => panic!("expected SeqIndex, got {other:?}"),
+    }
+}
+
+/// A closure defined before a variable is assigned captures the cell variable (#18496 item 5).
+#[test]
+fn closure_defined_before_variable_assignment_is_cell_boxed() {
+    let m = lower("def f():\n    def g():\n        return x\n    x = 42\n    return g()\n");
+    let f = func(&m, "f");
+    assert!(matches!(&f.body.stmts[0], semantic_ir::Stmt::LetStarBinding { name, .. } if name.starts_with("__cell_x_")));
+    assert!(matches!(&f.body.stmts[2], semantic_ir::Stmt::SeqSet { .. }));
+}
+
+

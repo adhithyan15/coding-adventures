@@ -36,6 +36,8 @@ const REFUSED: &[&str] = &[
     "var a = 1; { a } / 2;",
     "var x = 1; if (x) function f(){}",
     "l: function f(){} f();",
+    "if (1) let\nx = 1;",
+    "if (1) const x = 1;",
 ];
 
 /// Programs that must still compile and behave.

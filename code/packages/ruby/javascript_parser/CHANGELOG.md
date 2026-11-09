@@ -8,6 +8,7 @@ All notable changes to `coding_adventures_javascript_parser` will be documented 
 - Regenerated `_grammar_es2016.rb` … `_grammar_es2025.rb` after LANG84 phase 6d added `source_ref`/`source_sha`/`PARTIAL` citation lines to the es2016–es2025 pair headers. Only line numbers change.
 
 ### Fixed
+- Regenerated `_grammar_es2016.rb` through `_grammar_es2025.rb` after `lexical_declaration` was moved from `statement` to statement-list contexts (#18146).
 - Regenerated `_grammar_es2015.rb` through `_grammar_es2025.rb` after `yield_expression` gained optional operand support for bare `yield` (#17939).
 - Regenerated `_grammar_es2022.rb` through `_grammar_es2025.rb` after `static_block` gained function and class declarations (#17940).
 - Regenerated `_grammar_es1.rb` through `_grammar_es2025.rb` after the ECMAScript grammars gained the ExpressionStatement lookahead (F12 phase 0). A statement that starts with `{`, `function`, `class`, `let [` or `async function` is no longer parsed as an expression statement.

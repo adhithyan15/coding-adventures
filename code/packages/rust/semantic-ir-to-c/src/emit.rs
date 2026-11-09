@@ -2858,6 +2858,8 @@ fn is_builtin_method(name: &str) -> bool {
         | "inspect" | "nil?" | "equal?" | "itself" | "frozen?" | "&" | "|" | "^"
         // deferred-from-slice-8 — String char-set + padding methods
         | "squeeze" | "ljust" | "rjust" | "center"
+        // #18798 item 8 — built-in message accessor on exception objects
+        | "message"
     )
 }
 

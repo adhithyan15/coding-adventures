@@ -2910,3 +2910,17 @@ fn e2e_index_assignment_refuses_a_non_integer_or_huge_index() {
         assert_eq!(out, "float\nstring\ntoo big\n3");
     }
 }
+
+/// #18798 item 8 — built-in `.message` accessor on exception objects.
+/// Mapped through `sir_message` which fetches `.message` on exceptions
+/// or invokes `:sir_um_message` on user classes.
+#[test]
+fn e2e_exception_message_method() {
+    let src = "begin\n  raise \"boom\"\nrescue => e\n  puts e.message\nend\n";
+    let module = ruby_to_semantic_ir::compile_source(src, "prog").expect("ruby lowering");
+    let rb = compile(&module).expect("compiles").source;
+    assert!(rb.contains("sir_message("), "uses sir_message helper:\n{rb}");
+    if let Some(out) = run_ruby(&rb) {
+        assert_eq!(out, "boom");
+    }
+}

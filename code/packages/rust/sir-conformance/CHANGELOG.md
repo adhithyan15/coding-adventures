@@ -4,6 +4,14 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18496 item 5)
+
+- Conformance programs `py_param_captured_then_assigned`, `py_local_captured_then_assigned`, `py_closure_defined_before_variable_assigned`, `py_loop_closure_captures_variable`, and `py_nested_closure_cell_variable` in `tests/python_statement_forms.rs`, verifying that closures observe mutated cell variables across reassignments, loop iterations, and multi-level nesting across all backends.
+
+### Changed (#18798 item 8)
+
+- Emptied `REFUSED` table in `tests/ruby_sir_gaps.rs`. `rb_rescue_arrow_binding_named_like_a_method` now passes across all backends including C and Ruby.
+
 ### Added (#18496 item 7)
 
 - Conformance programs `py_nested_def_shadow_param`, `py_nested_def_shadow_local`, and `py_nested_def_shadow_param_returns_closure` in `tests/python_statement_forms.rs`, verifying that nested `def` statements shadowing parameters or prior locals invoke the nested function across all backends.

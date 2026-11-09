@@ -139,7 +139,6 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "caught",
     ),
     // The binding, named like a method, is the local in the clause body.
-    // `message` is a built-in method C and Ruby do not run yet: REFUSED.
     (
         "rb_rescue_arrow_binding_named_like_a_method",
         "def e\n  1\nend\nbegin\n  raise \"boom\"\nrescue => e\n  puts e.message\nend\n",
@@ -440,18 +439,7 @@ const PYTHON_PROGRAMS: &[(&str, &str, &str)] = &[
 ];
 
 /// `(program, backend, why)`: cells that must be refused at compile time.
-const REFUSED: &[(&str, Target, &str)] = &[
-    (
-        "rb_rescue_arrow_binding_named_like_a_method",
-        Target::C,
-        "the built-in method `message` (Collections batch)",
-    ),
-    (
-        "rb_rescue_arrow_binding_named_like_a_method",
-        Target::Ruby,
-        "the built-in method `message` (Collections batch)",
-    ),
-];
+const REFUSED: &[(&str, Target, &str)] = &[];
 
 /// The reference interpreter's stdout for `source` (trailing newlines
 /// trimmed), or `None` when it is not on `PATH`.
