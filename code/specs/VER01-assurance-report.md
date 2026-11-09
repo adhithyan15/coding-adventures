@@ -6,7 +6,7 @@ This specification formalizes **VER01**: the machine-readable assurance report f
 
 ---
 
-> **Update (VER04h):** claim numbers, labels, certificates and evidence ids in this document's examples are *computed from evidence manifests* and cross-checked by `--check`; see [VER04h](VER04h-warrant-derived-evidence.md) section 9. Memory-safety rows are `excluded` only when the effect certificate declares no `unsafe_code` exception and the package source contains no `unsafe`. Each claim's `proof` also carries `certificate_kind` (`"trivial-miter"` when a backing certificate is a collapsed miter, else `"miter"`), `--check` fails closed on duplicate claim ids, unranked proof labels, failing exhaustive status and (under a `pass` verdict) unchecked assumptions, and rejects `unverified::` evidence ids unless `--allow-unverified` is given.
+> **Update (VER04h):** claim numbers, labels, certificates and evidence ids in this document's examples are *computed from evidence manifests* and cross-checked by `--check`; see [VER04h](VER04h-warrant-derived-evidence.md) section 9. Memory-safety rows are `excluded` only when the effect certificate declares no `unsafe_code` exception and the package source contains no `unsafe`. Each claim's `proof` also carries `certificate_kind` (`"trivial-miter"` when a backing certificate is a collapsed miter, else `"miter"`), `--check` fails closed on duplicate claim ids, unranked proof labels, failing exhaustive status and (under a `pass` verdict) unchecked assumptions, and rejects `unverified::` evidence ids unless `--allow-unverified` is given (the flag prints every accepted id; it is temporary and tracked by backlog item WD-008). Evidence is bound to every `src/**/*.rs`, not only `src/lib.rs`.
 
 ## 1. Objectives and Ladder Integration
 

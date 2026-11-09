@@ -222,8 +222,21 @@ fn text(v: &JsonValue, key: &str) -> String {
     v.get(key).and_then(|x| x.as_str()).unwrap_or("").to_string()
 }
 
-fn num(v: &JsonValue, key: &str) -> u64 {
-    v.get(key).and_then(|x| x.as_i64()).unwrap_or(0).max(0) as u64
+/// Largest count a manifest may state: 2^53, the biggest integer a JSON
+/// number (an `f64`) carries exactly.
+pub const MAX_COUNT: u64 = 1 << 53;
+
+/// A count field: absent is 0, but a present value must be a non-negative
+/// integer no larger than [`MAX_COUNT`].  Negative, fractional, non-numeric
+/// or oversized values fail closed (audit N3) instead of being clamped.
+fn num(v: &JsonValue, key: &str) -> Result<u64, EvidenceError> {
+    match v.get(key) {
+        None => Ok(0),
+        Some(x) => match x.as_i64().and_then(|n| u64::try_from(n).ok()) {
+            Some(n) if n <= MAX_COUNT => Ok(n),
+            _ => err(format!("`{key}` must be an integer between 0 and {MAX_COUNT}")),
+        },
+    }
 }
 
 fn schema(v: &JsonValue, want: &str, path: &Path) -> Result<(), EvidenceError> {
@@ -613,10 +626,10 @@ impl Evidence {
                 op: text(t, "op"),
                 claim: text(t, "claim"),
                 verdict: req_text(t, "verdict", what)?,
-                cases: num(t, "cases"),
-                iterations: num(t, "iterations"),
-                admitted: num(t, "admitted"),
-                equal_cases: num(t, "equal_cases"),
+                cases: num(t, "cases")?,
+                iterations: num(t, "iterations")?,
+                admitted: num(t, "admitted")?,
+                equal_cases: num(t, "equal_cases")?,
                 caught_by: text(t, "caught_by"),
             });
         }
@@ -652,7 +665,7 @@ impl Evidence {
                 kind: req_text(p, "kind", what)?,
                 label: text(p, "label"),
                 verdict: req_text(p, "verdict", what)?,
-                max_len: num(p, "max_len"),
+                max_len: num(p, "max_len")?,
                 certificates,
                 obligation_sha256: text(p, "obligation_sha256"),
             });
@@ -690,7 +703,10 @@ impl Evidence {
         }
 
         let cert = load_cert(&package_dir.join("effect_certificate.json"))?;
-        let source = read_capped(&package_dir.join("src/lib.rs"), MAX_MANIFEST_BYTES)?;
+        // The binding covers every `src/**/*.rs` (audit N2), with the framing
+        // the producers share via `test_bootstrap::manifest::frame_sources`.
+        let source_framed = coding_adventures_test_bootstrap::manifest::source_tree_framing(&package_dir.join("src"))
+            .map_err(|e| EvidenceError(format!("cannot bind evidence to {}/src: {e}", package_dir.display())))?;
         let unsafe_source_files = scan_unsafe_sources(package_dir)?;
         if !unsafe_source_files.is_empty() && cert.unsafe_exceptions.is_empty() {
             return err(format!(
@@ -712,7 +728,7 @@ impl Evidence {
             hw_instruction_counters: text(&bv, "hw_instruction_counters"),
             spec,
             cert,
-            source_sha256: sha256_hex(&source),
+            source_sha256: sha256_hex(&source_framed),
             proofs_dir: dir.join("proofs"),
         })
     }
@@ -952,8 +968,13 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
             return err(format!("operation `{}` has no proof obligations in the manifest", op.name));
         };
         let symbol = first.function.clone();
-        let sum = |kind: &str, f: fn(&TestEntry) -> u64| -> u64 {
-            ev.entries(kind, &op.name).map(f).sum()
+        // Checked: a hostile manifest must not wrap the totals (audit N3).
+        let sum = |kind: &str, f: fn(&TestEntry) -> u64| -> Result<u64, EvidenceError> {
+            ev.entries(kind, &op.name).try_fold(0u64, |acc, t| {
+                acc.checked_add(f(t)).ok_or_else(|| {
+                    EvidenceError(format!("{kind} counts for operation `{}` overflow", op.name))
+                })
+            })
         };
         let weakest = obligations
             .iter()
@@ -1000,17 +1021,17 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
             symbol,
             example: status(Evidence::all_pass_nonempty(ev.entries("example", &op.name))),
             property: PropertyEvidence {
-                cases: sum("property", |t| t.cases),
+                cases: sum("property", |t| t.cases)?,
                 status: status(
                     Evidence::all_pass_nonempty(ev.entries("property", &op.name)) && negctl_ok,
                 ),
             },
             exhaustive: Some(ExhaustiveEvidence {
-                cases: sum("exhaustive", |t| t.cases),
+                cases: sum("exhaustive", |t| t.cases)?,
                 status: status(Evidence::all_pass_nonempty(ev.entries("exhaustive", &op.name))),
             }),
             fuzz: Some(FuzzEvidence {
-                iterations: sum("fuzz", |t| t.iterations),
+                iterations: sum("fuzz", |t| t.iterations)?,
                 status: status(Evidence::all_pass_nonempty(ev.entries("fuzz", &op.name))),
             }),
             proof: Some(ProofEvidence {
@@ -1101,18 +1122,18 @@ pub fn verify_evidence(
     }
     if ev.proof_source_sha256 != ev.source_sha256 {
         return Err(E::StaleEvidence(
-            "proof manifest was generated from a different src/lib.rs".into(),
+            "proof manifest was generated from different source (src/**/*.rs)".into(),
         ));
     }
 
     if ev.test_source_sha256 != ev.source_sha256 {
         return Err(E::StaleEvidence(
-            "test manifest was generated from a different src/lib.rs".into(),
+            "test manifest was generated from different source (src/**/*.rs)".into(),
         ));
     }
     if ev.bench_source_sha256 != ev.source_sha256 {
         return Err(E::StaleEvidence(
-            "bench manifest was generated from a different src/lib.rs".into(),
+            "bench manifest was generated from different source (src/**/*.rs)".into(),
         ));
     }
 

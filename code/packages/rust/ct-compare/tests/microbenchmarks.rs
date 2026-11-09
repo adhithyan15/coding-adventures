@@ -87,10 +87,13 @@ fn write_bench_manifest(outcomes: &[Outcome]) {
         ("schema", Json::str("warrant-bench-evidence-v1")),
         ("module", Json::str("ct_compare")),
         ("hw_instruction_counters", Json::str(probe_hardware_counters())),
-        // Same definition as the proof manifest: SHA-256 of src/lib.rs.
+        // Same definition as the proof manifest: SHA-256 of the framed src/**/*.rs.
         (
             "source_sha256",
-            Json::str(coding_adventures_sha256::sha256_hex(include_bytes!("../src/lib.rs"))),
+            Json::str(coding_adventures_sha256::sha256_hex(
+                &manifest::source_tree_framing(&std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src"))
+                    .expect("bind bench manifest to src"),
+            )),
         ),
         ("tests", Json::Arr(tests)),
     ]);

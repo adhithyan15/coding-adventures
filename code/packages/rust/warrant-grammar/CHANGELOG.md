@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Round-2: `resolve_sabotage` rejects a filter unless the fault is a real (non-`none`) one; `run_main` takes the crate's `src/` directory and records the framed `src/**/*.rs` digest as `source_sha256`. Generated harness regenerated.
 - Security review fixes (VER04h section 3 and 6):
   - A1: exhaustive-domain size uses checked arithmetic in the generator and in
     the generated prelude; an overflowing product (eight `U8` binders is

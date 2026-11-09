@@ -33,8 +33,7 @@ impl Sandbox {
         let _ = fs::remove_dir_all(&root);
         let pkg = root.join("code/packages/rust/ct-compare");
         copy_dir(&real.join("evidence"), &pkg.join("evidence"));
-        fs::create_dir_all(pkg.join("src")).unwrap();
-        fs::copy(real.join("src/lib.rs"), pkg.join("src/lib.rs")).unwrap();
+        copy_dir(&real.join("src"), &pkg.join("src"));
         fs::copy(real.join("effect_certificate.json"), pkg.join("effect_certificate.json")).unwrap();
         fs::create_dir_all(root.join("code/specs")).unwrap();
         fs::copy(
@@ -43,6 +42,12 @@ impl Sandbox {
         )
         .unwrap();
         Sandbox { root, pkg }
+    }
+
+    /// The `source_sha256` of this sandbox's `src/**/*.rs` (shared framing).
+    pub fn src_digest(&self) -> String {
+        let framed = coding_adventures_test_bootstrap::manifest::source_tree_framing(&self.pkg.join("src")).unwrap();
+        coding_adventures_sha256::sha256_hex(&framed)
     }
 
     pub fn spec(&self) -> PathBuf {

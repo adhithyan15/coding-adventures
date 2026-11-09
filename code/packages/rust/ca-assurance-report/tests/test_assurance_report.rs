@@ -395,6 +395,15 @@ fn test_cli_execution_and_flags() {
     let stdout = String::from_utf8_lossy(&out.stdout);
     assert!(stdout.contains("ASSURANCE VERDICT: REPORT-ONLY"));
     assert!(stdout.contains("accepted by --allow-unverified"));
+    // Every accepted id is named, and the flag is marked temporary (WD-008).
+    assert!(stdout.contains("WD-008"), "{stdout}");
+    let named = stdout.lines().filter(|l| l.trim_start().starts_with("accepted unverified: unverified::")).count();
+    let announced: usize = stdout
+        .lines()
+        .find_map(|l| l.strip_prefix("note: ")?.split(' ').next()?.parse().ok())
+        .expect("count in the note");
+    assert!(announced >= 1 && named == announced, "named {named} of {announced}:
+{stdout}");
 
     // 8. The same report fails closed once its evidence is corrupted.
     sandbox.edit("evidence/test-manifest.json", r#""verdict": "pass""#, r#""verdict": "fail""#);

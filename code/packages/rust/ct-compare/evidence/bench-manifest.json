@@ -2,7 +2,7 @@
   "hw_instruction_counters": "not-live",
   "module": "ct_compare",
   "schema": "warrant-bench-evidence-v1",
-  "source_sha256": "ba1a4fc10911acadc7d4f31fbe87edcc387333fa4005cd8b2f77aee2d897b5fa",
+  "source_sha256": "95a5f989f2c3d6cb4fb9aa2dc828681e33c1e9c3196fb05e78f737dd63db3b25",
   "tests": [
     {
       "id": "bench/ct_eq/16_bytes",

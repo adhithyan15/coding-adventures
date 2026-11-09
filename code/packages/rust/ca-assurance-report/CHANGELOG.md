@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Round-2 security fixes:
+  - N1: `has_unsafe_token` is a stricter lexer (char/byte literals are exactly `'` + escape-or-char + `'`, lifetimes/labels distinguished, `b""`/`c""`/raw strings with any `#` count, nested comments) and fails closed: an untokenisable file counts as containing `unsafe`.
+  - N2: `source_sha256` binds every `src/**/*.rs` (shared `test_bootstrap::manifest` framing); editing any source file makes `--check` fail as stale.
+  - N3: manifest counts must be integers in `0..=2^53` (no clamping) and per-operation totals use checked addition.
+  - `--allow-unverified` prints each accepted id and states the flag is temporary (WD-008).
 - Security review fixes (VER04h section 9, checks 8-16):
   - B1: duplicate claim ids are rejected, the claim count must equal the derived count, and every claim is compared by exact id.
   - B2: `--check` validates `exhaustive.status`, requires a ranked `proof.label`, and rejects unchecked assumptions under a `pass` verdict; rungs E3/E4 are judged per operation and E5 requires ranked labels.

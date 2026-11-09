@@ -42,6 +42,12 @@ use coding_adventures_warrant_ir::*;
 const SPEC: &str = include_str!("../../../../specs/ct-compare.warrant");
 const SOURCE: &str = include_str!("../../ct-compare/src/lib.rs");
 const SPEC_PATH: &str = "code/specs/ct-compare.warrant";
+/// `ct-compare/src`, whose every `*.rs` file the manifest's `source_sha256`
+/// covers (framing: `manifest::frame_sources`).
+fn ct_compare_src_dir() -> std::path::PathBuf {
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../ct-compare/src")
+}
+
 const SOURCE_PATH: &str = "code/packages/rust/ct-compare/src/lib.rs";
 
 /// Largest buffer length for which every length shape is proved.
@@ -575,7 +581,12 @@ fn write_outputs(outcomes: &[Outcome]) {
         ("spec", Json::str(SPEC_PATH)),
         ("spec_sha256", Json::str(sha256_hex(SPEC.as_bytes()))),
         ("source", Json::str(SOURCE_PATH)),
-        ("source_sha256", Json::str(sha256_hex(SOURCE.as_bytes()))),
+        (
+            "source_sha256",
+            Json::str(sha256_hex(
+                &manifest::source_tree_framing(&ct_compare_src_dir()).expect("bind proofs to ct-compare/src"),
+            )),
+        ),
         ("max_len", Json::Num(MAX_LEN as u64)),
         ("proofs", Json::Arr(entries)),
     ]);

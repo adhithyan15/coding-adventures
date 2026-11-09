@@ -191,7 +191,9 @@ every fault in that mode.
 `WARRANT_EVIDENCE_FILTER=<substring>` restricts a sabotage run to matching test
 ids. It is only meaningful together with `WARRANT_EVIDENCE_FAULT`: set alone it
 makes the target exit `2` with a message (it would otherwise run fewer tests
-and exit `0`), and a filter that matches no test also exits `2`.
+and exit `0`).  The fault must be a *real* one: `WARRANT_EVIDENCE_FAULT=none`
+with a filter is refused the same way.  A filter that matches no test also
+exits `2`, and a filtered or faulted run never writes a manifest.
 
 ## 7. Proof obligations from `labels` and `bound`
 
@@ -299,8 +301,23 @@ the obligations a run discharges, `obligation_sha256`: the SHA-256 of the
 canonical text of the *lowered, inlined* WIR function (its deterministic derived
 `Debug` rendering) followed by the textual obligation (kind, operation, secret
 mask, length shapes, bounds).  The test and bench manifests also carry
-`source_sha256`, the digest of `src/lib.rs` -- the same definition the proof
-manifest uses.
+`source_sha256`, the digest of **every** `src/**/*.rs` file -- the same
+definition in all three manifests and in the checker.  The digested bytes are
+the `warrant-src-v1` framing, implemented once in `test-bootstrap`
+(`manifest::frame_sources` / `source_tree_framing`) so producers and checker
+cannot drift:
+
+```text
+"warrant-src-v1\0"
+u64-LE file count
+per file, sorted by path bytes:
+    u64-LE path length,    path bytes   (relative to src/, "/" separators)
+    u64-LE content length, content bytes
+```
+
+Every field is length-prefixed, so different file sets never frame to the same
+bytes.  A symlink, a non-UTF-8 name, an oversized or too deeply nested file
+under `src/` is an error (producer and checker), never skipped.
 
 `evidence/bench-manifest.json` is written by the (hand-written) microbenchmark
 target in the same format as the test manifest (`kind: "bench"`), so the report
@@ -371,8 +388,9 @@ Further checks added by the security review (each has a falsification test in
     "trivial-miter"` in the report (`"miter"` otherwise); `--check` fails a report
     that omits the mark (`TrivialCertificateUnmarked`).  Recomputing
     `obligation_sha256` from the source is *not* done: see WD-009 in section 10.
-12. **Test and bench manifests are checked for staleness** against `src/lib.rs`
-    (`source_sha256`), like the proof manifest.
+12. **Test and bench manifests are checked for staleness** against every
+    `src/**/*.rs` (`source_sha256`, framing in section 8), like the proof
+    manifest: editing `src/capabilities.rs` alone makes `--check` fail.
 13. **Spec and ids.** The spec path in both manifests must be exactly
     `code/specs/<package>.warrant` (relative, no `..`), all three manifests must
     name the spec's module, evidence ids may not repeat within or across
@@ -384,9 +402,15 @@ Further checks added by the security review (each has a falsification test in
     CWE-416/415/476/190 must stay exemptions, and CWE-125/787 may be discharged
     only on a proof-manifest id.
 15. **`unverified::` ids fail `--check`** unless `--allow-unverified` is given
-    (the ids are then listed in the output).  `ct-compare`'s `BUILD` passes the
-    flag because its report still cites nine `unverified::` AST-audit
-    attestations; removing the flag is the incentive to replace them.
+    (every accepted id is then printed, one per line, not only a count).
+    `ct-compare`'s `BUILD` passes the flag because its report still cites nine
+    `unverified::` AST-audit attestations.  **The flag is temporary** and is
+    tracked by backlog item WD-008; removing it is the incentive to replace the
+    attestations with checked evidence.
+    Counts in manifests must be integers in `0..=2^53`, and the per-operation
+    totals are summed with checked arithmetic; anything else fails closed.
+    The `unsafe` scanner fails closed too: a file it cannot tokenise counts as
+    containing `unsafe`.
 16. **Inputs are size-capped**: manifests, the effect certificate, the Warrant
     document, sources and the report at 16 MiB, certificate files at 64 MiB.
 

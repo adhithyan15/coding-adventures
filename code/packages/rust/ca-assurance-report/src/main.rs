@@ -24,6 +24,7 @@ fn print_usage() {
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
     eprintln!("  --allow-unverified     Accept `unverified::` evidence ids (static attestations no tool checks);");
     eprintln!("                         without it --check fails on any such id");
+    eprintln!("                         (temporary; tracked by backlog item WD-008; every accepted id is printed)");
     eprintln!("  --registry <FILE>      Path to weakness-registry-v1.json");
     eprintln!("  --commit <SHA>         Commit SHA to record in generated report");
     eprintln!("  --help                 Display this help message");
@@ -181,10 +182,16 @@ fn main() {
                         );
                         exit(1);
                     }
+                    // Name every accepted id: a bare count hides which sentences
+                    // were taken on trust.  The flag is temporary (backlog WD-008).
                     println!(
-                        "note: {} evidence id(s) are static attestations no tool checks (accepted by --allow-unverified)",
+                        "note: {} evidence id(s) are static attestations no tool checks \
+                         (accepted by --allow-unverified, a temporary flag tracked by backlog item WD-008):",
                         unverified.len()
                     );
+                    for id in &unverified {
+                        println!("  accepted unverified: {id}");
+                    }
                 }
             }
             Err(e) => {

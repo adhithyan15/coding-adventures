@@ -248,7 +248,22 @@ fn manifests_must_describe_the_spec_and_source_on_disk() {
     let src = sb.read("src/lib.rs");
     sb.write("src/lib.rs", &format!("{src}\n// edited after the proofs ran\n"));
     let ev = Evidence::load(&sb.pkg).unwrap();
-    assert!(matches!(verify_evidence(&report, &ev), Err(E::StaleEvidence(m)) if m.contains("src/lib.rs")));
+    assert!(matches!(verify_evidence(&report, &ev), Err(E::StaleEvidence(m)) if m.contains("src/**/*.rs")));
+
+    // N2: the binding covers every src file, not only lib.rs: editing
+    // src/capabilities.rs alone makes the evidence stale.
+    let sb = Sandbox::new("stale-capabilities");
+    let (report, _) = build(&sb);
+    let caps = sb.read("src/capabilities.rs");
+    sb.write("src/capabilities.rs", &format!("{caps}\n// edited after the proofs ran\n"));
+    let ev = Evidence::load(&sb.pkg).unwrap();
+    assert!(matches!(verify_evidence(&report, &ev), Err(E::StaleEvidence(m)) if m.contains("src/**/*.rs")));
+    // A new src file is covered too.
+    let sb = Sandbox::new("stale-new-file");
+    let (report, _) = build(&sb);
+    sb.write("src/extra.rs", "pub fn extra() {}\n");
+    let ev = Evidence::load(&sb.pkg).unwrap();
+    assert!(matches!(verify_evidence(&report, &ev), Err(E::StaleEvidence(_))));
 
     // Only the proof manifest was produced from a different spec.
     let sb = Sandbox::new("stale-proof-spec");
@@ -307,10 +322,10 @@ fn removing_the_unsafe_exception_restores_the_exclusion() {
     // certificate declares an exception nor the code contains `unsafe`.
     let sb = Sandbox::new("no-unsafe");
     drop_unsafe_exception(&sb);
-    let old = sha256_hex(sb.read("src/lib.rs").as_bytes());
+    let old = sb.src_digest();
     let src = sb.read("src/lib.rs").replace("unsafe", "safe_");
     sb.write("src/lib.rs", &src);
-    let new = sha256_hex(src.as_bytes());
+    let new = sb.src_digest();
     for m in ["evidence/test-manifest.json", "evidence/proof-manifest.json", "evidence/bench-manifest.json"] {
         let t = sb.read(m).replace(&old, &new);
         sb.write(m, &t);
@@ -648,6 +663,30 @@ fn n1_lexer_fails_closed_on_untokenisable_input() {
     }
     // And well-formed input without the keyword is still clean.
     assert!(!has_unsafe_token("fn f<'a>(x: &'a str) { let c = '\\''; let s = \"y\"; }"));
+}
+
+#[test]
+fn n3_hostile_counts_fail_closed() {
+    // Present-but-invalid counts are errors, not clamped to 0 or wrapped.
+    for bad in ["-5", "9007199254740994", "1.5", "\"7\"", "1e300", "true"] {
+        let sb = Sandbox::new("hostile-count");
+        sb.edit("evidence/test-manifest.json", "\"cases\": 1,", &format!("\"cases\": {bad},"));
+        let e = Evidence::load(&sb.pkg).err().unwrap_or_else(|| panic!("{bad} must be refused"));
+        assert!(e.to_string().contains("cases"), "{bad}: {e}");
+    }
+    // Totals are summed with checked arithmetic: counts that would wrap u64
+    // make claim derivation fail instead of reporting a small total.
+    let sb = Sandbox::new("overflow-sum");
+    let mut ev = Evidence::load(&sb.pkg).unwrap();
+    let mut dup = ev.tests.iter().find(|t| t.kind == "property").unwrap().clone();
+    let op = dup.op.clone();
+    dup.id = "warrant/test/dup".into();
+    ev.tests.push(dup);
+    for t in ev.tests.iter_mut().filter(|t| t.kind == "property" && t.op == op) {
+        t.cases = u64::MAX / 2 + 1;
+    }
+    let e = derive_claims(&ev).unwrap_err();
+    assert!(e.to_string().contains("overflow"), "{e}");
 }
 
 // ---- B4: proof certificates bound to obligations ----------------------------------

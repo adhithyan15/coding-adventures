@@ -767,18 +767,22 @@ fn write_manifest(outcomes: &[Outcome]) {
 /// Decide the injected fault from the two sabotage variables.
 ///
 /// `WARRANT_EVIDENCE_FILTER` exists only so BUILD can aim a *sabotage* run at
-/// a cheap subset.  On its own it would turn the target into a suite that
-/// silently runs fewer tests and still exits 0, so it is an error unless a
-/// fault is also requested (audit A3).  Pure function so it can be tested
-/// without touching the process environment.
+/// a cheap subset.  Without a real fault it would turn the target into a suite
+/// that silently runs fewer tests and still exits 0, so a filter is an error
+/// unless the fault is a real (non-`none`) one (audit A3; `FAULT=none` plus a
+/// filter was the residual hole).  Pure function so it can be tested without
+/// touching the process environment.
 pub fn resolve_sabotage(fault: Option<&str>, filter: Option<&str>) -> Result<Fault, String> {
-    match (fault, filter) {
-        (None, Some(f)) => Err(format!(
-            "WARRANT_EVIDENCE_FILTER={f:?} is set without WARRANT_EVIDENCE_FAULT; \
-             a filtered run is only meaningful as a sabotage run"
+    let resolved = match fault {
+        None => Fault::None,
+        Some(text) => Fault::parse(text).ok_or_else(|| format!("unknown WARRANT_EVIDENCE_FAULT {text:?}"))?,
+    };
+    match (resolved, filter) {
+        (Fault::None, Some(f)) => Err(format!(
+            "WARRANT_EVIDENCE_FILTER={f:?} requires WARRANT_EVIDENCE_FAULT to name a real fault \
+             (not unset or \"none\"); a filtered run is only meaningful as a sabotage run"
         )),
-        (None, None) => Ok(Fault::None),
-        (Some(text), _) => Fault::parse(text).ok_or_else(|| format!("unknown WARRANT_EVIDENCE_FAULT {text:?}")),
+        (fault, _) => Ok(fault),
     }
 }
 
@@ -792,11 +796,18 @@ pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
 
 /// Entry point of the generated test target. Returns the process exit code.
 ///
-/// `source` is the crate source the evidence is about (the hand-written shim
-/// passes `include_bytes!("../src/lib.rs")`); its digest goes into the manifest
-/// as `source_sha256`, the same definition the proof manifest uses.
-pub fn run_main(source: &[u8]) -> i32 {
-    *SOURCE_SHA256.lock().unwrap() = sha256_hex(source);
+/// `src_dir` is the crate's `src/` directory (the hand-written shim passes
+/// `CARGO_MANIFEST_DIR/src`); the digest of **every** `src/**/*.rs` file, framed
+/// by `manifest::frame_sources`, goes into the manifest as `source_sha256`, the
+/// same definition the proof and bench manifests and the checker use.
+pub fn run_main(src_dir: &std::path::Path) -> i32 {
+    match manifest::source_tree_framing(src_dir) {
+        Ok(framed) => *SOURCE_SHA256.lock().unwrap() = sha256_hex(&framed),
+        Err(e) => {
+            eprintln!("cannot bind evidence to {}: {e}", src_dir.display());
+            return 2;
+        }
+    }
     std::panic::set_hook(Box::new(|_| ()));
     let fault_var = std::env::var("WARRANT_EVIDENCE_FAULT").ok();
     let filter_var = std::env::var("WARRANT_EVIDENCE_FILTER").ok();

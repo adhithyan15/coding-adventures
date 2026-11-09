@@ -339,6 +339,10 @@ fn filter_without_fault_is_an_error_and_an_empty_filter_match_fails() {
     assert_eq!(resolve_sabotage(None, None), Ok(Fault::None));
     let e = resolve_sabotage(None, Some("/exhaustive/")).unwrap_err();
     assert!(e.contains("WARRANT_EVIDENCE_FILTER") && e.contains("WARRANT_EVIDENCE_FAULT"), "{e}");
+    // Residual A3: an explicit `none` fault with a filter is the same hole.
+    let e = resolve_sabotage(Some("none"), Some("/exhaustive/")).unwrap_err();
+    assert!(e.contains("WARRANT_EVIDENCE_FILTER") && e.contains("real fault"), "{e}");
+    assert_eq!(resolve_sabotage(Some("none"), None), Ok(Fault::None));
     assert_eq!(resolve_sabotage(Some("invert"), Some("/exhaustive/")), Ok(Fault::Invert));
     assert_eq!(resolve_sabotage(Some("invert"), None), Ok(Fault::Invert));
     assert!(resolve_sabotage(Some("nonsense"), None).unwrap_err().contains("unknown"));
