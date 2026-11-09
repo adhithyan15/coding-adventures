@@ -358,6 +358,18 @@ an `Unsat` that does not depend on assumptions.
 **C9. DIMACS.** Every malformed input listed in section 5 returns `Err`, never
 panics and never allocates more than the header cap allows.
 
+**C10. The solver and the kernel read DIMACS identically.** `parse_dimacs`
+and `drat-check`'s reader accept and reject the same texts (tested on the
+malformed corpus and on lenient shapes). A divergence would let the kernel
+certify a different formula from the one solved.
+
+**C11. Heuristics are observable.** Because of C6 the search statistics of a
+fixed formula are a fingerprint of the heuristics. `tests/audit.rs` pins the
+conflicts, restarts, deletions and learned counts of four fixed instances so
+that silently disabling VSIDS decay, clause activity, restarts or reduction
+(none of which changes any answer) fails a test. A deliberate heuristic change
+updates the pins in the same commit.
+
 ## 7. The `SatTactic` adapter
 
 `constraint-engine::sat::SatTactic::solve(&[Predicate], &[String])` keeps
@@ -454,3 +466,12 @@ Recorded while implementing:
     0.95, `CLAUSE_DECAY` 0.999, initial phase false, `max(n_clauses/3, 2000)`
     learned-clause limit growing 1.1x) match §4.5. Restarts are part of the
     contract only through C6 determinism; tests do not pin the numbers.
+11. **DIMACS lexing is lenient in both readers, consistently.** Tokens are
+    parsed as `i64`, so `+1`, `-0` (a clause terminator), `00` and `01` are
+    accepted by `cdcl-sat` and by `drat-check` alike. §5 says "literals are
+    integers"; this is the integer reading. Tightening it is a coordinated
+    change to both readers and is not done here; C10 guards the agreement.
+12. **Work-budget resumption.** Each `Unknown` restarts the search at level 0.
+    Resuming with a constant work budget smaller than the work to reach one
+    conflict never progresses. Callers must grow the budget (documented on
+    `set_work_budget`). A conflict budget does not have this property.

@@ -890,6 +890,47 @@ fn medium_assumption_fuzz_is_certified() {
     assert!(sat > 100 && cores > 100 && finals > 5);
 }
 
+/// The solver is deterministic (C6), so its search on a fixed formula is a
+/// fingerprint of its heuristics: VSIDS decay, clause activity, restarts,
+/// phase saving and reduction all steer it. Correctness tests cannot see a
+/// heuristic silently switched off (the answers stay right, only slower), so
+/// this pins the exact search statistics of a few fixed instances. If a
+/// deliberate heuristic change moves these numbers, update them here and
+/// say why in the commit message; an unexplained change is a regression.
+#[test]
+fn search_statistics_fingerprint_pins_the_heuristics() {
+    let mut observed = Vec::new();
+    for n in [5usize, 6, 7] {
+        let mut s = Solver::from_cnf(&pigeonhole(n));
+        assert_eq!(s.solve(), SolveResult::Unsat);
+        let st = s.stats();
+        observed.push((format!("PHP({},{n})", n + 1), st.conflicts, st.restarts, st.deleted, st.learned));
+    }
+    let mut rng = Rng(0x00DE_1E7E_0000_0001);
+    let n = 175;
+    let cnf = random_3sat(&mut rng, n, (n as f64 * 4.4) as usize);
+    let mut s = Solver::from_cnf(&cnf);
+    let r = s.solve();
+    let st = s.stats();
+    observed.push((format!("random n=175 {r:?}"), st.conflicts, st.restarts, st.deleted, st.learned));
+    for o in &observed {
+        eprintln!("[audit] fingerprint {o:?}");
+    }
+    let expected: Vec<(String, u64, u64, u64, u64)> = FINGERPRINT
+        .iter()
+        .map(|&(name, c, r, d, l)| (name.to_string(), c, r, d, l))
+        .collect();
+    assert_eq!(observed, expected, "search heuristics changed; see the doc comment of this test");
+}
+
+/// (instance, conflicts, restarts, deleted, learned)
+const FINGERPRINT: &[(&str, u64, u64, u64, u64)] = &[
+    ("PHP(6,5)", 150, 1, 0, 149),
+    ("PHP(7,6)", 788, 5, 0, 787),
+    ("PHP(8,7)", 4719, 24, 3311, 4718),
+    ("random n=175 Unsat", 4710, 24, 3310, 4709),
+];
+
 // ---------------------------------------------------------------------------
 // 6. Malformed DIMACS and limits (C9)
 // ---------------------------------------------------------------------------
@@ -951,6 +992,90 @@ fn dimacs_edge_cases_that_must_parse() {
         let c = parse_dimacs(text).unwrap_or_else(|e| panic!("{text:?}: {e}"));
         assert_eq!((c.num_vars, c.clauses.len()), (*vars, *clauses), "{text:?}");
     }
+}
+
+/// The solver and the kernel read DIMACS with separate parsers. If they
+/// disagreed about what a formula text means, the kernel could certify a
+/// proof about a different formula than the solver solved. This feeds both
+/// the same texts (the malformed corpus, the lenient shapes, and tokens like
+/// `+1`, `-0`, `00`) and requires them to accept and reject identically.
+#[test]
+fn solver_and_kernel_read_dimacs_identically() {
+    let texts = [
+        "", "p cnf 2 1
+1 0
+", "1 2 0
+", "p cnf 2 1
+p cnf 2 1
+1 0
+", "p cnf 2
+1 0
+", "p cnf 2 1
+1 3 0
+",
+        "p cnf 2 1
+1 2
+", "p cnf 2 2
+1 0
+", "p cnf 2 1
+1 0
+2 0
+", "p cnf 2 1
+1 x 0
+", "p cnf 2 1
++1 0
+",
+        "p cnf 2 1
+1 -0
+", "p cnf 2 1
+1 00
+", "p cnf 2 1
+01 0
+", "p cnf 0 0
+", "p cnf 0 1
+0
+",
+        "p cnf 2 1
+1 0
+%
+", "p cnf 2 1
+1 -2 0
+", "p cnf 2 1
+1 -1 0
+", "p cnf 2 1
+cnf stuff
+1 0
+",
+        "c x
+p cnf 2 1
+c y
+1
+2 0
+", "p cnf 2 1
+1 0 2
+", "p cnf 2 1
+1 0
+x 0
+", "p  cnf  2   1
+1 0
+",
+        "p cnf 2 1
+1 99999999999999999999 0
+", "p cnf -2 1
+1 0
+", "p cnf 2 1 7
+1 0
+",
+    ];
+    let mut disagreements = Vec::new();
+    for t in texts {
+        let ours = parse_dimacs(t).is_ok();
+        let theirs = !matches!(drat_check::check(t, "0\n"), Err(drat_check::Rejection::Parse(_)));
+        if ours != theirs {
+            disagreements.push((t, ours, theirs));
+        }
+    }
+    assert!(disagreements.is_empty(), "solver/kernel DIMACS disagreement (text, solver accepts, kernel accepts): {disagreements:?}");
 }
 
 #[test]

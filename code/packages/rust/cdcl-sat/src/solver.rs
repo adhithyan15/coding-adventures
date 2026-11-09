@@ -349,6 +349,14 @@ impl Solver {
     /// millions of clauses one conflict can take a long time to reach. This
     /// counts the work itself. When it runs out, `solve` returns
     /// [`SolveResult::Unknown`] and the solver remains usable.
+    ///
+    /// The limit is measured from the work done so far, and each `Unknown`
+    /// restarts the search from level 0. A caller that resumes in a loop must
+    /// therefore **grow** the budget: a fixed budget smaller than the work
+    /// needed to reach one conflict makes no progress, however often it is
+    /// repeated (a conflict budget does not have this problem, because every
+    /// conflict teaches the solver a clause). The audit tests double the
+    /// budget on each `Unknown`.
     pub fn set_work_budget(&mut self, budget: Option<u64>) {
         self.work_limit = budget.map(|b| self.stats.work.saturating_add(b));
     }
