@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Regenerate `effect_certificate.json` with the hardened analyzer 0.3.0: the sole entry point now carries the declared effect set (the analyzer requires entry-point effects to equal `declared_effects`).
+
 - Round-2 security fixes:
   - N1: `has_unsafe_token` is a stricter lexer (char/byte literals are exactly `'` + escape-or-char + `'`, lifetimes/labels distinguished, `b""`/`c""`/raw strings with any `#` count, nested comments) and fails closed: an untokenisable file counts as containing `unsafe`.
   - N2: `source_sha256` binds every `src/**/*.rs` (shared `test_bootstrap::manifest` framing); editing any source file makes `--check` fail as stale.

@@ -15,7 +15,14 @@
     {
       "name": "generate_ct_compare_report",
       "signature": "pub fn generate_ct_compare_report( commit_sha: &str, registry: &WeaknessRegistry, evidence: &Evidence, ) -> Result<AssuranceReport, MatrixError>",
-      "effects": []
+      "effects": [
+        "fs:read:*",
+        "fs:list:*",
+        "fs:write:*",
+        "stdout:write:*",
+        "env:read:*",
+        "proc:signal:*"
+      ]
     }
   ],
   "unconditional_roots": [],

@@ -6,7 +6,7 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
-- Add required_capabilities.json (pure computation).
+- Add required_capabilities.json declaring only the capabilities used by #[cfg(test)] modules (the analyzer scans cfg(test) code); production code is pure.
 
 ## [0.1.1] - Unreleased
 
