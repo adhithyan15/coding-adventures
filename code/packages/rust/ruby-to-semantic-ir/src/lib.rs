@@ -10955,4 +10955,144 @@ b = "y"
             other => panic!("expected While, got {other:?}"),
         }
     }
+
+    // -------------------------------------------------------------------
+    // #18798 Item 21: Bare-name method call on self inside class
+    // -------------------------------------------------------------------
+
+    #[test]
+    fn bare_method_call_on_self_inside_class_lowers_to_method_builtin() {
+        // Issue #18798 Item 21:
+        // `class C; def m; 1; end; def test; m; end; end`
+        // Inside `test`, bare `m` must lower to BuiltinCall("__method__", [__self__(), "m"]).
+        let src = "class C\n  def m\n    1\n  end\n  def test\n    m\n  end\nend\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let f = m.functions.iter().find(|f| f.name == "C__test").expect("C__test");
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::BuiltinCall { name, args, .. } if name == "__self__" && args.is_empty()));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "m"));
+            }
+            other => panic!("expected BuiltinCall(__method__), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bare_method_call_with_args_inside_class_lowers_to_method_builtin() {
+        let src = "class C\n  def add(x, y)\n    x + y\n  end\n  def test\n    add(2, 3)\n  end\nend\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let f = m.functions.iter().find(|f| f.name == "C__test").expect("C__test");
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 4);
+                assert!(matches!(&args[0], Expr::BuiltinCall { name, .. } if name == "__self__"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "add"));
+                assert!(matches!(&args[2], Expr::IntLit { value: 2, .. }));
+                assert!(matches!(&args[3], Expr::IntLit { value: 3, .. }));
+            }
+            other => panic!("expected BuiltinCall(__method__), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bare_method_call_inherited_from_superclass_lowers_to_method_builtin() {
+        let src = "class Base\n  def base_method\n    10\n  end\nend\nclass Derived < Base\n  def test\n    base_method\n  end\nend\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let f = m.functions.iter().find(|f| f.name == "Derived__test").expect("Derived__test");
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::BuiltinCall { name, .. } if name == "__self__"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "base_method"));
+            }
+            other => panic!("expected BuiltinCall(__method__), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bare_method_call_from_included_module_lowers_to_method_builtin() {
+        let src = "module M\n  def mod_method\n    42\n  end\nend\nclass C\n  include M\n  def test\n    mod_method\n  end\nend\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let f = m.functions.iter().find(|f| f.name == "C__test").expect("C__test");
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::BuiltinCall { name, .. } if name == "__self__"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "mod_method"));
+            }
+            other => panic!("expected BuiltinCall(__method__), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn local_and_param_shadow_instance_method_in_bare_call() {
+        // Local variable assigned before bare name shadows the method:
+        let src = "class C\n  def m\n    1\n  end\n  def shadow_local\n    m = 2\n    m\n  end\n  def shadow_param(m)\n    m\n  end\nend\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let f_local = m.functions.iter().find(|f| f.name == "C__shadow_local").expect("C__shadow_local");
+        assert!(
+            matches!(&f_local.body.value, Expr::VarRef { name, scope: Scope::Local, .. } if name == "m"),
+            "local variable must shadow method; got {:?}",
+            f_local.body.value
+        );
+
+        let f_param = m.functions.iter().find(|f| f.name == "C__shadow_param").expect("C__shadow_param");
+        assert!(
+            matches!(&f_param.body.value, Expr::VarRef { name, scope: Scope::Param, .. } if name == "m"),
+            "param must shadow method; got {:?}",
+            f_param.body.value
+        );
+    }
+
+    #[test]
+    fn attr_reader_bare_call_on_self_lowers_to_method_builtin() {
+        let src = "class Person\n  attr_reader :name\n  def greet\n    name\n  end\nend\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let f = m.functions.iter().find(|f| f.name == "Person__greet").expect("Person__greet");
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 2);
+                assert!(matches!(&args[0], Expr::BuiltinCall { name, .. } if name == "__self__"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "name"));
+            }
+            other => panic!("expected BuiltinCall(__method__), got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn bare_method_call_with_block_on_self_lowers_to_method_builtin() {
+        let src = "class C\n  def wrap\n    yield\n  end\n  def test\n    wrap { 42 }\n  end\nend\n";
+        let m = lower(src);
+        assert_valid(&m);
+
+        let f = m.functions.iter().find(|f| f.name == "C__test").expect("C__test");
+        match &f.body.value {
+            Expr::BuiltinCall { name, args, .. } => {
+                assert_eq!(name, "__method__");
+                assert_eq!(args.len(), 3);
+                assert!(matches!(&args[0], Expr::BuiltinCall { name, .. } if name == "__self__"));
+                assert!(matches!(&args[1], Expr::StrLit { value, .. } if value == "wrap"));
+                assert!(matches!(&args[2], Expr::MakeClosure { .. }));
+            }
+            other => panic!("expected BuiltinCall(__method__), got {other:?}"),
+        }
+    }
 }

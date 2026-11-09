@@ -6,6 +6,21 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ### Fixed
 
+- **Dispatch bare-name calls to methods of `self` inside classes (#18798, Item 21).**
+  In Ruby, calling a method with no receiver (`m`, `m(...)`, or `m { ... }`) inside
+  an instance method of a class or module invokes `self.m` if the method exists in the
+  class, its superclasses, or any included module mixin. Previously, `bare_name_call`
+  refused bare names that matched nested class/module methods to prevent emitting
+  invalid top-level `DirectCall`s, which caused bare method calls to fall through to
+  `Scope::Local` and fail validation with an "unknown local variable" error.
+  `collect_method_names` now pre-indexes instance methods, superclasses, module
+  mixins, and attribute accessors (`attr_reader`, `attr_writer`, `attr_accessor`).
+  Inside an instance method body, bare calls and method calls without an explicit
+  receiver now dispatch to `BuiltinCall("__method__", [__self__(), StrLit("name"), ...args])`
+  when `self` has a matching instance method. Local variables and parameters continue to
+  shadow instance methods in source parse order. Tail statements ending in `method_with_block`
+  are also correctly promoted to the body's implicit return value.
+
 - **Copy assigned parameters into local aliases (#18798, Item 4).**
   In Ruby, parameters are mutable local bindings. Methods, blocks, and lambdas
   may reassign parameter names (`def f(n); n = n + 1; n; end`). In SIR, parameters
