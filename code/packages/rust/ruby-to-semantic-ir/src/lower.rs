@@ -75,6 +75,7 @@ pub fn compile(program: &GrammarASTNode, module_name: &str) -> Result<Module, Ru
         in_block_body: false,
         current_class: None,
         current_method: None,
+        current_method_params: Vec::new(),
         top_level_methods: HashSet::new(),
         nested_methods: HashSet::new(),
         enclosing_visible: HashSet::new(),
@@ -1136,6 +1137,10 @@ struct Lowerer {
     /// (`__super__(method_name, class_name, …)`).  Set by
     /// `lower_def_statement` around its body lowering and restored after.
     current_method: Option<String>,
+    /// #18798 Item 20 — parameter names of the enclosing method in their
+    /// exact declaration order. Read by bare `super` (`zsuper`) to forward
+    /// parameters in source declaration order rather than alphabetical order.
+    current_method_params: Vec<String>,
     /// #18778 — names of the methods `def`ined at the top level (no
     /// receiver, not inside a `class`/`module`), collected before any body is
     /// lowered.  A top-level `def` is a private method of `Object`, callable
@@ -6409,6 +6414,11 @@ impl Lowerer {
         let saved_block_cap = self.block_captures_enclosing;
         self.in_def_body = true;
         self.block_captures_enclosing = false;
+        // O2 / #18798 Item 20 — record method name and parameter declaration order.
+        let saved_method = self.current_method.take();
+        self.current_method = Some(name.clone());
+        let saved_method_params = std::mem::take(&mut self.current_method_params);
+        self.current_method_params = params.iter().map(|p| p.name.clone()).collect();
         for p in &params {
             self.declared_locals.insert(p.name.clone());
             self.current_params.insert(p.name.clone());
@@ -6435,6 +6445,10 @@ impl Lowerer {
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
+        self.in_def_body = saved_in_def;
+        self.block_captures_enclosing = saved_block_cap;
+        self.current_method = saved_method;
+        self.current_method_params = saved_method_params;
 
         // Phase Q9e — an endless def may also `yield` (`def t = yield`);
         // thread the explicit block param if so.
@@ -6523,11 +6537,13 @@ impl Lowerer {
         let saved_block_cap = self.block_captures_enclosing;
         self.in_def_body = true;
         self.block_captures_enclosing = false;
-        // O2 — record the method name so a `super` lowered inside this body
-        // knows which method to re-dispatch on the parent.  Saved/restored so
-        // a nested `def`/block does not leak this method's name outward.
+        // O2 / #18798 Item 20 — record the method name and parameter declaration
+        // order so a `super` lowered inside this body knows which method to re-dispatch
+        // on the parent and forwards parameters in their declared source order.
         let saved_method = self.current_method.take();
         self.current_method = Some(name.clone());
+        let saved_method_params = std::mem::take(&mut self.current_method_params);
+        self.current_method_params = params.iter().map(|p| p.name.clone()).collect();
         for p in &params {
             self.declared_locals.insert(p.name.clone());
             self.current_params.insert(p.name.clone());
@@ -6606,8 +6622,9 @@ impl Lowerer {
         self.declared_locals = saved_locals;
         self.current_params = saved_params;
         self.enclosing_visible = saved_visible;
-        // O2 — restore the enclosing method name (usually `None`).
+        // O2 / #18798 Item 20 — restore the enclosing method name and parameters.
         self.current_method = saved_method;
+        self.current_method_params = saved_method_params;
 
         // Sequential-assignment fix-up for the method body (see
         // `sequentialize_let_bindings`) — `def f; a = 1; x = a; end` must
@@ -9020,11 +9037,11 @@ impl Lowerer {
     ///     lowered args are forwarded verbatim.
     ///   - absent  → bare `super` ("zsuper") forwards ALL of the enclosing
     ///     method's arguments implicitly.  Real Ruby re-passes the *current*
-    ///     method's parameters; O2 makes that concrete by forwarding a `VarRef`
-    ///     to each of the enclosing method's params (declaration order — well,
-    ///     sorted for determinism, since `current_params` is a set), so
-    ///     `def describe; super; end` inside a param-taking method forwards
-    ///     them.  A method that takes no params forwards nothing.
+    ///     method's parameters; O2 / #18798 Item 20 makes that concrete by forwarding a `VarRef`
+    ///     to each of the enclosing method's params in their exact source declaration
+    ///     order ([`Self::current_method_params`]), so `def describe; super; end`
+    ///     inside a param-taking method forwards them. A method that takes no
+    ///     params forwards nothing.
     ///
     /// O2 (OOP production) — `super` is emitted as the OOP-runtime builtin
     /// `__super__(method_name, class_name, …args)`.  The runtime walks from
@@ -9057,10 +9074,11 @@ impl Lowerer {
                 .map(|n| self.lower_call_arg(n))
                 .collect::<Result<Vec<_>, _>>()?
         } else {
-            let mut params: Vec<String> = self.current_params.iter().cloned().collect();
-            params.sort();
-            params
-                .into_iter()
+            // #18798 Item 20: bare `super` forwards the enclosing method's
+            // parameters in their exact source declaration order.
+            self.current_method_params
+                .iter()
+                .cloned()
                 .map(|p| Expr::VarRef {
                     name: p,
                     scope: Scope::Param,
