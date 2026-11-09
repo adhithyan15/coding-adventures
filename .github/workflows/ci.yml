@@ -54,11 +54,21 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    # Full 15-shard regression build every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      full_build:
+        description: 'Run forced, sharded full build (15 shards)'
+        type: boolean
+        default: true
 
 # One run per branch at a time. Superseded runs are cancelled everywhere but
-# main (below).
+# main (below). Scheduled and dispatch runs on main use separate concurrency groups
+# so they do not block or cancel incremental push builds.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'schedule' && 'schedule' || (github.event_name == 'workflow_dispatch' && 'dispatch' || 'head') }}
   # A run on main always finishes, so main's state is always known; a
   # newer push queues behind it (GitHub keeps only the newest waiting).
   # Pull requests and other branches still cancel superseded runs.
@@ -161,6 +171,7 @@ jobs:
           PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
           EVENT_NAME: ${{ github.event_name }}
           GIT_REF: ${{ github.ref }}
+          BEFORE_SHA: ${{ github.event.before }}
         run: |
           if [ "$EVENT_NAME" = "pull_request" ]; then
             # Validate the base ref before using it to prevent script injection.
@@ -173,7 +184,11 @@ jobs:
               exit 1
             fi
           elif [ "$GIT_REF" = "refs/heads/main" ]; then
-            BASE="HEAD~1"
+            if [[ "$BEFORE_SHA" =~ ^[0-9a-f]{40}$ ]] && [ "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
+              BASE="$BEFORE_SHA"
+            else
+              BASE="HEAD~1"
+            fi
           else
             git fetch origin main:refs/remotes/origin/main 2>/dev/null || true
             BASE="origin/main"
@@ -181,15 +196,11 @@ jobs:
           echo "base=$BASE" >> "$GITHUB_OUTPUT"
           echo "Diff base: $BASE"
 
-      # full_build selects the forced, sharded build every main push runs.
-      # A pull request can ask for the same build with the `ci-full-build`
-      # label, so a change to the main build itself (sharding, disk reclaim,
-      # step ceilings) is proven on its own PR instead of after it merges --
-      # main runs take 4-5 hours and batch many merges, so a regression found
-      # there is found late and blamed on the wrong PR (X-7). Add the label,
-      # then push: labelling alone does not start a run, and a re-run replays
-      # the old event's labels. A labelled PR runs only the Linux shards; drop
-      # the label for the ordinary macOS/Windows legs.
+      # full_build selects the forced, sharded full build (15 shards).
+      # It runs periodically on a schedule (every 6 hours) or via workflow_dispatch,
+      # or when a pull request carries the `ci-full-build` label.
+      # Ordinary pushes to main run incremental change detection against the previous commit,
+      # giving fast feedback and preserving runner headroom.
       - name: Check if main branch
         id: detect-main
         shell: bash
@@ -197,18 +208,22 @@ jobs:
           GIT_REF: ${{ github.ref }}
           EVENT_NAME: ${{ github.event_name }}
           FULL_BUILD_LABEL: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci-full-build') }}
+          MANUAL_FULL_BUILD: ${{ github.event.inputs.full_build }}
         run: |
-          if [ "$GIT_REF" = "refs/heads/main" ] && [ "$EVENT_NAME" = "push" ]; then
+          if [ "$GIT_REF" = "refs/heads/main" ]; then
             echo "is_main=true" >> "$GITHUB_OUTPUT"
-            echo "full_build=true" >> "$GITHUB_OUTPUT"
           else
             echo "is_main=false" >> "$GITHUB_OUTPUT"
-            if [ "$FULL_BUILD_LABEL" = "true" ]; then
-              echo "::notice::ci-full-build label: running main's forced, sharded full build on this pull request"
-              echo "full_build=true" >> "$GITHUB_OUTPUT"
-            else
-              echo "full_build=false" >> "$GITHUB_OUTPUT"
-            fi
+          fi
+
+          if [ "$EVENT_NAME" = "schedule" ] || [ "$MANUAL_FULL_BUILD" = "true" ]; then
+            echo "::notice::$EVENT_NAME: running forced, sharded full build (15 shards)"
+            echo "full_build=true" >> "$GITHUB_OUTPUT"
+          elif [ "$FULL_BUILD_LABEL" = "true" ]; then
+            echo "::notice::ci-full-build label: running forced, sharded full build on this pull request"
+            echo "full_build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "full_build=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Detect needed languages and emit build plan
@@ -355,7 +370,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ steps.detect-main.outputs.full_build }}" = "true" ]; then
-            echo "Forced full build (main push or ci-full-build label); enabling all supported toolchains"
+            echo "Forced full build (schedule, dispatch, or ci-full-build label); enabling all supported toolchains"
             printf '%s\n' \
               'needs_python=true' \
               'needs_ruby=true' \
@@ -5722,7 +5737,7 @@ jobs:
       # disk-watch.sh prints `df` every five minutes and a breakdown of the
       # largest directories when usage crosses 70/80/90/95%, so a shard that
       # runs out of disk says what filled it while it still can (#17652).
-      - name: Full build on main merge
+      - name: Full build (forced and sharded)
         if: needs.detect.outputs.full_build == 'true'
         timeout-minutes: 150
         shell: bash

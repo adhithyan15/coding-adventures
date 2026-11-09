@@ -140,12 +140,12 @@ affected package list and rebuilds the selected shard.
 
 ## CI Shape
 
-Sharding is reserved for forced full builds: every `main` push, and a pull
+Sharding is reserved for forced full builds: periodic scheduled `main` builds
+(running every 6 hours), manual workflow dispatches with `full_build`, and a pull
 request carrying the `ci-full-build` label (so a change to the main build itself
-can be proven before it merges; label, then push). Other pull requests and
-branch pushes continue to run the normal affected-package build plan without a
-shard index, because those builds are already narrow and should not wait on
-multiple macOS/Windows shard jobs.
+can be proven before it merges; label, then push). Standard pull requests and
+ordinary `main` pushes run the normal incremental affected-package build plan without
+a shard index, keeping feedback fast and reserving runner capacity.
 
 For `main` pushes, the detect job emits `build_shards`, a compact JSON array
 for a GitHub Actions matrix. The CI workflow turns those shard entries into
