@@ -240,6 +240,16 @@ struct Emitter<'a> {
     /// `({}+1).x` prints `({}+1).x`, the object protected by the binary's own
     /// paren, with no double wrap. `None` outside an expression statement.
     expr_stmt_start: Option<usize>,
+    /// When emitting an arrow function's concise body, tracks `self.out.len()`
+    /// right after the `=>` — the byte offset the concise body's **first token**
+    /// will land at. An object literal emitted at exactly this offset is the
+    /// leading token of the concise body, where a bare `{` mis-parses as a *block
+    /// body*, so [`emit_object`](Self::emit_object) wraps just that object in parens
+    /// (`()=>({}).x`, `()=>({})[1]`, `()=>({})`).
+    ///
+    /// Like `expr_stmt_start`, using the position avoids double-wrapping when an
+    /// intervening spine node is precedence-wrapped (e.g. `()=>({}+1).x`).
+    arrow_concise_start: Option<usize>,
 }
 
 impl<'a> Emitter<'a> {
@@ -252,6 +262,7 @@ impl<'a> Emitter<'a> {
             indent: 0,
             source_map: SourceMapBuilder::new(),
             expr_stmt_start: None,
+            arrow_concise_start: None,
         }
     }
 
@@ -1606,9 +1617,10 @@ impl<'a> Emitter<'a> {
     ///    `AssignmentExpression`.
     /// 3. **Object-literal concise bodies are wrapped.** `() => ({a:1})` —
     ///    without the parens the leading `{` parses as a *block* body, so
-    ///    a concise body that is an [`Expression::ObjectExpression`] gets
-    ///    a disambiguating wrap. (The deeper leftmost-`{` case, e.g.
-    ///    `() => ({}).x`, is not yet wrapped — see CLOC12-gaps.)
+    ///    a concise body that has an object literal as its leftmost token
+    ///    (`() => ({})`, `() => ({}).x`, `() => ({})[1]`) gets a
+    ///    disambiguating wrap around that object literal via
+    ///    `arrow_concise_start`.
     ///
     /// Parenthesisation in the two mis-parse contexts — as a call callee
     /// (`(() => {})()`) and as a member object (`(() => {}).x`) — is
@@ -1669,16 +1681,14 @@ impl<'a> Emitter<'a> {
         match &a.body {
             ArrowBody::Block(b) => self.emit_function_body(b),
             ArrowBody::Expression(e) => {
-                // A concise body that starts with `{` (an object literal)
-                // would otherwise be read as a block body.
-                let wrap = matches!(**e, Expression::ObjectExpression(_));
-                if wrap {
-                    self.write_str("(");
-                }
+                // A concise body that starts with `{` (an object literal,
+                // directly or deep on a member/call/assignment spine like
+                // `({}).x` or `({})[1]`) would otherwise be read as a block body.
+                // We record the start offset so `emit_object` wraps just that
+                // leading object literal in parens (`()=>({}).x`, not `()=>({}.x)`).
+                let prev = self.arrow_concise_start.replace(self.out.len());
                 self.emit_expression_inner(e, PREC_ASSIGNMENT);
-                if wrap {
-                    self.write_str(")");
-                }
+                self.arrow_concise_start = prev;
             }
         }
     }
@@ -2636,13 +2646,15 @@ impl<'a> Emitter<'a> {
     }
 
     fn emit_object(&mut self, o: &ObjectExpression) {
-        // If this object is the **leading token** of an expression statement, a
-        // bare `{` would open a block — wrap it in parens. It is leading exactly
-        // when nothing has been written since the statement began, i.e. the
-        // recorded start offset still equals the current output length. Objects
-        // anywhere to the right (past any token, including a precedence `(`)
-        // don't match and print bare.
-        let wrap = self.expr_stmt_start == Some(self.out.len());
+        // If this object is the **leading token** of an expression statement or
+        // an arrow function concise body, a bare `{` would open a block or block
+        // body — wrap it in parens. It is leading exactly when nothing has been
+        // written since the statement or concise body began, i.e. the recorded
+        // start offset still equals the current output length. Objects anywhere
+        // to the right (past any token, including a precedence `(`) don't match
+        // and print bare.
+        let wrap = self.expr_stmt_start == Some(self.out.len())
+            || self.arrow_concise_start == Some(self.out.len());
         self.maybe_map(&o.cv);
         if wrap {
             self.write_str("(");
@@ -7467,6 +7479,54 @@ mod tests {
             properties: vec![],
         });
         assert_eq!(emit_expr(arrow_concise(&[], obj)), "()=>({});");
+    }
+
+    /// Issue #18146: A concise body whose leftmost expression is an object
+    /// literal (e.g. `({}).x`, `({})[1]`, `({})()`) must parenthesise that
+    /// object literal so the leading `{` is not mis-parsed as a block body.
+    #[test]
+    fn arrow_object_literal_member_concise_body_is_wrapped() {
+        let obj = || {
+            Expression::ObjectExpression(ObjectExpression {
+                cv: None,
+                properties: vec![],
+            })
+        };
+        let m = member(obj(), "x", false);
+        assert_eq!(emit_expr(arrow_concise(&[], m)), "()=>({}).x;");
+
+        let m_computed = member(obj(), "1", true);
+        assert_eq!(emit_expr(arrow_concise(&[], m_computed)), "()=>({})[1];");
+
+        let c = call(obj(), vec![]);
+        assert_eq!(emit_expr(arrow_concise(&[], c)), "()=>({})();");
+    }
+
+    /// A concise body where an object literal is NOT the leading token
+    /// (e.g. `[{}]`, `1+{}`) must NOT have parens inserted around the object.
+    #[test]
+    fn arrow_non_leading_object_concise_body_is_not_wrapped() {
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
+        });
+        let arr = Expression::ArrayExpression(ArrayExpression {
+            cv: None,
+            elements: vec![Some(obj)],
+        });
+        assert_eq!(emit_expr(arrow_concise(&[], arr)), "()=>[{}];");
+    }
+
+    /// When an object literal under an arrow concise body is already protected
+    /// by precedence parentheses (e.g. `({}+1).x`), it must not be double-wrapped.
+    #[test]
+    fn arrow_object_under_precedence_wrapped_concise_body_is_not_double_wrapped() {
+        let obj = Expression::ObjectExpression(ObjectExpression {
+            cv: None,
+            properties: vec![],
+        });
+        let e = member(binary(BinaryOperator::Add, obj, num(1.0)), "x", false);
+        assert_eq!(emit_expr(arrow_concise(&[], e)), "()=>({}+1).x;");
     }
 
     /// An IIFE arrow: the callee is wrapped because `()=>{}()` is a

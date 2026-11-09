@@ -2,7 +2,13 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
-## [0.63.2] - 2026-11-08
+## [0.63.3] - 2026-11-08
+
+### Fixed — wrap leftmost object expressions in arrow concise bodies (#18146)
+
+- Concise arrow function bodies whose leftmost token is an object literal (e.g. `() => ({})`, `() => ({}).x`, `() => ({})[1]`, `() => ({})()`) now parenthesise that leading object literal (`arrow_concise_start`) so JavaScript engines do not mis-parse the bare `{` as a block body.
+- Intervening precedence parentheses (e.g. `() => ({}+1).x`) are not double-wrapped.
+
 
 ### Fixed — prevent emitting `<!--` HTML comment sequence after `<` (#17887)
 
