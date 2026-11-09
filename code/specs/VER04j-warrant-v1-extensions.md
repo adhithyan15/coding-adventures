@@ -8,10 +8,12 @@ landable slice; none changes the meaning of a v0 document (section 1).
 [VER04c](VER04c-guarded-warrant-parser.md), [VER04d](VER04d-warrant-type-system.md),
 [VER04e](VER04e-warrant-codegen.md), [VER04f](VER04f-claims-to-properties.md),
 [VER04h](VER04h-warrant-derived-evidence.md), [TF01 §2](TF01-bootstrap-harness.md)
-(TFV). **Corpus encoding:** the polyglot evidence corpus format owned by VER04i
-(backlog WD-002; *not yet written*). Where this document needs a corpus rule it
-states the requirement and a provisional encoding; VER04i must adopt or
-supersede it explicitly, and may not contradict the requirement.
+(TFV). **Corpus encoding:** the polyglot evidence corpus format is owned by
+[VER04i](VER04i-polyglot-warrant-evidence.md) (backlog WD-002; a Draft on this
+branch). VER04i owns the corpus encodings. Where this document needs a corpus
+rule it states a requirement; VER04i must satisfy that requirement. Conflicts
+and gaps between the two documents are listed in section 12a, not silently
+resolved in either.
 
 ## 0. Why this exists
 
@@ -610,15 +612,17 @@ The last is the principal LEB128 bug class: right value, wrong bytes consumed.
 
 ### 4.9 Cross-language portability (VER04i corpus encoding)
 
-TFV already has the needed shapes. Provisional encoding for VER04i to adopt
-(it may rename but not change the information content):
+TFV already has the needed shapes. The encoding below is a requirement on
+VER04i, which owns the corpus encoding (VER04i section 2.7). VER04i may rename
+but not change the information content:
 
 * **tuple**, **record**: `L<n> v1 ... vn`, components in declaration order (field
   names are not transported; the corpus record schema carries them);
 * **variant**: `L2 S<hex ctor name> L<k> f1 ... fk`, by constructor *name* so
   reordering declarations cannot change a vector;
-* **Option**: `L0` or `L1 x`; **Result**: `L2 S<hex "Ok"|"Err"> v`, matching
-  whatever VER04i has already fixed for ct-compare results;
+* **Option**: `L0` or `L1 x` (agrees with VER04i section 2.7). **Result**:
+  `L2 S<hex "Ok"|"Err"> v` **conflicts with VER04i section 2.7**, which fixes
+  `Result` as an `M` with key `ok` or `err` (see section 12a, item 1);
 * depth: nesting counts against TFV's 64-container limit and is rejected at
   generation (W0709).
 
@@ -1066,15 +1070,58 @@ defect class (CWE-409/789 in lz*) into checked evidence.
    current byte APIs (no `max_output`, `Vec<u8>` with no error channel). Who
    decides the breaking change across 17 ports, and is a Rust-only API plus shim
    acceptable for the pilot?
-7. **VER04i does not exist yet** (backlog WD-002). The encodings in 2.8, 3.8, 4.9
-   and 5.6 are provisional requirements; should VER04i absorb them or should this
-   document own a type-encoding annex?
+7. **VER04i exists** (backlog WD-002, Draft on this branch). The encodings in 2.8,
+   3.8, 4.9 and 5.6 are requirements on VER04i. Section 12a lists where VER04i
+   does not yet satisfy them; the owner decides whether VER04i absorbs the gaps
+   or a type-encoding annex is added to this document.
 8. **Exhaustive budget.** Raise the reference `B` (400,000) or keep per-package
    `EvidenceOptions`? The demotion rule for `U16` claims depends on it.
 9. **Table fixtures.** `code/specs/fixtures/<name>/` with README provenance; who
    vets NIST/RFC data before a pin is accepted?
 10. **Nested patterns and positional constructors** (specified) versus flat
     patterns and named arguments; flat patterns halve the exhaustiveness work.
+
+## 12a. Reconciliation with VER04i
+
+VER04j was written without sight of VER04i. This section records where the two
+documents disagree or where VER04i does not yet cover a VER04j requirement. It
+does not change VER04i. Neither document has been rewritten to match the other;
+each item needs an owner decision.
+
+1. **`Result` encoding (conflict).** VER04j 4.9 proposes `L2 S"Ok"|"Err" v`.
+   VER04i 2.7 fixes `Result<T,E>` as an `M` with one entry, key `ok` (value) or
+   `err` (`S<VARIANT>`), and VER04i 2.6 uses tags `50`/`51` in the canonical
+   stream. VER04j 4.9 said to match VER04i's existing ct-compare form, which is
+   the `M` form, so VER04j's proposal is the one out of step. Proposed: VER04i's
+   form stands and VER04j 4.9 is corrected once the owner confirms.
+2. **Boundary rows for 64-bit types (gap in VER04i).** VER04j 2.8 requires
+   `2^53 - 1, 2^53, 2^53 + 1` and `2^63 - 1, 2^63, 2^63 + 1`. VER04i 2.6's
+   `u64_edge` contains `2^53` (as `1<<53`), `2^63` (as `1<<63`), `2^63 - 1`
+   (as `MAX ^ (1<<63)`) and `MAX`, but not `2^53 - 1`, `2^53 + 1` or `2^63 + 1`.
+   VER04i must add these rows.
+3. **Signed and 32-bit types (gap in VER04i).** VER04j 2.8 requires signed
+   boundary rows (`MIN, MIN+1, -1, 0, 1, MAX-1, MAX`), and WX-B adds `U32`,
+   `I32` and `I64`. VER04i 2.7's type table covers only `Bool`, `U8`, `U64`,
+   `Nat`, `Bytes`, `List`, `Option` and `Result`. VER04i must add rows for these
+   before any WX-B claim can be corpus-checked.
+4. **Tuples, records and user variants (gap in VER04i).** VER04j 4.9 defines the
+   TFV shapes `L<n>` (tuple, record) and `L2 S<ctor> L<k>` (variant). VER04i 2.7
+   and its canonical stream (2.6) have no rows for these shapes; a tuple is only
+   a concatenation of its elements there, and a record or user variant has no
+   tag. VER04i must define them, with constructor name as the key, before WX-A
+   corpus cases exist.
+5. **`U8` arithmetic (silent in VER04i).** VER04j 1.4 says `U8` and `U64`
+   arithmetic wraps, and that the Rust evaluator's non-wrapping `U8` is a defect.
+   VER04i 2.7 says `U64` wraps and `Nat` is checked, and says nothing about `U8`.
+   VER04i's in-lane model evaluator is checked against Rust per case, so it must
+   state the `U8` rule explicitly.
+6. **Agreement (no action).** Both documents agree on: the record schema carries
+   the type and the decoder range-checks (VER04j 2.8 item 1 and VER04i 2.7 "out of
+   range is a corpus error"); `Option` is `L0`/`L1 x`; `U64` is `BigInt` on
+   TypeScript and Dart, and `number` is forbidden above 2^53; the lane hazards for
+   Lua, OCaml and Java.
+
+VER13 has no reference to VER04i or VER04j, so it needed no edit here.
 
 ## 13. Specification change record
 
