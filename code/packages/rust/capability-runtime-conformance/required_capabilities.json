@@ -1,0 +1,75 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/capability-runtime-conformance",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "*",
+      "justification": "Writes capability_runtime_evidence.json, scratch strace traces and the Docker rootfs/profile under the caller-supplied evidence directory (a cargo target tmp dir)."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the strace trace it just wrote, the test binary and its ldd closure (to build the container rootfs), and /proc/self/fd for the inherited-descriptor audit."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "strace",
+      "justification": "Runs the test binary under strace -f as the independent observer (VER08b section 6)."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "docker",
+      "justification": "Runs the container ring: docker import/run/rmi with a generated seccomp profile (VER08b section 7)."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "ldd",
+      "justification": "Lists the shared objects the test binary needs so the container rootfs contains them and nothing else."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "tar",
+      "justification": "Packs the container rootfs for docker import."
+    },
+    {
+      "category": "env",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads PATH to find strace/docker, RCG_STRICT/RCG_REQUIRE_DOCKER switches and GITHUB_ACTIONS for the evidence file; the child audits its own environment against the manifest."
+    },
+    {
+      "category": "stdout",
+      "action": "write",
+      "target": "*",
+      "justification": "Prints TAP-style results, gate verdicts and failure ids."
+    },
+    {
+      "category": "rand",
+      "action": "read",
+      "target": "*",
+      "justification": "Draws the per-run ARMED-marker nonce with getrandom."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc syscall landlock_create_ruleset, landlock_add_rule, landlock_restrict_self, seccomp, prctl(PR_SET_NO_NEW_PRIVS), open(O_PATH), close, write, setrlimit(RLIMIT_CORE), getrandom, uname, _exit; plus the sabotage controls' deliberately forbidden probes",
+      "justification": "There is no safe std API for seccomp, Landlock or no_new_privs; arming the sandbox is the purpose of the crate. The negative controls issue forbidden syscalls on purpose and only ever run after arming, where they are refused."
+    }
+  ],
+  "justification": "The VER08b runtime capability gate. It must read and write evidence files, run strace/docker/ldd/tar, and use raw syscalls to install and test a sandbox. It is test infrastructure for other packages, not a runtime dependency of any shipped library.",
+  "banned_construct_exceptions": [
+    {
+      "construct": "unsafe_code",
+      "language": "rust",
+      "justification": "Raw libc calls for seccomp, Landlock, prctl and the negative-control probes; each unsafe block states why its arguments are valid."
+    }
+  ]
+}

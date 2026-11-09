@@ -1,0 +1,32 @@
+[package]
+name = "capability-runtime-conformance"
+version = "0.1.0"
+edition = "2021"
+description = "VER08b runtime capability conformance gate: manifest-derived seccomp/Landlock sandbox, strace observation, negative controls, Docker ring"
+license = "MIT"
+
+[dependencies]
+capability-os-sandbox = { path = "../capability-os-sandbox" }
+capability-cage = { path = "../capability-cage" }
+coding_adventures_sha256 = { path = "../sha256" }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"
+
+# The selftest targets are the gate's own binary: they are re-executed as the
+# child, so they need control of main.
+[[test]]
+name = "selftest_pure"
+harness = false
+
+[[test]]
+name = "selftest_misbehaving"
+harness = false
+
+[[test]]
+name = "selftest_declared"
+harness = false
+
+[[test]]
+name = "selftest_arm"
+harness = false

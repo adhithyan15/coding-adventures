@@ -1,0 +1,1279 @@
+//! The gate driver (VER08b sections 2, 6, 7, 8, 9): one test binary that is
+//! both the *parent* (observer, judge, controls, evidence) and the *child*
+//! (setup, arm, exercise).
+//!
+//! ```text
+//!   cargo test --test runtime_capability          (parent, role = default)
+//!     |
+//!     |-- strace -f -v -- <self> --rcg-child N enforce             the real run
+//!     |-- 3 rings x 18 sabotage runs                               negative controls
+//!     |-- env-leak run                                             launch-time control
+//!     |-- docker run ... <image> /rcg/test --rcg-child ...         container ring
+//!     `-- write capability_runtime_evidence.json
+//!
+//!   <self> --rcg-child N enforce                  (child)
+//!     phase A: prepare() -> audits -> arm()
+//!     marker : write(2, "RCG-ARMED N landlock=.. abi=.. seccomp=..")
+//!     phase B: exercise() -> TAP on fd 1 -> exit
+//! ```
+
+use crate::failure::FailureId;
+use crate::json::Json;
+use crate::observe::{Analysis, Ending, Violation};
+use crate::policy::{PolicyOptions, RuntimePolicy};
+use std::path::PathBuf;
+
+/// One named check the package's test program reports.
+#[derive(Debug, Clone)]
+pub struct Check {
+    /// TAP description.
+    pub name: String,
+    /// Whether it passed.
+    pub ok: bool,
+}
+
+/// The armed-phase body: returns the checks it ran. Built during phase A by
+/// [`GateConfig::prepare`], so everything it needs is already allocated.
+pub type Exercise = Box<dyn FnOnce() -> Vec<Check>>;
+
+/// What the package supplies.
+pub struct GateConfig {
+    /// `rust/ct-compare`-style label (also validated against the manifest).
+    pub package: &'static str,
+    /// The manifest text, `include_str!`ed so parent and child agree.
+    pub manifest_json: &'static str,
+    /// Where to write `capability_runtime_evidence.json` (and scratch files).
+    pub evidence_dir: Option<PathBuf>,
+    /// Phase A: load vectors, set the panic hook, return the armed-phase body.
+    pub prepare: fn() -> Exercise,
+    /// Policy options (for example coarse thread mapping).
+    pub options: PolicyOptions,
+    /// Which optional rings to run (packages run all of them; this crate's
+    /// own synthetic scenarios skip the slow ones).
+    pub rings: Rings,
+}
+
+/// Which optional parts of the gate to run. The main run and the observer
+/// always run; the negative controls and the container ring are the slow,
+/// package-independent parts.
+#[derive(Debug, Clone, Copy)]
+pub struct Rings {
+    /// Run the mandatory negative controls (VER08b section 8).
+    pub controls: bool,
+    /// Run the Docker ring (reports not-live if Docker is unavailable).
+    pub container: bool,
+}
+
+impl Rings {
+    /// Everything, as a real package gate must.
+    pub const ALL: Rings = Rings {
+        controls: true,
+        container: true,
+    };
+    /// Main run + observer only.
+    pub const MAIN_ONLY: Rings = Rings {
+        controls: false,
+        container: false,
+    };
+}
+
+/// How a child process ended, independent of the observer.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ChildStatus {
+    /// Normal exit with a code.
+    Exited(i32),
+    /// Terminated by a signal number.
+    Signaled(i32),
+}
+
+/// SIGSYS on Linux.
+pub const SIGSYS: i32 = 31;
+
+/// The verdicts of both rings for one run, plus whether they agree.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Judgement {
+    /// The ARMED marker was seen.
+    pub armed: bool,
+    /// The process was killed by SIGSYS.
+    pub killed_by_sigsys: bool,
+    /// Exit code if it exited normally.
+    pub exit_code: Option<i32>,
+    /// Post-arm calls outside the allowed set.
+    pub violations: Vec<Violation>,
+    /// Environment variable names present that no capability allows.
+    pub env_violations: Vec<String>,
+    /// Registered failure ids, deduplicated, in order.
+    pub ids: Vec<FailureId>,
+    /// Enforcement verdict: no SIGSYS.
+    pub enforcement_pass: bool,
+    /// Observation verdict: armed, no violations, no env violations.
+    pub observation_pass: bool,
+    /// Enforcement and observation agree (always true when the filter was off).
+    pub agreement: bool,
+}
+
+impl Judgement {
+    /// True if there is no failure id at all.
+    pub fn pass(&self) -> bool {
+        self.ids.is_empty()
+    }
+}
+
+/// Combine the observer's analysis and the process status into one
+/// judgement (the agreement table of VER08b section 6). `enforced` says
+/// whether the in-process filter was supposed to be installed.
+pub fn judge(
+    analysis: &Analysis,
+    status: &ChildStatus,
+    enforced: bool,
+    policy: &RuntimePolicy,
+) -> Judgement {
+    let killed = matches!(&analysis.ending, Ending::Killed(sig) if sig == "SIGSYS")
+        || (analysis.ending == Ending::Unknown && *status == ChildStatus::Signaled(SIGSYS));
+    let exit_code = match (&analysis.ending, status) {
+        (Ending::Exited(code), _) => Some(*code),
+        (_, ChildStatus::Exited(code)) => Some(*code),
+        _ => None,
+    };
+    let env_violations = analysis
+        .exec_env
+        .as_ref()
+        .map(|env| crate::observe::env_violations(env, policy))
+        .unwrap_or_default();
+    let violations = analysis.violations.clone();
+
+    let mut ids = Vec::new();
+    let mut push = |id: FailureId| {
+        if !ids.contains(&id) {
+            ids.push(id);
+        }
+    };
+    if !analysis.armed {
+        match exit_code {
+            Some(crate::failure::exit_code::INSTALL_FAILED) => push(FailureId::Rcg008),
+            Some(crate::failure::exit_code::LANDLOCK_MISSING) => push(FailureId::Rcg012),
+            Some(crate::failure::exit_code::ENV_EXPOSED) => push(FailureId::Rcg005),
+            Some(crate::failure::exit_code::FD_LEAK) => push(FailureId::Rcg011),
+            _ => push(FailureId::Rcg004),
+        }
+    }
+    if !env_violations.is_empty() {
+        push(FailureId::Rcg005);
+    }
+    match (killed, violations.is_empty()) {
+        (true, false) => push(FailureId::Rcg001),
+        (true, true) => push(FailureId::Rcg003),
+        (false, false) => {
+            push(FailureId::Rcg002);
+            if enforced {
+                push(FailureId::Rcg003);
+            }
+        }
+        (false, true) => {}
+    }
+    if analysis.armed && !killed && violations.is_empty() && exit_code.is_some_and(|c| c != 0) {
+        push(FailureId::Rcg007);
+    }
+
+    let agreement = !enforced || (killed == !violations.is_empty());
+    Judgement {
+        armed: analysis.armed,
+        killed_by_sigsys: killed,
+        exit_code,
+        env_violations: env_violations.clone(),
+        enforcement_pass: !killed,
+        observation_pass: analysis.armed && violations.is_empty() && env_violations.is_empty(),
+        violations,
+        ids,
+        agreement,
+    }
+}
+
+/// Render a [`Violation`] list as JSON for the evidence file.
+pub fn violations_json(violations: &[Violation]) -> Json {
+    Json::Arr(
+        violations
+            .iter()
+            .map(|v| {
+                Json::obj([
+                    ("syscall", Json::str(&v.name)),
+                    ("family", Json::str(v.family)),
+                    ("args", Json::str(&v.args)),
+                ])
+            })
+            .collect(),
+    )
+}
+
+/// Run the gate. Returns the process exit code (0 = pass, or not-live in
+/// non-strict mode; 1 = fail). The caller should `std::process::exit` with it.
+///
+/// When invoked with `--rcg-child ...` this function runs the child role and
+/// never returns.
+pub fn run_package_gate(config: &GateConfig) -> i32 {
+    imp::run(config)
+}
+
+#[cfg(target_os = "linux")]
+use linux as imp;
+#[cfg(not(target_os = "linux"))]
+use other as imp;
+
+// ---------------------------------------------------------------------------
+// Non-Linux: honest not-live reporting (RCG010). Never a silent pass.
+// ---------------------------------------------------------------------------
+#[cfg(not(target_os = "linux"))]
+mod other {
+    use super::*;
+
+    pub fn run(config: &GateConfig) -> i32 {
+        let reason = format!(
+            "{}: runtime capability gate is Linux-only (seccomp/Landlock/strace); \
+             this platform has no live ring",
+            FailureId::Rcg010
+        );
+        println!("NOT-LIVE {} ({reason})", config.package);
+        if let Some(dir) = &config.evidence_dir {
+            let _ = std::fs::create_dir_all(dir);
+            let evidence = Json::obj([
+                ("schema", Json::str("capability_runtime_evidence.v1")),
+                ("package", Json::str(config.package)),
+                ("live", Json::Bool(false)),
+                ("not_live_reason", Json::str(&reason)),
+                ("overall", Json::str("not-live")),
+            ]);
+            let _ = std::fs::write(
+                dir.join("capability_runtime_evidence.json"),
+                evidence.pretty(),
+            );
+        }
+        if std::env::var_os("RCG_STRICT").is_some() {
+            1
+        } else {
+            0
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Linux: the live gate.
+// ---------------------------------------------------------------------------
+#[cfg(target_os = "linux")]
+mod linux {
+    use super::*;
+    use crate::arm::{arm, landlock_abi, ArmError, ArmReport};
+    use crate::container::{docker_args, parse_ldd, seccomp_profile_json};
+    use crate::failure::exit_code;
+    use crate::observe::analyze;
+    use crate::policy::BASELINE;
+    use crate::sabotage::{self, CONTROLS};
+    use std::io::Write as _;
+    use std::os::unix::process::ExitStatusExt;
+    use std::path::Path;
+    use std::process::{Command, Stdio};
+
+    /// Variables Docker injects into every container; scrubbed in phase A.
+    const CONTAINER_INJECTED_ENV: &[&str] = &["PATH", "HOSTNAME", "HOME"];
+
+    /// Variables that the *toolchain runtime inside the child* sets for
+    /// itself after `exec` (the LLVM coverage runtime does this in an
+    /// instrumented build). The launcher never passed them, and the parent's
+    /// independent `execve` check would still flag a leaked copy, so the
+    /// in-child audit ignores exactly these names.
+    const SELF_SET_ENV: &[&str] = &["__LLVM_PROFILE_RT_INIT_ONCE"];
+
+    pub fn run(config: &GateConfig) -> i32 {
+        let args: Vec<String> = std::env::args().collect();
+        if let Some(position) = args.iter().position(|a| a == "--rcg-child") {
+            child_main(config, &args[position + 1..]);
+        }
+        parent_main(config)
+    }
+
+    // ----- child ---------------------------------------------------------
+
+    fn raw_write(fd: i32, text: &str) {
+        // SAFETY: writes `text.len()` bytes from a live &str to an fd.
+        unsafe {
+            libc::write(fd, text.as_ptr().cast(), text.len());
+        }
+    }
+
+    fn child_main(config: &GateConfig, args: &[String]) -> ! {
+        let nonce = args.first().cloned().unwrap_or_default();
+        let enforce = args.get(1).map(String::as_str) == Some("enforce");
+        let container = args.iter().any(|a| a == "--rcg-container");
+        let sabotage_name = args
+            .iter()
+            .position(|a| a == "--rcg-sabotage")
+            .and_then(|i| args.get(i + 1))
+            .cloned();
+
+        let policy = match RuntimePolicy::from_manifest_json(config.manifest_json, config.options) {
+            Ok(policy) => policy,
+            Err(refusal) => {
+                eprintln!("{refusal}");
+                std::process::exit(exit_code::INSTALL_FAILED);
+            }
+        };
+        // SAFETY: setrlimit with a valid struct; no core dump on SIGSYS.
+        unsafe {
+            let zero = libc::rlimit {
+                rlim_cur: 0,
+                rlim_max: 0,
+            };
+            libc::setrlimit(libc::RLIMIT_CORE, &zero);
+        }
+        if container {
+            for name in CONTAINER_INJECTED_ENV {
+                if !policy.env_name_allowed(name) {
+                    std::env::remove_var(name);
+                }
+            }
+        }
+
+        // ---- phase A ----
+        let exercise = (config.prepare)();
+        let _ = std::io::stdout().flush();
+        let stray_env: Vec<String> = std::env::vars_os()
+            .map(|(k, _)| k.to_string_lossy().into_owned())
+            .filter(|name| !policy.env_name_allowed(name) && !SELF_SET_ENV.contains(&name.as_str()))
+            .collect();
+        if !stray_env.is_empty() {
+            eprintln!(
+                "{}: unexpected environment: {stray_env:?}",
+                FailureId::Rcg005
+            );
+            std::process::exit(exit_code::ENV_EXPOSED);
+        }
+        let stray_fds = unexpected_fds();
+        if !stray_fds.is_empty() {
+            eprintln!("{}: unexpected fds: {stray_fds:?}", FailureId::Rcg011);
+            std::process::exit(exit_code::FD_LEAK);
+        }
+        let report = if enforce {
+            match arm(&policy) {
+                Ok(report) => report,
+                Err(ArmError::LandlockRequired) => {
+                    eprintln!("{}: Landlock required", FailureId::Rcg012);
+                    std::process::exit(exit_code::LANDLOCK_MISSING);
+                }
+                Err(error) => {
+                    eprintln!("{}: {error}", FailureId::Rcg008);
+                    std::process::exit(exit_code::INSTALL_FAILED);
+                }
+            }
+        } else {
+            ArmReport {
+                landlock_abi: landlock_abi(),
+                landlock_enforced: false,
+                seccomp_enforced: false,
+            }
+        };
+
+        // ---- the boundary ----
+        raw_write(
+            2,
+            &format!(
+                "RCG-ARMED {nonce} landlock={} abi={} seccomp={}\n",
+                u8::from(report.landlock_enforced),
+                report.landlock_abi,
+                u8::from(report.seccomp_enforced)
+            ),
+        );
+
+        // ---- phase B ----
+        if let Some(name) = sabotage_name {
+            let known = sabotage::attempt(&name, &nonce);
+            println!("SABOTAGE-SURVIVED {name} known={known}");
+            let _ = std::io::stdout().flush();
+            fast_exit(0);
+        }
+        let checks = exercise();
+        let mut failed = 0;
+        for (index, check) in checks.iter().enumerate() {
+            if check.ok {
+                println!("ok {} - {}", index + 1, check.name);
+            } else {
+                failed += 1;
+                println!("not ok {} - {}", index + 1, check.name);
+            }
+        }
+        println!("1..{}", checks.len());
+        let _ = std::io::stdout().flush();
+        fast_exit(if failed == 0 {
+            0
+        } else {
+            exit_code::CHECK_FAILED
+        });
+    }
+
+    /// Leave via `_exit(2)`: straight to `exit_group`, skipping `std`'s
+    /// runtime cleanup (which would `sigaltstack`/`munmap` its handler stack)
+    /// and libc's atexit machinery. Stdout is flushed by the caller first.
+    /// This keeps the baseline to what the *library* needs.
+    fn fast_exit(code: i32) -> ! {
+        // SAFETY: `_exit` takes an integer and never returns.
+        unsafe { libc::_exit(code) }
+    }
+
+    /// File descriptors other than 0-2 that are still open.
+    fn unexpected_fds() -> Vec<String> {
+        let mut found = Vec::new();
+        let names: Vec<String> = match std::fs::read_dir("/proc/self/fd") {
+            Ok(dir) => dir
+                .filter_map(Result::ok)
+                .map(|e| e.file_name().to_string_lossy().into_owned())
+                .collect(),
+            Err(_) => return found,
+        };
+        for name in names {
+            let Ok(fd) = name.parse::<i32>() else {
+                continue;
+            };
+            if fd <= 2 {
+                continue;
+            }
+            // The read_dir handle is closed by now, so its link no longer
+            // resolves; anything that still resolves is a real descriptor.
+            if let Ok(target) = std::fs::read_link(format!("/proc/self/fd/{name}")) {
+                found.push(format!("{fd}->{}", target.display()));
+            }
+        }
+        found
+    }
+
+    // ----- parent --------------------------------------------------------
+
+    struct RunOutcome {
+        status: ChildStatus,
+        stdout: String,
+        stderr: String,
+        trace: Option<String>,
+    }
+
+    fn which(program: &str) -> Option<PathBuf> {
+        let path = std::env::var_os("PATH")?;
+        std::env::split_paths(&path)
+            .map(|dir| dir.join(program))
+            .find(|candidate| candidate.is_file())
+    }
+
+    fn status_of(status: std::process::ExitStatus) -> ChildStatus {
+        match status.signal() {
+            Some(signal) => ChildStatus::Signaled(signal),
+            None => ChildStatus::Exited(status.code().unwrap_or(-1)),
+        }
+    }
+
+    struct Runner<'a> {
+        exe: PathBuf,
+        strace: Option<PathBuf>,
+        scratch: &'a Path,
+    }
+
+    impl Runner<'_> {
+        /// Run the child with an exactly specified environment.
+        fn run(
+            &self,
+            nonce: &str,
+            enforce: bool,
+            sabotage: Option<&str>,
+            env: &[(&str, &str)],
+            observe: bool,
+        ) -> std::io::Result<RunOutcome> {
+            let mode = if enforce { "enforce" } else { "observe-only" };
+            let mut child_args: Vec<String> = vec!["--rcg-child".into(), nonce.into(), mode.into()];
+            if let Some(name) = sabotage {
+                child_args.push("--rcg-sabotage".into());
+                child_args.push(name.into());
+            }
+            let trace_path = self.scratch.join(format!("trace-{nonce}.txt"));
+            let mut command = match (&self.strace, observe) {
+                (Some(strace), true) => {
+                    let mut c = Command::new(strace);
+                    c.args(["-f", "-v", "-q", "-s", "4096", "-o"])
+                        .arg(&trace_path)
+                        .arg("--")
+                        .arg(&self.exe);
+                    c
+                }
+                _ => Command::new(&self.exe),
+            };
+            command
+                .args(&child_args)
+                .env_clear()
+                .envs(env.iter().copied())
+                .stdin(Stdio::null())
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped());
+            let output = command.output()?;
+            let trace = std::fs::read_to_string(&trace_path).ok();
+            let _ = std::fs::remove_file(&trace_path);
+            Ok(RunOutcome {
+                status: status_of(output.status),
+                stdout: String::from_utf8_lossy(&output.stdout).into_owned(),
+                stderr: String::from_utf8_lossy(&output.stderr).into_owned(),
+                trace,
+            })
+        }
+    }
+
+    fn random_nonce(tag: &str) -> String {
+        let mut bytes = [0u8; 8];
+        // SAFETY: getrandom into a live 8-byte buffer.
+        unsafe {
+            libc::getrandom(bytes.as_mut_ptr().cast(), bytes.len(), 0);
+        }
+        let hex: String = bytes.iter().map(|b| format!("{b:02x}")).collect();
+        format!("{tag}-{hex}")
+    }
+
+    fn command_line(program: &str, args: &[&str]) -> Option<String> {
+        let output = Command::new(program).args(args).output().ok()?;
+        String::from_utf8_lossy(&output.stdout)
+            .lines()
+            .next()
+            .map(str::to_string)
+    }
+
+    fn kernel_info() -> String {
+        // SAFETY: uname fills a zeroed utsname struct.
+        let mut u: libc::utsname = unsafe { std::mem::zeroed() };
+        // SAFETY: valid pointer to utsname.
+        unsafe { libc::uname(&mut u) };
+        let field = |raw: &[libc::c_char]| {
+            let bytes: Vec<u8> = raw
+                .iter()
+                .take_while(|c| **c != 0)
+                .map(|c| *c as u8)
+                .collect();
+            String::from_utf8_lossy(&bytes).into_owned()
+        };
+        format!(
+            "{} {} {}",
+            field(&u.sysname),
+            field(&u.release),
+            field(&u.machine)
+        )
+    }
+
+    fn strict() -> bool {
+        std::env::var_os("RCG_STRICT").is_some()
+    }
+
+    fn not_live(config: &GateConfig, reason: &str, id: FailureId) -> i32 {
+        let message = format!("{id}: {reason}");
+        println!("NOT-LIVE {} ({message})", config.package);
+        write_evidence(
+            config,
+            &Json::obj([
+                ("schema", Json::str("capability_runtime_evidence.v1")),
+                ("package", Json::str(config.package)),
+                ("gate_version", Json::str("rcg-1")),
+                ("live", Json::Bool(false)),
+                ("not_live_reason", Json::str(&message)),
+                ("overall", Json::str("not-live")),
+            ]),
+        );
+        if strict() {
+            1
+        } else {
+            0
+        }
+    }
+
+    fn write_evidence(config: &GateConfig, evidence: &Json) {
+        if let Some(dir) = &config.evidence_dir {
+            let _ = std::fs::create_dir_all(dir);
+            let path = dir.join("capability_runtime_evidence.json");
+            match std::fs::write(&path, evidence.pretty()) {
+                Ok(()) => println!("evidence: {}", path.display()),
+                Err(error) => println!("evidence write failed: {error}"),
+            }
+        }
+    }
+
+    fn parent_main(config: &GateConfig) -> i32 {
+        let policy = match RuntimePolicy::from_manifest_json(config.manifest_json, config.options) {
+            Ok(policy) => policy,
+            Err(refusal) => {
+                println!("REFUSED {} {refusal}", config.package);
+                write_evidence(
+                    config,
+                    &Json::obj([
+                        ("schema", Json::str("capability_runtime_evidence.v1")),
+                        ("package", Json::str(config.package)),
+                        ("live", Json::Bool(true)),
+                        ("refusal", Json::str(refusal.to_string())),
+                        ("overall", Json::str("fail")),
+                    ]),
+                );
+                return 1;
+            }
+        };
+        let scratch = config
+            .evidence_dir
+            .clone()
+            .unwrap_or_else(std::env::temp_dir)
+            .join("rcg-scratch");
+        let _ = std::fs::create_dir_all(&scratch);
+        let exe = match std::env::current_exe() {
+            Ok(exe) => exe,
+            Err(error) => {
+                return not_live(
+                    config,
+                    &format!("no current_exe: {error}"),
+                    FailureId::Rcg013,
+                )
+            }
+        };
+
+        // The observer must work before any verdict is trusted.
+        let Some(strace) = which("strace") else {
+            return not_live(config, "strace not installed", FailureId::Rcg013);
+        };
+        let probe = Command::new(&strace)
+            .args(["-f", "-o", "/dev/null", "--", "/bin/true"])
+            .env_clear()
+            .status();
+        if !probe.map(|s| s.success()).unwrap_or(false) {
+            return not_live(
+                config,
+                "strace cannot trace here (ptrace blocked?)",
+                FailureId::Rcg013,
+            );
+        }
+
+        let runner = Runner {
+            exe: exe.clone(),
+            strace: Some(strace.clone()),
+            scratch: &scratch,
+        };
+        let mut failures: Vec<String> = Vec::new();
+
+        // ---- the real run: both rings ----
+        let nonce = random_nonce("main");
+        let main_json;
+        let main_pass;
+        let observed;
+        match runner.run(&nonce, true, None, &[], true) {
+            Ok(outcome) => {
+                let trace = outcome.trace.clone().unwrap_or_default();
+                let analysis = analyze(&trace, &nonce, &policy);
+                let judgement = judge(&analysis, &outcome.status, true, &policy);
+                let tap_ok = outcome
+                    .stdout
+                    .lines()
+                    .filter(|l| l.starts_with("ok "))
+                    .count();
+                let tap_bad = outcome
+                    .stdout
+                    .lines()
+                    .filter(|l| l.starts_with("not ok"))
+                    .count();
+                println!(
+                    "main run: armed={} checks_ok={tap_ok} checks_failed={tap_bad} ids={:?} exit={:?}",
+                    judgement.armed,
+                    judgement.ids.iter().map(|i| i.as_str()).collect::<Vec<_>>(),
+                    judgement.exit_code
+                );
+                for v in &judgement.violations {
+                    println!("  VIOLATION [{}] {} {}", v.family, v.name, v.args);
+                }
+                if !judgement.pass() {
+                    println!("--- child stderr ---\n{}", outcome.stderr);
+                    failures.push(format!(
+                        "main run failed: {:?}",
+                        judgement.ids.iter().map(|i| i.as_str()).collect::<Vec<_>>()
+                    ));
+                }
+                if tap_ok == 0 {
+                    failures.push("no checks ran".to_string());
+                }
+                observed = analysis.post_arm.clone();
+                main_pass = judgement.pass() && tap_ok > 0;
+                let (enforcement_kind, observation_kind) = (
+                    if judgement.enforcement_pass {
+                        "pass"
+                    } else {
+                        "fail"
+                    },
+                    if judgement.observation_pass {
+                        "pass"
+                    } else {
+                        "fail"
+                    },
+                );
+                let detail = analysis.marker_detail.clone();
+                main_json = Json::obj([
+                    (
+                        "enforcement",
+                        Json::obj([
+                            ("verdict", Json::str(enforcement_kind)),
+                            ("marker", Json::str(&detail)),
+                            ("seccomp_enforced", Json::Bool(detail.contains("seccomp=1"))),
+                            (
+                                "landlock_enforced",
+                                Json::Bool(detail.contains("landlock=1")),
+                            ),
+                            ("child_status", Json::str(format!("{:?}", outcome.status))),
+                            ("checks_ok", Json::Num(tap_ok as u64)),
+                            ("checks_failed", Json::Num(tap_bad as u64)),
+                            (
+                                "failure_ids",
+                                Json::strings(judgement.ids.iter().map(|i| i.as_str())),
+                            ),
+                        ]),
+                    ),
+                    (
+                        "observation",
+                        Json::obj([
+                            ("verdict", Json::str(observation_kind)),
+                            ("observer", Json::str("strace -f -v")),
+                            ("armed_marker_seen", Json::Bool(judgement.armed)),
+                            ("pre_arm_syscalls", Json::Num(analysis.pre_arm_calls)),
+                            (
+                                "observed_syscalls",
+                                Json::Obj(
+                                    analysis
+                                        .post_arm
+                                        .iter()
+                                        .map(|(k, v)| (k.clone(), Json::Num(*v)))
+                                        .collect(),
+                                ),
+                            ),
+                            (
+                                "unobserved_baseline",
+                                Json::strings(
+                                    BASELINE
+                                        .iter()
+                                        .map(|b| b.name)
+                                        .filter(|n| !analysis.post_arm.contains_key(*n)),
+                                ),
+                            ),
+                            ("violations", violations_json(&judgement.violations)),
+                            (
+                                "exec_env",
+                                Json::strings(analysis.exec_env.clone().unwrap_or_default()),
+                            ),
+                        ]),
+                    ),
+                    ("agreement", Json::Bool(judgement.agreement)),
+                ]);
+            }
+            Err(error) => {
+                return not_live(
+                    config,
+                    &format!("cannot spawn child: {error}"),
+                    FailureId::Rcg013,
+                )
+            }
+        }
+
+        // ---- negative controls ----
+        let mut control_json = Vec::new();
+        let mut known_gaps = Vec::new();
+        for control in CONTROLS.iter().filter(|_| config.rings.controls) {
+            let result = run_control(&runner, &policy, control);
+            if !result.all_detected() {
+                failures.push(format!(
+                    "{}: negative control {} NOT detected",
+                    FailureId::Rcg009,
+                    control.name
+                ));
+            }
+            println!(
+                "control {:<14} full(enf={} obs={}) observe-only={} enforce-only={}",
+                control.name,
+                result.full_enforced,
+                result.full_observed,
+                result.observe_only,
+                result.enforce_only
+            );
+            control_json.push(result.to_json(control.name, control.expected));
+        }
+        // env-leak: a launcher that leaks a variable the manifest does not name.
+        if config.rings.controls {
+            let nonce = random_nonce("env");
+            let leak = runner.run(&nonce, true, None, &[("RCG_CANARY", "leaked")], true);
+            let (enforced, observed_env, ids) = match leak {
+                Ok(outcome) => {
+                    let analysis =
+                        analyze(&outcome.trace.clone().unwrap_or_default(), &nonce, &policy);
+                    let env_hits = analysis
+                        .exec_env
+                        .as_ref()
+                        .map(|e| crate::observe::env_violations(e, &policy))
+                        .unwrap_or_default();
+                    (
+                        outcome.status == ChildStatus::Exited(exit_code::ENV_EXPOSED),
+                        env_hits.contains(&"RCG_CANARY".to_string()),
+                        vec![FailureId::Rcg005],
+                    )
+                }
+                Err(_) => (false, false, vec![]),
+            };
+            println!(
+                "control env-leak     in-child audit={enforced} execve-envp check={observed_env}"
+            );
+            if !(enforced && observed_env) {
+                failures.push(format!(
+                    "{}: negative control env-leak NOT detected",
+                    FailureId::Rcg009
+                ));
+            }
+            control_json.push(Json::obj([
+                ("name", Json::str("env-leak")),
+                ("expected_syscall", Json::Null),
+                (
+                    "in_child_audit",
+                    Json::obj([
+                        ("detected", Json::Bool(enforced)),
+                        (
+                            "failure_id",
+                            Json::str(ids.first().map_or("", |i| i.as_str())),
+                        ),
+                    ]),
+                ),
+                (
+                    "execve_observer",
+                    Json::obj([
+                        ("detected", Json::Bool(observed_env)),
+                        ("failure_id", Json::str("RCG005")),
+                    ]),
+                ),
+            ]));
+        }
+        // known gap: vDSO time is invisible to both rings.
+        if config.rings.controls {
+            let nonce = random_nonce("gap");
+            let detected = match runner.run(&nonce, true, Some(sabotage::TIME_VDSO), &[], true) {
+                Ok(outcome) => {
+                    let analysis =
+                        analyze(&outcome.trace.clone().unwrap_or_default(), &nonce, &policy);
+                    !analysis.violations.is_empty()
+                        || outcome.status == ChildStatus::Signaled(SIGSYS)
+                }
+                Err(_) => false,
+            };
+            println!(
+                "known gap time-vdso  detected={detected} (expected false: vDSO makes no syscall)"
+            );
+            known_gaps.push(Json::obj([
+                ("name", Json::str("time-vdso")),
+                ("detected", Json::Bool(detected)),
+                ("note", Json::str("Instant::now() is served by the vDSO without a syscall; neither seccomp nor strace can see it")),
+            ]));
+        }
+        let _ = std::fs::remove_dir_all(&scratch);
+
+        // ---- container ring ----
+        let container = if config.rings.container {
+            container_ring(config, &policy, &exe)
+        } else {
+            ContainerResult {
+                verdict: ContainerVerdict::NotLive,
+                detail: "skipped by configuration".to_string(),
+                invocation: Vec::new(),
+                control_detected: None,
+            }
+        };
+        let container_json = container.to_json();
+        match container.verdict {
+            ContainerVerdict::Pass => {}
+            ContainerVerdict::NotLive => {
+                println!("container ring: NOT-LIVE ({})", container.detail);
+                if std::env::var_os("RCG_REQUIRE_DOCKER").is_some() {
+                    failures.push(format!(
+                        "{}: docker required but unavailable",
+                        FailureId::Rcg014
+                    ));
+                }
+            }
+            ContainerVerdict::Fail => {
+                failures.push(format!("{}: {}", FailureId::Rcg014, container.detail))
+            }
+        }
+
+        let overall = if failures.is_empty() { "pass" } else { "fail" };
+        let evidence = Json::Obj(
+            [
+                (
+                    "schema".to_string(),
+                    Json::str("capability_runtime_evidence.v1"),
+                ),
+                ("package".to_string(), Json::str(&policy.package)),
+                ("gate_version".to_string(), Json::str("rcg-1")),
+                (
+                    "manifest_sha256".to_string(),
+                    Json::str(&policy.manifest_sha256),
+                ),
+                ("plan_sha256".to_string(), Json::str(&policy.plan_sha256)),
+                (
+                    "baseline_version".to_string(),
+                    Json::str(policy.baseline_version),
+                ),
+                (
+                    "baseline".to_string(),
+                    Json::Arr(
+                        BASELINE
+                            .iter()
+                            .map(|b| {
+                                Json::obj([
+                                    ("syscall", Json::str(b.name)),
+                                    ("why", Json::str(b.why)),
+                                ])
+                            })
+                            .collect(),
+                    ),
+                ),
+                (
+                    "declared_capabilities".to_string(),
+                    Json::strings(policy.declared.iter().cloned()),
+                ),
+                ("live".to_string(), Json::Bool(true)),
+                ("not_live_reason".to_string(), Json::Null),
+            ]
+            .into_iter()
+            .chain(match main_json {
+                Json::Obj(pairs) => pairs,
+                _ => Vec::new(),
+            })
+            .chain([
+                ("negative_controls".to_string(), Json::Arr(control_json)),
+                ("known_gaps".to_string(), Json::Arr(known_gaps)),
+                ("container".to_string(), container_json),
+                (
+                    "environment".to_string(),
+                    Json::obj([
+                        ("kernel", Json::str(kernel_info())),
+                        ("arch", Json::str(std::env::consts::ARCH)),
+                        (
+                            "runner",
+                            Json::str(if std::env::var_os("GITHUB_ACTIONS").is_some() {
+                                "github-actions"
+                            } else {
+                                "local"
+                            }),
+                        ),
+                        (
+                            "strace",
+                            Json::str(
+                                command_line(&strace.to_string_lossy(), &["-V"])
+                                    .unwrap_or_default(),
+                            ),
+                        ),
+                    ]),
+                ),
+                ("failures".to_string(), Json::strings(failures.clone())),
+                ("overall".to_string(), Json::str(overall)),
+            ])
+            .collect(),
+        );
+        write_evidence(config, &evidence);
+        let _ = (main_pass, observed);
+        if failures.is_empty() {
+            println!("RUNTIME CAPABILITY GATE: PASS ({})", config.package);
+            0
+        } else {
+            println!("RUNTIME CAPABILITY GATE: FAIL ({})", config.package);
+            for failure in &failures {
+                println!("  {failure}");
+            }
+            1
+        }
+    }
+
+    // ----- controls -------------------------------------------------------
+
+    struct ControlResult {
+        full_enforced: bool,
+        full_observed: bool,
+        observe_only: bool,
+        enforce_only: bool,
+        full_observed_name: String,
+    }
+
+    impl ControlResult {
+        fn all_detected(&self) -> bool {
+            self.full_enforced && self.full_observed && self.observe_only && self.enforce_only
+        }
+
+        fn to_json(&self, name: &str, expected: &[&str]) -> Json {
+            Json::obj([
+                ("name", Json::str(name)),
+                ("expected_syscall", Json::strings(expected.iter().copied())),
+                (
+                    "full",
+                    Json::obj([
+                        ("detected_by_enforcement", Json::Bool(self.full_enforced)),
+                        ("detected_by_observation", Json::Bool(self.full_observed)),
+                        ("failure_id", Json::str("RCG001")),
+                        ("observed", Json::str(&self.full_observed_name)),
+                    ]),
+                ),
+                (
+                    "observe_only",
+                    Json::obj([
+                        ("detected", Json::Bool(self.observe_only)),
+                        ("failure_id", Json::str("RCG002")),
+                    ]),
+                ),
+                (
+                    "enforce_only",
+                    Json::obj([
+                        ("detected", Json::Bool(self.enforce_only)),
+                        ("failure_id", Json::str("RCG001")),
+                    ]),
+                ),
+            ])
+        }
+    }
+
+    fn observed_expected(analysis: &Analysis, expected: &[&str]) -> Option<String> {
+        analysis
+            .violations
+            .iter()
+            .find(|v| expected.contains(&v.name.as_str()))
+            .map(|v| v.name.clone())
+    }
+
+    fn run_control(
+        runner: &Runner<'_>,
+        policy: &RuntimePolicy,
+        control: &sabotage::Control,
+    ) -> ControlResult {
+        let mut result = ControlResult {
+            full_enforced: false,
+            full_observed: false,
+            observe_only: false,
+            enforce_only: false,
+            full_observed_name: String::new(),
+        };
+        // Full: filter on + strace.
+        let nonce = random_nonce("full");
+        if let Ok(outcome) = runner.run(&nonce, true, Some(control.name), &[], true) {
+            let analysis = analyze(&outcome.trace.clone().unwrap_or_default(), &nonce, policy);
+            let judgement = judge(&analysis, &outcome.status, true, policy);
+            result.full_enforced = judgement.killed_by_sigsys
+                && !outcome.stdout.contains("SABOTAGE-SURVIVED")
+                && judgement.ids.contains(&FailureId::Rcg001);
+            if let Some(name) = observed_expected(&analysis, control.expected) {
+                result.full_observed = true;
+                result.full_observed_name = name;
+            }
+        }
+        // Observe-only: filter off, strace on. The attempt must go through
+        // (the process survives) AND the observer must still flag it.
+        let nonce = random_nonce("obs");
+        if let Ok(outcome) = runner.run(&nonce, false, Some(control.name), &[], true) {
+            let analysis = analyze(&outcome.trace.clone().unwrap_or_default(), &nonce, policy);
+            let judgement = judge(&analysis, &outcome.status, false, policy);
+            result.observe_only = observed_expected(&analysis, control.expected).is_some()
+                && judgement.ids.contains(&FailureId::Rcg002)
+                && !judgement.killed_by_sigsys;
+        }
+        // Enforce-only: filter on, no strace.
+        let nonce = random_nonce("enf");
+        if let Ok(outcome) = runner.run(&nonce, true, Some(control.name), &[], false) {
+            result.enforce_only = outcome.status == ChildStatus::Signaled(SIGSYS)
+                && !outcome.stdout.contains("SABOTAGE-SURVIVED");
+        }
+        let _ = std::fs::remove_file(format!("/tmp/rcg-sabotage-{nonce}"));
+        result
+    }
+
+    // ----- container ring --------------------------------------------------
+
+    #[derive(PartialEq, Eq)]
+    enum ContainerVerdict {
+        Pass,
+        Fail,
+        NotLive,
+    }
+
+    struct ContainerResult {
+        verdict: ContainerVerdict,
+        detail: String,
+        invocation: Vec<String>,
+        control_detected: Option<bool>,
+    }
+
+    impl ContainerResult {
+        fn to_json(&self) -> Json {
+            Json::obj([
+                (
+                    "live",
+                    Json::Bool(self.verdict != ContainerVerdict::NotLive),
+                ),
+                (
+                    "verdict",
+                    Json::str(match self.verdict {
+                        ContainerVerdict::Pass => "pass",
+                        ContainerVerdict::Fail => "fail",
+                        ContainerVerdict::NotLive => "not-live",
+                    }),
+                ),
+                ("detail", Json::str(&self.detail)),
+                ("invocation", Json::strings(self.invocation.iter().cloned())),
+                (
+                    "negative_control_io_uring_killed_by_container_filter",
+                    match self.control_detected {
+                        Some(b) => Json::Bool(b),
+                        None => Json::Null,
+                    },
+                ),
+            ])
+        }
+    }
+
+    fn docker_ok(docker: &Path, args: &[&str]) -> Result<std::process::Output, String> {
+        Command::new(docker)
+            .args(args)
+            .output()
+            .map_err(|e| format!("docker {args:?}: {e}"))
+    }
+
+    fn container_ring(config: &GateConfig, policy: &RuntimePolicy, exe: &Path) -> ContainerResult {
+        let not_live = |detail: String| ContainerResult {
+            verdict: ContainerVerdict::NotLive,
+            detail,
+            invocation: Vec::new(),
+            control_detected: None,
+        };
+        let Some(docker) = which("docker") else {
+            return not_live("docker binary not found".into());
+        };
+        match docker_ok(&docker, &["info", "--format", "{{.ServerVersion}}"]) {
+            Ok(out) if out.status.success() => {}
+            Ok(out) => {
+                return not_live(format!(
+                    "docker daemon unreachable: {}",
+                    String::from_utf8_lossy(&out.stderr)
+                        .lines()
+                        .next()
+                        .unwrap_or("")
+                ))
+            }
+            Err(error) => return not_live(error),
+        }
+        let work = config
+            .evidence_dir
+            .clone()
+            .unwrap_or_else(std::env::temp_dir)
+            .join("rcg-container");
+        let _ = std::fs::remove_dir_all(&work);
+        let rootfs = work.join("rootfs");
+        if let Err(error) = std::fs::create_dir_all(rootfs.join("rcg")) {
+            return not_live(format!("cannot create {}: {error}", work.display()));
+        }
+        // Rootfs: the test binary and its ldd closure, nothing else.
+        let result = (|| -> Result<(), String> {
+            std::fs::copy(exe, rootfs.join("rcg/test")).map_err(|e| format!("copy exe: {e}"))?;
+            let ldd = Command::new("ldd")
+                .arg(exe)
+                .output()
+                .map_err(|e| format!("ldd: {e}"))?;
+            for lib in parse_ldd(&String::from_utf8_lossy(&ldd.stdout)) {
+                let dest = rootfs.join(lib.trim_start_matches('/'));
+                if let Some(parent) = dest.parent() {
+                    std::fs::create_dir_all(parent).map_err(|e| format!("mkdir: {e}"))?;
+                }
+                std::fs::copy(&lib, &dest).map_err(|e| format!("copy {lib}: {e}"))?;
+            }
+            Ok(())
+        })();
+        if let Err(error) = result {
+            return not_live(error);
+        }
+        let tar_path = work.join("rootfs.tar");
+        let tar = Command::new("tar")
+            .arg("-C")
+            .arg(&rootfs)
+            .arg("-cf")
+            .arg(&tar_path)
+            .arg(".")
+            .status();
+        if !tar.map(|s| s.success()).unwrap_or(false) {
+            return not_live("tar failed".into());
+        }
+        let nonce = random_nonce("c");
+        let image = format!("rcg-{nonce}:1");
+        match docker_ok(&docker, &["import", &tar_path.to_string_lossy(), &image]) {
+            Ok(out) if out.status.success() => {}
+            Ok(out) => {
+                return not_live(format!(
+                    "docker import failed: {}",
+                    String::from_utf8_lossy(&out.stderr).trim()
+                ))
+            }
+            Err(error) => return not_live(error),
+        }
+        let profile_path = work.join("seccomp-profile.json");
+        let _ = std::fs::write(&profile_path, seccomp_profile_json(policy));
+
+        let run_in_container = |extra: &[&str],
+                                tag: &str|
+         -> (Vec<String>, Option<std::process::Output>) {
+            let mut command = vec!["/rcg/test".to_string(), "--rcg-child".into(), nonce.clone()];
+            command.extend(extra.iter().map(ToString::to_string));
+            command.push("--rcg-container".into());
+            let args = docker_args(
+                policy,
+                &profile_path.to_string_lossy(),
+                &image,
+                &format!("rcg-{tag}-{nonce}"),
+                &command,
+            );
+            let output = Command::new(&docker).args(&args).env_clear().output().ok();
+            (args, output)
+        };
+
+        // Real run inside the container: in-process arming still happens.
+        let (invocation, output) = run_in_container(&["enforce"], "main");
+        let mut detail = String::new();
+        let mut verdict = ContainerVerdict::Fail;
+        if let Some(out) = &output {
+            let stdout = String::from_utf8_lossy(&out.stdout);
+            let stderr = String::from_utf8_lossy(&out.stderr);
+            let ok_count = stdout.lines().filter(|l| l.starts_with("ok ")).count();
+            if out.status.success() && ok_count > 0 && stderr.contains("RCG-ARMED") {
+                verdict = ContainerVerdict::Pass;
+                detail = format!("container ran {ok_count} checks armed; exit 0");
+            } else {
+                detail = format!(
+                    "container run failed: status {:?}, ok={ok_count}, stderr: {}",
+                    out.status.code(),
+                    stderr.lines().take(3).collect::<Vec<_>>().join(" | ")
+                );
+            }
+        } else {
+            detail.push_str("docker run could not be spawned");
+        }
+        // Container-ring negative control: without the in-process filter,
+        // an io_uring_setup() attempt must be killed by the *container's* profile.
+        let (_, control) = run_in_container(&["observe-only", "--rcg-sabotage", "io-uring"], "ctl");
+        let control_detected = control.as_ref().map(|out| {
+            !String::from_utf8_lossy(&out.stdout).contains("SABOTAGE-SURVIVED")
+                && out.status.code() == Some(128 + SIGSYS)
+        });
+        if control_detected != Some(true) && verdict == ContainerVerdict::Pass {
+            verdict = ContainerVerdict::Fail;
+            detail = format!(
+                "container negative control not detected (status {:?})",
+                control.as_ref().and_then(|o| o.status.code())
+            );
+        }
+        let _ = docker_ok(&docker, &["rmi", "-f", &image]);
+        let _ = std::fs::remove_dir_all(&work);
+        ContainerResult {
+            verdict,
+            detail,
+            invocation: std::iter::once("docker".to_string())
+                .chain(invocation)
+                .collect(),
+            control_detected,
+        }
+    }
+}
