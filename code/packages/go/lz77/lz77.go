@@ -78,6 +78,23 @@ package lz77
 
 import "encoding/binary"
 
+// clampCount turns an attacker-controlled 32-bit header count into an int that
+// is never negative and never larger than maxItems.
+//
+// Why clamp before converting? On a 32-bit GOARCH, int is 32 bits wide, so
+// int(uint32(0xFFFFFFFF)) is -1. A negative count makes make([]T, 0, count)
+// panic. Comparing in uint64 first means the conversion to int only ever sees
+// a value that is at most maxItems, which is already an int.
+func clampCount(claimed uint32, maxItems int) int {
+	if maxItems < 0 {
+		return 0
+	}
+	if uint64(claimed) > uint64(maxItems) {
+		return maxItems
+	}
+	return int(claimed)
+}
+
 // Token is a single LZ77 token: (Offset, Length, NextChar).
 //
 // Represents one unit of the compressed stream.
@@ -260,10 +277,7 @@ func deserialiseTokens(data []byte) []Token {
 	// must not size the allocation or the loop.  Clamp it to the number of
 	// complete 4-byte tokens the remaining bytes can hold; a header claiming
 	// more tokens than are present is treated as truncated.
-	count := int(binary.BigEndian.Uint32(data[0:4]))
-	if maxTokens := (len(data) - 4) / 4; count > maxTokens {
-		count = maxTokens
-	}
+	count := clampCount(binary.BigEndian.Uint32(data[0:4]), (len(data)-4)/4)
 	tokens := make([]Token, 0, count)
 
 	for i := range count {

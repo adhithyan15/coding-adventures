@@ -50,7 +50,37 @@ package lz78
 
 import (
 	"encoding/binary"
+	"math"
 )
+
+// clampCount turns an attacker-controlled 32-bit header count into an int that
+// is never negative and never larger than maxItems.
+//
+// Why clamp before converting? On a 32-bit GOARCH, int is 32 bits wide, so
+// int(uint32(0xFFFFFFFF)) is -1. A negative count makes make([]T, 0, count)
+// panic. Comparing in uint64 first means the conversion to int only ever sees
+// a value that is at most maxItems, which is already an int.
+func clampCount(claimed uint32, maxItems int) int {
+	if maxItems < 0 {
+		return 0
+	}
+	if uint64(claimed) > uint64(maxItems) {
+		return maxItems
+	}
+	return int(claimed)
+}
+
+// clampLength turns an attacker-controlled 32-bit length field into an int that
+// is never negative. Unlike a count, a length is not bounded by the input size
+// (LZ78 output can be larger than its input), so the only ceiling is math.MaxInt.
+// Without the clamp a 32-bit build reads 0xFFFFFFFF as -1, and a negative
+// length is treated as the "no truncation" sentinel instead of a real bound.
+func clampLength(claimed uint32) int {
+	if uint64(claimed) > uint64(math.MaxInt) {
+		return math.MaxInt
+	}
+	return int(claimed)
+}
 
 // Token is one LZ78 output unit: a (DictIndex, NextChar) pair.
 //
@@ -269,13 +299,10 @@ func deserialiseTokens(data []byte) ([]Token, int) {
 	if len(data) < 8 {
 		return nil, 0
 	}
-	originalLength := int(binary.BigEndian.Uint32(data[0:4]))
+	originalLength := clampLength(binary.BigEndian.Uint32(data[0:4]))
 	// Security: the token count is attacker-controlled; clamp it to what the
 	// remaining bytes can hold (4 bytes per token) before sizing or looping.
-	tokenCount := int(binary.BigEndian.Uint32(data[4:8]))
-	if maxTokens := (len(data) - 8) / 4; tokenCount > maxTokens {
-		tokenCount = maxTokens
-	}
+	tokenCount := clampCount(binary.BigEndian.Uint32(data[4:8]), (len(data)-8)/4)
 	tokens := make([]Token, 0, tokenCount)
 	for i := 0; i < tokenCount; i++ {
 		base := 8 + i*4
