@@ -14,6 +14,9 @@ pub const PROPERTY_CASES: u64 = 4096;
 pub const FUZZ_ITERATIONS: u64 = 5000;
 pub const NEGCTL_FUZZ_ITERATIONS: u64 = 1000;
 pub const EXHAUSTIVE_BUDGET: u64 = 400000;
+pub const DOMAIN_BYTES_BUDGET: u64 = 67108864;
+pub const MAX_FIXED_WIDTH: u64 = 4096;
+pub const VALUE_OVERHEAD: u64 = 32;
 
 // ---------------------------------------------------------------------------
 // Runtime prelude (identical in every generated evidence harness).
@@ -222,9 +225,56 @@ pub fn domain(ty: Ty) -> Vec<V> {
     }
 }
 
+/// Closed-form size of [`domain`], `None` on `u64` overflow or an over-cap
+/// width.  Must agree with the generator's `Ty::domain_size`; the generator
+/// test suite checks `domain_size(t) == domain(t).len()` for every type.
+pub fn domain_size(ty: Ty) -> Option<u64> {
+    match ty {
+        Ty::Bool => Some(2),
+        Ty::U8 => Some(256),
+        Ty::Nat => Some(65),
+        Ty::U64 => Some(256 + 56 + 1 + 64),
+        Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
+        Ty::BytesN(n) if n as u64 > MAX_FIXED_WIDTH => None,
+        Ty::BytesN(0) => Some(1),
+        Ty::BytesN(1) => Some(256),
+        Ty::BytesN(n) if n <= 3 => 4u64.checked_pow(n as u32),
+        Ty::BytesN(n) => 3u64.checked_mul(n as u64)?.checked_add(4),
+    }
+}
+
+/// Upper bound on the memory [`domain`] materialises, in bytes.
+pub fn domain_bytes(ty: Ty) -> Option<u64> {
+    let payload = match ty {
+        Ty::Bytes => 8,
+        Ty::BytesN(n) => n as u64,
+        _ => 0,
+    };
+    domain_size(ty)?.checked_mul(payload.checked_add(VALUE_OVERHEAD)?)
+}
+
+/// Whether the Cartesian product of the binder domains fits both budgets.
+/// Every step is checked: a wrapped product (eight `U8` binders is `2^64`,
+/// which is `0` in `u64`) must count as over budget, never as zero.
+pub fn within_budget(tys: &[Ty]) -> bool {
+    let mut product = 1u64;
+    let mut bytes = 0u64;
+    for t in tys {
+        let (Some(size), Some(b)) = (domain_size(*t), domain_bytes(*t)) else {
+            return false;
+        };
+        let (Some(p), Some(total)) = (product.checked_mul(size), bytes.checked_add(b)) else {
+            return false;
+        };
+        product = p;
+        bytes = total;
+    }
+    product <= EXHAUSTIVE_BUDGET && bytes <= DOMAIN_BYTES_BUDGET
+}
+
 fn describe(tys: &[Ty]) -> String {
     tys.iter()
-        .map(|t| format!("{:?}[{}]", t, domain(*t).len()))
+        .map(|t| format!("{:?}[{}]", t, domain_size(*t).map_or_else(|| "over-budget".to_string(), |n| n.to_string())))
         .collect::<Vec<_>>()
         .join(" x ")
 }
@@ -254,15 +304,16 @@ type Holds = fn(&[V], Fault) -> bool;
 
 /// Bounded-exhaustive enumeration of the Cartesian product of binder domains.
 pub fn exhaustive(tys: &[Ty], admit: Admit, holds: Holds, fault: Fault) -> (Verdict, Stats) {
-    let domains: Vec<Vec<V>> = tys.iter().map(|t| domain(*t)).collect();
     let mut stats = Stats::default();
-    let product: u64 = domains.iter().map(|d| d.len() as u64).product();
-    if product > EXHAUSTIVE_BUDGET {
+    // Check the budget BEFORE materialising any domain: a hostile width would
+    // otherwise allocate gigabytes first and be refused afterwards.
+    if !within_budget(tys) {
         return (
             Verdict::fail("corpus-malformed", "exhaustive domain exceeds the budget"),
             stats,
         );
     }
+    let domains: Vec<Vec<V>> = tys.iter().map(|t| domain(*t)).collect();
     let mut idx = vec![0usize; domains.len()];
     loop {
         let env: Vec<V> = idx.iter().zip(&domains).map(|(i, d)| d[*i].clone()).collect();
@@ -708,20 +759,50 @@ fn write_manifest(outcomes: &[Outcome]) {
     }
 }
 
+/// Decide the injected fault from the two sabotage variables.
+///
+/// `WARRANT_EVIDENCE_FILTER` exists only so BUILD can aim a *sabotage* run at
+/// a cheap subset.  On its own it would turn the target into a suite that
+/// silently runs fewer tests and still exits 0, so it is an error unless a
+/// fault is also requested (audit A3).  Pure function so it can be tested
+/// without touching the process environment.
+pub fn resolve_sabotage(fault: Option<&str>, filter: Option<&str>) -> Result<Fault, String> {
+    match (fault, filter) {
+        (None, Some(f)) => Err(format!(
+            "WARRANT_EVIDENCE_FILTER={f:?} is set without WARRANT_EVIDENCE_FAULT; \
+             a filtered run is only meaningful as a sabotage run"
+        )),
+        (None, None) => Ok(Fault::None),
+        (Some(text), _) => Fault::parse(text).ok_or_else(|| format!("unknown WARRANT_EVIDENCE_FAULT {text:?}")),
+    }
+}
+
+/// A filtered suite that selects nothing proves nothing and must not pass.
+pub fn require_tests(count: usize, filter: Option<&str>) -> Result<(), String> {
+    match filter {
+        Some(f) if count == 0 => Err(format!("WARRANT_EVIDENCE_FILTER={f:?} matched no test")),
+        _ => Ok(()),
+    }
+}
+
 /// Entry point of the generated test target. Returns the process exit code.
 pub fn run_main() -> i32 {
     std::panic::set_hook(Box::new(|_| ()));
-    let fault = match std::env::var("WARRANT_EVIDENCE_FAULT") {
-        Ok(text) => match Fault::parse(&text) {
-            Some(f) => f,
-            None => {
-                eprintln!("unknown WARRANT_EVIDENCE_FAULT {text:?}");
-                return 2;
-            }
-        },
-        Err(_) => Fault::None,
+    let fault_var = std::env::var("WARRANT_EVIDENCE_FAULT").ok();
+    let filter_var = std::env::var("WARRANT_EVIDENCE_FILTER").ok();
+    let fault = match resolve_sabotage(fault_var.as_deref(), filter_var.as_deref()) {
+        Ok(f) => f,
+        Err(msg) => {
+            eprintln!("{msg}");
+            return 2;
+        }
     };
     let suite = build_suite(fault);
+    let registered = META.lock().unwrap().len();
+    if let Err(msg) = require_tests(registered, filter_var.as_deref()) {
+        eprintln!("{msg}");
+        return 2;
+    }
     run::main_recorded(&suite, write_manifest)
 }
 

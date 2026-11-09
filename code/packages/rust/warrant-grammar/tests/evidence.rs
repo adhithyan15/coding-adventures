@@ -254,3 +254,96 @@ fn model_calling_an_operation_is_rejected() {
     let bindings = BindingManifest { package: "p".into(), revision: "0".into(), bindings: b };
     assert_eq!(generate_src(src, &bindings).unwrap_err().0, DiagnosticCode::W0701);
 }
+
+// ---- audit A1/A2: the exhaustive budget must not wrap or count only elements ----
+
+fn eq_head() -> (&'static str, BindingManifest) {
+    let head = "warrant t\n  op eq(a: Bytes, b: Bytes) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq:\n    steps <= 10\n";
+    let mut b = BTreeMap::new();
+    b.insert("eq".to_string(), bind("ct_eq", &[], false, None));
+    (head, BindingManifest { package: "p".into(), revision: "0".into(), bindings: b })
+}
+
+#[test]
+fn a_wrapping_domain_product_is_over_budget_not_zero() {
+    // Eight U8 binders: 256^8 = 2^64, which wraps to 0 in u64 and used to slip
+    // under the budget (the enumeration would then never finish).
+    let (head, bindings) = eq_head();
+    let binders: Vec<String> = (0..8).map(|i| format!("x{i}: U8")).collect();
+    let src = format!("{head}  claim c:\n    forall {}. eq(b\"\", b\"\") == true\n", binders.join(", "));
+    let (code, msg) = generate_src(&src, &bindings).unwrap_err();
+    assert_eq!(code, DiagnosticCode::W0706, "{msg}");
+    // A product that wraps to a *non-zero* value is refused as well.
+    let binders: Vec<String> = (0..9).map(|i| format!("x{i}: U8")).collect();
+    let src = format!("{head}  claim c:\n    forall {}. eq(b\"\", b\"\") == true\n", binders.join(", "));
+    assert_eq!(generate_src(&src, &bindings).unwrap_err().0, DiagnosticCode::W0706);
+}
+
+#[test]
+fn the_prelude_budget_check_is_checked_arithmetic_too() {
+    use harness::{domain, domain_bytes, domain_size, within_budget, Ty};
+    assert!(!within_budget(&[Ty::U8; 8]), "2^64 wraps to 0 and must not pass");
+    assert!(!within_budget(&[Ty::U8; 9]));
+    assert!(!within_budget(&[Ty::BytesN(4097)]));
+    assert!(!within_budget(&[Ty::BytesN(usize::MAX)]));
+    assert!(within_budget(&[Ty::BytesN(4096)]), "the cap itself is allowed");
+    assert!(within_budget(&[Ty::U8, Ty::Bool]));
+    // The runner refuses before enumerating (it would otherwise never return).
+    let (v, s) = harness::exhaustive(&[Ty::U8; 8], |_| true, |_, _| true, Fault::None);
+    assert!(is_fail(&v, "corpus-malformed"), "{v:?}");
+    assert_eq!(s.cases, 0);
+    // The closed forms must describe what `domain` really enumerates, and the
+    // byte bound must dominate the real payload.
+    for ty in [Ty::Bool, Ty::U8, Ty::Nat, Ty::U64, Ty::Bytes, Ty::BytesN(0), Ty::BytesN(1), Ty::BytesN(2), Ty::BytesN(3), Ty::BytesN(4), Ty::BytesN(17)] {
+        let d = domain(ty);
+        assert_eq!(domain_size(ty), Some(d.len() as u64), "{ty:?}");
+        let payload: usize = d
+            .iter()
+            .map(|v| match v {
+                harness::V::Bytes(b) => b.len(),
+                _ => 0,
+            })
+            .sum();
+        assert!(domain_bytes(ty).unwrap() >= payload as u64, "{ty:?}");
+    }
+}
+
+#[test]
+fn oversized_fixed_widths_are_refused_with_w0707() {
+    // Bytes<100000> would materialise ~30 GB of domain.
+    let (head, bindings) = eq_head();
+    let src = format!("{head}  claim c:\n    forall a: Bytes<100000>. eq(a, a) == true\n");
+    let (code, msg) = generate_src(&src, &bindings).unwrap_err();
+    assert_eq!(code, DiagnosticCode::W0707, "{msg}");
+    // Just over the cap is refused, the cap itself is accepted.
+    let src = format!("{head}  claim c:\n    forall a: Bytes<4097>. eq(a, a) == true\n");
+    assert_eq!(generate_src(&src, &bindings).unwrap_err().0, DiagnosticCode::W0707);
+    let src = format!("{head}  claim c:\n    forall a: Bytes<4096>. eq(a, a) == true\n");
+    assert!(generate_src(&src, &bindings).is_ok());
+
+    // A huge const-generic width in a call is refused too (one match arm and one
+    // monomorphisation per width).
+    let head = "warrant t\n  op eq_fixed<N: Nat>(a: Bytes<N>, b: Bytes<N>) -> Bool\n  assume platform:\n    none\n  assume environment:\n    none\n  bound eq_fixed:\n    steps <= 10\n";
+    let mut b = BTreeMap::new();
+    b.insert("eq_fixed".to_string(), bind("ct_eq_fixed", &["N"], false, None));
+    let bindings = BindingManifest { package: "p".into(), revision: "0".into(), bindings: b };
+    let src = format!("{head}  claim c:\n    forall a: Bytes<2>, b: Bytes<2>. eq_fixed<100000>(a, b) == true\n");
+    assert_eq!(generate_src(&src, &bindings).unwrap_err().0, DiagnosticCode::W0707);
+}
+
+// ---- audit A3: a filter without a fault must not produce a green run ----------
+
+#[test]
+fn filter_without_fault_is_an_error_and_an_empty_filter_match_fails() {
+    use harness::{require_tests, resolve_sabotage};
+    assert_eq!(resolve_sabotage(None, None), Ok(Fault::None));
+    let e = resolve_sabotage(None, Some("/exhaustive/")).unwrap_err();
+    assert!(e.contains("WARRANT_EVIDENCE_FILTER") && e.contains("WARRANT_EVIDENCE_FAULT"), "{e}");
+    assert_eq!(resolve_sabotage(Some("invert"), Some("/exhaustive/")), Ok(Fault::Invert));
+    assert_eq!(resolve_sabotage(Some("invert"), None), Ok(Fault::Invert));
+    assert!(resolve_sabotage(Some("nonsense"), None).unwrap_err().contains("unknown"));
+    // A filter that selects zero tests proves nothing.
+    assert!(require_tests(0, Some("/no-such-suite/")).is_err());
+    assert!(require_tests(3, Some("/exhaustive/")).is_ok());
+    assert!(require_tests(0, None).is_ok(), "an unfiltered empty suite is the generator's concern");
+}

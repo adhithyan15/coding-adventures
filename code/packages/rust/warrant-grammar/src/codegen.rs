@@ -31,6 +31,9 @@ pub enum DiagnosticCode {
     W0705,
     /// W0706: Bounded-exhaustive domain exceeds the case budget (VER04h §3).
     W0706,
+    /// W0707: A fixed byte width exceeds the cap (VER04h §3): the exhaustive
+    /// domain would allocate `O(width^2)` bytes.
+    W0707,
 }
 
 impl fmt::Display for DiagnosticCode {
@@ -42,6 +45,7 @@ impl fmt::Display for DiagnosticCode {
             Self::W0704 => write!(f, "W0704"),
             Self::W0705 => write!(f, "W0705"),
             Self::W0706 => write!(f, "W0706"),
+            Self::W0707 => write!(f, "W0707"),
         }
     }
 }

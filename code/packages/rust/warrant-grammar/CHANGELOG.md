@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased
+
+- Security review fixes (VER04h section 3 and 6):
+  - A1: exhaustive-domain size uses checked arithmetic in the generator and in
+    the generated prelude; an overflowing product (eight `U8` binders is
+    `2^64`, which wrapped to `0`) is over budget.
+  - A2: the budget also bounds bytes (`DOMAIN_BYTES_BUDGET`), and fixed widths
+    above `MAX_FIXED_WIDTH` (4096), as binders or call widths, fail with the new
+    diagnostic `W0707`. The prelude checks the budget before allocating domains.
+  - A3: the generated target exits `2` when `WARRANT_EVIDENCE_FILTER` is set
+    without `WARRANT_EVIDENCE_FAULT`, or when the filter matches no test
+    (`resolve_sabotage`, `require_tests`).
+
 ## 0.1.0 — Unreleased
 
 - Add `evidence` (VER04h / VER-P030): compile a checked Warrant document into a

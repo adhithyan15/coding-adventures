@@ -46,6 +46,21 @@ const PRELUDE: &str = include_str!("evidence_prelude.rs.txt");
 /// Maximum size of the Cartesian product of binder domains (VER04h section 3).
 pub const EXHAUSTIVE_BUDGET: u64 = 400_000;
 
+/// Largest fixed width (`Bytes<N>` binder or `op<N>` call width) the generator
+/// accepts.  The enumerated domain of `Bytes<N>` holds `4 + 3N` values of `N`
+/// bytes each, i.e. about `3N^2` bytes, and every width becomes a monomorphised
+/// const-generic arm in the adapter; both must stay small (W0707).
+pub const MAX_FIXED_WIDTH: u64 = 4096;
+
+/// Memory budget for all binder domains of one claim, in bytes.  The element
+/// budget alone is not enough: `Bytes<100000>` has only ~300k elements but
+/// would materialise ~30 GB (VER04h section 3, audit A2).
+pub const DOMAIN_BYTES_BUDGET: u64 = 64 * 1024 * 1024;
+
+/// Upper bound on the heap/stack footprint of one `V` value besides its
+/// payload bytes.
+pub const VALUE_OVERHEAD: u64 = 32;
+
 /// Generation parameters. Every value is echoed into the manifest or the
 /// generated constants, so changing one changes the checked-in file.
 #[derive(Clone, Debug)]
@@ -63,6 +78,16 @@ fn unsupported(msg: impl Into<String>, span: (usize, usize)) -> CodegenError {
     CodegenError {
         code: DiagnosticCode::W0701,
         kind: CodegenErrorKind::UnsupportedTarget(msg.into()),
+        span,
+    }
+}
+
+fn width_too_large(n: u64, span: (usize, usize)) -> CodegenError {
+    CodegenError {
+        code: DiagnosticCode::W0707,
+        kind: CodegenErrorKind::UnsupportedTarget(format!(
+            "fixed width {n} exceeds the cap {MAX_FIXED_WIDTH}"
+        )),
         span,
     }
 }
@@ -109,19 +134,48 @@ impl Ty {
     }
 
     /// Closed-form size of the domain the prelude enumerates (VER04h section 3).
-    fn domain_size(self) -> u64 {
+    ///
+    /// `None` means "does not fit in a `u64`" and callers must treat it as
+    /// over budget.  (Arithmetic here is checked on purpose: a wrapped
+    /// product of eight `U8` binders is `2^64 = 0`, which used to pass the
+    /// budget and send the enumeration into an effectively endless loop.)
+    fn domain_size(self) -> Option<u64> {
         match self {
-            Ty::Bool => 2,
-            Ty::U8 => 256,
-            Ty::Nat => 65,
-            Ty::U64 => 256 + 56 + 1 + 64,
-            Ty::Bytes => 1 + 256 + 16 + 64 + 10,
-            Ty::BytesN(0) => 1,
-            Ty::BytesN(1) => 256,
-            Ty::BytesN(n) if n <= 3 => 4u64.pow(n as u32),
-            Ty::BytesN(n) => 4 + 3 * n,
+            Ty::Bool => Some(2),
+            Ty::U8 => Some(256),
+            Ty::Nat => Some(65),
+            Ty::U64 => Some(256 + 56 + 1 + 64),
+            Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
+            Ty::BytesN(n) if n > MAX_FIXED_WIDTH => None,
+            Ty::BytesN(0) => Some(1),
+            Ty::BytesN(1) => Some(256),
+            Ty::BytesN(n) if n <= 3 => 4u64.checked_pow(n as u32),
+            Ty::BytesN(n) => 3u64.checked_mul(n)?.checked_add(4),
         }
     }
+
+    /// Upper bound on the bytes the enumerated domain occupies: every element
+    /// costs [`VALUE_OVERHEAD`] plus its payload.
+    fn domain_bytes(self) -> Option<u64> {
+        let payload = match self {
+            Ty::Bytes => 8,
+            Ty::BytesN(n) => n,
+            _ => 0,
+        };
+        self.domain_size()?.checked_mul(payload.checked_add(VALUE_OVERHEAD)?)
+    }
+}
+
+/// Cartesian-product size and total domain bytes of a binder list, or `None`
+/// when either overflows a `u64` or a width is over the cap.
+fn claim_domain(tys: &[Ty]) -> Option<(u64, u64)> {
+    let mut product = 1u64;
+    let mut bytes = 0u64;
+    for t in tys {
+        product = product.checked_mul(t.domain_size()?)?;
+        bytes = bytes.checked_add(t.domain_bytes()?)?;
+    }
+    Some((product, bytes))
 }
 
 fn ty_of(p: &Parameter<'_>) -> Result<Ty, CodegenError> {
@@ -130,7 +184,12 @@ fn ty_of(p: &Parameter<'_>) -> Result<Ty, CodegenError> {
         TypeExpr::Bytes {
             width: Some(Width::Literal(n)),
             ..
-        } => Ok(Ty::BytesN(*n)),
+        } => {
+            if *n > MAX_FIXED_WIDTH {
+                return Err(width_too_large(*n, p.span));
+            }
+            Ok(Ty::BytesN(*n))
+        }
         TypeExpr::Named { name, .. } => match *name {
             "Bytes" => Ok(Ty::Bytes),
             "Bool" => Ok(Ty::Bool),
@@ -252,6 +311,9 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
                             for w in widths {
                                 match w {
                                     Width::Literal(v) => {
+                                        if *v > MAX_FIXED_WIDTH {
+                                            return Err(width_too_large(*v, sp));
+                                        }
                                         ws.push(format!("{v}u64"));
                                         cx.widths.entry(n.to_string()).or_default().insert(*v);
                                     }
@@ -580,12 +642,18 @@ pub fn generate_evidence_harness(
         let op = find_operation_in_expr(cbody, &op_names)
             .ok_or_else(|| unsupported(format!("claim {} calls no operation", c.name), *span))?;
         let tys: Vec<Ty> = binders.iter().map(ty_of).collect::<Result<_, _>>()?;
-        let product: u64 = tys.iter().map(|t| t.domain_size()).product();
-        if product > EXHAUSTIVE_BUDGET {
+        let (shown, over) = match claim_domain(&tys) {
+            Some((p, b)) => (
+                format!("{p} ({b} bytes)"),
+                p > EXHAUSTIVE_BUDGET || b > DOMAIN_BYTES_BUDGET,
+            ),
+            None => ("overflowing u64".to_string(), true),
+        };
+        if over {
             return Err(CodegenError {
                 code: DiagnosticCode::W0706,
                 kind: CodegenErrorKind::UnsupportedTarget(format!(
-                    "claim {} exhaustive domain {product} exceeds budget {EXHAUSTIVE_BUDGET}",
+                    "claim {} exhaustive domain {shown} exceeds budget {EXHAUSTIVE_BUDGET} cases / {DOMAIN_BYTES_BUDGET} bytes",
                     c.name
                 )),
                 span: *span,
@@ -751,7 +819,10 @@ pub fn generate_evidence_harness(
          pub const PROPERTY_CASES: u64 = {pc};\n\
          pub const FUZZ_ITERATIONS: u64 = {fi};\n\
          pub const NEGCTL_FUZZ_ITERATIONS: u64 = {nfi};\n\
-         pub const EXHAUSTIVE_BUDGET: u64 = {budget};\n\n",
+         pub const EXHAUSTIVE_BUDGET: u64 = {budget};\n\
+         pub const DOMAIN_BYTES_BUDGET: u64 = {bbudget};\n\
+         pub const MAX_FIXED_WIDTH: u64 = {maxw};\n\
+         pub const VALUE_OVERHEAD: u64 = {vo};\n\n",
         spec = options.spec_path,
         sha = options.spec_sha256,
         krate = options.package_crate,
@@ -760,6 +831,9 @@ pub fn generate_evidence_harness(
         fi = options.fuzz_iterations,
         nfi = options.negctl_fuzz_iterations,
         budget = EXHAUSTIVE_BUDGET,
+        bbudget = DOMAIN_BYTES_BUDGET,
+        maxw = MAX_FIXED_WIDTH,
+        vo = VALUE_OVERHEAD,
     );
     out.push_str(PRELUDE);
     out.push_str("\n// ---------------------------------------------------------------------------\n// Generated from the Warrant document\n// ---------------------------------------------------------------------------\n\n");

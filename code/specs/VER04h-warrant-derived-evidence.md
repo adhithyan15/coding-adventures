@@ -106,6 +106,21 @@ Cartesian product of the binder domains, filtered by refinements.
 Case-count budget: the product over binders (before refinement) must not exceed
 `EXHAUSTIVE_BUDGET = 400_000` per claim; the generator fails with `W0706` if a
 claim would exceed it, forcing a smaller domain rather than a silent sample.
+
+The budget is computed with **checked** arithmetic and also bounds memory:
+
+* a product (or sum) that overflows `u64` is over budget, never zero -- eight
+  `U8` binders are `2^64` cases, which wrapped to `0` and used to pass;
+* `DOMAIN_BYTES_BUDGET = 64 MiB` bounds the total bytes the binder domains
+  materialise (each element costs `VALUE_OVERHEAD = 32` bytes plus its payload),
+  because the element count alone lets `Bytes<100000>` (about 300k elements of
+  100 kB each) through;
+* a fixed width above `MAX_FIXED_WIDTH = 4096`, as a `Bytes<N>` binder or as an
+  `op<N>` call width (each becomes a const-generic match arm), fails
+  generation with `W0707`.
+
+The generated prelude repeats the same checks (`within_budget`) and runs them
+*before* materialising any domain.
 Both-sides length coverage is deliberate: every pair of lengths in `0..=8`
 occurs for `Bytes` pairs, so each mismatch path is exercised.
 
@@ -172,6 +187,11 @@ faults are selectable from the command line for BUILD-level checking:
 `WARRANT_EVIDENCE_FAULT=<fault> cargo test … --test warrant_evidence` must print
 `not ok` lines (and exit non-zero) for the affected suites. The BUILD files run
 every fault in that mode.
+
+`WARRANT_EVIDENCE_FILTER=<substring>` restricts a sabotage run to matching test
+ids. It is only meaningful together with `WARRANT_EVIDENCE_FAULT`: set alone it
+makes the target exit `2` with a message (it would otherwise run fewer tests
+and exit `0`), and a filter that matches no test also exits `2`.
 
 ## 7. Proof obligations from `labels` and `bound`
 
