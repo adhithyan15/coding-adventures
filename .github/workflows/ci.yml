@@ -5737,7 +5737,12 @@ jobs:
       # disk-watch.sh prints `df` every five minutes and a breakdown of the
       # largest directories when usage crosses 70/80/90/95%, so a shard that
       # runs out of disk says what filled it while it still can (#17652).
-      - name: Full build (forced and sharded)
+      # NOTE: the step name is load-bearing. The build-tool validators (Go,
+      # Python, Elixir, Lua, Perl, .NET) and ci_package_durations.py match on
+      # the literal "Full build on main merge", and a CI acceptance test indexes
+      # on it. The build now also runs on schedule/dispatch/label, but renaming
+      # the step would silently disable those checks.
+      - name: Full build on main merge
         if: needs.detect.outputs.full_build == 'true'
         timeout-minutes: 150
         shell: bash
