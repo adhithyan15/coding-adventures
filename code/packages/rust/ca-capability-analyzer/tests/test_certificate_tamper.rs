@@ -351,7 +351,8 @@ fn whitespace_and_key_order_are_semantically_neutral() {
 
 #[test]
 fn stale_source_is_detected_for_every_kind_of_edit() {
-    let edits: Vec<(&str, Box<dyn Fn(&Pkg)>)> = vec![
+    type Edit = (&'static str, Box<dyn Fn(&Pkg)>);
+    let edits: Vec<Edit> = vec![
         ("modify a byte", Box::new(|p| p.write("src/lib.rs", &LIB.replace("a[0]", "a[1]")))),
         ("append whitespace", Box::new(|p| p.write("src/lib.rs", &format!("{LIB} ")))),
         ("append comment", Box::new(|p| p.write("src/lib.rs", &format!("{LIB}// c\n")))),

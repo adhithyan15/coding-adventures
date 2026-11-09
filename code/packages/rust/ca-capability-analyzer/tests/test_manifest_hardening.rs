@@ -242,7 +242,7 @@ fn capability_field_validation() {
     let not_obj = r#"{"version": 1, "package": "rust/x", "justification": "Valid justification text.", "capabilities": ["fs:read:*"]}"#;
     assert!(err(not_obj).contains("must be an object"));
     for field in ["category", "action", "target", "justification"] {
-        let mut parts = vec![
+        let mut parts = [
             ("category", "\"fs\""),
             ("action", "\"read\""),
             ("target", "\"*\""),

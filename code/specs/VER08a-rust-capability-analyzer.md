@@ -150,10 +150,11 @@ An exception waives the construct for the whole package, not per item. Waived co
 | `include!(…)` (bare, `std::`, `core::`) | pulls in code the scanner never sees (`include_str!`/`include_bytes!` pull in data and are allowed) |
 | `#[path = "…"]` (also inside `cfg_attr`) | module location is untracked; may point at an unscanned directory |
 | in a `macro_rules!` body, a metavariable adjacent to `::` (`std::$m::read`, `$p::x`, `$(…)::*`) | the expansion constructs a path the scanner never sees |
+| in a `macro_rules!` body, an attribute whose name is a metavariable (`#[$a]`) or a `cfg_attr` containing one | `m!(no_mangle)` would create `#[no_mangle]` unseen. This also flags the common `$(#[$meta:meta])*` forwarding idiom (accepted false positive) |
 | `#[proc_macro]`, `#[proc_macro_derive]`, `#[proc_macro_attribute]`, or `proc-macro = true` in `Cargo.toml` | compile-time code execution with full authority |
 | unclassified `std`/`core`/`alloc` path (§3.3) | deny by default |
 | alias cycle / unbounded expansion (§3.2) | resolution did not converge |
-| `Cargo.toml` `path`/`build` keys (`[lib]`, `[[bin]]`, `[[example]]`, `[[test]]`, `[[bench]]`, `[package]`) that are absolute, contain `..`, start with a hidden component, or start with an unscanned directory (`tests benches examples target node_modules _build`) | compiled code outside the scanned set |
+| `Cargo.toml` `path` keys under `[lib]`/`[[bin]]` and `build` under `[package]` that are absolute, contain `..`, start with a hidden component, or start with an unscanned directory (`tests benches examples target node_modules _build`) | shipped code outside the scanned set. (`[[test]]`/`[[bench]]`/`[[example]]` paths are not shipped and not examined, G-5.) |
 
 ### 3.6 Third-party dependencies
 
