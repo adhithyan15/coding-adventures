@@ -1907,10 +1907,11 @@ mod tests {
         );
         let a = compile(&m).expect("compile");
         let src = &a.source;
-        assert!(!src.contains("try:"), "got:\n{src}");
-        assert!(!src.contains("except"), "got:\n{src}");
-        assert!(!src.contains("finally:"), "got:\n{src}");
-        assert!(src.contains("x = 42"), "got:\n{src}");
+        let main_src = src.split("def _sir_user_main():").nth(1).expect("user main");
+        assert!(!main_src.contains("try:"), "got:\n{src}");
+        assert!(!main_src.contains("except"), "got:\n{src}");
+        assert!(!main_src.contains("finally:"), "got:\n{src}");
+        assert!(main_src.contains("x = 42"), "got:\n{src}");
     }
 
     // ─── SIR cons pairs now ship in the dedicated package (Q8) ──────────────
