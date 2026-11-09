@@ -293,8 +293,14 @@ and `target` (the suite id attacked).
 obligations with `id`, `op`, `function`, `kind`
 (`constant-time | steps-bound | negative-control`), `label`
 (`proved | bounded(K) | unknown | falsified-as-expected | unchecked`),
-`verdict`, `max_len`, per-shape `runs` and `certificates`
-(`{sha256, kind, cnf_file, drat_file}`).
+`verdict`, `max_len`, per-shape `runs`, `certificates`
+(`{id, kind, count}`; `kind` is `miter` or `trivial-miter-collapsed`) and, for
+the obligations a run discharges, `obligation_sha256`: the SHA-256 of the
+canonical text of the *lowered, inlined* WIR function (its deterministic derived
+`Debug` rendering) followed by the textual obligation (kind, operation, secret
+mask, length shapes, bounds).  The test and bench manifests also carry
+`source_sha256`, the digest of `src/lib.rs` -- the same definition the proof
+manifest uses.
 
 `evidence/bench-manifest.json` is written by the (hand-written) microbenchmark
 target in the same format as the test manifest (`kind: "bench"`), so the report
@@ -336,6 +342,54 @@ because they are deterministic, `--check` on a stale or hand-edited report fails
    exception CWE-125/787 are `discharged` from the bounds-checked proofs
    (bounded, not a Miri run) and CWE-416/415/476/190 are unapproved exemptions.
 
+Further checks added by the security review (each has a falsification test in
+`tests/test_evidence.rs`):
+
+8. **Claims are matched by exact id, once.** A duplicate claim id, a claim with
+   no derived counterpart, or a different claim count fails (`DuplicateId`,
+   `UnknownEvidence`, `EvidenceMismatch`); a second copy can no longer hide
+   behind a genuine first one.
+9. **The generic checker validates what the report states**: a claim's
+   `exhaustive.status` must be `pass`, its `proof.label` must have a rank
+   (`proved`, `bounded(K)`, or the registry's `proved-to-gate-level`), and under
+   a `pass` verdict no claim may list a `*:unchecked` assumption.  Rungs E3/E4 are
+   judged *per operation* that has claims (each needs passing, non-empty
+   evidence), and E5 requires every operation to have obligations that all passed
+   with a ranked label.
+10. **The effect certificate is parsed strictly** (typed `label`,
+    `declared_effects`, `banned_construct_exceptions`; any wrong type or absent
+    field is an error, never "clean").  A construct whose name contains `unsafe`
+    or `ffi` (any case) is an unsafe-bearing exception.  As a cross-check
+    `src/**/*.rs` is scanned for the keyword `unsafe` outside comments and
+    literals; `unsafe` in the code with no declared exception fails at load and in
+    `verify_evidence` (`UnsafeContradiction`), and also withdraws the
+    `analyzer::no-unsafe-or-ffi` attestation.
+11. **Certificates are bound to obligations (partial).** Every `constant-time` /
+    `steps-bound` obligation with verdict `pass` must cite at least one
+    certificate and carry a well-formed `obligation_sha256`.  A claim backed by
+    a collapsed-miter certificate carries `proof.certificate_kind:
+    "trivial-miter"` in the report (`"miter"` otherwise); `--check` fails a report
+    that omits the mark (`TrivialCertificateUnmarked`).  Recomputing
+    `obligation_sha256` from the source is *not* done: see WD-009 in section 10.
+12. **Test and bench manifests are checked for staleness** against `src/lib.rs`
+    (`source_sha256`), like the proof manifest.
+13. **Spec and ids.** The spec path in both manifests must be exactly
+    `code/specs/<package>.warrant` (relative, no `..`), all three manifests must
+    name the spec's module, evidence ids may not repeat within or across
+    manifests, may not equal an attestation id, and may not start with
+    `unverified::`; JSON objects with duplicate keys are rejected.
+14. **The "no unsafe" contradiction uses structured fields** (status, CWE class,
+    evidence ids), not the free-text `reason`: with an unsafe exception no row may
+    cite the no-unsafe attestation, no memory-safety row may be `excluded`,
+    CWE-416/415/476/190 must stay exemptions, and CWE-125/787 may be discharged
+    only on a proof-manifest id.
+15. **`unverified::` ids fail `--check`** unless `--allow-unverified` is given
+    (the ids are then listed in the output).  `ct-compare`'s `BUILD` passes the
+    flag because its report still cites nine `unverified::` AST-audit
+    attestations; removing the flag is the incentive to replace them.
+16. **Inputs are size-capped**: manifests, the effect certificate, the Warrant
+    document, sources and the report at 16 MiB, certificate files at 64 MiB.
+
 Evidence ids come from three places: manifest entries (`warrant/...`,
 `bench/...`; must exist and have verdict `pass`), attestations derived from the
 effect certificate (`effect-certificate::proved`, `capability-audit::*-empty`,
@@ -352,6 +406,14 @@ so. Each failure mode has a falsification test (`tests/test_evidence.rs`).
 * A CT proof of `ct_eq` requires inlining the equal-length helper; the inliner
   is a pure WIR pass in `warrant-ir`, tested by differential execution against
   the unlined function on concrete inputs.
+* **WD-009 (follow-up)**: `obligation_sha256` is recorded and shape-checked, not
+  recomputed.  A checker that re-parses and re-lowers `src/lib.rs`, re-inlines the
+  function, rebuilds the obligation text and recomputes the digest (and compares
+  each certificate's CNF with the miter it claims to refute) would close the gap
+  between "a valid refutation exists" and "this refutation is of that obligation".
+  Until then a hand-written manifest with a valid but unrelated certificate and a
+  plausible hash is not detected; the `trivial-miter` mark makes the weakest case
+  (collapsed miters) visible.
 * The pilot's memory-safety CWE rows assume "no unsafe"; `ct-compare` contains
   one audited `volatile_barrier` module with `unsafe`. The report derives
   `is_safe_rust` from the effect certificate and states the exception.
