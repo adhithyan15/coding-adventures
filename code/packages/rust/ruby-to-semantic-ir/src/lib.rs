@@ -9538,7 +9538,7 @@ b = "y"
         let call = find_super_args(f).expect("__super__ call");
         assert!(matches!(&call[0], Expr::StrLit { value, .. } if value == "m"));
         assert!(matches!(&call[1], Expr::StrLit { value, .. } if value == "C"));
-        // Remaining args are the two params (sorted for determinism: a, b).
+        // Remaining args are the two params in source declaration order.
         let forwarded: Vec<&str> = call[2..]
             .iter()
             .filter_map(|e| match e {
@@ -9546,7 +9546,59 @@ b = "y"
                 _ => None,
             })
             .collect();
-        assert_eq!(forwarded, vec!["a", "b"], "bare super forwards all params");
+        assert_eq!(forwarded, vec!["a", "b"], "bare super forwards all params in declaration order");
+    }
+
+    /// #18798 Item 20 - zero-argument `super` must forward parameters in exact
+    /// declaration order, not alphabetical order.
+    #[test]
+    fn bare_super_preserves_declaration_order_non_alphabetical() {
+        // `def m(z, a, m_param)` has non-alphabetical parameter order.
+        // Alphabetical sorting would forward `[a, m_param, z]`.
+        // Ruby specification and SIR require `[z, a, m_param]`.
+        let m = lower(
+            "class Base\nend\nclass C < Base\n  def m(z, a, m_param)\n    super\n  end\nend\n",
+        );
+        let f = m.functions.iter().find(|f| f.name == "C__m").expect("C__m");
+        let call = find_super_args(f).expect("__super__ call");
+        assert!(matches!(&call[0], Expr::StrLit { value, .. } if value == "m"));
+        assert!(matches!(&call[1], Expr::StrLit { value, .. } if value == "C"));
+        let forwarded: Vec<&str> = call[2..]
+            .iter()
+            .filter_map(|e| match e {
+                Expr::VarRef { name, scope: Scope::Param, .. } => Some(name.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(
+            forwarded,
+            vec!["z", "a", "m_param"],
+            "bare super must preserve non-alphabetical declaration order"
+        );
+    }
+
+    /// #18798 Item 20 - zero-argument `super` inside endless def also preserves declaration order.
+    #[test]
+    fn bare_super_in_endless_def_preserves_declaration_order() {
+        let m = lower(
+            "class Base\nend\nclass C < Base\n  def calc(target, source) = super\nend\n",
+        );
+        let f = m.functions.iter().find(|f| f.name == "C__calc").expect("C__calc");
+        let call = find_super_args(f).expect("__super__ call");
+        assert!(matches!(&call[0], Expr::StrLit { value, .. } if value == "calc"));
+        assert!(matches!(&call[1], Expr::StrLit { value, .. } if value == "C"));
+        let forwarded: Vec<&str> = call[2..]
+            .iter()
+            .filter_map(|e| match e {
+                Expr::VarRef { name, scope: Scope::Param, .. } => Some(name.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(
+            forwarded,
+            vec!["target", "source"],
+            "bare super in endless def must preserve declaration order"
+        );
     }
 
     #[test]

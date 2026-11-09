@@ -6,6 +6,16 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ### Fixed
 
+- **Preserve parameter declaration order for zero-argument `super` (#18798, Item 20).**
+  Zero-argument `super` (`zsuper`) forwards the enclosing method's parameters
+  to the parent method. `lower_super_expr` collected parameters from
+  `current_params` (a `HashSet`) and sorted them alphabetically, passing
+  arguments in inverted or scrambled order for any method whose parameters were
+  not declared in alphabetical order (e.g. `def m(b, a); super; end` forwarded
+  `(a, b)`). `RubyLowerer` now tracks `current_method_params: Vec<String>` in
+  exact declaration order across `lower_def_statement` and `lower_endless_def_statement`,
+  and `lower_super_expr` forwards parameters directly in declaration order.
+
 - **Security review: a method of thousands of jumps aborted the process.**
   `jumps::lower_list` nested the statements after each jump one guard
   deeper, recursing on (and copying) the rest of the list once per jump: 5000
