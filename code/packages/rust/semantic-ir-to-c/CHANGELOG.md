@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased — Exception message method (#18798 item 8)
+
+- **Exception `message` builtin method.** `is_builtin_method` in `emit.rs` and `_sir_builtin_method_v` in `runtime.rs` now support zero-argument `"message"` on `SIR_ERROR` exception values, returning `recv.as.err->msg` (or `sir_class` if nil).
+
 ## Unreleased — Closure call default-padding sentinel (#18490)
 
 - **Closure thunk missing argument padding.** `emit_closure_thunk` in `emit.rs` now emits `_sir_missing()` instead of `_sir_nil()` when padding omitted arguments in closure calls. This ensures callees with default parameters trigger their body-top default evaluation prologue instead of binding `nil`.

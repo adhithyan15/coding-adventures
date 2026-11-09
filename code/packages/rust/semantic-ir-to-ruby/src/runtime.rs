@@ -213,6 +213,15 @@ def sir_append(recv, *args)
   end
 end
 
+def sir_message(recv)
+  return recv.public_send(:sir_um_message) if recv.respond_to?(:sir_um_message)
+
+  case recv
+  when Exception then recv.message
+  else raise NoMethodError, "undefined method 'message' for #{recv.inspect}"
+  end
+end
+
 # In-place addition for `+=`. When `a` is an Array, mutates `a` in place
 # by appending the elements of `b` (or `b` itself if not an Array),
 # preserving object identity across aliases (Python's `__iadd__`).

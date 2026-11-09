@@ -239,6 +239,37 @@ fn raise_named_class_with_a_compound_message_still_constructs_the_exception() {
 }
 
 #[test]
+fn exception_message_method_returns_message_or_class_name() {
+    // #18798 item 8: built-in `.message` accessor on exception objects
+    // Calling `__method__(e, "message")` returns the exception's message string,
+    // or the class name if no explicit message was given.
+    let m = exc_class_module(vec![
+        trycatch(
+            vec![raise_class("ArgumentError", Some(strlit("boom")))],
+            vec![rescue_clause(
+                vec!["ArgumentError"],
+                Some("e"),
+                vec![puts(bc("__method__", vec![local("e"), strlit("message")]))],
+            )],
+            None,
+        ),
+        trycatch(
+            vec![raise_class("TypeError", None)],
+            vec![rescue_clause(
+                vec!["TypeError"],
+                Some("e"),
+                vec![puts(bc("__method__", vec![local("e"), strlit("message")]))],
+            )],
+            None,
+        ),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "boom\nTypeError\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
 fn bare_rescue_catches_a_raised_message() {
     // `begin; raise "boom"; rescue; puts "caught"; end` → the `RuntimeError` is
     // caught by the bare rescue; the program exits 0.
