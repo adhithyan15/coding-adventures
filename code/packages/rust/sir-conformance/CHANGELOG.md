@@ -6,6 +6,9 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ### Added (#18798)
 
+- Conformance program `rb_begin_without_rescue_or_ensure` in `tests/ruby_sir_gaps.rs`, verifying that `begin ... end` with no `rescue` or `ensure` executes its statements inline across all backends (TypeScript, JavaScript, Python, Go, Rust, C).
+
+
 - Conformance program `rb_hash_each_one_parameter_block` in `tests/ruby_sir_gaps.rs`, verifying that `Hash#each` yields a 2-element array `[key, value]` to a one-parameter block across all backends (TypeScript, JavaScript, Python, Go, Rust, C).
 
 ### Added (#18496 item 5)

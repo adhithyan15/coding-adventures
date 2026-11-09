@@ -1737,6 +1737,31 @@ fn try_catch_builtin_ancestry_catches() {
     }
 }
 
+/// #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+/// lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+/// JS must emit the body statements inline rather than a syntax-invalid
+/// `try { }` block with no `catch` or `finally`.
+#[test]
+fn try_catch_without_rescue_or_ensure_emits_inline_body_js() {
+    let try_catch = Stmt::TryCatch {
+        body: vec![print(str_("no_rescue_or_ensure"))],
+        rescues: vec![],
+        ensure_body: None,
+        span: sp(),
+    };
+    let module = module_with_main(
+        vec![try_catch],
+        Expr::NilLit { span: sp() },
+        &[Feature::Exceptions, Feature::Strings],
+    );
+    let compiled = semantic_ir_to_javascript::compile(&module).expect("compile");
+    let main_src = compiled.source.split("function main()").nth(1).expect("main body");
+    assert!(!main_src.contains("try {"), "got:\n{}", main_src);
+    if let Some(stdout) = run_module(&module, "no_rescue_or_ensure") {
+        assert_eq!(stdout, "no_rescue_or_ensure");
+    }
+}
+
 /// (b) A bare `rescue` (no exception types) is a catch-all: it must catch
 /// a `raise RuntimeError, "y"` and print "rescued".
 #[test]

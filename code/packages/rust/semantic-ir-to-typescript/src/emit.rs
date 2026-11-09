@@ -1518,6 +1518,14 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
             ensure_body,
             ..
         } => {
+            // #18798 item 22: a `begin … end` with no `rescue` or `ensure`
+            // clause carries an empty `rescues` and `None` `ensure_body`. Emitting
+            // a bare `try { … }` without `catch` or `finally` is a TypeScript
+            // syntax error. Emit the body statements inline.
+            if rescues.is_empty() && ensure_body.is_none() {
+                emit_stmt_block(out, body, indent);
+                return;
+            }
             let pad = " ".repeat(indent);
             let _ = writeln!(out, "{}try {{", pad);
             emit_stmt_block(out, body, indent + 2);
