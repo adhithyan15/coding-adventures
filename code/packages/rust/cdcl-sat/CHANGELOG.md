@@ -32,6 +32,14 @@ completeness bug in the solver (see the contracts C1–C9 in VER09 §6.1).
   - a search-statistics fingerprint pinning VSIDS decay, clause activity,
     restarts and reduction (correctness tests cannot see a heuristic that is
     silently switched off).
+- Measured on a standalone copy of the crate plus `drat-check`
+  (`cargo llvm-cov -p cdcl-sat --release`; it fails inside the workspace):
+  line coverage 99.93% (1348 of 1349 lines), region coverage 99.53%. The one
+  missed line is the closing brace of `reduce_db`'s never-taken
+  `removed == 0` tail. `tests/audit.rs` alone covers 96.04% of lines.
+- Hand-made mutation check (29 mutants of `solver.rs`, scratch copy, discarded):
+  28 killed; the survivor (binary learned clauses deletable) is equivalent,
+  since a binary clause always has LBD at most 2 and is kept by the LBD rule.
 - VER09 §6.1: testable contracts C1–C9; §6 rewritten to what is actually
   logged; divergences 7–12 recorded.
 - `set_work_budget` documentation: resuming with a constant small work budget
