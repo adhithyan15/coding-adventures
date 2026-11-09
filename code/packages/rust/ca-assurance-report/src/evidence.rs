@@ -339,10 +339,26 @@ fn load_cert(path: &Path) -> Result<CertFacts, EvidenceError> {
 
 /// Does Rust source text contain the keyword `unsafe` outside comments and
 /// string/char literals?  A small lexer, deliberately conservative: it knows
-/// line comments, nested block comments, `"..."`, raw strings `r#"..."#`, byte
-/// strings and char literals, and treats every other occurrence of the whole
-/// word `unsafe` (including inside attributes and macros) as unsafe code.
+/// line comments, nested block comments, `"..."`, `b"..."`, `c"..."`, raw
+/// strings `r#"..."#` / `br#"..."#` / `cr#"..."#` with any number of `#`, and
+/// char/byte literals, and treats every other occurrence of the whole word
+/// `unsafe` (including inside attributes and macros) as unsafe code.
+///
+/// A char literal is exactly `'` + (one escape sequence | one character) + `'`
+/// (escapes: `\'` `\"` `\\` `\n` `\r` `\t` `\0` `\xHH` `\u{...}`).  A `'` that
+/// does not start a char literal must start a lifetime or label (`'a`,
+/// `'static`, `'outer:`).
+///
+/// **Fails closed** (audit N1): when the lexer cannot positively tokenise the
+/// file (unterminated comment, string or char literal, malformed escape, a
+/// stray quote), it returns `true`, so a file the checker cannot understand is
+/// treated as containing `unsafe` rather than silently skipped.
 pub fn has_unsafe_token(src: &str) -> bool {
+    scan_unsafe(src).unwrap_or(true)
+}
+
+/// `Some(found)` when the whole text tokenised, `None` when it did not.
+fn scan_unsafe(src: &str) -> Option<bool> {
     let c: Vec<char> = src.chars().collect();
     let n = c.len();
     let mut i = 0;
@@ -354,7 +370,7 @@ pub fn has_unsafe_token(src: &str) -> bool {
                 }
             }
             '/' if c.get(i + 1) == Some(&'*') => {
-                let mut depth = 1;
+                let mut depth = 1usize;
                 i += 2;
                 while i < n && depth > 0 {
                     if c[i] == '/' && c.get(i + 1) == Some(&'*') {
@@ -367,71 +383,117 @@ pub fn has_unsafe_token(src: &str) -> bool {
                         i += 1;
                     }
                 }
-            }
-            '"' => i = skip_string(&c, i + 1),
-            '\'' => {
-                // Char literal ('x', '\n', '\u{..}') or lifetime ('a).
-                if c.get(i + 1) == Some(&'\\') {
-                    i += 2;
-                    while i < n && c[i] != '\'' {
-                        i += 1;
-                    }
-                    i += 1;
-                } else if c.get(i + 2) == Some(&'\'') {
-                    i += 3;
-                } else {
-                    i += 1;
+                if depth > 0 {
+                    return None;
                 }
             }
+            '"' => i = skip_string(&c, i + 1)?,
+            '\'' => i = skip_quote(&c, i, false)?,
             ch if ch.is_alphabetic() || ch == '_' => {
                 let start = i;
                 while i < n && (c[i].is_alphanumeric() || c[i] == '_') {
                     i += 1;
                 }
                 let word: String = c[start..i].iter().collect();
-                if (word == "r" || word == "br" || word == "cr")
-                    && matches!(c.get(i), Some('#') | Some('"'))
-                {
-                    let mut hashes = 0;
-                    let mut j = i;
-                    while c.get(j) == Some(&'#') {
-                        hashes += 1;
-                        j += 1;
-                    }
-                    if c.get(j) == Some(&'"') {
-                        i = skip_raw_string(&c, j + 1, hashes);
+                match (word.as_str(), c.get(i)) {
+                    ("b", Some('\'')) => {
+                        i = skip_quote(&c, i, true)?;
                         continue;
                     }
+                    ("b" | "c", Some('"')) => {
+                        i = skip_string(&c, i + 1)?;
+                        continue;
+                    }
+                    ("r" | "br" | "cr", Some('#' | '"')) => {
+                        let mut hashes = 0;
+                        let mut j = i;
+                        while c.get(j) == Some(&'#') {
+                            hashes += 1;
+                            j += 1;
+                        }
+                        if c.get(j) == Some(&'"') {
+                            i = skip_raw_string(&c, j + 1, hashes)?;
+                            continue;
+                        }
+                    }
+                    _ => {}
                 }
                 if word == "unsafe" {
-                    return true;
+                    return Some(true);
                 }
             }
             _ => i += 1,
         }
     }
-    false
+    Some(false)
 }
 
-fn skip_string(c: &[char], mut i: usize) -> usize {
+/// Skip a `'` at `c[i]`: a char/byte literal or, when `byte` is false, a
+/// lifetime/label.  Returns the index after it, or `None` when malformed.
+fn skip_quote(c: &[char], i: usize, byte: bool) -> Option<usize> {
+    let after = i + 1;
+    let end = match c.get(after)? {
+        '\\' => skip_escape(c, after + 1)?,
+        '\'' | '\n' | '\r' => return None,
+        _ => after + 1,
+    };
+    if c.get(end) == Some(&'\'') {
+        return Some(end + 1);
+    }
+    // Not a literal: a lifetime or label, which is an identifier right after
+    // the quote.  A byte literal can never be one.
+    let first = *c.get(after)?;
+    if byte || !(first.is_alphabetic() || first == '_') {
+        return None;
+    }
+    let mut j = after;
+    while j < c.len() && (c[j].is_alphanumeric() || c[j] == '_') {
+        j += 1;
+    }
+    Some(j)
+}
+
+/// Skip the escape body after a backslash at `c[i - 1]`; returns the index
+/// after it, or `None` for an unknown or malformed escape.
+fn skip_escape(c: &[char], i: usize) -> Option<usize> {
+    match c.get(i)? {
+        '\'' | '"' | '\\' | 'n' | 'r' | 't' | '0' => Some(i + 1),
+        'x' => (c.get(i + 1)?.is_ascii_hexdigit() && c.get(i + 2)?.is_ascii_hexdigit()).then_some(i + 3),
+        'u' => {
+            if c.get(i + 1) != Some(&'{') {
+                return None;
+            }
+            let mut j = i + 2;
+            let digits_start = j;
+            while c.get(j)?.is_ascii_hexdigit() || c[j] == '_' {
+                j += 1;
+            }
+            (j > digits_start && c[j] == '}').then_some(j + 1)
+        }
+        _ => None,
+    }
+}
+
+/// Skip a string body (the opening quote is already consumed).
+fn skip_string(c: &[char], mut i: usize) -> Option<usize> {
     while i < c.len() {
         match c[i] {
             '\\' => i += 2,
-            '"' => return i + 1,
+            '"' => return Some(i + 1),
             _ => i += 1,
         }
     }
-    i
+    None
 }
 
-fn skip_raw_string(c: &[char], mut i: usize, hashes: usize) -> usize {
+fn skip_raw_string(c: &[char], mut i: usize, hashes: usize) -> Option<usize> {
     while i < c.len() {
         if c[i] == '"' && (0..hashes).all(|k| c.get(i + 1 + k) == Some(&'#')) {
-            return i + 1 + hashes;
+            return Some(i + 1 + hashes);
         }
         i += 1;
     }
-    i
+    None
 }
 
 /// Every `src/**/*.rs` file (symlinks are not followed) whose code contains

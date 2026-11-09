@@ -592,6 +592,64 @@ fn b3_unsafe_scanner_ignores_comments_strings_and_lookalikes() {
     assert!(!has_unsafe_token("fn f<'a>(x: &'a str) -> &'a str { x } let c = '\\''; let d = 'u';"));
 }
 
+#[test]
+fn n1_escaped_quote_char_literal_does_not_desync_the_lexer() {
+    // The audit reproducer: `'\''` used to swallow up to the next `'`, which
+    // flipped string state so the later `unsafe` was read as inside a string.
+    assert!(has_unsafe_token("fn f(){ g('\\'','\"'); unsafe { } }\nconst S:&str=\"x\";"));
+    assert!(has_unsafe_token("let a = '\\\\'; let b = '\"'; unsafe {}"));
+    assert!(has_unsafe_token("let a = '\\u{1F600}'; let b = '\\x41'; let c = '\\0'; unsafe {}"));
+    assert!(has_unsafe_token("let a = b'\\''; let s = \"x\"; unsafe {}"));
+    assert!(has_unsafe_token("let a = b'\\''; let q = '\"'; unsafe {}"));
+    assert!(has_unsafe_token("let a = b'x'; let s = b\"q\\\"\"; unsafe {}"));
+}
+
+#[test]
+fn n1_lifetimes_and_labels_next_to_quotes() {
+    assert!(has_unsafe_token("fn f<'a>(x: &'a str) -> &'static str { \"s\"; unsafe {} }"));
+    assert!(has_unsafe_token("'outer: loop { break 'outer; } let s = \"x\"; unsafe {}"));
+    assert!(has_unsafe_token("fn f<'a, 'b>(x: &'a u8, y: &'b u8) { let c = '\"'; unsafe {} }"));
+    assert!(!has_unsafe_token("fn f<'a>(x: &'a str) { let s = \"unsafe\"; }"));
+    assert!(!has_unsafe_token("'outer: loop { let _ = \"unsafe\"; break 'outer; }"));
+}
+
+#[test]
+fn n1_comments_raw_strings_and_byte_strings() {
+    assert!(!has_unsafe_token("/* a /* unsafe */ unsafe */ fn f() {}"));
+    assert!(has_unsafe_token("/* a /* b */ c */ unsafe {}"));
+    assert!(has_unsafe_token("/* /* */ */ unsafe {}"));
+    assert!(!has_unsafe_token("let s = r##\"unsafe \"# still \"## ;"));
+    assert!(has_unsafe_token("let s = r##\"unsafe \"# still \"##; unsafe {}"));
+    assert!(!has_unsafe_token("let s = br#\"unsafe\"#;"));
+    assert!(has_unsafe_token("let s = br###\"a\"##\"###; unsafe {}"));
+    assert!(!has_unsafe_token("let s = b\"unsafe \\\" unsafe\";"));
+    assert!(has_unsafe_token("let s = b\"x\"; unsafe {}"));
+    assert!(!has_unsafe_token("let s = r\"unsafe\";"));
+}
+
+#[test]
+fn n1_lexer_fails_closed_on_untokenisable_input() {
+    // None of these contains the word `unsafe`, yet each must count as unsafe
+    // because the lexer cannot positively tokenise the file.
+    for bad in [
+        "let s = \"never closed",
+        "/* never closed /* nested */",
+        "let s = r#\"never closed\";",
+        "let c = '",
+        "let c = '\\",
+        "let c = '\\q';",
+        "let c = '\\u{zz}';",
+        "let c = '\\x4';",
+        "let c = ''';",
+        "let c = b'ab';",
+        "let c = b'\\';",
+    ] {
+        assert!(has_unsafe_token(bad), "{bad:?} must fail closed");
+    }
+    // And well-formed input without the keyword is still clean.
+    assert!(!has_unsafe_token("fn f<'a>(x: &'a str) { let c = '\\''; let s = \"y\"; }"));
+}
+
 // ---- B4: proof certificates bound to obligations ----------------------------------
 
 #[test]
