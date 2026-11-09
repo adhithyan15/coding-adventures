@@ -630,6 +630,14 @@ struct FunctionCtx {
     /// whose captures may be planned from here (see
     /// [`Lowerer::plan_captures`]).
     owner: String,
+    /// The owner of the immediately enclosing scope (`None` for top-level,
+    /// detached, or method bodies). Used to trace the lexical enclosing
+    /// chain when resolving nested def calls (#18482 item 4).
+    parent_owner: Option<String>,
+    /// The sequence of enclosing scope owners from the module body down
+    /// to (but not including) this context's own `owner`. Used to check
+    /// lexical visibility of nested functions (#18482 item 4).
+    lexical_ancestors: Vec<String>,
     /// True only for a method body hoisted from a `class` statement's
     /// `def` (OOP surface).  A method's first parameter (`self`, by Python
     /// convention) is *not* added to `params` — it is not an ordinary
@@ -668,6 +676,8 @@ impl FunctionCtx {
             captures,
             locals: Vec::new(),
             owner: owner.to_string(),
+            parent_owner: None,
+            lexical_ancestors: Vec::new(),
             in_method: false,
             aliases: std::collections::HashMap::new(),
             cells: HashSet::new(),
@@ -675,18 +685,24 @@ impl FunctionCtx {
     }
 
     /// A context for a function with inherited cell variables from its enclosing
-    /// scope, owned by the function named `owner`.
+    /// scope, owned by the function named `owner`, inheriting its enclosing scope's
+    /// lexical ancestors (#18482 item 4).
     fn new_with_cells(
         params: HashSet<String>,
         captures: HashSet<String>,
         cells: HashSet<String>,
         owner: &str,
+        enclosing: &FunctionCtx,
     ) -> Self {
+        let mut lexical_ancestors = enclosing.lexical_ancestors.clone();
+        lexical_ancestors.push(enclosing.owner.clone());
         Self {
             params,
             captures,
             locals: Vec::new(),
             owner: owner.to_string(),
+            parent_owner: Some(enclosing.owner.clone()),
+            lexical_ancestors,
             in_method: false,
             aliases: std::collections::HashMap::new(),
             cells,
@@ -705,6 +721,8 @@ impl FunctionCtx {
             // No `def` records this sentinel as its parent, so nothing is
             // ever planned from inside a method body (see `DefFacts`).
             owner: DETACHED_OWNER.to_string(),
+            parent_owner: None,
+            lexical_ancestors: Vec::new(),
             in_method: true,
             aliases: std::collections::HashMap::new(),
             cells: HashSet::new(),
@@ -3331,6 +3349,7 @@ impl Lowerer {
             captures.iter().cloned().collect(),
             inner_cells,
             &fn_name,
+            enclosing,
         );
         let value = self.lower_expr_in(body_expr, &mut inner, depth + 1)?;
         let body = Block {
@@ -3479,6 +3498,7 @@ impl Lowerer {
             captures.iter().cloned().collect(),
             inner_cells,
             name,
+            enclosing,
         );
         let cell_prologue = self.cell_prologue(suite, &mut inner, &span)?;
         let param_prologue = self.param_copy_prologue(suite, &mut inner, &span)?;
@@ -3648,6 +3668,36 @@ impl Lowerer {
     /// (the earliest point its closure is built).  That is the only
     /// context whose values `f` can thread.
     ///
+    /// Check whether a function named `target` is lexically visible from `ctx`
+    /// (#18482 item 4).
+    ///
+    /// In Python, nested `def` statements bind in their defining enclosing scope.
+    /// A top-level function (`facts.parent == MODULE_OWNER`) is module-global and
+    /// visible everywhere.
+    ///
+    /// A nested function is defined in scope `facts.parent`. It is visible if and
+    /// only if `facts.parent` is the current scope (`ctx.owner == facts.parent`)
+    /// or is present in the chain of enclosing scopes (`ctx.lexical_ancestors`).
+    ///
+    /// Unrelated scopes (top-level code outside the parent, cousin functions nested
+    /// under different parents) cannot see `target` and will receive a positioned
+    /// `unresolved name` error matching Python's `NameError`.
+    fn is_function_visible(&self, target: &str, ctx: &FunctionCtx) -> bool {
+        let Some(facts) = self.def_facts.get(target) else {
+            return false;
+        };
+        if facts.parent == MODULE_OWNER {
+            return true;
+        }
+        if ctx.owner == facts.parent {
+            return true;
+        }
+        if ctx.parent_owner.as_deref() == Some(&facts.parent) {
+            return true;
+        }
+        ctx.lexical_ancestors.iter().any(|a| a == &facts.parent)
+    }
+
     /// Each list is sorted alphabetically, so the order is deterministic.
     fn plan_captures(
         &mut self,
@@ -3669,7 +3719,9 @@ impl Lowerer {
         // the same spelling shadows it — the same rule calls and bare
         // references use (`resolve_var`, `lower_call_suffix`).
         let names_function = |this: &Self, n: &str| {
-            this.function_names.contains(n) && !enclosing.is_enclosing_value(n)
+            this.function_names.contains(n)
+                && this.is_function_visible(n, enclosing)
+                && !enclosing.is_enclosing_value(n)
         };
 
         // ── Gather the group. ──
@@ -4939,8 +4991,12 @@ impl Lowerer {
         }
         // Known function (top-level or nested-lifted) → DirectCall, but
         // only if it is *not* shadowed by an enclosing value of the same
-        // name (a local/param/capture closure handle wins).
-        if self.function_names.contains(&name) && !ctx.is_enclosing_value(&name) {
+        // name (a local/param/capture closure handle wins), and it is
+        // lexically visible from this scope (#18482 item 4).
+        if self.function_names.contains(&name)
+            && self.is_function_visible(&name, ctx)
+            && !ctx.is_enclosing_value(&name)
+        {
             // A function that captures something cannot be called
             // directly: every backend gives a closure body its captures
             // as leading parameters, and a `DirectCall` passes only the
@@ -5707,7 +5763,8 @@ impl Lowerer {
         // function carries captures (a nested closure), re-thread them
         // from the currently visible enclosing values; otherwise it is a
         // zero-capture closure handle.
-        if self.function_names.contains(name) {
+        // It must be lexically visible from this scope (#18482 item 4).
+        if self.function_names.contains(name) && self.is_function_visible(name, ctx) {
             self.observed.add(Feature::Closures);
             return self.named_closure(name, ctx, span);
         }
