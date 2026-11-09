@@ -5,7 +5,7 @@ python3 ../../../scripts/ct_compare_tfv.py
 # VER04h: the evidence harness is generated from code/specs/ct-compare.warrant.
 # Fail if the checked-in file drifted, rewrite the evidence manifest from a real
 # run, and prove each sabotage mode makes the exhaustive suites report `not ok`.
-cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check
+cargo run -q -p coding_adventures_warrant_grammar --example gen_evidence -- --check ct-compare
 WARRANT_EVIDENCE_OUT=evidence/test-manifest.json cargo test -q -p coding_adventures_ct_compare --test warrant_evidence
 WARRANT_EVIDENCE_FAULT=invert WARRANT_EVIDENCE_FILTER=/exhaustive/ cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>/dev/null | grep -q '^not ok '
 WARRANT_EVIDENCE_FAULT=ignore-last-byte WARRANT_EVIDENCE_FILTER=/exhaustive/ cargo test -q -p coding_adventures_ct_compare --test warrant_evidence 2>/dev/null | grep -q '^not ok '

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The evidence generator's binding table moved out of `warrant-grammar`'s
+  `gen_evidence` example into `evidence.bindings` (data, per package); BUILD now
+  runs `gen_evidence -- --check ct-compare`. The generated
+  `tests/generated/warrant_evidence.rs` is byte-identical.
+
 - Add the Warrant-derived evidence harness (VER04h): `tests/warrant_evidence.rs`
   runs `tests/generated/warrant_evidence.rs`, generated from
   `code/specs/ct-compare.warrant`, against the real public API: every example,

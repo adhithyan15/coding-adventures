@@ -72,6 +72,8 @@ fn options(spec: &str) -> EvidenceOptions {
         property_cases: 4096,
         fuzz_iterations: 5000,
         negctl_fuzz_iterations: 1000,
+        exhaustive_budget: 400_000,
+        arg_types: BTreeMap::new(),
     }
 }
 

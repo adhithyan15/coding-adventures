@@ -2,6 +2,34 @@
 
 ## 0.1.0 — Unreleased
 
+- Evidence generator, second package (gf256, VER04h): the per-package binding
+  table is now data. `examples/gen_evidence [--check] [<package> ...]` reads
+  `code/packages/rust/<package>/evidence.bindings` (parsed by the new
+  `binding::parse_evidence_bindings`, which rejects unknown keys and options so a
+  typo cannot weaken evidence) instead of a hardcoded op-to-export table.
+  ct-compare's generated harness is byte-identical through its new bindings file.
+  - `EvidenceOptions` gains `exhaustive_budget` (default 400,000; gf256 uses 2^24
+    for the `U8^3` field-law claims, measured at about 9 s per claim in a debug
+    build) and `arg_types` (Rust parameter types of an export, e.g. `power`'s
+    `u32` exponent against the Warrant `U64`).
+  - New scalar adapter shape for operations over `U8`/`U64`/`Nat` returning `U8` or
+    `Result<U8, E>` (a panic is normalised to `E` by the binding, as for
+    `ct_select_bytes`), with a closed registry of field-arithmetic faults
+    (`or-for-xor`, `wrapping-sub`, `mul-as-add`, `alt-poly`, `generator-shift`,
+    `exp-mod-256`, `missing-error`). The generated `Fault` enum lists only the
+    faults a package uses.
+  - A negative control on a scalar operation attacks that operation alone
+    (`attacking`/`fault_for`) and stops at the first claim that catches the fault;
+    a fault applied to every operation of a field was invisible to every
+    relational claim (lesson recorded).
+  - Binder refinements may use models only; an operation inside one is refused
+    (W0701). `U8` binders stay inside 0..=255 under relation-biased generation,
+    `U64` binders draw small values often, and the fuzz coverage map sees `U8`
+    values; these prelude regions are feature-gated so other packages' output
+    does not change.
+  - Tests: `tests/evidence_bindings.rs` (bindings reader, budget, fault and
+    refinement rules, byte-for-byte regeneration of both checked-in harnesses).
+
 - Add `evidence` (VER04h / VER-P030): compile a checked Warrant document into a
   Rust evidence harness (examples, bounded-exhaustive, property, fuzz and
   sabotage suites) whose oracle is the *translated claim body*, not a hand-copied
