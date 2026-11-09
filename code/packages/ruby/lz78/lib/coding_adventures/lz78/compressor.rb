@@ -154,6 +154,12 @@ module CodingAdventures
         output = "".b
 
         tokens.each do |tok|
+          # Security: stop once the declared length is reached (nothing more
+          # survives the truncation; expanding further lets a tiny hostile
+          # stream grow quadratically) and on a dangling dictionary index.
+          break if original_length && output.bytesize >= original_length
+          break if tok.dict_index >= dict_table.length
+
           seq = reconstruct(dict_table, tok.dict_index)
           output << seq
 
@@ -191,7 +197,9 @@ module CodingAdventures
         return [[], 0] if data.bytesize < 8
 
         original_length = data.byteslice(0, 4).unpack1("N")
-        token_count     = data.byteslice(4, 4).unpack1("N")
+        # Security: clamp the attacker-controlled count to the complete 4-byte
+        # tokens actually present.
+        token_count     = [data.byteslice(4, 4).unpack1("N"), (data.bytesize - 8) / 4].min
         tokens = []
 
         token_count.times do |i|

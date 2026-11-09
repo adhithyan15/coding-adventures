@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Security
+
+- decode stops once original_length is reached and skips invalid back-references (previously appended nil). block_count was already capped.
+- Added test/test_hostile_headers.rb: hostile headers checked for bounded time and sane results, plus round trips over every byte string of length <= 2 and a seeded random sample.
+
 ## [0.1.0] - 2026-04-11
 
 ### Added
