@@ -1450,7 +1450,10 @@ def _yield_hash_pair(block: Closure, key: Val, value: Val) -> Val:
             params = [
                 p
                 for p in inspect.signature(block.fn).parameters.values()
-                if p.kind in (inspect.Parameter.POSITIONAL_ONLY, inspect.Parameter.POSITIONAL_OR_KEYWORD)
+                if p.kind in (
+                    inspect.Parameter.POSITIONAL_ONLY,
+                    inspect.Parameter.POSITIONAL_OR_KEYWORD,
+                )
             ]
             arity = len(params)
         except (TypeError, ValueError):
