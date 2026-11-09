@@ -214,6 +214,41 @@ fn bounded_rejection_rule_is_unbiased_on_a_tiny_word() {
 }
 
 #[test]
+fn bounded_rejects_outputs_below_the_threshold() {
+    // Random draws never reach the rejection branch (an output below
+    // t < 2^32 has probability 2^-32), so a statistical test cannot tell
+    // `bounded` from a version with no threshold. The finalizer is a
+    // bijection and the state that outputs 0 is 0, so the seed -gamma
+    // (2^64 - 0x9e3779b97f4a7c15) has first output exactly 0.
+    let seed = 0x61c8_8646_80b5_83eb_u64;
+    let mut probe = SplitMix64::new(seed);
+    let outputs = [probe.next_u64(), probe.next_u64(), probe.next_u64()];
+    assert_eq!(outputs[0], 0);
+    assert_eq!(outputs[1], 16_294_208_416_658_607_535);
+    // n = 3: t = (2^64 - 3) mod 3 = 1, so the output 0 is rejected and the
+    // answer comes from the second output (16294208416658607535 mod 3 = 1,
+    // where accepting 0 would have answered 0).
+    for (n, want) in [(3u64, 1u64), (6, 1), (10, 5), (1000, 535), (7, 2)] {
+        let mut rng = SplitMix64::new(seed);
+        assert_eq!(rng.bounded(n), want, "n = {n}");
+        let mut reference = Reference::new(seed);
+        assert_eq!(reference.bounded(n), want, "reference, n = {n}");
+        // Two outputs were consumed when the first was rejected (n = 7 has
+        // t = 2 and so also rejects 0).
+        assert_eq!(
+            rng.next_u64(),
+            outputs[2],
+            "n = {n} consumed the wrong number of outputs"
+        );
+    }
+    // n = 4 divides 2^64: threshold 0, nothing is ever rejected, so 0 is
+    // accepted and exactly one output is consumed.
+    let mut rng = SplitMix64::new(seed);
+    assert_eq!(rng.bounded(4), 0);
+    assert_eq!(rng.next_u64(), outputs[1]);
+}
+
+#[test]
 fn bounded_three_is_statistically_flat() {
     // 300_000 draws, each bucket within 1% of a third. (The exactness
     // claim is carried by the spec-sampler comparison above; this guards
