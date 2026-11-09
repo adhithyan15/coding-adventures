@@ -4,6 +4,7 @@ All notable changes to `python-to-semantic-ir` are documented here.
 
 ## Unreleased
 
+- Reject calls and bare references to cousin nested functions and nested functions from module top-level with positioned `"unresolved name <name>"` errors, enforcing lexical scoping (LEGB) for nested defs (#18482 item 4).
 - Reject `*args` and `**kwargs` splat arguments in function and method calls, `range(...)` calls, and class base expressions with positioned errors (`"unsupported: *starred argument in call (deferred)"` / `"unsupported: **double-starred keyword argument in call (deferred)"`) instead of silently collapsing them into single positional arguments (#18482 item 2).
 - Box variables captured by closures into 1-element sequences (`[Param]` / `[nil]`) when mutated or assigned after closure creation, ensuring Python closures see current cell variable bindings across mutations across all backends (#18496 item 5).
 - Bind nested `def` statements that shadow an enclosing parameter or prior local variable (`store_target`) so calling `n()` invokes the nested function rather than performing an indirect call on the parameter or prior value (#18496 item 7).
