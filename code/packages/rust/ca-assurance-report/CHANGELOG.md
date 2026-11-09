@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Integration of package-agnostic generation with the hardened checker: E5 is `pass` only when every operation has a ranked-label pass (the hardened per-operation rule), `not-live` only when the remaining obligations are recorded `not-live`, and `fail` otherwise; an absent optional bench manifest has no source binding to go stale while a present one is still checked; `effect_certificate.json` regenerated for the new `generate_package_report` entry point.
 - Round-2 security fixes:
   - N1: `has_unsafe_token` is a stricter lexer (char/byte literals are exactly `'` + escape-or-char + `'`, lifetimes/labels distinguished, `b""`/`c""`/raw strings with any `#` count, nested comments) and fails closed: an untokenisable file counts as containing `unsafe`.
   - N2: `source_sha256` binds every `src/**/*.rs` (shared `test_bootstrap::manifest` framing); editing any source file makes `--check` fail as stale.

@@ -43,6 +43,13 @@ const SPEC_PATH: &str = "code/specs/gf256.warrant";
 const SOURCE_PATH: &str = "code/packages/rust/gf256/src/lib.rs";
 const MODULE: &str = "gf256";
 
+/// `gf256/src`, whose every `*.rs` file the manifest's `source_sha256` covers
+/// (framing: `manifest::source_tree_framing`, shared with the test manifest and
+/// the report checker).
+fn gf256_src_dir() -> std::path::PathBuf {
+    std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../gf256/src")
+}
+
 #[derive(Clone)]
 struct Obligation {
     id: String,
@@ -137,7 +144,12 @@ fn write_outputs(_outcomes: &[Outcome]) {
         ("spec", Json::str(SPEC_PATH)),
         ("spec_sha256", Json::str(sha256_hex(SPEC.as_bytes()))),
         ("source", Json::str(SOURCE_PATH)),
-        ("source_sha256", Json::str(sha256_hex(SOURCE.as_bytes()))),
+        (
+            "source_sha256",
+            Json::str(sha256_hex(
+                &manifest::source_tree_framing(&gf256_src_dir()).expect("bind proofs to gf256/src"),
+            )),
+        ),
         ("max_len", Json::Num(0)),
         ("proofs", Json::Arr(proofs)),
     ]);

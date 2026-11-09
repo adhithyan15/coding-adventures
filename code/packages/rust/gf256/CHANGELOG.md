@@ -11,6 +11,17 @@ No change to the public API or to any operation's behaviour.
 
 ### Added
 
+- Integrated with the hardened evidence pipeline: the manifests record
+  `source_sha256` over every `src/**/*.rs` (framing `warrant-src-v1`, shared
+  with the proof manifest and `ca-assurance-report --check`); the shim passes
+  `src/` to `run_main` and the crate has a dev-dependency on
+  `coding_adventures_sha256`. The 2^24 exhaustive budget is the explicit
+  per-package `exhaustive_budget` in `evidence.bindings` and passes the checked
+  budget logic (W0706 element and byte budgets, W0707 width caps). BUILD runs
+  `--check assurance_report.json --allow-unverified` because the report cites the
+  same nine `unverified::` static attestations as ct-compare (WD-008). The
+  effect certificate is not verified in BUILD (no `src/capabilities.rs`
+  witness); this is unchanged and deliberately not hidden.
 - Warrant-derived evidence (VER04h): `code/specs/gf256.warrant` states the
   contract of the six public operations (known vectors, field laws, and
   independent bit-level models of XOR and shift-and-add multiplication, the

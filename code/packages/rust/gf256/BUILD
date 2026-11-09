@@ -19,4 +19,7 @@ WARRANT_EVIDENCE_FAULT=exp-mod-256 WARRANT_EVIDENCE_FILTER=/exhaustive/power_red
 WARRANT_PROOF_OUT=$PWD/evidence cargo test -q -p coding_adventures_warrant_ir --test gf256_proofs
 # VER04h: the report is derived from the manifests written above; --check
 # cross-checks it against them and fails closed on any disagreement.
-cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json
+# --allow-unverified: the report still cites nine `unverified::` static attestations
+# (AST audits no tool re-runs, same rows as ct-compare); the default is to refuse
+# them, and this flag keeps the dependence visible until checked evidence replaces them.
+cargo run -p coding_adventures_ca_assurance_report -- --check assurance_report.json --allow-unverified

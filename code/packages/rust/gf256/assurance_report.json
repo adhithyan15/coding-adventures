@@ -343,7 +343,7 @@
   "closure": [
     "rust/gf256"
   ],
-  "commit": "90312367992",
+  "commit": "2ff2db8cb02",
   "exemptions": [
     {
       "approved": false,

@@ -15,5 +15,9 @@ mod generated {
 }
 
 fn main() {
-    std::process::exit(generated::run_main());
+    // The crate source the evidence describes (every `src/**/*.rs`); its framed
+    // SHA-256 is recorded in the manifest (`source_sha256`) so the report
+    // checker can detect staleness.
+    let src = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
+    std::process::exit(generated::run_main(&src));
 }

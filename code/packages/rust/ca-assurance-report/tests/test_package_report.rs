@@ -188,7 +188,7 @@ fn a_stale_proof_manifest_is_rejected_even_when_every_entry_is_not_live() {
     src.push_str("\n// edited after the proof run\n");
     fs::write(cp.pkg.join("src/lib.rs"), src).unwrap();
     let ev = Evidence::load(&cp.pkg).unwrap();
-    assert!(matches!(verify_evidence(&report, &ev), Err(E::StaleEvidence(m)) if m.contains("src/lib.rs")));
+    assert!(matches!(verify_evidence(&report, &ev), Err(E::StaleEvidence(m)) if m.contains("src/**/*.rs")));
 }
 
 #[test]
