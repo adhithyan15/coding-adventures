@@ -4,6 +4,10 @@ All notable changes to `@coding-adventures/sir-runtime-core` are documented here
 
 ## [Unreleased]
 
+### Added (#18798)
+
+- `Closure.arity` and `makeClosure(fn, captures, arity)` record the declared parameter count on `Closure` handles so method dispatchers can distinguish 1-parameter blocks from multi-parameter blocks.
+
 ### Added (#18496 item 4)
 
 - `iadd(a, b)` — in-place addition for `+=`. Mutates arrays in place, preserving object identity across aliases, and delegates to `add(a, b)` otherwise. Registered under `"+=" : iadd` in `builtins` table.

@@ -1406,4 +1406,20 @@ describe("mixins: include / extend / MRO (MX3)", () => {
     defMethod("Greeter", "greet", new Closure(() => "hi"));
     expect(() => callMethod(callNew("Person"), "greet")).toThrow(SirError);
   });
+
+  it("Hash#each with a one-parameter block yields [key, value] pairs (#18798)", () => {
+    const h = new Map<Val, Val>([["a", 1], ["b", 2]]);
+    const seen: Val[] = [];
+    callMethod(h, "each", new Closure((pair: Val) => seen.push(pair), 1));
+    expect(seen).toEqual([["a", 1], ["b", 2]]);
+
+    // Two-parameter block yields k, v separately
+    const seenKV: Val[] = [];
+    callMethod(h, "each", new Closure((k: Val, v: Val) => seenKV.push([k, v]), 2));
+    expect(seenKV).toEqual([["a", 1], ["b", 2]]);
+
+    // map with a one-parameter block
+    const mapped = callMethod(h, "map", new Closure((pair: Val) => (pair as Val[])[0], 1));
+    expect(mapped).toEqual(["a", "b"]);
+  });
 });

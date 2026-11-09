@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline at the current statement indentation, avoiding invalid bare `try { }` blocks without catch or finally.
+
+
+## Unreleased — Hash#each with one-parameter block arity forwarding (#18798)
+
+- `Expr::MakeClosure` emits the closure's parameter count as `new __Sir.Closure(..., arity)` and `Closure` records it; `hashMethod` yields `[key, value]` pairs when `blk.arity === 1`.
+
 ## Unreleased — List in-place mutation and aliasing on append and += (#18496 item 4)
 
 - **Array `push` and `append`.** `arrayMethod` now handles `"append"` and `"push"`, appending arguments in-place and returning the array receiver. Added `"append"` to `METHOD_ALLOWLIST` and `ARRAY_METHODS`.

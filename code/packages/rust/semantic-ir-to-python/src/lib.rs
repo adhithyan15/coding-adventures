@@ -1883,6 +1883,37 @@ mod tests {
         assert!(!src.contains("finally:"), "got:\n{}", src);
     }
 
+    #[test]
+    fn try_catch_without_rescue_or_ensure_emits_inline_body_py() {
+        // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+        // lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+        // Python must emit the body statements inline rather than a syntax-invalid
+        // `try:` block with no `except` or `finally`.
+        let try_stmt = Stmt::TryCatch {
+            body: vec![Stmt::LetBinding {
+                name: "x".into(),
+                value: Expr::IntLit { value: 42, span: s() },
+                sir_type: None,
+                span: s(),
+            }],
+            rescues: vec![],
+            ensure_body: None,
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![try_stmt],
+            Expr::NilLit { span: s() },
+            &[Feature::Exceptions],
+        );
+        let a = compile(&m).expect("compile");
+        let src = &a.source;
+        let main_src = src.split("def _sir_user_main():").nth(1).expect("user main");
+        assert!(!main_src.contains("try:"), "got:\n{src}");
+        assert!(!main_src.contains("except"), "got:\n{src}");
+        assert!(!main_src.contains("finally:"), "got:\n{src}");
+        assert!(main_src.contains("x = 42"), "got:\n{src}");
+    }
+
     // ─── SIR cons pairs now ship in the dedicated package (Q8) ──────────────
 
     #[test]

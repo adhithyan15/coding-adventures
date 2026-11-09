@@ -41,7 +41,10 @@ export class LocalJumpError extends Error {
 /** A callable handle wrapping a function. */
 export class Closure implements ClosureLike {
   readonly __sirClosure = true as const;
-  constructor(public readonly fn: (...args: Val[]) => Val) {}
+  constructor(
+    public readonly fn: (...args: Val[]) => Val,
+    public readonly arity?: number,
+  ) {}
 }
 
 /**
@@ -63,8 +66,9 @@ export function apply(c: Val, args: Val[]): Val {
 }
 
 /** Build a closure that prepends captured values to each call's arguments. */
-export function makeClosure(fn: (...args: Val[]) => Val, captures: Val[]): Closure {
-  return new Closure((...args: Val[]) => fn(...captures, ...args));
+export function makeClosure(fn: (...args: Val[]) => Val, captures: Val[], arity?: number): Closure {
+  const effectiveArity = arity !== undefined ? Math.max(0, arity - captures.length) : undefined;
+  return new Closure((...args: Val[]) => fn(...captures, ...args), effectiveArity);
 }
 
 // --- Global store ----------------------------------------------------------

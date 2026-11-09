@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — begin ... end without rescue or ensure (#18798)
+
+- **Inline `Stmt::TryCatch` when empty.** In `emit_stmt`, when `rescues.is_empty() && ensure_body.is_none()`, statements in `body` are emitted inline via `emit_stmt_list`, avoiding unnecessary closure wrappers when no rescue or ensure is present.
+
+
+## Unreleased — Hash#each with one-parameter block arity forwarding (#18798)
+
+- `Closure.Arity` and `_sir_make_closure(..., arity)` record the declared parameter count on `Closure`; `_sir_hash_block_method` yields `[key, value]` pairs when `block.Arity == 1`.
+
 ## Unreleased — Closure call default-padding sentinel (#18490)
 
 - **Closure adapter bounds check and missing argument sentinel.** Added `_sir_closure_arg(args []Value, i int) Value` helper in `runtime.rs` that bounds-checks the arguments slice and returns `_sir_missing` if `i >= len(args)`. `MakeClosure` in `emit.rs` now indexes incoming arguments through `_sir_closure_arg(__args, i)`, avoiding runtime `index out of range` panics when called with fewer arguments than parameters and properly triggering default-parameter evaluation.

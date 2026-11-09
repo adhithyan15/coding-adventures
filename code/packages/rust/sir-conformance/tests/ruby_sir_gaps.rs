@@ -381,6 +381,14 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "h = {a: 1}\nputs h[:a]\nputs h[:b] == nil\nh[:b] = 2\nputs h[:b]\nputs h.size\n",
         "1\ntrue\n2\n2",
     ),
+    // #18798 Comment 1 — `Hash#each` with a one-parameter block yields the
+    // `[key, value]` pair as an Array, while a two-parameter block yields
+    // `k` and `v` separately.
+    (
+        "rb_hash_each_one_parameter_block",
+        "h = {a: 1, b: 2}\nh.each do |pair|\n  for v in pair\n    puts v\n  end\nend\nh.each { |k, v| puts k; puts v }\n",
+        "a\n1\nb\n2\na\n1\nb\n2",
+    ),
     // #18798 item 14 — `return` before the end of a method: inside a method
     // with `rescue` (Python, JavaScript and Go printed 2, the `rescue`
     // catching an "unknown builtin: return"; Rust panicked; C and Ruby refused
@@ -417,6 +425,14 @@ const RUBY_PROGRAMS: &[(&str, &str, &str)] = &[
         "rb_begin_rescue_as_the_last_statement",
         "def f\n  begin\n    raise \"x\"\n  rescue\n    5\n  end\nend\nputs f\ndef g\n  begin\n    6\n  rescue\n    7\n  end\nend\nputs g\ndef h(n)\n  if n > 0\n    begin\n      raise \"y\"\n    rescue => e\n      \"caught\"\n    ensure\n      puts \"ens\"\n    end\n  else\n    \"none\"\n  end\nend\nputs h(1)\nputs h(0)\n",
         "5\n6\nens\ncaught\nnone",
+    ),
+    // #18798 item 22 — `begin … end` with no `rescue` or `ensure` clause.
+    // Python and JS/TS previously emitted a bare `try:` or `try { }` with no
+    // `except`/`finally` or `catch`/`finally`, failing compilation with a syntax error.
+    (
+        "rb_begin_without_rescue_or_ensure",
+        "begin\n  x = 42\n  puts x\nend\nbegin\n  begin\n    puts \"nested\"\n  end\nend\ndef f\n  begin\n    99\n  end\nend\nputs f\n",
+        "42\nnested\n99",
     ),
 ];
 

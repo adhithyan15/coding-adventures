@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - support template literals with substitutions at SIMPLE and ADVANCED (#17854)
+
+- In `SIMPLE` and `ADVANCED` compilation modes, template literals with substitutions (e.g. `` `hello ${name}!` ``) previously failed to parse with syntax error or unsupported syntax because the underlying grammar in ES2016-ES2025 omitted the trailing substitution before `TEMPLATE_TAIL` and the typed-AST bridge declined substitution templates.
+- With the grammar and bridge fixes in `javascript-parser`, substitution templates now compile cleanly through the full pipeline at both `SIMPLE` and `ADVANCED` levels.
+- When all substitutions are compile-time constants (e.g. `` `hello ${'world'}!` ``), the constant-folding pass in `SIMPLE` and `ADVANCED` collapses the template into a plain string literal (`"hello world!"`), matching the reference Closure Compiler.
+- Added integration tests covering substituted template literals and tagged templates in `tests/diff_simple_template_literal.rs`, `tests/diff_template_literal_fold.rs`, and `tests/diff_simple_tagged_template.rs`.
+
 ### Fixed - refuse lexical declarations in single-statement contexts (#18146)
 
 - In ECMAScript (§14.1.1), `Statement` excludes lexical declarations (`let` and `const`), which are only valid in statement-list contexts (blocks, case/default clauses, class static blocks, and module/script roots).

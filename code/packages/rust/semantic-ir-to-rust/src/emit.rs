@@ -1044,6 +1044,13 @@ fn emit_try_catch(
     ensure_body: &Option<Vec<Stmt>>,
     indent: usize,
 ) {
+    // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause carries
+    // an empty `rescues` and `None` `ensure_body`. Emit the body statements
+    // inline without catch_unwind overhead.
+    if rescues.is_empty() && ensure_body.is_none() {
+        emit_bare_stmts(out, body, indent);
+        return;
+    }
     let pad = indent_str(indent);
     let inner = indent + 1;
     let ipad = indent_str(inner);
@@ -2533,7 +2540,7 @@ fn emit_make_closure(
         out.push_str("__it.next().unwrap_or(__sir::Value::Missing)");
     }
     out.push_str(")\n");
-    let _ = writeln!(out, "{}}}) }}))", pad);
+    let _ = writeln!(out, "{}}}), arity: {arity} }}))", pad);
     let _ = write!(out, "{}}}", indent_str(indent));
 }
 
@@ -5410,6 +5417,27 @@ mod tests {
             out.contains("std::panic::resume_unwind(Box::new(__exc));"),
             "got: {out}"
         );
+    }
+
+    #[test]
+    fn emit_try_catch_without_rescue_or_ensure_emits_inline() {
+        // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+        // lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+        // Rust emits the body statements inline without catch_unwind overhead.
+        let tc = Stmt::TryCatch {
+            body: vec![Stmt::ExprStmt {
+                expr: int(42),
+                span: s(),
+            }],
+            rescues: vec![],
+            ensure_body: None,
+            span: s(),
+        };
+        let mut out = String::new();
+        emit_stmt(&mut out, &tc, 1);
+        assert!(!out.contains("catch_unwind"), "got:\n{out}");
+        assert!(!out.contains("Err(__payload)"), "got:\n{out}");
+        assert!(out.contains("42"), "got:\n{out}");
     }
 
     #[test]

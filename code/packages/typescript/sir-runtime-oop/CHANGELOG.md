@@ -6,6 +6,8 @@ All notable changes to `@coding-adventures/sir-runtime-oop` are documented here.
 
 ### Fixed
 
+- `Hash#each` and Enumerable block methods over Hash yield `[key, value]` pairs when the block has arity 1, matching Ruby semantics (#18798).
+
 - The Windows standalone build now installs `sir-runtime-core` and its
   exceptions and pairs prerequisites before the package install, matching the
   generic build's complete local prerequisite closure.

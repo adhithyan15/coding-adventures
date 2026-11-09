@@ -302,7 +302,7 @@ mod tests {
         );
         // And it is threaded into `twice` as that block's value.
         assert!(
-            a.source.contains("twice(new __Sir.Closure((..._a: __Sir.Val[]) => __block_0(__sir_block__, ..._a)))"),
+            a.source.contains("twice(new __Sir.Closure((..._a: __Sir.Val[]) => __block_0(__sir_block__, ..._a), 1))"),
             "enclosing block must be threaded through the non-empty capture; got:\n{}",
             a.source
         );
@@ -1001,6 +1001,37 @@ mod tests {
         assert!(src.contains("throw __exc;"), "got:\n{}", src);
         // No ensure → no finally clause.
         assert!(!src.contains("finally {"), "got:\n{}", src);
+    }
+
+    #[test]
+    fn try_catch_without_rescue_or_ensure_emits_inline_body_ts() {
+        use semantic_ir::Stmt;
+        // #18798 item 22: a `begin … end` with no `rescue` or `ensure` clause
+        // lowers to `Stmt::TryCatch` with empty `rescues` and `None` `ensure_body`.
+        // TS must emit the body statements inline rather than a syntax-invalid
+        // `try { }` block with no `catch` or `finally`.
+        let try_stmt = Stmt::TryCatch {
+            body: vec![Stmt::LetBinding {
+                name: "x".into(),
+                value: Expr::IntLit { value: 42, span: s() },
+                sir_type: None,
+                span: s(),
+            }],
+            rescues: vec![],
+            ensure_body: None,
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![try_stmt],
+            Expr::NilLit { span: s() },
+            &[Feature::Exceptions],
+        );
+        let a = compile(&m).expect("compile");
+        let main_src = a.source.split("function main():").nth(1).expect("main body");
+        assert!(!main_src.contains("try {"), "got:\n{main_src}");
+        assert!(!main_src.contains("catch"), "got:\n{main_src}");
+        assert!(!main_src.contains("finally"), "got:\n{main_src}");
+        assert!(main_src.contains("42"), "got:\n{main_src}");
     }
 
     // ─── SIR cons pairs now ship in the dedicated package (Q8) ──────────────
