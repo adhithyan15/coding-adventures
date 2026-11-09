@@ -6733,6 +6733,33 @@ fn contextual_asi_points(tokens: &[lexer::token::Token]) -> Vec<usize> {
             points.push(i);
             continue;
         }
+
+        // Case 5: Statement keyword on a new line after an expression end (#17887).
+        // If a program cannot be parsed by the grammar (e.g. contextual `yield` as identifier),
+        // ordinary statement boundaries before statement-starting keywords like `var`,
+        // `let`, `const`, `function`, `class`, `if`, etc. must still receive ASI.
+        let is_stmt_keyword = tok.type_ == lexer::token::TokenType::Keyword
+            && matches!(
+                tok.value.as_str(),
+                "var" | "let" | "const" | "function" | "class" | "if" | "while" | "for"
+                    | "do" | "return" | "throw" | "switch" | "try" | "break" | "continue"
+                    | "debugger" | "import" | "export" | "yield"
+            );
+        if is_stmt_keyword {
+            let prev_ends_expr = (prev.type_ == lexer::token::TokenType::Name && !is_string_literal(prev))
+                || prev.type_ == lexer::token::TokenType::Number
+                || is_string_literal(prev)
+                || matches!(prev.value.as_str(), ")" | "]" | "this" | "true" | "false" | "null" | "super" | "yield")
+                || (prev_idx > 0 && (tokens[prev_idx - 1].value == "." || tokens[prev_idx - 1].value == "?."));
+            let is_stmt_header = prev.value == ")" && {
+                let p = open_paren[prev_idx];
+                p != usize::MAX && p > 0 && matches!(tokens[p - 1].value.as_str(), "if" | "while" | "for" | "with")
+            };
+            if prev_ends_expr && !is_stmt_header {
+                points.push(i);
+                continue;
+            }
+        }
     }
 
     points

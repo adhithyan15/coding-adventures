@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - preserve statement break after identifier yield in WHITESPACE_ONLY (#17887)
+
+- In sloppy mode outside a generator, `yield` is a valid identifier. When minifying code where `yield` was used as an identifier or assignment target (e.g. `var yield = 4\nvar x = yield\n/ 2;` or `var a = 10\nyield = 6\nvar x = yield\n/ 2;`), `WHITESPACE_ONLY` previously dropped statement breaks before statement-starting keywords or assignment targets, resulting in syntax errors.
+- Added statement-keyword newline boundary detection (Case 5) in `whitespace_only.rs::contextual_asi_points` to ensure statement boundaries before statement keywords (and `yield` as statement start) are preserved even when the primary grammar parse falls back to restricted ASI.
+- Hardened temp directory generation in `tests/regression_emitter_html_comment_17887.rs` against concurrent test collisions with an atomic sequence counter.
+- Added regression tests in `tests/regression_ws_yield_identifier_17887.rs` verified against Node.js runtime execution.
+
 ### Fixed - line comments and hashbangs stop before U+2028 and U+2029 (#17887)
 
 - Fixed a bug where line comments (`// ...`) and hashbangs (`#! ...`) swallowed U+2028 (Line Separator) and U+2029 (Paragraph Separator) and ran past them to the next `\n` or `\r`. Under ECMA-262 §12.3, U+2028 and U+2029 are LineTerminators that terminate single-line comments.

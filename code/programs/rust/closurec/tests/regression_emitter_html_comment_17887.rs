@@ -30,17 +30,18 @@ use std::process::Command;
 const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 
 fn run_closurec(source: &str, level: &str) -> (String, String, i32) {
-    let dir = std::env::temp_dir();
-    let id = format!(
-        "closurec_test_17887_{}_{}_{:?}",
-        level,
+    static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+    let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    let dir = std::env::temp_dir().join(format!(
+        "closurec-html-comment-17887-{}-{n}-{}",
         std::process::id(),
         std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_nanos()
-    );
-    let in_file = dir.join(format!("{id}.js"));
+            .map(|d| d.as_nanos())
+            .unwrap_or(0)
+    ));
+    std::fs::create_dir_all(&dir).expect("fresh scratch dir");
+    let in_file = dir.join("input.js");
     fs::write(&in_file, source).unwrap();
 
     let output = Command::new(BINARY)
@@ -51,7 +52,7 @@ fn run_closurec(source: &str, level: &str) -> (String, String, i32) {
         .output()
         .unwrap();
 
-    let _ = fs::remove_file(&in_file);
+    let _ = fs::remove_dir_all(&dir);
 
     let stdout = String::from_utf8_lossy(&output.stdout).to_string();
     let stderr = String::from_utf8_lossy(&output.stderr).to_string();
