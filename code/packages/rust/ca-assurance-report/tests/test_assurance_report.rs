@@ -36,6 +36,7 @@ fn evid() -> AuditEvidence {
         hw_counters: "not-live".into(),
         oob_ids: vec!["warrant/m/proof/op/constant-time".into()],
         oob_label: "bounded(8)".into(),
+        ..AuditEvidence::default()
     }
 }
 

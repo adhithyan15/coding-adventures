@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- Package-agnostic generation (second package: `rust/gf256`). New
+  `generate_package_report(package, version, commit, registry, evidence,
+  profile)`; `generate_ct_compare_report` is now a thin wrapper and ct-compare's
+  checked-in report is unchanged. `--generate` takes the package id and version
+  from the package directory (`rust/<dir>`, `Cargo.toml`) and a `--profile
+  comparison|field-arithmetic` that selects which true sentence the three static
+  attestation rows (CWE-326/327/407) carry.
+- Proof obligations may be recorded `not-live` (attempted, refused by the
+  tooling, with the blocker in `note`): such a claim has no proof block and cites
+  no proof id, rung E5 is `not-live` rather than `fail`, and CWE-208 / CWE-400
+  become *unapproved exemptions that quote the recorded blocker* instead of an
+  open row. Erasing the entries is not an acknowledgement: a spec that declares
+  `secret` labels or `steps` bounds without an entry still fails closed
+  (`UncoveredClaim`), and a missing proof manifest still fails to load. The bench
+  manifest is optional (no manifest, no benchmark evidence to cite).
+- Tests: `tests/test_package_report.rs` (gf256 report derives, verifies and
+  matches the checked-in file; not-live handling; stale source, count drift and
+  forged-promotion falsification; ct-compare reproduced exactly).
+
 - VER04h / VER-P030: the report is derived from evidence manifests, never written by hand.
   - `generate_ct_compare_report` now takes an `Evidence` (loaded from `evidence/{test,proof,bench}-manifest.json`, the effect certificate and the Warrant document) and contains no evidence literal: case counts, fuzz iterations, proof labels, certificate digests, rungs and every `PackageAuditContext` flag are computed.
   - New `evidence` module with `Evidence::load`, `derive_claims` and `verify_evidence`; `--check` now also cross-checks the report against the manifests and fails closed on unknown evidence ids, failing cited evidence, count/label/digest drift, certificate files that are missing, mis-hashed or rejected by the DRAT checker, Warrant claims/examples/obligations with no evidence, stale manifests (spec or source hash), and a no-unsafe claim next to a declared `unsafe_code` exception.

@@ -33,7 +33,7 @@ use coding_adventures_warrant_grammar::parser::{
 use coding_adventures_warrant_grammar::source::{SourceDocument, SourceLimits};
 
 use crate::json::JsonValue;
-use crate::matrix::{AuditEvidence, PackageAuditContext, WeaknessStatus};
+use crate::matrix::{AuditEvidence, AuditProfile, PackageAuditContext, WeaknessStatus};
 use crate::report::{
     AssuranceReport, ClaimEvidence, ExhaustiveEvidence, FuzzEvidence, ProofEvidence,
     PropertyEvidence, RungsSummary,
@@ -86,9 +86,21 @@ pub struct ProofEntry {
     pub function: String,
     pub kind: String,
     pub label: String,
+    /// `pass`, `fail`, `unchecked` (resource not tracked) or `not-live` (the
+    /// obligation was attempted and the tooling refused the source).
     pub verdict: String,
     pub max_len: u64,
     pub certificates: Vec<CertRef>,
+    /// Free text the driver recorded (for `not-live`, the precise blocker).
+    pub note: String,
+}
+
+impl ProofEntry {
+    /// An obligation whose outcome is a verdict about the code, as opposed to
+    /// a recorded inability to run it.
+    fn is_live(&self) -> bool {
+        self.verdict != "not-live" && self.verdict != "unchecked"
+    }
 }
 
 /// Facts read from the Warrant document that the manifests must cover.
@@ -283,10 +295,13 @@ impl Evidence {
             .collect();
         let spec_rel = text(&tv, "spec");
 
+        // The proof manifest is required: every package's Warrant document
+        // declares `labels` and `bound` rows, so there is always at least one
+        // obligation to account for, as a verdict or as a `not-live` entry.
         let ppath = dir.join("proof-manifest.json");
         let pv = parse(&ppath)?;
         schema(&pv, "warrant-proof-evidence-v1", &ppath)?;
-        let proofs = pv
+        let proofs: Vec<ProofEntry> = pv
             .get("proofs")
             .and_then(|x| x.as_array())
             .ok_or_else(|| EvidenceError("proof manifest has no proofs".into()))?
@@ -299,6 +314,7 @@ impl Evidence {
                 label: text(p, "label"),
                 verdict: text(p, "verdict"),
                 max_len: num(p, "max_len"),
+                note: text(p, "note"),
                 certificates: p
                     .get("certificates")
                     .and_then(|x| x.as_array())
@@ -312,11 +328,19 @@ impl Evidence {
             })
             .collect();
 
+        // Benchmarks are optional the same way: no manifest, no benchmark
+        // evidence (and the matrix then cannot cite any).
         let bpath = dir.join("bench-manifest.json");
-        let bv = parse(&bpath)?;
-        schema(&bv, "warrant-bench-evidence-v1", &bpath)?;
-        let bench = bv
-            .get("tests")
+        let bv = if bpath.is_file() {
+            let bv = parse(&bpath)?;
+            schema(&bv, "warrant-bench-evidence-v1", &bpath)?;
+            Some(bv)
+        } else {
+            None
+        };
+        let bench: Vec<(String, String)> = bv
+            .as_ref()
+            .and_then(|b| b.get("tests"))
             .and_then(|x| x.as_array())
             .unwrap_or(&[])
             .iter()
@@ -335,7 +359,10 @@ impl Evidence {
             proof_spec_sha256: text(&pv, "spec_sha256"),
             proof_source_sha256: text(&pv, "source_sha256"),
             bench,
-            hw_instruction_counters: text(&bv, "hw_instruction_counters"),
+            hw_instruction_counters: bv
+                .as_ref()
+                .map(|b| text(b, "hw_instruction_counters"))
+                .unwrap_or_else(|| "not-live".to_string()),
             spec,
             cert,
             source_sha256: sha256_hex(&source),
@@ -417,16 +444,38 @@ impl Evidence {
 
     /// Package facts for the weakness matrix, every one read from a manifest.
     pub fn audit_context(&self, package_id: &str) -> PackageAuditContext {
+        self.audit_context_with_profile(package_id, AuditProfile::Comparison)
+    }
+
+    /// [`Evidence::audit_context`] for a package whose attestation rows are
+    /// not about comparison primitives.
+    pub fn audit_context_with_profile(
+        &self,
+        package_id: &str,
+        profile: AuditProfile,
+    ) -> PackageAuditContext {
+        // Only obligations that produced a verdict about the code may be cited
+        // as evidence; a `not-live` one is acknowledged separately.
         let ct: Vec<&ProofEntry> = self
             .proofs
             .iter()
-            .filter(|p| p.kind == "constant-time")
+            .filter(|p| p.kind == "constant-time" && p.is_live())
             .collect();
         let steps: Vec<&ProofEntry> = self
             .proofs
             .iter()
-            .filter(|p| p.kind == "steps-bound")
+            .filter(|p| p.kind == "steps-bound" && p.is_live())
             .collect();
+        let not_live = |kind: &str| -> Vec<&ProofEntry> {
+            self.proofs
+                .iter()
+                .filter(|p| p.kind == kind && p.verdict == "not-live")
+                .collect()
+        };
+        let (ct_nl, steps_nl) = (not_live("constant-time"), not_live("steps-bound"));
+        let mut notes: Vec<&str> = ct_nl.iter().chain(steps_nl.iter()).map(|p| p.note.as_str()).collect();
+        notes.sort_unstable();
+        notes.dedup();
         let proof_ok = |v: &[&ProofEntry]| {
             !v.is_empty() && v.iter().all(|p| p.verdict == "pass" && label_rank(&p.label).is_some())
         };
@@ -457,6 +506,10 @@ impl Evidence {
                 .map(|p| p.id.clone())
                 .collect(),
             oob_label: weakest(&ct),
+            ct_not_live: ct_nl.iter().map(|p| p.id.clone()).collect(),
+            step_not_live: steps_nl.iter().map(|p| p.id.clone()).collect(),
+            not_live_note: notes.join(" | "),
+            profile,
         };
         PackageAuditContext {
             package_id: package_id.to_string(),
@@ -476,13 +529,22 @@ impl Evidence {
         let status = |ok: bool| if ok { "pass" } else { "fail" }.to_string();
         let kind_ok =
             |k: &[&str]| Self::all_pass_nonempty(self.tests.iter().filter(|t| k.contains(&t.kind.as_str())));
-        let proofs_ok = {
+        // E5 is `pass` only when every obligation passed, `fail` when any live
+        // obligation did not, and `not-live` when the rest were recorded
+        // not-live (or there are none): an acknowledged absence, never a pass.
+        let e5 = {
             let v: Vec<&ProofEntry> = self
                 .proofs
                 .iter()
                 .filter(|p| p.kind == "constant-time" || p.kind == "steps-bound")
                 .collect();
-            !v.is_empty() && v.iter().all(|p| p.verdict == "pass")
+            if v.iter().any(|p| p.is_live() && p.verdict != "pass") {
+                "fail".to_string()
+            } else if v.is_empty() || v.iter().any(|p| !p.is_live()) {
+                "not-live".to_string()
+            } else {
+                "pass".to_string()
+            }
         };
         RungsSummary {
             e0: status(self.cert.label == "proved" && self.cert.declared_effects.is_empty()),
@@ -491,7 +553,7 @@ impl Evidence {
             e2: "not-live".into(),
             e3: status(kind_ok(&["property", "exhaustive"])),
             e4: status(kind_ok(&["fuzz"])),
-            e5: status(proofs_ok),
+            e5,
         }
     }
 }
@@ -571,8 +633,20 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
             assumptions.push(format!("{}:unchecked", p.kind));
         }
         assumptions.sort();
-        let certificate = certificate_digest(ev, &op.name)
-            .ok_or_else(|| EvidenceError(format!("operation `{}` has no certificates", op.name)))?;
+        // Every obligation recorded `not-live` means no proof exists for this
+        // operation: the claim carries no proof block at all (never a label),
+        // and the manifest's note says why.
+        let proof = if obligations.iter().all(|p| p.verdict == "not-live") {
+            None
+        } else {
+            let certificate = certificate_digest(ev, &op.name)
+                .ok_or_else(|| EvidenceError(format!("operation `{}` has no certificates", op.name)))?;
+            Some(ProofEvidence {
+                label: proof_label,
+                assumptions,
+                certificate,
+            })
+        };
 
         let negctl_ok = Evidence::all_pass_nonempty(ev.entries("negctl", &op.name));
         let mut evidence_ids: Vec<String> = ev
@@ -583,7 +657,7 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
             .chain(
                 ev.proofs
                     .iter()
-                    .filter(|p| p.op == op.name && p.verdict != "unchecked")
+                    .filter(|p| p.op == op.name && p.is_live())
                     .map(|p| p.id.clone()),
             )
             .collect();
@@ -606,11 +680,7 @@ pub fn derive_claims(ev: &Evidence) -> Result<Vec<ClaimEvidence>, EvidenceError>
                 iterations: sum("fuzz", |t| t.iterations),
                 status: status(Evidence::all_pass_nonempty(ev.entries("fuzz", &op.name))),
             }),
-            proof: Some(ProofEvidence {
-                label: proof_label,
-                assumptions,
-                certificate,
-            }),
+            proof,
             evidence: evidence_ids,
         });
     }

@@ -17,8 +17,8 @@ pub use evidence::{
     derive_claims, verify_evidence, Evidence, EvidenceCheckError, EvidenceError,
 };
 pub use matrix::{
-    build_weakness_matrix, AuditEvidence, MatrixError, PackageAuditContext, WeaknessRow,
-    WeaknessStatus,
+    build_weakness_matrix, AuditEvidence, AuditProfile, MatrixError, PackageAuditContext,
+    WeaknessRow, WeaknessStatus,
 };
 pub use registry::{RegistryError, WeaknessClass, WeaknessRegistry};
 pub use report::{
@@ -35,7 +35,32 @@ pub fn generate_ct_compare_report(
     registry: &WeaknessRegistry,
     evidence: &Evidence,
 ) -> Result<AssuranceReport, MatrixError> {
-    let ctx = evidence.audit_context("rust/ct-compare");
+    generate_package_report(
+        "rust/ct-compare",
+        "0.1.0",
+        commit_sha,
+        registry,
+        evidence,
+        AuditProfile::Comparison,
+    )
+}
+
+/// Construct the report-only assurance report of any package whose evidence
+/// manifests live in `evidence`.  `package` (for example `rust/gf256`) and
+/// `version` come from the caller, which reads them from the package; every
+/// count, label, certificate digest and context flag is derived from
+/// `evidence`, so the function holds no evidence literal.  Obligations the
+/// proof manifest records `not-live` become claims without a proof block and
+/// unapproved exemptions that quote the recorded blocker.
+pub fn generate_package_report(
+    package: &str,
+    version: &str,
+    commit_sha: &str,
+    registry: &WeaknessRegistry,
+    evidence: &Evidence,
+    profile: AuditProfile,
+) -> Result<AssuranceReport, MatrixError> {
+    let ctx = evidence.audit_context_with_profile(package, profile);
     let weaknesses = build_weakness_matrix(registry, &ctx)?;
     let claims = derive_claims(evidence).map_err(|e| MatrixError::MissingEvidence(e.0))?;
     let rungs = evidence.rungs();
@@ -48,6 +73,8 @@ pub fn generate_ct_compare_report(
         .map(|w| {
             let (id, kind) = if w.cwe == 208 {
                 ("EXEMPT-CWE-208-GATE-LEVEL".to_string(), "weakness-floor")
+            } else if w.cwe == 400 {
+                ("EXEMPT-CWE-400-NO-STEP-PROOF".to_string(), "no-live-proof")
             } else {
                 (format!("EXEMPT-CWE-{}-UNSAFE-EXCEPTION", w.cwe), "unsafe-exception")
             };
@@ -63,10 +90,10 @@ pub fn generate_ct_compare_report(
         .collect();
 
     Ok(AssuranceReport {
-        package: "rust/ct-compare".into(),
-        version: "0.1.0".into(),
+        package: package.into(),
+        version: version.into(),
         commit: commit_sha.into(),
-        closure: vec!["rust/ct-compare".into()],
+        closure: vec![package.into()],
         capabilities: CapabilitiesSummary {
             declared: evidence.cert.declared_effects.clone(),
             analyzer: if evidence.cert.label == "proved" { "pass" } else { "fail" }.into(),

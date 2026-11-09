@@ -11,9 +11,30 @@ use std::path::PathBuf;
 use std::process::exit;
 
 use coding_adventures_ca_assurance_report::{
-    generate_ct_compare_report, verify_assurance_report, verify_evidence, AssuranceReport,
-    CheckVerdict, Evidence, WeaknessRegistry,
+    generate_package_report, verify_assurance_report, verify_evidence, AssuranceReport,
+    AuditProfile, CheckVerdict, Evidence, WeaknessRegistry,
 };
+
+/// `rust/<directory name>` and the `version = "..."` of the package's
+/// `Cargo.toml`: the report names the package it was generated for, it does not
+/// carry a hardcoded identity.
+fn package_identity(dir: &std::path::Path) -> Result<(String, String), String> {
+    let canon = dir.canonicalize().map_err(|e| format!("{}: {e}", dir.display()))?;
+    let name = canon
+        .file_name()
+        .and_then(|n| n.to_str())
+        .ok_or("package directory has no name")?
+        .to_string();
+    let cargo = fs::read_to_string(canon.join("Cargo.toml"))
+        .map_err(|e| format!("{}/Cargo.toml: {e}", canon.display()))?;
+    let version = cargo
+        .lines()
+        .map(str::trim)
+        .find_map(|l| l.strip_prefix("version = \"").and_then(|r| r.strip_suffix('"')))
+        .ok_or("Cargo.toml has no `version = \"...\"` line")?
+        .to_string();
+    Ok((format!("rust/{name}"), version))
+}
 
 fn print_usage() {
     eprintln!("Usage: ca-assurance-report-rs [OPTIONS]");
@@ -21,6 +42,8 @@ fn print_usage() {
     eprintln!("Options:");
     eprintln!("  --package-dir <DIR>    Package directory holding evidence/ (default: the report's directory, or .)");
     eprintln!("  --generate             Generate and emit assurance_report.json");
+    eprintln!("  --profile <P>          comparison (default) | field-arithmetic: which true sentence the");
+    eprintln!("                         static attestation rows (CWE-326/327/407) carry");
     eprintln!("  --check <FILE>         Verify an existing assurance_report.json fail-closed");
     eprintln!("  --registry <FILE>      Path to weakness-registry-v1.json");
     eprintln!("  --commit <SHA>         Commit SHA to record in generated report");
@@ -55,6 +78,7 @@ fn main() {
     let mut generate = false;
     let mut registry_file: Option<PathBuf> = None;
     let mut commit_sha = "HEAD".to_string();
+    let mut profile = AuditProfile::Comparison;
 
     let mut i = 1;
     while i < args.len() {
@@ -77,6 +101,20 @@ fn main() {
             }
             "--generate" => {
                 generate = true;
+            }
+            "--profile" => {
+                i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --profile requires an argument");
+                    exit(2);
+                }
+                profile = match args[i].parse() {
+                    Ok(p) => p,
+                    Err(e) => {
+                        eprintln!("Error: {e}");
+                        exit(2);
+                    }
+                };
             }
             "--registry" => {
                 i += 1;
@@ -198,7 +236,21 @@ fn main() {
                 exit(1);
             }
         };
-        let report = match generate_ct_compare_report(&commit_sha, &registry, &evidence) {
+        let (package_id, version) = match package_identity(&package_dir) {
+            Ok(v) => v,
+            Err(e) => {
+                eprintln!("Error: {e}");
+                exit(1);
+            }
+        };
+        let report = match generate_package_report(
+            &package_id,
+            &version,
+            &commit_sha,
+            &registry,
+            &evidence,
+            profile,
+        ) {
             Ok(r) => r,
             Err(e) => {
                 eprintln!("Error generating report: {e}");
