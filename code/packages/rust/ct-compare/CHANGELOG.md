@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add the VER08b runtime capability conformance gate (`tests/runtime_capability.rs`):
+  the full public API (`ct_eq`, `ct_eq_fixed`, `ct_select_bytes` incl. its panic
+  path, `ct_eq_u64`) runs inside a seccomp/Landlock sandbox derived from
+  `required_capabilities.json` (`capabilities: []`), observed independently under
+  `strace -f`, with negative controls and a Docker ring. Linux only; other
+  platforms report NOT-LIVE. Adds the `capability-runtime-conformance`
+  dev-dependency.
 - Add equal-instruction-count microbenchmarks and deterministic cost budgeting
   (`tests/microbenchmarks.rs`, VER07 / VER07a / VER-P017):
   - Multi-scale $n \in \{16, 256, 4096\}$ sweeps for `ct_eq` with zero-allocation budget;
