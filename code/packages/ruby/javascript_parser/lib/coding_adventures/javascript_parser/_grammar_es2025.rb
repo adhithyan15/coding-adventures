@@ -1853,19 +1853,15 @@ PARSER_GRAMMAR = GT::ParserGrammar.new(
         GT::RuleReference.new(name: "TEMPLATE_NO_SUB", is_token: true),
         GT::Sequence.new(elements: [
           GT::RuleReference.new(name: "TEMPLATE_HEAD", is_token: true),
-          GT::Repetition.new(element: GT::RuleReference.new(name: "template_span", is_token: false)),
+          GT::Repetition.new(element: GT::Sequence.new(elements: [
+              GT::RuleReference.new(name: "expression", is_token: false),
+              GT::RuleReference.new(name: "TEMPLATE_MIDDLE", is_token: true),
+            ])),
+          GT::RuleReference.new(name: "expression", is_token: false),
           GT::RuleReference.new(name: "TEMPLATE_TAIL", is_token: true),
         ]),
       ]),
       line_number: 626,
-    ),
-    GT::GrammarRule.new(
-      name: "template_span",
-      body: GT::Sequence.new(elements: [
-        GT::RuleReference.new(name: "expression", is_token: false),
-        GT::RuleReference.new(name: "TEMPLATE_MIDDLE", is_token: true),
-      ]),
-      line_number: 629,
     ),
   ],
 )
