@@ -6,6 +6,22 @@ All notable changes to the `ruby-to-semantic-ir` crate will be documented in thi
 
 ### Fixed
 
+- **Lower `.call(...)` on lambda/proc receivers to `Expr::IndirectCall` and capture outer locals/parameters in lambda bodies (#18798, Item 3).**
+  In Ruby, lambdas and procs are callable objects invoked with `.call(...)`. Lowering
+  `.call(...)` as a general OOP method call (`__method__`) failed at runtime because
+  `call_method` only inspects class instance methods, producing `undefined method 'call'`
+  on Python, JS, TS, Go, and Rust, and being refused on C and Ruby. Additionally,
+  `hoist_lambda_body` did not track enclosing locals or parameters, leaving lambda bodies
+  unable to read enclosing lexical scope variables.
+  `fold_one_dot_call` now intercepts `method_name == "call"`, lowering directly to
+  `Expr::IndirectCall` and registering `Feature::Closures`. Trailing blocks attached to
+  `.call` are hoisted and appended to indirect call arguments. `hoist_lambda_body` now
+  tracks enclosing lexical locals and parameters, performs free-variable recapture analysis
+  (`recapture_reads_in_block`), populates `Function.captures` and `Expr::MakeClosure.captures`,
+  and rewrites free reads to `Scope::Capture`, properly capturing both cell-boxed mutable
+  variables and immutable enclosing parameters/locals.
+
+
 - **Persist `while`/`until` loop body locals and `rescue => e` bindings into enclosing scope (#18798, Comment 1 & Item 8).**
   In Ruby, neither `while`/`until` loops nor `begin ... rescue` clauses introduce a
   new scope. Locals first assigned inside a `while` or `until` loop body or condition

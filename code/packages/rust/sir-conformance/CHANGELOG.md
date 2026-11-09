@@ -4,6 +4,10 @@ All notable changes to the `sir-conformance` crate will be documented in this fi
 
 ## [Unreleased]
 
+### Added (#18798 item 3)
+
+- Conformance program `rb_lambda_call_and_outer_captures` in `tests/ruby_sir_gaps.rs`, verifying that Ruby arrow lambdas invoked via `.call(...)` correctly receive arguments (multi-arg and zero-arg) and capture outer local variables and enclosing method parameters across all backends (Ruby, Python, C, JavaScript, TypeScript, Go, Rust).
+
 ### Added (#18798 item 23)
 
 - Conformance program `rb_block_with_no_parameters` in `tests/ruby_sir_gaps.rs`, verifying that yielding or passing arguments to a zero-parameter block discards the surplus arguments across iterators and methods on all backends.
