@@ -79,12 +79,16 @@ All files are lexed first; one package-wide binding table is built:
 | `use ::a::b;` | leading `::` ignored |
 | `use a::b as _;` | no binding; the path itself is still classified |
 | `extern crate a as b;` | binding `b -> a` |
+| `type F = a::b;` / `type F<T> = &a::b<T>;` | binding `F -> a::b` (the first path after `=`, skipping `& * mut dyn impl const` and lifetimes) |
 
-Binding heads are expanded through other bindings to a fixed point (bounded; a cycle or growth past 64 segments is `CAP003`). For every path occurrence (in `use` leaves and everywhere else) the analyzer classifies the path **and** every *candidate*: for each path segment equal to a binding name, `binding_target + remaining_segments`; and, for a path not headed `std`/`core`/`alloc`/`crate`/`self`/`super`/`Self`, `glob_prefix + path` for each glob. Glob candidates may add `CAP001`/`CAP002` results, never `CAP003`. Pinned by tests:
+Binding heads are expanded through other bindings to a fixed point (bounded; a cycle or growth past 64 segments is `CAP003`). Identical bindings are de-duplicated *before* expansion and every cap is checked *inside* the expansion loop, so no intermediate result can exceed it (§5, M4). For every path occurrence (in `use` leaves and everywhere else) the analyzer classifies the path **and** every *candidate*: for each path segment equal to a binding name, `binding_target + remaining_segments`; and, for a path not headed `std`/`core`/`alloc`/`crate`/`self`/`super`/`Self`, `glob_prefix + path` for each glob. Glob candidates may add `CAP001`/`CAP002` results, never `CAP003`. Pinned by tests:
 
 - `use std::{fs, process::Command};`, `use std as s; s::process::Command`, `use std::fs as f; f::read(..)`, `use std::*; process::Command::new(..)`, and `a::s::process::Command` (another file has `pub use std as s;`) resolve to `std::` paths and are detected.
 - Re-exporting a capability (`pub use std::process as p;`) is itself a detection at the re-export site.
 - Bindings are package-wide, not per scope: an unrelated local item sharing a binding's name may yield a false positive. Accepted.
+- Qualified paths name the self type: after `>::` the item is read as `<self type path>::item`, so `<File>::create(..)`, `<std::fs::File as T>::create(..)` and the turbofish `Path::<X>::exists` classify as `File::create`, `std::fs::File::create` and `Path::exists`. A `<` that cannot be matched within 512 tokens is `CAP003`; a self type with no path (`<[u8]>::len`) is pure.
+- Type aliases are bindings: `type F = File; F::create(..)` reaches `std::fs::File::create` (`fs:write`), `type U = UdpSocket; U::bind(..)` reaches `net:listen`. (An associated `type Item = Foo;` inside an `impl` is also a binding; bindings are package-wide, see above.)
+- Bounded work per path: a path longer than 64 segments, or one with more than 64 candidate spellings, is `CAP003`; after 200,000 extra spellings in one file the remaining paths are classified as written and the file carries a `CAP003`.
 
 ### 3.3 Capability classification
 
@@ -117,6 +121,9 @@ Binding heads are expanded through other bindings to a fixed point (bounded; a c
 | `std::ffi::*`, `core::ffi::*`, `alloc::ffi::*` | `ffi:call` |
 | `std::os::…` containing segment `net` / `process` / `fs` / `thread` | `net:connect` / `proc:exec` / `fs:write` / `thread:spawn` |
 | any other `std::os::*` (raw fds/handles) | `ffi:call` |
+| `{core,std}::arch::*` item whose name starts `_rdrand` / `_rdseed` (hardware randomness) | `rand:read` |
+| `std::path::absolute` (joins the current directory) | `env:read` |
+| `…::Path::{read_dir metadata symlink_metadata canonicalize read_link exists try_exists is_file is_dir is_symlink}` and the same on `PathBuf`, however qualified (`Path::exists(p)`, `std::path::Path::metadata(p)`, `<PathBuf>::is_file(p)`, `let g = Path::canonicalize;`) | `fs:list` |
 | any path containing segment `RandomState`; any path headed `rand getrandom fastrand oorandom rand_core rand_chacha` | `rand:read` |
 | paths headed `libc nix winapi windows windows_sys libloading` | `ffi:call` |
 | paths headed `tokio mio socket2 reqwest hyper ureq async_std smol` | `net:connect` |
@@ -124,6 +131,10 @@ Binding heads are expanded through other bindings to a fixed point (bounded; a c
 | pure std modules/macros (below) | pure |
 
 Method heuristic: `.name(` with `name` in {`read_dir metadata symlink_metadata canonicalize read_link exists try_exists is_file is_dir is_symlink`} is `fs:list`, because `Path::exists()` reaches the filesystem without naming `std::fs`. This over-approximates (a user method called `exists` is flagged).
+
+*Receiver resolution (L4).* The heuristic is skipped for exactly one provable shape: the receiver is `Local::ctor(..)` optionally followed by `.unwrap()`, `.expect(..)`, `.clone()` or `?`, where `Local` is a struct/enum of the package whose own inherent `impl Local { .. }` declares both `ctor` (an associated fn returning `Self`, `Local`, `Result<Self|Local, _>` or `Option<Self|Local>`) and a `self` method of the called name, and `Local` is not rebound by a `use`/`type`. Inherent methods win method resolution, so such a call cannot reach `Path::<name>`. Anything else - a variable, a field, another adapter, a trait method - stays flagged. Example: `Url::parse(s).unwrap().canonicalize()` in url-parser is the crate's own `Url::canonicalize`, not a filesystem call.
+
+`core::arch::*::__cpuid` and similar CPU-identification intrinsics are *informational only* (INFO): they reveal the CPU model but are not an OS authority, and are not reported.
 
 Pure `std`/`core`/`alloc` modules: `alloc any arch array ascii borrow boxed cell char clone cmp collections convert default error f32 f64 fmt future hash hint i8 i16 i32 i64 i128 isize iter marker mem num ops option panic path pin prelude primitive ptr rc result slice str string sync task u8 u16 u32 u64 u128 usize vec`, plus `core::net`, `core::time`. Pure macros: `assert assert_eq assert_ne debug_assert debug_assert_eq debug_assert_ne matches vec format format_args panic unreachable unimplemented todo write writeln concat stringify line column file module_path cfg compile_error env option_env include_str include_bytes thread_local is_x86_feature_detected is_aarch64_feature_detected try` (`env!` is compile-time and pure).
 
@@ -141,12 +152,15 @@ Anything else (`crate`, local modules, unlisted third-party crates) is **pure by
 
 `extern "ABI"` in any position (item, block, fn-pointer type) is a detection `ffi:call` for **every** ABI string whose source text is not exactly `Rust` (`"C-unwind"`, `"system"`, `"vectorcall"`, escaped and raw strings are caught). `extern { … }`, `extern fn`, `unsafe extern` likewise. `extern crate` is not FFI.
 
+`extern "Rust" { … }` (an *import block*, whatever the ABI string) declares symbols defined outside the crate, exactly like `extern "C" { … }`: it is a banned `foreign_linkage` and an `ffi:call` detection. `extern "Rust" fn f() {}` and `extern "Rust" fn(u8)` types are ordinary and not flagged.
+
 An exception waives the construct for the whole package, not per item. Waived constructs are **still reported** (§6.1).
 
 ### 3.5 Unanalysable constructs (`CAP003`, never waivable, exit `1`)
 
 | Construct | Why |
 |---|---|
+| a bare `include`, `include_str` or `include_bytes` identifier inside the arguments of any macro invocation (`m!(include, "../x.rs")`), and in a `macro_rules!` body any `$name!(…)` (a macro chosen by a metavariable) | the callee invokes the macro out of sight (M2). `$a != b` and `!$a` are not flagged. Accepted false positive: a variable named `include` used as a macro argument (`assert!(include)`) |
 | `include!(…)` (bare, `std::`, `core::`) | pulls in code the scanner never sees (`include_str!`/`include_bytes!` pull in data and are allowed) |
 | `#[path = "…"]` (also inside `cfg_attr`) | module location is untracked; may point at an unscanned directory |
 | in a `macro_rules!` body, a metavariable adjacent to `::` (`std::$m::read`, `$p::x`, `$(…)::*`) | the expansion constructs a path the scanner never sees |
@@ -154,7 +168,17 @@ An exception waives the construct for the whole package, not per item. Waived co
 | `#[proc_macro]`, `#[proc_macro_derive]`, `#[proc_macro_attribute]`, or `proc-macro = true` in `Cargo.toml` | compile-time code execution with full authority |
 | unclassified `std`/`core`/`alloc` path (§3.3) | deny by default |
 | alias cycle / unbounded expansion (§3.2) | resolution did not converge |
-| `Cargo.toml` `path` keys under `[lib]`/`[[bin]]` and `build` under `[package]` that are absolute, contain `..`, start with a hidden component, or start with an unscanned directory (`tests benches examples target node_modules _build`) | shipped code outside the scanned set. (`[[test]]`/`[[bench]]`/`[[example]]` paths are not shipped and not examined, G-5.) |
+| `Cargo.toml` key `path`, `build`, `proc-macro` or `proc_macro` **anywhere outside** the dependency tables (§3.5.1) whose value is not verifiable; for `path`/`build`: absolute, contains `..`, starts with a hidden component, or starts with an unscanned directory (`tests benches examples target node_modules _build`) | shipped code outside the scanned set. (`[[test]]`/`[[bench]]`/`[[example]]` `path`s are not shipped and not examined, G-5.) |
+| `Cargo.toml` text the reader cannot parse | fail closed (§3.5.1) |
+
+#### 3.5.1 `Cargo.toml` reader (M3)
+
+`Cargo.toml` is read by a small TOML-subset *tokenizer*, not line by line, so strings, arrays and inline tables are consumed as units and no state is lost between lines. Every value is flattened to a full key path (`bin`, `[]`, `path`) and one rule is applied to that path however the author spelled it: dotted keys (`lib.path`), quoted keys and tables (`["lib"]`, `'lib'.path`), top-level inline tables (`lib = { path = ".." }`, `package = { build = ".." }`), arrays of inline tables (`bin = [{ path = ".." }]`), multi-line strings and multi-line arrays.
+
+- A watched key (`path`, `build`, `proc-macro`, `proc_macro`) is accepted only with a verifiable value: a plain single-line string without escapes that stays inside the scanned set; `false` for `build` / `proc-macro` / `proc_macro`. A multi-line string, an escape sequence (`"t\u0065sts/x.rs"` can spell `tests`), an array, a table, or a table-header form (`[lib.path]`) there is `CAP003`. `proc-macro = true` is `CAP003`.
+- A watched key nested *under* another structure (a path segment named `path` that has children) is `CAP003`.
+- Exempt: `[dependencies]`, `[dev-dependencies]`, `[build-dependencies]`, `[target.*.…dependencies…]` (a dependency's `path` names another crate), `[workspace.dependencies]`, `[patch.*]`, `[replace]`, `[features]` (feature names may be called `path`/`build`), and `path` in `[[test]]`/`[[bench]]`/`[[example]]`.
+- Any text the reader does not understand (unterminated string or bracket, missing `=`, escaped quoted key, nesting deeper than 32) is one `CAP003`; analysis never silently skips a line.
 
 ### 3.6 Third-party dependencies
 
@@ -171,6 +195,7 @@ The pure module/macro lists of §3.3 are the allowlist for `std`/`core`/`alloc`.
 ## 5. Resource Ceilings and Scanner Boundaries
 
 - Maximum source files **10,000**; per file **4 MiB**; cumulative **64 MiB**; directory depth **64**; manifest **1 MiB**.
+- Work ceilings (M4, each exceeded -> `CAP003`, never a hang or an allocation abort): 20,000 distinct use bindings / alias entries; 256 distinct glob imports; 64 segments per path; 64 spellings per path; 200,000 extra spellings per file; `macro_rules!` body scanning bounded to 4x the token count per file; `Cargo.toml` value nesting 32. Bracket matching is a single pass per file (`#[#[#[…` is linear).
 - Symlinks (file or directory) inside the package are refused (exit `2`).
 - Every `.rs` file under the package root is scanned, **including** `src/capabilities.rs` (previously exempt; a hand-edited generated module is scanned like any file) and a root `build.rs`.
 - Excluded: hidden directories (unreachable as modules without `#[path]`, which is `CAP003`); at the package **root only** `target/ node_modules/ _build/ tests/ benches/ examples/`. A nested directory named `target`, `tests`, … (e.g. `src/target/mod.rs`) **is** scanned.
@@ -224,7 +249,7 @@ Per-construct status: `absent`, `present-excepted(N)`, `present-violation(N)`. `
 - **G-5** `tests/`, `benches/`, `examples/`, `[dev-dependencies]` are not analysed though `cargo test` executes them.
 - **G-6** Macros are not expanded: authority produced only by expansion of *another crate's* macros (`#[derive(ThirdParty)]`, `thirdparty::mac!()`) is invisible. Metavariable-spliced paths in local `macro_rules!` are `CAP003`; method names spliced via `.$m(` are not detected.
 - **G-7** Dynamic behaviour (function pointers, trait objects, `dlopen` through any crate, `/proc/self/mem` through a declared fs capability).
-- **G-8** Type-directed routes beyond the §3.3 method heuristic.
+- **G-8** Type-directed routes beyond the §3.3 method heuristic and the type-alias / qualified-path / receiver rules of §3.2-3.3. A binding whose target begins `crate::`/`super::`/`self::` (`type F = super::File;`, `use super::File as G;`) is not followed into the module it names; only same-named bindings elsewhere in the package are.
 - **G-9** `cfg` is ignored (conservative); compiler flags, `.cargo/config.toml` and `RUSTFLAGS` are not examined.
 
 ## 9. Divergence Log (previous revision -> this revision)
@@ -244,3 +269,11 @@ Per-construct status: `absent`, `present-excepted(N)`, `present-violation(N)`. `
 | D11 | `rand` category had no Rust rule | `RandomState`, rand crates | taxonomy has `rand` |
 | D12 | duplicate JSON keys last-wins; lenient numbers/whitespace | rejected | parser differential |
 | D13 | duplicate/unknown banned exceptions silently accepted | rejected | consistency with capability duplicates |
+| D14 | `Path::exists(p)`, `std::path::Path::metadata(p)`, `<PathBuf>::is_file(p)`, `let g = Path::canonicalize;` pure (`path` is a pure module; method list applied only after `.`) | `…::Path/PathBuf::<fs method>` is `fs:list`; `std::path::absolute` is `env:read` | M1 false negative |
+| D15 | `m!(include, "../x.rs")` with `macro_rules! m { ($mac:ident, $f:expr) => { $mac!($f) } }` evaded `CAP003` | bare include-family names in macro arguments and `$name!(..)` in macro bodies are `CAP003` | M2 false negative |
+| D16 | line-oriented `Cargo.toml` reader: top-level inline tables, `bin = [{..}]`, `package = { build = ".." }`, `lib = { proc-macro = true }`, quoted table names, multi-line strings and arrays resetting the section all evaded | tokenizing reader, one path-based rule, fail closed (§3.5.1) | M3 false negative |
+| D17 | alias expansion built (entries x targets) before checking its cap (264 KB input -> 2.3 GB abort); candidate generation quadratic in path length; `matching_close` O(n^2) on `#[#[…`; uncapped glob count | de-dup before expansion, caps inside loops, per-path / per-file ceilings, single-pass bracket table (§5) | M4 denial of service |
+| D18 | `type F = File; F::create(..)`, `<File>::create(..)`, `type U = UdpSocket; U::bind(..)` escalated within a category | type aliases are bindings; `>::item` is classified as `<self type>::item` (§3.2) | L1 |
+| D19 | `core::arch` / `std::arch` wholly pure | `_rdrand*` / `_rdseed*` are `rand:read`; `__cpuid` informational | L2 |
+| D20 | `extern "Rust" { … }` not flagged | `foreign_linkage` + `ffi:call` | L3 |
+| D21 | `.canonicalize()` on any receiver was `fs:list` (url-parser's `Url::canonicalize` forced a false `fs:list` declaration) | receiver resolution for `Local::ctor(..)[.unwrap()/.expect()/.clone()/?]` with an inherent method of that name (§3.3) | L4 false positive |
