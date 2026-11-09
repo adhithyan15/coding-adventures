@@ -55,14 +55,22 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    # Full 15-shard regression build every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)
-    - cron: '0 */6 * * *'
+    # Full 15-shard Linux regression build every 6 hours. The 00:00 UTC run
+    # is the daily one: it also runs the same shards on macOS and Windows
+    # (see `cross_os_full` in the detect job). The cron string is matched
+    # literally in detect-main, so change both together.
+    - cron: '0 0 * * *'
+    - cron: '0 6,12,18 * * *'
   workflow_dispatch:
     inputs:
       full_build:
-        description: 'Run forced, sharded full build (15 shards)'
+        description: 'Run forced, sharded full build (15 Linux shards)'
         type: boolean
         default: true
+      cross_os_full:
+        description: 'Also run the 15 shards on macOS and Windows (needs full_build; ~45 jobs)'
+        type: boolean
+        default: false
 
 # One run per branch at a time. Superseded runs are cancelled everywhere but
 # main (below). Scheduled and dispatch runs on main use separate concurrency groups
@@ -118,6 +126,7 @@ jobs:
       diff_base: ${{ steps.diff-base.outputs.base }}
       is_main: ${{ steps.detect-main.outputs.is_main }}
       full_build: ${{ steps.detect-main.outputs.full_build }}
+      cross_os_full: ${{ steps.detect-main.outputs.cross_os_full }}
       build_shards: ${{ steps.detect.outputs.build_shards }}
       build_matrix: ${{ steps.build-matrix.outputs.build_matrix }}
       shard_count: ${{ steps.build-matrix.outputs.shard_count }}
@@ -199,6 +208,9 @@ jobs:
       # full_build selects the forced, sharded full build (15 shards).
       # It runs periodically on a schedule (every 6 hours) or via workflow_dispatch,
       # or when a pull request carries the `ci-full-build` label.
+      # cross_os_full additionally runs those shards on macOS and Windows. It is
+      # set only by the 00:00 UTC schedule (once a day) and by a manual dispatch
+      # with `cross_os_full`; the `ci-full-build` label stays Linux-only.
       # Ordinary pushes to main run incremental change detection against the previous commit,
       # giving fast feedback and preserving runner headroom.
       - name: Check if main branch
@@ -209,6 +221,8 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           FULL_BUILD_LABEL: ${{ github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ci-full-build') }}
           MANUAL_FULL_BUILD: ${{ github.event.inputs.full_build }}
+          MANUAL_CROSS_OS_FULL: ${{ github.event.inputs.cross_os_full }}
+          SCHEDULE_CRON: ${{ github.event.schedule }}
         run: |
           if [ "$GIT_REF" = "refs/heads/main" ]; then
             echo "is_main=true" >> "$GITHUB_OUTPUT"
@@ -224,6 +238,18 @@ jobs:
             echo "full_build=true" >> "$GITHUB_OUTPUT"
           else
             echo "full_build=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Compared as plain strings, never evaluated. The daily cron must
+          # match the 00:00 entry under `on.schedule` exactly.
+          if [ "$EVENT_NAME" = "schedule" ] && [ "$SCHEDULE_CRON" = "0 0 * * *" ]; then
+            echo "::notice::daily schedule: also running the full build on macOS and Windows"
+            echo "cross_os_full=true" >> "$GITHUB_OUTPUT"
+          elif [ "$EVENT_NAME" = "workflow_dispatch" ] && [ "$MANUAL_FULL_BUILD" = "true" ] && [ "$MANUAL_CROSS_OS_FULL" = "true" ]; then
+            echo "::notice::manual dispatch: also running the full build on macOS and Windows"
+            echo "cross_os_full=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "cross_os_full=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Detect needed languages and emit build plan
@@ -420,6 +446,7 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           FULL_BUILD: ${{ steps.detect-main.outputs.full_build }}
+          CROSS_OS_FULL: ${{ steps.detect-main.outputs.cross_os_full }}
           BUILD_SHARDS: ${{ steps.detect.outputs.build_shards }}
           NEEDS_SWIFT: ${{ steps.toolchains.outputs.needs_swift }}
           NEEDS_ELIXIR: ${{ steps.toolchains.outputs.needs_elixir }}
@@ -459,10 +486,12 @@ jobs:
             """macOS re-runs the whole affected build. It earns its runner only
             when the change could behave differently there.
 
-            These legs exist ONLY on pull requests -- main builds from ubuntu
-            shards -- so unlike the job gates there is no main-merge safety net.
-            Dropping a leg removes that coverage from the repo entirely, which
-            is why the OS-only suites below get an explicit gate."""
+            These per-change legs exist ONLY on pull requests. main's only
+            cross-OS coverage is the daily full build (cross_os_full), which
+            can lag a regression by up to a day, so unlike the job gates there
+            is no per-merge safety net. Dropping a leg removes that coverage
+            from pull requests entirely, which is why the OS-only suites below
+            get an explicit gate."""
             # The macOS leg carries one suite gated on runner.os alone, with no
             # toolchain condition: the ADJ POSIX process-tree containment tests.
             if flag("RUN_MACOS_OS_SUITES"):
@@ -566,6 +595,24 @@ jobs:
               for shard in shards
             ]
             shard_count = len(entries)
+            if flag("CROSS_OS_FULL"):
+              # The daily full build repeats the same shards on macOS and
+              # Windows, so a platform-only regression surfaces within a day
+              # instead of only when a pull request happens to touch it. The
+              # shard plan is computed once (on Linux); each OS runs the same
+              # shard indexes against the same build-plan.json.
+              for platform in (MACOS, WINDOWS):
+                entries += [
+                  {
+                    "os": platform["os"],
+                    "label": platform["label"] + " " + shard["label"],
+                    "sharded": True,
+                    "shard_index": shard["shard_index"],
+                    "package_count": shard.get("package_count", 0),
+                    "languages": shard.get("languages", []),
+                  }
+                  for shard in shards
+                ]
           elif os.environ["EVENT_NAME"] == "pull_request":
             entries = [LINUX]
             if needs_macos(plan):
@@ -5744,17 +5791,23 @@ jobs:
       # the step would silently disable those checks.
       - name: Full build on main merge
         if: needs.detect.outputs.full_build == 'true'
-        timeout-minutes: 150
+        # Linux shards keep the 150-minute ceiling. The daily macOS/Windows
+        # shards run the same work on slower runners, so they get the same
+        # 300-minute ceiling as the pull-request build step above.
+        timeout-minutes: ${{ matrix.os == 'ubuntu-latest' && 150 || 300 }}
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Linux" ] && [ -w /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs ]; then
             printf '%s\n' "$$" | sudo tee /sys/fs/cgroup/forme-sandbox/runner/cgroup.procs >/dev/null
           fi
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
-          code/scripts/ci/disk-watch.sh report "before full build"
-          code/scripts/ci/disk-watch.sh watch 300 &
-          disk_watch_pid=$!
-          trap 'kill "$disk_watch_pid" 2>/dev/null || true; code/scripts/ci/disk-watch.sh report "after full build"' EXIT
+          # Windows is left out of disk-watch, as in the pull-request build.
+          if [ "$RUNNER_OS" != "Windows" ]; then
+            code/scripts/ci/disk-watch.sh report "before full build"
+            code/scripts/ci/disk-watch.sh watch 300 &
+            disk_watch_pid=$!
+            trap 'kill "$disk_watch_pid" 2>/dev/null || true; code/scripts/ci/disk-watch.sh report "after full build"' EXIT
+          fi
           # -prune-leaf-targets: each standalone Cargo package builds its whole
           # dependency tree into its own target/, and keeping them all filled
           # the runner disk part-way through a shard (X-7). A leaf's target/
