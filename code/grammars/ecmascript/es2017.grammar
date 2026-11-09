@@ -162,8 +162,8 @@ class_body = LBRACE { class_element } RBRACE ;
 
 # --- CHANGED IN ES2017: class_element gains async_method ---
 
-class_element = [ "static" ] method_definition SEMICOLON
-              | [ "static" ] async_method SEMICOLON
+class_element = [ "static" ] method_definition
+              | [ "static" ] async_method
               | SEMICOLON ;
 
 method_definition = property_name LPAREN [ formal_parameters ] RPAREN
@@ -395,16 +395,16 @@ postfix_expression = left_hand_side_expression [ PLUS_PLUS | MINUS_MINUS ] ;
 left_hand_side_expression = call_expression | new_expression ;
 
 call_expression = member_expression arguments
-                  { arguments | DOT NAME | LBRACKET expression RBRACKET
+                  { arguments | DOT identifier_name | LBRACKET expression RBRACKET
                   | template_literal } ;
 
 new_expression = member_expression
                | "new" new_expression ;
 
 member_expression = primary_expression
-                    { DOT NAME | LBRACKET expression RBRACKET | template_literal }
+                    { DOT identifier_name | LBRACKET expression RBRACKET | template_literal }
                   | "new" member_expression arguments
-                  | "super" DOT NAME
+                  | "super" DOT identifier_name
                   | "super" LBRACKET expression RBRACKET
                   | "new" DOT "target" ;
 
@@ -459,7 +459,48 @@ property_definition = property_name COLON assignment_expression
                     | NAME
                     | ELLIPSIS assignment_expression ;
 
-property_name = NAME
+identifier_name = NAME
+                | "await"
+                | "break"
+                | "case"
+                | "catch"
+                | "class"
+                | "const"
+                | "continue"
+                | "debugger"
+                | "default"
+                | "delete"
+                | "do"
+                | "else"
+                | "enum"
+                | "export"
+                | "extends"
+                | "false"
+                | "finally"
+                | "for"
+                | "function"
+                | "if"
+                | "import"
+                | "in"
+                | "instanceof"
+                | "let"
+                | "new"
+                | "null"
+                | "return"
+                | "super"
+                | "switch"
+                | "this"
+                | "throw"
+                | "true"
+                | "try"
+                | "typeof"
+                | "var"
+                | "void"
+                | "while"
+                | "with"
+                | "yield" ;
+
+property_name = identifier_name
               | STRING
               | NUMBER
               | LBRACKET assignment_expression RBRACKET ;

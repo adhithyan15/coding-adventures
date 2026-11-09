@@ -2,6 +2,17 @@
 
 All notable changes to the `coding-adventures-javascript-parser` crate will be documented in this file.
 
+## [0.67.7] - 2026-11-09
+
+### Fixed
+
+- Support adjacent class members and reserved-word property names (#17852):
+  - In `code/grammars/ecmascript/es2016.grammar` through `es2025.grammar`, removed trailing `SEMICOLON` requirement after `method_definition` and `async_method` in `class_element` to allow adjacent class members without explicit semicolons.
+  - In `code/grammars/ecmascript/es5.grammar` through `es2025.grammar`, defined `identifier_name` matching `NAME` and all ECMAScript reserved words, allowing reserved words as property names in `property_name`, member dot access `.` and optional chaining `?.`.
+  - In `src/bridge.rs`, added helper `extract_ident_name` to extract identifier names from either raw tokens or `identifier_name` grammar nodes in `convert_member_expression`, `convert_call_expression`, `convert_optional_chain_expression`, and `convert_property_key`.
+  - Regenerated compiled grammars for Rust and Ruby.
+  - Added unit tests for adjacent class members without semicolons, reserved words as property names and dot access, and reserved words as class members.
+
 ## [0.67.6] - 2026-11-09
 
 ### Fixed

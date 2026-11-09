@@ -214,8 +214,8 @@ class_body = LBRACE { class_element } RBRACE ;
 #     set age(value) { this._age = value; }
 #   }
 
-class_element = { decorator } [ "static" ] method_definition SEMICOLON
-              | { decorator } [ "static" ] async_method SEMICOLON
+class_element = { decorator } [ "static" ] method_definition
+              | { decorator } [ "static" ] async_method
               | { decorator } class_field_declaration
               | { decorator } private_method_definition
               | static_block
@@ -536,15 +536,15 @@ left_hand_side_expression = call_expression
                           | new_expression ;
 
 call_expression = member_expression arguments
-                  { arguments | DOT NAME | DOT PRIVATE_NAME
+                  { arguments | DOT identifier_name | DOT PRIVATE_NAME
                   | LBRACKET expression RBRACKET | template_literal } ;
 
 optional_chain_expression = member_expression
-                            { OPTIONAL_CHAIN NAME
+                            { OPTIONAL_CHAIN identifier_name
                             | OPTIONAL_CHAIN PRIVATE_NAME
                             | OPTIONAL_CHAIN LBRACKET expression RBRACKET
                             | OPTIONAL_CHAIN arguments
-                            | DOT NAME
+                            | DOT identifier_name
                             | DOT PRIVATE_NAME
                             | LBRACKET expression RBRACKET
                             | arguments
@@ -554,10 +554,10 @@ new_expression = member_expression
                | "new" new_expression ;
 
 member_expression = primary_expression
-                    { DOT NAME | DOT PRIVATE_NAME
+                    { DOT identifier_name | DOT PRIVATE_NAME
                     | LBRACKET expression RBRACKET | template_literal }
                   | "new" member_expression arguments
-                  | "super" DOT NAME
+                  | "super" DOT identifier_name
                   | "super" LBRACKET expression RBRACKET
                   | "new" DOT "target" ;
 
@@ -616,7 +616,48 @@ property_definition = property_name COLON assignment_expression
 
 object_spread_property = ELLIPSIS assignment_expression ;
 
-property_name = NAME
+identifier_name = NAME
+                | "await"
+                | "break"
+                | "case"
+                | "catch"
+                | "class"
+                | "const"
+                | "continue"
+                | "debugger"
+                | "default"
+                | "delete"
+                | "do"
+                | "else"
+                | "enum"
+                | "export"
+                | "extends"
+                | "false"
+                | "finally"
+                | "for"
+                | "function"
+                | "if"
+                | "import"
+                | "in"
+                | "instanceof"
+                | "let"
+                | "new"
+                | "null"
+                | "return"
+                | "super"
+                | "switch"
+                | "this"
+                | "throw"
+                | "true"
+                | "try"
+                | "typeof"
+                | "var"
+                | "void"
+                | "while"
+                | "with"
+                | "yield" ;
+
+property_name = identifier_name
               | STRING
               | NUMBER
               | LBRACKET assignment_expression RBRACKET ;

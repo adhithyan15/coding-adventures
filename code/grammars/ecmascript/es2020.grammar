@@ -111,8 +111,8 @@ class_heritage = "extends" left_hand_side_expression ;
 
 class_body = LBRACE { class_element } RBRACE ;
 
-class_element = [ "static" ] method_definition SEMICOLON
-              | [ "static" ] async_method SEMICOLON
+class_element = [ "static" ] method_definition
+              | [ "static" ] async_method
               | SEMICOLON ;
 
 method_definition = property_name LPAREN [ formal_parameters ] RPAREN
@@ -384,7 +384,7 @@ left_hand_side_expression = call_expression
                           | new_expression ;
 
 call_expression = member_expression arguments
-                  { arguments | DOT NAME | LBRACKET expression RBRACKET
+                  { arguments | DOT identifier_name | LBRACKET expression RBRACKET
                   | template_literal } ;
 
 # --- NEW IN ES2020: Optional chaining ---
@@ -406,10 +406,10 @@ call_expression = member_expression arguments
 # The lexer handles this by recognizing `?.` only when NOT followed by a digit.
 
 optional_chain_expression = member_expression
-                            { OPTIONAL_CHAIN NAME
+                            { OPTIONAL_CHAIN identifier_name
                             | OPTIONAL_CHAIN LBRACKET expression RBRACKET
                             | OPTIONAL_CHAIN arguments
-                            | DOT NAME
+                            | DOT identifier_name
                             | LBRACKET expression RBRACKET
                             | arguments
                             | template_literal } ;
@@ -418,9 +418,9 @@ new_expression = member_expression
                | "new" new_expression ;
 
 member_expression = primary_expression
-                    { DOT NAME | LBRACKET expression RBRACKET | template_literal }
+                    { DOT identifier_name | LBRACKET expression RBRACKET | template_literal }
                   | "new" member_expression arguments
-                  | "super" DOT NAME
+                  | "super" DOT identifier_name
                   | "super" LBRACKET expression RBRACKET
                   | "new" DOT "target" ;
 
@@ -500,7 +500,48 @@ property_definition = property_name COLON assignment_expression
 
 object_spread_property = ELLIPSIS assignment_expression ;
 
-property_name = NAME
+identifier_name = NAME
+                | "await"
+                | "break"
+                | "case"
+                | "catch"
+                | "class"
+                | "const"
+                | "continue"
+                | "debugger"
+                | "default"
+                | "delete"
+                | "do"
+                | "else"
+                | "enum"
+                | "export"
+                | "extends"
+                | "false"
+                | "finally"
+                | "for"
+                | "function"
+                | "if"
+                | "import"
+                | "in"
+                | "instanceof"
+                | "let"
+                | "new"
+                | "null"
+                | "return"
+                | "super"
+                | "switch"
+                | "this"
+                | "throw"
+                | "true"
+                | "try"
+                | "typeof"
+                | "var"
+                | "void"
+                | "while"
+                | "with"
+                | "yield" ;
+
+property_name = identifier_name
               | STRING
               | NUMBER
               | LBRACKET assignment_expression RBRACKET ;

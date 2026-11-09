@@ -189,28 +189,15 @@
    "upstream_stdout": "console.log(2);\n"
   },
   "ladder_t6_class_advanced": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "ADVANCED compilation failed at parse stage:",
-   "closurec_stdout": "",
+   "closurec_exit": 0,
+   "closurec_stdout": "class A{constructor(){this.x=1}get(){return this.x}}console.log((new A).get());\n",
    "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
    "level": "ADVANCED",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: a class method following a constructor fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
+   "reason": "closurec does not rename the class declaration in advanced mode, leaving class A unminified, whereas upstream renames it to a.",
    "rung": "class",
    "tier": 6,
    "upstream_exit": 0,
    "upstream_stdout": "class a{constructor(){this.x=1}get(){return this.x}}console.log((new a).get());\n"
-  },
-  "ladder_t6_class_simple": {
-   "closurec_exit": 1,
-   "closurec_stderr_starts_with": "SIMPLE compilation failed at parse stage:",
-   "closurec_stdout": "",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15837",
-   "level": "SIMPLE",
-   "reason": "closurec refuses valid JavaScript that upstream compiles: a class method following a constructor fails at the parse stage. This is a front-end capability gap, not an optimizer one. Note it fails only on the typed path \u2014 WHITESPACE_ONLY passes, because that path never parses.",
-   "rung": "class",
-   "tier": 6,
-   "upstream_exit": 0,
-   "upstream_stdout": "class A{constructor(){this.x=1}get(){return this.x}}console.log((new A).get());\n"
   },
   "ladder_t6_class_static_advanced": {
    "closurec_exit": 0,
