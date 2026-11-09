@@ -1002,70 +1002,33 @@ fn dimacs_edge_cases_that_must_parse() {
 #[test]
 fn solver_and_kernel_read_dimacs_identically() {
     let texts = [
-        "", "p cnf 2 1
-1 0
-", "1 2 0
-", "p cnf 2 1
-p cnf 2 1
-1 0
-", "p cnf 2
-1 0
-", "p cnf 2 1
-1 3 0
-",
-        "p cnf 2 1
-1 2
-", "p cnf 2 2
-1 0
-", "p cnf 2 1
-1 0
-2 0
-", "p cnf 2 1
-1 x 0
-", "p cnf 2 1
-+1 0
-",
-        "p cnf 2 1
-1 -0
-", "p cnf 2 1
-1 00
-", "p cnf 2 1
-01 0
-", "p cnf 0 0
-", "p cnf 0 1
-0
-",
-        "p cnf 2 1
-1 0
-%
-", "p cnf 2 1
-1 -2 0
-", "p cnf 2 1
-1 -1 0
-", "p cnf 2 1
-cnf stuff
-1 0
-",
-        "c x
-p cnf 2 1
-c y
-1
-2 0
-", "p cnf 2 1
-1 0 2
-", "p cnf 2 1
-1 0
-x 0
-", "p  cnf  2   1
-1 0
-",
-        "p cnf 2 1
-1 99999999999999999999 0
-", "p cnf -2 1
-1 0
-", "p cnf 2 1 7
-1 0
-",
+        "",
+        "p cnf 2 1\n1 0\n",
+        "1 2 0\n",
+        "p cnf 2 1\np cnf 2 1\n1 0\n",
+        "p cnf 2\n1 0\n",
+        "p cnf 2 1\n1 3 0\n",
+        "p cnf 2 1\n1 2\n",
+        "p cnf 2 2\n1 0\n",
+        "p cnf 2 1\n1 0\n2 0\n",
+        "p cnf 2 1\n1 x 0\n",
+        "p cnf 2 1\n+1 0\n",
+        "p cnf 2 1\n1 -0\n",
+        "p cnf 2 1\n1 00\n",
+        "p cnf 2 1\n01 0\n",
+        "p cnf 0 0\n",
+        "p cnf 0 1\n0\n",
+        "p cnf 2 1\n1 0\n%\n",
+        "p cnf 2 1\r\n1 -2 0\r\n",
+        "p cnf 2 1\n1 -1 0\n",
+        "p cnf 2 1\ncnf stuff\n1 0\n",
+        "c x\np cnf 2 1\nc y\n1\n2 0\n",
+        "p cnf 2 1\n1 0 2\n",
+        "p cnf 2 1\n1 0\nx 0\n",
+        "p  cnf  2   1\n1 0\n",
+        "p cnf 2 1\n1 99999999999999999999 0\n",
+        "p cnf -2 1\n1 0\n",
+        "p cnf 2 1 7\n1 0\n",
     ];
     let mut disagreements = Vec::new();
     for t in texts {
@@ -1075,7 +1038,10 @@ x 0
             disagreements.push((t, ours, theirs));
         }
     }
-    assert!(disagreements.is_empty(), "solver/kernel DIMACS disagreement (text, solver accepts, kernel accepts): {disagreements:?}");
+    assert!(
+        disagreements.is_empty(),
+        "solver/kernel DIMACS disagreement (text, solver accepts, kernel accepts): {disagreements:?}"
+    );
 }
 
 #[test]
