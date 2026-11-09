@@ -216,6 +216,16 @@ func Decode(tokens []Token, originalLength int) []byte {
 	var output []byte
 
 	for _, tok := range tokens {
+		// Security: stop as soon as the declared length is reached (nothing
+		// more survives the truncation; expanding further lets a tiny hostile
+		// stream grow quadratically), and stop on a dangling dictionary index
+		// instead of panicking.
+		if originalLength >= 0 && len(output) >= originalLength {
+			break
+		}
+		if int(tok.DictIndex) >= len(table) {
+			break
+		}
 		seq := reconstruct(table, tok.DictIndex)
 		output = append(output, seq...)
 
@@ -260,13 +270,15 @@ func deserialiseTokens(data []byte) ([]Token, int) {
 		return nil, 0
 	}
 	originalLength := int(binary.BigEndian.Uint32(data[0:4]))
+	// Security: the token count is attacker-controlled; clamp it to what the
+	// remaining bytes can hold (4 bytes per token) before sizing or looping.
 	tokenCount := int(binary.BigEndian.Uint32(data[4:8]))
+	if maxTokens := (len(data) - 8) / 4; tokenCount > maxTokens {
+		tokenCount = maxTokens
+	}
 	tokens := make([]Token, 0, tokenCount)
 	for i := 0; i < tokenCount; i++ {
 		base := 8 + i*4
-		if base+4 > len(data) {
-			break
-		}
 		di := binary.BigEndian.Uint16(data[base : base+2])
 		nc := data[base+2]
 		tokens = append(tokens, Token{DictIndex: di, NextChar: nc})
