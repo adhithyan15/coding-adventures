@@ -300,7 +300,7 @@ fn deserialise_tokens(data: &[u8]) -> (Vec<Token>, usize) {
     let body = &data[8..];
     let token_count = claimed.min(body.len() / 4);
     let mut tokens = Vec::with_capacity(token_count);
-    for chunk in body.chunks_exact(4).take(token_count) {
+    for chunk in body.as_chunks::<4>().0.iter().take(token_count) {
         let dict_index = u16::from_be_bytes([chunk[0], chunk[1]]);
         tokens.push(Token { dict_index, next_char: chunk[2] });
     }

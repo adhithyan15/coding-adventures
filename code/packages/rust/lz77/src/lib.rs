@@ -266,7 +266,7 @@ pub fn deserialise_tokens(data: &[u8]) -> Vec<Token> {
     let count = claimed.min(body.len() / 4);
     let mut tokens = Vec::with_capacity(count);
 
-    for chunk in body.chunks_exact(4).take(count) {
+    for chunk in body.as_chunks::<4>().0.iter().take(count) {
         let offset = u16::from_be_bytes([chunk[0], chunk[1]]);
         tokens.push(Token::new(offset, chunk[2], chunk[3]));
     }
