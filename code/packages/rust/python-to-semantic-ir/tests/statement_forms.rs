@@ -1162,5 +1162,72 @@ fn starred_base_class_is_refused() {
     assert_eq!(err.line, 1);
 }
 
+// ── lexical visibility of nested defs (#18482 item 4) ────────────────
+
+/// A function cannot call a nested def defined inside another function (a "cousin").
+/// Python raises NameError; the frontend must refuse it as unresolved name (#18482 item 4).
+#[test]
+fn cousin_nested_def_call_is_refused() {
+    let src = "def f():\n    def inner_f():\n        return 1\n    return inner_f()\n\ndef g():\n    return inner_f()\n\nf()\ng()\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unresolved name `inner_f`"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 7);
+}
+
+/// The module top-level cannot call a nested def defined inside a function (#18482 item 4).
+#[test]
+fn top_level_calling_nested_def_is_refused() {
+    let src = "def f():\n    def inner_f():\n        return 1\n    return inner_f()\n\ninner_f()\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unresolved name `inner_f`"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 6);
+}
+
+/// A bare reference to a cousin nested def is refused as unresolved name (#18482 item 4).
+#[test]
+fn bare_reference_to_cousin_nested_def_is_refused() {
+    let src = "def f():\n    def inner_f():\n        return 1\n    return inner_f\n\ndef g():\n    h = inner_f\n    return h()\n";
+    let err = refuse(src);
+    assert!(
+        err.message.contains("unresolved name `inner_f`"),
+        "unexpected error message: {}",
+        err.message
+    );
+    assert_eq!(err.line, 7);
+}
+
+/// Sibling nested defs within the same enclosing function can call each other (#18482 item 4).
+#[test]
+fn sibling_nested_defs_can_call_each_other() {
+    let src = "def outer(n):\n    def ev(x):\n        if x == 0:\n            return 1\n        else:\n            return od(x - 1)\n    def od(x):\n        if x == 0:\n            return 0\n        else:\n            return ev(x - 1)\n    return ev(n)\n";
+    let m = lower(src);
+    assert_eq!(m.functions.len(), 4); // main, outer, ev, od
+}
+
+/// A nested def can call itself recursively (#18482 item 4).
+#[test]
+fn nested_def_self_recursion_allowed() {
+    let src = "def outer(n):\n    def fact(x):\n        if x <= 1:\n            return 1\n        else:\n            return x * fact(x - 1)\n    return fact(n)\n";
+    let m = lower(src);
+    assert_eq!(m.functions.len(), 3); // main, outer, fact
+}
+
+/// A deeply nested def can see and call its ancestor's siblings (#18482 item 4).
+#[test]
+fn deeply_nested_def_can_call_ancestor_sibling() {
+    let src = "def outer():\n    def mid1():\n        def inner():\n            return mid2()\n        return inner()\n    def mid2():\n        return 42\n    return mid1()\n";
+    let m = lower(src);
+    assert_eq!(m.functions.len(), 5); // main, outer, mid1, inner, mid2
+}
+
+
 
 
