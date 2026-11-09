@@ -2358,22 +2358,29 @@ fn era_at_least(era: &str, min: &str) -> bool {
     normalise(era) >= normalise(min)
 }
 
-/// Phase 4d — flag bit set on the `Token.flags` field for Name
+/// Phase 4d / #18798 Item 17 — flag bit set on the `Token.flags` field for Name
 /// tokens that match the `_<digit>` numbered-block-param pattern
 /// (Ruby 2.7+).  Downstream tooling can check
 /// `(tok.flags.unwrap_or(0) & NUMBERED_BLOCK_PARAM_FLAG) != 0` to
-/// dispatch on numbered-param semantics.  Higher bits are reserved
-/// for future era flags.
-pub const NUMBERED_BLOCK_PARAM_FLAG: u32 = 1 << 0;
+/// dispatch on numbered-param semantics.
+///
+/// Allocated at bit 8 (`1 << 8`) above the common `lexer::token` bit range
+/// (bits 0..7) to avoid colliding with `TOKEN_PRECEDED_BY_NEWLINE` (bit 0),
+/// `TOKEN_CONTEXT_KEYWORD` (bit 1), `TOKEN_PRECEDED_BY_SPACE` (bit 2), and
+/// `TOKEN_SYNTHETIC` (bit 3).
+pub const NUMBERED_BLOCK_PARAM_FLAG: u32 = 1 << 8;
 
-/// Phase 4e — flag bit set on `Token.flags` for range tokens
+/// Phase 4e / #18798 Item 17 — flag bit set on `Token.flags` for range tokens
 /// (`..` / `...`) under era ≥ 2.6 when they're followed by a
 /// *closer* token (right paren/bracket/brace, comma, semicolon,
 /// newline, or EOF) — i.e. the syntactic position of an "endless
 /// range" like `(1..)` or `arr[2..]`.  Pre-2.6 these positions
 /// were parse errors, so the flag stays off and any downstream
 /// parser can reject them.
-pub const ENDLESS_RANGE_FLAG: u32 = 1 << 1;
+///
+/// Allocated at bit 9 (`1 << 9`) above the common `lexer::token` bit range
+/// (bits 0..7) to avoid colliding with common lexer flags.
+pub const ENDLESS_RANGE_FLAG: u32 = 1 << 9;
 
 /// #18814 — how many engine steps [`RubyLexer::push`] lets the state
 /// machine's trace hold before dropping it (see
@@ -4131,6 +4138,88 @@ mod tests {
         assert!(
             !any_flagged,
             "lexemes other than `_1`..`_9` must not get the flag"
+        );
+    }
+
+    #[test]
+    fn ruby_lexer_flags_do_not_collide_with_base_lexer_flags() {
+        // #18798 item 17 — verify that Ruby lexer flags do not share bits
+        // with base lexer flags (bits 0..7).
+        let base_flags = lexer::token::TOKEN_PRECEDED_BY_NEWLINE
+            | lexer::token::TOKEN_CONTEXT_KEYWORD
+            | lexer::token::TOKEN_PRECEDED_BY_SPACE
+            | lexer::token::TOKEN_SYNTHETIC;
+        assert_eq!(
+            NUMBERED_BLOCK_PARAM_FLAG & base_flags,
+            0,
+            "NUMBERED_BLOCK_PARAM_FLAG must not collide with base lexer flags"
+        );
+        assert_eq!(
+            ENDLESS_RANGE_FLAG & base_flags,
+            0,
+            "ENDLESS_RANGE_FLAG must not collide with base lexer flags"
+        );
+        assert_eq!(
+            NUMBERED_BLOCK_PARAM_FLAG & ENDLESS_RANGE_FLAG,
+            0,
+            "Ruby-specific flags must be disjoint"
+        );
+    }
+
+    #[test]
+    fn token_with_newline_flag_is_not_flagged_as_numbered_param() {
+        // #18798 item 17: when a Token carries TOKEN_PRECEDED_BY_NEWLINE (bit 0),
+        // it must not be mistaken for NUMBERED_BLOCK_PARAM_FLAG.
+        let token = Token {
+            type_: TokenType::Name,
+            value: "_1".to_string(),
+            line: 2,
+            column: 1,
+            type_name: None,
+            flags: Some(lexer::token::TOKEN_PRECEDED_BY_NEWLINE),
+            cv: None,
+        };
+        assert!(!has_numbered_param_flag(&token));
+    }
+
+    #[test]
+    fn token_with_context_keyword_flag_is_not_flagged_as_endless_range() {
+        // #18798 item 17: when a Token carries TOKEN_CONTEXT_KEYWORD (bit 1),
+        // it must not be mistaken for ENDLESS_RANGE_FLAG.
+        let token = Token {
+            type_: TokenType::Name,
+            value: "..".to_string(),
+            line: 1,
+            column: 1,
+            type_name: None,
+            flags: Some(lexer::token::TOKEN_CONTEXT_KEYWORD),
+            cv: None,
+        };
+        assert!(!has_endless_range_flag(&token));
+    }
+
+    #[test]
+    fn ruby_flags_coexist_with_base_lexer_gap_flags() {
+        // #18798 item 17: tagging with NUMBERED_BLOCK_PARAM_FLAG preserves
+        // base lexer flags without interference.
+        let base = lexer::token::TOKEN_PRECEDED_BY_SPACE | lexer::token::TOKEN_PRECEDED_BY_NEWLINE;
+        let combined = base | NUMBERED_BLOCK_PARAM_FLAG;
+        assert_ne!(combined & NUMBERED_BLOCK_PARAM_FLAG, 0);
+        assert_ne!(combined & lexer::token::TOKEN_PRECEDED_BY_NEWLINE, 0);
+        assert_ne!(combined & lexer::token::TOKEN_PRECEDED_BY_SPACE, 0);
+        assert_eq!(combined & lexer::token::TOKEN_CONTEXT_KEYWORD, 0);
+        assert_eq!(combined & ENDLESS_RANGE_FLAG, 0);
+    }
+
+    #[test]
+    fn endless_range_flag_does_not_set_context_keyword_flag() {
+        // #18798 item 17: ENDLESS_RANGE_FLAG does not set TOKEN_CONTEXT_KEYWORD.
+        let toks = tokenize_ruby_for_version("(1..)", "2.6").unwrap();
+        let dotdot = toks.iter().find(|t| t.value == "..").expect("expected ..");
+        assert!(has_endless_range_flag(dotdot));
+        assert_eq!(
+            dotdot.flags.unwrap_or(0) & lexer::token::TOKEN_CONTEXT_KEYWORD,
+            0
         );
     }
 
