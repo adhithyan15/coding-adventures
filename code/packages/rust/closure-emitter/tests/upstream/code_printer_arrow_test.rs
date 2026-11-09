@@ -178,6 +178,27 @@ fn object_literal_concise_body_is_wrapped() {
     assert_emits(arrow_concise(&[], obj), "()=>({});");
 }
 
+/// Issue #18146: When the leftmost token of a concise body is an object literal
+/// (e.g. `({}).x` or `({})[1]`), the object literal itself must be wrapped
+/// in parentheses so it is not mis-parsed as a block body.
+#[test]
+fn object_literal_member_concise_body_is_wrapped() {
+    let obj = Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+    assert_emits(arrow_concise(&[], member(obj, ident("x"))), "()=>({}).x;");
+}
+
+#[test]
+fn object_literal_computed_member_concise_body_is_wrapped() {
+    let obj = Expression::ObjectExpression(ObjectExpression { cv: None, properties: vec![] });
+    let elem = Expression::MemberExpression(MemberExpression {
+        cv: None,
+        object: Box::new(obj),
+        property: Box::new(num(1.0)),
+        computed: true,
+    });
+    assert_emits(arrow_concise(&[], elem), "()=>({})[1];");
+}
+
 // =====================================================================
 // Active — block body
 // =====================================================================
