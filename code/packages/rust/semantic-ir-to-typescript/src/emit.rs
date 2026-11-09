@@ -1764,14 +1764,19 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
         Expr::MakeClosure {
             fn_name, captures, ..
         } => {
-            // Render: new __Sir.Closure((..._a) => <fn>(<cap0>, <cap1>, ..._a))
+            // Render: new __Sir.Closure((..._a) => <fn>(<cap0>, <cap1>, ..._a), <arity>)
+            let arity = STRICT_ARITY.with(|t| t.borrow().get(fn_name).copied());
             out.push_str("new __Sir.Closure((..._a: __Sir.Val[]) => ");
             let _ = write!(out, "{}(", sanitize_ident(fn_name));
             for c in captures {
                 emit_expr(out, &c.value, indent);
                 out.push_str(", ");
             }
-            out.push_str("..._a))");
+            out.push_str("..._a)");
+            if let Some(ar) = arity {
+                let _ = write!(out, ", {ar}");
+            }
+            out.push(')');
         }
         Expr::Intrinsic { name, span, .. } => {
             // v0 backend accepts no intrinsics; the check_module
@@ -2448,7 +2453,8 @@ fn emit_strict_closure(out: &mut String, inner: &Expr, indent: usize) {
         emit_expr(out, &c.value, indent);
         out.push_str(", ");
     }
-    out.push_str("..._a); })");
+    out.push_str("..._a); }, ");
+    let _ = write!(out, "{n})");
 }
 
 fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize) {

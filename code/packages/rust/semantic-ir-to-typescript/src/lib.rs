@@ -302,7 +302,7 @@ mod tests {
         );
         // And it is threaded into `twice` as that block's value.
         assert!(
-            a.source.contains("twice(new __Sir.Closure((..._a: __Sir.Val[]) => __block_0(__sir_block__, ..._a)))"),
+            a.source.contains("twice(new __Sir.Closure((..._a: __Sir.Val[]) => __block_0(__sir_block__, ..._a), 1))"),
             "enclosing block must be threaded through the non-empty capture; got:\n{}",
             a.source
         );
