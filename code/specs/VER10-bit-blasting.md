@@ -163,9 +163,19 @@ value, and bits outside every asserted cone are `false`.
   `bvult`, …), plus `=`, `distinct`, `not`, `and`, `or`, `=>`, `iff`,
   `ite` and `true`/`false`.
 
-Anything else answers `Unknown` with a reason that names it: `extract`,
-`concat`, division, quantifiers, uninterpreted functions, other theories.
-The tactic never guesses.
+- **Added by the LH-006a audit (constraint-engine 0.5.0):** `bvudiv`,
+  `bvurem`, `bvsdiv`, `bvsrem`, `bvsmod`, `concat`, `(_ extract hi lo)`,
+  `(_ zero_extend k)` and `(_ sign_extend k)`. Indexed operators are taken
+  in the flattened form `Apply { f: "_", args: [Var(name), Int(i)…, operand] }`
+  because `smt-lib-format` cannot read `((_ extract 7 4) x)` yet.
+  `bvsmod` is built in `constraint-engine` from `bvurem`, `bvneg`, `bvadd`
+  and `ite` following the SMT-LIB definition (sign of the divisor;
+  `bvsmod x 0 = x`). Division is refused before it is built when its size
+  estimate (`16 w² + 64 w` gates) would exceed the node cap.
+
+Anything else answers `Unknown` with a reason that names it: rotations,
+`repeat`, `bvnand`/`bvnor`/`bvxnor`/`bvcomp`, quantifiers, uninterpreted
+functions, other theories. The tactic never guesses.
 
 **Every UNSAT is certified before it is reported.** The tactic solves with
 proof logging and runs `drat-check` on the proof. Only an accepted proof
@@ -318,7 +328,7 @@ tests), the solver (VER09) or the proof checker (VER11).
 | §4 shifts: amount ≥ w forces the overflow value | `barrel` forces overflow from bit `k` when `2^k ≥ w`, and the staged shifts saturate to zero below that | match |
 | §2.2 and-simplification rules | identical, in the stated order | match |
 | §3 Tseitin: three clauses per AND, constant pinned by a unit, cone only, incremental | as stated | match |
-| (task scope) `extract`, `concat`, `udiv`, `urem`, `sdiv`, `srem`, `zext`, `sext` | **absent at audit time**; §5 says the tactic answers `Unknown` for them | gap, closed by this audit for the circuit layer (§9.1); the `constraint-engine` tactic still answers `Unknown` for them |
+| (task scope) `extract`, `concat`, `udiv`, `urem`, `sdiv`, `srem`, `zext`, `sext` | **absent at audit time**; §5 says the tactic answers `Unknown` for them | gap, closed by this audit for the circuit layer (§9.1); closed for the `constraint-engine` tactic by the LH-006a audit (0.5.0), which also adds `bvsmod` (§9.5) |
 | (task scope) LIA inside `bit-blaster` | none: LIA is `constraint-engine::lia` (bounded Cooper); `bit-blaster` has no integer-arithmetic encoding | not applicable here; LIA's Unknown semantics are checked in `constraint-engine` (§9.4) |
 | §6 "Line coverage is held at 95% or more" | claimed, no recorded measurement | measured in the audit (see CHANGELOG) |
 
@@ -333,3 +343,24 @@ representative operator set at widths 2 and 3; identities proved with
 certified proofs and non-identities refuted with a verified counterexample.
 `constraint-engine/tests/lia_unknown.rs`: incomplete LIA searches answer
 `Unknown`, never `Unsat`.
+
+### 9.5 The lowering layer (LH-006a)
+
+F4 excluded the `Predicate` to circuit lowering. `constraint-engine/src/
+bv_faithfulness.rs` covers it: the lowered circuit is simulated against a
+reference written from the SMT-LIB definitions (no shared code) for every
+operation, exhaustively at widths 1 to 8 (unary and binary), at 1 to 4 for
+the ternary forms, by seeded random and corner values at 16/32/64, and end
+to end through the tactic with the result's negation certified UNSAT at
+widths 1 to 3 (exhaustive) and 4, 16 (sampled). 18 mutants of the lowering
+were all killed. No unfaithful lowering was found.
+
+The multiplier is the limit of proof by solving. `a*b = b*a` is certified
+to width 7 (8 in release builds); from width 10 the CDCL conflict budget is
+exhausted (the answer is `Unknown`). `x * -1 = -x` reaches the proof
+checker up to width 16, where `drat-check`'s default work limit (2^32)
+rejects the proof; a 2^34 per-test budget certifies it. The public tactic
+keeps the default limits. The low `h` bits of a `w`-bit product are proved
+equal to the `h`-bit product (16→8, 32→16, 32→8, 64→32, 64→8), so the low
+bits of a wide multiplier reduce to the exhaustively checked 8-bit case;
+the high bits are covered by simulation only.

@@ -3878,6 +3878,8 @@ impl Compiler {
             };
             if is_additive_sequence {
                 let mut floor_root = None;
+                let mut like_root_radicand = None;
+                let mut like_root_coefficient = 0_i64;
                 let mut integer_offset = 0_i64;
                 let mut index = 0;
                 let mut subtract = negative;
@@ -3893,10 +3895,26 @@ impl Compiler {
                     let Piece::Node(operand) = sequence.get(index)? else {
                         return None;
                     };
-                    if let Some(value) =
+                    if let Some(radicand) = self.exact_static_sqrt_radicand(operand) {
+                        if floor_root.is_some() {
+                            return None;
+                        }
+                        if let Some(previous) = like_root_radicand {
+                            if previous != radicand {
+                                return None;
+                            }
+                        } else {
+                            like_root_radicand = Some(radicand);
+                        }
+                        like_root_coefficient = if subtract {
+                            like_root_coefficient.checked_sub(1)?
+                        } else {
+                            like_root_coefficient.checked_add(1)?
+                        };
+                    } else if let Some(value) =
                         self.exact_static_integer_signed_floor_root_value(operand, subtract)
                     {
-                        if floor_root.replace(value).is_some() {
+                        if like_root_radicand.is_some() || floor_root.replace(value).is_some() {
                             return None;
                         }
                     } else {
@@ -3923,7 +3941,16 @@ impl Compiler {
                         };
                     index += 1;
                 }
-                return floor_root?.checked_add(integer_offset);
+                let root_value = if let Some(radicand) = like_root_radicand {
+                    self.exact_scaled_floor_root_value(
+                        like_root_coefficient,
+                        1,
+                        radicand as u128,
+                    )?
+                } else {
+                    floor_root?
+                };
+                return root_value.checked_add(integer_offset);
             }
             let children = direct_nodes(node);
             return (direct_tokens(node).is_empty() && children.len() == 1)
@@ -17774,6 +17801,30 @@ mod tests {
             compile_source(source, "test").expect_err(
                 "dynamic, negative, oversized, zero, and overflowing divisor powers must fail closed",
             );
+        }
+    }
+
+    #[test]
+    fn al4_like_floor_root_sums_reduce_before_widening() {
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) + sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(3 + sqrt(entier(80)) + sqrt(entier(80)) - 1)) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(-(sqrt(entier(80)) + sqrt(entier(80))))) * sign(pick())) mod 5); output(result) end",
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) - sqrt(entier(80)))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "like static square roots may combine before floor-root reduction for {source:?}: {error}"
+                )
+            });
+        }
+
+        for source in [
+            "begin real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) + sqrt(entier(5)))) * sign(pick())) mod 5); output(result) end",
+            "begin integer procedure dynamic; dynamic := 80; real procedure pick; pick := 3.5; real result; result := entier((abs(entier(-9007199254740993) + entier(sqrt(entier(80)) + sqrt(dynamic()))) * sign(pick())) mod 5); output(result) end",
+        ] {
+            compile_source(source, "test")
+                .expect_err("unlike and dynamic additive roots must fail closed");
         }
     }
 

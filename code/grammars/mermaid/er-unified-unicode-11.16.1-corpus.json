@@ -1,0 +1,15 @@
+{
+  "upstream_version": "11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "scope": "pinned Mermaid 11.16.1 unified ER Unicode rendering sources; browser HTML-label styling is out of scope",
+  "fixtures": [
+    {
+      "name": "unified-unicode-entity-and-attributes",
+      "source": "erDiagram\n_**testẽζ➕Ø😀㌕ぼ**_ {\n  *__List~List~int~~sdfds__* **driversLicense** PK \"***The l😀icense #***\"\n  *string(99)~T~~~~~~* firstName \"Only __99__ <br>characters are a<br>llowed dsfsdfsdfsdfs\"\n  string last*Name*\n  string __phone__ UK\n  int _age_\n}"
+    },
+    {
+      "name": "unified-unicode-relationship",
+      "source": "erDiagram\nperson[😀] {\n  string *first*Name\n  string _**last**Name_\n}\na[\"*Customer Account*\"] {\n  **string** ema*i*l\n}\nperson ||--o| a : __hẽ😀__"
+    }
+  ]
+}
