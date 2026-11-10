@@ -73,8 +73,9 @@ If no skip rule matches, the hash is subject to normal indentation and token
 matching. A grammar with a hash token can emit it. Otherwise the lexer returns
 its ordinary unexpected-character error at the hash's line and column when the
 indentation is valid. A skip match that consumes zero characters at this
-position returns a lexer error. In either case, the lexer must not restart
-line-start processing at the same hash.
+position returns a lexer error. Indentation-mode token matches must also
+consume input. If a token pattern matches an empty string, the lexer returns
+an error at that position before appending a token.
 
 ### Token flags: what came before a token
 
