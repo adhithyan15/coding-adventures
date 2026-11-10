@@ -16,6 +16,13 @@
   Because the estimate is slightly above the real count, a lone multiplier
   at widths 250 and 251 (real size just under the cap) is now refused where
   it used to fit; widths up to 249 behave as before.
+- The same step also reserves **work**. A repeated `(bvmul x y)` adds no
+  nodes (structural hashing returns the existing circuit), but each copy
+  repeats about `10 w²` gate constructions. The node check alone let
+  `MAX_GATE_CALLS` be passed by up to one multiplier before the late check.
+  `multiplication_and_call_estimate(w)` (`10 w²`) is now checked against
+  `MAX_GATE_CALLS` by a new `reserve_work` before each multiplication. This
+  came from the security review.
 
 ### Added
 
@@ -23,7 +30,20 @@
   real node count for 22 widths including 1, 2, 3, 8, 16, 32, 64 and odd
   ones; at most 4x at widths from 16 up) and
   `wide_multiplication_is_refused_before_it_is_built` (no node or gate call
-  is made when refused).
+  is made when refused). The conservativeness test also bounds the measured
+  gate calls by `multiplication_and_call_estimate`.
+- `a_long_bvmul_chain_is_refused_mid_fold_before_the_overflowing_step` (an
+  8-operand chain is refused on nodes without crossing the cap) and
+  `repeated_identical_multipliers_are_refused_on_work_before_crossing_the_cap`
+  (40 shared copies are refused on work with `and_calls` still at or below
+  `MAX_GATE_CALLS`). The second test fails when `reserve_work` is removed,
+  which was checked by mutation.
+
+### Changed
+
+- The refusal test no longer asserts a wall-clock bound. The unchanged node
+  and gate-call counts already prove nothing was built, and timing is
+  unreliable on loaded CI runners.
 
 ## 0.5.0 — 2026-11-10
 
