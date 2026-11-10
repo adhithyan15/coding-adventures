@@ -27,14 +27,25 @@ use std::sync::Mutex;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum V {
     Bool(bool),
+//@if v0
     Nat(u64),
     U64(u64),
+//@endif
+//@if v1
+    /// `Int` and `Nat` (the numeric tower below the fixed-width types).
+    Int(i128),
+    /// A fixed-width integer: its type and canonical value.
+    Fixed(F, i128),
+    /// `Option<T>` (`None` carries no type).
+    Opt(Option<Box<V>>),
+//@endif
     Bytes(Vec<u8>),
     Ok(Box<V>),
     Err(String),
     Name(String),
 }
 
+//@if v0
 impl V {
     pub fn truthy(&self) -> bool {
         matches!(self, V::Bool(true))
@@ -89,6 +100,375 @@ impl V {
     }
 }
 
+//@endif
+//@if v1
+/// The eight fixed-width integer types of Warrant v1 (VER04j section 2.2).
+///
+/// A value is stored as the mathematical integer it denotes (an `i128`, so
+/// `U64` and `I64` both fit) and is always canonical, i.e. inside the range of
+/// its type.  Bitwise functions work on the width-`w` two's-complement
+/// *pattern*, held in a `u128` and masked to `w` bits.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum F {
+    U8,
+    U16,
+    U32,
+    U64,
+    I8,
+    I16,
+    I32,
+    I64,
+}
+
+impl F {
+    pub fn bits(self) -> u32 {
+        match self {
+            F::U8 | F::I8 => 8,
+            F::U16 | F::I16 => 16,
+            F::U32 | F::I32 => 32,
+            F::U64 | F::I64 => 64,
+        }
+    }
+    pub fn signed(self) -> bool {
+        matches!(self, F::I8 | F::I16 | F::I32 | F::I64)
+    }
+    pub fn min(self) -> i128 {
+        if self.signed() {
+            -(1i128 << (self.bits() - 1))
+        } else {
+            0
+        }
+    }
+    pub fn max(self) -> i128 {
+        if self.signed() {
+            (1i128 << (self.bits() - 1)) - 1
+        } else {
+            (1i128 << self.bits()) - 1
+        }
+    }
+    pub fn mask(self) -> u128 {
+        (1u128 << self.bits()) - 1
+    }
+    /// The two's-complement pattern of `v` masked to `w` bits (any `v`).
+    pub fn pattern(self, v: i128) -> u128 {
+        (v as u128) & self.mask()
+    }
+    /// Read a pattern back as a canonical value of the type.
+    pub fn canon(self, p: u128) -> i128 {
+        let p = p & self.mask();
+        if self.signed() && p >> (self.bits() - 1) == 1 {
+            (p as i128) - (1i128 << self.bits())
+        } else {
+            p as i128
+        }
+    }
+    fn contains(self, v: i128) -> bool {
+        self.min() <= v && v <= self.max()
+    }
+}
+
+/// Edge values of a fixed-width type (VER04j section 2.6), in a fixed order.
+/// Unsigned width `w`: `0..=255`, `1<<i` for `8 <= i < w`, `MAX`, then
+/// `MAX ^ (1<<i)` for `0 <= i < w`.  Signed: the same patterns read signed,
+/// plus `-1 ..= -255`, deduplicated, ascending.
+pub fn fx_edge(f: F) -> Vec<i128> {
+    let w = f.bits();
+    let umax = f.mask();
+    let mut u: Vec<u128> = (0..=255u128).filter(|v| *v <= umax).collect();
+    u.extend((8..w).map(|i| 1u128 << i));
+    u.push(umax);
+    u.extend((0..w).map(|i| umax ^ (1u128 << i)));
+    if !f.signed() {
+        return u.into_iter().map(|p| p as i128).collect();
+    }
+    let mut s: Vec<i128> = u.into_iter().map(|p| f.canon(p)).collect();
+    s.extend((1..=255i128).map(|k| -k).filter(|v| f.contains(*v)));
+    s.sort();
+    s.dedup();
+    s
+}
+
+/// Every value of a narrow type (`U8 I8 U16 I16`), ascending.
+pub fn fx_full(f: F) -> Vec<i128> {
+    (f.min()..=f.max()).collect()
+}
+
+impl V {
+    pub fn truthy(&self) -> bool {
+        matches!(self, V::Bool(true))
+    }
+    pub fn length(&self) -> V {
+        match self {
+            V::Bytes(b) => V::Int(b.len() as i128),
+            _ => panic!("len of a non-bytes value"),
+        }
+    }
+    pub fn err_of(v: V) -> V {
+        match v {
+            V::Name(n) => V::Err(n),
+            _ => panic!("Err needs an error constructor"),
+        }
+    }
+    /// The mathematical value of an `Int`/`Nat` or fixed-width operand.
+    pub fn int(&self) -> i128 {
+        match self {
+            V::Int(n) | V::Fixed(_, n) => *n,
+            _ => panic!("numeric operand expected"),
+        }
+    }
+    pub fn fx(&self) -> (F, i128) {
+        match self {
+            V::Fixed(f, n) => (*f, *n),
+            _ => panic!("fixed-width operand expected"),
+        }
+    }
+    /// A shift count or bit index: a mathematical natural number.
+    pub fn count(&self) -> u128 {
+        u128::try_from(self.int()).expect("count must be a natural number")
+    }
+    fn bytes(&self) -> &[u8] {
+        match self {
+            V::Bytes(b) => b,
+            _ => panic!("bytes expected"),
+        }
+    }
+    fn boolv(&self) -> bool {
+        matches!(self, V::Bool(true))
+    }
+    pub fn compare(l: &V, r: &V, op: &str) -> V {
+        let (a, b) = (l.int(), r.int());
+        V::Bool(match op {
+            "<" => a < b,
+            ">" => a > b,
+            "<=" => a <= b,
+            _ => a >= b,
+        })
+    }
+    /// `+ - *`: wrapping on equal fixed-width operands (the pattern product
+    /// keeps `U64 * U64` exact), checked `i128` on `Int`/`Nat`.
+    pub fn arith(l: &V, r: &V, op: char) -> V {
+        if let (V::Fixed(f, a), V::Fixed(g, b)) = (l, r) {
+            assert_eq!(f, g, "mixed fixed-width operands");
+            let (pa, pb) = (f.pattern(*a), f.pattern(*b));
+            let p = match op {
+                '+' => pa.wrapping_add(pb),
+                '-' => pa.wrapping_sub(pb),
+                _ => pa.wrapping_mul(pb),
+            };
+            return V::Fixed(*f, f.canon(p));
+        }
+        let (a, b) = (l.int(), r.int());
+        let n = match op {
+            '+' => a.checked_add(b),
+            '-' => a.checked_sub(b),
+            _ => a.checked_mul(b),
+        };
+        V::Int(n.expect("model arithmetic overflow"))
+    }
+    /// Unary minus: wrapping on a signed fixed-width value, exact on `Int`.
+    pub fn neg(v: &V) -> V {
+        match v {
+            V::Fixed(f, a) => V::Fixed(*f, f.canon(f.pattern(*a).wrapping_neg())),
+            _ => V::Int(v.int().checked_neg().expect("model arithmetic overflow")),
+        }
+    }
+    fn opt(v: Option<i128>, f: F) -> V {
+        V::Opt(v.map(|x| Box::new(V::Fixed(f, x))))
+    }
+    pub fn widen(t: F, x: &V) -> V {
+        let v = x.int();
+        assert!(t.contains(v), "widen operand outside the target range");
+        V::Fixed(t, v)
+    }
+    pub fn wrap(t: F, x: &V) -> V {
+        V::Fixed(t, t.canon(t.pattern(x.int())))
+    }
+    pub fn try_(t: F, x: &V) -> V {
+        let v = x.int();
+        V::Opt(t.contains(v).then(|| Box::new(V::Fixed(t, v))))
+    }
+    pub fn to_int(x: &V) -> V {
+        V::Int(x.fx().1)
+    }
+    pub fn to_nat(x: &V) -> V {
+        let (f, v) = x.fx();
+        assert!(!f.signed(), "to_nat of a signed value");
+        V::Int(v)
+    }
+    pub fn max_value(t: F) -> V {
+        V::Fixed(t, t.max())
+    }
+    pub fn min_value(t: F) -> V {
+        V::Fixed(t, t.min())
+    }
+    pub fn checked(op: char, a: &V, b: &V) -> V {
+        let (f, x) = a.fx();
+        let (_, y) = b.fx();
+        let exact = match op {
+            '+' => x.checked_add(y),
+            '-' => x.checked_sub(y),
+            _ => x.checked_mul(y),
+        };
+        V::opt(exact.filter(|v| f.contains(*v)), f)
+    }
+    /// `div`/`rem`: unsigned operands, or `Int`/`Nat` with floor semantics.
+    pub fn divrem(div: bool, a: &V, b: &V) -> V {
+        if let V::Fixed(f, x) = a {
+            let (_, y) = b.fx();
+            assert!(!f.signed(), "div/rem of signed operands");
+            return V::opt((y != 0).then(|| if div { x / y } else { x % y }), *f);
+        }
+        let (x, y) = (a.int(), b.int());
+        if y == 0 || (x == i128::MIN && y == -1) {
+            return V::Opt(None);
+        }
+        let r = if div {
+            let q = x / y;
+            if x % y != 0 && ((x < 0) != (y < 0)) {
+                q - 1
+            } else {
+                q
+            }
+        } else if y == -1 {
+            0
+        } else {
+            let m = x % y;
+            if m != 0 && ((m < 0) != (y < 0)) {
+                m + y
+            } else {
+                m
+            }
+        };
+        V::Opt(Some(Box::new(V::Int(r))))
+    }
+    /// `div_trunc`/`rem_trunc` on signed operands: `None` for `b == 0` and for
+    /// `min / -1`.
+    pub fn divrem_trunc(div: bool, a: &V, b: &V) -> V {
+        let (f, x) = a.fx();
+        let (_, y) = b.fx();
+        let ok = y != 0 && !(y == -1 && x == f.min());
+        V::opt(ok.then(|| if div { x / y } else { x % y }), f)
+    }
+    pub fn unwrap_or(o: &V, d: &V) -> V {
+        match o {
+            V::Opt(Some(v)) => (**v).clone(),
+            V::Opt(None) => d.clone(),
+            _ => panic!("Option operand expected"),
+        }
+    }
+    /// `bit_and` (`'&'`), `bit_or` (`'|'`), `bit_xor` (`'^'`).
+    pub fn bitop(op: char, a: &V, b: &V) -> V {
+        let (f, x) = a.fx();
+        let (_, y) = b.fx();
+        let (px, py) = (f.pattern(x), f.pattern(y));
+        V::Fixed(
+            f,
+            f.canon(match op {
+                '&' => px & py,
+                '|' => px | py,
+                _ => px ^ py,
+            }),
+        )
+    }
+    pub fn bit_not(a: &V) -> V {
+        let (f, x) = a.fx();
+        V::Fixed(f, f.canon(!f.pattern(x)))
+    }
+    /// `shl shr sar rotl rotr`.  A count `>= w` is handled *before* any host
+    /// shift (VER04j section 3.5), so the host never sees an over-wide shift.
+    pub fn shift(op: &str, a: &V, n: &V) -> V {
+        let (f, x) = a.fx();
+        let (n, w, p) = (n.count(), u128::from(f.bits()), f.pattern(x));
+        let v = match op {
+            "shl" => {
+                if n >= w {
+                    0
+                } else {
+                    f.canon(p << n)
+                }
+            }
+            "shr" => {
+                if n >= w {
+                    0
+                } else {
+                    f.canon(p >> n)
+                }
+            }
+            "sar" => {
+                assert!(f.signed(), "sar of an unsigned value");
+                if n >= w {
+                    if x < 0 {
+                        -1
+                    } else {
+                        0
+                    }
+                } else {
+                    x >> n
+                }
+            }
+            _ => {
+                let k = if op == "rotl" { n % w } else { (w - n % w) % w };
+                if k == 0 {
+                    x
+                } else {
+                    f.canon((p << k) | (p >> (w - k)))
+                }
+            }
+        };
+        V::Fixed(f, v)
+    }
+    /// `popcount clz ctz` of the width-`w` pattern.
+    pub fn bitcount(op: &str, a: &V) -> V {
+        let (f, x) = a.fx();
+        let p = f.pattern(x);
+        let w = f.bits();
+        V::Int(match op {
+            "popcount" => i128::from(p.count_ones()),
+            "clz" => {
+                if p == 0 {
+                    i128::from(w)
+                } else {
+                    i128::from(p.leading_zeros() - (128 - w))
+                }
+            }
+            _ => {
+                if p == 0 {
+                    i128::from(w)
+                } else {
+                    i128::from(p.trailing_zeros())
+                }
+            }
+        })
+    }
+    pub fn bit(a: &V, i: &V) -> V {
+        let (f, x) = a.fx();
+        let i = i.count();
+        V::Bool(i < u128::from(f.bits()) && (f.pattern(x) >> i) & 1 == 1)
+    }
+    /// `be_bytes` / `le_bytes`.
+    pub fn endian_bytes(big: bool, a: &V) -> V {
+        let (f, x) = a.fx();
+        let p = f.pattern(x);
+        let n = (f.bits() / 8) as usize;
+        let mut v: Vec<u8> = (0..n).rev().map(|i| (p >> (8 * i)) as u8).collect();
+        if !big {
+            v.reverse();
+        }
+        V::Bytes(v)
+    }
+    /// `from_be<T>` / `from_le<T>`.
+    pub fn from_endian(big: bool, t: F, b: &V) -> V {
+        let mut bytes = b.bytes().to_vec();
+        assert_eq!(bytes.len() as u32 * 8, t.bits(), "wrong byte width");
+        if !big {
+            bytes.reverse();
+        }
+        let p = bytes.iter().fold(0u128, |acc, x| (acc << 8) | u128::from(*x));
+        V::Fixed(t, t.canon(p))
+    }
+}
+
+//@endif
 //@@FAULTS@@
 
 fn mask_last_byte(bytes: &[u8]) -> Vec<u8> {
@@ -142,6 +522,16 @@ pub enum Ty {
     Nat,
     Bytes,
     BytesN(usize),
+//@if v1
+    /// A fixed-width binder at its default domain: every value of a narrow
+    /// type (`U8 I8 U16 I16`), the edge set of a wide one.
+    Fx(F),
+    /// A narrow binder demoted to its edge set by the budget rule (section 2.6).
+    FxEdge(F),
+    /// A `Nat` that flows directly into a shift count: `0..=64` plus the
+    /// boundary counts `65 127 128 129 255 256 65535 65536` (section 3.6).
+    NatCount,
+//@endif
 }
 
 const ALPHABET: [u8; 4] = [0x00, 0x01, 0x80, 0xff];
@@ -164,6 +554,7 @@ fn alpha_strings(len: usize) -> Vec<Vec<u8>> {
 pub fn domain(ty: Ty) -> Vec<V> {
     match ty {
         Ty::Bool => vec![V::Bool(false), V::Bool(true)],
+//@if v0
         Ty::U8 => (0..=255u64).map(V::Nat).collect(),
         Ty::Nat => (0..=64u64).map(V::Nat).collect(),
         Ty::U64 => {
@@ -173,6 +564,17 @@ pub fn domain(ty: Ty) -> Vec<V> {
             v.extend((0..64).map(|i| u64::MAX ^ (1u64 << i)));
             v.into_iter().map(V::U64).collect()
         }
+//@endif
+//@if v1
+        Ty::U8 | Ty::U64 => unreachable!("a v1 document binds U8/U64 as Ty::Fx"),
+        Ty::Nat => (0..=64i128).map(V::Int).collect(),
+        Ty::NatCount => (0..=64i128)
+            .chain([65, 127, 128, 129, 255, 256, 65535, 65536])
+            .map(V::Int)
+            .collect(),
+        Ty::Fx(f) if f.bits() <= 16 => fx_full(f).into_iter().map(|v| V::Fixed(f, v)).collect(),
+        Ty::Fx(f) | Ty::FxEdge(f) => fx_edge(f).into_iter().map(|v| V::Fixed(f, v)).collect(),
+//@endif
         Ty::Bytes => {
             let mut v: Vec<Vec<u8>> = vec![Vec::new()];
             v.extend((0..=255u8).map(|b| vec![b]));
@@ -207,9 +609,18 @@ pub fn domain(ty: Ty) -> Vec<V> {
 pub fn domain_size(ty: Ty) -> Option<u64> {
     match ty {
         Ty::Bool => Some(2),
+//@if v0
         Ty::U8 => Some(256),
         Ty::Nat => Some(65),
         Ty::U64 => Some(256 + 56 + 1 + 64),
+//@endif
+//@if v1
+        Ty::U8 | Ty::U64 => None,
+        Ty::Nat => Some(65),
+        Ty::NatCount => Some(65 + 8),
+        Ty::Fx(f) if f.bits() <= 16 => Some(1u64 << f.bits()),
+        Ty::Fx(f) | Ty::FxEdge(f) => Some(fx_edge(f).len() as u64),
+//@endif
         Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
         Ty::BytesN(n) if n as u64 > MAX_FIXED_WIDTH => None,
         Ty::BytesN(0) => Some(1),
@@ -248,12 +659,37 @@ pub fn within_budget(tys: &[Ty]) -> bool {
     product <= EXHAUSTIVE_BUDGET && bytes <= DOMAIN_BYTES_BUDGET
 }
 
+//@if v0
 fn describe(tys: &[Ty]) -> String {
     tys.iter()
         .map(|t| format!("{:?}[{}]", t, domain_size(*t).map_or_else(|| "over-budget".to_string(), |n| n.to_string())))
         .collect::<Vec<_>>()
         .join(" x ")
 }
+//@endif
+//@if v1
+/// The manifest `domain` text of a claim (VER04j section 2.6): per binder its
+/// type, whether the domain is `full` (every value), `edge` (the biased
+/// boundary set), `count` (the shift-count domain) or `set` (a fixed finite
+/// set), and its size, for example `a: U16 full(65536); b: U16 edge(281)`.
+fn describe(tys: &[Ty], names: &[&str]) -> String {
+    tys.iter()
+        .zip(names)
+        .map(|(t, n)| {
+            let size = domain_size(*t).map_or_else(|| "over-budget".to_string(), |n| n.to_string());
+            let (ty, kind) = match t {
+                Ty::Fx(f) if f.bits() <= 16 => (format!("{f:?}"), "full"),
+                Ty::Fx(f) | Ty::FxEdge(f) => (format!("{f:?}"), "edge"),
+                Ty::NatCount => ("Nat".to_string(), "count"),
+                Ty::Nat => ("Nat".to_string(), "set"),
+                other => (format!("{other:?}"), "set"),
+            };
+            format!("{n}: {ty} {kind}({size})")
+        })
+        .collect::<Vec<_>>()
+        .join("; ")
+}
+//@endif
 
 /// Per-test counters that end up in the manifest.
 #[derive(Clone, Debug, Default)]
@@ -372,9 +808,38 @@ impl Src for StreamSrc<'_> {
     }
 }
 
+//@if v1
+/// Draw a fixed-width value (VER04j section 2.6).  `U8` is uniform and `U64`
+/// keeps the v0 generator (zero, MAX, powers of two, small values, uniform);
+/// every other type draws 3/4 uniformly over its full range and 1/4 from its
+/// edge set, so boundaries are reached without exhaustive enumeration.
+fn fresh_fx(f: F, src: &mut dyn Src) -> V {
+    let v = match f {
+        F::U8 => i128::from(src.byte()),
+        F::U64 => i128::from(match src.bounded(8) {
+            0 => 0,
+            1 => u64::MAX,
+            2 => 1u64 << src.bounded(64),
+            3..=5 => src.bounded(300),
+            _ => src.word(),
+        }),
+        _ => {
+            if src.bounded(4) == 0 {
+                let edge = fx_edge(f);
+                edge[(src.word() % edge.len() as u64) as usize]
+            } else {
+                f.canon(u128::from(src.word()))
+            }
+        }
+    };
+    V::Fixed(f, v)
+}
+
+//@endif
 fn fresh(ty: Ty, src: &mut dyn Src) -> V {
     match ty {
         Ty::Bool => V::Bool(src.bounded(2) == 1),
+//@if v0
         Ty::U8 => V::Nat(u64::from(src.byte())),
         Ty::Nat => V::Nat(src.bounded(65)),
         Ty::U64 => V::U64(match src.bounded(8) {
@@ -389,6 +854,19 @@ fn fresh(ty: Ty, src: &mut dyn Src) -> V {
 //@endif
             _ => src.word(),
         }),
+//@endif
+//@if v1
+        Ty::U8 | Ty::U64 => unreachable!("a v1 document binds U8/U64 as Ty::Fx"),
+        Ty::Nat => V::Int(i128::from(src.bounded(65))),
+        // Half of all draws come from 0..=130 so that n = w and n = w + 1 are
+        // reached for every width including 64 (VER04j section 3.6).
+        Ty::NatCount => V::Int(i128::from(if src.bounded(2) == 0 {
+            src.bounded(131)
+        } else {
+            src.bounded(65)
+        })),
+        Ty::Fx(f) | Ty::FxEdge(f) => fresh_fx(f, src),
+//@endif
         Ty::Bytes => {
             let len = src.bounded(65) as usize;
             V::Bytes((0..len).map(|_| src.byte()).collect())
@@ -423,6 +901,7 @@ fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
             }
             V::Bytes(o)
         }
+//@if v0
 //@if u8
         // A small U64 pairs with another small U64, so refinements that relate
         // two exponents (`e < 255 and f < 255 and e != f`) are admitted.
@@ -436,6 +915,17 @@ fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
         (V::Nat(n), 6..=7) if ty == Ty::U8 => V::Nat((n + 1) % 256),
 //@endif
         (V::Nat(n), 4..=7) => V::Nat(n.wrapping_add(1)),
+//@endif
+//@if v1
+        // A small U64 pairs with another small U64 (refinements such as
+        // `e < 255 and f < 255 and e != f` must be admitted); every other
+        // fixed-width value flips one bit (modes 4-5) or steps by one with
+        // wrap-around (modes 6-7), so related pairs straddle every boundary.
+        (V::Fixed(F::U64, n), 6..=7) if *n < 1000 => V::Fixed(F::U64, i128::from(src.bounded(300))),
+        (V::Fixed(f, n), 4..=5) => V::Fixed(*f, f.canon(f.pattern(*n) ^ (1u128 << src.bounded(u64::from(f.bits()))))),
+        (V::Fixed(f, n), 6..=7) => V::Fixed(*f, f.canon(f.pattern(*n).wrapping_add(1))),
+        (V::Int(n), 4..=7) => V::Int(n + 1),
+//@endif
         (p, _) => p.clone(),
     }
 }
@@ -482,6 +972,7 @@ fn shrink_vals(cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> (Vec<V>, usi
                 cur[i] = V::Bytes(s);
                 steps += n;
             }
+//@if v0
             V::U64(v) => {
                 let (s, n) = shrink_int(
                     *v as i128,
@@ -498,6 +989,36 @@ fn shrink_vals(cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> (Vec<V>, usi
                 cur[i] = V::U64(s as u64);
                 steps += n;
             }
+//@endif
+//@if v1
+            // Unsigned values shrink toward 0 (bisection, then single steps);
+            // a signed value first tries its negation, then shrinks toward 0
+            // from its own side.
+            V::Fixed(f, v) => {
+                let f = *f;
+                let start = if *v < 0 && f.contains(-*v) {
+                    let mut t = base.clone();
+                    t[i] = V::Fixed(f, -*v);
+                    if prop(&t) { *v } else { -*v }
+                } else {
+                    *v
+                };
+                let (s, n) = shrink_int(
+                    start,
+                    0,
+                    f.min(),
+                    f.max(),
+                    |x| {
+                        let mut t = base.clone();
+                        t[i] = V::Fixed(f, x);
+                        prop(&t)
+                    },
+                    1000,
+                );
+                cur[i] = V::Fixed(f, s);
+                steps += n;
+            }
+//@endif
             _ => {}
         }
     }
@@ -551,10 +1072,18 @@ fn cover(cov: &mut CoverageBitmap, env: &[V]) {
     for (i, v) in env.iter().enumerate() {
         match v {
             V::Bytes(b) => cov.record_edge(300 + b.len().min(64)),
+//@if v0
             V::U64(n) => cov.record_edge(500 + n.count_ones() as usize),
+//@endif
             V::Bool(x) => cov.record_edge(600 + usize::from(*x)),
+//@if v0
 //@if u8
             V::Nat(n) => cov.record_edge(2000 + (*n as usize).min(512)),
+//@endif
+//@endif
+//@if v1
+            V::Fixed(f, n) => cov.record_edge(500 + f.pattern(*n).count_ones() as usize),
+            V::Int(n) => cov.record_edge(2000 + (*n).clamp(0, 512) as usize),
 //@endif
             _ => {}
         }
@@ -566,12 +1095,19 @@ fn cover(cov: &mut CoverageBitmap, env: &[V]) {
                     let pre = a.iter().zip(b.iter()).take_while(|(x, y)| x == y).count();
                     cov.record_edge(1000 + pre.min(64));
                 }
+//@if v0
                 (V::U64(a), V::U64(b)) => {
                     cov.record_edge(if a == b { 700 } else { 701 + (a ^ b).count_ones() as usize });
                 }
 //@if u8
                 (V::Nat(a), V::Nat(b)) => {
                     cov.record_edge(if a == b { 3000 } else { 3001 + (a ^ b).count_ones() as usize });
+                }
+//@endif
+//@endif
+//@if v1
+                (V::Fixed(f, a), V::Fixed(_, b)) => {
+                    cov.record_edge(if a == b { 700 } else { 701 + (f.pattern(*a) ^ f.pattern(*b)).count_ones() as usize });
                 }
 //@endif
                 _ => {}
@@ -652,6 +1188,10 @@ struct Meta {
     target: String,
     domain: String,
     seed: String,
+//@if v1
+    /// Binders the budget rule demoted from `full` to `edge` (section 2.6).
+    demoted: Vec<String>,
+//@endif
 }
 
 static META: Mutex<Vec<Meta>> = Mutex::new(Vec::new());
@@ -729,6 +1269,12 @@ fn write_manifest(outcomes: &[Outcome]) {
                 e.insert("cases".into(), Json::Num(s.cases));
                 e.insert("discarded".into(), Json::Num(s.discarded));
                 e.insert("domain".into(), Json::Str(m.domain));
+//@if v1
+                e.insert(
+                    "demoted".into(),
+                    Json::Arr(m.demoted.into_iter().map(Json::Str).collect()),
+                );
+//@endif
             }
             "property" => {
                 e.insert("cases".into(), Json::Num(s.cases));
@@ -751,6 +1297,9 @@ fn write_manifest(outcomes: &[Outcome]) {
     }
     let doc = Json::obj([
         ("schema", Json::str("warrant-test-evidence-v1")),
+//@if v1
+        ("warrant_version", Json::str("v1")),
+//@endif
         ("module", Json::str(MODULE)),
         ("spec", Json::str(SPEC_PATH)),
         ("spec_sha256", Json::str(SPEC_SHA256)),
@@ -763,6 +1312,15 @@ fn write_manifest(outcomes: &[Outcome]) {
     }
 }
 
+//@if v1
+/// Write the manifest of an in-process run (`Suite::run_recorded`) to
+/// `WARRANT_EVIDENCE_OUT`; the generated test target does this through
+/// `run_main`, a test of the generator does it through this wrapper.
+pub fn write_manifest_for(outcomes: &[Outcome]) {
+    write_manifest(outcomes);
+}
+
+//@endif
 /// Decide the injected fault from the two sabotage variables.
 ///
 /// `WARRANT_EVIDENCE_FILTER` exists only so BUILD can aim a *sabotage* run at
@@ -837,6 +1395,9 @@ impl Meta {
             target: String::new(),
             domain: String::new(),
             seed: String::new(),
+//@if v1
+            demoted: Vec::new(),
+//@endif
         }
     }
 }
