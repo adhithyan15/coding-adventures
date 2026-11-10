@@ -20946,3 +20946,12 @@ main normally and conflict-free as
 `ef9184d288890108164f6e2c5c5280fdc78063d0`. The same complete local
 validation remains green. This final reconciliation again requires fresh
 exact-head review and hosted CI before guarded auto-merge.
+
+Protected main advanced once more while only the exact-head CI gate remained
+queued, from `0470e0947e6f46ca0751b0dbe3b0d6de929d151e` to
+`c097efa5dbc604efb3fddb6d7f11b4559ffa81d1`. The intervening ALGOL
+floor-root-sum commit is exact-path-disjoint from the parity tranche and
+touches no workflow. Merge that main normally and conflict-free as
+`02329e686f1e1928ab1c04699eeca479880628f1`; the complete local validation
+remains green. Require another exact-head review and hosted-CI rollup before
+guarded auto-merge.
