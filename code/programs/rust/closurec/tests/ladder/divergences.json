@@ -113,25 +113,14 @@
   },
   "ladder_t4_while_advanced": {
    "closurec_exit": 0,
-   "closurec_stdout": "var i=0;for(;i<3;)i++;console.log(i);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15855",
+   "closurec_stdout": "for(var i=0;i<3;)i++;console.log(i);\n",
+   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15856",
    "level": "ADVANCED",
-   "reason": "closurec rewrites the while into a for but leaves the initializer as a separate statement rather than hoisting it into the for header (CCR-074). The ADVANCED rung additionally needs the loop-local rename of CCR-022.",
+   "reason": "At ADVANCED upstream additionally renames the loop-local binding (CCR-022).",
    "rung": "while",
    "tier": 4,
    "upstream_exit": 0,
    "upstream_stdout": "for(var a=0;a<3;)a++;console.log(a);\n"
-  },
-  "ladder_t4_while_simple": {
-   "closurec_exit": 0,
-   "closurec_stdout": "var i=0;for(;i<3;)i++;console.log(i);\n",
-   "issue": "https://github.com/adhithyan15/coding-adventures/issues/15855",
-   "level": "SIMPLE",
-   "reason": "closurec rewrites the while into a for but leaves the initializer as a separate statement rather than hoisting it into the for header (CCR-074). The ADVANCED rung additionally needs the loop-local rename of CCR-022.",
-   "rung": "while",
-   "tier": 4,
-   "upstream_exit": 0,
-   "upstream_stdout": "for(var i=0;i<3;)i++;console.log(i);\n"
   },
   "ladder_t5_regex_advanced": {
    "closurec_exit": 0,
