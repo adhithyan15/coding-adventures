@@ -384,6 +384,10 @@ pub struct CheckedWarrantModule {
     pub claims: Vec<String>,
 }
 
+/// A declared record or variant before its field types are resolved: whether it
+/// is a record, its constructors with their field declarations, and its span.
+type RawAdt<'a> = (bool, Vec<(String, Vec<&'a FieldDecl<'a>>)>, (usize, usize));
+
 /// State tracking for semantic checking.
 pub struct Checker<'a> {
     file: &'a WarrantFile<'a>,
@@ -402,7 +406,7 @@ pub struct Checker<'a> {
     // pass (names and unresolved field types), `adts` once the field types are
     // resolved (pass 2b), `ctor_index` maps a constructor name to
     // (type name, constructor index).
-    adt_raw: BTreeMap<String, (bool, Vec<(String, Vec<&'a FieldDecl<'a>>)>, (usize, usize))>,
+    adt_raw: BTreeMap<String, RawAdt<'a>>,
     adts: BTreeMap<String, CheckedAdt>,
     ctor_index: BTreeMap<String, (String, usize)>,
 
@@ -3167,7 +3171,7 @@ impl<'a> Checker<'a> {
                     if want != en || !args.is_empty() {
                         return Err(mismatch());
                     }
-                    let (cases, _) = self.errors.get(en).ok_or_else(|| mismatch())?;
+                    let (cases, _) = self.errors.get(en).ok_or_else(mismatch)?;
                     let idx = cases.iter().position(|c| c == case).ok_or(CheckerError {
                         code: DiagnosticCode::W0202,
                         kind: CheckerErrorKind::UnboundConstructor(format!("{en}.{case}")),

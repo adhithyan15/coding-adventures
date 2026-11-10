@@ -308,14 +308,17 @@ fn claim_domain(tys: &[Ty]) -> Option<(u64, u64)> {
     Some((product, bytes))
 }
 
+/// The fields of a record or constructor: name and declared type.
+type FieldTys<'a> = Vec<(&'a str, TypeExpr<'a>)>;
+
 /// What the generator needs to know about the document's type declarations to
 /// turn a `TypeExpr` into a [`Ty`]: aliases, records, variants, error types
 /// and the constructor table.
 #[derive(Default)]
 struct TyEnv<'a> {
     aliases: HashMap<&'a str, TypeExpr<'a>>,
-    records: HashMap<&'a str, Vec<(&'a str, TypeExpr<'a>)>>,
-    variants: HashMap<&'a str, Vec<(&'a str, Vec<(&'a str, TypeExpr<'a>)>)>>,
+    records: HashMap<&'a str, FieldTys<'a>>,
+    variants: HashMap<&'a str, Vec<(&'a str, FieldTys<'a>)>>,
     errors: HashMap<&'a str, Vec<&'a str>>,
     /// constructor name -> (type name, index, arity)
     ctors: HashMap<String, (String, usize, usize)>,
@@ -907,31 +910,42 @@ fn count_binders(e: &Expression<'_>, out: &mut HashSet<String>) {
 }
 
 /// Demote the leftmost full `U16`/`I16` leaf of `ty` (depth first) to its edge
-/// set, recording its component path (tuple index / constructor field index).
-fn demote_first(ty: &mut Ty, path: &mut Vec<usize>) -> bool {
+/// set, recording its component path: a tuple component or record field index,
+/// and for a variant the constructor name before the field index (`a.Q.0`).
+fn demote_first(ty: &mut Ty, path: &mut Vec<String>) -> bool {
     match ty {
         Ty::Fx(f) if f.bits() == 16 => {
             *ty = Ty::FxEdge(*f);
             true
         }
         Ty::Tuple(cs) => cs.iter_mut().enumerate().any(|(i, c)| {
-            path.push(i);
+            path.push(i.to_string());
             let hit = demote_first(c, path);
             if !hit {
                 path.pop();
             }
             hit
         }),
-        Ty::Data { ctors, .. } => ctors.iter_mut().any(|(_, fs)| {
-            fs.iter_mut().enumerate().any(|(i, c)| {
-                path.push(i);
-                let hit = demote_first(c, path);
-                if !hit {
+        Ty::Data { ctors, .. } => {
+            let several = ctors.len() > 1;
+            ctors.iter_mut().any(|(cname, fs)| {
+                if several {
+                    path.push(cname.clone());
+                }
+                let hit = fs.iter_mut().enumerate().any(|(i, c)| {
+                    path.push(i.to_string());
+                    let hit = demote_first(c, path);
+                    if !hit {
+                        path.pop();
+                    }
+                    hit
+                });
+                if !hit && several {
                     path.pop();
                 }
                 hit
             })
-        }),
+        }
         Ty::Opt(t) | Ty::List(t) | Ty::Res(t, _) => demote_first(t, path),
         _ => false,
     }
@@ -944,7 +958,7 @@ fn demote_first(ty: &mut Ty, path: &mut Vec<usize>) -> bool {
 /// binder index and component path of each demotion, in order.  `U8`/`I8`
 /// leaves are never demoted.  If nothing is left to demote and the claim is
 /// still over budget the caller reports W0706 -- no silent sampling.
-fn demote_for_budget(tys: &mut [Ty], budget: u64) -> Vec<(usize, Vec<usize>)> {
+fn demote_for_budget(tys: &mut [Ty], budget: u64) -> Vec<(usize, Vec<String>)> {
     let mut demoted = Vec::new();
     loop {
         let over = match claim_domain(tys) {
@@ -2478,7 +2492,7 @@ pub fn generate_evidence_harness(
             .iter()
             .map(|b| ty_of(b, v1, &env))
             .collect::<Result<_, _>>()?;
-        let mut demoted: Vec<(usize, Vec<usize>)> = Vec::new();
+        let mut demoted: Vec<(usize, Vec<String>)> = Vec::new();
         if v1 {
             // A Nat that flows directly into a shift count gets the
             // count-aware domain (VER04j section 3.6).
