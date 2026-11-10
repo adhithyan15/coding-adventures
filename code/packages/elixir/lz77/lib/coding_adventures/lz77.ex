@@ -195,10 +195,10 @@ defmodule CodingAdventures.LZ77 do
       raise ArgumentError, "invalid LZ77 token: offset #{offset} exceeds output size"
     end
 
-    # A negative length would never reach copy_bytes/3's zero base case and
-    # would grow the output forever.
-    if length < 0 do
-      raise ArgumentError, "invalid LZ77 token: negative length #{length}"
+    # A negative or non-integer length (e.g. 2.0) would never reach
+    # copy_bytes/3's integer zero base case and would grow the output forever.
+    if not is_integer(length) or length < 0 do
+      raise ArgumentError, "invalid LZ77 token: length must be a non-negative integer"
     end
 
     # Copy byte-by-byte so overlapping matches (length > offset) re-read bytes

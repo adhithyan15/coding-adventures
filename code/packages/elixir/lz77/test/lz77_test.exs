@@ -230,4 +230,10 @@ defmodule CodingAdventures.LZ77Test do
       LZ77.decode([%{offset: 0, length: 0, next_char: ?A}, %{offset: 1, length: -1, next_char: ?B}])
     end
   end
+
+  test "decode rejects a non-integer copy length" do
+    assert_raise ArgumentError, fn ->
+      LZ77.decode([%{offset: 0, length: 0, next_char: ?A}, %{offset: 1, length: 2.0, next_char: ?B}])
+    end
+  end
 end

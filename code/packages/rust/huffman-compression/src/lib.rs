@@ -371,6 +371,13 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     // 2 bytes: [symbol_value (u8), code_length (u8)].
     // The table is sorted by (code_length, symbol_value) — the same order the
     // encoder wrote it.
+    //
+    // SECURITY: symbols are single bytes, so a table can name at most 256 of
+    // them, each once. A larger or repeating table is hostile: Kraft alone
+    // would still admit ~2^56 long codes, each costing a String and a map slot.
+    if symbol_count > 256 {
+        return Err(format!("symbol_count {symbol_count} exceeds 256"));
+    }
     let table_start = 8;
     let table_end = symbol_count
         .checked_mul(2)
@@ -385,10 +392,14 @@ pub fn decompress(data: &[u8]) -> Result<Vec<u8>, String> {
     }
 
     let mut lengths: Vec<(u16, usize)> = Vec::with_capacity(symbol_count);
+    let mut seen = [false; 256];
     for i in 0..symbol_count {
         let off = table_start + 2 * i;
         let symbol = data[off] as u16;
         let length = data[off + 1] as usize;
+        if std::mem::replace(&mut seen[symbol as usize], true) {
+            return Err(format!("symbol {symbol} appears twice in code-lengths table"));
+        }
         lengths.push((symbol, length));
     }
 
@@ -808,6 +819,17 @@ mod tests {
         let t = std::time::Instant::now();
         assert_eq!(decompress(&compress(&data).unwrap()).unwrap(), data);
         assert!(t.elapsed().as_secs() < 10);
+    }
+
+    #[test]
+    fn test_hostile_symbol_count_over_256_rejected() {
+        let entries: Vec<(u8, u8)> = (0..257u32).map(|i| (i as u8, 9)).collect();
+        assert!(decompress(&hostile(&entries, 1, &[0])).is_err());
+    }
+
+    #[test]
+    fn test_hostile_duplicate_symbol_rejected() {
+        assert!(decompress(&hostile(&[(0, 1), (0, 1)], 1, &[0])).is_err());
     }
 
     // ── Determinism ───────────────────────────────────────────────────────────
