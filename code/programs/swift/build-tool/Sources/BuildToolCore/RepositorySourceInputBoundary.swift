@@ -478,7 +478,6 @@ enum RepositorySourceInputBoundaryProjection {
                   "code/packages/rust/cas-substitution",
                   "code/packages/rust/cas-summation",
                   "code/packages/rust/cas-trig",
-                  "code/packages/rust/gf256",
                   "code/packages/rust/llm-cache",
                   "code/packages/rust/llm-gateway",
                   "code/packages/rust/llm-primitives",
