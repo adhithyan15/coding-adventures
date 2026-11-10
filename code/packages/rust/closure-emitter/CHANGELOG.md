@@ -2,7 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
-## [0.63.7] - 2026-11-10
+## [0.63.8] - 2026-11-10
+
+### Fixed — drop redundant statement-terminator semicolon before `}` across compound statements (CCR-088, #15925)
+
+- In `src/lib.rs`, `last_stmt_uses_terminator_semi` now inspects compound statements (`WhileStatement`, `ForStatement`, `ForInStatement`, `ForOfStatement`, `IfStatement`, `LabeledStatement`, `WithStatement`).
+- When a compound statement's body slot unwraps a single-statement block or contains a bare statement ending in a terminator semicolon (such as `return`, `expression`, `var`, `break`, `continue`, or `debugger`), the semicolon is recognized as a poppable statement terminator before a closing `}` in compact mode (per ASI rules and upstream Closure Compiler `CodeGenerator.java` / `CodeConsumer.java`).
+- Preserves the semicolon when:
+  - The body is an `EmptyStatement` (e.g. `function f(){for(;;);};`).
+  - The body is a `ThrowStatement` (CCR-084, upstream always forces `;` after `throw`).
+  - The body is a `DoWhileStatement` in body slot position (wrapped in `{ ... }` per CCR-083).
+  - In pretty mode (`opts.pretty`).
+- Added unit tests in `src/lib.rs` verifying single loops, nested loops, switch case clauses, empty statements, and throw statements.
 
 ### Fixed — unwrap single-statement and empty blocks under labels (CCR-087, #15924)
 
