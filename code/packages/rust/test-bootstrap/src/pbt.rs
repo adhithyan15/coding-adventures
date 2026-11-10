@@ -83,22 +83,53 @@ pub fn bounded_u64(rng: &mut SplitMix64, n: u64) -> u64 {
 }
 
 /// Generate an unbiased random integer in `[min_val, max_val]`.
+///
+/// The span `max - min + 1` can be as large as 2^128 (the whole of `i128`),
+/// which does not fit in an `i128` or a `u128`, so it is computed modulo
+/// 2^128 in `u128`: a result of `0` means "the full 128-bit range".
+///
+/// ```text
+///   span <= 2^32          one bounded() draw           (conformance-pinned)
+///   span <  2^64          one 64-bit rejection draw    (conformance-pinned)
+///   span == 2^64          one raw 64-bit output        (conformance-pinned)
+///   2^64 < span < 2^128   128-bit rejection sampling:
+///                           t = (2^128 - span) mod span; redraw while raw < t
+///   span == 2^128         the raw 128-bit word itself
+/// ```
+///
+/// Before the audit the wide case used `raw % span`, which VER05 §3.1
+/// forbids: for a span of 3 * 2^126 the low third of the range was drawn
+/// with probability 1/2. The narrower cases, which the pbt-v1 corpus pins,
+/// are unchanged. The old subtraction also overflowed for spans above
+/// 2^127 (a panic in debug builds).
 pub fn gen_bounded_int(rng: &mut SplitMix64, min_val: i128, max_val: i128) -> i128 {
     assert!(min_val <= max_val, "min_val must be <= max_val");
-    let span = (max_val - min_val) as u128 + 1;
-    let offset = if span <= (1u128 << 32) {
+    let span = (max_val as u128)
+        .wrapping_sub(min_val as u128)
+        .wrapping_add(1);
+    let wide_word = |rng: &mut SplitMix64| {
+        let w1 = rng.next_u64() as u128;
+        let w2 = rng.next_u64() as u128;
+        (w1 << 64) | w2
+    };
+    let offset = if span == 0 {
+        wide_word(rng)
+    } else if span <= (1u128 << 32) {
         rng.bounded(span as u64) as u128
     } else if span < (1u128 << 64) {
         bounded_u64(rng, span as u64) as u128
     } else if span == (1u128 << 64) {
         rng.next_u64() as u128
     } else {
-        let w1 = rng.next_u64() as u128;
-        let w2 = rng.next_u64() as u128;
-        let raw = (w1 << 64) | w2;
-        raw % span
+        let threshold = span.wrapping_neg() % span;
+        loop {
+            let raw = wide_word(rng);
+            if raw >= threshold {
+                break raw % span;
+            }
+        }
     };
-    min_val + offset as i128
+    (min_val as u128).wrapping_add(offset) as i128
 }
 
 /// Reference implementation for bounded generator conformance (VER05 §6.2).
@@ -169,6 +200,11 @@ pub fn shrink_int(
     let mut current = initial;
     let mut steps = 0;
 
+    // No budget, no shrinking: the start comes back as it was.
+    if max_steps == 0 {
+        return (current, 0);
+    }
+
     if min_val <= target && target <= max_val && target != current && !prop(target) {
         return (target, 1);
     }
@@ -177,10 +213,12 @@ pub fn shrink_int(
         if current == target {
             break;
         }
-        let diff = current - target;
+        // Saturating: opposite extremes (i128::MAX vs i128::MIN) overflow a
+        // plain subtraction, and `abs()` of i128::MIN panics.
+        let diff = current.saturating_sub(target);
         let mut progress = false;
 
-        if diff.abs() > 1 {
+        if diff.unsigned_abs() > 1 {
             let step = diff.div_euclid(2);
             let candidate = current - step;
             if min_val <= candidate
@@ -276,9 +314,9 @@ pub fn shrink_list(
             if current[i] == elem_target {
                 break;
             }
-            let diff = current[i] - elem_target;
+            let diff = current[i].saturating_sub(elem_target);
             let mut progress = false;
-            if diff.abs() > 1 {
+            if diff.unsigned_abs() > 1 {
                 let step = diff.div_euclid(2);
                 let cand_val = current[i] - step;
                 let mut cand_list = current.clone();
@@ -512,6 +550,14 @@ where
     P: Fn(&T) -> bool + std::panic::RefUnwindSafe,
     S: Fn(T, &dyn Fn(&T) -> bool) -> (T, usize),
 {
+    // A property that was never evaluated has proved nothing: reporting
+    // Pass for `num_tests == 0` would be a vacuous pass.
+    if options.num_tests == 0 {
+        return Verdict::fail(
+            FID_EXHAUSTED,
+            "no cases were evaluated (num_tests is 0); a property that never ran is not a pass",
+        );
+    }
     let mut rng = SplitMix64::new(seed);
     for iteration in 1..=options.num_tests {
         let candidate = match gen(&mut rng) {
@@ -541,9 +587,29 @@ where
                 );
             }
             Ok(false) => {
-                // Property falsified: execute integrated shrinking
+                // Property falsified: execute integrated shrinking. The
+                // shrinker is caller-supplied and untrusted: it may panic (the
+                // property can panic on a smaller input) or return a value
+                // that no longer falsifies. The witness we report must be a
+                // real counterexample, so verify it and fall back to the
+                // original candidate (unshrunk, zero steps) otherwise.
                 let shrink_pred = |val: &T| prop_ref(val);
-                let (shrunk, steps) = shrink(candidate.clone(), &shrink_pred);
+                let shrunk_result =
+                    catch_unwind(AssertUnwindSafe(|| shrink(candidate.clone(), &shrink_pred)));
+                let (shrunk, steps) = match shrunk_result {
+                    Ok((value, steps)) => {
+                        let still_fails = matches!(
+                            catch_unwind(AssertUnwindSafe(|| prop_ref(&value))),
+                            Ok(false)
+                        );
+                        if still_fails {
+                            (value, steps)
+                        } else {
+                            (candidate.clone(), 0)
+                        }
+                    }
+                    Err(_) => (candidate.clone(), 0),
+                };
 
                 if options.is_ci {
                     // Privacy-preserving mode: redact raw values, emit digest (VER05 §5.2)
