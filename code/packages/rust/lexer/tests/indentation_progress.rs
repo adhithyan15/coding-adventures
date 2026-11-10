@@ -85,4 +85,11 @@ fn assert_hash_handling() {
     let error = GrammarLexer::new("#", &grammar).tokenize().unwrap_err();
     assert_eq!(error.message, "Zero-width skip match in indentation");
     assert_eq!((error.line, error.column), (1, 1));
+
+    // An empty token match must not turn the fallback into repeated
+    // allocations at the same byte.
+    let grammar = parse_token_grammar("mode: indentation\nNAME = /[a-z]*/").unwrap();
+    let error = GrammarLexer::new("#", &grammar).tokenize().unwrap_err();
+    assert_eq!(error.message, "Zero-width token match in indentation");
+    assert_eq!((error.line, error.column), (1, 1));
 }
