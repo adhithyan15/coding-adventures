@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   diffRootSlugSplits,
   findRootSlugSplits,
+  liveRootSlugs,
   loadRootSlugBaseline,
   loadRootTagVocabulary,
   parseRootSlug,
@@ -120,6 +121,16 @@ describe("root slug vocabulary", () => {
 });
 
 describe("root slug splits", () => {
+  it("visits every track's parsed roots once and keeps the joiner's comma rule", () => {
+    const root = fixture({ "TOY-1": ["stare-latin"], "TOY-2": ["amare-latin"] });
+    writeFileSync(
+      join(root, "toy", "lessons", "TOY-2.md"),
+      "---\nschema_version: 2\nid: TOY-2\nchapter: 2\nheadword: w2\n" +
+        "roots: latin-stare, stare-latin, amare-latin\n---\n\n# w2\n",
+    );
+    expect(liveRootSlugs(root)).toEqual(["amare-latin", "latin-stare", "stare-latin"]);
+  });
+
   it("reports one etymon spelled two ways", () => {
     const root = fixture({ "TOY-1": ["stare-latin"], "TOY-2": ["latin-stare"] });
     expect(findRootSlugSplits(root)).toEqual([
