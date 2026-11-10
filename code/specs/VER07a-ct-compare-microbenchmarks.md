@@ -72,6 +72,15 @@ It delivers **VER-P017**: the equal-instruction-count benchmark suite covering $
 - Evaluated for slice lengths $n \in \{16, 256, 4096\}$.
 - Compares execution with `choice = true` (0xFF mask) versus `choice = false` (0x00 mask).
 - Asserts that branch-free selection maintains equal instruction counts regardless of choice condition.
+- **Not zero-allocation (LH-003a).** `ct_select_bytes` returns a fresh `Vec`, so
+  measured through the counting global allocator it makes exactly one
+  allocation of `a.len()` bytes per call. The zero-allocation claim (§1, item 2)
+  covers `ct_eq`, `ct_eq_fixed` and `ct_eq_u64` only; the select benchmarks are
+  named `bench/select_bytes/*`, outside the `bench/ct_*` set the assurance
+  report cites, and `bench/select_bytes/allocates_exactly_its_output` pins the
+  real profile. Every zero-allocation budget in this suite is checked against
+  the real heap and fails if the counter was not live; the negative control
+  `bench/sabotage/allocation_detected` proves a one-byte allocation fails it.
 
 ### 2.4 `ct_eq_u64`
 - Compares 64-bit unsigned integers:

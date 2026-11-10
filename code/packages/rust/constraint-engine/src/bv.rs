@@ -161,6 +161,18 @@ impl Lowering {
             .collect()
     }
 
+    /// The work counterpart of [`Self::reserve`]: refuse before building when
+    /// `estimate` more gate constructions would pass [`MAX_GATE_CALLS`]. Node
+    /// count alone is not enough, because a repeated subterm is free in size
+    /// (structural hashing returns the existing node) but every construction
+    /// still costs work.
+    fn reserve_work(&self, estimate: u64) -> Lowered<()> {
+        if self.aig.and_calls().saturating_add(estimate) > MAX_GATE_CALLS {
+            return Err(format!("bit-blasting work exceeds MAX_GATE_CALLS ({MAX_GATE_CALLS})"));
+        }
+        Ok(())
+    }
+
     fn check_size(&self) -> Lowered<()> {
         if self.aig.num_nodes() > MAX_AIG_NODES {
             return Err(format!("bit-blasted circuit exceeds MAX_AIG_NODES ({MAX_AIG_NODES})"));
@@ -406,6 +418,10 @@ impl Lowering {
                     if x.width() != acc.width() {
                         return Err(format!("`{f}` on widths {} and {}", acc.width(), x.width()));
                     }
+                    if f == "bvmul" {
+                        self.reserve(multiplication_gate_estimate(acc.width()))?;
+                        self.reserve_work(multiplication_and_call_estimate(acc.width()))?;
+                    }
                     let g = &mut self.aig;
                     acc = match f {
                         "bvand" => bv::and(g, &acc, &x),
@@ -460,6 +476,59 @@ const DIV_GATES_PER_BIT: usize = 64;
 fn division_gate_estimate(w: usize) -> usize {
     DIV_GATES_PER_BIT_SQUARED * w * w + DIV_GATES_PER_BIT * w
 }
+
+/// Upper bound on the gates one `bvmul` builds at width `w`, so that a
+/// multiplier too big for [`MAX_AIG_NODES`] is refused before it is built.
+///
+/// `bit_blaster::bv::mul` is shift-and-add: row `i` is `a << i` ANDed with
+/// `b[i]`, and the `w` rows are summed by `w` ripple-carry adders. Shifted-in
+/// zeros and the all-zero first accumulator fold away, so about half of each
+/// adder is constant; what is left is a little under `4 w²` AND nodes. Measured
+/// at the time of writing (new nodes for `bvmul x y`, `w`-bit inputs):
+///
+/// ```text
+///   w      actual    4w² + 2w    ratio
+///   1           1           6     6.0
+///   2           6          20     3.3
+///   3          19          42     2.2
+///   8         204         272     1.3
+///   16        916       1 056     1.15
+///   32      3 876       4 160     1.07
+///   64     15 940      16 512     1.04
+///  128     64 644      66 048     1.02
+/// ```
+///
+/// The actual count is `4 w² - O(w)`, so `4 w² + 2 w` stays above it with a
+/// ratio that tends to 1. Structural hashing can only make a real multiplier
+/// smaller (never larger), so the estimate also bounds a multiplier built
+/// next to existing circuitry. Work is bounded separately by
+/// [`multiplication_and_call_estimate`]: a repeated `bvmul x y` adds no nodes
+/// but still makes every gate construction again. See
+/// `multiplication_cost_estimate_is_conservative`.
+fn multiplication_gate_estimate(w: usize) -> usize {
+    MUL_GATES_PER_BIT_SQUARED
+        .saturating_mul(w)
+        .saturating_mul(w)
+        .saturating_add(MUL_GATES_PER_BIT.saturating_mul(w))
+}
+
+/// Upper bound on the gate constructions ([`Aig::and_calls`]) one `bvmul`
+/// makes at width `w`, counted whether or not structural hashing finds the
+/// gate already built. Each of the `w` rows is `w` ANDs, and each ripple-carry
+/// adder costs about 9 constructions per bit, so `10 w²` covers both; the
+/// conservativeness test measures it.
+fn multiplication_and_call_estimate(w: usize) -> u64 {
+    (w as u64).saturating_mul(w as u64).saturating_mul(MUL_CALLS_PER_BIT_SQUARED)
+}
+
+/// Gate constructions per bit² of the shift-and-add multiplier.
+const MUL_CALLS_PER_BIT_SQUARED: u64 = 10;
+
+/// Gates per bit² of the shift-and-add multiplier (see above).
+const MUL_GATES_PER_BIT_SQUARED: usize = 4;
+
+/// The linear slack on top, which also covers widths 1 to 3.
+const MUL_GATES_PER_BIT: usize = 2;
 
 /// SMT-LIB `bvsmod`: the remainder whose sign follows the **divisor**.
 ///
