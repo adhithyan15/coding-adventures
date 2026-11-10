@@ -158,3 +158,53 @@ type HuffmanCompressionTests() =
 
         let error = Assert.Throws<InvalidOperationException>(fun () -> HuffmanCompression.Decompress malformed |> ignore)
         Assert.Contains("positive", error.Message)
+
+    // ---- Hostile input (SEC-003): the code-length table is attacker-controlled ----
+
+    member private _.Hostile(entries: (int * int) array, original: uint32, payload: byte array) =
+        let output = Array.zeroCreate<byte> (8 + (entries.Length * 2) + payload.Length)
+        BinaryPrimitives.WriteUInt32BigEndian(output.AsSpan(0, 4), original)
+        BinaryPrimitives.WriteUInt32BigEndian(output.AsSpan(4, 4), uint32 entries.Length)
+        entries
+        |> Array.iteri (fun i (symbol, length) ->
+            output[8 + (2 * i)] <- byte symbol
+            output[9 + (2 * i)] <- byte length)
+        Array.Copy(payload, 0, output, 8 + (entries.Length * 2), payload.Length)
+        output
+
+    member private this.AssertRejected(entries: (int * int) array, original: uint32, payload: byte array) =
+        let data = this.Hostile(entries, original, payload)
+        Assert.Throws<InvalidOperationException>(fun () -> HuffmanCompression.Decompress data |> ignore) |> ignore
+
+    [<Fact>]
+    member this.``decompress rejects huge length gap``() =
+        this.AssertRejected([| (0, 1); (1, 255) |], 4u, Array.create 8 0xFFuy)
+
+    [<Fact>]
+    member this.``decompress rejects oversubscribed table``() =
+        this.AssertRejected([| (0, 1); (1, 1); (2, 1) |], 1u, [| 0uy |])
+
+    [<Fact>]
+    member this.``decompress rejects unsorted table``() =
+        this.AssertRejected([| (0, 2); (1, 1) |], 1u, [| 0uy |])
+
+    [<Fact>]
+    member this.``decompress rejects symbol count over 256``() =
+        this.AssertRejected(Array.init 257 (fun i -> (i % 256, 9)), 1u, [| 0uy |])
+
+    [<Fact>]
+    member this.``decompress rejects duplicate symbol``() =
+        this.AssertRejected([| (0, 1); (0, 1) |], 1u, [| 0uy |])
+
+    [<Fact>]
+    member this.``decompress rejects declared length uint32 max with tiny payload``() =
+        this.AssertRejected([| (0, 1); (1, 1) |], UInt32.MaxValue, Array.zeroCreate<byte> 4)
+
+    [<Fact>]
+    member this.``decompress fails fast when bits match no code``() =
+        this.AssertRejected([| (0, 1) |], 8u, Array.create 100000 0xFFuy)
+
+    [<Fact>]
+    member _.``decompress large round trip is linear``() =
+        let data = Array.init 400000 (fun i -> byte (i % 7))
+        Assert.Equal<byte array>(data, HuffmanCompression.Decompress(HuffmanCompression.Compress data))

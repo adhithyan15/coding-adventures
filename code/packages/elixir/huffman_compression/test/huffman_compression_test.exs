@@ -125,6 +125,7 @@ defmodule CodingAdventures.HuffmanCompressionTest do
 
   test "wire format: code-lengths table for AAABBC is sorted by (len, sym)" do
     compressed = HuffmanCompression.compress("AAABBC")
+
     <<_orig_len::32-big, _sym_count::32-big, table_bytes::binary-size(6), _bits::binary>> =
       compressed
 
@@ -276,5 +277,65 @@ defmodule CodingAdventures.HuffmanCompressionTest do
 
   test "spec vector: rt hello hello hello" do
     assert rt("hello hello hello") == "hello hello hello"
+  end
+
+  # ─── Hostile input (SEC-003): the code-lengths table is attacker-controlled ──
+
+  defp hostile(entries, original, payload) do
+    table = for {sym, len} <- entries, into: <<>>, do: <<sym::8, len::8>>
+    <<original::32-big, length(entries)::32-big>> <> table <> payload
+  end
+
+  test "hostile: huge length gap is rejected" do
+    assert {:error, _} =
+             HuffmanCompression.decompress(
+               hostile([{0, 1}, {1, 255}], 4, :binary.copy(<<255>>, 8))
+             )
+  end
+
+  test "hostile: zero length is rejected" do
+    assert {:error, :invalid_code_length} =
+             HuffmanCompression.decompress(hostile([{0, 0}], 1, <<0>>))
+  end
+
+  test "hostile: over-subscribed table is rejected" do
+    assert {:error, :oversubscribed} =
+             HuffmanCompression.decompress(hostile([{0, 1}, {1, 1}, {2, 1}], 1, <<0>>))
+  end
+
+  test "hostile: unsorted table is rejected" do
+    assert {:error, :unsorted_table} =
+             HuffmanCompression.decompress(hostile([{0, 2}, {1, 1}], 1, <<0>>))
+  end
+
+  test "hostile: symbol_count over 256 is rejected" do
+    entries = for i <- 0..256, do: {rem(i, 256), 9}
+    assert {:error, :too_many_symbols} = HuffmanCompression.decompress(hostile(entries, 1, <<0>>))
+  end
+
+  test "hostile: duplicate symbol is rejected" do
+    assert {:error, :duplicate_symbol} =
+             HuffmanCompression.decompress(hostile([{0, 1}, {0, 1}], 1, <<0>>))
+  end
+
+  test "hostile: declared length u32 max with a tiny payload is rejected" do
+    assert {:error, :declared_length_too_large} =
+             HuffmanCompression.decompress(
+               hostile([{0, 1}, {1, 1}], 4_294_967_295, <<0, 0, 0, 0>>)
+             )
+  end
+
+  test "hostile: truncated table is rejected" do
+    assert {:error, :too_short} = HuffmanCompression.decompress(<<0, 0, 0, 1, 0, 0, 0, 5, 0, 1>>)
+  end
+
+  test "hostile: unmatched bits fail fast" do
+    assert {:error, :invalid_code} =
+             HuffmanCompression.decompress(hostile([{0, 1}], 8, :binary.copy(<<255>>, 100_000)))
+  end
+
+  test "large round trip decodes in linear time" do
+    data = for i <- 0..99_999, into: <<>>, do: <<rem(i, 7)>>
+    assert rt(data) == data
   end
 end
