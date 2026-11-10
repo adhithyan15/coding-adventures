@@ -446,13 +446,13 @@ class CorpusTests(unittest.TestCase):
             {
                 "boundary_count": 18,
                 "input_count": 20,
-                "scope_count": 491,
-                "authorization_count": 493,
+                "scope_count": 490,
+                "authorization_count": 492,
             },
         )
         self.assertEqual(
             runner.repository_source_input_boundary_digest(boundary),
-            "8bc50843ef23d7aadceda81bfbaadf13c27dd037502fe228a11eaa7aa6c6e022",
+            "ec5168704ebab3272bdbd4ff13ec4f1837a1e3d6f9ed048523b6651820148a78",
         )
         by_id = {entry["id"]: entry for entry in boundary["boundaries"]}
         self.assertEqual(
