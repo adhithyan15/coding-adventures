@@ -318,11 +318,11 @@ struct HasherTests {
 
         #expect(checkedObject.isEqual(productionObject))
         #expect(checked.boundaries.count == 18)
-        #expect(checked.boundaries.flatMap(\.inputs).count == 21)
-        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 19)
+        #expect(checked.boundaries.flatMap(\.inputs).count == 20)
+        #expect(Set(checked.boundaries.flatMap(\.inputs).map(\.path)).count == 18)
         #expect(
             Hasher.repositorySourceInputBoundaryDigest
-                == "fdf54a19088b209d575866c5dc6919c14b1b6e001e29681a5bef4e1241a12dc4"
+                == "8bc50843ef23d7aadceda81bfbaadf13c27dd037502fe228a11eaa7aa6c6e022"
         )
         #expect(
             try Hasher.canonicalRepositorySourceInputBoundaryDigest(from: checkedData)
