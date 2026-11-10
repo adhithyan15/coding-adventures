@@ -1,6 +1,6 @@
 # warrant-grammar
 
-Canonical Warrant v0 grammar data for [VER04 P006a](../../../specs/VER04-warrant-language.md#11-grammar-artifacts-and-syntax-corpus-staging-p006).
+Canonical Warrant v0/v1 grammar data for [VER04 P006a](../../../specs/VER04-warrant-language.md#11-grammar-artifacts-and-syntax-corpus-staging-p006).
 The existing grammar-tools compiler turns the repository's `.tokens` and
 `.grammar` files into native Rust structures committed in `src/`.
 
@@ -81,6 +81,111 @@ let harness = compile_rust_l0_harness(&ast, &checked, &manifest, &options).unwra
 
 Source admission, layout capture, grammar data, parser, type checking and codegen do not
 establish solvers, property engine, proof or release authorization (VER-P009+).
+
+## Warrant v1: fixed-width integers and bitwise operations (VER04j WX-B, WX-C)
+
+A document headed `warrant name v1` enables eight fixed-width types (`U8 U16 U32
+U64 I8 I16 I32 I64`), suffixed and hex literals (`5u16`, `-128i8`, `0x1du8`) and
+a family of total built-ins. Arithmetic wraps; checking is explicit.
+
+```text
+warrant demo v1
+  model xtime(x: U8) -> U8 = if x >= 128u8 then bit_xor(shl(x, 1), 0x1du8) else shl(x, 1)
+  example wraps:
+    max_value<U32>() + 1u32 == 0u32
+  example clamp_is_explicit:
+    unwrap_or(try<U8>(300), 255u8) == 255u8
+```
+
+| Group | Built-ins |
+|---|---|
+| conversion | `widen<T>` (range contained), `wrap<T>` (mod 2^w), `try<T>` (`Option`), `to_int`, `to_nat`, `max_value<T>()`, `min_value<T>()` |
+| checked | `checked_add checked_sub checked_mul`, `div rem` (unsigned or `Int`), `div_trunc rem_trunc` (signed), `unwrap_or` |
+| bitwise | `bit_and bit_or bit_xor bit_not`, `shl shr sar rotl rotr` (the count is a `Nat`; `n >= w` gives `0`/`-1`, never the host's masked shift), `popcount clz ctz bit` |
+| endian | `be_bytes le_bytes` (to `Bytes<w/8>`), `from_be<T> from_le<T>` |
+
+`fixed::FixedTy` and the functions in [`src/fixed.rs`](src/fixed.rs) are the one
+definition of what these mean; the checker, the ground evaluator and the tests
+share them, and the generated harness carries a separate copy that
+`tests/wx_evidence.rs` holds to it. A v0 document is unaffected: the new names
+exist only under the `v1` header, and `ct-compare`'s and `gf256`'s generated
+evidence is byte-identical (`tests/v0_compat.rs`).
+
+For evidence, a v1 document's binders get the domains of VER04j 2.6 (every value
+of `U8 I8 U16 I16`, a biased edge set of 281-623 values for wider types, demoted
+leftmost-first under the exhaustive budget) and a shift-count `Nat` gets the
+count-aware domain; the scalar adapter shape accepts fixed-width parameters and
+the faults `saturate-add`, `trap-as-zero-mul`, `narrow-width`, `sign-confuse`,
+`off-by-one-range`, `shift-mask`, `shift-ub`, `rotate-as-shift-left`,
+`sar-as-shr`, `popcount-off` and friends in an `evidence.bindings` `faults=` list.
+`tests/fixtures/wx_fixed.warrant` is the test fixture; its generated harness is
+checked in at `tests/generated/wx_evidence.rs` (`WARRANT_REGEN=1 cargo test -p
+coding_adventures_warrant_grammar --test wx_regen` rewrites it).
+
+## Warrant v1: tuples, records and sum types (VER04j WX-A)
+
+The same `v1` header also enables structured values: tuples, records and
+non-recursive sum types, with nested patterns and an exhaustiveness check.
+
+```text
+warrant leb v1
+  error LebError = TRUNCATED | OVERLONG
+  record Span(start: U8, len: U8)
+  variant Shape = Circle(r: U8) | Rect(w: U8, h: U8) | Empty
+  model Pair = (U8, U8)
+
+  model dec2(b0: U8, b1: U8) -> Result<(U64, Nat), LebError> =
+    if b0 < 128u8 then Ok((widen<U64>(b0), 1)) else Err(LebError.OVERLONG)
+  model area(s: Shape) -> U64 =
+    match s with Circle(r) -> widen<U64>(r) * widen<U64>(r)
+               | Rect(w, h) -> widen<U64>(w) * widen<U64>(h)
+               | Empty -> 0u64
+  example gap:
+    normalize(9u8, 4u8).len == 5u8
+```
+
+| Construct | Meaning |
+|---|---|
+| `(T1, T2, ...)`, `(e1, e2, ...)` | structural tuple, arity 2 to 8; `t.0`, `f(x).1` project |
+| `record R(a: T, ...)` | nominal, one constructor named `R`, 1 to 32 fields; `r.a` projects |
+| `variant V = A(x: T) \| B \| ...` | nominal sum, 2 to 256 constructors, positional `A(e)`, bare `B`; no recursion (W0203) |
+| `match e with p -> e \| ...` | patterns `_`, binders, `true`/`false`, `(p, q)`, `C(p, ...)`, `Some(p)`, `Ok(p)`, `Err(E.CASE)`; non-exhaustive or redundant is W0301 |
+
+Everything is v1-only: in a v0 document each of these is `W0101`, and a v0
+document means exactly what it did (`tests/v0_compat.rs`). Composites are
+invariant (`(Nat, Nat)` is not an `(Int, Int)`), unordered (`<` is W0301) and
+compared structurally.
+
+- [`src/patterns.rs`](src/patterns.rs) is the pattern-matrix usefulness algorithm
+  behind exhaustiveness and redundancy; `tests/wxa_patterns.rs` holds it to
+  brute-force enumeration over small types.
+- The ground evaluator builds `EvalValue::Tuple` and `EvalValue::Con`, and
+  `EvalValue::encode_portable` writes the cross-language corpus form (tuple and
+  record `L<n> ...`, variant `L2 S<ctor name> L<k> ...`, `Option` `L0`/`L1 x`,
+  `Result` as the VER04i `M1` form); nesting past TFV's 64 containers is `W0709`.
+- Evidence: composite binders get the domains of VER04j 4.7 (a product,
+  lexicographic; a variant's constructors in order; `Option`, `Result`, `List`),
+  the leftmost-first `U16`/`I16` demotion reaches into them, generators draw
+  constructors uniformly and relation-bias one leaf, and shrinkers work
+  component-wise. Operations whose signature mentions a composite are bound
+  with `struct`/`enum` lines and `ret=`/`errors=` in `evidence.bindings`:
+
+```text
+struct Span path=subject::Span fields=start:u8,len:u8
+enum Shape path=subject::Shape ctors=Circle(r:u8),Rect(w:u8,h:u8),Empty
+op decode2 export=decode2 args=u8,u8 ret=(u64,usize) errors=subject::LebErr/Overlong=OVERLONG faults=off-by-one-consumed,drop-consumed
+op classify export=classify ret=Shape faults=wrong-ctor
+```
+
+  The faults are `drop-consumed`, `swap-components`, `field-zero`, `wrong-ctor`,
+  `ok-as-err` and `off-by-one-consumed` (the LEB128 bug class: right value, wrong
+  bytes consumed). A value a host integer cannot hold is counted as
+  `unreachable_by_type` in the manifest, never narrowed. The checked-in pilot is
+  `tests/fixtures/wxa.warrant` with its bindings and generated harness
+  (`tests/generated/wxa_evidence.rs`, `WARRANT_REGEN=1 cargo test -p
+  coding_adventures_warrant_grammar --test wxa_regen` rewrites it);
+  `tests/wxa_evidence.rs` also runs the ground evaluator against the generated
+  model code on every composite domain within budget.
 
 ## Tests and regeneration
 

@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d25b155255953fad",
+  "sourceHash": "fnv1a64:f0e7be64d3c5a45a",
   "lessons": [
     {
       "id": "KA-C14-kaalagalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:499f69e4433ccf4c",
+      "sourceHash": "fnv1a64:1ca6473a6e6e82d2",
       "notice": null,
       "blocks": [
         {
@@ -36,6 +36,10 @@
             {
               "kind": "speech",
               "text": "Kannada's summer, rain, and cold words are native, just like Tamil's — but its word for \"spring\" borrows twice from Sanskrit, not once."
+            },
+            {
+              "kind": "speech",
+              "text": "Before the seasons: say avaru kelasa māḍuttāre once for “they work” and once for one respected adult. Then make hesaru plural."
             }
           ]
         },
@@ -123,6 +127,24 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the double loan — \"vasanta ṛtu\" — both halves Sanskrit]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "avaru kelasa māḍuttāre; then avara akka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *avaru kelasa māḍuttāre*; then *avara akka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hesarugaḷu; identify adu as non-human",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hesarugaḷu*; identify *adu* as non-human]"
             },
             {
               "kind": "prompt",

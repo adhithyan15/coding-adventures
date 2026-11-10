@@ -148,8 +148,24 @@ windows before the established A1 boundary.
 
 The exact Kannada surfaces are bounded to official Government of India
 transcripts. They do not set a CEFR level or supply an external Kannada A1
-syllabus. Strict inventory coverage moves from **198/258 to 204/258**; the
-remaining 54 points stay open, including four structurally untransferable
+syllabus. Strict inventory coverage moved from **198/258 to 204/258**; the
+remaining total is updated by the chapter-12 bridge below. This is a repository
+coverage measurement, not a claim of certification, standard setting, human
+validation, learner readiness or learner attainment.
+
+## Kannada A1 third-person bridge status
+
+Four short chapter-12 lessons make the existing family words usable with a
+bounded third-person path. They introduce **avanu**, **avaḷu**, **adu**, and
+**avaru**; the human/non-human distinction; the present endings in **avanu
+kelasa māḍuttāne**, **avaḷu kelasa māḍuttāḷe**, and **avaru kelasa māḍuttāre**;
+the family phrases **avana appa**, **avaḷa amma**, and **avara akka**; and the
+ordinary non-human plural **-gaḷu**. The lessons explicitly defer the broader
+past-person system, the non-human present ending, a general genitive paradigm,
+and human plural formation.
+
+Strict Kannada A1 inventory coverage moves from **204/258 to 209/258**. The
+remaining 49 points stay open, including four structurally untransferable
 Spanish-proxy demands. This is a repository coverage measurement, not a claim
 of certification, standard setting, human validation, learner readiness or
 learner attainment.

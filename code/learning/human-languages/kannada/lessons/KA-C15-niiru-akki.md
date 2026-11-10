@@ -17,11 +17,11 @@ reviews_of: [KA-C14-kaalagalu]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02]
+  knowledge: [KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07]
 introduces:
   knowledge: [KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02]
 practises:
-  knowledge: [KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02]
+  knowledge: [KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,14 @@ variety: standard-colloquial
 # ನೀರು, ಅಕ್ಕಿ, ಅನ್ನ — water matching Tamil, and rice, raw and cooked
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07] -->
 
 [PAUSE 2s] Kannada's water-word sides with Tamil, not with Malayalam's
 surprising break from the pack.
+
+One last retrieval first: say *avaḷa amma kelasa māḍuttāḷe*, change “her” to
+“his”, then say *hesarugaḷu* and *avaru*. Which one is a non-human noun
+plural and which one is a human pronoun?
 
 ## The word, taken apart: ನೀರು — matching Tamil
 <!-- hl-knowledge: introduces=[KA-ETYMON-C15-NIIRU-AKKI-01]; assesses=[] -->
@@ -53,12 +57,14 @@ word (DEDR 3690).
   *anna*, "food, cooked rice" (CDIAL 395), the same general idea as Tamil's *sātam*.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-ETYMON-C15-NIIRU-AKKI-01, KA-ETYMON-C15-NIIRU-AKKI-02, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07] -->
 
 [PAUSE 1s]
 - [YOU SAY: "nīru" — water, matching Tamil]
 - [YOU SAY: "akki" — raw rice]
 - [YOU SAY: "anna" — cooked rice]
+- [YOU SAY: *avaḷa amma kelasa māḍuttāḷe*; then *avana appa kelasa māḍuttāne*]
+- [YOU SAY: *hesarugaḷu* and *avaru*; name which is non-human and which is human]
 - [YOU RECALL: say *appa amma aṇṇa tamma akka taṅgi*]
 
 ## Wrap-up Recall

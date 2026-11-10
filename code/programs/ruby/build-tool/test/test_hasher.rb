@@ -79,7 +79,7 @@ class TestHasher < Minitest::Test
     packaged = Pathname(__dir__).expand_path / "../lib/build_tool/language_source_input_registry.json"
     assert_equal checked.binread, packaged.binread
     assert_equal JSON.parse(checked.read), BuildTool::Hasher.source_input_registry
-    assert_equal "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
+    assert_equal "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1",
       BuildTool::Hasher.source_input_registry_digest
   end
 

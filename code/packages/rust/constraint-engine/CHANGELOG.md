@@ -1,5 +1,108 @@
 # Changelog — `constraint-engine`
 
+## 0.5.0 — 2026-11-10
+
+Faithfulness audit of the BV tactic's `Predicate` to circuit lowering
+(`src/bv.rs`; backlog LH-006a), the layer the `bit-blaster` audit (PR
+#19081) did not cover. **No unfaithful lowering was found:** every
+operation that the tactic already accepted matched an independent
+SMT-LIB reference on every checked assignment, and 18 hand-made mutants of
+the lowering (swapped branches, operands, operators, off-by-one indices)
+were all killed by the new tests. What the audit did find is listed under
+Security.
+
+### Added
+
+- Lowering for the rest of the `QF_BV` operations that `bit-blaster` 0.2.0
+  already had circuits for: `bvudiv`, `bvurem`, `bvsdiv`, `bvsrem`,
+  `concat`, and the indexed forms `(_ extract hi lo)`, `(_ zero_extend k)`
+  and `(_ sign_extend k)`. `smt-lib-format` cannot yet read an indexed head
+  such as `((_ extract 7 4) x)`, so the tactic takes the flattened shape
+  `Apply { f: "_", args: [Var("extract"), Int(7), Int(4), x] }`. Before
+  this, all of them answered `Unknown`.
+- `bvsmod` (SMT-LIB: the remainder takes the sign of the **divisor**),
+  built in `bv.rs` from `bvurem`, `bvneg`, `bvadd` and `ite` exactly as the
+  SMT-LIB definition spells it out. `bit-blaster` is unchanged.
+- `src/bv_faithfulness.rs` (unit tests inside the module): the audit.
+  - Every unary and binary operation, every comparison, `=`, `distinct`,
+    every extract slice, the extensions and both `concat` shapes:
+    **exhaustive at every width 1 to 8** by simulating the lowered
+    circuit against a reference written from the SMT-LIB definitions
+    (the test asserts more than 2 million checked assignments). Ternary forms (n-ary
+    `bvadd/bvsub/bvmul/bvand/bvor/bvxor`, `ite`) exhaustive at widths 1 to
+    4, 5000 seeded random assignments at 5 to 8.
+  - Seeded random assignments plus every pair of corner values (0, 1, 2,
+    max, max-1, sign boundary, `w-1`, `w`, `w+1`) at 16, 32 and 64 bits.
+  - End to end through `BvTactic::solve` (Tseitin, CDCL, DRAT): the
+    reference answer is SAT and reads back the pinned inputs, the negation
+    is UNSAT (so kernel-certified). Exhaustive at widths 1 to 3, sampled at
+    4 and 16.
+  - SMT-LIB corner semantics pinned explicitly: `bvudiv x 0 = all ones`,
+    `bvurem x 0 = x`, `bvsdiv x 0 = -1/+1`, `bvsrem/bvsmod x 0 = x`,
+    `MIN / -1 = MIN`, `MIN srem -1 = 0`, shifts by at least the width,
+    extract and extend boundaries, the `bvsdiv/bvsrem/bvsmod` table.
+  - Boolean connectives against truth tables; every refusal path with its
+    reason; every `#b`, `#x` (both cases) and `(_ bvN w)` literal at widths
+    1 to 8 plus the 127/128-bit boundary.
+- Certified identities at 16, 32 and 64 bits: add/sub/neg/xor/compare
+  identities, concat/extract round trip, division and remainder by zero and
+  by one, multiplication by constants (0, 1, 2, 3, 5, 7, `2^(w-1)`,
+  `2^(w/2)` squared).
+- A line in `BUILD` that runs the one slow test (see Measured) with
+  `--release -- --ignored`.
+
+### Security
+
+- **A wide divider was built in full before it was refused.** `check_size`
+  runs after an operation finishes, so a division at width 512 first built
+  millions of gates before answering `Unknown`.
+  Division, remainder and `bvsmod` now estimate their size from the width
+  (`16 w^2 + 64 w` gates, checked by `division_cost_estimate_is_conservative`
+  to be at or above the real count for each operation) and refuse before
+  building. `concat`, `zero_extend` and `sign_extend` check the result
+  width before allocating. `bvmul` has the same late check, unchanged here:
+  a 512-bit multiplier is about 2.6 M gates, within the tested envelope.
+- Indexed identifiers take only non-negative indices that fit `usize`; a
+  hostile `zero_extend` by `i128::MAX` is an `Unknown`, not an allocation.
+
+### Changed
+
+- `Lowering::decide` takes the `drat-check` limits as a parameter.
+  `BvTactic::solve` always passes the defaults; only tests pass a larger
+  budget, so the public tactic's limits are not raised.
+
+### Measured (what is and is not proved)
+
+Coverage matrix (S = simulation of the lowered AIG, E = end to end with
+certified UNSAT, P = proof by miter):
+
+| Operation group | w 1 to 8 | w 16, 32, 64 |
+|---|---|---|
+| bitwise, add, sub, neg, mul, shifts, udiv, urem, sdiv, srem, smod, comparisons, `=`, `distinct`, concat, extract, extensions | S exhaustive; E exhaustive at w 1 to 3, sampled at 4 | S seeded random + corners; E sampled at 16 |
+| ternary: n-ary folds, `ite` | S exhaustive at w 1 to 4, sampled at 5 to 8; E exhaustive at w 3 | S seeded random + corners |
+| mul commutativity | P certified at w 1 to 7 (8 passes in release, too slow unoptimised) | not proved (see below) |
+| mul by constants, low `h` bits of a product equal the `h`-bit product (`16->8`, `32->16`, `32->8`, `64->32`, `64->8`) | | P certified |
+| add/sub/neg/logic identities, division by zero/one | | P certified |
+| `x * -1 = -x` | P certified w 9, 10, 12 | w 16 needs a drat work budget of 2^34 (4x the default 2^32): P certified in the ignored release test; the default limit answers `Unknown` |
+
+- **Correction to the backlog note.** The wide multiplier miters do not all
+  fail on drat-check's work limit. `a*b = b*a` fails from width 10 on
+  because the *CDCL search* exhausts its 1 M conflict budget (about 20 s in
+  release); the proof checker is never reached. Only `x * -1 = -x` at width
+  16 gets as far as the checker, which rejects at 2^32 literal visits. Both
+  answer `Unknown`, never `Unsat` (tested), and neither limit was raised.
+  For the wide cases the tests use a per-test budget (above) or the
+  structural decomposition (low halves).
+- **Not proved:** the *high* bits of a multiplier wider than 8 for
+  arbitrary operands, and general multiplier miters (`a*b = b*a`,
+  distributivity) from width 10 up. They are covered by simulation only
+  (random + corners at 16, 32, 64; exhaustive to 8). Widths above 64 are
+  covered only structurally (concat/extract/extend wiring at 200 bits).
+- Line coverage of `src/bv.rs`: 98.5% (384 of 390 lines), region coverage
+  97.6%, function coverage 100% (`cargo llvm-cov` on a standalone copy; the
+  workspace run fails with "Argument list too long"). The six uncovered lines
+  are `unreachable!` arms and the "search budget exhausted" answer.
+
 ## 0.4.0 — 2026-11-02
 
 The LIA tactic is sound: `Unsat` is reported only after an exhaustive

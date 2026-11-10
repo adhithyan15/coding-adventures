@@ -2,6 +2,10 @@
 
 All notable changes to `task-wasm` are documented here.
 
+## Unreleased - BUILD-001
+
+- `pkg/task_engine.wasm` is no longer committed (ignored; built by `build-wasm.sh`). `BUILD` now builds it and runs `js/smoke.mjs` against that build. `build-wasm.sh` honours `CARGO_TARGET_DIR`.
+
 ## [0.1.0] - Unreleased
 
 ### Added — `set_order` (C3b, #14018)

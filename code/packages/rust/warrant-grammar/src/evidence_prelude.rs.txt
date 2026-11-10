@@ -27,14 +27,34 @@ use std::sync::Mutex;
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum V {
     Bool(bool),
+//@if v0
     Nat(u64),
     U64(u64),
+//@endif
+//@if v1
+    /// `Int` and `Nat` (the numeric tower below the fixed-width types).
+    Int(i128),
+    /// A fixed-width integer: its type and canonical value.
+    Fixed(F, i128),
+    /// `Option<T>` (`None` carries no type).
+    Opt(Option<Box<V>>),
+//@endif
     Bytes(Vec<u8>),
     Ok(Box<V>),
     Err(String),
     Name(String),
+//@if comp
+    /// WX-A: a tuple (VER04j section 4.5).
+    Tup(Vec<V>),
+    /// WX-A: a record or variant value: type name, constructor index,
+    /// constructor name, fields in declaration order (a record is constructor 0).
+    Con(&'static str, usize, &'static str, Vec<V>),
+    /// A list.
+    List(Vec<V>),
+//@endif
 }
 
+//@if v0
 impl V {
     pub fn truthy(&self) -> bool {
         matches!(self, V::Bool(true))
@@ -89,6 +109,587 @@ impl V {
     }
 }
 
+//@endif
+//@if v1
+/// The eight fixed-width integer types of Warrant v1 (VER04j section 2.2).
+///
+/// A value is stored as the mathematical integer it denotes (an `i128`, so
+/// `U64` and `I64` both fit) and is always canonical, i.e. inside the range of
+/// its type.  Bitwise functions work on the width-`w` two's-complement
+/// *pattern*, held in a `u128` and masked to `w` bits.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum F {
+    U8,
+    U16,
+    U32,
+    U64,
+    I8,
+    I16,
+    I32,
+    I64,
+}
+
+impl F {
+    pub fn bits(self) -> u32 {
+        match self {
+            F::U8 | F::I8 => 8,
+            F::U16 | F::I16 => 16,
+            F::U32 | F::I32 => 32,
+            F::U64 | F::I64 => 64,
+        }
+    }
+    pub fn signed(self) -> bool {
+        matches!(self, F::I8 | F::I16 | F::I32 | F::I64)
+    }
+    pub fn min(self) -> i128 {
+        if self.signed() {
+            -(1i128 << (self.bits() - 1))
+        } else {
+            0
+        }
+    }
+    pub fn max(self) -> i128 {
+        if self.signed() {
+            (1i128 << (self.bits() - 1)) - 1
+        } else {
+            (1i128 << self.bits()) - 1
+        }
+    }
+    pub fn mask(self) -> u128 {
+        (1u128 << self.bits()) - 1
+    }
+    /// The two's-complement pattern of `v` masked to `w` bits (any `v`).
+    pub fn pattern(self, v: i128) -> u128 {
+        (v as u128) & self.mask()
+    }
+    /// Read a pattern back as a canonical value of the type.
+    pub fn canon(self, p: u128) -> i128 {
+        let p = p & self.mask();
+        if self.signed() && p >> (self.bits() - 1) == 1 {
+            (p as i128) - (1i128 << self.bits())
+        } else {
+            p as i128
+        }
+    }
+    fn contains(self, v: i128) -> bool {
+        self.min() <= v && v <= self.max()
+    }
+}
+
+/// Edge values of a fixed-width type (VER04j section 2.6), in a fixed order.
+/// Unsigned width `w`: `0..=255`, `1<<i` for `8 <= i < w`, `MAX`, then
+/// `MAX ^ (1<<i)` for `0 <= i < w`.  Signed: the same patterns read signed,
+/// plus `-1 ..= -255`, deduplicated, ascending.
+pub fn fx_edge(f: F) -> Vec<i128> {
+    let w = f.bits();
+    let umax = f.mask();
+    let mut u: Vec<u128> = (0..=255u128).filter(|v| *v <= umax).collect();
+    u.extend((8..w).map(|i| 1u128 << i));
+    u.push(umax);
+    u.extend((0..w).map(|i| umax ^ (1u128 << i)));
+    if !f.signed() {
+        return u.into_iter().map(|p| p as i128).collect();
+    }
+    let mut s: Vec<i128> = u.into_iter().map(|p| f.canon(p)).collect();
+    s.extend((1..=255i128).map(|k| -k).filter(|v| f.contains(*v)));
+    s.sort();
+    s.dedup();
+    s
+}
+
+/// Every value of a narrow type (`U8 I8 U16 I16`), ascending.
+pub fn fx_full(f: F) -> Vec<i128> {
+    (f.min()..=f.max()).collect()
+}
+
+impl V {
+    pub fn truthy(&self) -> bool {
+        matches!(self, V::Bool(true))
+    }
+    pub fn length(&self) -> V {
+        match self {
+            V::Bytes(b) => V::Int(b.len() as i128),
+//@if comp
+            V::List(l) => V::Int(l.len() as i128),
+//@endif
+            _ => panic!("len of a non-bytes value"),
+        }
+    }
+    pub fn err_of(v: V) -> V {
+        match v {
+            V::Name(n) => V::Err(n),
+            _ => panic!("Err needs an error constructor"),
+        }
+    }
+    /// The mathematical value of an `Int`/`Nat` or fixed-width operand.
+    pub fn int(&self) -> i128 {
+        match self {
+            V::Int(n) | V::Fixed(_, n) => *n,
+            _ => panic!("numeric operand expected"),
+        }
+    }
+    pub fn fx(&self) -> (F, i128) {
+        match self {
+            V::Fixed(f, n) => (*f, *n),
+            _ => panic!("fixed-width operand expected"),
+        }
+    }
+    /// A shift count or bit index: a mathematical natural number.
+    pub fn count(&self) -> u128 {
+        u128::try_from(self.int()).expect("count must be a natural number")
+    }
+    fn bytes(&self) -> &[u8] {
+        match self {
+            V::Bytes(b) => b,
+            _ => panic!("bytes expected"),
+        }
+    }
+    fn boolv(&self) -> bool {
+        matches!(self, V::Bool(true))
+    }
+    pub fn compare(l: &V, r: &V, op: &str) -> V {
+        let (a, b) = (l.int(), r.int());
+        V::Bool(match op {
+            "<" => a < b,
+            ">" => a > b,
+            "<=" => a <= b,
+            _ => a >= b,
+        })
+    }
+    /// `+ - *`: wrapping on equal fixed-width operands (the pattern product
+    /// keeps `U64 * U64` exact), checked `i128` on `Int`/`Nat`.
+    pub fn arith(l: &V, r: &V, op: char) -> V {
+        if let (V::Fixed(f, a), V::Fixed(g, b)) = (l, r) {
+            assert_eq!(f, g, "mixed fixed-width operands");
+            let (pa, pb) = (f.pattern(*a), f.pattern(*b));
+            let p = match op {
+                '+' => pa.wrapping_add(pb),
+                '-' => pa.wrapping_sub(pb),
+                _ => pa.wrapping_mul(pb),
+            };
+            return V::Fixed(*f, f.canon(p));
+        }
+        let (a, b) = (l.int(), r.int());
+        let n = match op {
+            '+' => a.checked_add(b),
+            '-' => a.checked_sub(b),
+            _ => a.checked_mul(b),
+        };
+        V::Int(n.expect("model arithmetic overflow"))
+    }
+    /// Unary minus: wrapping on a signed fixed-width value, exact on `Int`.
+    pub fn neg(v: &V) -> V {
+        match v {
+            V::Fixed(f, a) => V::Fixed(*f, f.canon(f.pattern(*a).wrapping_neg())),
+            _ => V::Int(v.int().checked_neg().expect("model arithmetic overflow")),
+        }
+    }
+    fn opt(v: Option<i128>, f: F) -> V {
+        V::Opt(v.map(|x| Box::new(V::Fixed(f, x))))
+    }
+    pub fn widen(t: F, x: &V) -> V {
+        let v = x.int();
+        assert!(t.contains(v), "widen operand outside the target range");
+        V::Fixed(t, v)
+    }
+    pub fn wrap(t: F, x: &V) -> V {
+        V::Fixed(t, t.canon(t.pattern(x.int())))
+    }
+    pub fn try_(t: F, x: &V) -> V {
+        let v = x.int();
+        V::Opt(t.contains(v).then(|| Box::new(V::Fixed(t, v))))
+    }
+    pub fn to_int(x: &V) -> V {
+        V::Int(x.fx().1)
+    }
+    pub fn to_nat(x: &V) -> V {
+        let (f, v) = x.fx();
+        assert!(!f.signed(), "to_nat of a signed value");
+        V::Int(v)
+    }
+    pub fn max_value(t: F) -> V {
+        V::Fixed(t, t.max())
+    }
+    pub fn min_value(t: F) -> V {
+        V::Fixed(t, t.min())
+    }
+    pub fn checked(op: char, a: &V, b: &V) -> V {
+        let (f, x) = a.fx();
+        let (_, y) = b.fx();
+        let exact = match op {
+            '+' => x.checked_add(y),
+            '-' => x.checked_sub(y),
+            _ => x.checked_mul(y),
+        };
+        V::opt(exact.filter(|v| f.contains(*v)), f)
+    }
+    /// `div`/`rem`: unsigned operands, or `Int`/`Nat` with floor semantics.
+    pub fn divrem(div: bool, a: &V, b: &V) -> V {
+        if let V::Fixed(f, x) = a {
+            let (_, y) = b.fx();
+            assert!(!f.signed(), "div/rem of signed operands");
+            return V::opt((y != 0).then(|| if div { x / y } else { x % y }), *f);
+        }
+        let (x, y) = (a.int(), b.int());
+        if y == 0 || (x == i128::MIN && y == -1) {
+            return V::Opt(None);
+        }
+        let r = if div {
+            let q = x / y;
+            if x % y != 0 && ((x < 0) != (y < 0)) {
+                q - 1
+            } else {
+                q
+            }
+        } else if y == -1 {
+            0
+        } else {
+            let m = x % y;
+            if m != 0 && ((m < 0) != (y < 0)) {
+                m + y
+            } else {
+                m
+            }
+        };
+        V::Opt(Some(Box::new(V::Int(r))))
+    }
+    /// `div_trunc`/`rem_trunc` on signed operands: `None` for `b == 0` and for
+    /// `min / -1`.
+    pub fn divrem_trunc(div: bool, a: &V, b: &V) -> V {
+        let (f, x) = a.fx();
+        let (_, y) = b.fx();
+        let ok = y != 0 && !(y == -1 && x == f.min());
+        V::opt(ok.then(|| if div { x / y } else { x % y }), f)
+    }
+    pub fn unwrap_or(o: &V, d: &V) -> V {
+        match o {
+            V::Opt(Some(v)) => (**v).clone(),
+            V::Opt(None) => d.clone(),
+            _ => panic!("Option operand expected"),
+        }
+    }
+    /// `bit_and` (`'&'`), `bit_or` (`'|'`), `bit_xor` (`'^'`).
+    pub fn bitop(op: char, a: &V, b: &V) -> V {
+        let (f, x) = a.fx();
+        let (_, y) = b.fx();
+        let (px, py) = (f.pattern(x), f.pattern(y));
+        V::Fixed(
+            f,
+            f.canon(match op {
+                '&' => px & py,
+                '|' => px | py,
+                _ => px ^ py,
+            }),
+        )
+    }
+    pub fn bit_not(a: &V) -> V {
+        let (f, x) = a.fx();
+        V::Fixed(f, f.canon(!f.pattern(x)))
+    }
+    /// `shl shr sar rotl rotr`.  A count `>= w` is handled *before* any host
+    /// shift (VER04j section 3.5), so the host never sees an over-wide shift.
+    pub fn shift(op: &str, a: &V, n: &V) -> V {
+        let (f, x) = a.fx();
+        let (n, w, p) = (n.count(), u128::from(f.bits()), f.pattern(x));
+        let v = match op {
+            "shl" => {
+                if n >= w {
+                    0
+                } else {
+                    f.canon(p << n)
+                }
+            }
+            "shr" => {
+                if n >= w {
+                    0
+                } else {
+                    f.canon(p >> n)
+                }
+            }
+            "sar" => {
+                assert!(f.signed(), "sar of an unsigned value");
+                if n >= w {
+                    if x < 0 {
+                        -1
+                    } else {
+                        0
+                    }
+                } else {
+                    x >> n
+                }
+            }
+            _ => {
+                let k = if op == "rotl" { n % w } else { (w - n % w) % w };
+                if k == 0 {
+                    x
+                } else {
+                    f.canon((p << k) | (p >> (w - k)))
+                }
+            }
+        };
+        V::Fixed(f, v)
+    }
+    /// `popcount clz ctz` of the width-`w` pattern.
+    pub fn bitcount(op: &str, a: &V) -> V {
+        let (f, x) = a.fx();
+        let p = f.pattern(x);
+        let w = f.bits();
+        V::Int(match op {
+            "popcount" => i128::from(p.count_ones()),
+            "clz" => {
+                if p == 0 {
+                    i128::from(w)
+                } else {
+                    i128::from(p.leading_zeros() - (128 - w))
+                }
+            }
+            _ => {
+                if p == 0 {
+                    i128::from(w)
+                } else {
+                    i128::from(p.trailing_zeros())
+                }
+            }
+        })
+    }
+    pub fn bit(a: &V, i: &V) -> V {
+        let (f, x) = a.fx();
+        let i = i.count();
+        V::Bool(i < u128::from(f.bits()) && (f.pattern(x) >> i) & 1 == 1)
+    }
+    /// `be_bytes` / `le_bytes`.
+    pub fn endian_bytes(big: bool, a: &V) -> V {
+        let (f, x) = a.fx();
+        let p = f.pattern(x);
+        let n = (f.bits() / 8) as usize;
+        let mut v: Vec<u8> = (0..n).rev().map(|i| (p >> (8 * i)) as u8).collect();
+        if !big {
+            v.reverse();
+        }
+        V::Bytes(v)
+    }
+    /// `from_be<T>` / `from_le<T>`.
+    pub fn from_endian(big: bool, t: F, b: &V) -> V {
+        let mut bytes = b.bytes().to_vec();
+        assert_eq!(bytes.len() as u32 * 8, t.bits(), "wrong byte width");
+        if !big {
+            bytes.reverse();
+        }
+        let p = bytes.iter().fold(0u128, |acc, x| (acc << 8) | u128::from(*x));
+        V::Fixed(t, t.canon(p))
+    }
+}
+
+//@endif
+//@if comp
+/// The panic payload an adapter raises for a value its host integer type cannot
+/// hold: the case is *unreachable by type*, skipped (never narrowed) and counted
+/// (VER04j section 4.6).
+#[derive(Debug)]
+pub struct Unreachable;
+
+thread_local! {
+    static UNREACH: std::cell::Cell<u64> = const { std::cell::Cell::new(0) };
+}
+
+fn count_unreach() {
+    UNREACH.with(|c| c.set(c.get() + 1));
+}
+
+fn take_unreach() -> u64 {
+    UNREACH.with(|c| c.replace(0))
+}
+
+/// Convert a model integer to a host integer, or raise [`Unreachable`].
+fn host<T: TryFrom<i128>>(v: i128) -> T {
+    T::try_from(v).unwrap_or_else(|_| std::panic::panic_any(Unreachable))
+}
+
+impl V {
+    pub fn tup(&self) -> &[V] {
+        match self {
+            V::Tup(vs) => vs,
+            _ => panic!("tuple expected"),
+        }
+    }
+    pub fn fields(&self) -> &[V] {
+        match self {
+            V::Con(_, _, _, vs) => vs,
+            _ => panic!("record or variant expected"),
+        }
+    }
+    pub fn ctor(&self) -> usize {
+        match self {
+            V::Con(_, i, _, _) => *i,
+            _ => panic!("record or variant expected"),
+        }
+    }
+    pub fn some_ref(&self) -> Option<&V> {
+        match self {
+            V::Opt(o) => o.as_deref(),
+            _ => panic!("Option expected"),
+        }
+    }
+    pub fn list(&self) -> &[V] {
+        match self {
+            V::List(vs) => vs,
+            _ => panic!("list expected"),
+        }
+    }
+    /// `t.i` of a tuple.
+    pub fn proj(&self, i: usize) -> V {
+        self.tup()[i].clone()
+    }
+    /// `r.f` of a record (`field_pos` is generated from the declarations).
+    pub fn field(&self, f: &str) -> V {
+        match self {
+            V::Con(ty, _, _, vs) => vs[field_pos(ty, f)].clone(),
+            _ => panic!("record expected"),
+        }
+    }
+}
+
+/// A match pattern, built by the generated model code (VER04j section 4.3).
+#[derive(Clone, Copy, Debug)]
+pub enum Pat {
+    Wild,
+    /// A binder: the matched value is appended to the bindings.
+    Bind,
+    Bool(bool),
+    Tup(&'static [Pat]),
+    /// Constructor index and field patterns of a record or variant.
+    Con(usize, &'static [Pat]),
+    None,
+    Some(&'static Pat),
+    Ok(&'static Pat),
+    /// `Err(p)`: `p` is matched against the error value (`V::Name`).
+    Err(&'static Pat),
+    /// `E.CASE`.
+    Case(&'static str),
+}
+
+/// Does `v` match `p`?  Binders are pushed to `out` left to right.
+pub fn pat_match(p: &Pat, v: &V, out: &mut Vec<V>) -> bool {
+    match (p, v) {
+        (Pat::Wild, _) => true,
+        (Pat::Bind, v) => {
+            out.push(v.clone());
+            true
+        }
+        (Pat::Bool(b), V::Bool(x)) => b == x,
+        (Pat::Tup(ps), V::Tup(vs)) => {
+            ps.len() == vs.len() && ps.iter().zip(vs).all(|(p, v)| pat_match(p, v, out))
+        }
+        (Pat::Con(i, ps), V::Con(_, j, _, vs)) => {
+            i == j && ps.len() == vs.len() && ps.iter().zip(vs).all(|(p, v)| pat_match(p, v, out))
+        }
+        (Pat::None, V::Opt(None)) => true,
+        (Pat::Some(p), V::Opt(Some(b))) => pat_match(p, b, out),
+        (Pat::Ok(p), V::Ok(b)) => pat_match(p, b, out),
+        (Pat::Err(p), V::Err(n)) => pat_match(p, &V::Name(n.clone()), out),
+        (Pat::Case(c), V::Name(n)) => c == n,
+        _ => false,
+    }
+}
+
+/// The result of an operation with its `Ok` (or `Some`) payload rewritten by `f`.
+fn map_payload(v: V, f: impl FnOnce(V) -> V) -> V {
+    match v {
+        V::Ok(x) => V::Ok(Box::new(f(*x))),
+        V::Opt(Some(x)) => V::Opt(Some(Box::new(f(*x)))),
+        other => f(other),
+    }
+}
+
+/// Fault `drop-consumed`: the second component of a tuple result becomes `0`.
+fn fault_drop_consumed(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Tup(mut vs) if vs.len() >= 2 => {
+            vs[1] = zero_like(&vs[1]);
+            V::Tup(vs)
+        }
+        other => other,
+    })
+}
+
+/// Fault `swap-components`: the components of a homogeneous tuple are reversed
+/// (exchanged, for a pair).
+fn fault_swap_components(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Tup(mut vs) => {
+            vs.reverse();
+            V::Tup(vs)
+        }
+        other => other,
+    })
+}
+
+/// Fault `field-zero`: the first numeric field of a record result becomes `0`.
+fn fault_field_zero(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Con(t, i, c, mut vs) => {
+            if let Some(slot) = vs.iter_mut().find(|f| matches!(f, V::Int(_) | V::Fixed(..))) {
+                *slot = zero_like(slot);
+            }
+            V::Con(t, i, c, vs)
+        }
+        other => other,
+    })
+}
+
+/// Fault `off-by-one-consumed`: the second component of a `(value, consumed)`
+/// pair is off by one, `+ 1` when even and `- 1` when odd, so both directions
+/// occur and a claim that pins `consumed` on every input catches the fault.
+fn fault_off_by_one_consumed(v: V) -> V {
+    map_payload(v, |x| match x {
+        V::Tup(mut vs) if vs.len() >= 2 => {
+            vs[1] = match &vs[1] {
+                V::Int(n) => V::Int(if n % 2 == 0 { n + 1 } else { n - 1 }),
+                V::Fixed(f, n) => {
+                    let p = f.pattern(*n);
+                    let q = if n % 2 == 0 { p.wrapping_add(1) } else { p.wrapping_sub(1) };
+                    V::Fixed(*f, f.canon(q))
+                }
+                other => other.clone(),
+            };
+            V::Tup(vs)
+        }
+        other => other,
+    })
+}
+
+/// Fault `wrong-ctor`: a variant result is reported as the *previous*
+/// constructor (the last one for the first), with the first element of each of
+/// its fields' domains as fields.
+fn fault_wrong_ctor(v: V, ty: Ty) -> V {
+    map_payload(v, |x| match (x, ty) {
+        (V::Con(name, i, _, _), Ty::Data(_, ctors)) if !ctors.is_empty() => {
+            let j = (i + ctors.len() - 1) % ctors.len();
+            let (cname, fields) = ctors[j];
+            V::Con(name, j, cname, fields.iter().map(|t| domain_take(*t, 1).remove(0)).collect())
+        }
+        (other, _) => other,
+    })
+}
+
+/// Fault `ok-as-err`: a successful result is reported as the first error case.
+fn fault_ok_as_err(v: V, first_case: &str) -> V {
+    match v {
+        V::Ok(_) => V::Err(first_case.to_string()),
+        other => other,
+    }
+}
+
+/// A zero of the same numeric type as `v` (any other value is unchanged).
+fn zero_like(v: &V) -> V {
+    match v {
+        V::Int(_) => V::Int(0),
+        V::Fixed(f, _) => V::Fixed(*f, 0),
+        other => other.clone(),
+    }
+}
+
+//@endif
 //@@FAULTS@@
 
 fn mask_last_byte(bytes: &[u8]) -> Vec<u8> {
@@ -142,6 +743,30 @@ pub enum Ty {
     Nat,
     Bytes,
     BytesN(usize),
+//@if v1
+    /// A fixed-width binder at its default domain: every value of a narrow
+    /// type (`U8 I8 U16 I16`), the edge set of a wide one.
+    Fx(F),
+    /// A narrow binder demoted to its edge set by the budget rule (section 2.6).
+    FxEdge(F),
+    /// A `Nat` that flows directly into a shift count: `0..=64` plus the
+    /// boundary counts `65 127 128 129 255 256 65535 65536` (section 3.6).
+    NatCount,
+//@endif
+//@if comp
+    /// WX-A: a tuple, the Cartesian product of its components.
+    Tuple(&'static [Ty]),
+    /// WX-A: a record (one constructor named like the type) or variant: the
+    /// constructors with their field types, in declaration order.
+    Data(&'static str, &'static [(&'static str, &'static [Ty])]),
+    /// `Option<T>`: `None`, then `Some(x)` for every `x` of `T`.
+    Opt(&'static Ty),
+    /// `Result<T, E>`: `Ok(x)` for every `x` of `T`, then each error case.
+    Res(&'static Ty, &'static [&'static str]),
+    /// `List<T>`: every list of length 0..=2 over the first 16 elements of `T`,
+    /// plus length-3 lists over its first 4.
+    List(&'static Ty),
+//@endif
 }
 
 const ALPHABET: [u8; 4] = [0x00, 0x01, 0x80, 0xff];
@@ -164,6 +789,7 @@ fn alpha_strings(len: usize) -> Vec<Vec<u8>> {
 pub fn domain(ty: Ty) -> Vec<V> {
     match ty {
         Ty::Bool => vec![V::Bool(false), V::Bool(true)],
+//@if v0
         Ty::U8 => (0..=255u64).map(V::Nat).collect(),
         Ty::Nat => (0..=64u64).map(V::Nat).collect(),
         Ty::U64 => {
@@ -173,6 +799,22 @@ pub fn domain(ty: Ty) -> Vec<V> {
             v.extend((0..64).map(|i| u64::MAX ^ (1u64 << i)));
             v.into_iter().map(V::U64).collect()
         }
+//@endif
+//@if v1
+        Ty::U8 | Ty::U64 => unreachable!("a v1 document binds U8/U64 as Ty::Fx"),
+        Ty::Nat => (0..=64i128).map(V::Int).collect(),
+        Ty::NatCount => (0..=64i128)
+            .chain([65, 127, 128, 129, 255, 256, 65535, 65536])
+            .map(V::Int)
+            .collect(),
+        Ty::Fx(f) if f.bits() <= 16 => fx_full(f).into_iter().map(|v| V::Fixed(f, v)).collect(),
+        Ty::Fx(f) | Ty::FxEdge(f) => fx_edge(f).into_iter().map(|v| V::Fixed(f, v)).collect(),
+//@endif
+//@if comp
+        Ty::Tuple(_) | Ty::Data(..) | Ty::Opt(_) | Ty::Res(..) | Ty::List(_) => {
+            domain_take(ty, domain_size(ty).map_or(0, |n| n as usize))
+        }
+//@endif
         Ty::Bytes => {
             let mut v: Vec<Vec<u8>> = vec![Vec::new()];
             v.extend((0..=255u8).map(|b| vec![b]));
@@ -207,9 +849,35 @@ pub fn domain(ty: Ty) -> Vec<V> {
 pub fn domain_size(ty: Ty) -> Option<u64> {
     match ty {
         Ty::Bool => Some(2),
+//@if v0
         Ty::U8 => Some(256),
         Ty::Nat => Some(65),
         Ty::U64 => Some(256 + 56 + 1 + 64),
+//@endif
+//@if v1
+        Ty::U8 | Ty::U64 => None,
+        Ty::Nat => Some(65),
+        Ty::NatCount => Some(65 + 8),
+        Ty::Fx(f) if f.bits() <= 16 => Some(1u64 << f.bits()),
+        Ty::Fx(f) | Ty::FxEdge(f) => Some(fx_edge(f).len() as u64),
+//@endif
+//@if comp
+        Ty::Tuple(cs) => product_size(cs),
+        Ty::Data(_, ctors) => {
+            let mut total = 0u64;
+            for (_, fields) in ctors {
+                total = total.checked_add(product_size(fields)?)?;
+            }
+            Some(total)
+        }
+        Ty::Opt(t) => domain_size(*t)?.checked_add(1),
+        Ty::Res(t, cases) => domain_size(*t)?.checked_add(cases.len() as u64),
+        Ty::List(t) => {
+            let n = domain_size(*t)?;
+            let (d, e) = (n.min(16), n.min(4));
+            1u64.checked_add(d)?.checked_add(d * d)?.checked_add(e * e * e)
+        }
+//@endif
         Ty::Bytes => Some(1 + 256 + 16 + 64 + 10),
         Ty::BytesN(n) if n as u64 > MAX_FIXED_WIDTH => None,
         Ty::BytesN(0) => Some(1),
@@ -221,6 +889,11 @@ pub fn domain_size(ty: Ty) -> Option<u64> {
 
 /// Upper bound on the memory [`domain`] materialises, in bytes.
 pub fn domain_bytes(ty: Ty) -> Option<u64> {
+//@if comp
+    if is_comp(ty) {
+        return domain_size(ty)?.checked_mul(elem_cost(ty)?);
+    }
+//@endif
     let payload = match ty {
         Ty::Bytes => 8,
         Ty::BytesN(n) => n as u64,
@@ -229,6 +902,148 @@ pub fn domain_bytes(ty: Ty) -> Option<u64> {
     domain_size(ty)?.checked_mul(payload.checked_add(VALUE_OVERHEAD)?)
 }
 
+//@if comp
+fn is_comp(ty: Ty) -> bool {
+    matches!(ty, Ty::Tuple(_) | Ty::Data(..) | Ty::Opt(_) | Ty::Res(..) | Ty::List(_))
+}
+
+/// Size of the Cartesian product of component domains (`None` on overflow).
+fn product_size(cs: &[Ty]) -> Option<u64> {
+    let mut n = 1u64;
+    for c in cs {
+        n = n.checked_mul(domain_size(*c)?)?;
+    }
+    Some(n)
+}
+
+/// The most bytes one element of the domain of `ty` can occupy: every node
+/// costs [`VALUE_OVERHEAD`], a `Bytes` payload its length.  An upper bound, so
+/// `size x elem_cost` over-estimates the memory a domain needs (VER04j
+/// section 14.1, item 20).
+fn elem_cost(ty: Ty) -> Option<u64> {
+    let node = VALUE_OVERHEAD;
+    match ty {
+        Ty::Bytes => node.checked_add(8),
+        Ty::BytesN(n) => node.checked_add(n as u64),
+        Ty::Tuple(cs) => {
+            let mut c = node;
+            for t in cs {
+                c = c.checked_add(elem_cost(*t)?)?;
+            }
+            Some(c)
+        }
+        Ty::Data(_, ctors) => {
+            let mut worst = 0u64;
+            for (_, fields) in ctors {
+                let mut c = 0u64;
+                for t in *fields {
+                    c = c.checked_add(elem_cost(*t)?)?;
+                }
+                worst = worst.max(c);
+            }
+            node.checked_add(worst)
+        }
+        Ty::Opt(t) => node.checked_add(elem_cost(*t)?),
+        Ty::Res(t, _) => node.checked_add(elem_cost(*t)?.max(2 * node)),
+        Ty::List(t) => node.checked_add(elem_cost(*t)?.checked_mul(3)?),
+        _ => Some(node),
+    }
+}
+
+/// The first `k` elements of the domain of `ty`, in domain order, without
+/// materialising the rest: tuples and records are the Cartesian product of
+/// their components (lexicographic, the last component varying fastest), a
+/// variant the concatenation of its constructors' products in declaration
+/// order, `Option<T>` is `None` then `Some(x)`, `Result<T, E>` is `Ok(x)` then
+/// each error case, `List<T>` is the lists of length 0, 1, 2 over the first 16
+/// elements of `T` and then length 3 over its first 4 (VER04j section 4.7).
+pub fn domain_take(ty: Ty, k: usize) -> Vec<V> {
+    if k == 0 {
+        return Vec::new();
+    }
+    match ty {
+        Ty::Tuple(cs) => product(cs, k).into_iter().map(V::Tup).collect(),
+        Ty::Data(name, ctors) => {
+            let mut out = Vec::new();
+            for (i, (cname, fields)) in ctors.iter().enumerate() {
+                if out.len() >= k {
+                    break;
+                }
+                for fs in product(fields, k - out.len()) {
+                    out.push(V::Con(name, i, cname, fs));
+                }
+            }
+            out
+        }
+        Ty::Opt(t) => {
+            let mut out = vec![V::Opt(None)];
+            out.extend(domain_take(*t, k - 1).into_iter().map(|x| V::Opt(Some(Box::new(x)))));
+            out
+        }
+        Ty::Res(t, cases) => {
+            let mut out: Vec<V> = domain_take(*t, k).into_iter().map(|x| V::Ok(Box::new(x))).collect();
+            for c in cases.iter() {
+                if out.len() >= k {
+                    break;
+                }
+                out.push(V::Err(c.to_string()));
+            }
+            out
+        }
+        Ty::List(t) => {
+            let wide = domain_take(*t, 16);
+            let narrow = domain_take(*t, 4);
+            let mut out: Vec<V> = vec![V::List(Vec::new())];
+            for a in &wide {
+                out.push(V::List(vec![a.clone()]));
+            }
+            for a in &wide {
+                for b in &wide {
+                    out.push(V::List(vec![a.clone(), b.clone()]));
+                }
+            }
+            for a in &narrow {
+                for b in &narrow {
+                    for c in &narrow {
+                        out.push(V::List(vec![a.clone(), b.clone(), c.clone()]));
+                    }
+                }
+            }
+            out.truncate(k);
+            out
+        }
+        _ => {
+            let mut d = domain(ty);
+            d.truncate(k);
+            d
+        }
+    }
+}
+
+/// The first `k` tuples of the lexicographic product of the components.
+fn product(comps: &[Ty], k: usize) -> Vec<Vec<V>> {
+    let Some((first, rest_comps)) = comps.split_first() else {
+        return vec![Vec::new()];
+    };
+    let rest_size = product_size(rest_comps).map_or(usize::MAX, |n| n.min(usize::MAX as u64) as usize);
+    let rest = product(rest_comps, k.min(rest_size));
+    let heads = domain_take(*first, k.div_ceil(rest.len().max(1)));
+    let mut out = Vec::new();
+    'outer: for a in heads {
+        for r in &rest {
+            let mut t = Vec::with_capacity(1 + r.len());
+            t.push(a.clone());
+            t.extend(r.iter().cloned());
+            out.push(t);
+            if out.len() == k {
+                break 'outer;
+            }
+        }
+    }
+    out
+}
+
+//@endif
 /// Whether the Cartesian product of the binder domains fits both budgets.
 /// Every step is checked: a wrapped product (eight `U8` binders is `2^64`,
 /// which is `0` in `u64`) must count as over budget, never as zero.
@@ -248,13 +1063,76 @@ pub fn within_budget(tys: &[Ty]) -> bool {
     product <= EXHAUSTIVE_BUDGET && bytes <= DOMAIN_BYTES_BUDGET
 }
 
+//@if v0
 fn describe(tys: &[Ty]) -> String {
     tys.iter()
         .map(|t| format!("{:?}[{}]", t, domain_size(*t).map_or_else(|| "over-budget".to_string(), |n| n.to_string())))
         .collect::<Vec<_>>()
         .join(" x ")
 }
+//@endif
+//@if v1
+/// The manifest `domain` text of a claim (VER04j section 2.6): per binder its
+/// type, whether the domain is `full` (every value), `edge` (the biased
+/// boundary set), `count` (the shift-count domain) or `set` (a fixed finite
+/// set), and its size, for example `a: U16 full(65536); b: U16 edge(281)`.
+fn describe(tys: &[Ty], names: &[&str]) -> String {
+    tys.iter()
+        .zip(names)
+        .map(|(t, n)| {
+//@if comp
+            if is_comp(*t) {
+                return format!("{n}: {}", describe_ty(*t));
+            }
+//@endif
+            let size = domain_size(*t).map_or_else(|| "over-budget".to_string(), |n| n.to_string());
+            let (ty, kind) = match t {
+                Ty::Fx(f) if f.bits() <= 16 => (format!("{f:?}"), "full"),
+                Ty::Fx(f) | Ty::FxEdge(f) => (format!("{f:?}"), "edge"),
+                Ty::NatCount => ("Nat".to_string(), "count"),
+                Ty::Nat => ("Nat".to_string(), "set"),
+                other => (format!("{other:?}"), "set"),
+            };
+            format!("{n}: {ty} {kind}({size})")
+        })
+        .collect::<Vec<_>>()
+        .join("; ")
+}
+//@endif
 
+//@if comp
+/// The manifest text of one type's domain (VER04j section 4.7), for example
+/// `tuple(U64 edge(377), Nat set(65)) size(24505)`.
+fn describe_ty(ty: Ty) -> String {
+    let size = domain_size(ty).map_or_else(|| "over-budget".to_string(), |n| n.to_string());
+    let leaf = |name: String, kind: &str| format!("{name} {kind}({size})");
+    match ty {
+        Ty::Fx(f) if f.bits() <= 16 => leaf(format!("{f:?}"), "full"),
+        Ty::Fx(f) | Ty::FxEdge(f) => leaf(format!("{f:?}"), "edge"),
+        Ty::NatCount => leaf("Nat".to_string(), "count"),
+        Ty::Nat => leaf("Nat".to_string(), "set"),
+        Ty::Tuple(cs) => {
+            let parts: Vec<String> = cs.iter().map(|c| describe_ty(*c)).collect();
+            format!("tuple({}) size({size})", parts.join(", "))
+        }
+        Ty::Data(name, ctors) if ctors.len() == 1 => {
+            let parts: Vec<String> = ctors[0].1.iter().map(|c| describe_ty(*c)).collect();
+            format!("record {name}({}) size({size})", parts.join(", "))
+        }
+        Ty::Data(name, ctors) => format!("variant {name}[{} ctors] size({size})", ctors.len()),
+        Ty::Opt(t) => format!("Option<{}> size({size})", describe_ty(*t)),
+        Ty::Res(t, cases) => {
+            format!("Result<{}, {} cases> size({size})", describe_ty(*t), cases.len())
+        }
+        Ty::List(t) => format!(
+            "List<{}> size({size}) [len 0..=2 over the first 16, len 3 over the first 4]",
+            describe_ty(*t)
+        ),
+        other => leaf(format!("{other:?}"), "set"),
+    }
+}
+
+//@endif
 /// Per-test counters that end up in the manifest.
 #[derive(Clone, Debug, Default)]
 pub struct Stats {
@@ -264,6 +1142,10 @@ pub struct Stats {
     pub admitted: u64,
     /// Property cases whose first two binders were equal (the equal branch).
     pub equal: u64,
+//@if comp
+    /// Cases skipped because a host integer cannot hold a generated value.
+    pub unreachable: u64,
+//@endif
 }
 
 fn counterexample_message(what: &str, env: &[V]) -> String {
@@ -372,9 +1254,38 @@ impl Src for StreamSrc<'_> {
     }
 }
 
+//@if v1
+/// Draw a fixed-width value (VER04j section 2.6).  `U8` is uniform and `U64`
+/// keeps the v0 generator (zero, MAX, powers of two, small values, uniform);
+/// every other type draws 3/4 uniformly over its full range and 1/4 from its
+/// edge set, so boundaries are reached without exhaustive enumeration.
+fn fresh_fx(f: F, src: &mut dyn Src) -> V {
+    let v = match f {
+        F::U8 => i128::from(src.byte()),
+        F::U64 => i128::from(match src.bounded(8) {
+            0 => 0,
+            1 => u64::MAX,
+            2 => 1u64 << src.bounded(64),
+            3..=5 => src.bounded(300),
+            _ => src.word(),
+        }),
+        _ => {
+            if src.bounded(4) == 0 {
+                let edge = fx_edge(f);
+                edge[(src.word() % edge.len() as u64) as usize]
+            } else {
+                f.canon(u128::from(src.word()))
+            }
+        }
+    };
+    V::Fixed(f, v)
+}
+
+//@endif
 fn fresh(ty: Ty, src: &mut dyn Src) -> V {
     match ty {
         Ty::Bool => V::Bool(src.bounded(2) == 1),
+//@if v0
         Ty::U8 => V::Nat(u64::from(src.byte())),
         Ty::Nat => V::Nat(src.bounded(65)),
         Ty::U64 => V::U64(match src.bounded(8) {
@@ -389,6 +1300,47 @@ fn fresh(ty: Ty, src: &mut dyn Src) -> V {
 //@endif
             _ => src.word(),
         }),
+//@endif
+//@if v1
+        Ty::U8 | Ty::U64 => unreachable!("a v1 document binds U8/U64 as Ty::Fx"),
+        Ty::Nat => V::Int(i128::from(src.bounded(65))),
+        // Half of all draws come from 0..=130 so that n = w and n = w + 1 are
+        // reached for every width including 64 (VER04j section 3.6).
+        Ty::NatCount => V::Int(i128::from(if src.bounded(2) == 0 {
+            src.bounded(131)
+        } else {
+            src.bounded(65)
+        })),
+        Ty::Fx(f) | Ty::FxEdge(f) => fresh_fx(f, src),
+//@endif
+//@if comp
+        // Components are drawn independently; constructors uniformly, so a rare
+        // constructor is reached as often as a common one (section 4.7).
+        Ty::Tuple(cs) => V::Tup(cs.iter().map(|c| fresh(*c, src)).collect()),
+        Ty::Data(name, ctors) => {
+            let i = src.bounded(ctors.len() as u64) as usize;
+            let (cname, fields) = ctors[i];
+            V::Con(name, i, cname, fields.iter().map(|t| fresh(*t, src)).collect())
+        }
+        Ty::Opt(t) => {
+            if src.bounded(2) == 0 {
+                V::Opt(None)
+            } else {
+                V::Opt(Some(Box::new(fresh(*t, src))))
+            }
+        }
+        Ty::Res(t, cases) => {
+            if cases.is_empty() || src.bounded(2) == 0 {
+                V::Ok(Box::new(fresh(*t, src)))
+            } else {
+                V::Err(cases[src.bounded(cases.len() as u64) as usize].to_string())
+            }
+        }
+        Ty::List(t) => {
+            let n = src.bounded(4) as usize;
+            V::List((0..n).map(|_| fresh(*t, src)).collect())
+        }
+//@endif
         Ty::Bytes => {
             let len = src.bounded(65) as usize;
             V::Bytes((0..len).map(|_| src.byte()).collect())
@@ -399,6 +1351,13 @@ fn fresh(ty: Ty, src: &mut dyn Src) -> V {
 
 /// Derive a second binder from the first (mode 0..8, see VER04h section 4).
 fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
+//@if comp
+    if mode >= 4 {
+        if let Some(v) = relate_comp(prev, ty, mode, src) {
+            return v;
+        }
+    }
+//@endif
     match (prev, mode) {
         (_, 0) | (_, 1) => fresh(ty, src),
         (p, 2) | (p, 3) => p.clone(),
@@ -423,6 +1382,7 @@ fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
             }
             V::Bytes(o)
         }
+//@if v0
 //@if u8
         // A small U64 pairs with another small U64, so refinements that relate
         // two exponents (`e < 255 and f < 255 and e != f`) are admitted.
@@ -436,10 +1396,52 @@ fn relate(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> V {
         (V::Nat(n), 6..=7) if ty == Ty::U8 => V::Nat((n + 1) % 256),
 //@endif
         (V::Nat(n), 4..=7) => V::Nat(n.wrapping_add(1)),
+//@endif
+//@if v1
+        // A small U64 pairs with another small U64 (refinements such as
+        // `e < 255 and f < 255 and e != f` must be admitted); every other
+        // fixed-width value flips one bit (modes 4-5) or steps by one with
+        // wrap-around (modes 6-7), so related pairs straddle every boundary.
+        (V::Fixed(F::U64, n), 6..=7) if *n < 1000 => V::Fixed(F::U64, i128::from(src.bounded(300))),
+        (V::Fixed(f, n), 4..=5) => V::Fixed(*f, f.canon(f.pattern(*n) ^ (1u128 << src.bounded(u64::from(f.bits()))))),
+        (V::Fixed(f, n), 6..=7) => V::Fixed(*f, f.canon(f.pattern(*n).wrapping_add(1))),
+        (V::Int(n), 4..=7) => V::Int(n + 1),
+//@endif
         (p, _) => p.clone(),
     }
 }
 
+//@if comp
+/// Relation bias on a composite: perturb *one* component (a leaf, recursively)
+/// and keep everything else, so the related value differs in a single place
+/// (section 4.7).  `None` when `prev` has nothing to perturb.
+fn relate_comp(prev: &V, ty: Ty, mode: u8, src: &mut dyn Src) -> Option<V> {
+    match (prev, ty) {
+        (V::Tup(vs), Ty::Tuple(cs)) if !vs.is_empty() => {
+            let i = src.bounded(vs.len() as u64) as usize;
+            let mut o = vs.clone();
+            o[i] = relate(&vs[i], cs[i], mode, src);
+            Some(V::Tup(o))
+        }
+        (V::Con(n, i, c, vs), Ty::Data(_, ctors)) if !vs.is_empty() => {
+            let j = src.bounded(vs.len() as u64) as usize;
+            let mut o = vs.clone();
+            o[j] = relate(&vs[j], ctors[*i].1[j], mode, src);
+            Some(V::Con(n, *i, c, o))
+        }
+        (V::Opt(Some(x)), Ty::Opt(t)) => Some(V::Opt(Some(Box::new(relate(x, *t, mode, src))))),
+        (V::Ok(x), Ty::Res(t, _)) => Some(V::Ok(Box::new(relate(x, *t, mode, src)))),
+        (V::List(vs), Ty::List(t)) if !vs.is_empty() => {
+            let i = src.bounded(vs.len() as u64) as usize;
+            let mut o = vs.clone();
+            o[i] = relate(&vs[i], *t, mode, src);
+            Some(V::List(o))
+        }
+        _ => None,
+    }
+}
+
+//@endif
 fn build(tys: &[Ty], src: &mut dyn Src, mode: u8) -> Vec<V> {
     let mut env: Vec<V> = Vec::with_capacity(tys.len());
     for (i, ty) in tys.iter().enumerate() {
@@ -482,6 +1484,7 @@ fn shrink_vals(cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> (Vec<V>, usi
                 cur[i] = V::Bytes(s);
                 steps += n;
             }
+//@if v0
             V::U64(v) => {
                 let (s, n) = shrink_int(
                     *v as i128,
@@ -498,12 +1501,177 @@ fn shrink_vals(cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> (Vec<V>, usi
                 cur[i] = V::U64(s as u64);
                 steps += n;
             }
+//@endif
+//@if v1
+            // Unsigned values shrink toward 0 (bisection, then single steps);
+            // a signed value first tries its negation, then shrinks toward 0
+            // from its own side.
+            V::Fixed(f, v) => {
+                let f = *f;
+                let start = if *v < 0 && f.contains(-*v) {
+                    let mut t = base.clone();
+                    t[i] = V::Fixed(f, -*v);
+                    if prop(&t) { *v } else { -*v }
+                } else {
+                    *v
+                };
+                let (s, n) = shrink_int(
+                    start,
+                    0,
+                    f.min(),
+                    f.max(),
+                    |x| {
+                        let mut t = base.clone();
+                        t[i] = V::Fixed(f, x);
+                        prop(&t)
+                    },
+                    1000,
+                );
+                cur[i] = V::Fixed(f, s);
+                steps += n;
+            }
+//@endif
             _ => {}
         }
     }
     (cur, steps)
 }
 
+//@if comp
+/// Shrink one value of type `ty` while `holds` keeps *failing* (a candidate is
+/// accepted when the property is false for it).  Components shrink with their
+/// own shrinkers; a variant first tries an earlier constructor with minimal
+/// fields, then shrinks field-wise; `Option` shrinks toward `None`; a list
+/// toward `[]`, then loses elements, then shrinks them (section 4.7).
+fn shrink_value(ty: Ty, v: &V, holds: &dyn Fn(&V) -> bool, steps: &mut usize) -> V {
+    if *steps >= 1000 {
+        return v.clone();
+    }
+    let still_fails = |c: &V, steps: &mut usize| {
+        *steps += 1;
+        !holds(c)
+    };
+    match (v, ty) {
+        (V::Tup(vs), Ty::Tuple(cs)) => {
+            let mut cur = vs.clone();
+            for i in 0..cur.len() {
+                let base = cur.clone();
+                let shrunk = shrink_value(
+                    cs[i],
+                    &base[i],
+                    &|c: &V| {
+                        let mut t = base.clone();
+                        t[i] = c.clone();
+                        holds(&V::Tup(t))
+                    },
+                    steps,
+                );
+                cur[i] = shrunk;
+            }
+            V::Tup(cur)
+        }
+        (V::Con(name, idx, cname, vs), Ty::Data(_, ctors)) => {
+            for (j, (jname, jfields)) in ctors.iter().enumerate().take(*idx) {
+                let minimal: Vec<V> = jfields.iter().map(|t| domain_take(*t, 1).remove(0)).collect();
+                let cand = V::Con(name, j, jname, minimal);
+                if still_fails(&cand, steps) {
+                    return cand;
+                }
+            }
+            let mut cur = vs.clone();
+            for i in 0..cur.len() {
+                let base = cur.clone();
+                let shrunk = shrink_value(
+                    ctors[*idx].1[i],
+                    &base[i],
+                    &|c: &V| {
+                        let mut t = base.clone();
+                        t[i] = c.clone();
+                        holds(&V::Con(name, *idx, cname, t))
+                    },
+                    steps,
+                );
+                cur[i] = shrunk;
+            }
+            V::Con(name, *idx, cname, cur)
+        }
+        (V::Opt(Some(x)), Ty::Opt(t)) => {
+            let none = V::Opt(None);
+            if still_fails(&none, steps) {
+                return none;
+            }
+            let inner = shrink_value(*t, x, &|c: &V| holds(&V::Opt(Some(Box::new(c.clone())))), steps);
+            V::Opt(Some(Box::new(inner)))
+        }
+        (V::Ok(x), Ty::Res(t, _)) => {
+            let inner = shrink_value(*t, x, &|c: &V| holds(&V::Ok(Box::new(c.clone()))), steps);
+            V::Ok(Box::new(inner))
+        }
+        (V::List(vs), Ty::List(t)) => {
+            let empty = V::List(Vec::new());
+            if !vs.is_empty() && still_fails(&empty, steps) {
+                return empty;
+            }
+            let mut cur = vs.clone();
+            let mut i = 0;
+            while i < cur.len() {
+                let mut shorter = cur.clone();
+                shorter.remove(i);
+                if still_fails(&V::List(shorter.clone()), steps) {
+                    cur = shorter;
+                } else {
+                    i += 1;
+                }
+            }
+            for i in 0..cur.len() {
+                let base = cur.clone();
+                let shrunk = shrink_value(
+                    *t,
+                    &base[i],
+                    &|c: &V| {
+                        let mut l = base.clone();
+                        l[i] = c.clone();
+                        holds(&V::List(l))
+                    },
+                    steps,
+                );
+                cur[i] = shrunk;
+            }
+            V::List(cur)
+        }
+        // A scalar leaf: the v1 shrinker of fixed-width values, byte strings, ...
+        _ => {
+            let (r, n) = shrink_vals(vec![v.clone()], &|t: &Vec<V>| holds(&t[0]));
+            *steps += n;
+            r.into_iter().next().unwrap_or_else(|| v.clone())
+        }
+    }
+}
+
+/// Shrink a candidate environment binder by binder (composite-aware).
+fn shrink_comp(tys: &[Ty], cand: Vec<V>, prop_raw: &dyn Fn(&Vec<V>) -> bool) -> (Vec<V>, usize) {
+    // As in `shrink_vals`: a candidate outside the operation's domain panics in
+    // the adapter and then counts as "the claim holds".
+    let prop = |t: &Vec<V>| catch_unwind(AssertUnwindSafe(|| prop_raw(t))).unwrap_or(true);
+    let mut cur = cand;
+    let mut steps = 0;
+    for i in 0..cur.len() {
+        let base = cur.clone();
+        cur[i] = shrink_value(
+            tys[i],
+            &base[i],
+            &|c: &V| {
+                let mut t = base.clone();
+                t[i] = c.clone();
+                prop(&t)
+            },
+            &mut steps,
+        );
+    }
+    (cur, steps)
+}
+
+//@endif
 /// L2 property suite over relation-biased generators.
 pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault) -> (Verdict, Stats) {
     let seed = SplitMix64::new(EVIDENCE_SEED ^ fnv1a64(tag.as_bytes())).next_u64();
@@ -536,7 +1704,12 @@ pub fn property(tag: &str, tys: &[Ty], admit: Admit, holds: Holds, fault: Fault)
         &options,
         gen,
         move |env: &Vec<V>| holds(env, fault),
+//@if plain
         shrink_vals,
+//@endif
+//@if comp
+        |c: Vec<V>, p: &dyn Fn(&Vec<V>) -> bool| shrink_comp(tys, c, p),
+//@endif
     );
     let stats = Stats {
         cases: cases.get(),
@@ -551,10 +1724,23 @@ fn cover(cov: &mut CoverageBitmap, env: &[V]) {
     for (i, v) in env.iter().enumerate() {
         match v {
             V::Bytes(b) => cov.record_edge(300 + b.len().min(64)),
+//@if v0
             V::U64(n) => cov.record_edge(500 + n.count_ones() as usize),
+//@endif
             V::Bool(x) => cov.record_edge(600 + usize::from(*x)),
+//@if v0
 //@if u8
             V::Nat(n) => cov.record_edge(2000 + (*n as usize).min(512)),
+//@endif
+//@endif
+//@if v1
+            V::Fixed(f, n) => cov.record_edge(500 + f.pattern(*n).count_ones() as usize),
+            V::Int(n) => cov.record_edge(2000 + (*n).clamp(0, 512) as usize),
+//@endif
+//@if comp
+            V::Con(_, c, _, _) => cov.record_edge(5000 + (*c).min(255)),
+            V::Opt(o) => cov.record_edge(5300 + usize::from(o.is_some())),
+            V::List(l) => cov.record_edge(5400 + l.len().min(16)),
 //@endif
             _ => {}
         }
@@ -566,12 +1752,19 @@ fn cover(cov: &mut CoverageBitmap, env: &[V]) {
                     let pre = a.iter().zip(b.iter()).take_while(|(x, y)| x == y).count();
                     cov.record_edge(1000 + pre.min(64));
                 }
+//@if v0
                 (V::U64(a), V::U64(b)) => {
                     cov.record_edge(if a == b { 700 } else { 701 + (a ^ b).count_ones() as usize });
                 }
 //@if u8
                 (V::Nat(a), V::Nat(b)) => {
                     cov.record_edge(if a == b { 3000 } else { 3001 + (a ^ b).count_ones() as usize });
+                }
+//@endif
+//@endif
+//@if v1
+                (V::Fixed(f, a), V::Fixed(_, b)) => {
+                    cov.record_edge(if a == b { 700 } else { 701 + (f.pattern(*a) ^ f.pattern(*b)).count_ones() as usize });
                 }
 //@endif
                 _ => {}
@@ -652,6 +1845,10 @@ struct Meta {
     target: String,
     domain: String,
     seed: String,
+//@if v1
+    /// Binders the budget rule demoted from `full` to `edge` (section 2.6).
+    demoted: Vec<String>,
+//@endif
 }
 
 static META: Mutex<Vec<Meta>> = Mutex::new(Vec::new());
@@ -729,16 +1926,31 @@ fn write_manifest(outcomes: &[Outcome]) {
                 e.insert("cases".into(), Json::Num(s.cases));
                 e.insert("discarded".into(), Json::Num(s.discarded));
                 e.insert("domain".into(), Json::Str(m.domain));
+//@if comp
+                e.insert("unreachable_by_type".into(), Json::Num(s.unreachable));
+//@endif
+//@if v1
+                e.insert(
+                    "demoted".into(),
+                    Json::Arr(m.demoted.into_iter().map(Json::Str).collect()),
+                );
+//@endif
             }
             "property" => {
                 e.insert("cases".into(), Json::Num(s.cases));
                 e.insert("discarded".into(), Json::Num(s.discarded));
                 e.insert("equal_cases".into(), Json::Num(s.equal));
+//@if comp
+                e.insert("unreachable_by_type".into(), Json::Num(s.unreachable));
+//@endif
                 e.insert("seed".into(), Json::Str(m.seed));
             }
             "fuzz" => {
                 e.insert("iterations".into(), Json::Num(s.iterations));
                 e.insert("admitted".into(), Json::Num(s.admitted));
+//@if comp
+                e.insert("unreachable_by_type".into(), Json::Num(s.unreachable));
+//@endif
                 e.insert("seed".into(), Json::Str(m.seed));
             }
             _ => {
@@ -751,6 +1963,9 @@ fn write_manifest(outcomes: &[Outcome]) {
     }
     let doc = Json::obj([
         ("schema", Json::str("warrant-test-evidence-v1")),
+//@if v1
+        ("warrant_version", Json::str("v1")),
+//@endif
         ("module", Json::str(MODULE)),
         ("spec", Json::str(SPEC_PATH)),
         ("spec_sha256", Json::str(SPEC_SHA256)),
@@ -763,6 +1978,15 @@ fn write_manifest(outcomes: &[Outcome]) {
     }
 }
 
+//@if v1
+/// Write the manifest of an in-process run (`Suite::run_recorded`) to
+/// `WARRANT_EVIDENCE_OUT`; the generated test target does this through
+/// `run_main`, a test of the generator does it through this wrapper.
+pub fn write_manifest_for(outcomes: &[Outcome]) {
+    write_manifest(outcomes);
+}
+
+//@endif
 /// Decide the injected fault from the two sabotage variables.
 ///
 /// `WARRANT_EVIDENCE_FILTER` exists only so BUILD can aim a *sabotage* run at
@@ -837,6 +2061,9 @@ impl Meta {
             target: String::new(),
             domain: String::new(),
             seed: String::new(),
+//@if v1
+            demoted: Vec::new(),
+//@endif
         }
     }
 }

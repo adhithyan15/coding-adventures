@@ -1,4 +1,9 @@
-# The committed pkg/spreadsheet_engine.wasm must match the sources it is built
-# from (bash and python3 are Unix-only here; BUILD covers Windows).
+# The .wasm is generated, not committed (BUILD-001): build it for the browser
+# target, then drive that fresh build through the Node smoke tests. That is
+# what keeps the wasm ABI and the engine's behaviour honest. (bash and node are
+# Unix-only here; BUILD covers Windows with the host-target tests.)
 cargo test -p spreadsheet-wasm -- --nocapture
-bash build-wasm.sh --check
+rustup target add wasm32-unknown-unknown
+bash build-wasm.sh
+node js/smoke.mjs
+node js/smoke-files.mjs
