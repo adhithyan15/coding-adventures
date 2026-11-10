@@ -20955,3 +20955,15 @@ touches no workflow. Merge that main normally and conflict-free as
 `02329e686f1e1928ab1c04699eeca479880628f1`; the complete local validation
 remains green. Require another exact-head review and hosted-CI rollup before
 guarded auto-merge.
+
+Protected main then advanced by seven commits to
+`ae4512d04068145cf305a98b862f46c326a49c13` while exact reviewed head
+`6ae41ad97d835d1c804b3ea09153368faf7335d0` had no failures and only its
+Ubuntu and macOS builds remained queued. The delta is exact-path-disjoint from
+the parity tranche, but it adds assumption-catalogue commands to the repo-wide
+CI contract and changes unrelated release/VisiCalc workflows. Merge current
+main normally and conflict-free as
+`aa739f84fb13536347be59a1ca5868cd332e5d77`. The complete Rust validation,
+the newly required assumption-catalogue validation and generator check, and
+all 71 catalogue tests pass locally. Require fresh exact-head review and
+hosted CI; guarded auto-merge remains disabled.
