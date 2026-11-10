@@ -1411,7 +1411,9 @@ The numbering continues from 14.1.
     The property is `match op(args) with Ok(r) -> size(r) <= e | Err(_) -> true`;
     a non-`Result` operation has size `len(result)`.  The suites take the operation's
     parameters (with their refinements) as binders, so every binder domain, budget,
-    demotion and cap of VER04h applies; relation bias draws an unsigned limit
+    demotion and cap of VER04h applies (an operation whose parameters are too many
+    or too wide for the exhaustive budget is therefore W0706 for this suite, as for a
+    written claim; an operation with static widths is W0701); relation bias draws an unsigned limit
     parameter from the boundary list of section 6.3 whenever the claim also has a
     `Bytes` binder (only for documents with an `output` or `heap` row, so every other
     generated harness is byte-identical).
@@ -1423,8 +1425,11 @@ The numbering continues from 14.1.
     for memory beyond the cap (default 64 MiB, `OBSERVER_CAP_BYTES`) the allocator
     records the attempted peak, wakes the caller and parks that worker forever, and
     the caller fails the instance with `bound-heap-exceeded` and the measured peak.
-    At most 8 workers are ever abandoned (at most 512 MiB held); after that an
-    observed call is refused with the same failure instead of being started.  The
+    A test that has tripped once fails its later observed calls without running them
+    (a shrinker would otherwise abandon one worker per candidate), and at most 64
+    workers holding at most 1 GiB between them are ever abandoned in one process
+    (`OBS_MAX_ABANDONED`, `OBS_MAX_HELD`); after that an observed call is refused with
+    the same failure instead of being started.  The
     window is the whole adapter call (argument conversion, the export, result
     conversion), so the adapter's copy of the result counts: a `heap` bound must
     leave room for one extra copy of the output, as the spec's own example
@@ -1442,7 +1447,11 @@ The numbering continues from 14.1.
     adapter (any `Bytes` result, a `Bytes` parameter beside a numeric one) is adapted
     by the composite adapter of WX-A, including its host `Result`/`errors=` binding
     forms; the prelude's `comp` part is emitted for it.  Before this, such a
-    signature was W0701.
+    signature was W0701.  A `fresh` result is satisfied by construction there (a host
+    `Vec<u8>` cannot alias its input) and is no longer refused.  The model translation
+    gained `concat` of two byte strings (it was W0701 before, although VER04 reserves
+    it), so a claim can build a well-formed input for the operation; its prelude part
+    is emitted only when a body uses it, like `imin`/`imax`.
 36. **Faults.** `ignore-limit`, `off-by-one-limit`, `limit-after-alloc` and
     `truncate-silently` are rewrites of the composite adapter.  The *limit
     parameter* is the one unsigned numeric parameter the operation's `output` row

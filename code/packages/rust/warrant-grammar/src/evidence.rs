@@ -39,7 +39,8 @@ use crate::codegen::{
 };
 use crate::fixed::{self, FixedTy};
 use crate::parser::{
-    BinaryOp, Declaration, Expression, Literal, OpDecl, Parameter, Pattern, ProjKey, TypeExpr,
+    BinaryOp, ClaimDecl, Declaration, Expression, Literal, OpDecl, Parameter, Pattern, ProjKey,
+    TypeExpr,
     UnaryOp, Version, WarrantFile, Width,
 };
 
@@ -65,6 +66,12 @@ pub const DOMAIN_BYTES_BUDGET: u64 = 64 * 1024 * 1024;
 /// Upper bound on the heap/stack footprint of one `V` value besides its
 /// payload bytes.
 pub const VALUE_OVERHEAD: u64 = 32;
+
+/// The allocation cap of the WX-H observer, per observed adapter call (VER04j
+/// section 6.3: a tool-profile value, 64 MiB by default).  It is echoed into the
+/// generated `OBSERVER_CAP_BYTES` constant of a document that has an `output` or
+/// `heap` bound, and into no other.
+pub const OBSERVER_CAP_BYTES: u64 = 64 * 1024 * 1024;
 
 /// Generation parameters. Every value is echoed into the manifest or the
 /// generated constants, so changing one changes the checked-in file.
@@ -674,6 +681,11 @@ fn emit(e: &Expression<'_>, cx: &mut Cx<'_>) -> Result<String, CodegenError> {
                         "Ok" if parts.len() == 1 => format!("V::Ok(Box::new({}))", parts[0]),
                         "Err" if parts.len() == 1 => format!("V::err_of({})", parts[0]),
                         "len" if parts.len() == 1 => format!("{}.length()", parts[0]),
+                        // WX-H: byte-string `concat`, so a claim can build a
+                        // well-formed stream for the operation under test.
+                        "concat" if cx.v1 && parts.len() == 2 => {
+                            format!("V::concat(&{}, &{})", parts[0], parts[1])
+                        }
                         _ if cx.models.contains(n) => {
                             format!("model_{n}({})", parts.join(", "))
                         }
@@ -1049,6 +1061,15 @@ const WXA_FAULTS: &[(&str, &str)] = &[
     ("off-by-one-consumed", "OffByOneConsumed"),
 ];
 
+/// The faults of VER04j section 6.4 (WX-H), rewrites of a composite adapter's
+/// limit parameter or result.  They apply to the operation they are bound to only.
+const WXH_FAULTS: &[(&str, &str)] = &[
+    ("ignore-limit", "IgnoreLimit"),
+    ("off-by-one-limit", "OffByOneLimit"),
+    ("limit-after-alloc", "LimitAfterAlloc"),
+    ("truncate-silently", "TruncateSilently"),
+];
+
 fn fault_variant(name: &str) -> Option<&'static str> {
     FAULTS
         .iter()
@@ -1062,6 +1083,12 @@ fn fault_variant(name: &str) -> Option<&'static str> {
         })
         .or_else(|| {
             WXA_FAULTS
+                .iter()
+                .find(|(n, _)| *n == name)
+                .map(|(_, v)| *v)
+        })
+        .or_else(|| {
+            WXH_FAULTS
                 .iter()
                 .find(|(n, _)| *n == name)
                 .map(|(_, v)| *v)
@@ -1121,6 +1148,7 @@ fn fault_block(used: &BTreeSet<String>) -> String {
         .copied()
         .chain(V1_FAULTS.iter().map(|(n, v, _)| (*n, *v)))
         .chain(WXA_FAULTS.iter().copied())
+        .chain(WXH_FAULTS.iter().copied())
         .filter(|(n, _)| used.contains(*n))
         .collect();
     let mut s = String::new();
@@ -1269,6 +1297,10 @@ fn shape_of<'a>(op: &OpDecl<'a>, v1: bool, env: &TyEnv<'a>) -> Result<Shape, Cod
                 fallible: returns_result_u8(&op.return_type),
             })
         }
+        // WX-H (VER04j section 14.2 item 35): any other v1 signature (a `Bytes`
+        // result, a `Bytes` parameter beside a number, ...) goes through the
+        // composite adapter, whose host conversions say what is supported.
+        _ if v1 => Ok(Shape::Composite),
         _ => Err(unsupported(
             format!("operation `{}` has a signature with no adapter shape", op.name),
             op.span,
@@ -2114,12 +2146,16 @@ fn composite_adapter<'a>(
     err_case: Option<&str>,
     faults: &[String],
     options: &EvidenceOptions,
+    limit: Option<usize>,
 ) -> Result<String, CodegenError> {
     let n = op.name;
     let bad = |m: String| unsupported(format!("operation `{n}`: {m}"), op.span);
-    if !op.static_params.is_empty() || op.is_fresh {
+    // A `fresh` result is satisfied by construction here: a host `Vec<u8>` or
+    // `Result<Vec<u8>, _>` is owned and cannot alias the input (WX-H, the
+    // section 6.2 example is `fresh`).
+    if !op.static_params.is_empty() {
         return Err(bad(
-            "static widths and fresh outputs are not supported on a composite operation".into(),
+            "static widths are not supported on a composite operation".into(),
         ));
     }
     let host = options.hosts.ops.get(n);
@@ -2179,6 +2215,15 @@ fn composite_adapter<'a>(
                 is_result && matches!(&core, Ty::Tuple(_) | Ty::Data { .. }) && !cases.is_empty()
             }
             "missing-error" => is_result,
+            // WX-H: the limit faults rewrite the one numeric parameter the
+            // operation's `output` bound mentions.
+            "ignore-limit" | "off-by-one-limit" | "limit-after-alloc" => limit.is_some(),
+            "truncate-silently" => {
+                limit.is_some()
+                    && is_result
+                    && payload == Ty::Bytes
+                    && ptys.contains(&Ty::Bytes)
+            }
             _ => {
                 return Err(bad(format!("fault `{f}` is not a composite-operation fault")));
             }
@@ -2201,6 +2246,27 @@ fn composite_adapter<'a>(
     for (i, (t, h)) in ptys.iter().zip(&hargs).enumerate() {
         let v = to_host(t, h, &format!("args[{i}]"), true, &mut hc).map_err(&bad)?;
         let _ = writeln!(s, "    let p{i} = {v};");
+    }
+    if let Some(l) = limit {
+        let HostTy::Int(rt) = &hargs[l] else {
+            return Err(bad("the limit parameter needs an integer host type".into()));
+        };
+        let mut arms = String::new();
+        if faults.iter().any(|f| f == "ignore-limit") {
+            let _ = write!(arms, "Fault::IgnoreLimit => {rt}::MAX, ");
+        }
+        if faults.iter().any(|f| f == "off-by-one-limit") {
+            let _ = write!(arms, "Fault::OffByOneLimit => p{l}.saturating_add(1), ");
+        }
+        if !arms.is_empty() {
+            let _ = writeln!(s, "    let p{l} = match fault {{ {arms}_ => p{l} }};");
+        }
+        if faults.iter().any(|f| f == "limit-after-alloc") {
+            let _ = writeln!(
+                s,
+                "    let hog = (fault == Fault::LimitAfterAlloc).then(|| vec![0u8; p{l} as usize]);"
+            );
+        }
     }
     let arglist: Vec<String> = (0..ptys.len()).map(|i| format!("p{i}")).collect();
     let call = format!("{export}({})", arglist.join(", "));
@@ -2255,9 +2321,18 @@ fn composite_adapter<'a>(
         }
         let _ = writeln!(s, "        None => V::Err(\"{case}\".into()),\n    }};");
     }
+    if limit.is_some() && faults.iter().any(|f| f == "limit-after-alloc") {
+        // The hog must live across the call (and not be optimised away).
+        s.push_str("    std::hint::black_box(&hog);\n");
+    }
     let mut arms = String::new();
     for f in faults {
         let rhs = match f.as_str() {
+            "truncate-silently" => {
+                let b = ptys.iter().position(|t| *t == Ty::Bytes).unwrap_or(0);
+                let l = limit.unwrap_or(0);
+                format!("fault_truncate_silently(v, args[{b}].bytes(), args[{l}].int())")
+            }
             "drop-consumed" => "fault_drop_consumed(v)".to_string(),
             "swap-components" => "fault_swap_components(v)".to_string(),
             "field-zero" => "fault_field_zero(v)".to_string(),
@@ -2356,6 +2431,87 @@ fn uses_composites<'a>(file: &WarrantFile<'a>, env: &TyEnv<'a>) -> bool {
 }
 
 // ---------------------------------------------------------------------------
+// WX-H helpers
+// ---------------------------------------------------------------------------
+
+/// Names (first path segment) an expression mentions, restricted to `names`.
+fn mentioned(e: &Expression<'_>, names: &HashSet<&str>, out: &mut BTreeSet<String>) {
+    match e {
+        Expression::Reference { name, args, .. } => {
+            if let Some(first) = name.segments.first() {
+                if names.contains(first) {
+                    out.insert((*first).to_string());
+                }
+            }
+            for a in args.iter().flat_map(|l| l.iter()) {
+                mentioned(a, names, out);
+            }
+        }
+        Expression::Grouped { inner, .. } => mentioned(inner, names, out),
+        Expression::Unary { operand, .. } => mentioned(operand, names, out),
+        Expression::Binary { left, right, .. } => {
+            mentioned(left, names, out);
+            mentioned(right, names, out);
+        }
+        Expression::Conditional {
+            condition,
+            then_branch,
+            else_branch,
+            ..
+        } => {
+            mentioned(condition, names, out);
+            mentioned(then_branch, names, out);
+            mentioned(else_branch, names, out);
+        }
+        Expression::Tuple { elements, .. } | Expression::List { elements, .. } => {
+            for x in elements {
+                mentioned(x, names, out);
+            }
+        }
+        Expression::Project { base, .. } => mentioned(base, names, out),
+        Expression::Match { target, arms, .. } => {
+            mentioned(target, names, out);
+            for a in arms {
+                mentioned(&a.body, names, out);
+            }
+        }
+        Expression::Quantified { body, .. } => mentioned(body, names, out),
+        Expression::Literal { .. } => {}
+    }
+}
+
+/// The limit parameter of an operation's `output` row: the one unsigned numeric
+/// parameter (`U16`, `U32`, `U64` or `Nat`) the bound mentions.  `Ok(None)` when
+/// it mentions none or several, in which case the limit faults are refused.
+fn limit_param<'a>(
+    op: &OpDecl<'a>,
+    output: &Expression<'a>,
+    v1: bool,
+    env: &TyEnv<'a>,
+) -> Result<Option<usize>, CodegenError> {
+    let names: HashSet<&str> = op.params.iter().map(|p| p.name).collect();
+    let mut seen = BTreeSet::new();
+    mentioned(output, &names, &mut seen);
+    let mut found = None;
+    let mut count = 0;
+    for (i, p) in op.params.iter().enumerate() {
+        if !seen.contains(p.name) {
+            continue;
+        }
+        let numeric = match ty_of(p, v1, env) {
+            Ok(Ty::Fx(f)) => !f.signed() && f.bits() >= 16,
+            Ok(Ty::Nat) => true,
+            _ => false,
+        };
+        if numeric {
+            count += 1;
+            found = Some(i);
+        }
+    }
+    Ok(if count == 1 { found } else { None })
+}
+
+// ---------------------------------------------------------------------------
 // The generator
 // ---------------------------------------------------------------------------
 
@@ -2428,7 +2584,34 @@ pub fn generate_evidence_harness(
     let module = file.name;
     let v1 = file.version == Version::V1;
     let env = TyEnv::new(file);
-    let comp = v1 && uses_composites(file, &env);
+    let comp = v1
+        && (uses_composites(file, &env)
+            || file.declarations.iter().any(|d| {
+                matches!(d, Declaration::Op(o) if matches!(shape_of(o, v1, &env), Ok(Shape::Composite)))
+            }));
+
+    // WX-H: the `heap` and `output` rows of each operation's `bound` (v1 only).
+    // A document with at least one of them gets the allocation observer.
+    #[derive(Default)]
+    struct ObsOp<'f, 'a> {
+        heap: Option<&'f Expression<'a>>,
+        output: Option<&'f Expression<'a>>,
+    }
+    let mut obs_ops: BTreeMap<&str, ObsOp<'_, '_>> = BTreeMap::new();
+    if v1 {
+        for d in &file.declarations {
+            if let Declaration::Bound(b) = d {
+                for r in &b.rows {
+                    match r.name {
+                        "heap" => obs_ops.entry(b.name).or_default().heap = Some(&r.bound),
+                        "output" => obs_ops.entry(b.name).or_default().output = Some(&r.bound),
+                        _ => {}
+                    }
+                }
+            }
+        }
+    }
+    let obs = !obs_ops.is_empty();
 
     let mut models = HashSet::new();
     let mut errors = HashSet::new();
@@ -2450,12 +2633,20 @@ pub fn generate_evidence_harness(
         }
     }
     let op_names: HashSet<&str> = op_decls.iter().map(|o| o.name).collect();
+    for name in obs_ops.keys() {
+        if !op_names.contains(name) {
+            return Err(unsupported(format!("bound of unknown operation `{name}`"), file.span));
+        }
+    }
 
     let mut widths: BTreeMap<String, BTreeSet<u64>> = BTreeMap::new();
     let mut body = String::new();
     let mut features: BTreeSet<&str> = BTreeSet::new();
     features.insert(if v1 { "v1" } else { "v0" });
     features.insert(if comp { "comp" } else { "plain" });
+    if obs {
+        features.insert("obs");
+    }
 
     // Model functions.
     for d in &file.declarations {
@@ -2510,12 +2701,23 @@ pub fn generate_evidence_harness(
                 v1,
                 ctors: &env.ctors,
             };
-            let _ = write!(
-                body,
-                "#[allow(unused_variables)]\npub fn example_{}(fault: Fault) -> bool {{\n    {}.truthy()\n}}\n\n",
-                ex.name,
-                emit(&ex.body, &mut cx)?
-            );
+            if obs {
+                // An observed instance that the observer fails is a failed
+                // example, not a panic (VER04j section 14.2 item 34).
+                let _ = write!(
+                    body,
+                    "#[allow(unused_variables)]\npub fn example_{}(fault: Fault) -> bool {{\n    match catch_unwind(AssertUnwindSafe(|| {}.truthy())) {{\n        Ok(v) => v,\n        Err(p) => obs_failed(p),\n    }}\n}}\n\n",
+                    ex.name,
+                    emit(&ex.body, &mut cx)?
+                );
+            } else {
+                let _ = write!(
+                    body,
+                    "#[allow(unused_variables)]\npub fn example_{}(fault: Fault) -> bool {{\n    {}.truthy()\n}}\n\n",
+                    ex.name,
+                    emit(&ex.body, &mut cx)?
+                );
+            }
             examples.push(Ex {
                 name: ex.name.to_string(),
                 op: op.to_string(),
@@ -2524,27 +2726,100 @@ pub fn generate_evidence_harness(
     }
 
     // Claims.
+    //
+    // `name` is the label that ends up in ids, seeds and the manifest, `ident`
+    // the Rust identifier the claim's functions are named after (they differ for
+    // the synthesized `<op>/output-bound` claims of WX-H, section 14.2 item 32).
     struct Cl {
         name: String,
+        ident: String,
         op: String,
     }
-    let mut claims: Vec<Cl> = Vec::new();
+    enum Job<'f, 'a> {
+        Real(&'f ClaimDecl<'a>),
+        OutputBound(&'f OpDecl<'a>),
+    }
+    /// One claim to generate: a written one, or a synthesized `output-bound`.
+    struct Work<'f, 'a> {
+        label: String,
+        ident: String,
+        binders: &'f [Parameter<'a>],
+        cbody: Option<&'f Expression<'a>>,
+        span: (usize, usize),
+        op: String,
+    }
+    let mut jobs: Vec<Job<'_, '_>> = Vec::new();
     for d in &file.declarations {
-        let Declaration::Claim(c) = d else { continue };
-        let Expression::Quantified {
-            is_forall: true,
+        if let Declaration::Claim(c) = d {
+            jobs.push(Job::Real(c));
+        }
+    }
+    for o in &op_decls {
+        if obs_ops.get(o.name).is_some_and(|b| b.output.is_some()) {
+            jobs.push(Job::OutputBound(o));
+        }
+    }
+    let mut claims: Vec<Cl> = Vec::new();
+    for job in &jobs {
+        let Work {
+            label,
+            ident,
             binders,
-            body: cbody,
+            cbody,
             span,
-        } = &c.body
-        else {
-            return Err(unsupported(
-                format!("claim {} must be `forall`", c.name),
-                c.span,
-            ));
+            op,
+        } = match job {
+            Job::Real(c) => {
+                let Expression::Quantified {
+                    is_forall: true,
+                    binders,
+                    body: cbody,
+                    span,
+                } = &c.body
+                else {
+                    return Err(unsupported(
+                        format!("claim {} must be `forall`", c.name),
+                        c.span,
+                    ));
+                };
+                let op = find_operation_in_expr(cbody, &op_names).ok_or_else(|| {
+                    unsupported(format!("claim {} calls no operation", c.name), *span)
+                })?;
+                Work {
+                    label: c.name.to_string(),
+                    ident: c.name.to_string(),
+                    binders: binders.as_slice(),
+                    cbody: Some(&**cbody),
+                    span: *span,
+                    op: op.to_string(),
+                }
+            }
+            Job::OutputBound(o) => {
+                if !o.static_params.is_empty() {
+                    return Err(unsupported(
+                        format!(
+                            "operation `{}`: an `output` bound on an operation with static widths is not supported",
+                            o.name
+                        ),
+                        o.span,
+                    ));
+                }
+                Work {
+                    label: format!("{}/output-bound", o.name),
+                    ident: format!("{}_output_bound", o.name),
+                    binders: o.params.as_slice(),
+                    cbody: None,
+                    span: o.span,
+                    op: o.name.to_string(),
+                }
+            }
         };
-        let op = find_operation_in_expr(cbody, &op_names)
-            .ok_or_else(|| unsupported(format!("claim {} calls no operation", c.name), *span))?;
+        if claims.iter().any(|c| c.ident == ident) {
+            return Err(unsupported(
+                format!("generated claim name `{ident}` is already taken"),
+                span,
+            ));
+        }
         let mut tys: Vec<Ty> = binders
             .iter()
             .map(|b| ty_of(b, v1, &env))
@@ -2554,8 +2829,10 @@ pub fn generate_evidence_harness(
             // A Nat that flows directly into a shift count gets the
             // count-aware domain (VER04j section 3.6).
             let mut counts = HashSet::new();
-            count_binders(cbody, &mut counts);
-            for (t, b) in tys.iter_mut().zip(binders) {
+            if let Some(cbody) = cbody {
+                count_binders(cbody, &mut counts);
+            }
+            for (t, b) in tys.iter_mut().zip(binders.iter()) {
                 if *t == Ty::Nat && counts.contains(b.name) {
                     *t = Ty::NatCount;
                 }
@@ -2574,10 +2851,10 @@ pub fn generate_evidence_harness(
             return Err(CodegenError {
                 code: DiagnosticCode::W0706,
                 kind: CodegenErrorKind::UnsupportedTarget(format!(
-                    "claim {} exhaustive domain {shown} exceeds budget {} cases / {DOMAIN_BYTES_BUDGET} bytes",
-                    c.name, options.exhaustive_budget
+                    "claim {label} exhaustive domain {shown} exceeds budget {} cases / {DOMAIN_BYTES_BUDGET} bytes",
+                    options.exhaustive_budget
                 )),
-                span: *span,
+                span,
             });
         }
         if tys.contains(&Ty::U8) {
@@ -2614,60 +2891,119 @@ pub fn generate_evidence_harness(
         // would be evaluated by the faulted adapter and so change which cases
         // a negative control admits.
         cx.allow_ops = false;
-        for p in binders {
+        for p in binders.iter() {
             if let Some(r) = &p.refinement {
                 let _ = write!(admit, " && {}.truthy()", emit(r, &mut cx)?);
             }
         }
         cx.allow_ops = true;
-        let holds = emit(cbody, &mut cx)?;
+        let holds = match cbody {
+            Some(cbody) => emit(cbody, &mut cx)?,
+            // The WX-H property (section 6.3): `size(op(args)) <= bound`.  The
+            // bound is evaluated first, for every instance, so a bound that is
+            // negative on the admitted domain fails even where the operation
+            // answers `Err`.
+            None => {
+                let args: Vec<String> = binders.iter().map(|p| format!("b_{}.clone()", p.name)).collect();
+                format!(
+                    "V::Bool({{ let bound = op_{op}_output(env); obs_output_ok(op_{op}(&[], &[{}], fault), bound) }})",
+                    args.join(", ")
+                )
+            }
+        };
         let tys_src: Vec<String> = tys.iter().map(|t| t.rust()).collect();
         if v1 {
             let _ = write!(
                 body,
                 "const CLAIM_{up}_NAMES: &[&str] = &[{names}];\n\n\
                  const CLAIM_{up}_DEMOTED: &[&str] = &[{dem}];\n\n",
-                up = c.name.to_uppercase(),
+                up = ident.to_uppercase(),
                 names = names_src.join(", "),
                 dem = demoted_src.join(", "),
             );
         }
-        let up = c.name.to_uppercase();
-        let n = c.name;
+        let up = ident.to_uppercase();
+        let n = ident.as_str();
         let _ = write!(body, "const CLAIM_{up}_TYS: &[Ty] = &[{}];\n\n", tys_src.join(", "));
         let _ = write!(
             body,
             "#[allow(unused_variables)]\nfn claim_{n}_admit(env: &[V]) -> bool {{\n{binds}    {admit}\n}}\n\n"
         );
+        // WX-H: an instance the observer fails is a false claim, not a panic.
+        let obs_arm = if obs {
+            "        Err(p) if p.is::<ObsFailure>() => obs_failed(p),\n"
+        } else {
+            ""
+        };
         if comp {
             // A value a host integer cannot hold raises `Unreachable`: the case
             // is skipped and counted, never narrowed (VER04j section 4.6).
             let _ = write!(
                 body,
-                "#[allow(unused_variables, unused_mut)]\nfn claim_{n}_holds(env: &[V], fault: Fault) -> bool {{\n{binds}    match catch_unwind(AssertUnwindSafe(|| {holds}.truthy())) {{\n        Ok(v) => v,\n        Err(p) if p.is::<Unreachable>() => {{\n            count_unreach();\n            true\n        }}\n        Err(p) => std::panic::resume_unwind(p),\n    }}\n}}\n\n"
+                "#[allow(unused_variables, unused_mut)]\nfn claim_{n}_holds(env: &[V], fault: Fault) -> bool {{\n{binds}    match catch_unwind(AssertUnwindSafe(|| {holds}.truthy())) {{\n        Ok(v) => v,\n        Err(p) if p.is::<Unreachable>() => {{\n            count_unreach();\n            true\n        }}\n{obs_arm}        Err(p) => std::panic::resume_unwind(p),\n    }}\n}}\n\n"
             );
             let _ = write!(
                 body,
                 "pub fn exh_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = exhaustive(CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n\
-                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = property(\"claim/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n\
-                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = fuzz_claim(\"fuzz/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n"
+                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = property(\"claim/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n\
+                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    take_unreach();\n    let (v, mut s) = fuzz_claim(\"fuzz/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations);\n    s.unreachable = take_unreach();\n    (v, s)\n}}\n\n"
             );
         } else {
+            let holds_fn = if obs {
+                format!("    match catch_unwind(AssertUnwindSafe(|| {holds}.truthy())) {{\n        Ok(v) => v,\n        Err(p) => obs_failed(p),\n    }}")
+            } else {
+                format!("    {holds}.truthy()")
+            };
             let _ = write!(
                 body,
-                "#[allow(unused_variables)]\nfn claim_{n}_holds(env: &[V], fault: Fault) -> bool {{\n{binds}    {holds}.truthy()\n}}\n\n\
+                "#[allow(unused_variables)]\nfn claim_{n}_holds(env: &[V], fault: Fault) -> bool {{\n{binds}{holds_fn}\n}}\n\n\
                  pub fn exh_{n}(fault: Fault) -> (Verdict, Stats) {{\n    exhaustive(CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault)\n}}\n\n\
-                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    property(\"claim/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault)\n}}\n\n\
-                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    fuzz_claim(\"fuzz/{module}/{n}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations)\n}}\n\n"
+                 pub fn prop_{n}(fault: Fault) -> (Verdict, Stats) {{\n    property(\"claim/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault)\n}}\n\n\
+                 pub fn fuz_{n}(fault: Fault, iterations: u64) -> (Verdict, Stats) {{\n    fuzz_claim(\"fuzz/{module}/{label}\", CLAIM_{up}_TYS, claim_{n}_admit, claim_{n}_holds, fault, iterations)\n}}\n\n"
             );
         }
         claims.push(Cl {
-            name: c.name.to_string(),
-            op: op.to_string(),
+            name: label,
+            ident,
+            op,
         });
     }
     if claims.is_empty() {
         return Err(unsupported("document has no claims to generate evidence for", file.span));
+    }
+
+    // WX-H: the `heap` and `output` rows as functions of the call's arguments.
+    for (opn, rows) in &obs_ops {
+        let decl = op_decls
+            .iter()
+            .find(|o| o.name == *opn)
+            .expect("checked above");
+        for (metric, expr) in [("heap", rows.heap), ("output", rows.output)] {
+            let Some(expr) = expr else { continue };
+            let mut cx = Cx {
+                binders: decl.params.iter().map(|p| p.name.to_string()).collect(),
+                models: &models,
+                ops: &ops,
+                errors: &errors,
+                // A bound is a function of the arguments: it may call models
+                // but never the operation it bounds.
+                allow_ops: false,
+                widths: &mut widths,
+                v1,
+                ctors: &env.ctors,
+            };
+            let binds: String = decl
+                .params
+                .iter()
+                .enumerate()
+                .map(|(i, p)| format!("        let b_{} = args[{i}].clone();\n", p.name))
+                .collect();
+            let _ = write!(
+                body,
+                "#[allow(unused_variables)]\nfn op_{opn}_{metric}(args: &[V]) -> i128 {{\n    obs_bound(\"{metric} bound of `{opn}`\", || {{\n{binds}        {}\n    }})\n}}\n\n",
+                emit(expr, &mut cx)?
+            );
+        }
     }
 
     // WX-A: the position of a record field, looked up by name at run time (the
@@ -2691,6 +3027,21 @@ pub fn generate_evidence_harness(
     for op in &op_decls {
         let binding = &manifest.bindings[op.name];
         let shape = shape_of(op, v1, &env)?;
+        let adapters_before = adapters.len();
+        // WX-H: the numeric parameter an `output` row mentions is the limit the
+        // four limit faults rewrite (VER04j section 14.2 item 36).
+        let limit = match obs_ops.get(op.name).and_then(|r| r.output) {
+            Some(expr) => limit_param(op, expr, v1, &env)?,
+            None => None,
+        };
+        for f in &binding.negative_controls {
+            if WXH_FAULTS.iter().any(|(n, _)| n == f) && shape != Shape::Composite {
+                return Err(unsupported(
+                    format!("fault `{f}` of operation `{}` needs a composite-adapter operation", op.name),
+                    op.span,
+                ));
+            }
+        }
         let empty = BTreeSet::new();
         let err_case = binding.error_normalization.as_ref().map(|n| n.error_case.as_str());
         if shape == Shape::Composite {
@@ -2702,6 +3053,7 @@ pub fn generate_evidence_harness(
                 err_case,
                 &binding.negative_controls,
                 options,
+                limit,
             )?);
             let mut list = Vec::new();
             for f in &binding.negative_controls {
@@ -2764,6 +3116,36 @@ pub fn generate_evidence_harness(
                     .collect(),
             );
         }
+        if let Some(rows) = obs_ops.get(op.name) {
+            // The adapter just emitted becomes `op_<n>_raw`; `op_<n>` runs it on
+            // the observer worker inside an allocation window and compares the
+            // peak with the `heap` row (VER04j section 6.3).
+            let emitted = adapters.split_off(adapters_before);
+            let from = format!("fn op_{}(", op.name);
+            let to = format!("fn op_{}_raw(", op.name);
+            if !emitted.contains(&from) {
+                return Err(unsupported(
+                    format!("operation `{}` has no observable adapter", op.name),
+                    op.span,
+                ));
+            }
+            adapters.push_str(&emitted.replacen(&from, &to, 1));
+            let n = op.name;
+            let resolve = if shape.scoped() {
+                format!("    let fault = fault_for(\"{n}\", fault);\n")
+            } else {
+                String::new()
+            };
+            let heap = if rows.heap.is_some() {
+                format!("    let heap = Some(op_{n}_heap(args));\n")
+            } else {
+                "    let heap: Option<i128> = None;\n".to_string()
+            };
+            let _ = write!(
+                adapters,
+                "#[allow(unused_variables)]\nfn op_{n}(w: &[u64], args: &[V], fault: Fault) -> V {{\n{resolve}{heap}    let (w, a) = (w.to_vec(), args.to_vec());\n    obs_observe(\"{n}\", heap, move || op_{n}_raw(&w, &a, fault))\n}}\n\n"
+            );
+        }
         for (n, _) in &op_faults[op.name] {
             used_faults.insert(n.clone());
         }
@@ -2786,20 +3168,21 @@ pub fn generate_evidence_harness(
     for c in &claims {
         let _ = write!(
             suite,
-            "    reg(&mut suite, Meta {{ domain: {describe}, {demoted}..Meta::new(\"{id1}\", \"exhaustive\", \"{op}\", \"{n}\") }}, move || {{\n        let (v, s) = exh_{n}(fault);\n        (v, s, String::new())\n    }});\n\
-             \x20   reg(&mut suite, Meta {{ seed: seed_of(\"claim/{module}/{n}\").to_string(), ..Meta::new(\"{id2}\", \"property\", \"{op}\", \"{n}\") }}, move || {{\n        let (v, s) = prop_{n}(fault);\n        (v, s, String::new())\n    }});\n\
-             \x20   reg(&mut suite, Meta {{ seed: seed_of(\"fuzz/{module}/{n}\").to_string(), ..Meta::new(\"{id3}\", \"fuzz\", \"{op}\", \"{n}\") }}, move || {{\n        let (v, s) = fuz_{n}(fault, FUZZ_ITERATIONS);\n        (v, s, String::new())\n    }});\n",
-            n = c.name,
+            "    reg(&mut suite, Meta {{ domain: {describe}, {demoted}..Meta::new(\"{id1}\", \"exhaustive\", \"{op}\", \"{label}\") }}, move || {{\n        let (v, s) = exh_{n}(fault);\n        (v, s, String::new())\n    }});\n\
+             \x20   reg(&mut suite, Meta {{ seed: seed_of(\"claim/{module}/{label}\").to_string(), ..Meta::new(\"{id2}\", \"property\", \"{op}\", \"{label}\") }}, move || {{\n        let (v, s) = prop_{n}(fault);\n        (v, s, String::new())\n    }});\n\
+             \x20   reg(&mut suite, Meta {{ seed: seed_of(\"fuzz/{module}/{label}\").to_string(), ..Meta::new(\"{id3}\", \"fuzz\", \"{op}\", \"{label}\") }}, move || {{\n        let (v, s) = fuz_{n}(fault, FUZZ_ITERATIONS);\n        (v, s, String::new())\n    }});\n",
+            n = c.ident,
+            label = c.name,
             op = c.op,
             describe = if v1 {
-                format!("describe(CLAIM_{}_TYS, CLAIM_{}_NAMES)", c.name.to_uppercase(), c.name.to_uppercase())
+                format!("describe(CLAIM_{}_TYS, CLAIM_{}_NAMES)", c.ident.to_uppercase(), c.ident.to_uppercase())
             } else {
-                format!("describe(CLAIM_{}_TYS)", c.name.to_uppercase())
+                format!("describe(CLAIM_{}_TYS)", c.ident.to_uppercase())
             },
             demoted = if v1 {
                 format!(
                     "demoted: CLAIM_{}_DEMOTED.iter().map(|s| s.to_string()).collect(), ",
-                    c.name.to_uppercase()
+                    c.ident.to_uppercase()
                 )
             } else {
                 String::new()
@@ -2824,7 +3207,7 @@ pub fn generate_evidence_harness(
             "fn neg_exh_{n}(fault: Fault) -> Verdict {{\n    exh_{n}(fault).0\n}}\n\n\
              fn neg_prop_{n}(fault: Fault) -> Verdict {{\n    prop_{n}(fault).0\n}}\n\n\
              fn neg_fuz_{n}(fault: Fault) -> Verdict {{\n    fuz_{n}(fault, NEGCTL_FUZZ_ITERATIONS).0\n}}\n\n",
-            n = c.name
+            n = c.ident
         );
     }
     for op in shapes.keys() {
@@ -2844,7 +3227,7 @@ pub fn generate_evidence_harness(
                 claims
                     .iter()
                     .filter(|c| &c.op == op)
-                    .map(|c| format!("(\"{n}\", {pre}_{n})", n = c.name))
+                    .map(|c| format!("(\"{}\", {pre}_{})", c.name, c.ident))
                     .collect()
             };
             if members.is_empty() {
@@ -2893,6 +3276,9 @@ pub fn generate_evidence_harness(
     if body.contains("V::imin(") || body.contains("V::imax(") {
         features.insert("minmax");
     }
+    if body.contains("V::concat(") {
+        features.insert("concat");
+    }
 
     // Assemble.
     let mut out = String::new();
@@ -2914,7 +3300,7 @@ pub fn generate_evidence_harness(
          pub const EXHAUSTIVE_BUDGET: u64 = {budget};\n\
          pub const DOMAIN_BYTES_BUDGET: u64 = {bbudget};\n\
          pub const MAX_FIXED_WIDTH: u64 = {maxw};\n\
-         pub const VALUE_OVERHEAD: u64 = {vo};\n\n",
+         pub const VALUE_OVERHEAD: u64 = {vo};\n{obs_cap}\n",
         spec = options.spec_path,
         sha = options.spec_sha256,
         krate = options.package_crate,
@@ -2926,6 +3312,11 @@ pub fn generate_evidence_harness(
         bbudget = DOMAIN_BYTES_BUDGET,
         maxw = MAX_FIXED_WIDTH,
         vo = VALUE_OVERHEAD,
+        obs_cap = if obs {
+            format!("pub const OBSERVER_CAP_BYTES: u64 = {OBSERVER_CAP_BYTES};\n")
+        } else {
+            String::new()
+        },
     );
     out.push_str(&expand_prelude(&fault_block(&used_faults), &features));
     out.push_str("\n// ---------------------------------------------------------------------------\n// Generated from the Warrant document\n// ---------------------------------------------------------------------------\n\n");
