@@ -329,6 +329,14 @@ const ER_UNIFIED_UNICODE_VISUAL_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-unified-unicode-11.16.1-visual-corpus.json"
 ));
+const ER_UNIFIED_STYLES_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-unified-styles-11.16.1-corpus.json"
+));
+const ER_UNIFIED_STYLES_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/er-unified-styles-11.16.1-visual-corpus.json"
+));
 const ER_STYLES_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/er-styles-11.16.1-corpus.json"
@@ -2846,6 +2854,35 @@ fn pinned_er_unified_unicode_sources_reach_semantic_ir() {
     assert!(diagrams[0].nodes[0].compartments[0].entries[0].contains("driversLicense"));
     assert_eq!(diagrams[1].nodes.len(), 2);
     assert_eq!(diagrams[1].relationships[0].label.as_deref(), Some("__hẽ😀__"));
+}
+
+#[test]
+fn pinned_er_unified_style_sources_reach_semantic_ir() {
+    let syntax: Value = serde_json::from_str(ER_UNIFIED_STYLES_CORPUS).unwrap();
+    let visual: Value = serde_json::from_str(ER_UNIFIED_STYLES_VISUAL_CORPUS).unwrap();
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let fixtures = syntax["fixtures"].as_array().unwrap();
+    let visual_names = visual["fixtures"].as_array().unwrap();
+    assert_eq!(fixtures.len(), 3);
+    assert_eq!(fixtures.len(), visual_names.len());
+
+    let diagrams = fixtures
+        .iter()
+        .zip(visual_names)
+        .map(|(fixture, visual_name)| {
+            assert_eq!(fixture["name"], *visual_name);
+            parse_er_diagram(fixture["source"].as_str().unwrap()).unwrap()
+        })
+        .collect::<Vec<_>>();
+    let direct = diagrams[0].nodes.iter().find(|node| node.id == "c").unwrap();
+    assert_eq!(direct.style.as_ref().unwrap().fill.as_deref(), Some("#f9f"));
+    assert_eq!(direct.style.as_ref().unwrap().font_size, Some(24.0));
+    let classed = diagrams[1].nodes.iter().find(|node| node.id == "p").unwrap();
+    assert_eq!(classed.style.as_ref().unwrap().stroke.as_deref(), Some("lightblue"));
+    assert_eq!(classed.style.as_ref().unwrap().font_weight, Some(700));
+    let defaulted = diagrams[2].nodes.iter().find(|node| node.id == "c").unwrap();
+    assert_eq!(defaulted.style.as_ref().unwrap().fill.as_deref(), Some("pink"));
+    assert_eq!(defaulted.style.as_ref().unwrap().text_color.as_deref(), Some("green"));
 }
 
 #[test]
