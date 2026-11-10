@@ -20967,3 +20967,14 @@ main normally and conflict-free as
 the newly required assumption-catalogue validation and generator check, and
 all 71 catalogue tests pass locally. Require fresh exact-head review and
 hosted CI; guarded auto-merge remains disabled.
+
+Protected main advanced again from
+`ae4512d04068145cf305a98b862f46c326a49c13` to
+`b9528b15054c4686a73e15880a1c3548f1b00524` while exact reviewed head
+`6517a9d65581a91e85427d3a36912a9c02e6fb92` remained mergeable without
+failures. The intervening dependency-free TypeScript SHA-512 test migration
+is exact-path-disjoint from the parity tranche and touches no workflow. Merge
+current main normally and conflict-free as
+`e665a342bd7979331e78f1c3bd5fa8bd741c3aa4`; complete Rust and repo-wide
+catalogue validation remains green. Require fresh exact-head review and hosted
+CI before guarded auto-merge.
