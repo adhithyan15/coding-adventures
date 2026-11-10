@@ -75,7 +75,8 @@ ok 1 - math/two-plus-two
   the test's id.
 - A panic fails that test and the run continues. Its message is not copied
   into TAP, because it may quote inputs.
-- Failure IDs are limited to TF01's six registered values. The runner checks
+- Failure IDs are a closed vocabulary of fifteen values (TF01's six, VER05's
+  four, VER06's five). The runner checks
   `verdict::is_registered_failure_id` at serialization, including directly
   constructed `Verdict::Fail` values. An unknown ID emits only
   `Bail out! invalid failure id`, stops remaining tests and exits nonzero;
@@ -93,16 +94,55 @@ every normal run, but it fails this check.
 
 ## Its own tests
 
-- `src/**`: unit tests on libtest, for the parts the corpus cannot reach
-  (TAP layout, argument parsing, panics, bad ids, runtime protocol bail-outs
-  and their writer-error behavior).
+Everything here runs on libtest (or a spawned process), never on the harness
+being tested, so the harness is not the thing reporting on itself.
+
+- `src/**`: unit tests for the parts the corpus cannot reach.
 - `tests/self_corpus.rs`: every record of `cases.tfv` run on this harness.
   The corpus is embedded with `include_str!`, so the crate reads no files and
-  `required_capabilities.json` is empty.
-- `tests/pbt_corpus.rs`: every record of `specs/fixtures/pbt-v1/cases.tfv` run on this harness.
+  `required_capabilities.json` is empty. `pbt_corpus.rs` and `fuzz_corpus.rs`
+  do the same for `pbt-v1` and `fuzz-v1`.
+- `tests/l0_contracts.rs` (+ `exit_fixture.rs`): "fails when it should". Every
+  verdict path yields a registered non-pass verdict; panics of every shape are
+  failures; exact TAP bytes; real-process exit statuses 0, 1 and 2;
+  `/dev/full` and a closed pipe are not passes; the sabotaged self-corpus fails
+  *exactly* the expected-fail cases.
+- `tests/tfv_exhaustive.rs`: 364,413 bounded-exhaustive TFV documents and a
+  220,900-pair deep-equality universe, with hand-written oracles and the
+  canonical-spelling property. With `TFV_DIFFERENTIAL_OUT=<path>` it also dumps
+  every verdict, which `code/scripts/tfv_differential.py` replays through the
+  independent Python reference (`code/scripts/tfv.py`).
+- `tests/prng_contracts.rs`: published SplitMix64 and FNV-1a vectors, an
+  independent `u128` reference, `bounded` against the spec sampler, sub-seed
+  independence.
+- `tests/pbt_properties.rs`, `tests/fuzz_properties.rs`,
+  `tests/bench_statistics.rs`: verdict honesty, generator distributions,
+  exhaustive shrinking, campaign determinism and dedup, coverage feedback,
+  mutator algebra, hand-computed statistics and budgets.
 - `code/scripts/bootstrap_harness_conformance.py` re-derives every expected
   answer in standard-library Python and checks that `cases.tfv` is exactly
   what `cases.json` generates.
+
+## Known limits
+
+These are specified behaviour or open items, written down so nobody has to
+rediscover them (TF01 §8, VER05 §7, VER06 §9, VER07 §8):
+
+- **No assertion counting.** A test body that returns `Pass` without checking
+  anything passes. `Verdict` is `#[must_use]`, which catches the common slip of
+  computing a check and discarding it.
+- **A test that calls `process::exit(0)` leaves a truncated report with exit
+  status 0.** The plan line `1..N` is printed first so a supervisor can compare
+  it with the result lines; do not trust the exit status alone for suites whose
+  tests you do not control. There are no timeouts at this layer.
+- **Independent `Bytes` draws almost never collide** (never at fixed length 16).
+  An "equal inputs" claim needs a correlated generator; see VER05 §7.2.
+- **`AllocCounter` is cooperative**: it counts what the closure records, not the
+  real heap, so a zero-allocation budget through it proves nothing by itself.
+- **`FuzzReport::is_clean()`**, not `crashes.is_empty()`, is the "found nothing"
+  test: timeouts and out-of-memory outcomes are counted separately.
+- **PBT CI redaction** uses a 64-bit FNV digest over a low-entropy string, not
+  the SHA-256 of VER05 §5.2, and is brute-forceable for small input domains.
 
 To change the corpus, edit `cases.json`, then regenerate:
 
