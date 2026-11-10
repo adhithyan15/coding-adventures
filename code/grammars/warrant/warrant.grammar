@@ -1,6 +1,6 @@
 # VER04 pure-profile canonical EBNF draft, through existing grammar-tools.
 # Semantic names/types/contracts and protected source admission follow later.
-file = "warrant" NAME NEWLINE INDENT { declaration | NEWLINE } DEDENT ;
+file = "warrant" NAME [ NAME ] NEWLINE INDENT { declaration | NEWLINE } DEDENT ;
 declaration = model_declaration | error_declaration | operation | example | claim | assumptions | labels | input | bound ;
 
 model_declaration = "model" NAME ( EQUALS type NEWLINE | LPAREN [ parameters ] RPAREN ARROW type EQUALS expression NEWLINE ) ;
@@ -42,7 +42,7 @@ sum = product { ( PLUS | MINUS ) product } ;
 product = unary { STAR unary } ;
 unary = ( "not" | MINUS ) unary | primary ;
 primary = literal | list_literal | reference | LPAREN expression RPAREN ;
-literal = "true" | "false" | U64_LITERAL | U8_LITERAL | BYTES_LITERAL | INT ;
+literal = "true" | "false" | U64_LITERAL | U8_LITERAL | U16_LITERAL | U32_LITERAL | I8_LITERAL | I16_LITERAL | I32_LITERAL | I64_LITERAL | HEX_LITERAL | BYTES_LITERAL | INT ;
 list_literal = LBRACKET [ expression { COMMA expression } ] RBRACKET ;
 reference = qualified_name [ LT widths GT ] [ LPAREN [ expression { COMMA expression } ] RPAREN ] ;
 qualified_name = QNAME | NAME ;

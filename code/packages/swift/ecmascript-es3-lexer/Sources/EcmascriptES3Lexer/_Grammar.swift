@@ -77,8 +77,8 @@ enum EmbeddedGrammar {
     mode: nil,
     escapeMode: nil,
     skipDefinitions: [
-        TokenDefinition(name: "WHITESPACE", pattern: "[ \\t\\r\\n\\v\\f]+", isRegex: true, lineNumber: 211, alias: nil),
-        TokenDefinition(name: "LINE_COMMENT", pattern: "\\/\\/[^\\n\\r]*", isRegex: true, lineNumber: 212, alias: nil),
+        TokenDefinition(name: "WHITESPACE", pattern: "[ \\t\\r\\n\\v\\f\\u2028\\u2029]+", isRegex: true, lineNumber: 211, alias: nil),
+        TokenDefinition(name: "LINE_COMMENT", pattern: "\\/\\/[^\\n\\r\\u2028\\u2029]*", isRegex: true, lineNumber: 212, alias: nil),
         TokenDefinition(name: "BLOCK_COMMENT", pattern: "\\/\\*[^*]*\\*+([^\\/*][^*]*\\*+)*\\/", isRegex: true, lineNumber: 213, alias: nil),
     ],
     reservedKeywords: ["abstract", "boolean", "byte", "char", "class", "const", "debugger", "double", "enum", "export", "extends", "final", "float", "goto", "implements", "import", "int", "interface", "long", "native", "package", "private", "protected", "public", "short", "static", "super", "synchronized", "throws", "transient", "volatile"],

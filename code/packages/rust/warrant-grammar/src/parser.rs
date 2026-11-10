@@ -10,6 +10,7 @@
 
 use std::fmt;
 
+use crate::fixed::FixedTy;
 use crate::layout::{LayoutToken, LayoutTokenKind, TokenSpan};
 use crate::source::SourceDocument;
 
@@ -50,9 +51,16 @@ pub enum ParserErrorKind {
     UnexpectedToken,
     UnexpectedEof,
     Allocation,
+    /// The second word of the header is not exactly `v1` (VER04j section 1.1).
+    InvalidVersionHeader,
+    /// A v1 construct (a new literal form) in a v0 document (VER04j section 1.1).
+    V1ConstructInV0,
+    /// A suffixed literal outside the range of its type (VER04j section 2.2).
+    LiteralOutOfRange,
 }
 
-/// Parser error with stable diagnostic code W0001 and safe message.
+/// Parser error with a stable diagnostic code and safe message: `W0001` for
+/// every v0 failure, `W0101` for the v1 header and literal rules.
 #[derive(Clone, PartialEq, Eq)]
 pub struct ParserError {
     kind: ParserErrorKind,
@@ -66,7 +74,12 @@ impl ParserError {
     }
 
     pub fn code(&self) -> &'static str {
-        "W0001"
+        match self.kind {
+            ParserErrorKind::InvalidVersionHeader
+            | ParserErrorKind::V1ConstructInV0
+            | ParserErrorKind::LiteralOutOfRange => "W0101",
+            _ => "W0001",
+        }
     }
 
     pub fn kind(&self) -> ParserErrorKind {
@@ -88,6 +101,9 @@ impl fmt::Display for ParserError {
             ParserErrorKind::UnexpectedToken => "unexpected token in source",
             ParserErrorKind::UnexpectedEof => "unexpected end of file",
             ParserErrorKind::Allocation => "memory allocation failure",
+            ParserErrorKind::InvalidVersionHeader => "invalid version header",
+            ParserErrorKind::V1ConstructInV0 => "v1 construct in a v0 document",
+            ParserErrorKind::LiteralOutOfRange => "literal out of range for its type",
         };
         write!(f, "{}: {msg}", self.code())
     }
@@ -107,10 +123,24 @@ impl std::error::Error for ParserError {}
 
 // ── AST Definitions ─────────────────────────────────────────────────────────
 
+/// The language version a document declares in its header (VER04j section 1.1).
+///
+/// ```text
+/// warrant gf256        -- a v0 document: means exactly what VER04 says
+/// warrant gf256 v1     -- a v1 document: WX-B (fixed-width integers) and
+///                         WX-C (bitwise operations) are enabled
+/// ```
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum Version {
+    V0,
+    V1,
+}
+
 /// A parsed Warrant file.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WarrantFile<'a> {
     pub name: &'a str,
+    pub version: Version,
     pub declarations: Vec<Declaration<'a>>,
     pub span: (usize, usize),
 }
@@ -363,6 +393,10 @@ pub enum Literal<'a> {
     U8(u8),
     Bytes(&'a str),
     Int(u64),
+    /// A suffixed literal of one of the six types added by WX-B (`5u16`,
+    /// `-128i8`, `0xffu32`), holding its canonical in-range value.  `u8` and
+    /// `u64` literals keep their v0 variants.
+    Fixed(FixedTy, i128),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -390,6 +424,7 @@ struct Parser<'a> {
     nodes_allocated: usize,
     depth: usize,
     work_done: usize,
+    version: Version,
 }
 
 impl<'a> Parser<'a> {
@@ -416,6 +451,7 @@ impl<'a> Parser<'a> {
             nodes_allocated: 0,
             depth: 0,
             work_done: 0,
+            version: Version::V0,
         })
     }
 
@@ -615,6 +651,18 @@ impl<'a> Parser<'a> {
         let start_span = self.token_span_range(start_tok);
 
         let (file_name, _) = self.expect_name()?;
+        // VER04j section 1.1: `warrant NAME [ NAME ]`; the optional second
+        // name must be exactly `v1`.  Anything else is W0101, never ignored.
+        if let Some(LayoutTokenKind::Word(word)) = self.peek_kind() {
+            if word != "v1" {
+                return Err(ParserError::new(
+                    ParserErrorKind::InvalidVersionHeader,
+                    self.current_raw_span(),
+                ));
+            }
+            self.advance()?;
+            self.version = Version::V1;
+        }
         self.expect_newline()?;
         self.expect_indent()?;
 
@@ -664,6 +712,7 @@ impl<'a> Parser<'a> {
 
         Ok(WarrantFile {
             name: file_name,
+            version: self.version,
             declarations,
             span: (start_span.0, end_span.1),
         })
@@ -1590,6 +1639,24 @@ impl<'a> Parser<'a> {
             Some(LayoutTokenKind::Symbol("-")) => {
                 let tok = self.advance()?.unwrap();
                 let start_span = self.token_span_range(tok);
+                // VER04j section 2.2: `-128i8` is legal although `128i8` is not.
+                // The minimum of a signed type is the one literal whose
+                // magnitude is out of range, accepted only as the *direct*
+                // operand of unary minus; it is folded into one literal here.
+                if let Some(LayoutTokenKind::Number(text)) = self.peek_kind() {
+                    let num_tok = self.peek().unwrap();
+                    let num_span = self.token_span_range(num_tok);
+                    if let Ok(Literal::Fixed(ty, v)) = self.parse_number(text, num_span, true) {
+                        if ty.signed() && v == ty.max() + 1 {
+                            self.advance()?;
+                            self.leave_depth();
+                            return Ok(Expression::Literal {
+                                lit: Literal::Fixed(ty, -v),
+                                span: (start_span.0, num_span.1),
+                            });
+                        }
+                    }
+                }
                 let operand = Box::new(self.parse_unary()?);
                 let end_span = self.expr_span(&operand);
                 Ok(Expression::Unary {
@@ -1697,56 +1764,12 @@ impl<'a> Parser<'a> {
                     span,
                 })
             }
-            // Number literal: INT, U64_LITERAL, U8_LITERAL
+            // Number literal: INT, the suffixed forms and HEX_LITERAL.
             Some(LayoutTokenKind::Number(num_str)) => {
                 let tok = self.advance()?.unwrap();
                 let span = self.token_span_range(tok);
-
-                if let Some(prefix) = num_str.strip_suffix("u64") {
-                    if prefix.len() > 1 && prefix.starts_with('0') {
-                        // Leading zero rejected
-                        return Err(ParserError::new(
-                            ParserErrorKind::UnexpectedToken,
-                            Some(span),
-                        ));
-                    }
-                    let val: u64 = prefix.parse().map_err(|_| {
-                        ParserError::new(ParserErrorKind::UnexpectedToken, Some(span))
-                    })?;
-                    Ok(Expression::Literal {
-                        lit: Literal::U64(val),
-                        span,
-                    })
-                } else if let Some(prefix) = num_str.strip_suffix("u8") {
-                    if prefix.len() > 1 && prefix.starts_with('0') {
-                        return Err(ParserError::new(
-                            ParserErrorKind::UnexpectedToken,
-                            Some(span),
-                        ));
-                    }
-                    let val: u8 = prefix.parse().map_err(|_| {
-                        ParserError::new(ParserErrorKind::UnexpectedToken, Some(span))
-                    })?;
-                    Ok(Expression::Literal {
-                        lit: Literal::U8(val),
-                        span,
-                    })
-                } else {
-                    if num_str.len() > 1 && num_str.starts_with('0') {
-                        // Leading zero rejected (warrant.tokens INT = 0|[1-9][0-9]*)
-                        return Err(ParserError::new(
-                            ParserErrorKind::UnexpectedToken,
-                            Some(span),
-                        ));
-                    }
-                    let val: u64 = num_str.parse().map_err(|_| {
-                        ParserError::new(ParserErrorKind::UnexpectedToken, Some(span))
-                    })?;
-                    Ok(Expression::Literal {
-                        lit: Literal::Int(val),
-                        span,
-                    })
-                }
+                let lit = self.parse_number(num_str, span, false)?;
+                Ok(Expression::Literal { lit, span })
             }
             // Reference: qualified_name [ < widths > ] [ ( [ args ] ) ]
             Some(LayoutTokenKind::Word(_)) => {
@@ -1804,6 +1827,110 @@ impl<'a> Parser<'a> {
         };
         self.leave_depth();
         result
+    }
+
+    /// Parse the text of a `Number` token (VER04j section 2.2).
+    ///
+    /// ```text
+    /// 5          INT                      -> Literal::Int
+    /// 5u8 5u64   v0 suffixes              -> Literal::U8 / Literal::U64
+    /// 5u16 5i8   v1 suffixes              -> Literal::Fixed (v0 document: W0101)
+    /// 0x1d       hex, no suffix           -> Literal::Int (v1 only)
+    /// 0x1du8     hex with suffix          -> as the decimal literal (v1 only)
+    /// 256u8      out of range             -> W0101 in v1
+    /// 128i8      magnitude 2^(w-1)        -> accepted only when `allow_min`
+    ///                                        (the operand of unary minus)
+    /// ```
+    ///
+    /// Leading zeros are a syntax error in decimal (`01u16`), exactly as the
+    /// `INT` token has always forbidden them; hex may have leading zeros.
+    fn parse_number(
+        &self,
+        text: &str,
+        span: (usize, usize),
+        allow_min: bool,
+    ) -> Result<Literal<'a>, ParserError> {
+        let syntax = || ParserError::new(ParserErrorKind::UnexpectedToken, Some(span));
+        let out_of_range = || ParserError::new(ParserErrorKind::LiteralOutOfRange, Some(span));
+        let v1_only = || {
+            if self.version == Version::V1 {
+                Ok(())
+            } else {
+                Err(ParserError::new(
+                    ParserErrorKind::V1ConstructInV0,
+                    Some(span),
+                ))
+            }
+        };
+        // Hex: `0x` hexdigits+ [suffix].  The lexer hands over every
+        // alphanumeric after `0x`, so an uppercase digit or a bad suffix is
+        // diagnosed here rather than silently split into two tokens.
+        let (digits, suffix, radix) = if let Some(rest) = text.strip_prefix("0x") {
+            v1_only()?;
+            let n = rest
+                .bytes()
+                .take_while(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'))
+                .count();
+            if n == 0 {
+                return Err(syntax());
+            }
+            (&rest[..n], &rest[n..], 16)
+        } else {
+            let n = text.bytes().take_while(u8::is_ascii_digit).count();
+            let digits = &text[..n];
+            if digits.len() > 1 && digits.starts_with('0') {
+                return Err(syntax());
+            }
+            (digits, &text[n..], 10)
+        };
+        let ty = if suffix.is_empty() {
+            None
+        } else {
+            Some(FixedTy::from_suffix(suffix).ok_or_else(syntax)?)
+        };
+        let magnitude = u128::from_str_radix(digits, radix);
+        match ty {
+            None => {
+                let v: u64 = magnitude
+                    .ok()
+                    .and_then(|m| u64::try_from(m).ok())
+                    .ok_or_else(|| {
+                        if radix == 16 {
+                            out_of_range()
+                        } else {
+                            syntax()
+                        }
+                    })?;
+                Ok(Literal::Int(v))
+            }
+            Some(legacy @ (FixedTy::U8 | FixedTy::U64)) if self.version == Version::V0 => {
+                // Legacy v0 behaviour, byte for byte: a failure is W0001.
+                let m = magnitude.map_err(|_| syntax())?;
+                if m > legacy.max() as u128 {
+                    return Err(syntax());
+                }
+                Ok(if legacy == FixedTy::U8 {
+                    Literal::U8(m as u8)
+                } else {
+                    Literal::U64(m as u64)
+                })
+            }
+            Some(ty) => {
+                v1_only()?;
+                let m = magnitude.map_err(|_| out_of_range())?;
+                let max = ty.max() as u128;
+                let is_min = ty.signed() && m == max + 1;
+                if m > max && !(allow_min && is_min) {
+                    return Err(out_of_range());
+                }
+                let v = m as i128;
+                Ok(match ty {
+                    FixedTy::U8 => Literal::U8(v as u8),
+                    FixedTy::U64 => Literal::U64(v as u64),
+                    _ => Literal::Fixed(ty, v),
+                })
+            }
+        }
     }
 
     fn expr_span(&self, expr: &Expression<'a>) -> (usize, usize) {

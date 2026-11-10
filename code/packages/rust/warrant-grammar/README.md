@@ -1,6 +1,6 @@
 # warrant-grammar
 
-Canonical Warrant v0 grammar data for [VER04 P006a](../../../specs/VER04-warrant-language.md#11-grammar-artifacts-and-syntax-corpus-staging-p006).
+Canonical Warrant v0/v1 grammar data for [VER04 P006a](../../../specs/VER04-warrant-language.md#11-grammar-artifacts-and-syntax-corpus-staging-p006).
 The existing grammar-tools compiler turns the repository's `.tokens` and
 `.grammar` files into native Rust structures committed in `src/`.
 
@@ -81,6 +81,46 @@ let harness = compile_rust_l0_harness(&ast, &checked, &manifest, &options).unwra
 
 Source admission, layout capture, grammar data, parser, type checking and codegen do not
 establish solvers, property engine, proof or release authorization (VER-P009+).
+
+## Warrant v1: fixed-width integers and bitwise operations (VER04j WX-B, WX-C)
+
+A document headed `warrant name v1` enables eight fixed-width types (`U8 U16 U32
+U64 I8 I16 I32 I64`), suffixed and hex literals (`5u16`, `-128i8`, `0x1du8`) and
+a family of total built-ins. Arithmetic wraps; checking is explicit.
+
+```text
+warrant demo v1
+  model xtime(x: U8) -> U8 = if x >= 128u8 then bit_xor(shl(x, 1), 0x1du8) else shl(x, 1)
+  example wraps:
+    max_value<U32>() + 1u32 == 0u32
+  example clamp_is_explicit:
+    unwrap_or(try<U8>(300), 255u8) == 255u8
+```
+
+| Group | Built-ins |
+|---|---|
+| conversion | `widen<T>` (range contained), `wrap<T>` (mod 2^w), `try<T>` (`Option`), `to_int`, `to_nat`, `max_value<T>()`, `min_value<T>()` |
+| checked | `checked_add checked_sub checked_mul`, `div rem` (unsigned or `Int`), `div_trunc rem_trunc` (signed), `unwrap_or` |
+| bitwise | `bit_and bit_or bit_xor bit_not`, `shl shr sar rotl rotr` (the count is a `Nat`; `n >= w` gives `0`/`-1`, never the host's masked shift), `popcount clz ctz bit` |
+| endian | `be_bytes le_bytes` (to `Bytes<w/8>`), `from_be<T> from_le<T>` |
+
+`fixed::FixedTy` and the functions in [`src/fixed.rs`](src/fixed.rs) are the one
+definition of what these mean; the checker, the ground evaluator and the tests
+share them, and the generated harness carries a separate copy that
+`tests/wx_evidence.rs` holds to it. A v0 document is unaffected: the new names
+exist only under the `v1` header, and `ct-compare`'s and `gf256`'s generated
+evidence is byte-identical (`tests/v0_compat.rs`).
+
+For evidence, a v1 document's binders get the domains of VER04j 2.6 (every value
+of `U8 I8 U16 I16`, a biased edge set of 281-623 values for wider types, demoted
+leftmost-first under the exhaustive budget) and a shift-count `Nat` gets the
+count-aware domain; the scalar adapter shape accepts fixed-width parameters and
+the faults `saturate-add`, `trap-as-zero-mul`, `narrow-width`, `sign-confuse`,
+`off-by-one-range`, `shift-mask`, `shift-ub`, `rotate-as-shift-left`,
+`sar-as-shr`, `popcount-off` and friends in an `evidence.bindings` `faults=` list.
+`tests/fixtures/wx_fixed.warrant` is the test fixture; its generated harness is
+checked in at `tests/generated/wx_evidence.rs` (`WARRANT_REGEN=1 cargo test -p
+coding_adventures_warrant_grammar --test wx_regen` rewrites it).
 
 ## Tests and regeneration
 
