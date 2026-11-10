@@ -801,6 +801,142 @@ class OrchestrationTests(unittest.TestCase):
         self.assertTrue(gen.make_title("word " * 60).endswith("..."))
 
 
+KINDS_RAW = ac.EVIDENCE_KINDS_PATH.read_bytes()
+NON_CLAIMS_RAW = ac.NON_CLAIMS_PATH.read_bytes()
+
+
+def kinds() -> dict:
+    return json.loads(KINDS_RAW)
+
+
+def non_claims() -> dict:
+    return json.loads(NON_CLAIMS_RAW)
+
+
+def kind_row(data: dict, name: str) -> dict:
+    return next(k for k in data["kinds"] if k["kind"] == name)
+
+
+class CompanionFileTests(unittest.TestCase):
+    """evidence-kinds.json, non-claims.json and the report pins (AS-001a part 2)."""
+
+    def test_real_companion_files_and_pins_have_no_findings(self):
+        findings = ac.check_companions(RAW, KINDS_RAW, NON_CLAIMS_RAW, ac.PACKAGES_ROOT)
+        self.assertEqual([], findings, messages(findings))
+
+    def test_every_catalogue_kind_is_defined_and_every_defined_kind_used(self):
+        data = kinds()
+        data["kinds"] = [k for k in data["kinds"] if k["kind"] != "miri-run"]
+        found = ac.check_evidence_kinds(data, REAL["assumptions"])
+        self.assertIn("evidence kind 'miri-run' is not defined", messages(found))
+        data = kinds()
+        extra = dict(kind_row(data, "miri-run"), kind="orphan", patterns=["orphan/*"])
+        data["kinds"].append(extra)
+        found = ac.check_evidence_kinds(data, REAL["assumptions"])
+        self.assertIn(
+            "orphan: evidence kind is named by no catalogue entry", messages(found)
+        )
+
+    def test_patterns_are_well_formed_namespaced_and_disjoint(self):
+        for bad in ("*/x", "a//b", "a/b c", "/".join(["a"] * 17)):
+            self.assertIsNone(ac.parse_pattern(bad), bad)
+        self.assertEqual(["warrant", "*", "proof"], ac.parse_pattern("warrant/*/proof"))
+        self.assertTrue(ac.patterns_overlap(["a", "*"], ["a", "b"]))
+        self.assertFalse(ac.patterns_overlap(["a", "*"], ["a", "*", "c"]))
+        data = kinds()
+        kind_row(data, "miri-run")["patterns"] = ["warrant/*/proof/*/steps-bound"]
+        text = messages(ac.check_evidence_kinds(data, REAL["assumptions"]))
+        self.assertIn("outside the 'planned' namespace", text)
+        self.assertIn("overlaps a pattern of", text)
+        data = kinds()
+        kind_row(data, "miri-run")["patterns"] = ["miri//x"]
+        self.assertIn(
+            "malformed pattern",
+            messages(ac.check_evidence_kinds(data, REAL["assumptions"])),
+        )
+
+    def test_evidence_kind_field_errors(self):
+        data = kinds()
+        row = kind_row(data, "miri-run")
+        row.update(manifest="ci", verdict="fail", per_run="no", description=" ")
+        text = messages(ac.check_evidence_kinds(data, REAL["assumptions"]))
+        for needle in ("manifest 'ci'", "verdict must be", "per_run", "description"):
+            self.assertIn(needle, text)
+        data = kinds()
+        data["kinds"].append(dict(data["kinds"][0]))
+        self.assertIn(
+            "kind defined twice",
+            messages(ac.check_evidence_kinds(data, REAL["assumptions"])),
+        )
+        self.assertTrue(ac.check_evidence_kinds([], REAL["assumptions"]))
+        self.assertTrue(
+            ac.check_evidence_kinds({"schema": "x", "kinds": []}, REAL["assumptions"])
+        )
+
+    def test_non_claim_errors(self):
+        data = non_claims()
+        data["non_claims"][0].update(
+            package="*", cwe=True, claim="speed", source="../etc", statement=""
+        )
+        text = messages(ac.check_non_claims(data))
+        for needle in ("package", "cwe", "claim 'speed'", "source", "statement"):
+            self.assertIn(needle, text)
+        data = non_claims()
+        data["non_claims"][0]["source"] = "code/specs/NO-SUCH.md"
+        self.assertIn("does not exist", messages(ac.check_non_claims(data)))
+        data = non_claims()
+        data["non_claims"].append(dict(data["non_claims"][0]))
+        self.assertIn("duplicate non-claim", messages(ac.check_non_claims(data)))
+        self.assertTrue(ac.check_non_claims({"schema": "ver13-non-claims-v1"}))
+
+    def test_a_stale_report_pin_is_catalogue_drift(self):
+        pin = ac.expected_pin(RAW, KINDS_RAW, NON_CLAIMS_RAW)
+        self.assertEqual([], ac.check_report_pins(ac.PACKAGES_ROOT, pin))
+        with tempfile.TemporaryDirectory() as tmp:
+            pkg = Path(tmp) / "rust" / "demo"
+            pkg.mkdir(parents=True)
+            report = pkg / "assurance_report.json"
+            report.write_text(json.dumps({"catalogue": pin}), encoding="utf-8")
+            self.assertEqual([], ac.check_report_pins(Path(tmp), pin))
+            stale = dict(pin, sha256="0" * 64)
+            report.write_text(json.dumps({"catalogue": stale}), encoding="utf-8")
+            found = ac.check_report_pins(Path(tmp), pin)
+            self.assertEqual({"AC-14"}, rules(found))
+            self.assertIn("CatalogueDrift", messages(found))
+            report.write_text("{}", encoding="utf-8")
+            self.assertIn(
+                "CatalogueDrift", messages(ac.check_report_pins(Path(tmp), pin))
+            )
+            report.write_text('{"a": 1, "a": 2}', encoding="utf-8")
+            self.assertIn("unreadable", messages(ac.check_report_pins(Path(tmp), pin)))
+
+    def test_editing_any_companion_file_changes_the_pin(self):
+        pin = ac.expected_pin(RAW, KINDS_RAW, NON_CLAIMS_RAW)
+        self.assertNotEqual(
+            pin, ac.expected_pin(RAW, KINDS_RAW + b"\n", NON_CLAIMS_RAW)
+        )
+        self.assertNotEqual(
+            pin, ac.expected_pin(RAW, KINDS_RAW, NON_CLAIMS_RAW + b"\n")
+        )
+
+    def test_companion_schemas_match_the_checker_and_validate(self):
+        schemas = REPO / "code" / "specs" / "schemas"
+        ek = json.loads((schemas / "ver13-evidence-kinds-v1.schema.json").read_text())
+        nc = json.loads((schemas / "ver13-non-claims-v1.schema.json").read_text())
+        item = ek["properties"]["kinds"]["items"]
+        self.assertEqual(set(ac.EVIDENCE_KIND_FIELDS), set(item["required"]))
+        self.assertEqual(list(ac.MANIFESTS), item["properties"]["manifest"]["enum"])
+        row = nc["properties"]["non_claims"]["items"]
+        self.assertEqual(set(ac.NON_CLAIM_FIELDS), set(row["required"]))
+        self.assertEqual(list(ac.CLAIM_KINDS), row["properties"]["claim"]["enum"])
+        try:
+            import jsonschema
+        except ImportError:  # the checker itself needs no third-party package
+            self.skipTest("jsonschema not installed")
+        jsonschema.validate(kinds(), ek)
+        jsonschema.validate(non_claims(), nc)
+
+
 class CommandLineTests(unittest.TestCase):
     def cli(self, *args: str) -> tuple[int, str, str]:
         out, err = io.StringIO(), io.StringIO()
@@ -813,6 +949,16 @@ class CommandLineTests(unittest.TestCase):
         self.assertEqual(0, code, err)
         self.assertIn("OK (84 entries)", out)
         self.assertIn(f"catalogue sha256: {ac.catalogue_digest(RAW)}", out)
+        self.assertIn(f"evidence-kinds sha256: {ac.catalogue_digest(KINDS_RAW)}", out)
+
+    def test_a_stale_report_pin_fails_the_run(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            pkg = Path(tmp) / "rust" / "demo"
+            pkg.mkdir(parents=True)
+            (pkg / "assurance_report.json").write_text("{}", encoding="utf-8")
+            code, _, err = self.cli("--packages-root", tmp)
+        self.assertEqual(1, code)
+        self.assertIn("CatalogueDrift", err)
 
     def test_digest_only(self):
         code, out, _ = self.cli("--digest")
