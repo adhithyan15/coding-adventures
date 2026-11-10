@@ -269,4 +269,51 @@ subtest 'decompress with sym_count > 0 but missing table bytes is safe' => sub {
     is $result, '', 'returns empty string when table is truncated';
 };
 
+# ---- Hostile input (SEC-003): the code-lengths table is attacker-controlled --
+
+sub hostile {
+    my ($entries, $orig, $payload) = @_;
+    return pack("NN", $orig, scalar @$entries)
+        . join('', map { pack("CC", @$_) } @$entries)
+        . $payload;
+}
+
+subtest 'hostile: huge length gap is rejected' => sub {
+    ok dies { decompress(hostile([[0, 1], [1, 255]], 4, "\xff" x 8)) }, 'dies';
+};
+
+subtest 'hostile: zero length is rejected' => sub {
+    ok dies { decompress(hostile([[0, 0]], 1, "\x00")) }, 'dies';
+};
+
+subtest 'hostile: over-subscribed table is rejected' => sub {
+    ok dies { decompress(hostile([[0, 1], [1, 1], [2, 1]], 1, "\x00")) }, 'dies';
+};
+
+subtest 'hostile: unsorted table is rejected' => sub {
+    ok dies { decompress(hostile([[0, 2], [1, 1]], 1, "\x00")) }, 'dies';
+};
+
+subtest 'hostile: symbol_count over 256 is rejected' => sub {
+    my @entries = map { [$_ % 256, 9] } 0 .. 256;
+    ok dies { decompress(hostile(\@entries, 1, "\x00")) }, 'dies';
+};
+
+subtest 'hostile: duplicate symbol is rejected' => sub {
+    ok dies { decompress(hostile([[0, 1], [0, 1]], 1, "\x00")) }, 'dies';
+};
+
+subtest 'hostile: declared length u32 max with tiny payload is rejected' => sub {
+    ok dies { decompress(hostile([[0, 1], [1, 1]], 0xFFFFFFFF, "\x00" x 4)) }, 'dies';
+};
+
+subtest 'hostile: unmatched bits fail fast' => sub {
+    ok dies { decompress(hostile([[0, 1]], 8, "\xff" x 100_000)) }, 'dies';
+};
+
+subtest 'large round trip decodes in linear time' => sub {
+    my $data = join '', map { chr($_ % 7) } 0 .. 99_999;
+    is rt($data), $data, 'round trip';
+};
+
 done_testing;
