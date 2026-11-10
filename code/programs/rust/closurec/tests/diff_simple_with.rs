@@ -16,9 +16,9 @@
 //!
 //! ## Fact 1 — SIMPLE: the `with` survives and the pipeline descends into it
 //!
-//! `with (o) { x(1 + 2); }` at SIMPLE emits `with(o){x(3)}`. Two things prove
+//! `with (o) { x(1 + 2); }` at SIMPLE emits `with(o)x(3);`. Two things prove
 //! the whole pipeline ran through the `with`:
-//!   1. the `with` round-trips (`with(o){…}`), proving the bridge modelled it —
+//!   1. the `with` round-trips (`with(o)…`), proving the bridge modelled it —
 //!      not a WHITESPACE_ONLY fallback; and
 //!   2. the argument folds — `1 + 2` → `3` — proving the SIMPLE pipeline
 //!      descended INTO the `with` body. A WHITESPACE_ONLY fallback would leave

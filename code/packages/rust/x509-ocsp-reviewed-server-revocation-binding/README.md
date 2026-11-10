@@ -129,6 +129,20 @@ routed responder through RFC 6960 no-check policy, but does not establish
 revocation policy for the added proof's own responder or complete revocation
 policy.
 
+`bind_x509_ocsp_routed_issuer_reviewed_responder_revocation_intermediate_revocation`
+provides the corresponding composition for an original responder that uses
+separately authenticated revocation instead of no-check. Repository-owned
+private evidence interfaces derive the exact retained intermediate, selected
+reviewed root, and original observation time from the complete responder-
+revocation branch, then require a separate fully routed authenticated proof to
+name those exact objects and time. Target, issuer, then time are checked in
+stable order. Success retains both complete non-copyable branches, while
+failures reuse the existing payload-free intermediate-binding categories.
+This does not establish revocation policy for either added proof's own
+responder, feed this alternative into the added-status responder path
+projection, or provide complete revocation, generalized path validation, TLS,
+HTTP, OAuth, or network readiness.
+
 `reify_x509_ocsp_routed_issuer_reviewed_intermediate_status_responder_path`
 then consumes that complete composition and nominally reifies the added status
 proof's delegated responder-to-reviewed-root path. The retained proof already
@@ -227,7 +241,7 @@ This crate performs evidence composition, exact-time validity checks, the
 bounded selected-anchor and exact-intermediate responder DNS policies, and the
 RFC 6960 responder no-check or exact authenticated responder-revocation
 branches plus the independent exact intermediate-revocation branch described
-above and its exact no-check composition described above only.
+above and its exact no-check and authenticated-responder compositions only.
 The complete responder DNS and no-check policy sequence applies to both the
 fully fixed RSA SHA-256 proof and the fully routed proof. The routed proof
 retains every selected signature route through these semantic gates. The new
@@ -236,18 +250,19 @@ exact routed responder, intermediate, and observation time, but stops before
 revocation policy for the second proof's signer and for the intermediate.
 The independent intermediate branch binds another complete authenticated proof
 to the exact retained intermediate, selected reviewed root, and observation
-time. The no-check composition derives those same inputs through the consumed
-no-check proof and retains the added proof. Its follow-up projection reifies
-that proof's exact delegated responder-to-reviewed-root path; subsequent
-policies apply supported reviewed-root DNS constraints and either the no-check
-or separately authenticated revocation branch to that exact added responder.
+time. Both compositions derive those same inputs through the consumed
+responder-policy proof and retain the added proof. The no-check follow-up
+projection reifies that proof's exact delegated responder-to-reviewed-root
+path; subsequent policies apply supported reviewed-root DNS constraints and
+either the no-check or separately authenticated revocation branch to that
+exact added responder.
 It does not perform new cryptography, search for or generalize certificate
 paths, implement complete
 RFC 5280 policy, apply excluded or non-DNS anchor constraints or non-DNS
-intermediate constraints to the responder certificate, compose intermediate-
-status evidence with the original authenticated responder-revocation branch,
-implement complete revocation policy, validate the additional responder-
-revocation proof's own responder, interpret unsupported OCSP extensions,
+intermediate constraints to the responder certificate, project the added
+intermediate-status responder path from the original authenticated responder-
+revocation branch, implement complete revocation policy, validate either
+additional revocation proof's own responder, interpret unsupported OCSP extensions,
 acquire or cache OCSP data, read a clock, implement TLS or HTTP, authorize
 OAuth transport, open a network connection, or access a credential. The
 reviewed Mozilla root snapshot excludes OS, enterprise, user-installed, and

@@ -716,8 +716,8 @@ const languageSourceInputRegistryJSON = `
         {
           "id": "rust-engram-wasm-build-inputs",
           "package_root": "code/packages/rust/engram-wasm",
-          "paths": ["js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs", "pkg/engram_engine.wasm"],
-          "reason": "The Engram WASM BUILD runs the exact smoke module, which imports one exact host module and reads one exact checked-in WebAssembly artifact.",
+          "paths": ["js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs"],
+          "reason": "The Engram WASM BUILD runs the exact smoke module, which imports one exact host module; the WebAssembly artifact it reads is built by the same BUILD and is not a source input.",
           "owner": "build-tool-engram-wasm-package-source-input-registry-repair"
         }
       ],
@@ -1020,4 +1020,4 @@ const languageSourceInputRegistryJSON = `
 }
 `
 
-const languageSourceInputRegistryDigest = "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621"
+const languageSourceInputRegistryDigest = "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1"

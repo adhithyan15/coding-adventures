@@ -1,7 +1,7 @@
 // wasm-loader.js — browser loader for the Rust spreadsheet engine compiled to
 // WebAssembly. This is the SOURCE; scripts/bundle-wasm-engine.sh prepends the
 // `.wasm` bytes (as `var __SPREADSHEET_WASM_B64__ = "..."`) to produce the
-// committed vendor/spreadsheet-engine-wasm.js the page loads.
+// generated vendor/spreadsheet-engine-wasm.js the page loads.
 //
 // It presents the SAME global API as the TypeScript engine bundle
 // (`window.SpreadsheetEngine` with `createSpreadsheet()` + `columnToLetters`),

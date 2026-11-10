@@ -654,7 +654,9 @@ def test_workflow_validates_before_building_and_has_one_publisher() -> None:
     assert "Get-FileHash $corruptProbe" not in workflow
     assert "code/packages/rust/task-wasm/pkg/task_engine.wasm" in workflow
     assert "host/web/public/task_engine.wasm" in workflow
-    assert "':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'" in workflow
+    # BUILD-001: the engine is built in the workflow rather than committed, so
+    # the tracked-file drift check no longer excludes it.
+    assert "':(exclude)code/packages/rust/task-wasm/pkg/task_engine.wasm'" not in workflow
     assert WEB_LOCK.is_file()
 
 

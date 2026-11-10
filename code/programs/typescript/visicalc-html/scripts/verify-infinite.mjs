@@ -1,7 +1,7 @@
 // verify-infinite.mjs — headless proof that the virtualized infinite-sheet demo
 // (infinite.html) does REAL windowed rendering on the shared Rust engine.
 //
-// It loads the SAME committed bundle the browser loads
+// It loads the SAME generated bundle the browser loads
 // (vendor/spreadsheet-engine-wasm.js — the base64-embedded .wasm + loader),
 // seeds the SAME data infinite.html seeds, and replays infinite.html's exact
 // visible-window computation at several scroll positions — asserting that:
@@ -19,10 +19,16 @@
 //
 // Run:  node code/programs/typescript/visicalc-html/scripts/verify-infinite.mjs
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import vm from "node:vm";
 
-// Load the committed vendored bundle in a sandbox that provides the few globals
+// The bundle is generated, not committed (BUILD-001); say how to make it.
+if (!existsSync(new URL("../vendor/spreadsheet-engine-wasm.js", import.meta.url))) {
+  console.error("vendor/spreadsheet-engine-wasm.js is missing; build it with: bash code/scripts/build-demo-wasm.sh visicalc");
+  process.exit(1);
+}
+
+// Load the generated vendor bundle in a sandbox that provides the few globals
 // the loader expects (the same ones a browser has).
 const bundle = readFileSync(
   new URL("../vendor/spreadsheet-engine-wasm.js", import.meta.url),

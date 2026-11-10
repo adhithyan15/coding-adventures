@@ -28,7 +28,7 @@ fi
 echo "Building task-wasm for $TARGET (release)..."
 (cd "$WORKSPACE" && cargo build -p task-wasm --target "$TARGET" --release)
 
-SRC="$WORKSPACE/target/$TARGET/release/task_wasm.wasm"
+SRC="${CARGO_TARGET_DIR:-$WORKSPACE/target}/$TARGET/release/task_wasm.wasm"
 DST="$OUT_DIR/task_engine.wasm"
 cp "$SRC" "$DST"
 

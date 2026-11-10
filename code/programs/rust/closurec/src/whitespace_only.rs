@@ -2610,7 +2610,7 @@ pub fn whitespace_only_minify(
         }
     }
 
-    // ---- gap-074 + gap-076 + gap-079: header-keyword body flatten -
+    // ---- gap-074 + gap-076 + gap-079 + CCR-076: header-keyword body flatten -
     // `for(...){S}` / `while(...){S}` / `with(...){S}` / `if(...){S}`
     // whose body `{S}` is a SINGLE statement with NO trailing `;` →
     // `for(...)S;`. Sibling of gap-067 (which flattens a *labeled*
@@ -2622,186 +2622,165 @@ pub fn whitespace_only_minify(
     //   for(a in o){h(a)}      →  for(a in o)h(a);       (gap-074)
     //   with(o){a()}           →  with(o)a();            (gap-076)
     //   if(x){y()}             →  if(x)y();              (gap-079)
+    //   for(...){for(...){S}}  →  for(...)for(...)S;     (CCR-076, #15861)
     //
-    // The `{` immediately following a `for(...)`/`while(...)`/
-    // `with(...)`/`if(...)` header is UNAMBIGUOUSLY the statement
-    // body — never an object literal — so (unlike gap-067) no
-    // completion-keyword guard is needed. The body is dropped braces
-    // + a synthetic `;` terminator.
-    //
-    // gap-079 (the `if` arm) — DANGLING-ELSE SAFETY. Stripping the
-    // braces around an `if` consequent is unsound exactly when the
-    // body contains a nested un-`else`-d `if` AND the outer `if` has
-    // an `else`:  `if(a){if(b)c()}else d()` must KEEP its braces —
-    // flattening to `if(a)if(b)c();else d()` would re-bind the `else`
-    // to the INNER `if(b)` (the JAR keeps the braces too, verified).
-    // We get this for free: any body containing a nested `if` (or any
-    // other control-flow keyword) sets `has_blocking_keyword` and is
-    // therefore NOT flattened — so the dangling-else case can never
-    // reach the brace-drop. A consequent that is a single non-control
-    // statement (`{y()}`) has no such hazard. `else`-arm flatten
-    // (`else{z()}` → `else z()`) is the separate gap-080.
-    //
-    // PROVABLY-SAFE minimal slice (matches `minify_loop_body_flatten`,
-    // `minify_with_body_flatten`, and `minify_if_body_flatten`):
-    //   - anchor on a `for`/`while`/`with`/`if` STATEMENT keyword
-    //     (word-like, and NOT a property — `o.while(x){…}` is a
-    //     method call, so a `.`/`?.` look-behind disqualifies it);
-    //   - the keyword's `(`…`)` header is matched by a structural
-    //     depth scan, and the token AFTER `)` must be a `{`;
-    //   - the body has NO nested `{` and NO control-flow keyword at
-    //     depth 1 (this is also the dangling-else guard for `if`),
-    //     and either ZERO top-level `;` (a single un-terminated
-    //     statement) or exactly ONE that is the body's last token (a
-    //     single terminated statement, #17840: the shape the ASI splice
-    //     produces). Multi-statement bodies (`{a();b()}`) and empty
-    //     bodies (`{}`) are untouched.
-    //
-    // All bracket checks route through `is_structural_punct`, so a
-    // literal `"{"`/`")"` can never be mistaken for a delimiter.
+    // Iterated pass: loops can nest arbitrarily, and inner loops flatten first
+    // before the outer loop becomes eligible.
     {
-        let mut drops: Vec<usize> = Vec::new();
-        // #18123: a keyword directly in a class body or object literal is a
-        // method name, not a statement head (`x={while(a){c=a;}}`).
-        let in_member_list = member_list_positions(&kept);
-        let mut i = 0;
-        while i + 1 < kept.len() {
-            // gap-076: `with` joins the anchor set. A `with(o){…}`
-            // statement has the same `keyword (…) {body}` shape as a
-            // loop, and a `{` immediately after the `with(…)` header
-            // is unambiguously the with-body — so the identical
-            // single-statement flatten applies (`with(o){a()}` →
-            // `with(o)a();`).
-            let is_loop_kw = is_word_like(kept[i])
-                && matches!(kept[i].value.as_str(), "for" | "while" | "with" | "if");
-            let is_property = i >= 1
-                && (is_structural_punct(kept[i - 1], ".")
-                    || is_structural_punct(kept[i - 1], "?."));
-            if !is_loop_kw
-                || is_property
-                || in_member_list[i]
-                || !is_structural_punct(kept[i + 1], "(")
-            {
-                i += 1;
-                continue;
-            }
-            // Match the header `(` … `)`.
-            let mut depth: i32 = 1;
-            let mut header_close: Option<usize> = None;
-            let mut j = i + 2;
-            while j < kept.len() {
-                let t = &kept[j];
-                if is_structural_punct(t, "(")
-                    || is_structural_punct(t, "[")
-                    || is_structural_punct(t, "{")
+        for _ in 0..8 {
+            let mut drops: Vec<usize> = Vec::new();
+            // #18123: a keyword directly in a class body or object literal is a
+            // method name, not a statement head (`x={while(a){c=a;}}`).
+            let in_member_list = member_list_positions(&kept);
+            let mut i = 0;
+            while i + 1 < kept.len() {
+                // gap-076: `with` joins the anchor set. A `with(o){…}`
+                // statement has the same `keyword (…) {body}` shape as a
+                // loop, and a `{` immediately after the `with(…)` header
+                // is unambiguously the with-body — so the identical
+                // single-statement flatten applies (`with(o){a()}` →
+                // `with(o)a();`).
+                let is_loop_kw = is_word_like(kept[i])
+                    && matches!(kept[i].value.as_str(), "for" | "while" | "with" | "if");
+                let is_property = i >= 1
+                    && (is_structural_punct(kept[i - 1], ".")
+                        || is_structural_punct(kept[i - 1], "?."));
+                if !is_loop_kw
+                    || is_property
+                    || in_member_list[i]
+                    || !is_structural_punct(kept[i + 1], "(")
                 {
-                    depth += 1;
-                } else if is_structural_punct(t, ")") {
-                    depth -= 1;
-                    if depth == 0 {
-                        header_close = Some(j);
-                        break;
-                    }
-                } else if is_structural_punct(t, "]")
-                    || is_structural_punct(t, "}")
-                {
-                    depth -= 1;
+                    i += 1;
+                    continue;
                 }
-                j += 1;
-            }
-            let Some(hc) = header_close else {
-                i += 1;
-                continue;
-            };
-            // The body must be a `{` immediately after the header.
-            let body_open = hc + 1;
-            if body_open >= kept.len()
-                || !is_structural_punct(kept[body_open], "{")
-            {
-                i += 1;
-                continue;
-            }
-            // Scan the body to its matching `}`, gathering
-            // eligibility info (no nested brace, no blocking
-            // keyword, zero top-level `;`).
-            let mut bdepth: i32 = 1;
-            let mut body_close: Option<usize> = None;
-            let mut has_nested_brace = false;
-            let mut has_blocking_keyword = false;
-            let mut top_semis: u32 = 0;
-            let mut k = body_open + 1;
-            while k < kept.len() {
-                let t = &kept[k];
-                if is_structural_punct(t, "{") {
-                    has_nested_brace = true;
-                    bdepth += 1;
-                } else if is_structural_punct(t, "(")
-                    || is_structural_punct(t, "[")
-                {
-                    bdepth += 1;
-                } else if is_structural_punct(t, "}") {
-                    bdepth -= 1;
-                    if bdepth == 0 {
-                        body_close = Some(k);
-                        break;
-                    }
-                } else if is_structural_punct(t, ")")
-                    || is_structural_punct(t, "]")
-                {
-                    bdepth -= 1;
-                } else if bdepth == 1 {
-                    if is_structural_punct(t, ";") {
-                        top_semis += 1;
-                    } else if is_word_like(t)
-                        && matches!(
-                            t.value.as_str(),
-                            "function"
-                                | "try"
-                                | "if"
-                                | "while"
-                                | "for"
-                                | "do"
-                                | "switch"
-                                | "class"
-                        )
+                let outer_name = kept[i].value.as_str();
+                // Match the header `(` … `)`.
+                let mut depth: i32 = 1;
+                let mut header_close: Option<usize> = None;
+                let mut j = i + 2;
+                while j < kept.len() {
+                    let t = &kept[j];
+                    if is_structural_punct(t, "(")
+                        || is_structural_punct(t, "[")
+                        || is_structural_punct(t, "{")
                     {
-                        has_blocking_keyword = true;
-                    }
-                }
-                k += 1;
-            }
-            if let Some(bc) = body_close {
-                let non_empty = bc > body_open + 1;
-                // #17840: a single statement whose ONE top-level `;` is its
-                // own terminator, right before the `}`, qualifies too. The
-                // ASI splice turns `with(o){a()}` into `with(o){a();}`
-                // before this pass runs, and the emit-time gap-032 flatten
-                // that handles explicit `;` bodies doesn't cover `with`.
-                let terminated_single = top_semis == 1
-                    && bc > body_open + 2
-                    && is_structural_punct(kept[bc - 1], ";");
-                if non_empty
-                    && !has_nested_brace
-                    && !has_blocking_keyword
-                    && !starts_lexical_declaration(&kept, body_open + 1)
-                    && (top_semis == 0 || terminated_single)
-                {
-                    if let Some(semi) = synth_semi.as_ref() {
-                        drops.push(body_open); // loop-body `{`
-                        if terminated_single {
-                            drops.push(bc - 1); // the body's own `;`
+                        depth += 1;
+                    } else if is_structural_punct(t, ")") {
+                        depth -= 1;
+                        if depth == 0 {
+                            header_close = Some(j);
+                            break;
                         }
-                        kept[bc] = semi; // `}` → synthetic `;`
-                        i = bc + 1;
-                        continue;
+                    } else if is_structural_punct(t, "]")
+                        || is_structural_punct(t, "}")
+                    {
+                        depth -= 1;
+                    }
+                    j += 1;
+                }
+                let Some(hc) = header_close else {
+                    i += 1;
+                    continue;
+                };
+                // The body must be a `{` immediately after the header.
+                let body_open = hc + 1;
+                if body_open >= kept.len()
+                    || !is_structural_punct(kept[body_open], "{")
+                {
+                    i += 1;
+                    continue;
+                }
+                // Scan the body to its matching `}`, gathering
+                // eligibility info (no nested brace, no blocking
+                // keyword, zero top-level `;`).
+                let mut bdepth: i32 = 1;
+                let mut body_close: Option<usize> = None;
+                let mut has_nested_brace = false;
+                let mut has_blocking_keyword = false;
+                let mut top_semis: u32 = 0;
+                let mut k = body_open + 1;
+                while k < kept.len() {
+                    let t = &kept[k];
+                    if is_structural_punct(t, "{") {
+                        has_nested_brace = true;
+                        bdepth += 1;
+                    } else if is_structural_punct(t, "(")
+                        || is_structural_punct(t, "[")
+                    {
+                        bdepth += 1;
+                    } else if is_structural_punct(t, "}") {
+                        bdepth -= 1;
+                        if bdepth == 0 {
+                            body_close = Some(k);
+                            break;
+                        }
+                    } else if is_structural_punct(t, ")")
+                        || is_structural_punct(t, "]")
+                    {
+                        bdepth -= 1;
+                    } else if bdepth == 1 {
+                        if is_structural_punct(t, ";") {
+                            top_semis += 1;
+                        } else if is_word_like(t) {
+                            let kw = t.value.as_str();
+                            let is_control = matches!(
+                                kw,
+                                "function"
+                                    | "try"
+                                    | "if"
+                                    | "do"
+                                    | "switch"
+                                    | "class"
+                            );
+                            // Loops (`for`, `while`) inside a loop have no `else`,
+                            // so they never create a dangling-else hazard (CCR-076).
+                            // But inside `if`, or if `kw` is a control/declaration keyword,
+                            // they block.
+                            let loop_in_loop = matches!(outer_name, "for" | "while" | "with")
+                                && matches!(kw, "for" | "while");
+                            if is_control || (!loop_in_loop && matches!(kw, "for" | "while")) {
+                                has_blocking_keyword = true;
+                            }
+                        }
+                    }
+                    k += 1;
+                }
+                if let Some(bc) = body_close {
+                    let non_empty = bc > body_open + 1;
+                    // #17840: a single statement whose ONE top-level `;` is its
+                    // own terminator, right before the `}`, qualifies too. The
+                    // ASI splice turns `with(o){a()}` into `with(o){a();}`
+                    // before this pass runs, and the emit-time gap-032 flatten
+                    // that handles explicit `;` bodies doesn't cover `with`.
+                    let terminated_single = top_semis == 1
+                        && bc > body_open + 2
+                        && is_structural_punct(kept[bc - 1], ";");
+                    if non_empty
+                        && !has_nested_brace
+                        && !has_blocking_keyword
+                        && !starts_lexical_declaration(&kept, body_open + 1)
+                        && (top_semis == 0 || terminated_single)
+                    {
+                        if let Some(semi) = synth_semi.as_ref() {
+                            drops.push(body_open); // loop-body `{`
+                            if terminated_single {
+                                drops.push(bc - 1); // the body's own `;`
+                            }
+                            kept[bc] = semi; // `}` → synthetic `;`
+                            i = bc + 1;
+                            continue;
+                        }
                     }
                 }
+                i += 1;
             }
-            i += 1;
-        }
-        drops.sort_unstable();
-        for &drop_idx in drops.iter().rev() {
-            kept.remove(drop_idx);
+            if drops.is_empty() {
+                break;
+            }
+            drops.sort_unstable();
+            for &drop_idx in drops.iter().rev() {
+                kept.remove(drop_idx);
+            }
         }
     }
 

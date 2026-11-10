@@ -17,11 +17,11 @@ reviews_of: [KA-C13-dehada-bhagagalu]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [KA-LEX-C13-DEHADA-BHAGAGALU-01]
+  knowledge: [KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07]
 introduces:
   knowledge: [KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02]
 practises:
-  knowledge: [KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02]
+  knowledge: [KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,11 +32,14 @@ variety: standard-colloquial
 # ವಸಂತ ಋತು, ಬೇಸಿಗೆ, ಮಳೆಗಾಲ, ಚಳಿಗಾಲ — native words, plus a double Sanskrit loan
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C13-DEHADA-BHAGAGALU-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07] -->
 
 [PAUSE 2s] Kannada's summer, rain, and cold words are native, just like
 Tamil's — but its word for "spring" borrows **twice** from Sanskrit, not
 once.
+
+Before the seasons: say *avaru kelasa māḍuttāre* once for “they work” and
+once for one respected adult. Then make *hesaru* plural.
 
 ## You'll want to know: The words
 <!-- hl-knowledge: introduces=[KA-LEX-C14-KAALAGALU-01]; assesses=[] -->
@@ -63,13 +66,15 @@ that shapes Karnataka's agricultural year the most, not a clean four-way
 Western split.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C13-DEHADA-BHAGAGALU-01, KA-LEX-C14-KAALAGALU-01, KA-PRAGMATICS-C14-KAALAGALU-02, KA-LEX-C11-BANNAGALU-01, KA-LEX-C11-BANNAGALU-02, KA-GRAMMAR-C12-THIRD-PERSON-03, KA-GRAMMAR-C12-HUMAN-NONHUMAN-04, KA-GRAMMAR-C12-PRESENT-THIRD-05, KA-GRAMMAR-C12-THIRD-PERSON-POSSESSIVE-06, KA-GRAMMAR-C12-PLURAL-GALU-07] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bēsige" — summer, native]
 - [YOU SAY: "maḷegāla" — the rains]
 - [YOU SAY: "caḷigāla" — the cold season, native]
 - [YOU SAY: the double loan — "vasanta ṛtu" — both halves Sanskrit]
+- [YOU SAY: *avaru kelasa māḍuttāre*; then *avara akka*]
+- [YOU SAY: *hesarugaḷu*; identify *adu* as non-human]
 - [YOU RECALL: say *kappu biḷi kempu nīli*]
 
 ## Wrap-up Recall

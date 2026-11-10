@@ -717,8 +717,8 @@ internal static class SourceInputRegistryProjection
         {
           "id": "rust-engram-wasm-build-inputs",
           "package_root": "code/packages/rust/engram-wasm",
-          "paths": ["js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs", "pkg/engram_engine.wasm"],
-          "reason": "The Engram WASM BUILD runs the exact smoke module, which imports one exact host module and reads one exact checked-in WebAssembly artifact.",
+          "paths": ["js/engram-mosaic-host-wasm.mjs", "js/smoke.mjs"],
+          "reason": "The Engram WASM BUILD runs the exact smoke module, which imports one exact host module; the WebAssembly artifact it reads is built by the same BUILD and is not a source input.",
           "owner": "build-tool-engram-wasm-package-source-input-registry-repair"
         }
       ],
@@ -1024,7 +1024,7 @@ internal static class SourceInputRegistryProjection
     internal const string RepositoryBoundaryJson = """
 {
   "schema_version": 1,
-  "language_source_input_registry_sha256": "5201a045ea3e2086fd9be316f2692743ca329f1d84f1c0983a0da47e96b3f621",
+  "language_source_input_registry_sha256": "8f3d9ee3a696671b6889bba64962b0193ade73f8ed10ecb6ab5353b436ca4ad1",
   "boundaries": [
     {
       "id": "haskell-workspace-project",
@@ -1470,10 +1470,9 @@ internal static class SourceInputRegistryProjection
         "excluded_roots": []
       },
       "inputs": [
-        {"path": "code/programs/typescript/visicalc-html/index.html", "role": "cross_package_exact"},
-        {"path": "code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js", "role": "cross_package_exact"}
+        {"path": "code/programs/typescript/visicalc-html/index.html", "role": "cross_package_exact"}
       ],
-      "reason": "The Deno VisiCalc server text-imports these exact sibling HTML and reviewed WASM-wrapper inputs at compile time.",
+      "reason": "The Deno VisiCalc server text-imports this exact tracked sibling HTML input at compile time; its generated WASM-engine bundle is built, not committed, and is not a source input.",
       "owner": "build-tool-shared-and-generated-boundary-source-input-contract"
     },
     {

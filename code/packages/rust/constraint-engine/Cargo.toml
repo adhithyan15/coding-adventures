@@ -1,6 +1,6 @@
 [package]
 name = "constraint-engine"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "LANG24 PR 24-C — pluggable solver tactics for the generic Constraint-VM: SAT (CDCL, via the cdcl-sat crate), LIA (Cooper) and QF_BV (bit-blasting via bit-blaster, UNSAT certified by drat-check). Consumed by constraint-vm and future tactic extensions."
 

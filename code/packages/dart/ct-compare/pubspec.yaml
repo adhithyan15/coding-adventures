@@ -1,0 +1,14 @@
+name: coding_adventures_ct_compare
+version: 0.1.0
+description: >
+  Constant-time byte comparison and selection (CT01): byte equality, equal-length
+  byte selection and unsigned 64-bit equality with an integer selection bit.
+repository: https://github.com/adhithyan15/coding-adventures
+
+environment:
+  sdk: ^3.0.0
+
+dependencies: {}
+
+dev_dependencies:
+  test: ^1.25.0
