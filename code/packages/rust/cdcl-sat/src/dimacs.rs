@@ -200,9 +200,8 @@ pub fn parse_dimacs_with_limit(text: &str, max_vars: usize) -> Result<Cnf, Dimac
         }
         let (num_vars, _) = header.ok_or_else(|| err(line_no, DimacsErrorKind::MissingHeader))?;
         for token in line.split_whitespace() {
-            let value: i64 = token
-                .parse()
-                .map_err(|_| err(line_no, DimacsErrorKind::BadLiteral(token.to_owned())))?;
+            let value = strict_int(token)
+                .ok_or_else(|| err(line_no, DimacsErrorKind::BadLiteral(token.to_owned())))?;
             if value == 0 {
                 clauses.push(std::mem::take(&mut current));
                 continue;
@@ -229,6 +228,27 @@ pub fn parse_dimacs_with_limit(text: &str, max_vars: usize) -> Result<Cnf, Dimac
     Ok(Cnf { num_vars, clauses })
 }
 
+/// `0`, or ASCII digits with no leading zero.
+fn canonical_digits(s: &str) -> bool {
+    !s.is_empty() && s.bytes().all(|b| b.is_ascii_digit()) && (s == "0" || !s.starts_with('0'))
+}
+
+/// The strict integer grammar shared with `drat-check` (VER09 7.11, VER11
+/// 3.4.2 L4): `-?(0|[1-9][0-9]*)` in `i64` range, with `-0` not an integer.
+/// Rust's `i64::from_str` would accept `+1` and read `-0` as the clause
+/// terminator, which no other DIMACS reader does.
+fn strict_int(token: &str) -> Option<i64> {
+    let digits = token.strip_prefix('-').unwrap_or(token);
+    if !canonical_digits(digits) {
+        return None;
+    }
+    let value: i64 = token.parse().ok()?;
+    if token.starts_with('-') && value == 0 {
+        return None;
+    }
+    Some(value)
+}
+
 /// Parse `p cnf <vars> <clauses>`.
 fn parse_header(line: &str, max_vars: usize) -> Result<(usize, usize), DimacsErrorKind> {
     let fields: Vec<&str> = line.split_whitespace().collect();
@@ -236,8 +256,10 @@ fn parse_header(line: &str, max_vars: usize) -> Result<(usize, usize), DimacsErr
         return Err(DimacsErrorKind::BadHeader(format!("expected `p cnf <vars> <clauses>`, got `{line}`")));
     }
     let number = |s: &str, what: &str| {
-        s.parse::<usize>()
-            .map_err(|_| DimacsErrorKind::BadHeader(format!("{what} `{s}` is not a non-negative integer")))
+        canonical_digits(s)
+            .then(|| s.parse::<usize>().ok())
+            .flatten()
+            .ok_or_else(|| DimacsErrorKind::BadHeader(format!("{what} `{s}` is not a non-negative integer")))
     };
     let vars = number(fields[2], "variable count")?;
     let clauses = number(fields[3], "clause count")?;
