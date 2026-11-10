@@ -191,11 +191,31 @@ static int cmp_sym_len(const void *pa, const void *pb) {
     return a->symbol < b->symbol ? -1 : (a->symbol > b->symbol ? 1 : 0);
 }
 
+/* Longest code length either side of the wire accepts.
+ *
+ * WHY 56 (and why the encoder never needs length-limiting):
+ *   A Huffman tree of depth d needs a total weight of at least Fibonacci(d + 2)
+ *   (the worst case is the "Fibonacci" frequency distribution 1,1,2,3,5,8,...).
+ *   The CMP04 header stores the input length in a u32, so the total weight is
+ *   at most 2^32 - 1, and Fibonacci(48) = 4,807,526,976 > 2^32 caps the depth at
+ *   46. 46 <= 56, so with `len <= UINT32_MAX` every code the encoder builds fits
+ *   in the 64-bit code accumulator with 8+ bits to spare, and the decoder's
+ *   1..56 limit can never reject encoder output. (A depth of 33..46 DOES occur,
+ *   for ~15 MB of Fibonacci-distributed bytes, and overflowed the previous
+ *   32-bit code values.) No package-merge or zlib-style length cap is needed,
+ *   and because nothing is capped the canonical codes (hence the output bytes)
+ *   are unchanged for every input the old encoder handled correctly. */
+#define HUFFMAN_MAX_CODE_LEN 56u
+
 /* Assign canonical codes (DEFLATE-style) to the sorted table. codes[i] is the
- * code for table[i], right-justified in the low `table[i].length` bits. */
-static void canonical_codes(const sym_len *table, size_t n, uint32_t *codes) {
+ * code for table[i], right-justified in the low `table[i].length` bits.
+ *
+ * Codes are 64-bit: a code longer than 32 bits does not fit in a uint32_t, and
+ * shifting a 32-bit value by >= 32 is undefined behaviour. Callers guarantee
+ * every length is in 1..HUFFMAN_MAX_CODE_LEN, so the code stays below 2^56. */
+static void canonical_codes(const sym_len *table, size_t n, uint64_t *codes) {
     size_t i;
-    uint32_t code = 0;
+    uint64_t code = 0;
     if (n == 0) {
         return;
     }
@@ -211,14 +231,23 @@ int huffman_compress(const uint8_t *data, size_t len, uint8_t **out,
     uint32_t freq[256];
     uint8_t code_len[256];
     sym_len table[256];
-    uint32_t codes[256];
+    uint64_t codes[256];
     size_t n = 0;
     bytebuf bits; /* the LSB-first packed bit stream */
     unsigned bit_acc = 0, bit_cnt = 0;
     size_t i;
     /* Per-symbol code + length, indexed by byte value for fast encode lookup. */
-    uint32_t sym_code[256];
+    uint64_t sym_code[256];
     uint8_t sym_len_by_byte[256];
+
+#if SIZE_MAX > 0xFFFFFFFFu
+    /* The header's length field and the frequency counters are 32-bit. Refuse
+     * larger inputs instead of silently truncating (which would also void the
+     * depth bound documented at HUFFMAN_MAX_CODE_LEN). */
+    if (len > 0xFFFFFFFFu) {
+        return 0;
+    }
+#endif
 
     if (len == 0) {
         /* Empty input → an 8-byte header of zeros. */
@@ -238,6 +267,11 @@ int huffman_compress(const uint8_t *data, size_t len, uint8_t **out,
     compute_code_lengths(freq, code_len);
 
     for (i = 0; i < 256; i++) {
+        /* Defence in depth: unreachable for len <= UINT32_MAX (depth <= 46),
+         * but never emit a table the decoder would reject. */
+        if (code_len[i] > HUFFMAN_MAX_CODE_LEN) {
+            return 0;
+        }
         if (code_len[i] > 0) {
             table[n].symbol = (uint16_t)i;
             table[n].length = code_len[i];
@@ -259,10 +293,10 @@ int huffman_compress(const uint8_t *data, size_t len, uint8_t **out,
     bits.failed = 0;
     for (i = 0; i < len; i++) {
         uint8_t clen = sym_len_by_byte[data[i]];
-        uint32_t ccode = sym_code[data[i]];
+        uint64_t ccode = sym_code[data[i]];
         int j;
         for (j = clen - 1; j >= 0; j--) {
-            unsigned bit = (ccode >> j) & 1u;
+            unsigned bit = (unsigned)((ccode >> j) & 1u);
             bit_acc |= bit << bit_cnt;
             bit_cnt++;
             if (bit_cnt == 8) {
