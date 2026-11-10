@@ -58,8 +58,8 @@ over it, and the old DPLL survives only as a test oracle.
 
 **Out (later specs):**
 
-- DRAT proof emission — VER11. This spec reserves the shape (§6) so VER11
-  only adds a sink.
+- (DRAT proof emission was listed here when VER09 was written. It has since
+  landed in this crate, in memory, under VER11; §6 now states its contract.)
 - Preprocessing (bounded variable elimination, subsumption). Every
   preprocessing step must also be logged for DRAT, so it waits for VER11 to
   land and to be measured against.
@@ -234,8 +234,9 @@ each simplified clause is RUP with respect to it.
 ### 4.8 Budgets and results
 
 `solve` returns `Sat`, `Unsat` or `Unknown`. `Unknown` is returned only
-when the caller's **conflict budget** runs out. With no budget the solver
-always terminates with `Sat` or `Unsat`. CDCL is complete, and restarts do
+when one of the caller's budgets runs out: the **conflict budget**
+(`set_conflict_budget`) or the **work budget** (`set_work_budget`, §10.6).
+With no budget the solver always terminates with `Sat` or `Unsat`. CDCL is complete, and restarts do
 not break termination because the Luby sequence is unbounded and learned
 clauses are never all deleted.
 
@@ -276,20 +277,98 @@ thing:
 The writer emits a header and one clause per line, terminated by `0`. A
 round trip (`write` then `read`) gives the same clauses in the same order.
 
-## 6. Reserved for VER11: proof emission
+## 6. Proof emission (DRAT, VER11 §4)
 
-Every place the solver changes the clause database is one of four events:
+The solver keeps an optional **in-memory** DRAT proof (`enable_proof`,
+`from_cnf_with_proof`; read it with `proof`, `take_proof`). It is a
+`Vec<ProofStep>` of `Add(clause)` and `Delete(clause)`; `to_drat_text` renders
+the DRAT text that `drat-check` reads. Nothing is written to disk: the solver
+stays free of capabilities. Every change to the clause database is one of
+these events, each produced in exactly one function:
 
-| Event | Where |
-|---|---|
-| lemma added (RUP) | a learned clause; a clause simplified at level 0 (§4.7) |
-| clause deleted | database reduction (§4.5) |
-| empty clause | conflict at level 0 |
-| original clause | `add_clause` |
+| Event | Where | Logged as |
+|---|---|---|
+| original clause | `add_clause` | **not logged**: the checker reads it from the formula |
+| clause shortened by level-0 facts (§4.7) | `add_clause` | `Add(shortened)` (RUP) |
+| empty clause from `add_clause` (empty after simplification, or a unit that contradicts level-0 facts) | `add_clause` | `Add([])` |
+| learned clause, units included | `record_learnt` | `Add(clause)` (RUP) |
+| learned clause deleted | `reduce_db` | `Delete(clause)` |
+| conflict at level 0 | `search` | `Add([])` |
 
-VER11 adds an optional proof sink that receives the first three, in DRAT
-text format. The solver's code is organised so those events each happen in
-exactly one function.
+Original clauses are never deleted from the proof, and a deleted clause is
+always a learned clause of length >= 3 with LBD >= 3 that is not currently a
+reason.
+
+### 6.1 Testable contracts
+
+These are the statements the test suite (`tests/audit.rs`, `tests/drat.rs`,
+`tests/differential.rs`) holds the implementation to. The solver is untrusted
+search; the first four are exactly what makes it safe to trust `drat-check`'s
+verdict on its output.
+
+**C1. Sat is sound.** If `solve`/`solve_with_assumptions` returns `Sat`,
+`model()` has one value per variable that exists at that moment, satisfies
+every clause added so far (as given, before simplification), and makes every
+assumption true.
+
+**C2. Unsat comes with a checkable proof.** If the solver was created with
+proof logging enabled before the first `add_clause`, and `solve()` returns
+`Unsat` with no assumptions (or `is_ok()` is false), then
+`DratProof::to_drat_text()` is accepted by `drat_check::check` against the
+DIMACS text of **every clause ever added, in the form given**. This holds across
+incremental `add_clause`/`solve` sequences and after earlier `Unknown` and
+`Sat` answers, as long as the proof was not taken (`take_proof`) in between.
+The proof also stays accepted when every `Delete` step is removed.
+
+**C3. Unsat under assumptions is a claim about formula and assumptions, and
+is certifiable.** `failed_assumptions()` is a sorted, duplicate-free subset of
+the assumptions, and formula AND failed core is unsatisfiable. Appending the
+core as unit clauses to the formula and `0` to the proof makes `drat-check`
+accept: the proof so far is not a refutation of the formula alone (the formula
+may be satisfiable), but it carries every lemma the conflict needed.
+
+**C4. Unknown is honest.** `Unknown` is returned only when a budget ran out.
+Whatever the budget, the answer is never a wrong `Sat` or `Unsat`, the solver
+remains usable, and removing the budget and solving again gives the correct
+answer. A proof recorded across the `Unknown` call is still accepted (C2).
+
+**C5. Complete on small instances.** With no budget every call terminates with
+`Sat` or `Unsat`, agreeing with exhaustive enumeration (formula AND
+assumptions). Exhaustively tested: every formula of at most 3 clauses of width
+<= 2 over 3 variables (including empty, duplicate-literal and tautological
+clauses), every formula of at most 4 clauses of width <= 3 over 3 variables,
+and every formula of at most 3 clauses of width <= 2 over 4 variables.
+
+**C6. Determinism.** The solver has no randomness, clock, address-dependent
+or hash-ordered behaviour. The same sequence of `add_clause`, budget and solve
+calls gives the same results, the same model, the same `Stats` and
+byte-identical proof text.
+
+**C7. Budget semantics.** The conflict budget is a running countdown shared by
+all later `solve` calls until reset (`set_conflict_budget(Some(n))` replaces
+the remaining count). Each analysed conflict spends one. `Some(0)` yields
+`Unknown` at once for any formula that is not already known UNSAT (a
+known-UNSAT solver answers `Unsat` before looking at budgets). The work budget
+is relative to the work done so far when it is set.
+
+**C8. Model/core hygiene.** `model()` is empty after any answer but `Sat`;
+`failed_assumptions()` is empty after any answer but `Unsat`, and empty after
+an `Unsat` that does not depend on assumptions.
+
+**C9. DIMACS.** Every malformed input listed in section 5 returns `Err`, never
+panics and never allocates more than the header cap allows.
+
+**C10. The solver and the kernel read DIMACS identically.** `parse_dimacs`
+and `drat-check`'s reader accept and reject the same texts (tested on the
+malformed corpus and on lenient shapes). A divergence would let the kernel
+certify a different formula from the one solved.
+
+**C11. Heuristics are observable.** Because of C6 the search statistics of a
+fixed formula are a fingerprint of the heuristics. `tests/audit.rs` pins the
+conflicts, restarts, deletions and learned counts of four fixed instances so
+that silently disabling VSIDS decay, clause activity, restarts or reduction
+(none of which changes any answer) fails a test. A deliberate heuristic change
+updates the pins in the same commit.
 
 ## 7. The `SatTactic` adapter
 
@@ -370,3 +449,31 @@ Recorded while implementing:
 6. **A work budget** (`Solver::set_work_budget`, added with VER10). It
    counts watch-list visits, because a conflict budget alone does not bound
    time on formulas with millions of clauses.
+7. **DRAT proof emission landed inside VER09's crate** (VER11 §4), as an
+   in-memory `DratProof` rather than a text sink as §6 originally described;
+   §6 and §6.1 now state what is logged and what is promised. The audit that
+   wrote §6.1 found the old §6 table slightly wrong: a learned clause is also
+   logged as a unit, and `add_clause` logs shortened clauses and the empty
+   clause.
+8. **`failed_assumptions`.** §4.6 says "sorted"; the code also removes
+   duplicates, includes the falsified assumption itself, and returns both `x`
+   and `¬x` when both were assumed. A level-0-false assumption `p` gives the
+   core `[p]` (not empty): formula AND `p` is UNSAT although the formula alone
+   is not. An empty core means the formula is UNSAT without assumptions.
+9. **Budget scope.** §4.8 said "conflict budget" only and did not say that the
+   budget persists across calls. §6.1 C7 fixes both.
+10. **Restart/phase/reduction constants** (`RESTART_UNIT` 100, `VAR_DECAY`
+    0.95, `CLAUSE_DECAY` 0.999, initial phase false, `max(n_clauses/3, 2000)`
+    learned-clause limit growing 1.1x) match §4.5. Restarts are part of the
+    contract only through C6 determinism; tests do not pin the numbers.
+11. **DIMACS lexing is strict, identically in both readers.** An integer
+    token is `-?(0|[1-9][0-9]*)` in `i64` range; header counts are
+    `0|[1-9][0-9]*`. `+1`, `-0` (which used to be a clause terminator), `00`,
+    `01` and `-01` are errors in `cdcl-sat` and in `drat-check` alike (VER11
+    L4, D6, D10). Earlier text accepted them via Rust's `i64::from_str`; that
+    was changed because a trusted reader must not disagree with other DIMACS
+    readers about where a clause ends. C10 guards the agreement.
+12. **Work-budget resumption.** Each `Unknown` restarts the search at level 0.
+    Resuming with a constant work budget smaller than the work to reach one
+    conflict never progresses. Callers must grow the budget (documented on
+    `set_work_budget`). A conflict budget does not have this property.

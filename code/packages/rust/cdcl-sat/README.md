@@ -92,7 +92,17 @@ let drat_text = s.proof().unwrap().to_drat_text();  // "0\n"
   proof. A negative corpus of truncated, reordered and tampered proofs
   must all be rejected.
 
-Line coverage is above 99%.
+- **Audit suite (`tests/audit.rs`):** exhaustive formula domains (about 38 000
+  small formulas, plus 254 000 assumption solves), seeded random 3-SAT n=5..20,
+  tiny budgets, determinism, PHP/XOR/Tseitin families, clause-database
+  reduction, malformed DIMACS. Every UNSAT answer, and every failed-assumption
+  core, is certified by `drat-check`; every SAT model is re-evaluated. The
+  contracts being tested are VER09 §6.1 (C1–C9).
+
+Line coverage, measured with `cargo llvm-cov` on a standalone copy of the crate
+and `drat-check` (it fails inside the workspace): see CHANGELOG 0.3.1 for the
+figure at the time of the last audit. Do not trust this README for a number;
+re-measure.
 
 ## Capabilities
 

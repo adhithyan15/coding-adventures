@@ -54,6 +54,44 @@ pub fn var(lit: Lit) -> usize {
     (lit >> 1) as usize
 }
 
+/// The strict integer grammar of VER11 3.4.2 rule L4: `-?(0|[1-9][0-9]*)` as
+/// an `i64`, where `-0` is **not** an integer and no token has a leading zero
+/// (`00` and `01` are rejected, so no reader can disagree about whether `00`
+/// is a terminator).
+///
+/// Rust's own `i64::from_str` is more generous: it accepts a leading `+`, and
+/// it reads `-0` as `0`. Taking either would let this reader disagree with
+/// every other DIMACS reader about where a clause ends (`-0` would end one),
+/// which is the exact parser differential the kernel's private parser exists
+/// to prevent. So the token is vetted byte by byte first.
+fn parse_int(token: &str) -> Option<i64> {
+    let digits = token.strip_prefix('-').unwrap_or(token);
+    if !is_canonical_digits(digits) {
+        return None;
+    }
+    let value: i64 = token.parse().ok()?;
+    if token.starts_with('-') && value == 0 {
+        return None; // `-0`
+    }
+    Some(value)
+}
+
+/// `0` or a digit string with no leading zero.
+fn is_canonical_digits(digits: &str) -> bool {
+    !digits.is_empty()
+        && digits.bytes().all(|b| b.is_ascii_digit())
+        && (digits == "0" || !digits.starts_with('0'))
+}
+
+/// A non-negative count in a `p cnf` header: canonical ASCII digits only
+/// (no `+`, no leading zeros).
+fn parse_count(token: &str) -> Option<usize> {
+    if !is_canonical_digits(token) {
+        return None;
+    }
+    token.parse().ok()
+}
+
 /// DIMACS integer → literal code. The caller has checked `value != 0` and
 /// `|value| <= limit`, and the limit keeps the code inside `u32`.
 fn lit_from_dimacs(value: i64) -> Lit {
@@ -179,7 +217,7 @@ pub fn parse_formula(text: &str, max_vars: usize) -> Result<Formula, ParseError>
             }
             let f: Vec<&str> = text.split_whitespace().collect();
             let counts = match f.as_slice() {
-                ["p", "cnf", v, c] => v.parse::<usize>().ok().zip(c.parse::<usize>().ok()),
+                ["p", "cnf", v, c] => parse_count(v).zip(parse_count(c)),
                 _ => None,
             };
             match counts {
@@ -195,7 +233,7 @@ pub fn parse_formula(text: &str, max_vars: usize) -> Result<Formula, ParseError>
             return fail(line, "clause before the `p cnf` header".into());
         };
         for token in text.split_whitespace() {
-            let Ok(value) = token.parse::<i64>() else {
+            let Some(value) = parse_int(token) else {
                 return fail(line, format!("`{token}` is not an integer"));
             };
             if value == 0 {
@@ -232,9 +270,8 @@ pub fn parse_proof(text: &str, max_vars: usize) -> Result<Vec<Step>, ParseError>
                 deleting = true;
                 continue;
             }
-            let value: i64 = token
-                .parse()
-                .map_err(|_| ParseError::BadProofToken { line, token: token.to_owned() })?;
+            let value = parse_int(token)
+                .ok_or_else(|| ParseError::BadProofToken { line, token: token.to_owned() })?;
             if value == 0 {
                 let kind = if deleting { StepKind::Delete } else { StepKind::Add };
                 steps.push(Step { kind, lits: std::mem::take(&mut lits), line });
@@ -265,6 +302,27 @@ mod tests {
         assert_eq!(var(5), 2);
         assert_eq!(lit_to_dimacs(5), -3);
         assert_eq!(lit_to_dimacs(4), 3);
+    }
+
+    /// Regression (VER11 D6): Rust's `i64::from_str` accepts `+1` and reads
+    /// `-0` as `0`, which made `-0` a clause terminator.
+    #[test]
+    fn integer_tokens_are_strict() {
+        for ok in ["0", "7", "-7", "9223372036854775807", "-9223372036854775808"] {
+            assert!(parse_int(ok).is_some(), "{ok}");
+        }
+        assert_eq!(parse_int("-7"), Some(-7));
+        for bad in ["", "-", "+", "+1", "+0", "-0", "-00", "00", "01", "007", "-01", "--1", "1-", "1.0", "1e3", "0x1", " 1", "1 ", "9223372036854775808", "-9223372036854775809", "\u{661}"] {
+            assert_eq!(parse_int(bad), None, "{bad:?}");
+        }
+        assert_eq!(parse_count("12"), Some(12));
+        assert_eq!(parse_count("0"), Some(0));
+        for bad in ["", "012", "00", "+1", "-1", "1.0", "x", "99999999999999999999"] {
+            assert_eq!(parse_count(bad), None, "{bad:?}");
+        }
+        // end to end: `-0` must not split a clause or end one.
+        assert!(parse_formula("p cnf 1 1\n-0 1 0\n", 10).is_err());
+        assert!(parse_proof("1 -0\n", 10).is_err());
     }
 
     #[test]
