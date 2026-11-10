@@ -198,6 +198,13 @@ reported nothing. Every live `roots:` line is bracketed today, so this was
 latent rather than live; it is fixed because a guard reading different bytes
 from the thing it guards is not a guard.
 
+The baseline check must visit the same guarded, parsed lesson sources one
+track at a time and retain only the distinct root slugs. Holding every parsed
+lesson at once adds gigabytes of live objects to a check that needs only a
+small set of strings; on Windows that work can exceed the unchanged 30-second
+test budget. Streaming must not substitute a raw frontmatter scan or omit a
+track: the joiner and guard must still use exactly the same `rootSlugs()` rule.
+
 ### SHAPE NORMALISATION — done, 192 entries down to 82
 
 All 110 `shape` entries are resolved. 184 `roots:` uses rewritten across **169
