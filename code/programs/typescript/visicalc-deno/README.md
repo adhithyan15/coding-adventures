@@ -29,6 +29,14 @@ attributes, so the compiled `.app` is self-contained.
 
 ## Run
 
+The engine bundle `visicalc-html/vendor/spreadsheet-engine-wasm.js` is
+generated, not committed (BUILD-001). `main.ts` text-imports it at compile
+time, so build it first (once after a clone, and again when the engine changes):
+
+```
+bash ../../../scripts/build-demo-wasm.sh visicalc   # or: deno task wasm
+```
+
 ```
 deno task desktop   # open a dev window  (deno desktop -A main.ts)
 deno task build     # compile a self-contained VisiCalc.app

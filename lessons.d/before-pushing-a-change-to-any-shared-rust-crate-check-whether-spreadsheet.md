@@ -4,6 +4,10 @@ category: CI & GitHub Actions
 
 # Before pushing a change to any shared Rust crate, check whether spreadsheet-wasm depends on it; the lexer lesson generalises to parser, grammar-tools and every crate in its wasm cargo tree
 
+> **Superseded by BUILD-001.** These artifacts are no longer committed and the
+> `--check` staleness gate is gone; nothing needs rebuilding or recommitting.
+> Build locally with `bash code/scripts/build-demo-wasm.sh`. Kept as history.
+
 **What went wrong.** #18360 bounded the generic `parser` crate's tree size.
 Its unit tests passed, but `build (shard-5-of-15)` failed on
 `rust/spreadsheet-wasm`: "pkg/spreadsheet_engine.wasm is stale: a source it is

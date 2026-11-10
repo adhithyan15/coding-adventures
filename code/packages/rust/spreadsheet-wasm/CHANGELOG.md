@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased - BUILD-001
+
+- `pkg/spreadsheet_engine.wasm` and its `.inputs` stamp are no longer committed; `pkg/` is ignored and built by `build-wasm.sh`, `BUILD_mac_and_linux` and `code/scripts/build-demo-wasm.sh`. `build-wasm.sh --check` and `inputs-digest.py` are removed (nothing stored, nothing to go stale). `BUILD_mac_and_linux` now builds the wasm and runs both Node smoke tests against that fresh build. `build-wasm.sh` honours `CARGO_TARGET_DIR`.
+
 ## Unreleased
 
 **Rebuilt: the inputs digest drifted with no change to a repository source.**

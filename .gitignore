@@ -220,3 +220,12 @@ code/programs/mosaic/*/dist-native-*/
 # Crash residue from code/scripts/capture-upstream-refusals.sh, which writes the
 # refusal evidence via mkstemp + rename; a killed run can leave the temp behind.
 code/programs/rust/closurec/tests/oracle/.upstream-refusals-*.json
+
+# Generated WebAssembly artifacts (BUILD-001): built by
+# code/scripts/build-demo-wasm.sh and by each crate's BUILD, never committed.
+# square_nostd.wasm under packages/dart/wasm-runtime is a hand-made test
+# fixture, not one of these, and stays tracked.
+/code/packages/rust/spreadsheet-wasm/pkg/
+/code/packages/rust/task-wasm/pkg/
+/code/packages/rust/engram-wasm/pkg/
+/code/programs/typescript/visicalc-html/vendor/spreadsheet-engine-wasm.js
