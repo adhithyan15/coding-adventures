@@ -1,0 +1,149 @@
+-- VER04j WX-A test fixture: a v1 document over tuples, records and
+-- non-recursive sum types, with a LEB128-shaped pilot (`decode2`: a
+-- `(value, consumed)` pair, the principal bug class of section 4.8).  It is NOT
+-- a package specification; it exists so the generator is tested by compiling
+-- and running what it emits against a tiny in-test subject (see
+-- tests/wxa_evidence.rs).  Every model is a claim's oracle written from the
+-- LEB128 definition and VER04j, never from the subject.
+warrant wxa v1
+  error LebError = TRUNCATED | OVERLONG
+
+  record Span(start: U8, len: U8)
+  variant Shape = Circle(r: U8) | Rect(w: U8, h: U8) | Empty
+  model Pair = (U8, U8)
+  record Blob(tag: U8, data: Bytes)
+  variant Tok = Num(n: U8) | Pair2(a: U8, b: U8) | End
+
+  -- decode the first one or two bytes of a stream as an unsigned LEB128 value
+  op decode2(b0: U8, b1: U8) -> Result<(U64, Nat), LebError>
+  op normalize(a: U8, b: U8) -> Span
+  op classify(w: U8, h: U8) -> Shape
+  op area(s: Shape) -> (Bool, U64)
+  op order(a: U8, b: U8) -> Pair
+  op split(a: U8) -> Option<(U8, U8)>
+  op try_pair(a: U8) -> Result<(U8, U8), LebError>
+  op sh(a: U8, n: Nat) -> (U8, Nat)
+  op pick(o: Option<(U8, Bool)>, l: List<Bool>) -> (U8, Nat)
+  op bsum(d: Bytes) -> (U8, Nat)
+  op blob(a: U8) -> Blob
+  op tok(a: U8, b: U8) -> Tok
+  op bits(a: U8) -> (List<Bool>, Nat)
+
+  labels decode2:
+    b0 public
+    b1 public
+  labels normalize:
+    a public
+    b public
+  labels classify:
+    w public
+    h public
+  labels area:
+    s public
+  labels order:
+    a public
+    b public
+  labels split:
+    a public
+  labels try_pair:
+    a public
+  labels sh:
+    a public
+    n public
+  labels pick:
+    o public
+    l public
+  labels bsum:
+    d public
+  labels blob:
+    a public
+  labels tok:
+    a public
+    b public
+  labels bits:
+    a public
+
+  model low7(b: U8) -> U64 = widen<U64>(bit_and(b, 127u8))
+  model dec2(b0: U8, b1: U8) -> Result<(U64, Nat), LebError> = if b0 < 128u8 then Ok((low7(b0), 1)) else (if b1 < 128u8 then Ok((low7(b0) + shl(low7(b1), 7), 2)) else Err(LebError.OVERLONG))
+  model span_model(a: U8, b: U8) -> Span = if a <= b then Span(a, b - a) else Span(b, a - b)
+  model classify_model(w: U8, h: U8) -> Shape = if w == 0u8 and h == 0u8 then Empty else (if w == h then Circle(w) else Rect(w, h))
+  model area_model(s: Shape) -> (Bool, U64) = match s with Circle(r) -> (false, widen<U64>(r) * widen<U64>(r)) | Rect(w, h) -> (false, widen<U64>(w) * widen<U64>(h)) | Empty -> (true, 0u64)
+  model order_model(a: U8, b: U8) -> Pair = if a <= b then (a, b) else (b, a)
+  model split_model(a: U8) -> Option<(U8, U8)> = if a == 0u8 then None else Some((shr(a, 4), bit_and(a, 15u8)))
+  model try_pair_model(a: U8) -> Result<(U8, U8), LebError> = if a == 255u8 then Err(LebError.OVERLONG) else Ok((a, a + 1u8))
+
+  model pick_model(o: Option<(U8, Bool)>, l: List<Bool>) -> (U8, Nat) = ((match o with None -> 0u8 | Some((x, true)) -> x | Some((x, false)) -> 1u8), len(l))
+  model bsum_model(d: Bytes) -> (U8, Nat) = (if len(d) == 0 then 0u8 else 1u8, len(d))
+  model blob_model(a: U8) -> Blob = Blob(a, be_bytes(a))
+  model tag_of(b: Blob) -> U8 = b.tag
+  model tok_model(a: U8, b: U8) -> Tok = match (a == 0u8, b == 0u8) with (true, true) -> End | (true, _) -> Num(b) | (_, true) -> Num(a) | (false, false) -> Pair2(a, b)
+
+  example decode2_one_byte:
+    decode2(5u8, 0u8) == Ok((5u64, 1))
+  example decode2_two_bytes:
+    decode2(0x80u8, 1u8) == Ok((128u64, 2))
+  example decode2_overlong:
+    decode2(0x80u8, 0x80u8) == Err(LebError.OVERLONG)
+  example normalize_orders_the_pair:
+    normalize(9u8, 4u8) == Span(4u8, 5u8)
+  example normalize_projects_a_field:
+    normalize(9u8, 4u8).len == 5u8
+  example classify_empty:
+    classify(0u8, 0u8) == Empty
+  example classify_circle:
+    classify(3u8, 3u8) == Circle(3u8)
+  example classify_rect:
+    classify(3u8, 4u8) == Rect(3u8, 4u8)
+  example area_of_a_rect:
+    area(Rect(3u8, 4u8)) == (false, 12u64)
+  example order_swaps:
+    order(9u8, 4u8) == (4u8, 9u8)
+  example split_of_zero:
+    split(0u8) == None
+  example split_splits_the_nibbles:
+    split(0xabu8) == Some((10u8, 11u8))
+  example try_pair_rejects_255:
+    try_pair(255u8) == Err(LebError.OVERLONG)
+  example try_pair_steps:
+    try_pair(7u8) == Ok((7u8, 8u8))
+  example sh_reports_the_count:
+    sh(1u8, 3) == (8u8, 3)
+
+  claim pick_matches_the_model:
+    forall o: Option<(U8, Bool)>, l: List<Bool>. pick(o, l) == pick_model(o, l)
+  claim bsum_matches_the_model:
+    forall d: Bytes. bsum(d) == bsum_model(d)
+  claim blob_matches_the_model:
+    forall a: U8. blob(a) == blob_model(a)
+  claim blob_tag_is_the_argument:
+    forall a: U8. blob(a).tag == a
+  claim tok_matches_the_model:
+    forall a: U8, b: U8. tok(a, b) == tok_model(a, b)
+  claim bits_has_two_entries:
+    forall a: U8. len(bits(a).0) == 2 and bits(a).1 == 2
+  claim projection_on_a_binder:
+    forall b: Blob. order(b.tag, b.tag) == (tag_of(b), b.tag)
+  claim decode2_matches_the_model:
+    forall a: U8, b: U8. decode2(a, b) == dec2(a, b)
+  claim consumed_is_pinned:
+    forall a: U8, b: U8. match decode2(a, b) with Ok((v, n)) -> n == (if a < 128u8 then 1 else 2) | Err(e) -> a >= 128u8 and b >= 128u8
+  claim normalize_matches_the_model:
+    forall a: U8, b: U8. normalize(a, b) == span_model(a, b)
+  claim normalize_len_is_the_gap:
+    forall a: U8, b: U8. normalize(a, b).len == (if a <= b then b - a else a - b)
+  claim classify_matches_the_model:
+    forall w: U8, h: U8. classify(w, h) == classify_model(w, h)
+  claim area_matches_the_model:
+    forall s: Shape. area(s) == area_model(s)
+  claim order_matches_the_model:
+    forall a: U8, b: U8. order(a, b) == order_model(a, b)
+  claim order_on_a_tuple_binder:
+    forall p: (U8, Bool). order(p.0, p.0) == (p.0, p.0)
+  claim split_matches_the_model:
+    forall a: U8. split(a) == split_model(a)
+  claim try_pair_matches_the_model:
+    forall a: U8. try_pair(a) == try_pair_model(a)
+  claim sh_matches_the_model:
+    forall a: U8, n: Nat. sh(a, n) == (shl(a, n), n)
+  claim composite_binder_domains:
+    forall r: Result<Bool, LebError>, o: Option<Bool>, l: List<Bool>, a: U8. (match r with Ok(x) -> true | Err(LebError.TRUNCATED) -> true | Err(e) -> true) and len(l) <= 3 and order(a, a) == (a, a)

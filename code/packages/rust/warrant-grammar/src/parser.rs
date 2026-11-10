@@ -57,6 +57,9 @@ pub enum ParserErrorKind {
     V1ConstructInV0,
     /// A suffixed literal outside the range of its type (VER04j section 2.2).
     LiteralOutOfRange,
+    /// WX-A: a duplicate field, constructor-field or constructor name inside one
+    /// `record` or `variant` declaration (VER04j section 14.1, item 13).
+    DuplicateName,
 }
 
 /// Parser error with a stable diagnostic code and safe message: `W0001` for
@@ -78,6 +81,7 @@ impl ParserError {
             ParserErrorKind::InvalidVersionHeader
             | ParserErrorKind::V1ConstructInV0
             | ParserErrorKind::LiteralOutOfRange => "W0101",
+            ParserErrorKind::DuplicateName => "W0201",
             _ => "W0001",
         }
     }
@@ -104,6 +108,7 @@ impl fmt::Display for ParserError {
             ParserErrorKind::InvalidVersionHeader => "invalid version header",
             ParserErrorKind::V1ConstructInV0 => "v1 construct in a v0 document",
             ParserErrorKind::LiteralOutOfRange => "literal out of range for its type",
+            ParserErrorKind::DuplicateName => "duplicate name in a declaration",
         };
         write!(f, "{}: {msg}", self.code())
     }
@@ -157,7 +162,53 @@ pub enum Declaration<'a> {
     Labels(LabelsDecl<'a>),
     Input(InputDecl<'a>),
     Bound(BoundDecl<'a>),
+    /// WX-A: `record Name(f1: T1, ...)` (v1 only).
+    Record(RecordDecl<'a>),
+    /// WX-A: `variant Name = C1(f: T) | C2 | ...` (v1 only).
+    Variant(VariantDecl<'a>),
 }
+
+/// One `name: type` field of a record or constructor (VER04j section 4.2).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FieldDecl<'a> {
+    pub name: &'a str,
+    pub ty: TypeExpr<'a>,
+    pub span: (usize, usize),
+}
+
+/// `record Name(f1: T1, ..., fn: Tn)`, `1 <= n <= 32`: a nominal type with a
+/// single constructor that has the type's own name.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RecordDecl<'a> {
+    pub name: &'a str,
+    pub fields: Vec<FieldDecl<'a>>,
+    pub span: (usize, usize),
+}
+
+/// One constructor of a `variant`; a nullary constructor has no fields.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CtorDecl<'a> {
+    pub name: &'a str,
+    pub fields: Vec<FieldDecl<'a>>,
+    pub span: (usize, usize),
+}
+
+/// `variant Name = C1(fields) | C2 | ...`, `2 <= constructors <= 256`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct VariantDecl<'a> {
+    pub name: &'a str,
+    pub ctors: Vec<CtorDecl<'a>>,
+    pub span: (usize, usize),
+}
+
+/// Most fields a record or a constructor may have (VER04j section 4.2).
+pub const MAX_FIELDS: usize = 32;
+/// Most constructors a variant may have.
+pub const MAX_CTORS: usize = 256;
+/// Most components of a tuple.
+pub const MAX_TUPLE: usize = 8;
+/// Deepest nesting of a pattern (VER04j section 4.3).
+pub const MAX_PATTERN_DEPTH: usize = 8;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ModelDecl<'a> {
@@ -300,6 +351,11 @@ pub enum TypeExpr<'a> {
         name: &'a str,
         span: (usize, usize),
     },
+    /// WX-A: `(T1, ..., Tn)`, `2 <= n <= 8`, structural (v1 only).
+    Tuple {
+        elems: Vec<TypeExpr<'a>>,
+        span: (usize, usize),
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -362,6 +418,28 @@ pub enum Expression<'a> {
         inner: Box<Expression<'a>>,
         span: (usize, usize),
     },
+    /// WX-A: `(e1, ..., en)`, `2 <= n <= 8` (v1 only).
+    Tuple {
+        elements: Vec<Expression<'a>>,
+        span: (usize, usize),
+    },
+    /// WX-A: postfix projection `base.0` / `base.field` (v1 only).  A projection
+    /// whose head is a plain name (`r.field`) is parsed as a qualified name and
+    /// resolved by the checker.
+    Project {
+        base: Box<Expression<'a>>,
+        key: ProjKey<'a>,
+        span: (usize, usize),
+    },
+}
+
+/// The selector of an [`Expression::Project`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ProjKey<'a> {
+    /// A tuple component `t.0`.
+    Index(usize),
+    /// A record field `r.name`.
+    Field(&'a str),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -406,12 +484,45 @@ pub struct MatchArm<'a> {
     pub span: (usize, usize),
 }
 
+/// A match pattern (VER04j section 4.3).
+///
+/// ```text
+/// None                  Pattern::None
+/// Some(x)  Some((a, b)) Pattern::Some(Box<..>)     (likewise Ok and Err)
+/// _                     Pattern::Wild              (v1; a v0 binder named `_`)
+/// true false            Pattern::Bool
+/// (p, q)                Pattern::Tuple
+/// Red  Circle(r)  E.X   Pattern::Ctor { name, args }
+/// ```
+///
+/// A bare NAME is `Ctor` with no arguments: the checker decides whether it is a
+/// constructor (it names one) or a fresh binder.  In a v0 document the inner
+/// pattern of `Some`/`Ok`/`Err` is always such a bare NAME, a binder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Pattern<'a> {
     None,
-    Some(&'a str),
-    Ok(&'a str),
-    Err(&'a str),
+    Some(Box<Pattern<'a>>),
+    Ok(Box<Pattern<'a>>),
+    Err(Box<Pattern<'a>>),
+    Wild,
+    Bool(bool),
+    Tuple(Vec<Pattern<'a>>),
+    Ctor {
+        name: QualifiedName<'a>,
+        args: Vec<Pattern<'a>>,
+    },
+}
+
+impl<'a> Pattern<'a> {
+    /// The binder name of a v0-style inner pattern (a bare single NAME).
+    pub fn as_binder(&self) -> Option<&'a str> {
+        match self {
+            Pattern::Ctor { name, args } if args.is_empty() && name.segments.len() == 1 => {
+                Some(name.segments[0])
+            }
+            _ => None,
+        }
+    }
 }
 
 // ── Parser Engine ───────────────────────────────────────────────────────────
@@ -707,6 +818,8 @@ impl<'a> Parser<'a> {
                 Declaration::Labels(l) => l.span,
                 Declaration::Input(i) => i.span,
                 Declaration::Bound(b) => b.span,
+                Declaration::Record(r) => r.span,
+                Declaration::Variant(v) => v.span,
             })
             .unwrap_or(start_span);
 
@@ -737,6 +850,14 @@ impl<'a> Parser<'a> {
             }
             Some(LayoutTokenKind::Word("input")) => self.parse_input_decl().map(Declaration::Input),
             Some(LayoutTokenKind::Word("bound")) => self.parse_bound_decl().map(Declaration::Bound),
+            Some(LayoutTokenKind::Word("record")) => {
+                self.require_v1()?;
+                self.parse_record_decl().map(Declaration::Record)
+            }
+            Some(LayoutTokenKind::Word("variant")) => {
+                self.require_v1()?;
+                self.parse_variant_decl().map(Declaration::Variant)
+            }
             Some(_) => Err(ParserError::new(
                 ParserErrorKind::UnexpectedToken,
                 self.current_raw_span(),
@@ -1130,6 +1251,123 @@ impl<'a> Parser<'a> {
         })
     }
 
+    // ── WX-A declarations (VER04j section 4.2) ─────────────────────────────
+
+    /// A WX-A construct was found: legal only in a v1 document (W0101).
+    fn require_v1(&self) -> Result<(), ParserError> {
+        if self.version == Version::V1 {
+            Ok(())
+        } else {
+            Err(ParserError::new(
+                ParserErrorKind::V1ConstructInV0,
+                self.current_raw_span(),
+            ))
+        }
+    }
+
+    /// `field { "," field }` up to (not including) the closing parenthesis,
+    /// `1 <= n <= 32`, names unique.
+    ///
+    /// ```text
+    /// tag: U8, constructed: Bool, number: U32, value: Bytes
+    /// ```
+    fn parse_fields(&mut self) -> Result<Vec<FieldDecl<'a>>, ParserError> {
+        let mut fields: Vec<FieldDecl<'a>> = Vec::new();
+        loop {
+            self.count_node()?;
+            let (name, start) = self.expect_name()?;
+            self.expect_symbol(":")?;
+            let ty = self.parse_type()?;
+            let span = (start.0, self.type_span(&ty).1);
+            if fields.iter().any(|f| f.name == name) {
+                return Err(ParserError::new(ParserErrorKind::DuplicateName, Some(span)));
+            }
+            if fields.len() == MAX_FIELDS {
+                return Err(ParserError::new(ParserErrorKind::UnexpectedToken, Some(span)));
+            }
+            fields.push(FieldDecl { name, ty, span });
+            if matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(","))) {
+                self.advance()?;
+            } else {
+                return Ok(fields);
+            }
+        }
+    }
+
+    /// `record Name(f1: T1, ..., fn: Tn)`
+    fn parse_record_decl(&mut self) -> Result<RecordDecl<'a>, ParserError> {
+        let start_tok = self.expect_word("record")?;
+        let start_span = self.token_span_range(start_tok);
+        let (name, _) = self.expect_name()?;
+        self.expect_symbol("(")?;
+        let fields = self.parse_fields()?;
+        let close = self.expect_symbol(")")?;
+        let end = self.token_span_range(close);
+        self.expect_newline()?;
+        Ok(RecordDecl {
+            name,
+            fields,
+            span: (start_span.0, end.1),
+        })
+    }
+
+    /// `variant Name = C1(fields) | C2 | ...` (at least two constructors).
+    fn parse_variant_decl(&mut self) -> Result<VariantDecl<'a>, ParserError> {
+        let start_tok = self.expect_word("variant")?;
+        let start_span = self.token_span_range(start_tok);
+        let (name, _) = self.expect_name()?;
+        self.expect_symbol("=")?;
+        let mut ctors: Vec<CtorDecl<'a>> = Vec::new();
+        loop {
+            self.count_node()?;
+            let (cname, cstart) = self.expect_name()?;
+            let mut fields = Vec::new();
+            let mut end = cstart;
+            if matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol("("))) {
+                self.advance()?;
+                fields = self.parse_fields()?;
+                let close = self.expect_symbol(")")?;
+                end = self.token_span_range(close);
+            }
+            if ctors.iter().any(|c| c.name == cname) {
+                return Err(ParserError::new(
+                    ParserErrorKind::DuplicateName,
+                    Some((cstart.0, end.1)),
+                ));
+            }
+            if ctors.len() == MAX_CTORS {
+                return Err(ParserError::new(
+                    ParserErrorKind::UnexpectedToken,
+                    Some((cstart.0, end.1)),
+                ));
+            }
+            ctors.push(CtorDecl {
+                name: cname,
+                fields,
+                span: (cstart.0, end.1),
+            });
+            if matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol("|"))) {
+                self.advance()?;
+            } else {
+                break;
+            }
+        }
+        // A sum type needs a choice: a single constructor is a record.
+        if ctors.len() < 2 {
+            return Err(ParserError::new(
+                ParserErrorKind::UnexpectedToken,
+                self.current_raw_span(),
+            ));
+        }
+        self.expect_newline()?;
+        let end = ctors.last().map_or(start_span, |c| c.span);
+        Ok(VariantDecl {
+            name,
+            ctors,
+            span: (start_span.0, end.1),
+        })
+    }
+
     // ── Parameters & Types ──────────────────────────────────────────────────
 
     fn parse_parameters(&mut self) -> Result<Vec<Parameter<'a>>, ParserError> {
@@ -1237,6 +1475,29 @@ impl<'a> Parser<'a> {
                 let tok = self.advance()?.unwrap();
                 let span = self.token_span_range(tok);
                 Ok(TypeExpr::Named { name, span })
+            }
+            // WX-A tuple type `(T1, ..., Tn)`, `2 <= n <= 8`.
+            Some(LayoutTokenKind::Symbol("(")) => {
+                self.require_v1()?;
+                let open = self.advance()?.unwrap();
+                let start_span = self.token_span_range(open);
+                let mut elems = vec![self.parse_type()?];
+                while matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(","))) {
+                    self.advance()?;
+                    elems.push(self.parse_type()?);
+                }
+                let close = self.expect_symbol(")")?;
+                let end_span = self.token_span_range(close);
+                if elems.len() < 2 || elems.len() > MAX_TUPLE {
+                    return Err(ParserError::new(
+                        ParserErrorKind::UnexpectedToken,
+                        Some((start_span.0, end_span.1)),
+                    ));
+                }
+                Ok(TypeExpr::Tuple {
+                    elems,
+                    span: (start_span.0, end_span.1),
+                })
             }
             _ => Err(ParserError::new(
                 ParserErrorKind::UnexpectedToken,
@@ -1422,39 +1683,131 @@ impl<'a> Parser<'a> {
         })
     }
 
+    /// `pattern` of VER04j section 4.3.  A v0 document accepts exactly
+    /// `None | Some(NAME) | Ok(NAME) | Err(NAME)`; every richer form is W0101
+    /// there and a syntax error everywhere else it was one before.
     fn parse_pattern(&mut self) -> Result<(Pattern<'a>, (usize, usize)), ParserError> {
+        self.parse_pattern_at(1)
+    }
+
+    fn parse_pattern_at(
+        &mut self,
+        depth: usize,
+    ) -> Result<(Pattern<'a>, (usize, usize)), ParserError> {
+        self.count_node()?;
+        if depth > MAX_PATTERN_DEPTH {
+            return Err(ParserError::new(
+                ParserErrorKind::UnexpectedToken,
+                self.current_raw_span(),
+            ));
+        }
         match self.peek_kind() {
             Some(LayoutTokenKind::Word("None")) => {
                 let tok = self.advance()?.unwrap();
                 let sp = self.token_span_range(tok);
                 Ok((Pattern::None, sp))
             }
-            Some(LayoutTokenKind::Word("Some")) => {
+            Some(LayoutTokenKind::Word(w @ ("Some" | "Ok" | "Err"))) => {
                 let tok = self.advance()?.unwrap();
                 let start_span = self.token_span_range(tok);
                 self.expect_symbol("(")?;
-                let (name, _) = self.expect_name()?;
+                let inner = if self.version == Version::V0 {
+                    // v0: a binder NAME only (it may spell `_`, `Some`, ...).
+                    match self.peek_kind() {
+                        Some(LayoutTokenKind::Symbol("("))
+                        | Some(LayoutTokenKind::Word("true"))
+                        | Some(LayoutTokenKind::Word("false")) => {
+                            return Err(ParserError::new(
+                                ParserErrorKind::V1ConstructInV0,
+                                self.current_raw_span(),
+                            ))
+                        }
+                        _ => {}
+                    }
+                    let (name, sp) = self.expect_name()?;
+                    if matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol("(" | "."))) {
+                        return Err(ParserError::new(
+                            ParserErrorKind::V1ConstructInV0,
+                            self.current_raw_span(),
+                        ));
+                    }
+                    Pattern::Ctor {
+                        name: QualifiedName {
+                            segments: vec![name],
+                            span: sp,
+                        },
+                        args: Vec::new(),
+                    }
+                } else {
+                    self.parse_pattern_at(depth + 1)?.0
+                };
                 let close = self.expect_symbol(")")?;
                 let end_span = self.token_span_range(close);
-                Ok((Pattern::Some(name), (start_span.0, end_span.1)))
+                let inner = Box::new(inner);
+                let pat = match w {
+                    "Some" => Pattern::Some(inner),
+                    "Ok" => Pattern::Ok(inner),
+                    _ => Pattern::Err(inner),
+                };
+                Ok((pat, (start_span.0, end_span.1)))
             }
-            Some(LayoutTokenKind::Word("Ok")) => {
+            Some(LayoutTokenKind::Word("true" | "false")) => {
+                self.require_v1()?;
                 let tok = self.advance()?.unwrap();
-                let start_span = self.token_span_range(tok);
-                self.expect_symbol("(")?;
-                let (name, _) = self.expect_name()?;
-                let close = self.expect_symbol(")")?;
-                let end_span = self.token_span_range(close);
-                Ok((Pattern::Ok(name), (start_span.0, end_span.1)))
+                let sp = self.token_span_range(tok);
+                let is_true = matches!(tok.kind, LayoutTokenKind::Word("true"));
+                Ok((Pattern::Bool(is_true), sp))
             }
-            Some(LayoutTokenKind::Word("Err")) => {
+            Some(LayoutTokenKind::Word("_")) if self.version == Version::V1 => {
                 let tok = self.advance()?.unwrap();
-                let start_span = self.token_span_range(tok);
-                self.expect_symbol("(")?;
-                let (name, _) = self.expect_name()?;
+                let sp = self.token_span_range(tok);
+                Ok((Pattern::Wild, sp))
+            }
+            Some(LayoutTokenKind::Word(_)) => {
+                self.require_v1()?;
+                let name = self.parse_qualified_name()?;
+                let start = name.span.0;
+                let mut end = name.span.1;
+                let mut args = Vec::new();
+                if matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol("("))) {
+                    self.advance()?;
+                    loop {
+                        args.push(self.parse_pattern_at(depth + 1)?.0);
+                        if args.len() > MAX_FIELDS {
+                            return Err(ParserError::new(
+                                ParserErrorKind::UnexpectedToken,
+                                self.current_raw_span(),
+                            ));
+                        }
+                        if matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(","))) {
+                            self.advance()?;
+                        } else {
+                            break;
+                        }
+                    }
+                    let close = self.expect_symbol(")")?;
+                    end = self.token_span_range(close).1;
+                }
+                Ok((Pattern::Ctor { name, args }, (start, end)))
+            }
+            Some(LayoutTokenKind::Symbol("(")) => {
+                self.require_v1()?;
+                let open = self.advance()?.unwrap();
+                let start = self.token_span_range(open).0;
+                let mut items = vec![self.parse_pattern_at(depth + 1)?.0];
+                while matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(","))) {
+                    self.advance()?;
+                    items.push(self.parse_pattern_at(depth + 1)?.0);
+                }
                 let close = self.expect_symbol(")")?;
-                let end_span = self.token_span_range(close);
-                Ok((Pattern::Err(name), (start_span.0, end_span.1)))
+                let end = self.token_span_range(close).1;
+                if items.len() < 2 || items.len() > MAX_TUPLE {
+                    return Err(ParserError::new(
+                        ParserErrorKind::UnexpectedToken,
+                        Some((start, end)),
+                    ));
+                }
+                Ok((Pattern::Tuple(items), (start, end)))
             }
             _ => Err(ParserError::new(
                 ParserErrorKind::UnexpectedToken,
@@ -1687,13 +2040,36 @@ impl<'a> Parser<'a> {
                         self.current_raw_span(),
                     ));
                 }
-                let inner = Box::new(self.parse_expression()?);
-                let close = self.expect_symbol(")")?;
-                let end_span = self.token_span_range(close);
-                Ok(Expression::Grouped {
-                    inner,
-                    span: (start_span.0, end_span.1),
-                })
+                let first = self.parse_expression()?;
+                if matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(","))) {
+                    // WX-A tuple literal `(e1, ..., en)`, `2 <= n <= 8`.
+                    self.require_v1()?;
+                    let mut elements = vec![first];
+                    while matches!(self.peek_kind(), Some(LayoutTokenKind::Symbol(","))) {
+                        self.advance()?;
+                        elements.push(self.parse_expression()?);
+                    }
+                    let close = self.expect_symbol(")")?;
+                    let end_span = self.token_span_range(close);
+                    if elements.len() > MAX_TUPLE {
+                        return Err(ParserError::new(
+                            ParserErrorKind::UnexpectedToken,
+                            Some((start_span.0, end_span.1)),
+                        ));
+                    }
+                    Ok(Expression::Tuple {
+                        elements,
+                        span: (start_span.0, end_span.1),
+                    })
+                } else {
+                    let inner = Box::new(first);
+                    let close = self.expect_symbol(")")?;
+                    let end_span = self.token_span_range(close);
+                    Ok(Expression::Grouped {
+                        inner,
+                        span: (start_span.0, end_span.1),
+                    })
+                }
             }
             // List literal
             Some(LayoutTokenKind::Symbol("[")) => {
@@ -1826,7 +2202,68 @@ impl<'a> Parser<'a> {
             )),
         };
         self.leave_depth();
-        result
+        self.parse_projections(result?)
+    }
+
+    /// `primary = atom { PROJ }` (VER04j section 4.3).  A `PROJ` is a `.` with
+    /// no whitespace on either side followed by a decimal INT (no leading zero,
+    /// no suffix) or a NAME.  A `.` followed by whitespace is the quantifier
+    /// separator and never a projection.
+    ///
+    /// ```text
+    /// f(x).0      Project { base: f(x), key: Index(0) }
+    /// (a, b).1.v  Project { Project { .., Index(1) }, Field("v") }
+    /// t. 0        not a projection (a syntax error further up)
+    /// t.00 t.0u8  syntax errors
+    /// ```
+    fn parse_projections(&mut self, mut e: Expression<'a>) -> Result<Expression<'a>, ParserError> {
+        loop {
+            let Some(dot_tok) = self.peek() else {
+                return Ok(e);
+            };
+            if !matches!(dot_tok.kind, LayoutTokenKind::Symbol(".")) {
+                return Ok(e);
+            }
+            let dot = self.token_span_range(dot_tok);
+            let Some(next_tok) = self.tokens.get(self.pos + 1) else {
+                return Ok(e);
+            };
+            let next = self.token_span_range(next_tok);
+            if dot.0 != self.expr_span(&e).1 || next.0 != dot.1 {
+                return Ok(e);
+            }
+            let key = match next_tok.kind {
+                LayoutTokenKind::Number(text) => {
+                    self.require_v1()?;
+                    let plain = !text.is_empty()
+                        && text.bytes().all(|b| b.is_ascii_digit())
+                        && (text == "0" || !text.starts_with('0'));
+                    match text.parse::<usize>() {
+                        Ok(i) if plain => ProjKey::Index(i),
+                        _ => {
+                            return Err(ParserError::new(
+                                ParserErrorKind::UnexpectedToken,
+                                Some(next),
+                            ))
+                        }
+                    }
+                }
+                LayoutTokenKind::Word(name) => {
+                    self.require_v1()?;
+                    ProjKey::Field(name)
+                }
+                _ => return Ok(e),
+            };
+            self.count_node()?;
+            self.advance()?;
+            self.advance()?;
+            let start = self.expr_span(&e).0;
+            e = Expression::Project {
+                base: Box::new(e),
+                key,
+                span: (start, next.1),
+            };
+        }
     }
 
     /// Parse the text of a `Number` token (VER04j section 2.2).
@@ -1944,6 +2381,8 @@ impl<'a> Parser<'a> {
             Expression::List { span, .. } => *span,
             Expression::Reference { span, .. } => *span,
             Expression::Grouped { span, .. } => *span,
+            Expression::Tuple { span, .. } => *span,
+            Expression::Project { span, .. } => *span,
         }
     }
 
@@ -1954,6 +2393,7 @@ impl<'a> Parser<'a> {
             TypeExpr::Option { span, .. } => *span,
             TypeExpr::Result { span, .. } => *span,
             TypeExpr::Named { span, .. } => *span,
+            TypeExpr::Tuple { span, .. } => *span,
         }
     }
 }
