@@ -204,6 +204,10 @@ lesson at once adds gigabytes of live objects to a check that needs only a
 small set of strings; on Windows that work can exceed the unchanged 30-second
 test budget. Streaming must not substitute a raw frontmatter scan or omit a
 track: the joiner and guard must still use exactly the same `rootSlugs()` rule.
+The CLI may use the loader's bounded asynchronous source reads, but must
+consume one track before opening the next, retain its existing synchronous
+library entry point, and share the exact baseline/write decision between both
+routes so concurrency cannot change which split is accepted.
 
 ### SHAPE NORMALISATION — done, 192 entries down to 82
 
