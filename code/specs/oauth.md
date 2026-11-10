@@ -2625,6 +2625,24 @@ responder, implement complete revocation policy, generalize path construction
 or validation, or provide TLS, HTTP, OAuth transport, or network authority.
 Concrete HTTPS and live-provider readiness remain unavailable.
 
+A final bounded branch policy consumes that complete root-and-intermediate DNS
+proof and requires RFC 6960 no-check semantics on the separately authenticated
+proof's exact responder. The responder is derived only through the consumed
+repository-owned evidence; callers cannot substitute a certificate, extension
+set, path, root, algorithm, key, signature, status, freshness endpoint, or
+time. One structurally unique `id-pkix-ocsp-nocheck` extension must be present
+with exact DER `NULL` contents, and success retains the complete non-copyable
+proof. Stable failures expose no certificate, extension, response, key,
+signature, status, root, or time payload. This pure public-certificate-data
+policy performs no credential access or editing, signing, storage, clock
+acquisition, provider action, audit event, trace emission, I/O, network access,
+or other external effect. It resolves only RFC 6960's trust-for-certificate-
+lifetime branch for this responder and does not establish separately
+authenticated revocation for it, implement complete revocation policy,
+generalize path construction or validation, or provide TLS, HTTP, OAuth
+transport, or network authority. Concrete HTTPS and live-provider readiness
+remain unavailable.
+
 An independent bounded routed intermediate-revocation follow-up consumes the
 complete fully routed reviewed server-revocation proof plus a separate fully
 authenticated, fully routed OCSP target-revocation proof. The second proof

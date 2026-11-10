@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Apply the repository-owned RFC 6960 no-check evaluator to the separately
+  authenticated responder-revocation proof's own exact responder after its
+  root and intermediate DNS policies.
+- Retain the complete non-copyable proof and stop before recursive responder
+  revocation, complete revocation, TLS, HTTP, or OAuth readiness.
 - Apply the separately authenticated responder-revocation proof's exact
   intermediate critical permitted and excluded DNS constraints to that proof's
   exact responder, retaining only count evidence.
