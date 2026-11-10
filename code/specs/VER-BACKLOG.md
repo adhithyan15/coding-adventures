@@ -621,3 +621,33 @@ Provisional decisions on VER13 open questions (coordinator defaults, pending own
 | P2 / OPS-006 | A worktree-isolated agent switched the MAIN checkout's branch (to its own worktree branch); no work lost. Briefs must say never run `git checkout`/`switch` outside the agent's own worktree | apply in briefs |
 | ready / LP-001 | gf256 + package-agnostic report: branch worktree-agent-a6e1ded123339efdd (integration on main + security fixes M1/L1/L3/L4/L5; round 2 PASSED) | queued for PR |
 | P2 / WD-014 | Security INFO: `--check` step 6 doesn't re-derive CWE-125/787 discharge; proof `kind` not whitelisted; evidence.bindings not hash-bound; gen_evidence numeric options uncapped and file I/O uncapped/symlink-following | backlog |
+
+### Coordinator status, 2026-11-10 (parallel PR wave)
+
+Every queued branch above is now an open PR with auto-merge armed; the rows
+below map items to PRs and log what the wave discovered. Status `PR` means
+"open, auto-merge armed, babysat"; `open` means not started.
+
+| Priority / id | Item | Status |
+|---|---|---|
+| PR / SEC-001 | lz77/lz78/lzss/lzw decompression bounds in all lanes | PR #19059 |
+| PR / LH-003 | test-bootstrap audit (macOS: /dev/full test now Linux-only, see LH-003c) | PR #19075 |
+| PR / LH-001, LH-005 | drat-check + cdcl-sat soundness audits, strict DIMACS | PR #19076 |
+| PR / LP-001 | gf256 Warrant evidence + package-agnostic report | PR #19077 |
+| merged / WD-002, AS-000 | VER04i, VER04j, VER13 specs + backlog | PR #19078 (merged) |
+| PR / CAP-RT-001 | runtime capability conformance gate | PR #19079 |
+| PR / LH-002, LP-006 | analyzer hardening + 74 manifests (14 removed from the v1 invalid ledger) | PR #19080 |
+| PR / LH-006 | bit-blaster faithfulness audit | PR #19081 |
+| PR / CT01 ports | ct-compare in lua, perl, haskell, ocaml, dart, swift (OCaml corpus now embedded: tests need no fs capability) | PR #19082 |
+| PR / SEC-003, SEC-004 | Rust huffman table validation; Elixir lz77 linear decode | PR #19084 |
+| PR / OPS-012..014 | BUILD_windows parity (vitest, PERL5LIB, EndOfLine) + CI audit script | PR #19085 |
+| PR / BUILD-001 | stop committing generated wasm; build where used | PR #19086 |
+| PR / SEC-003b | huffman decoder hardening in 16 more lanes | PR #19087 |
+| PR / AS-001a(1) | VER13 catalogue data (84 entries) + AC-14 checker in CI | PR #19089 |
+| P1 / AS-001a(2) | ca-assurance-report side: pin `catalogue.sha256`; enforce AC-1..AC-13 report rules; migrate ct-compare report to catalogue ids; derived exemptions; `evidence-kinds.json` | after #19077 and #19089 |
+| P0 / CI-RED-001 | main fails `test_repository_source_input_boundary_is_closed_and_canonical` (six TypeScript packages missing from the TS workspace boundary); fix is open PR #19050 | watch; blocks #19086 |
+| P2 / LH-003c | Rust std treats EBADF on stdout as a successful write, so a harness whose fd 1 is closed or read-only prints nothing and exits 0. Detect at start (fstat fd 1) or document in TF01 §8 known limits; supervisors must require the plan line | open |
+| P2 / CI-001 | Playwright 1.58 cannot install Chromium on ubuntu-latest (26.04); `release-visicalc.yml` verify pinned to ubuntu-24.04 in #19086. Bump release-tests Playwright, then unpin | open |
+| P3 / SEC-003c | C and C++ huffman encoders hold codes in 32-bit integers; an extremely skewed distribution needs longer codes | open |
+| P3 / OPS-015 | Windows leftovers from the parity audit: lua nib_* BUILD uses `>/dev/null \|\|`; matrix-rust-napi has no Windows addon copy; four advisory runner-set differences (go/barcode-1d, swift/Barcode1D, swift/PaintCodecPNGNative, typescript/forme-shell-desktop) | open |
+| P3 / AS-006 | Backlog hygiene: AS-004 is used for two rows; VER13 references WD-009 and CAP-RT ids that need their own rows | open |
